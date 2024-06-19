@@ -4077,6 +4077,11 @@ void lara_as_rope(ITEM_INFO* item, COLL_INFO* coll)
 
 	if (input & IN_LOOK)
 		LookUpDown();
+	if(item->anim_number == ANIM_SWINGFWD) {
+		camera.speed = 5;
+		camera.target_elevation = -item->pos.x_rot;
+	}
+
 }
 
 void lara_col_rope(ITEM_INFO* item, COLL_INFO* coll)
@@ -4150,7 +4155,7 @@ void lara_col_ropefwd(ITEM_INFO* item, COLL_INFO* coll)
 			else
 				Vel = 0;
 
-			ApplyVelocityToRope(lara.RopeSegment - 2, item->pos.y_rot + (!lara.RopeDirection ? 32760 : 0), (ushort)(Vel >> 5));
+			ApplyVelocityToRope(lara.RopeSegment, item->pos.y_rot + (!lara.RopeDirection ? 32760 : 0), (ushort)(Vel >> 5));
 		}
 
 		if (lara.RopeFrame < lara.RopeDFrame)
@@ -4170,8 +4175,7 @@ void lara_col_ropefwd(ITEM_INFO* item, COLL_INFO* coll)
 
 		item->frame_number = (short)(lara.RopeFrame >> 8);
 
-		if (!(input & IN_SPRINT) && lara.RopeFrame >> 8 == anims[ANIM_SWINGFWD].frame_base + 32 &&
-			lara.RopeMaxXBackward < 6750 && lara.RopeMaxXForward < 6750)
+		if (!(input & IN_SPRINT) && lara.RopeFrame >> 8 == anims[ANIM_SWINGFWD].frame_base + 32)
 		{
 			item->anim_number = ANIM_SWING2HANG;
 			item->frame_number = anims[ANIM_SWING2HANG].frame_base;

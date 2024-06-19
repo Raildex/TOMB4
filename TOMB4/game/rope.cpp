@@ -10,7 +10,7 @@
 
 static PENDULUM NullPendulum = { {0, 0, 0}, {0, 0, 0}, 0, 0 };
 
-ROPE_STRUCT RopeList[5];
+ROPE_STRUCT RopeList[64];
 PENDULUM CurrentPendulum;
 long nRope = 0;
 
@@ -373,12 +373,12 @@ void CalculateRope(ROPE_STRUCT* Rope)
 		}
 
 		ModelRigidRope(&Rope->Segment[0], &Pendulum->Position, &Rope->Velocity[0], &Pendulum->Velocity, Rope->SegmentLength * Pendulum->node);
-		Pendulum->Velocity.y += 0x60000;
+		Pendulum->Velocity.y += 0xC0000;
 		Pendulum->Position.x += Pendulum->Velocity.x;
 		Pendulum->Position.y += Pendulum->Velocity.y;
 		Pendulum->Position.z += Pendulum->Velocity.z;
-		Pendulum->Velocity.x -= Pendulum->Velocity.x >> 8;
-		Pendulum->Velocity.z -= Pendulum->Velocity.z >> 8;
+		Pendulum->Velocity.x -= Pendulum->Velocity.x >> 22;
+		Pendulum->Velocity.z -= Pendulum->Velocity.z >> 22;
 	}
 
 	for (n = Pendulum->node; n < 23; n++)
@@ -393,17 +393,17 @@ void CalculateRope(ROPE_STRUCT* Rope)
 
 	for (n = Pendulum->node; n < 24; n++)
 	{
-		Rope->Velocity[n].y += 0x30000;
+		Rope->Velocity[n].y += 0xF0000;
 
 		if (Pendulum->Rope)
 		{
-			Rope->Velocity[n].x -= Rope->Velocity[n].x >> 4;
-			Rope->Velocity[n].z -= Rope->Velocity[n].z >> 4;
+			Rope->Velocity[n].x -= Rope->Velocity[n].x >> 9;
+			Rope->Velocity[n].z -= Rope->Velocity[n].z >> 9;
 		}
 		else
 		{
-			Rope->Velocity[n].x -= Rope->Velocity[n].x >> 7;
-			Rope->Velocity[n].z -= Rope->Velocity[n].z >> 7;
+			Rope->Velocity[n].x -= Rope->Velocity[n].x >> 9;
+			Rope->Velocity[n].z -= Rope->Velocity[n].z >> 9;
 		}
 	}
 
