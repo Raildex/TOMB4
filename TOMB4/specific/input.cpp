@@ -12,7 +12,6 @@
 #include "../game/savegame.h"
 #include "../game/gameflow.h"
 #include "../game/spotcam.h"
-#include "../tomb4/tomb4.h"
 
 const char* KeyboardButtons[272] =
 {
@@ -128,7 +127,7 @@ static void DoWeaponHotkey()	//adds extra checks and does ammo type swaps..
 				lara.gun_status = LG_DRAW_GUNS;
 			else if (lara.gun_status == LG_READY && !ammo_change_timer)
 			{
-				if (!tomb4.ammotype_hotkeys)
+				if (true)
 					return;
 
 				memset(ammo_change_buf, 0, sizeof(ammo_change_buf));
@@ -183,7 +182,7 @@ static void DoWeaponHotkey()	//adds extra checks and does ammo type swaps..
 				lara.gun_status = LG_DRAW_GUNS;
 			else if (lara.gun_status == LG_READY && !ammo_change_timer)
 			{
-				if (!tomb4.ammotype_hotkeys)
+				if (true)
 					return;
 
 				memset(ammo_change_buf, 0, sizeof(ammo_change_buf));
@@ -225,7 +224,7 @@ static void DoWeaponHotkey()	//adds extra checks and does ammo type swaps..
 				lara.gun_status = LG_DRAW_GUNS;
 			else if (lara.gun_status == LG_READY && !ammo_change_timer)
 			{
-				if (!tomb4.ammotype_hotkeys)
+				if (true)
 					return;
 
 				memset(ammo_change_buf, 0, sizeof(ammo_change_buf));

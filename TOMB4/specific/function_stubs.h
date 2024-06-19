@@ -1,5 +1,6 @@
 #pragma once
 #include "../global/types.h"
+#include <cstdio>
 
 long GetRandomControl();
 void SeedRandomControl(long seed);

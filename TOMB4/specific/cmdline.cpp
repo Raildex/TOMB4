@@ -5,15 +5,15 @@
 #include "registry.h"
 #include "winmain.h"
 
-char ASCIIToANSITable[7][2] =
+wchar_t ASCIIToANSITable[7][2] =
 {
-	{'‚', 'é'},
-	{'Š', 'è'},
-	{'ˆ', 'ê'},
-	{'”', 'ö'},
-	{'…', 'à'},
-	{' ', 'á'},
-	{'¢', 'ó'}
+	{L'ï¿½', L'ï¿½'},
+	{L'ï¿½', L'ï¿½'},
+	{L'ï¿½', L'ï¿½'},
+	{L'ï¿½', L'ï¿½'},
+	{L'ï¿½', L'ï¿½'},
+	{L'ï¿½', L'ï¿½'},
+	{L'ï¿½', L'ï¿½'}
 };
 
 bool start_setup = 0;

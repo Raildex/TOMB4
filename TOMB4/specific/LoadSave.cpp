@@ -23,8 +23,6 @@
 #include "3dmath.h"
 #include "../game/control.h"
 #include "../game/lara.h"
-#include "../tomb4/tomb4.h"
-#include "../tomb4/troyestuff.h"
 #include "drawbars.h"
 
 long sfx_frequencies[3] = { 11025, 22050, 44100 };
@@ -71,11 +69,6 @@ void DoOptions()
 
 	if (menu)	//controls menu
 	{
-		if (menu == 200)
-		{
-			TroyeMenu(f, menu, sel);
-			return;
-		}
 
 		if (Gameflow->Language == GERMAN)
 			keyboard_buttons = (char**)GermanKeyboard;
@@ -219,7 +212,7 @@ void DoOptions()
 		{
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			ControlMethod = 0;
-			memcpy(layout[1], layout, 72);
+			memcpy(layout[1], layout, sizeof(*layout));
 		}
 
 		if (sel & 1)
@@ -449,13 +442,13 @@ void DisplayStatsUCunt()
 	min = (sec / 60) % 60;
 	sec = (sec % 60);
 
-	sprintf(buf, "%02d:%02d:%02d", (days * 24) + hours, min, sec);
+	sprintf(buf, "%02ld:%02ld:%02ld", (days * 24) + hours, min, sec);
 	PrintString(phd_centerx + (phd_centerx >> 2), y + 3 * font_height, 6, buf, 0);
 
-	sprintf(buf, "%dm", savegame.Game.Distance / 419);
+	sprintf(buf, "%ldm", savegame.Game.Distance / 419);
 	PrintString(phd_centerx + (phd_centerx >> 2), y + 4 * font_height, 6, buf, 0);
 
-	sprintf(buf, "%d", savegame.Game.AmmoUsed);
+	sprintf(buf, "%ld", savegame.Game.AmmoUsed);
 	PrintString(phd_centerx + (phd_centerx >> 2), y + 5 * font_height, 6, buf, 0);
 
 	sprintf(buf, "%d", savegame.Game.HealthUsed);
@@ -765,12 +758,7 @@ static void S_DrawTile(long x, long y, long w, long h, LPDIRECT3DTEXTUREX t, lon
 
 void S_DisplayMonoScreen()
 {
-	ulong col;
-
-	if (tomb4.inv_bg_mode == 1 || tomb4.inv_bg_mode == 3)
-		col = 0xFFFFFFFF;
-	else
-		col = 0xFFFFFF80;
+	ulong col = 0xFFFFFF80;
 
 	S_DrawTile(0, 0, phd_winwidth, phd_winheight, MonoScreen.tex, col, col, col, col);
 }
@@ -810,13 +798,12 @@ void RGBM_Mono(uchar * r, uchar * g, uchar * b)
 {
 	uchar c;
 
-	if (tomb4.inv_bg_mode != 3)
-	{
-		c = (*r + *b) >> 1;
-		*r = c;
-		*g = c;
-		*b = c;
-	}
+
+	c = (*r + *b) >> 1;
+	*r = c;
+	*g = c;
+	*b = c;
+
 }
 
 static void BitMaskGetNumberOfBits(ulong bitMask, ulong& bitDepth, ulong& bitOffset)

@@ -6,12 +6,11 @@
 #include "../game/sound.h"
 #include "LoadSave.h"
 #include "winmain.h"
-#include "../tomb4/tomb4.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4838)
 #pragma warning(disable : 4309)
-static char source_pcm_format[50] =
+static unsigned char source_pcm_format[50] =
 {
 	2, 0, 1, 0, 34, 86, 0, 0, 147, 43, 0, 0, 0, 2, 4, 0, 32, 0, 244, 3, 7, 0, 0, 1, 0, 0, 0, 2, 0, 255, 0, 0,
 	0, 0, 192, 0, 64, 0, 240, 0, 0, 0, 204, 1, 48, 255, 136, 1, 24, 255
@@ -397,7 +396,7 @@ void S_SetReverbType(long reverb)
 	if (App.SoundDisabled)
 		return;
 
-	if (tomb4.reverb == 1)
+	if (/*tomb4.reverb == 1*/ true)
 		reverb = 0;
 
 	if (current_reverb != reverb)

@@ -12,7 +12,6 @@
 #include "effect2.h"
 #include "lara.h"
 #include "savegame.h"
-#include "../tomb4/tomb4.h"
 
 CAMERA_INFO camera;
 
@@ -658,11 +657,7 @@ void CombatCamera(ITEM_INFO* item)
 	else
 	{
 		camera.target_angle = lara.head_y_rot + lara.torso_y_rot + item->pos.y_rot;
-
-		if (!tomb4.combat_cam_tilt)
-			camera.target_elevation = lara.torso_x_rot + item->pos.x_rot + lara.head_x_rot - 1820;
-		else
-			camera.target_elevation = lara.torso_x_rot + item->pos.x_rot + lara.head_x_rot - 2730;
+		camera.target_elevation = lara.torso_x_rot + item->pos.x_rot + lara.head_x_rot - 2730;
 	}
 
 	wx = camera.target.x;
@@ -1398,7 +1393,7 @@ void CalculateCamera()
 	}
 	else
 	{
-		if (camera.type != COMBAT_CAMERA || tomb4.combat_cam_tilt)
+		if (camera.type != COMBAT_CAMERA)
 			y -= 256;
 
 		if (camera.type == COMBAT_CAMERA)

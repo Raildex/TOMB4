@@ -15,7 +15,6 @@
 #include "savegame.h"
 #include "gameflow.h"
 #include "../specific/output.h"
-#include "../tomb4/tomb4.h"
 
 DISPLAYPU pickups[8];
 long PickupX;
@@ -60,7 +59,7 @@ void DrawGameInfo(long timed)
 
 		if (lara.target)
 		{
-			if (tomb4.enemy_bars && lara.target->hit_points > 0)
+			if (/*tomb4.enemy_bars &&*/ lara.target->hit_points > 0)
 			{
 				if (lara.target->object_number == LARA_DOUBLE)
 					S_DrawEnemyBar(lara_item->hit_points / 10);
@@ -85,7 +84,7 @@ void DrawGameInfo(long timed)
 			PrintString(phd_winwidth >> 1, font_height, 0, buf, 0x8000);
 		}
 
-		if (tomb4.ammo_counter)
+		if (/*tomb4.ammo_counter*/true)
 		{
 			if (lara.gun_status == LG_READY)
 			{

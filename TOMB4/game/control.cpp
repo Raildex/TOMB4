@@ -28,7 +28,6 @@
 #include "lot.h"
 #include "../specific/output.h"
 #include "gameflow.h"
-#include "../tomb4/tomb4.h"
 #include "lara1gun.h"
 #include "sphere.h"
 #include "draw.h"
@@ -226,7 +225,6 @@ long ControlPhase(long nframes, long demo_mode)
 	{
 		GlobalCounter++;
 		UpdateSky();
-		RPC_Update();
 
 		if (S_UpdateInput() == IN_ALL)
 			return 0;
@@ -241,7 +239,7 @@ long ControlPhase(long nframes, long demo_mode)
 
 		if (cutseq_trig)
 		{
-			if (keymap[DIK_ESCAPE] && !ScreenFading && !bDoCredits && tomb4.cutseq_skipper)
+			if (keymap[DIK_ESCAPE] && !ScreenFading && !bDoCredits)
 				cutseq_trig = 3;
 
 			input = 0;
@@ -261,7 +259,7 @@ long ControlPhase(long nframes, long demo_mode)
 		if (gfLevelComplete)
 			return 3;
 
-		if (tomb4.gameover)
+		if (/*tomb4.gameover*/ true)
 		{
 			if (reset_flag)
 			{

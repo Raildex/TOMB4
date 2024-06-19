@@ -20,7 +20,6 @@
 #include "savegame.h"
 #include "gameflow.h"
 #include "../specific/file.h"
-#include "../tomb4/tomb4.h"
 #include "../specific/dxsound.h"
 
 COLL_INFO mycoll;
@@ -29,8 +28,7 @@ static COLL_INFO* lara_coll = &mycoll;
 
 void LaraCheatyBits()
 {
-	if (!tomb4.cheats)
-		return;
+	return;
 
 #ifdef _DEBUG
 	if (keymap[DIK_F1])
@@ -568,11 +566,7 @@ void LaraControl(short item_number)
 			break;
 		}
 	}
-
-	if (tomb4.reverb == 2)
-		S_SetReverbType(room[l->room_number].ReverbType);
-	else
-		S_SetReverbType(room[camera.pos.room_number].ReverbType);
+	S_SetReverbType(room[camera.pos.room_number].ReverbType);
 
 	if (l->hit_points <= 0)
 	{

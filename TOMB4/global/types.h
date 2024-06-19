@@ -30,7 +30,7 @@
 #define W2V_SHIFT	14
 #define MAX_SAMPLES	370
 #define MAX_DYNAMICS	64
-#define MALLOC_SIZE	15000000	//15MB
+#define MALLOC_SIZE	1024*1024*128	//128MB
 
 /********************DX defs********************/
 #define LPDIRECTDRAWX			LPDIRECTDRAW4
@@ -1432,9 +1432,9 @@ struct INVOBJ
 	short object_number;
 	short yoff;
 	short scale1;
-	short yrot;
-	short xrot;
-	short zrot;
+	ushort yrot;
+	ushort xrot;
+	ushort zrot;
 	short flags;
 	short objname;
 	ulong meshbits;

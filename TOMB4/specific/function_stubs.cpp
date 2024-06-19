@@ -1,4 +1,5 @@
 #include "../tomb4/pch.h"
+#include <cstdio>
 #include "function_stubs.h"
 
 FILE* logF = 0;
@@ -75,15 +76,11 @@ void Log(ulong type, const char* s, ...)
 {
 #ifdef DO_LOG
 	va_list list;
-	char buf[4096];
-
-	if (!logF)
-		logF = fopen("log.txt", "w+");
 
 	va_start(list, s);
-	vsprintf(buf, s, list);
-	strcat(buf, "\n");
+	vfprintf(stdout,s,list);
+	fprintf(stdout,"\n");
 	va_end(list);
-	fwrite(buf, strlen(buf), 1, logF);
+	fflush(stdout);
 #endif
 }

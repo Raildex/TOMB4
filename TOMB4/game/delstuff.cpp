@@ -12,7 +12,6 @@
 #include "../specific/function_stubs.h"
 #include "lara.h"
 #include "gameflow.h"
-#include "../tomb4/tomb4.h"
 
 short* GLaraShadowframe;
 float lara_matrices[180];
@@ -118,7 +117,7 @@ void DrawLara(ITEM_INFO* item, long mirror)
 	if (lara.vehicle == NO_ITEM)
 		S_PrintShadow(obj->shadow_size, GLaraShadowframe, item);
 
-	if (tomb4.look_transparency)
+	if (true)
 	{
 		if (input & IN_LOOK)
 		{

@@ -9,7 +9,6 @@
 #include "../specific/input.h"
 #include "lara.h"
 #include "gameflow.h"
-#include "../tomb4/tomb4.h"
 
 SPOTCAM SpotCam[128];
 long bTrackCamInit = 0;
@@ -365,7 +364,7 @@ void CalculateSpotCams()
 	else if (!spotcam_timer)
 		current_spline_position += cspeed;
 
-	if (tomb4.cutseq_skipper && keymap[DIK_ESCAPE] && gfCurrentLevel)
+	if (keymap[DIK_ESCAPE] && gfCurrentLevel)
 		current_spline_position = 0x10000;
 
 	if (!(input & IN_LOOK))

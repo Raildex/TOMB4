@@ -19,7 +19,6 @@
 #include "file.h"
 #include "../game/lara.h"
 #include "../game/gameflow.h"
-#include "../tomb4/tomb4.h"
 #include "output.h"
 #include "../game/lara_states.h"
 #include "../game/deltapak.h"
@@ -253,30 +252,20 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item)
 		y3 = (long)ccv.y;
 		z3 = (long)ccv.z;
 		setXYZ3(v, x1, y1, z1, x2, y2, z2, x3, y3, z3, clipflags);
-
-		if (tomb4.shadow_mode == 3)	//psx like?
-		{
-			v[0].color = 0x00000000;
-			v[1].color = 0x00000000;
-			v[2].color = 0xFF000000;
-		}
-		else
-		{
-			v[0].color = 0x4F000000;
-			v[1].color = 0x4F000000;
-			v[2].color = 0x4F000000;
-		}
+		
+		v[0].color = 0x00000000;
+		v[1].color = 0x00000000;
+		v[2].color = 0xFF000000;
+		
+		
 
 		if (item->after_death)
 		{
-			if (tomb4.shadow_mode == 3)
-				v[2].color = 0xFF000000 - (item->after_death << 24);
-			else
-			{
-				v[0].color = 0x80000000 - (item->after_death << 24);
-				v[1].color = v[0].color;
-				v[2].color = v[0].color;
-			}
+
+			v[0].color = 0x80000000 - (item->after_death << 24);
+			v[1].color = v[0].color;
+			v[2].color = v[0].color;
+			
 		}
 
 		v[0].specular = 0xFF000000;
@@ -473,13 +462,10 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item)
 	long x, y, z, x1, y1, z1, x2, y2, z2, x3, y3, z3, xSize, zSize, xDist, zDist;
 	short s;
 
-	if (tomb4.shadow_mode != 1)
+	if (true)
 	{
-		if (tomb4.shadow_mode == 4)
-			S_PrintSpriteShadow(size, box, item);
-		else
-			S_PrintCircleShadow(size, box, item);
 
+		S_PrintSpriteShadow(size, box, item);
 		return;
 	}
 

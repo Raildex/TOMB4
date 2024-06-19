@@ -11,7 +11,6 @@
 #include "../specific/gamemain.h"
 #include "../specific/file.h"
 #include "lara.h"
-#include "../tomb4/tomb4.h"
 
 #define PRINT_HEIGHT_CORRECTION 128 // The maximum difference between the footprint and the floor
 
@@ -74,11 +73,6 @@ void S_DrawFootPrints()
 
 		if (print->Active)
 		{
-			if (!tomb4.footprints)
-			{
-				print->Active = 0;
-				continue;
-			}
 
 			print->Active--;
 

@@ -46,6 +46,11 @@ static long zero = 0;
 
 void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, short type)
 {
+	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_TEXTUREMAG, D3DTEXTUREFILTER::D3DFILTER_LINEARMIPLINEAR);
+	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_TEXTUREMIN, D3DTEXTUREFILTER::D3DFILTER_LINEARMIPLINEAR);
+	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_ANISOTROPY, 16);
+	D3DVALUE bias = D3DVALUE(0.0f);
+	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_MIPMAPLODBIAS, *(DWORD*)&bias);
 	switch (type)
 	{
 	case 0:

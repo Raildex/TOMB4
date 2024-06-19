@@ -23,7 +23,6 @@
 #include "../specific/input.h"
 #include "gameflow.h"
 #include "tomb4fx.h"
-#include "../tomb4/tomb4.h"
 
 void(*lara_control_routines[118])(ITEM_INFO* item, COLL_INFO* coll) =
 {
@@ -283,9 +282,6 @@ static void TiltHer(ITEM_INFO* item, long rad, long height)
 	long wy[4];
 	long yT, y, wx, wz, dy;
 	short room_number, rotX, rotZ;
-
-	if (!tomb4.crawltilt)
-		return;
 
 	yT = item->pos.y_pos - height - 162;
 	room_number = item->room_number;
@@ -576,11 +572,7 @@ void lara_col_hang(ITEM_INFO* item, COLL_INFO* coll)
 
 	item->fallspeed = 0;
 	item->gravity_status = 0;
-
-	if (tomb4.fix_climb_up_delay)
-		flag = item->anim_number == ANIM_GRABLEDGE;
-	else
-		flag = (item->anim_number == ANIM_GRABLEDGE && item->frame_number == anims[ANIM_GRABLEDGE].frame_base + 21);
+	flag = (item->anim_number == ANIM_GRABLEDGE && item->frame_number == anims[ANIM_GRABLEDGE].frame_base + 21);
 
 	if (flag)
 	{
@@ -630,10 +622,8 @@ void lara_col_hang(ITEM_INFO* item, COLL_INFO* coll)
 	lara.move_angle = item->pos.y_rot;
 	LaraHangTest(item, coll);
 
-	if (tomb4.fix_climb_up_delay)
-		flag = item->anim_number == ANIM_GRABLEDGE;
-	else
-		flag = (item->anim_number == ANIM_GRABLEDGE && item->frame_number == anims[ANIM_GRABLEDGE].frame_base + 21);
+
+	flag = (item->anim_number == ANIM_GRABLEDGE && item->frame_number == anims[ANIM_GRABLEDGE].frame_base + 21);
 
 	if (flag)
 	{
@@ -1015,10 +1005,9 @@ void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll)
 
 		if ((input & IN_DUCK || lara.keep_ducked) && (!(input & (IN_FLARE | IN_DRAW)) || input & IN_FORWARD) && lara.water_status != LW_WADE)
 		{
-			if (tomb4.flexible_crawling)
-				collided = (item->anim_number == ANIM_ALL4S || item->anim_number == ANIM_ALL4S2 || item->anim_number == 266 || item->anim_number == 268);
-			else
-				collided = (item->anim_number == ANIM_ALL4S || item->anim_number == ANIM_ALL4S2);
+			
+			collided = (item->anim_number == ANIM_ALL4S || item->anim_number == ANIM_ALL4S2 || item->anim_number == 266 || item->anim_number == 268);
+
 
 			if (collided)
 			{

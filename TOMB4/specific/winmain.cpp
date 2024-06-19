@@ -6,7 +6,7 @@
 #include "dxshell.h"
 #include <time.h>
 #include "../game/text.h"
-#include "lighting.h"
+
 #include "function_table.h"
 #include "d3dmatrix.h"
 #include "3dmath.h"

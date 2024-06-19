@@ -12,7 +12,6 @@
 #include "../game/gameflow.h"
 #include "dxshell.h"
 #include "../game/savegame.h"
-#include "../tomb4/tomb4.h"
 
 LPDIRECT3DVERTEXBUFFER DestVB;
 WATERTAB WaterTable[22][64];
@@ -74,13 +73,9 @@ unsigned int __stdcall GameMain(void* ptr)
 		if (!App.SoundDisabled)
 			SOUND_Init();
 
-		RPC_Init();
-		init_tomb4_stuff();
 		DoGameflow();
 		GameClose();
 		S_CDStop();
-
-		RPC_close();
 		PostMessage(App.hWnd, WM_CLOSE, 0, 0);
 		MainThread.active = 0;
 		_endthreadex(1);
@@ -176,7 +171,7 @@ bool GameInitialise()
 	desc.dwCaps = 0;
 	desc.dwSize = sizeof(desc);
 	desc.dwFVF = D3DFVF_TLVERTEX;
-	desc.dwNumVertices = 0x2000;
+	desc.dwNumVertices = 0xFFFF;
 	DXAttempt(App.dx.lpD3D->CreateVertexBuffer(&desc, &DestVB, D3DDP_DONOTCLIP, 0));
 	init_game_malloc();
 	clipflags = (short*)malloc(0x4000);

@@ -29,7 +29,6 @@
 #include "../game/gameflow.h"
 #include "../game/spotcam.h"
 #include "../game/effect2.h"
-#include "../tomb4/tomb4.h"
 
 D3DTLVERTEX SkinVerts[40][12];
 short SkinClip[40][12];
@@ -58,7 +57,7 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh)
 	if (gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6)
 		DistanceFogStart = 12.0F * 1024.0F;
 	else
-		DistanceFogStart = tomb4.distance_fog * 1024.0F;
+		DistanceFogStart = 12 * 1024.0F;
 
 	num = 255.0F / DistanceFogStart;
 	mesh->SourceVB->Lock(DDLOCK_READONLY, (LPVOID*)&v, 0);
@@ -279,7 +278,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh)
 	if (gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6)
 		DistanceFogStart = 12.0F * 1024.0F;
 	else
-		DistanceFogStart = tomb4.distance_fog * 1024.0F;
+		DistanceFogStart = 12 * 1024.0F;
 
 	num = 255.0F / DistanceFogStart;
 	pR = (StaticMeshShade & 0x1F) << 3;
@@ -311,7 +310,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh)
 		sG = 0;
 		sB = 0;
 
-		if (tomb4.static_lighting)
+		if (true)
 		{
 			for (int j = 0; j < MAX_DYNAMICS; j++)
 			{
@@ -1015,13 +1014,9 @@ void RenderLoadPic(long unused)
 		S_InitialisePolyList();
 		RenderIt(camera.pos.room_number);
 
-		if (tomb4.loadingtxt && !tomb4.tr5_loadbar)
+		if (true)
 		{
-			if (tomb4.bar_mode == 2 || tomb4.bar_mode == 3)
-				PrintString(phd_centerx, long(float((480 - (font_height >> 1)) * float(phd_winymax / 480.0F))) - (font_height >> 1),
-					5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
-			else
-				PrintString(phd_centerx, long(float(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1),
+			PrintString(phd_centerx, long(float(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1),
 					5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
 		}
 
@@ -1034,13 +1029,9 @@ void RenderLoadPic(long unused)
 	S_InitialisePolyList();
 	RenderIt(camera.pos.room_number);
 
-	if (tomb4.loadingtxt && !tomb4.tr5_loadbar)
+	if (true)
 	{
-		if (tomb4.bar_mode == 2 || tomb4.bar_mode == 3)
-			PrintString(phd_centerx, long(float((480 - (font_height >> 1)) * float(phd_winymax / 480.0F))) - (font_height >> 1),
-				5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
-		else
-			PrintString(phd_centerx, long(float(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1),
+		PrintString(phd_centerx, long(float(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1),
 				5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
 	}
 
@@ -1843,8 +1834,8 @@ long GetRenderScale(long unit)	//User selected scale
 {
 	long w, h, x, y;
 
-	w = long(640.0F /  tomb4.GUI_Scale);
-	h = long(480.0F / tomb4.GUI_Scale);
+	w = long(640.0F /  1);
+	h = long(480.0F / 1);
 	x = (phd_winwidth > w) ? MulDiv(phd_winwidth, unit, w) : unit;
 	y = (phd_winheight > h) ? MulDiv(phd_winheight, unit, h) : unit;
 	return x < y ? x : y;
