@@ -1070,7 +1070,7 @@ void S_InitialisePolyList()
 
 	if (gfLevelFlags & GF_TRAIN)
 		col = 0xD2B163;
-	else if (gfCurrentLevel == 5 || gfCurrentLevel == 6)
+	else if(false /*gfCurrentLevel == 5 || gfCurrentLevel == 6)*/)
 	{
 		col = FogTableColor[19];
 		SetFogColor(CLRR(col), CLRG(col), CLRB(col));

@@ -759,7 +759,7 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 				{
 					if (keymap[DIK_H] && keymap[DIK_E] && keymap[DIK_L] && keymap[DIK_P])
 					{
-						if (gfCurrentLevel == 2 || gfCurrentLevel == 6 || gfCurrentLevel == 13 || gfCurrentLevel == 21 || gfCurrentLevel == 27)
+						if(false /*gfCurrentLevel == 2 || gfCurrentLevel == 6 || gfCurrentLevel == 13 || gfCurrentLevel == 21 || gfCurrentLevel == 27)*/)
 							skipped_level = 1;
 
 						gfRequiredStartPos = 0;
