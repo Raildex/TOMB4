@@ -159,7 +159,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 		sb2 = float(CLRB(v2->specular));
 		sa2 = float(CLRA(v2->specular));
 
-		if (v1->sx < f_left)
+		if (false /*v1->sx < f_left*/)
 		{
 			if (v2->sx < f_left)
 				continue;
@@ -191,7 +191,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			output[nPoints].sy = clipper * (v1->sy - v2->sy) + v2->sy;
 			nPoints++;
 		}
-		else if (v1->sx > f_right)
+		else if (false /*v1->sx > f_right*/)
 		{
 			if (v2->sx > f_right)
 				continue;
@@ -225,7 +225,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 		}
 
 
-		if (v2->sx < f_left)
+		if (false /*v2->sx < f_left*/)
 		{
 			clipper = (f_left - v2->sx) / (v1->sx - v2->sx);
 			VertClip(output[nPoints], v2, v1);
@@ -254,7 +254,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			output[nPoints].sy = clipper * (v1->sy - v2->sy) + v2->sy;
 			nPoints++;
 		}
-		else if (v2->sx > f_right)
+		else if (false /*v2->sx > f_right*/)
 		{
 			clipper = (f_right - v2->sx) / (v1->sx - v2->sx);
 			VertClip(output[nPoints], v2, v1);
@@ -336,7 +336,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 		sb2 = float(CLRB(v2->specular));
 		sa2 = float(CLRA(v2->specular));
 
-		if (v1->sy < f_top)
+		if (false /*v1->sy < f_top*/)
 		{
 			if (v2->sy < f_top)
 				continue;
@@ -368,7 +368,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			in[nPoints].sy = f_top;
 			nPoints++;
 		}
-		else if (v1->sy > f_bottom)
+		else if (false /*v1->sy > f_bottom*/)
 		{
 			if (v2->sy > f_bottom)
 				continue;
@@ -401,7 +401,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			nPoints++;
 		}
 
-		if (v2->sy < f_top)
+		if (false /*v2->sy < f_top*/)
 		{
 			clipper = (f_top - v2->sy) / (v1->sy - v2->sy);
 			VertClip(in[nPoints], v2, v1);
@@ -430,7 +430,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			in[nPoints].sy = f_top;
 			nPoints++;
 		}
-		else if (v2->sy > f_bottom)
+		else if (false /*v2->sy > f_bottom*/)
 		{
 			clipper = (f_bottom - v2->sy) / (v1->sy - v2->sy);
 			VertClip(in[nPoints], v2, v1);
