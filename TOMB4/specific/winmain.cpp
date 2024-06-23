@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "winmain.h"
 #include "function_stubs.h"
 #include "cmdline.h"
@@ -8,7 +8,7 @@
 #include "../game/text.h"
 
 #include "function_table.h"
-#include "d3dmatrix.h"
+#include "D3DMATRIX.h"
 #include "3dmath.h"
 #include "audio.h"
 #include "output.h"
@@ -17,6 +17,17 @@
 #include "dxsound.h"
 #include "gamemain.h"
 #include "fmv.h"
+#include "winapp.h"
+#include "commandlines.h"
+#include "dxflags.h"
+#include "dxdisplaymode.h"
+#include "dxinfo.h"
+#include "dxdirectdrawinfo.h"
+#include "dxd3ddevice.h"
+#include <winuser.h>
+#include "../tomb4/resource.h"
+#include <windowsx.h>
+#include <process.h>
 
 static COMMANDLINES commandlines[] =
 {
@@ -58,7 +69,7 @@ void WinProcessCommandLine(LPSTR cmd)
 	char* pCommand;
 	char* p;
 	char* last;
-	ulong l;
+	unsigned long l;
 	long num;
 	char parameter[20];
 
@@ -72,7 +83,7 @@ void WinProcessCommandLine(LPSTR cmd)
 		command->code((char*)"_INIT");
 	}
 
-	for (int i = 0; (ulong)i < strlen(cmd); i++)
+	for (int i = 0; (unsigned long)i < strlen(cmd); i++)
 	{
 		if (toupper(cmd[i]))
 			cmd[i] = toupper(cmd[i]);
@@ -91,7 +102,7 @@ void WinProcessCommandLine(LPSTR cmd)
 				p = 0;
 				l = strlen(pCommand);
 
-				for (int j = 0; (ulong)j < l; j++, pCommand++)
+				for (int j = 0; (unsigned long)j < l; j++, pCommand++)
 				{
 					if (*pCommand != '=')
 						continue;
@@ -99,7 +110,7 @@ void WinProcessCommandLine(LPSTR cmd)
 					p = pCommand + 1;
 					l = strlen(p);
 
-					for (j = 0; (ulong)j < l; j++, p++)
+					for (j = 0; (unsigned long)j < l; j++, p++)
 					{
 						if (*p != ' ')
 							break;
@@ -108,7 +119,7 @@ void WinProcessCommandLine(LPSTR cmd)
 					last = p;
 					l = strlen(last);
 
-					for (j = 0; (ulong)j < l; j++, last++)
+					for (j = 0; (unsigned long)j < l; j++, last++)
 					{
 						if (*last == ' ')
 							break;
@@ -236,7 +247,7 @@ void WinProcessCommands(long cmd)
 
 		DXToggleFullScreen();
 		HWInitialise();
-		S_InitD3DMatrix();
+		S_Init_D3DMATRIX();
 		SetD3DViewMatrix();
 		ResumeThread((HANDLE)MainThread.handle);
 		App.dx.WaitAtBeginScene = 0;
@@ -320,7 +331,7 @@ void WinProcessCommands(long cmd)
 			HWInitialise();
 			InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
 			InitFont();
-			S_InitD3DMatrix();
+			S_Init_D3DMATRIX();
 			SetD3DViewMatrix();
 		}
 
@@ -330,7 +341,7 @@ void WinProcessCommands(long cmd)
 		resChangeCounter = 120;
 	}
 }
-
+extern void FillADPCMBuffer(char* p, long track);
 LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static long mouseX, mouseY, mouseB;
@@ -466,9 +477,9 @@ bool WinCreateWindow()
 	return 1;
 }
 
-void WinSetStyle(bool fullscreen, ulong& set)
+void WinSetStyle(bool fullscreen, unsigned long& set)
 {
-	ulong style;
+	unsigned long style;
 
 	style = GetWindowLong(App.hWnd, GWL_STYLE);
 

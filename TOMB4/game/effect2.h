@@ -1,6 +1,11 @@
 #pragma once
-#include "../global/types.h"
-
+struct SPLASH_SETUP;
+struct DYNAMIC;
+struct SPLASH_STRUCT;
+struct RIPPLE_STRUCT;
+struct SPARKS;
+struct GAME_VECTOR;
+struct ITEM_INFO;
 void ControlSmokeEmitter(short item_number);
 void TriggerExplosionSmokeEnd(long x, long y, long z, long uw);
 void TriggerExplosionSmoke(long x, long y, long z, long uw);
@@ -28,11 +33,11 @@ void TriggerRocketSmoke(long x, long y, long z, long col);
 void SetupSplash(SPLASH_SETUP* setup);
 void UpdateSplashes();
 
-extern DYNAMIC dynamics[MAX_DYNAMICS * 2];
-extern SPLASH_STRUCT splashes[4];
-extern RIPPLE_STRUCT ripples[16];
+extern DYNAMIC dynamics[];
+extern SPLASH_STRUCT splashes[];
+extern RIPPLE_STRUCT ripples[];
 extern SPLASH_SETUP splash_setup;
-extern SPARKS spark[256];
+extern SPARKS spark[];
 extern long wibble;
 extern long SplashCount;
 extern long KillEverythingFlag;

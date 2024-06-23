@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "sentrygun.h"
 #include "effect2.h"
 #include "../specific/function_stubs.h"
@@ -13,6 +13,14 @@
 #include "people.h"
 #include "newinv.h"
 #include "control.h"
+#include "sparks.h"
+#include "iteminfo.h"
+#include "itemstatus.h"
+#include "itemflags.h"
+#include "biteinfo.h"
+#include "creatureinfo.h"
+#include "aiinfo.h"
+#include "math_tbls.h"
 
 static BITE_INFO AGOffsets = { 0, 0, 0, 8 };
 
@@ -69,8 +77,8 @@ void TriggerAutogunFlamethrower(ITEM_INFO* item)
 
 		sptr->Scalar = 3;
 		v *= (GetRandomControl() & 7) + 60;
-		sptr->dSize = uchar(v >> 8);
-		sptr->Size = uchar(v >> 12);
+		sptr->dSize = unsigned char(v >> 8);
+		sptr->Size = unsigned char(v >> 12);
 		sptr->sSize = sptr->Size;
 	}
 }

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "objects.h"
 #include "control.h"
 #include "sound.h"
@@ -23,7 +23,23 @@
 #include "lara.h"
 #include "../specific/file.h"
 #include "gameflow.h"
-
+#include "sparks.h"
+#include "iteminfo.h"
+#include "larainfo.h"
+#include "itemflags.h"
+#include "floortypes.h"
+#include "laragunstatus.h"
+#include "animstruct.h"
+#include "heighttypes.h"
+#include "inputbuttons.h"
+#include "objectinfo.h"
+#include "itemstatus.h"
+#include "texturestruct.h"
+#include "boxinfo.h"
+#include "roominfo.h"
+#include "types.h"
+#include "floorinfo.h"
+#include <cstdlib>
 OBJECT_INFO objects[NUMBER_OBJECTS];
 
 static short StatuePlinthBounds[12] = { 0, 0, -64, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };

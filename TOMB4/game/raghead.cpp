@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "raghead.h"
 #include "box.h"
 #include "objects.h"
@@ -14,6 +14,21 @@
 #include "effects.h"
 #include "lara.h"
 #include "gameflow.h"
+#include "creatureinfo.h"
+#include "aiinfo.h"
+#include "animstruct.h"
+#include "larainfo.h"
+#include "objectinfo.h"
+#include "itemstatus.h"
+#include "biteinfo.h"
+#include "weapontypes.h"
+#include "types.h"
+#include "roominfo.h"
+#include "aibits.h"
+#include "laragunstatus.h"
+#include "itemflags.h"
+#include "gfleveloptions.h"
+#include <cstdlib>
 
 static BITE_INFO raghead_fire = { 0, -16, 200, 11 };
 static BITE_INFO raghead_blade = { 0, 0, 0, 15 };

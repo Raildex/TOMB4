@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "elements.h"
 #include "objects.h"
 #include "lara_states.h"
@@ -13,7 +13,17 @@
 #include "effect2.h"
 #include "../specific/input.h"
 #include "lara.h"
-
+#include "iteminfo.h"
+#include "larainfo.h"
+#include "animstruct.h"
+#include "laragunstatus.h"
+#include "weapontypes.h"
+#include "itemflags.h"
+#include "itemstatus.h"
+#include "inputbuttons.h"
+#include "roominfo.h"
+#include "types.h"
+#include <cstdlib>
 short ElementPuzzleBounds[12] = { 0, 0, -64, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 
 void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)

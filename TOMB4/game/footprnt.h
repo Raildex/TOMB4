@@ -1,5 +1,7 @@
 #pragma once
-#include "../global/types.h"
+
+struct ITEM_INFO;
+struct FOOTPRINT;
 
 void AddFootPrint(ITEM_INFO* item);
 void S_DrawFootPrints();

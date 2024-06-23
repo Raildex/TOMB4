@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "lighting.h"
 #include "dxshell.h"
 #include "3dmath.h"
@@ -13,6 +13,15 @@
 #include "../game/draw.h"
 #include "winmain.h"
 #include "../game/lara.h"
+#include "pclight.h"
+#include "lighttypes.h"
+#include "dynamic.h"
+#include "types.h"
+#include "itemlight.h"
+#include "iteminfo.h"
+#include "roominfo.h"
+#include "pclightinfo.h"
+#include <cmath>
 
 ITEM_INFO* current_item;
 long StaticMeshShade;
@@ -246,7 +255,7 @@ void CreateLightList(ITEM_INFO* item)
 	PCLIGHT* current_lights;
 	PCLIGHT* prev_lights;
 	PCLIGHT_INFO* room_light;
-	D3DVECTOR vec;
+	_D3DVECTOR vec;
 	void* bakPtr;
 	long bakNum, dx, dy, dz, range;
 	bool in_range;
@@ -539,8 +548,8 @@ void CalcAmbientLight(ITEM_INFO* item)
 
 void ResetLighting()
 {
-	D3DMATRIX view;
-	D3DMATRIX cam;
+	_D3DMATRIX view;
+	_D3DMATRIX cam;
 	
 	ambientR = 0;
 	ambientG = 0;

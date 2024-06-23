@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "seth.h"
 #include "effect2.h"
 #include "../specific/function_stubs.h"
@@ -13,6 +13,21 @@
 #include "effects.h"
 #include "lara_states.h"
 #include "lara.h"
+#include "sparks.h"
+#include "iteminfo.h"
+#include "phd3dpos.h"
+#include "nodeoffsetinfo.h"
+#include "types.h"
+#include "aiinfo.h"
+#include "creatureinfo.h"
+#include "aibits.h"
+#include "objectinfo.h"
+#include "animstruct.h"
+#include "weapontypes.h"
+#include "larainfo.h"
+#include "fxinfo.h"
+#include "biteinfo.h"
+#include <cstdlib>
 
 static BITE_INFO left_hand = { 0, 220, 50, 17 };
 static BITE_INFO right_hand = { 0, 220, 50, 13 };
@@ -58,7 +73,7 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv)
 
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
-	sptr->FxObj = (uchar)fx_number;
+	sptr->FxObj = (unsigned char)fx_number;
 
 	if (effects[fx_number].flag1 == 1)
 		sptr->Scalar = 3;
@@ -135,7 +150,7 @@ void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv)
 	sptr->Flags = 0;
 }
 
-void TriggerSethFlame(short item_number, uchar NodeNumber, short size)
+void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size)
 {
 	SPARKS* sptr;
 	long dx, dz;
@@ -176,10 +191,10 @@ void TriggerSethFlame(short item_number, uchar NodeNumber, short size)
 
 	sptr->MaxYvel = 0;
 	sptr->Gravity = (GetRandomControl() & 0x1F) + 16;
-	sptr->FxObj = (uchar)item_number;
+	sptr->FxObj = (unsigned char)item_number;
 	sptr->NodeNumber = NodeNumber;
 	sptr->Scalar = 2;
-	sptr->Size = uchar((GetRandomControl() & 0xF) + size);
+	sptr->Size = unsigned char((GetRandomControl() & 0xF) + size);
 	sptr->sSize = sptr->Size;
 	sptr->dSize = sptr->Size >> 4;
 }

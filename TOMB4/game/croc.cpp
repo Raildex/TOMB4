@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "croc.h"
 #include "box.h"
 #include "objects.h"
@@ -15,6 +15,23 @@
 #include "tomb4fx.h"
 #include "effect2.h"
 #include "lara.h"
+#include "iteminfo.h"
+#include "aiinfo.h"
+#include "creatureinfo.h"
+#include "animstruct.h"
+#include "objectinfo.h"
+#include "roomflags.h"
+#include "roominfo.h"
+#include "biteinfo.h"
+#include "aibits.h"
+#include "locuststruct.h"
+#include "phdvector.h"
+#include "larainfo.h"
+#include "sparks.h"
+#include "fxinfo.h"
+#include "phd3dpos.h"
+#include "types.h"
+#include <cstdlib>
 
 LOCUST_STRUCT Locusts[64];
 
@@ -520,15 +537,15 @@ void UpdateLocusts()
 			if (fx->Counter > 90)
 			{
 				max_turn = fx->speed << 7;
-				oy = (ushort)angles[0] - (ushort)fx->pos.y_rot;
+				oy = (unsigned short)angles[0] - (unsigned short)fx->pos.y_rot;
 
 				if (abs(oy) > 32768)
-					oy = (ushort)fx->pos.y_rot - (ushort)angles[0];
+					oy = (unsigned short)fx->pos.y_rot - (unsigned short)angles[0];
 
-				ox = (ushort)angles[1] - (ushort)fx->pos.x_rot;
+				ox = (unsigned short)angles[1] - (unsigned short)fx->pos.x_rot;
 
 				if (abs(ox) > 32768)
-					ox = (ushort)fx->pos.x_rot - (ushort)angles[0];
+					ox = (unsigned short)fx->pos.x_rot - (unsigned short)angles[0];
 
 				ox >>= 3;
 				oy >>= 3;
@@ -644,7 +661,7 @@ void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv)
 
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
-	sptr->FxObj = (uchar)fx_number;
+	sptr->FxObj = (unsigned char)fx_number;
 	sptr->Scalar = 2;
 	sptr->Size = (GetRandomControl() & 0xF) + 128;
 	sptr->sSize = sptr->Size;

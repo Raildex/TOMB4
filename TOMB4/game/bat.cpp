@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "bat.h"
 #include "box.h"
 #include "objects.h"
@@ -7,6 +7,15 @@
 #include "lara.h"
 #include "control.h"
 #include "lot.h"
+#include "creatureinfo.h"
+#include "moodtype.h"
+#include "iteminfo.h"
+#include "aiinfo.h"
+#include "animstruct.h"
+#include "objectinfo.h"
+#include "biteinfo.h"
+#include "types.h"
+#include <cstdlib>
 
 static BITE_INFO bat_bite = { 0, 16, 45, 4 };
 

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "rope.h"
 #include "../specific/specificfx.h"
 #include "../specific/3dmath.h"
@@ -7,6 +7,15 @@
 #include "lara_states.h"
 #include "lara.h"
 #include "../specific/input.h"
+#include "phdvector.h"
+#include "types.h"
+#include "ropestruct.h"
+#include "larainfo.h"
+#include "iteminfo.h"
+#include "animstruct.h"
+#include "laragunstatus.h"
+#include "inputbuttons.h"
+#include <d3dtypes.h>
 
 static PENDULUM NullPendulum = { {0, 0, 0}, {0, 0, 0}, 0, 0 };
 
@@ -25,7 +34,7 @@ void DrawRopeList()
 
 void ProjectRopePoints(ROPE_STRUCT* Rope)
 {
-	D3DVECTOR Output;
+	_D3DVECTOR Output;
 	PHD_VECTOR t;
 	float zv;
 

@@ -1,5 +1,7 @@
 #pragma once
-#include "../global/types.h"
+
+struct PHD_VECTOR;
+
 
 void InitialiseHorseman(short item_number);
 void HorsemanControl(short item_number);

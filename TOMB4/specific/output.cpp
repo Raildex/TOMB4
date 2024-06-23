@@ -1,6 +1,6 @@
-#include "../tomb4/pch.h"
+
 #include "output.h"
-#include "d3dmatrix.h"
+#include "D3DMATRIX.h"
 #include "../game/objects.h"
 #include "function_table.h"
 #include "lighting.h"
@@ -29,8 +29,25 @@
 #include "../game/gameflow.h"
 #include "../game/spotcam.h"
 #include "../game/effect2.h"
+#include "meshdata.h"
+#include "texturestruct.h"
+#include "spritestruct.h"
+#include <d3dtypes.h>
+#include "gfleveloptions.h"
+#include "roominfo.h"
+#include "roomflags.h"
+#include "iteminfo.h"
+#include "dynamic.h"
+#include "objectinfo.h"
+#include "fontflags.h"
+#include "dxflags.h"
+#include "larainfo.h"
+#include "languages.h"
+#include "timing.h"
+#include "displaypu.h"
+#include <cmath>
 
-D3DTLVERTEX SkinVerts[40][12];
+_D3DTLVERTEX SkinVerts[40][12];
 short SkinClip[40][12];
 long GlobalAlpha = 0xFF000000;
 long GlobalAmbient;
@@ -673,7 +690,7 @@ void ProcessPickupMeshVertices(MESH_DATA* mesh)
 	mesh->SourceVB->Unlock();
 }
 
-static void RGB_M(ulong& c, long m)	//Original was a macro.
+static void RGB_M(unsigned long& c, long m)	//Original was a macro.
 {
 	long r, g, b, a;
 
@@ -689,14 +706,14 @@ void phd_PutPolygons(short* objptr, long clip)
 	MESH_DATA* mesh;
 	SPRITESTRUCT* envmap_sprite;
 	TEXTURESTRUCT* pTex;
-	D3DVECTOR normals[4];
+	_D3DVECTOR normals[4];
 	TEXTURESTRUCT envmap_texture;
 	short* quad;
 	short* tri;
 	long clrbak[4];
 	long spcbak[4];
 	long num;
-	ushort drawbak;
+	unsigned short drawbak;
 	bool envmap;
 
 	SetD3DViewMatrix();
@@ -911,11 +928,11 @@ void phd_PutPolygons(short* objptr, long clip)
 void phd_PutPolygons_train(short* objptr, long x)
 {
 	MESH_DATA* mesh;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT* pTex;
 	short* quad;
 	short* tri;
-	ushort drawbak;
+	unsigned short drawbak;
 
 	if (!objptr)
 		return;
@@ -1074,7 +1091,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color)
 	MESH_DATA* mesh;
 	SPRITESTRUCT* envmap_sprite;
 	TEXTURESTRUCT* pTex;
-	D3DVECTOR normals[4];
+	_D3DVECTOR normals[4];
 	TEXTURESTRUCT envmap_texture;
 	short* quad;
 	short* tri;
@@ -1082,7 +1099,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color)
 	long clrbak[4];
 	long spcbak[4];
 	long num;
-	ushort drawbak;
+	unsigned short drawbak;
 	bool envmap;
 
 	bWaterEffect = 0;
@@ -1269,7 +1286,7 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus)
 	MESH_DATA* mesh;
 	short* quad;
 	short* tri;
-	ushort drawbak;
+	unsigned short drawbak;
 
 	mesh = (MESH_DATA*)objptr;
 	SetD3DViewMatrix();
@@ -1459,12 +1476,12 @@ long S_GetObjectBounds(short* bounds)
 		return 0;
 }
 
-HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACEX surf, HBITMAP hbm, long x, long y, long dx, long dy)
+HRESULT DDCopyBitmap(IDirectDrawSurface4* surf, HBITMAP hbm, long x, long y, long dx, long dy)
 {
 	HDC hdc;
 	HDC hdc2;
 	BITMAP bitmap;
-	DDSURFACEDESCX desc;
+	DDSURFACEDESC2 desc;
 	HRESULT result;
 	long l, t;
 
@@ -1486,7 +1503,7 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACEX surf, HBITMAP hbm, long x, long y, lon
 	if (!dy)
 		dy = bitmap.bmHeight;
 
-	desc.dwSize = sizeof(DDSURFACEDESCX);
+	desc.dwSize = sizeof(DDSURFACEDESC2);
 	desc.dwFlags = DDSD_WIDTH | DDSD_HEIGHT;
 	surf->GetSurfaceDesc(&desc);
 	l = 0;
@@ -1515,7 +1532,7 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACEX surf, HBITMAP hbm, long x, long y, lon
 	return result;
 }
 
-HRESULT _LoadBitmap(LPDIRECTDRAWSURFACEX surf, LPCSTR name)
+HRESULT _LoadBitmap(IDirectDrawSurface4* surf, LPCSTR name)
 {
 	HBITMAP hBitmap;
 	HRESULT result;
@@ -1774,13 +1791,13 @@ void S_OutputPolyList()
 
 void StashSkinVertices(long node)
 {
-	D3DTLVERTEX* d;
+	_D3DTLVERTEX* d;
 	short* cf;
 	char* vns;
 
 	vns = (char*)&SkinVertNums[node];
 	cf = (short*)&SkinClip[node];
-	d = (D3DTLVERTEX*)&SkinVerts[node];
+	d = (_D3DTLVERTEX*)&SkinVerts[node];
 
 	while (1)
 	{
@@ -1803,13 +1820,13 @@ void StashSkinVertices(long node)
 
 void SkinVerticesToScratch(long node)
 {
-	D3DTLVERTEX* d;
+	_D3DTLVERTEX* d;
 	short* cf;
 	char* vns;
 
 	vns = (char*)&ScratchVertNums[node];
 	cf = (short*)&SkinClip[node];
-	d = (D3DTLVERTEX*)&SkinVerts[node];
+	d = (_D3DTLVERTEX*)&SkinVerts[node];
 
 	while (1)
 	{

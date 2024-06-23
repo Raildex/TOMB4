@@ -1,5 +1,11 @@
 #pragma once
-#include "../global/types.h"
+#include "pendulum.h"
+
+struct PHD_VECTOR;
+struct ROPE_STRUCT;
+struct ITEM_INFO;
+struct COLL_INFO;
+
 
 void DrawRopeList();
 void ProjectRopePoints(ROPE_STRUCT* Rope);

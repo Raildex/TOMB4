@@ -1,9 +1,16 @@
-#include "../tomb4/pch.h"
+
 #include "cmdline.h"
 #include "function_stubs.h"
 #include "../game/gameflow.h"
 #include "registry.h"
 #include "winmain.h"
+#include "dxd3ddevice.h"
+#include "dxtextureinfo.h"
+#include "dxdisplaymode.h"
+#include "dxdirectdrawinfo.h"
+#include "languages.h"
+#include "winapp.h"
+#include "dxdirectsoundinfo.h"
 
 wchar_t ASCIIToANSITable[7][2] =
 {
@@ -325,7 +332,7 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 	if (message == WM_COMMAND)
 	{
-		switch ((ushort)wParam)
+		switch ((unsigned short)wParam)
 		{
 		case IDOK:
 
@@ -432,7 +439,7 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 			if (((wParam >> 16) & 0xFFFF) == BN_CLICKED)
 			{
-				if (SendMessage(GetDlgItem(dlg, (ushort)wParam), BM_GETCHECK, 0, 0))
+				if (SendMessage(GetDlgItem(dlg, (unsigned short)wParam), BM_GETCHECK, 0, 0))
 					EnableWindow(GetDlgItem(dlg, 1005), 0);
 				else
 					EnableWindow(GetDlgItem(dlg, 1005), 1);

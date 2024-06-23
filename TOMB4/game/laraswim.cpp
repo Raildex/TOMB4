@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "laraswim.h"
 #include "lara_states.h"
 #include "lara.h"
@@ -10,6 +10,20 @@
 #include "camera.h"
 #include "../specific/input.h"
 #include "effect2.h"
+#include "inputbuttons.h"
+#include "iteminfo.h"
+#include "larainfo.h"
+#include "types.h"
+#include "animstruct.h"
+#include "larawaterstatus.h"
+#include "laragunstatus.h"
+#include "roominfo.h"
+#include "floorinfo.h"
+#include "roomflags.h"
+#include "collisiontypes.h"
+#include "camerainfo.h"
+#include "objectvector.h"
+#include <cstdlib>
 
 static void lara_as_swimcheat(ITEM_INFO* item, COLL_INFO* coll)
 {

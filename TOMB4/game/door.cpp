@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "door.h"
 #include "draw.h"
 #include "control.h"
@@ -14,7 +14,22 @@
 #include "lara.h"
 #include "switch.h"
 #include "lot.h"
-
+#include "phdvector.h"
+#include "floorinfo.h"
+#include "doorposdata.h"
+#include "doordata.h"
+#include "creatureinfo.h"
+#include "iteminfo.h"
+#include "larainfo.h"
+#include "itemstatus.h"
+#include "itemflags.h"
+#include "laragunstatus.h"
+#include "animstruct.h"
+#include "larawaterstatus.h"
+#include "inputbuttons.h"
+#include "collinfo.h"
+#include "boxinfo.h"
+#include "types.h"
 static PHD_VECTOR CrowbarDoorPos = { -412, 0, 140 };
 static PHD_VECTOR PullDoorPos = { -201, 0, 322 };
 static PHD_VECTOR PushDoorPos = { 201, 0, -702 };

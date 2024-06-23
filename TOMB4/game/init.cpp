@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "init.h"
 #include "objects.h"
 #include "../specific/function_stubs.h"
@@ -16,6 +16,22 @@
 #include "effect2.h"
 #include "tomb4fx.h"
 #include "pickup.h"
+#include "doordata.h"
+#include "iteminfo.h"
+#include "roominfo.h"
+#include "floorinfo.h"
+#include "boxinfo.h"
+#include "types.h"
+#include "objectinfo.h"
+#include "itemstatus.h"
+#include "animstruct.h"
+#include "ropestruct.h"
+#include "itemflags.h"
+#include "sparks.h"
+#include "locuststruct.h"
+#include "roomflags.h"
+#include <cstdlib>
+#include <windows.h>
 
 void InitialiseMapper(short item_number)
 {
@@ -501,7 +517,7 @@ void InitialisePickUp(short item_number)
 
 	if (item->trigger_flags & 128)
 	{
-		RPickups[NumRPickups] = (uchar)item_number;
+		RPickups[NumRPickups] = (unsigned char)item_number;
 		NumRPickups++;
 	}
 
@@ -566,19 +582,6 @@ void init_all_ropes()
 
 void InitialiseEffects()
 {
-	memset(spark, 0, sizeof(spark));
-	memset(fire_spark, 0, sizeof(fire_spark));
-	memset(smoke_spark, 0, sizeof(smoke_spark));
-	memset(Gunshells, 0, sizeof(Gunshells));
-	memset(Gunflashes, 0, sizeof(Gunflashes));
-	memset(debris, 0, sizeof(debris));
-	memset(blood, 0, sizeof(blood));
-	memset(splashes, 0, sizeof(splashes));
-	memset(ripples, 0, sizeof(ripples));
-	memset(Bubbles, 0, sizeof(Bubbles));
-	memset(Drips, 0, sizeof(Drips));
-	memset(ShockWaves, 0, sizeof(ShockWaves));
-
 	for (int i = 0; i < 256; i++)
 		spark[i].Dynamic = -1;
 

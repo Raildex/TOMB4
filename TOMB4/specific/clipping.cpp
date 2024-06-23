@@ -1,6 +1,10 @@
-#include "../tomb4/pch.h"
+
 #include "clipping.h"
 #include "3dmath.h"
+#include "d3dtlbumpvertex.h"
+#include "types.h"
+#include <d3dtypes.h>
+#include <d3d.h>
 
 #define VertClip(result, v1, v2)\
 {\
@@ -102,7 +106,7 @@ long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out)
 	return nPoints;
 }
 
-long visible_zclip(D3DTLVERTEX* v0, D3DTLVERTEX* v1, D3DTLVERTEX* v2)
+long visible_zclip(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2)
 {
 	return (v2->tu * v0->sz - v2->sz * v0->tu) * v1->tv
 		+ (v2->sz * v0->tv - v2->tv * v0->sz) * v1->tu

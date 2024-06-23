@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "jeep.h"
 #include "../specific/function_stubs.h"
 #include "objects.h"
@@ -29,6 +29,29 @@
 #include "../specific/input.h"
 #include "laramisc.h"
 #include "../specific/file.h"
+#include "bikeinfo.h"
+#include "laragunstatus.h"
+#include "larainfo.h"
+#include "weapontypes.h"
+#include "iteminfo.h"
+#include "jeepinfo.h"
+#include "itemstatus.h"
+#include "objectinfo.h"
+#include "animstruct.h"
+#include "itemflags.h"
+#include "roominfo.h"
+#include "inputbuttons.h"
+#include "roomflags.h"
+#include "staticinfo.h"
+#include "meshinfo.h"
+#include "collinfo.h"
+#include "aiinfo.h"
+#include "creatureinfo.h"
+#include "aiobject.h"
+#include "heighttypes.h"
+#include "sparks.h"
+#include "types.h"
+#include <cstdlib>
 
 static short jroomies[22];
 static char dont_exit_jeep = 0;
@@ -147,14 +170,14 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 
 	if (thing)
 	{
-		sptr->dR = uchar((16 * velocity) >> 5);
-		sptr->dG = uchar((16 * velocity) >> 5);
-		sptr->dB = uchar((32 * velocity) >> 5);
+		sptr->dR = unsigned char((16 * velocity) >> 5);
+		sptr->dG = unsigned char((16 * velocity) >> 5);
+		sptr->dB = unsigned char((32 * velocity) >> 5);
 	}
 
 	sptr->ColFadeSpeed = 4;
 	sptr->FadeToBlack = 4;
-	sptr->Life = uchar((GetRandomControl() & 3) - (velocity >> 12) + 20);
+	sptr->Life = unsigned char((GetRandomControl() & 3) - (velocity >> 12) + 20);
 	sptr->sLife = sptr->Life;
 
 	if (sptr->Life < 9)
@@ -188,7 +211,7 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 	sptr->Scalar = 1;
 	sptr->Gravity = -4 - (GetRandomControl() & 3);
 	sptr->MaxYvel = -8 - (GetRandomControl() & 7);
-	sptr->dSize = uchar((GetRandomControl() & 7) + (velocity >> 7) + 32);
+	sptr->dSize = unsigned char((GetRandomControl() & 7) + (velocity >> 7) + 32);
 	sptr->sSize = sptr->dSize >> 1;
 	sptr->Size = sptr->dSize >> 1;
 }
@@ -1498,7 +1521,7 @@ void JeepControl(short item_number)
 	long front_left, front_right, front_mid;
 	long hitWall, h, driving, killed, pitch, oldY, hdiff, smokeVel;
 	short room_number, wheelRot, xRot, zRot;
-	static uchar ExhaustSmokeVel;
+	static unsigned char ExhaustSmokeVel;
 
 	driving = -1;
 	killed = 0;

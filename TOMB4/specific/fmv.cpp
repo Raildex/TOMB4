@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "fmv.h"
 #include "dxshell.h"
 #include "audio.h"
@@ -8,18 +8,26 @@
 #include "input.h"
 #include "3dmath.h"
 #include "../game/text.h"
-#include "d3dmatrix.h"
+#include "D3DMATRIX.h"
 #include "dxsound.h"
 #include "../game/control.h"
 #include "cmdline.h"
 #include "gamemain.h"
 #include "LoadSave.h"
+#include "dxflags.h"
+#include "dxdisplaymode.h"
+#include "binkstruct.h"
+#include "dxinfo.h"
+#include "dxdirectdrawinfo.h"
+#include "dxd3ddevice.h"
+#include "inputbuttons.h"
+#include <cstdio>
 
 static void (__stdcall* BinkCopyToBuffer)(BINK_STRUCT*, LPVOID, LONG, long, long, long, long);
-static void(__stdcall* BinkOpenDirectSound)(ulong);
+static void(__stdcall* BinkOpenDirectSound)(unsigned long);
 static void (__stdcall* BinkSetSoundSystem)(LPVOID, LPDIRECTSOUND);
-static LPVOID (__stdcall* BinkOpen)(char*, ulong);
-static long (__stdcall* BinkDDSurfaceType)(LPDIRECTDRAWSURFACEX);
+static LPVOID (__stdcall* BinkOpen)(char*, unsigned long);
+static long (__stdcall* BinkDDSurfaceType)(IDirectDrawSurface4*);
 static long (__stdcall* BinkDoFrame)(BINK_STRUCT*);
 static void (__stdcall* BinkNextFrame)(BINK_STRUCT*);
 static long (__stdcall* BinkWait)(BINK_STRUCT*);
@@ -27,7 +35,7 @@ static void (__stdcall* BinkClose)(BINK_STRUCT*);
 static HMODULE hBinkW32;
 
 static BINK_STRUCT* Bink;
-static LPDIRECTDRAWSURFACEX BinkSurface;
+static IDirectDrawSurface4* BinkSurface;
 static long BinkSurfaceType;
 
 #define GET_DLL_PROC(dll, proc, n) \
@@ -76,10 +84,10 @@ void FreeBinkStuff()
 
 void ShowBinkFrame()
 {
-	DDSURFACEDESCX surf;
+	DDSURFACEDESC2 surf;
 
 	memset(&surf, 0, sizeof(surf));
-	surf.dwSize = sizeof(DDSURFACEDESCX);
+	surf.dwSize = sizeof(DDSURFACEDESC2);
 	DXAttempt(BinkSurface->Lock(0, &surf, DDLOCK_NOSYSLOCK, 0));
 	BinkCopyToBuffer(Bink, surf.lpSurface, surf.lPitch, Bink->num, 0, 0, BinkSurfaceType);
 	DXAttempt(BinkSurface->Unlock(0));
@@ -177,7 +185,7 @@ long PlayFmvNow(long num)
 		DXChangeVideoMode();
 		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
 		InitFont();
-		S_InitD3DMatrix();
+		S_Init_D3DMATRIX();
 		SetD3DViewMatrix();
 	}
 

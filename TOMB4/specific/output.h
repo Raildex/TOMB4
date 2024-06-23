@@ -1,6 +1,6 @@
 #pragma once
-#include "../global/types.h"
-
+struct MESH_DATA;
+struct ROOM_INFO;
 void ProcessObjectMeshVertices(MESH_DATA* mesh);
 void ProcessStaticMeshVertices(MESH_DATA* mesh);
 void ProcessTrainMeshVertices(MESH_DATA* mesh);
@@ -14,8 +14,6 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color);
 void phd_PutPolygonSkyMesh(short* objptr, long clipstatus);
 void S_DrawPickup(short object_number);
 long S_GetObjectBounds(short* bounds);
-HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACEX surf, HBITMAP hbm, long x, long y, long dx, long dy);
-HRESULT _LoadBitmap(LPDIRECTDRAWSURFACEX surf, LPCSTR name);
 void do_boot_screen(long language);
 void S_AnimateTextures(long n);
 long S_DumpScreen();

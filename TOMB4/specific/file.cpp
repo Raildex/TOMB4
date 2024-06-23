@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include <zlib.h>
 #include "file.h"
 #include "function_stubs.h"
@@ -28,6 +28,36 @@
 #include "../game/lara.h"
 #include "output.h"
 #include "../game/gameflow.h"
+#include "dxinfo.h"
+#include "dxdirectdrawinfo.h"
+#include "dxd3ddevice.h"
+#include "dxtextureinfo.h"
+#include "texture.h"
+#include "objectinfo.h"
+#include "meshdata.h"
+#include "texturestruct.h"
+#include "roominfo.h"
+#include <d3dtypes.h>
+#include "phdspritestruct.h"
+#include "spritestruct.h"
+#include "objectvector.h"
+#include "phdtexturestruct.h"
+#include "iteminfo.h"
+#include "meshinfo.h"
+#include "boxinfo.h"
+#include "floorinfo.h"
+#include "staticinfo.h"
+#include "sampleinfo.h"
+#include "aiobject.h"
+#include "gfleveloptions.h"
+#include "animstruct.h"
+#include "rangestruct.h"
+#include "changestruct.h"
+#include "lightinfo.h"
+#include "../game/texture.h"
+#include "larainfo.h"
+#include "languages.h"
+#include <process.h>
 
 TEXTURESTRUCT* textinfo;
 SPRITESTRUCT* spriteinfo;
@@ -235,7 +265,7 @@ void FreeLevel()
 bool FindCDDrive()
 {
 	HANDLE file;
-	ulong drives, type;
+	unsigned long drives, type;
 	char path[14];
 	char root[5];
 	static char cd_drive;
@@ -339,15 +369,15 @@ long LoadFile(const char* name, char** dest)
 bool LoadTextures(long RTPages, long OTPages, long BTPages)
 {
 	DXTEXTUREINFO* dxtex;
-	LPDIRECTDRAWSURFACEX tSurf;
-	LPDIRECT3DTEXTUREX pTex;
-	uchar* TextureData;
+	IDirectDrawSurface4* tSurf;
+	IDirect3DTexture2* pTex;
+	unsigned char* TextureData;
 	long* d;
 	char* pData;
 	char* pComp;
 	char* s;
 	long format, skip, size, compressedSize, nTex, c;
-	uchar r, g, b, a;
+	unsigned char r, g, b, a;
 
 	Log(2, "LoadTextures");
 	nTextures = 1;
@@ -399,7 +429,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 
 	Log(5, "RTPages %d", RTPages);
 	size = RTPages * skip * 0x10000;
-	TextureData = (uchar*)malloc(size);
+	TextureData = (unsigned char*)malloc(size);
 	memcpy(TextureData, FileData, size);
 	FileData += size;
 	S_LoadBar();
@@ -423,7 +453,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 
 	Log(5, "OTPages %d", OTPages);
 	size = OTPages * skip * 0x10000;
-	TextureData = (uchar*)malloc(size);
+	TextureData = (unsigned char*)malloc(size);
 	memcpy(TextureData, FileData, size);
 	FileData += size;
 	S_LoadBar();
@@ -451,7 +481,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	if (BTPages)
 	{
 		size = BTPages * skip * 0x10000;
-		TextureData = (uchar*)malloc(size);
+		TextureData = (unsigned char*)malloc(size);
 		memcpy(TextureData, FileData, size);
 		FileData += size;
 
@@ -503,7 +533,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	free(CompressedData);
 
 	pData = FileData;
-	TextureData = (uchar*)malloc(0x40000);
+	TextureData = (unsigned char*)malloc(0x40000);
 
 	if (!gfCurrentLevel)	//main menu logo
 	{
@@ -1008,9 +1038,9 @@ bool LoadBoxes()
 
 	size = *(long*)FileData;
 	FileData += sizeof(long);
-	overlap = (ushort*)game_malloc(sizeof(ushort) * size);
-	memcpy(overlap, FileData, sizeof(ushort) * size);
-	FileData += sizeof(ushort) * size;
+	overlap = (unsigned short*)game_malloc(sizeof(unsigned short) * size);
+	memcpy(overlap, FileData, sizeof(unsigned short) * size);
+	FileData += sizeof(unsigned short) * size;
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -1282,7 +1312,7 @@ void AdjustUV(long num)
 {
 	TEXTURESTRUCT* tex;
 	float u, v;
-	ushort type;
+	unsigned short type;
 
 	Log(2, "AdjustUV");
 

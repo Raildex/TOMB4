@@ -1,5 +1,12 @@
 #pragma once
-#include "../global/types.h"
+struct ROOM_INFO;
+struct FLOOR_INFO;
+struct ITEM_INFO;
+struct ANIM_STRUCT;
+struct GAME_VECTOR;
+struct PHD_VECTOR;
+struct MESH_INFO;
+struct PHD_3DPOS;
 
 long ControlPhase(long nframes, long demo_mode);
 void FlipMap(long FlipNumber);
@@ -50,8 +57,8 @@ extern short* OutsideRoomOffsets;
 extern char* OutsideRoomTable;
 extern short IsRoomOutsideNo;
 
-extern MESH_INFO* SmashedMesh[16];
-extern short SmashedMeshRoom[16];
+extern MESH_INFO* SmashedMesh[];
+extern short SmashedMeshRoom[];
 extern short SmashedMeshCount;
 
 extern long flipmap[10];
@@ -70,12 +77,12 @@ extern long InItemControlLoop;
 extern short ItemNewRooms[256][2];
 extern short ItemNewRoomNo;
 
-extern uchar CurrentAtmosphere;
-extern uchar IsAtmospherePlaying;
+extern unsigned char CurrentAtmosphere;
+extern unsigned char IsAtmospherePlaying;
 extern char cd_flags[128];
 
-extern ulong FmvSceneTriggered;
-extern ulong CutSceneTriggered;
+extern unsigned long FmvSceneTriggered;
+extern unsigned long CutSceneTriggered;
 extern long SetDebounce;
 extern long framecount;
 extern long reset_flag;
@@ -83,7 +90,7 @@ extern long WeaponDelay;
 extern long LaserSightX;
 extern long LaserSightY;
 extern long LaserSightZ;
-extern ushort GlobalCounter;
+extern unsigned short GlobalCounter;
 extern short XSoff1;
 extern short XSoff2;
 extern short YSoff1;

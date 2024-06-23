@@ -1,6 +1,14 @@
 #pragma once
-#include "../global/types.h"
+#include "targettype.h"
 
+struct ITEM_INFO;
+struct AI_INFO;
+struct LOT_INFO;
+struct PHD_VECTOR;
+struct BITE_INFO;
+struct CREATURE_INFO;
+struct PHD_3DPOS;
+struct BOX_INFO;
 void CreatureDie(short item_number, long explode);
 void InitialiseCreature(short item_number);
 long CreatureActive(short item_number);
@@ -37,6 +45,6 @@ void CreatureYRot(PHD_3DPOS* srcpos, short angle, short angadd);
 long MoveCreature3DPos(PHD_3DPOS* srcpos, PHD_3DPOS* destpos, long velocity, short angdif, long angadd);
 
 extern BOX_INFO* boxes;
-extern ushort* overlap;
+extern unsigned short* overlap;
 extern short* ground_zone[5][2];
 extern long num_boxes;

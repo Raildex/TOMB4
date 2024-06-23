@@ -1,5 +1,8 @@
 #pragma once
-#include "../global/types.h"
+
+struct ITEM_INFO;
+struct COLL_INFO;
+
 
 void InitialiseInjuredSas(short item_number);
 void InjuredSasControl(short item_number);

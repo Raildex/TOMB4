@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "objlight.h"
 #include "control.h"
 #include "effect2.h"
@@ -9,6 +9,11 @@
 #include "camera.h"
 #include "tomb4fx.h"
 #include "gameflow.h"
+#include "gfleveloptions.h"
+#include "iteminfo.h"
+#include "roomflags.h"
+#include "roominfo.h"
+#include <cstdlib>
 
 void ControlPulseLight(short item_number)
 {

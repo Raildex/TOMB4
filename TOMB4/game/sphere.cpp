@@ -1,10 +1,14 @@
-#include "../tomb4/pch.h"
+
 #include "sphere.h"
 #include "../specific/3dmath.h"
 #include "draw.h"
 #include "lara.h"
 #include "objects.h"
 #include "control.h"
+#include "iteminfo.h"
+#include "objectinfo.h"
+#include "types.h"
+#include <cstring>
 
 SPHERE Slist[34];
 char GotLaraSpheres;
@@ -120,7 +124,7 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
 	SPHERE* laraSpheres;
 	PHD_VECTOR ip;
 	PHD_VECTOR lp;
-	ulong touch_bits;
+	unsigned long touch_bits;
 	long nItemSpheres, nLaraSpheres, ir, lr;
 
 	touch_bits = 0;

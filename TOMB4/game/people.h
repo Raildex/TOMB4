@@ -1,5 +1,9 @@
 #pragma once
-#include "../global/types.h"
+
+struct ITEM_INFO;
+struct AI_INFO;
+struct BITE_INFO;
+
 
 short GunShot(long x, long y, long z, short speed, short yrot, short room_number);
 short GunHit(long x, long y, long z, short speed, short yrot, short room_number);

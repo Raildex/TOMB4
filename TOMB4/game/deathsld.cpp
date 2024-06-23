@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "deathsld.h"
 #include "../specific/function_stubs.h"
 #include "lara_states.h"
@@ -11,6 +11,17 @@
 #include "../specific/input.h"
 #include "lara.h"
 #include "objects.h"
+#include "iteminfo.h"
+#include "gamevector.h"
+#include "objectinfo.h"
+#include "animstruct.h"
+#include "itemstatus.h"
+#include "itemflags.h"
+#include "laragunstatus.h"
+#include "larainfo.h"
+#include "phdvector.h"
+#include "inputbuttons.h"
+#include "types.h"
 
 static short DeathSlideBounds[12] = { -256, 256, -100, 100, 256, 512, 0, 0, -4550, 4550, 0, 0 };
 static PHD_VECTOR DeathSlidePosition = { 0, 0, 371 };

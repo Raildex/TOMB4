@@ -1,6 +1,11 @@
-#include "../tomb4/pch.h"
+
 #include <cstdio>
+#include <cstdlib>
+#include <cstdarg>
+#include <cstring>
 #include "function_stubs.h"
+#include "phdvector.h"
+#include "types.h"
 
 FILE* logF = 0;
 
@@ -72,7 +77,7 @@ void* game_malloc(long size)
 	}
 }
 
-void Log(ulong type, const char* s, ...)
+void Log(unsigned long type, const char* s, ...)
 {
 #ifdef DO_LOG
 	va_list list;

@@ -1,0 +1,17 @@
+#ifndef D3DTLBUMPVERTEX_INCLUDED
+#define D3DTLBUMPVERTEX_INCLUDED
+#include <d3dtypes.h>
+struct D3DTLBUMPVERTEX
+{
+	D3DVALUE sx;
+	D3DVALUE sy;
+	D3DVALUE sz;
+	D3DVALUE rhw;
+	D3DCOLOR color;
+	D3DCOLOR specular;
+	D3DVALUE tu;
+	D3DVALUE tv;
+	D3DVALUE tx;
+	D3DVALUE ty;
+};
+#endif

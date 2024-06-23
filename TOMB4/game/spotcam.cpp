@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "spotcam.h"
 #include "tomb4fx.h"
 #include "../specific/3dmath.h"
@@ -9,6 +9,10 @@
 #include "../specific/input.h"
 #include "lara.h"
 #include "gameflow.h"
+#include "iteminfo.h"
+#include "inputbuttons.h"
+#include "larainfo.h"
+#include <dinput.h>
 
 SPOTCAM SpotCam[128];
 long bTrackCamInit = 0;
@@ -47,8 +51,8 @@ static short InitialCameraRoom;
 static short LastFov;
 static short spotcam_timer;
 static short spotcam_loopcnt;
-static uchar SpotRemap[8];
-static uchar CameraCnt[8];
+static unsigned char SpotRemap[8];
+static unsigned char CameraCnt[8];
 
 void SetSplineData(long num, long cam)
 {
@@ -221,7 +225,7 @@ void InitialiseSpotCam(short Sequence)
 
 void InitSpotCamSequences()
 {
-	uchar s, cc, ce;
+	unsigned char s, cc, ce;
 
 	bTrackCamInit = 0;
 

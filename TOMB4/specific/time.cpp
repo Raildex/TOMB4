@@ -1,6 +1,6 @@
-#include "../tomb4/pch.h"
-#include "../specific/time.h"	//there's some other time.h
+
 #include "function_stubs.h"
+#include <windows.h>
 
 static __int64 counter, frequency;
 

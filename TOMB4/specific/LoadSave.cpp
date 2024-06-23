@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "LoadSave.h"
 #include "../game/text.h"
 #include "../game/sound.h"
@@ -24,7 +24,19 @@
 #include "../game/control.h"
 #include "../game/lara.h"
 #include "drawbars.h"
-
+#include "fontflags.h"
+#include "inputbuttons.h"
+#include "savegameinfo.h"
+#include "savefileinfo.h"
+#include "colorbitmasks.h"
+#include <ddraw.h>
+#include "dxflags.h"
+#include "timing.h"
+#include "monoscreenstruct.h"
+#include "d3dtlbumpvertex.h"
+#include "languages.h"
+#include <dinput.h>
+#include <joystickapi.h>
 long sfx_frequencies[3] = { 11025, 22050, 44100 };
 long SoundQuality = 1;
 long MusicVolume = 40;
@@ -34,21 +46,21 @@ char MonoScreenOn;
 
 static MONOSCREEN_STRUCT MonoScreen;
 static SAVEFILE_INFO SaveGames[15];
-
+void ConvertSurfaceToTextures(IDirectDrawSurface4* surface);
 void DoOptions()
 {
 	JOYINFOEX joy;
 	char** keyboard_buttons;
 	char* txt;
 	static long menu;
-	static ulong sel = 1;	//selection
-	static ulong sel2;		//selection for when mapping keys
+	static unsigned long sel = 1;	//selection
+	static unsigned long sel2;		//selection for when mapping keys
 	static long mSliderCol = 0xFF3F3F3F;
 	static long sSliderCol = 0xFF3F3F3F;
 	static long sfx_bak;
 	static long sfx_quality_bak;
 	static long sfx_breath_db = -1;
-	ulong nMask;
+	unsigned long nMask;
 	long f, y, i, jread, jx, jy, lp;
 	static char sfx_backup_flag;	//have we backed sfx stuff up?
 	static bool waiting_for_key = 0;
@@ -253,7 +265,7 @@ void DoOptions()
 		if (!sel)
 			sel = 1;
 
-		if (sel > ulong(1 << (nMask - 1)))
+		if (sel > (unsigned long)(1 << (nMask - 1)))
 			sel = 1 << (nMask - 1);
 
 		if (dbinput & IN_DESELECT)
@@ -322,7 +334,7 @@ void DoOptions()
 		if (!sel)
 			sel = 1;
 
-		if (sel > ulong(1 << (nMask - 1)))
+		if (sel > (unsigned long)(1 << (nMask - 1)))
 			sel = 1 << (nMask - 1);
 
 		mSliderCol = 0xFF3F3F3F;
@@ -546,7 +558,7 @@ long DoLoadSave(long LoadSave)
 	SAVEFILE_INFO* pSave;
 	static long selection;
 	long txt, l;
-	uchar color;
+	unsigned char color;
 	char string[80];
 	char name[41];
 
@@ -696,7 +708,7 @@ long S_LoadSave(long load_or_save, long mono, long inv_active)
 	return ret;
 }
 
-static void S_DrawTile(long x, long y, long w, long h, LPDIRECT3DTEXTUREX t, long c0, long c1, long c2, long c3)
+static void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, long c0, long c1, long c2, long c3)
 {
 	D3DTLBUMPVERTEX v[4];
 	float u1, v1, u2, v2;
@@ -758,7 +770,7 @@ static void S_DrawTile(long x, long y, long w, long h, LPDIRECT3DTEXTUREX t, lon
 
 void S_DisplayMonoScreen()
 {
-	ulong col = 0xFFFFFF80;
+	unsigned long col = 0xFFFFFF80;
 
 	S_DrawTile(0, 0, phd_winwidth, phd_winheight, MonoScreen.tex, col, col, col, col);
 }
@@ -794,9 +806,9 @@ void FreeMonoScreen()
 	MonoScreenOn = 0;
 }
 
-void RGBM_Mono(uchar * r, uchar * g, uchar * b)
+void RGBM_Mono(unsigned char * r, unsigned char * g, unsigned char * b)
 {
-	uchar c;
+	unsigned char c;
 
 
 	c = (*r + *b) >> 1;
@@ -806,7 +818,7 @@ void RGBM_Mono(uchar * r, uchar * g, uchar * b)
 
 }
 
-static void BitMaskGetNumberOfBits(ulong bitMask, ulong& bitDepth, ulong& bitOffset)
+static void BitMaskGetNumberOfBits(unsigned long bitMask, unsigned long& bitDepth, unsigned long& bitOffset)
 {
 	long i;
 
@@ -841,14 +853,14 @@ static void WinVidGetColorBitMasks(COLOR_BIT_MASKS* bm, LPDDPIXELFORMAT pixelFor
 	BitMaskGetNumberOfBits(bm->dwRGBAlphaBitMask, bm->dwRGBAlphaBitDepth, bm->dwRGBAlphaBitOffset);
 }
 
-static void CustomBlt(LPDDSURFACEDESCX dst, ulong dstX, ulong dstY, LPDDSURFACEDESCX src, LPRECT srcRect)
+static void CustomBlt(_DDSURFACEDESC2* dst, unsigned long dstX, unsigned long dstY, _DDSURFACEDESC2* src, LPRECT srcRect)
 {
 	COLOR_BIT_MASKS srcMask, dstMask;
-	uchar* srcLine;
-	uchar* dstLine;
-	uchar* srcPtr;
-	uchar* dstPtr;
-	ulong srcX, srcY, width, height, srcBpp, dstBpp, color, high, low, r, g, b;
+	unsigned char* srcLine;
+	unsigned char* dstLine;
+	unsigned char* srcPtr;
+	unsigned char* dstPtr;
+	unsigned long srcX, srcY, width, height, srcBpp, dstBpp, color, high, low, r, g, b;
 
 	srcX = srcRect->left;
 	srcY = srcRect->top;
@@ -858,15 +870,15 @@ static void CustomBlt(LPDDSURFACEDESCX dst, ulong dstX, ulong dstY, LPDDSURFACED
 	dstBpp = dst->ddpfPixelFormat.dwRGBBitCount / 8;
 	WinVidGetColorBitMasks(&srcMask, &src->ddpfPixelFormat);
 	WinVidGetColorBitMasks(&dstMask, &dst->ddpfPixelFormat);
-	srcLine = (uchar*)src->lpSurface + srcY * src->lPitch + srcX * srcBpp;
-	dstLine = (uchar*)dst->lpSurface + dstY * dst->lPitch + dstX * dstBpp;
+	srcLine = (unsigned char*)src->lpSurface + srcY * src->lPitch + srcX * srcBpp;
+	dstLine = (unsigned char*)dst->lpSurface + dstY * dst->lPitch + dstX * dstBpp;
 
-	for (ulong j = 0; j < height; j++) 
+	for (unsigned long j = 0; j < height; j++) 
 	{
 		srcPtr = srcLine;
 		dstPtr = dstLine;
 
-		for (ulong i = 0; i < width; i++)
+		for (unsigned long i = 0; i < width; i++)
 		{
 			color = 0;
 			memcpy(&color, srcPtr, srcBpp);
@@ -901,7 +913,7 @@ static void CustomBlt(LPDDSURFACEDESCX dst, ulong dstX, ulong dstY, LPDDSURFACED
 			else if (srcMask.dwBBitDepth > dstMask.dwBBitDepth)
 				b >>= srcMask.dwBBitDepth - dstMask.dwBBitDepth;
 
-			RGBM_Mono((uchar*)&r, (uchar*)&g, (uchar*)&b);
+			RGBM_Mono((unsigned char*)&r, (unsigned char*)&g, (unsigned char*)&b);
 			color = dst->ddpfPixelFormat.dwRGBAlphaBitMask; // destination is opaque
 			color |= r << dstMask.dwRBitOffset;
 			color |= g << dstMask.dwGBitOffset;
@@ -916,24 +928,24 @@ static void CustomBlt(LPDDSURFACEDESCX dst, ulong dstX, ulong dstY, LPDDSURFACED
 	}
 }
 
-void ConvertSurfaceToTextures(LPDIRECTDRAWSURFACEX surface)
+void ConvertSurfaceToTextures(IDirectDrawSurface4* surface)
 {
-	DDSURFACEDESCX tSurf;
-	DDSURFACEDESCX uSurf;
+	DDSURFACEDESC2 tSurf;
+	DDSURFACEDESC2 uSurf;
 	RECT r;
-	ushort* pTexture;
-	ushort* pSrc;
+	unsigned short* pTexture;
+	unsigned short* pSrc;
 
 	memset(&tSurf, 0, sizeof(tSurf));
-	tSurf.dwSize = sizeof(DDSURFACEDESCX);
+	tSurf.dwSize = sizeof(DDSURFACEDESC2);
 	surface->Lock(0, &tSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
-	pSrc = (ushort*)tSurf.lpSurface;
+	pSrc = (unsigned short*)tSurf.lpSurface;
 	MonoScreen.surface = CreateTexturePage(tSurf.dwWidth, tSurf.dwHeight, 0, 0, RGBM_Mono, -1);
 
 	memset(&uSurf, 0, sizeof(uSurf));
-	uSurf.dwSize = sizeof(DDSURFACEDESCX);
+	uSurf.dwSize = sizeof(DDSURFACEDESC2);
 	MonoScreen.surface->Lock(0, &uSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
-	pTexture = (ushort*)uSurf.lpSurface;
+	pTexture = (unsigned short*)uSurf.lpSurface;
 
 	r.left = 0;
 	r.top = 0;

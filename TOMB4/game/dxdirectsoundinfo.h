@@ -1,0 +1,10 @@
+#ifndef DXDIRECTSOUNDINFO_INCLUDED
+#define DXDIRECTSOUNDINFO_INCLUDED
+struct DXDIRECTSOUNDINFO
+{
+	char Name[30];
+	char About[80];
+	LPGUID lpGuid;
+	GUID Guid;
+};
+#endif

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "health.h"
 #include "../specific/drawbars.h"
 #include "text.h"
@@ -15,6 +15,17 @@
 #include "savegame.h"
 #include "gameflow.h"
 #include "../specific/output.h"
+#include "savegameinfo.h"
+#include "larainfo.h"
+#include "iteminfo.h"
+#include "objectinfo.h"
+#include "laragunstatus.h"
+#include "larawaterstatus.h"
+#include "displaypu.h"
+#include "types.h"
+#include "weapontypes.h"
+#include "gfleveloptions.h"
+#include <cstdio>
 
 DISPLAYPU pickups[8];
 long PickupX;

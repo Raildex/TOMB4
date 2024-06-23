@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "moveblok.h"
 #include "control.h"
 #include "collide.h"
@@ -17,6 +17,22 @@
 #include "box.h"
 #include "../specific/input.h"
 #include "lara.h"
+#include "iteminfo.h"
+#include "floorinfo.h"
+#include "boxinfo.h"
+#include "quadrantnames.h"
+#include "roominfo.h"
+#include "heighttypes.h"
+#include "animstruct.h"
+#include "inputbuttons.h"
+#include "itemflags.h"
+#include "itemstatus.h"
+#include "laragunstatus.h"
+#include "larainfo.h"
+#include "types.h"
+#include "objectinfo.h"
+#include <cstdlib>
+#include <windows.h>
 
 static short MovingBlockBounds[12] = { 0, 0, -256, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 
@@ -75,7 +91,7 @@ void InitialiseMovingBlock(short item_number)
 	ClearMovableBlockSplitters(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 }
 
-static long TestBlockPush(ITEM_INFO* item, long height, ushort quadrant)
+static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 {
 	ITEM_INFO** itemlist;
 	ITEM_INFO* collided;
@@ -155,7 +171,7 @@ static long TestBlockPush(ITEM_INFO* item, long height, ushort quadrant)
 	return 1;
 }
 
-static long TestBlockPull(ITEM_INFO* item, long height, ushort quadrant)
+static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 {
 	ITEM_INFO** itemlist;
 	ITEM_INFO* collided;
@@ -288,7 +304,7 @@ void MovableBlock(short item_number)
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 	long offset;
-	ushort quadrant;
+	unsigned short quadrant;
 	short frame, base, room_number;
 	static char sfx = 0;
 
@@ -296,7 +312,7 @@ void MovableBlock(short item_number)
 	pos.x = 0;
 	pos.y = 0;
 	pos.z = 0;
-	quadrant = ushort(lara_item->pos.y_rot + 0x2000) / 0x4000;
+	quadrant = unsigned short(lara_item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch (lara_item->anim_number)
 	{
@@ -494,7 +510,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 
 			if (TestLaraPosition(MovingBlockBounds, item, laraitem))
 			{
-				if ((ushort(yrot + 0x2000) / 0x4000) + ((ushort)item->pos.y_rot / 0x4000) & 1)
+				if ((unsigned short(yrot + 0x2000) / 0x4000) + ((unsigned short)item->pos.y_rot / 0x4000) & 1)
 					MovingBlockPos.z = bounds[0] - 35;
 				else
 					MovingBlockPos.z = bounds[4] - 35;
@@ -526,7 +542,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
-		quadrant = (ushort)(laraitem->pos.y_rot + 8192) >> 14;
+		quadrant = (unsigned short)(laraitem->pos.y_rot + 8192) >> 14;
 
 		if (input & IN_FORWARD)
 		{
@@ -566,7 +582,7 @@ void InitialisePlanetEffect(short item_number)
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 	char* pifl;
-	uchar others[4];
+	unsigned char others[4];
 
 	item = &items[item_number];
 	item->mesh_bits = 0;

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "sas.h"
 #include "objects.h"
 #include "../specific/function_stubs.h"
@@ -15,7 +15,20 @@
 #include "people.h"
 #include "../specific/input.h"
 #include "lara.h"
-
+#include "creatureinfo.h"
+#include "aiinfo.h"
+#include "animstruct.h"
+#include "larainfo.h"
+#include "objectinfo.h"
+#include "itemstatus.h"
+#include "biteinfo.h"
+#include "weapontypes.h"
+#include "itemflags.h"
+#include "laragunstatus.h"
+#include "types.h"
+#include "inputbuttons.h"
+#include "aibits.h"
+#include <cstdlib>
 static short DragSASBounds[12] = { -256, 256, -100, 100, -512, -460, -1820, 1820, -5460, 5460, 0, 0 };
 static PHD_VECTOR DragSASPos = { 0, 0, -460 };
 static BITE_INFO sas_fire = { 0, 300, 64, 7 };

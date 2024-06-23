@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "lara2gun.h"
 #include "objects.h"
 #include "larafire.h"
@@ -13,6 +13,18 @@
 #include "savegame.h"
 #include "gameflow.h"
 #include "control.h"
+#include "laragunstatus.h"
+#include "larainfo.h"
+#include "objectinfo.h"
+#include "animstruct.h"
+#include "laramesh.h"
+#include "weapontypes.h"
+#include "pistoldef.h"
+#include "inputbuttons.h"
+#include "weaponinfo.h"
+#include "iteminfo.h"
+#include "savegameinfo.h"
+#include "gfleveloptions.h"
 
 static PISTOL_DEF PistolTable[4] =
 {

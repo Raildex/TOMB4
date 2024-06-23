@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "scarab.h"
 #include "box.h"
 #include "objects.h"
@@ -9,7 +9,18 @@
 #include "../specific/output.h"
 #include "effect2.h"
 #include "lara.h"
-
+#include "creatureinfo.h"
+#include "aiinfo.h"
+#include "animstruct.h"
+#include "larainfo.h"
+#include "objectinfo.h"
+#include "itemstatus.h"
+#include "biteinfo.h"
+#include "weapontypes.h"
+#include "scarabstruct.h"
+#include "aibits.h"
+#include "types.h"
+#include <cstdlib>
 static BITE_INFO beetle_bite = { 0, 0, 0, 12 };
 
 SCARAB_STRUCT Scarabs[128];

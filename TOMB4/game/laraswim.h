@@ -1,5 +1,8 @@
 #pragma once
-#include "../global/types.h"
+
+struct COLL_INFO;
+struct ITEM_INFO;
+
 
 void lara_as_swim(ITEM_INFO* item, COLL_INFO* coll);
 void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll);

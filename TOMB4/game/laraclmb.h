@@ -1,5 +1,8 @@
 #pragma once
-#include "../global/types.h"
+
+struct ITEM_INFO;
+struct COLL_INFO;
+
 
 void lara_as_climbstnc(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_climbleft(ITEM_INFO* item, COLL_INFO* coll);

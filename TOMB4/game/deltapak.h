@@ -1,6 +1,10 @@
 #pragma once
-#include "../global/types.h"
-
+struct NODELOADHEADER;
+struct PACKNODE;
+struct RTDECODE;
+struct OBJECT_INFO;
+struct ITEM_INFO;
+struct PHD_VECTOR;
 void handle_cutseq_triggering(long name);
 void do_new_cutscene_camera();
 void InitPackNodes(NODELOADHEADER* lnode, PACKNODE* pnode, char* packed, long numnodes);

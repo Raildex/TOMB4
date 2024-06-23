@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "senet.h"
 #include "objects.h"
 #include "items.h"
@@ -14,6 +14,17 @@
 #include "../specific/output.h"
 #include "../specific/input.h"
 #include "lara.h"
+#include "iteminfo.h"
+#include "types.h"
+#include "itemstatus.h"
+#include "itemflags.h"
+#include "inputbuttons.h"
+#include "larainfo.h"
+#include "animstruct.h"
+#include "roominfo.h"
+#include "objectinfo.h"
+#include "laragunstatus.h"
+#include <cstdlib>
 
 long SenetTargetX;
 long SenetTargetZ;
@@ -444,7 +455,7 @@ void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ObjectCollision(item_number, l, coll);
 }
 
-void ShockwaveExplosion(ITEM_INFO* item, ulong col, long speed)
+void ShockwaveExplosion(ITEM_INFO* item, unsigned long col, long speed)
 {
 	PHD_VECTOR pos;
 	long InnerOuter;

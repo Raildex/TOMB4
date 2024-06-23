@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "effect2.h"
 #include "control.h"
 #include "objects.h"
@@ -17,6 +17,23 @@
 #include "sound.h"
 #include "lara.h"
 #include "gameflow.h"
+#include "iteminfo.h"
+#include "phd3dpos.h"
+#include "roominfo.h"
+#include "sparks.h"
+#include "roomflags.h"
+#include "dynamic.h"
+#include "fxinfo.h"
+#include "ripplestruct.h"
+#include "objectinfo.h"
+#include "spdynamic.h"
+#include "larainfo.h"
+#include "gamevector.h"
+#include "gfleveloptions.h"
+#include "splashsetup.h"
+#include "splashstruct.h"
+#include "types.h"
+#include <cstdlib>
 
 DYNAMIC dynamics[MAX_DYNAMICS * 2];
 SPLASH_STRUCT splashes[4];
@@ -146,7 +163,7 @@ void ControlSmokeEmitter(short item_number)
 			sptr->Gravity = -8 - (GetRandomControl() & 0xF);
 			sptr->MaxYvel = -8 - (GetRandomControl() & 7);
 			size = (GetRandomControl() & 0x1F) + 128;
-			sptr->dSize = (uchar)size;
+			sptr->dSize = (unsigned char)size;
 			sptr->sSize = sptr->dSize >> 1;
 			sptr->Size = sptr->sSize;
 
@@ -220,9 +237,9 @@ void ControlSmokeEmitter(short item_number)
 		sptr->Gravity = -8 - (GetRandomControl() & 0xF);
 		sptr->MaxYvel = -8 - (GetRandomControl() & 7);
 		size = (GetRandomControl() & 0x1F) + 128;
-		sptr->dSize = (uchar)size;
-		sptr->sSize = (uchar)(size >> 2);
-		sptr->Size = (uchar)(size >> 2);
+		sptr->dSize = (unsigned char)size;
+		sptr->sSize = (unsigned char)(size >> 2);
+		sptr->Size = (unsigned char)(size >> 2);
 
 		if (item->object_number == STEAM_EMITTER)
 		{
@@ -484,19 +501,19 @@ void TriggerDynamic(long x, long y, long z, long falloff, long r, long g, long b
 	dl->x = x;
 	dl->y = y;
 	dl->z = z;
-	dl->falloff = ushort(falloff << 8);
+	dl->falloff = unsigned short(falloff << 8);
 
 	if (falloff < 8)
 	{
-		dl->r = uchar((r * falloff) >> 3);
-		dl->g = uchar((g * falloff) >> 3);
-		dl->b = uchar((b * falloff) >> 3);
+		dl->r = unsigned char((r * falloff) >> 3);
+		dl->g = unsigned char((g * falloff) >> 3);
+		dl->b = unsigned char((b * falloff) >> 3);
 	}
 	else
 	{
-		dl->r = (uchar)r;
-		dl->g = (uchar)g;
-		dl->b = (uchar)b;
+		dl->r = (unsigned char)r;
+		dl->g = (unsigned char)g;
+		dl->b = (unsigned char)b;
 	}
 
 	dl->FalloffScale = 0x200000 / (falloff << 8);
@@ -517,19 +534,19 @@ void TriggerDynamic_MIRROR(long x, long y, long z, long falloff, long r, long g,
 		dl->x = x;
 		dl->y = y;
 		dl->z = z;
-		dl->falloff = ushort(falloff << 8);
+		dl->falloff = unsigned short(falloff << 8);
 
 		if (falloff < 8)
 		{
-			dl->r = uchar((r * falloff) >> 3);
-			dl->g = uchar((g * falloff) >> 3);
-			dl->b = uchar((b * falloff) >> 3);
+			dl->r = unsigned char((r * falloff) >> 3);
+			dl->g = unsigned char((g * falloff) >> 3);
+			dl->b = unsigned char((b * falloff) >> 3);
 		}
 		else
 		{
-			dl->r = (uchar)r;
-			dl->g = (uchar)g;
-			dl->b = (uchar)b;
+			dl->r = (unsigned char)r;
+			dl->g = (unsigned char)g;
+			dl->b = (unsigned char)b;
 		}
 
 		dl->FalloffScale = 0x200000 / (falloff << 8);
@@ -583,15 +600,15 @@ void ControlEnemyMissile(short fx_number)
 		else
 			fx->speed += 3;
 
-		oy = (ushort)angles[0] - (ushort)fx->pos.y_rot;
+		oy = (unsigned short)angles[0] - (unsigned short)fx->pos.y_rot;
 
 		if (abs(oy) > 0x8000)
-			oy = (ushort)fx->pos.y_rot - (ushort)angles[0];
+			oy = (unsigned short)fx->pos.y_rot - (unsigned short)angles[0];
 
-		ox = (ushort)angles[1] - (ushort)fx->pos.x_rot;
+		ox = (unsigned short)angles[1] - (unsigned short)fx->pos.x_rot;
 
 		if (abs(ox) > 0x8000)
-			ox = (ushort)fx->pos.x_rot - (ushort)angles[1];
+			ox = (unsigned short)fx->pos.x_rot - (unsigned short)angles[1];
 
 		oy >>= 3;
 		ox >>= 3;
@@ -742,7 +759,7 @@ void SetupRipple(long x, long y, long z, long size, long flags)
 
 	ripple = &ripples[num];
 	ripple->flags = (char)flags | 1;
-	ripple->size = (uchar)size;
+	ripple->size = (unsigned char)size;
 	ripple->life = (GetRandomControl() & 0xF) + 48;
 	ripple->init = 1;
 	ripple->x = x;
@@ -776,7 +793,7 @@ void TriggerUnderwaterBlood(long x, long y, long z, long size)
 	ripple->flags = 49;
 	ripple->init = 1;
 	ripple->life = (GetRandomControl() & 7) - 16;
-	ripple->size = (uchar)size;
+	ripple->size = (unsigned char)size;
 	ripple->x = x + (GetRandomControl() & 0x3F) - 32;
 	ripple->y = y;
 	ripple->z = z + (GetRandomControl() & 0x3F) - 32;
@@ -915,17 +932,17 @@ void TriggerDartSmoke(long x, long y, long z, long xv, long zv, long hit)
 	{
 		sptr->MaxYvel = 0;
 		sptr->Gravity = 0;
-		sptr->Size = uchar(rand >> 3);
+		sptr->Size = unsigned char(rand >> 3);
 		sptr->sSize = sptr->Size;
-		sptr->dSize = uchar(rand >> 1);
+		sptr->dSize = unsigned char(rand >> 1);
 	}
 	else
 	{
 		sptr->MaxYvel = -4 - (GetRandomControl() & 3);
 		sptr->Gravity = -4 - (GetRandomControl() & 3);
-		sptr->Size = uchar(rand >> 4);
+		sptr->Size = unsigned char(rand >> 4);
 		sptr->sSize = sptr->Size;
-		sptr->dSize = (uchar)rand;
+		sptr->dSize = (unsigned char)rand;
 	}
 }
 
@@ -944,7 +961,7 @@ void TriggerExplosionBubble(long x, long y, long z, short room_number)
 	SPARKS* sptr;
 	PHD_3DPOS pos;
 	long dx, dz;
-	uchar size;
+	unsigned char size;
 
 	dx = lara_item->pos.x_pos - x;
 	dz = lara_item->pos.z_pos - z;
@@ -995,7 +1012,7 @@ void ControlColouredLights(short item_number)
 {
 	ITEM_INFO* item;
 	long objnum;
-	uchar colours[5][3] =
+	unsigned char colours[5][3] =
 	{
 		{ 255, 0, 0 },		//RED_LIGHT
 		{ 0, 255, 0 },		//GREEN_LIGHT
@@ -1073,7 +1090,7 @@ long GetFreeSpark()
 			next_spark = (free + 1) & 0xFF;
 			spark[free].extras = 0;
 			spark[free].Dynamic = -1;
-			spark[free].Def = (uchar)objects[DEFAULT_SPRITES].mesh_index;
+			spark[free].Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
 			return free;
 		}
 	}
@@ -1095,7 +1112,7 @@ long GetFreeSpark()
 	next_spark = (free + 1) & 0xFF;
 	spark[free].extras = 0;
 	spark[free].Dynamic = -1;
-	spark[free].Def = (uchar)objects[DEFAULT_SPRITES].mesh_index;
+	spark[free].Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
 	return free;
 }
 
@@ -1135,16 +1152,16 @@ void UpdateSparks()
 		if (sptr->sLife - sptr->Life < sptr->ColFadeSpeed)
 		{
 			fade = ((sptr->sLife - sptr->Life) << 16) / sptr->ColFadeSpeed;
-			sptr->R = uchar(sptr->sR + ((fade * (sptr->dR - sptr->sR)) >> 16));
-			sptr->G = uchar(sptr->sG + ((fade * (sptr->dG - sptr->sG)) >> 16));
-			sptr->B = uchar(sptr->sB + ((fade * (sptr->dB - sptr->sB)) >> 16));
+			sptr->R = unsigned char(sptr->sR + ((fade * (sptr->dR - sptr->sR)) >> 16));
+			sptr->G = unsigned char(sptr->sG + ((fade * (sptr->dG - sptr->sG)) >> 16));
+			sptr->B = unsigned char(sptr->sB + ((fade * (sptr->dB - sptr->sB)) >> 16));
 		}
 		else if (sptr->Life < sptr->FadeToBlack)
 		{
 			fade = ((sptr->Life - sptr->FadeToBlack) << 16) / sptr->FadeToBlack + 0x10000;
-			sptr->R = uchar((sptr->dR * fade) >> 16);
-			sptr->G = uchar((sptr->dG * fade) >> 16);
-			sptr->B = uchar((sptr->dB * fade) >> 16);
+			sptr->R = unsigned char((sptr->dR * fade) >> 16);
+			sptr->G = unsigned char((sptr->dG * fade) >> 16);
+			sptr->B = unsigned char((sptr->dB * fade) >> 16);
 
 			if (sptr->R < 8 && sptr->G < 8 && sptr->B < 8)
 			{
@@ -1214,7 +1231,7 @@ void UpdateSparks()
 			sptr->z += SmokeWindZ >> 1;
 		}
 
-		sptr->Size = uchar(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
+		sptr->Size = unsigned char(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
 
 		if (sptr->Flags & 1 && !lara.burn || sptr->Flags & 0x400)
 		{
@@ -1421,8 +1438,8 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 	SPARKS* sptr;
 	SP_DYNAMIC* pDL;
 	long dx, dz, scalar, mirror, i;
-	uchar extras_table[4];
-	uchar r, g, b;
+	unsigned char extras_table[4];
+	unsigned char r, g, b;
 
 	extras_table[0] = 0;
 	extras_table[1] = 4;
@@ -1463,7 +1480,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 			sptr->TransType = 2;
 			sptr->Life = (GetRandomControl() & 7) + 16;
 			sptr->sLife = sptr->Life;
-			sptr->RoomNumber = (uchar)room_number;
+			sptr->RoomNumber = (unsigned char)room_number;
 		}
 		else
 		{
@@ -1479,7 +1496,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 			sptr->sLife = sptr->Life;
 		}
 
-		sptr->extras = uchar(extras | ((extras_table[extras] + (GetRandomControl() & 7) + 28) << 3));
+		sptr->extras = unsigned char(extras | ((extras_table[extras] + (GetRandomControl() & 7) + 28) << 3));
 		sptr->Dynamic = (char)dynamic;
 
 		if (dynamic == -2)
@@ -1705,7 +1722,7 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 		else
 		{
 			sptr->Flags = 602;
-			sptr->FxObj = (uchar)body_part;
+			sptr->FxObj = (unsigned char)body_part;
 			sptr->Gravity = -32 - (GetRandomControl() & 0x3F);
 			sptr->MaxYvel = -24 - (GetRandomControl() & 7);
 		}
@@ -1728,7 +1745,7 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 		else
 		{
 			sptr->Flags = 586;
-			sptr->FxObj = (uchar)body_part;
+			sptr->FxObj = (unsigned char)body_part;
 			sptr->Gravity = -32 - (GetRandomControl() & 0x3F);
 			sptr->MaxYvel = -24 - (GetRandomControl() & 7);
 		}
@@ -1749,7 +1766,7 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 	else
 		size = (GetRandomControl() & 0xF) + 48;
 
-	sptr->Size = (uchar)size;
+	sptr->Size = (unsigned char)size;
 	sptr->sSize = sptr->Size;
 
 	if (type == 2)
@@ -1795,7 +1812,7 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly)
 	sptr->ColFadeSpeed = 8;
 	sptr->FadeToBlack = 8;
 	sptr->TransType = 2;
-	sptr->Life = uchar((dy >> 9) + (GetRandomControl() & 7) + 16);
+	sptr->Life = unsigned char((dy >> 9) + (GetRandomControl() & 7) + 16);
 	sptr->sLife = sptr->Life;
 	sptr->x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
 	sptr->y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 16;
@@ -1809,7 +1826,7 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly)
 		sptr->Flags = 538;
 
 	sptr->Scalar = 2;
-	sptr->dSize = uchar((GetRandomControl() & 0xF) + (dy >> 6) + 16);
+	sptr->dSize = unsigned char((GetRandomControl() & 0xF) + (dy >> 6) + 16);
 	sptr->sSize = sptr->dSize >> 1;
 	sptr->Size = sptr->dSize >> 1;
 
@@ -1849,9 +1866,9 @@ void TriggerRocketSmoke(long x, long y, long z, long col)
 	sptr->sR = 0;
 	sptr->sG = 0;
 	sptr->sB = 0;
-	sptr->dR = uchar(col + 64);
-	sptr->dG = uchar(col + 64);
-	sptr->dB = uchar(col + 64);
+	sptr->dR = unsigned char(col + 64);
+	sptr->dG = unsigned char(col + 64);
+	sptr->dB = unsigned char(col + 64);
 	sptr->FadeToBlack = 12;
 	sptr->ColFadeSpeed = (GetRandomControl() & 3) + 4;
 	sptr->TransType = 2;

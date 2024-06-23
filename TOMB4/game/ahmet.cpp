@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "ahmet.h"
 #include "collide.h"
 #include "lara_states.h"
@@ -18,7 +18,21 @@
 #include "people.h"
 #include "effects.h"
 #include "lara.h"
-
+#include "iteminfo.h"
+#include "biteinfo.h"
+#include "phdvector.h"
+#include "animstruct.h"
+#include "itemstatus.h"
+#include "dripstruct.h"
+#include "itemflags.h"
+#include "objectinfo.h"
+#include "aiinfo.h"
+#include "creatureinfo.h"
+#include "aibits.h"
+#include "moodtype.h"
+#include "larainfo.h"
+#include "types.h"
+#include <cstdlib>
 short ScalesBounds[12] = { -1408, -640, 0, 0, -512, 512, -1820, 1820, -5460, 5460, -1820, 1820 };
 static BITE_INFO ahmet_bite = { 0, 0, 0, 11 };
 static BITE_INFO ahmet_left_claw = { 0, 0, 0, 16 };

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "deltapak.h"
 #include "tomb4fx.h"
 #include "lara_states.h"
@@ -25,6 +25,23 @@
 #ifdef TIMES_LEVEL
 #include "../specific/function_table.h"
 #endif
+#include "actorme.h"
+#include "animstruct.h"
+#include "cutseqroutines.h"
+#include "gfleveloptions.h"
+#include "itemflags.h"
+#include "iteminfo.h"
+#include "itemstatus.h"
+#include "laragunstatus.h"
+#include "larainfo.h"
+#include "laramesh.h"
+#include "newcutscene.h"
+#include "nodeloadheader.h"
+#include "objectinfo.h"
+#include "packnode.h"
+#include "roominfo.h"
+#include "rtdecode.h"
+#include "weapontypes.h"
 
 static short frig_shadow_bbox[6] = { -165, 150, -777, 1, -87, 78 };
 static short frig_jeep_shadow_bbox[6] = { -600, 600, -777, 1, -600, 600 };
@@ -114,8 +131,8 @@ static PACKNODE* actor_pnodes[10];
 static ITEM_INFO duff_item[10];
 static char* GLOBAL_resident_depack_buffers;	//not really used
 static camera_type GLOBAL_oldcamtype;
-static ulong cutseq_meshbits[10];
-static ulong cutseq_meshswapbits[10];
+static unsigned long cutseq_meshbits[10];
+static unsigned long cutseq_meshswapbits[10];
 static long GLOBAL_numcutseq_frames;
 static long lastcamnum;
 static long numnailed;
@@ -371,9 +388,9 @@ void InitPackNodes(NODELOADHEADER* lnode, PACKNODE* pnode, char* packed, long nu
 
 	for (int i = 0; i < numnodes; i++)
 	{
-		pnode->xkey = (ushort)lnode->xkey;
-		pnode->ykey = (ushort)lnode->ykey;
-		pnode->zkey = (ushort)lnode->zkey;
+		pnode->xkey = (unsigned short)lnode->xkey;
+		pnode->ykey = (unsigned short)lnode->ykey;
+		pnode->zkey = (unsigned short)lnode->zkey;
 		pnode->decode_x.packmethod = (lnode->packmethod >> 10) & 0xF;
 		pnode->decode_y.packmethod = (lnode->packmethod >> 5) & 0xF;
 		pnode->decode_z.packmethod = (lnode->packmethod) & 0xF;
@@ -509,12 +526,12 @@ short GetTrackWord(long off, char* packed, long packmethod)
 	offset = packmethod * off;
 	offset2 = offset >> 3;
 
-	ret = ((1 << packmethod) - 1) & ((ulong)(*(uchar*)(packed + offset2) |
-		((*(uchar*)(packed + offset2 + 1) |
-			(*(ushort*)(packed + offset2 + 2) << 8)) << 8)) >> (offset & 7));
+	ret = ((1 << packmethod) - 1) & ((unsigned long)(*(unsigned char*)(packed + offset2) |
+		((*(unsigned char*)(packed + offset2 + 1) |
+			(*(unsigned short*)(packed + offset2 + 2) << 8)) << 8)) >> (offset & 7));
 
 	if (((1 << (packmethod - 1)) & ret) != 0)
-		return (ulong)(ret | ~((1 << packmethod) - 1));
+		return (unsigned long)(ret | ~((1 << packmethod) - 1));
 
 	return ret;
 }

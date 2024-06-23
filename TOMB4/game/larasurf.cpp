@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "larasurf.h"
 #include "lara_states.h"
 #include "lara.h"
@@ -10,6 +10,17 @@
 #include "../specific/3dmath.h"
 #include "camera.h"
 #include "../specific/input.h"
+#include "inputbuttons.h"
+#include "iteminfo.h"
+#include "larainfo.h"
+#include "larawaterstatus.h"
+#include "animstruct.h"
+#include "types.h"
+#include "laragunstatus.h"
+#include "weapontypes.h"
+#include "heighttypes.h"
+#include "collisiontypes.h"
+#include <cstdlib>
 
 void lara_as_surfswim(ITEM_INFO* item, COLL_INFO* coll)
 {

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "drawroom.h"
 #include "function_stubs.h"
 #include "dxshell.h"
@@ -16,6 +16,21 @@
 #include "file.h"
 #include "../game/control.h"
 #include "../game/gameflow.h"
+#include "roomdynamic.h"
+#include "meshdata.h"
+#include "texturebucket.h"
+#include "dynamic.h"
+#include "fvector.h"
+#include <d3dtypes.h>
+#include "roominfo.h"
+#include "pclightinfo.h"
+#include "lightinfo.h"
+#include "texturestruct.h"
+#include "gfleveloptions.h"
+#include "lighttypes.h"
+#include "fogbulbstruct.h"
+#include "../game/texture.h"
+#include <cmath>
 
 static ROOM_DYNAMIC RoomDynamics[MAX_DYNAMICS];
 static long nRoomDynamics;
@@ -80,7 +95,7 @@ void ProcessRoomVertices(ROOM_INFO* r)
 	float zv, fR, fG, fB, val, val2, num;
 	long cR, cG, cB, sA, sR, sG, sB, rndoff, col;
 	short clipFlag;
-	uchar rnd, abs;
+	unsigned char rnd, abs;
 	char shimmer;
 
 	clip = clipflags;
@@ -289,7 +304,7 @@ void ProcessRoomData(ROOM_INFO* r)
 	short* prelight;
 	float intensity;
 	long nWaterVerts, nShoreVerts, nRestOfVerts, nLights, nBulbs;
-	ushort cR, cG, cB;
+	unsigned short cR, cG, cB;
 
 	data_ptr = r->data;
 	r->nVerts = *data_ptr++;
@@ -306,7 +321,7 @@ void ProcessRoomData(ROOM_INFO* r)
 	r->gt4cnt = *data_ptr++;
 	data_ptr += r->gt4cnt * 5;
 	r->gt3cnt = *data_ptr;
-	r->verts = (D3DVECTOR*)game_malloc(sizeof(D3DVECTOR) * r->nVerts);
+	r->verts = (_D3DVECTOR*)game_malloc(sizeof(_D3DVECTOR) * r->nVerts);
 	faces = (short*)malloc(2 * r->nVerts);
 	prelight = (short*)malloc(2 * r->nVerts);
 	data_ptr = r->data + 1;	//go to vert data
@@ -417,9 +432,9 @@ void ProcessRoomData(ROOM_INFO* r)
 		cG = ((prelight[i] & 0x3E0) >> 5) << 3;
 		cB = (prelight[i] & 0x1F) << 3;
 		r->prelight[i] = RGBA(cR, cG, cB, 0xFF);
-		cR = ushort((cR * water_color_R) >> 8);
-		cG = ushort((cG * water_color_G) >> 8);
-		cB = ushort((cB * water_color_B) >> 8);
+		cR = unsigned short((cR * water_color_R) >> 8);
+		cG = unsigned short((cG * water_color_G) >> 8);
+		cB = unsigned short((cB * water_color_B) >> 8);
 		r->prelightwater[i] = RGBA(cR, cG, cB, 0xFF);
 		vptr++;
 		data_ptr += 6;
@@ -560,7 +575,7 @@ void InsertRoom(ROOM_INFO* r)
 	}
 }
 
-void CalcTriFaceNormal(D3DVECTOR* p1, D3DVECTOR* p2, D3DVECTOR* p3, D3DVECTOR* N)
+void CalcTriFaceNormal(_D3DVECTOR* p1, _D3DVECTOR* p2, _D3DVECTOR* p3, _D3DVECTOR* N)
 {
 	FVECTOR u, v;
 
@@ -646,7 +661,7 @@ void ProcessMeshData(long num_meshes)
 
 				if (mesh->nNorms > 0)
 				{
-					mesh->Normals = (D3DVECTOR*)game_malloc(mesh->nNorms * sizeof(D3DVECTOR));
+					mesh->Normals = (_D3DVECTOR*)game_malloc(mesh->nNorms * sizeof(_D3DVECTOR));
 
 					for (int j = 0; j < mesh->nVerts; j++)
 					{
@@ -654,7 +669,7 @@ void ProcessMeshData(long num_meshes)
 						vtx[j].ny = mesh_ptr[1];
 						vtx[j].nz = mesh_ptr[2];
 						mesh_ptr += 3;
-						D3DNormalise((D3DVECTOR*)&vtx[j].nx);
+						D3DNormalise((_D3DVECTOR*)&vtx[j].nx);
 						mesh->Normals[j].x = vtx[j].nx;
 						mesh->Normals[j].y = vtx[j].ny;
 						mesh->Normals[j].z = vtx[j].nz;
@@ -898,17 +913,17 @@ void DrawBuckets()
 
 void CreateVertexNormals(ROOM_INFO* r)
 {
-	D3DVECTOR p1;
-	D3DVECTOR p2;
-	D3DVECTOR p3;
-	D3DVECTOR n1;
-	D3DVECTOR n2;
+	_D3DVECTOR p1;
+	_D3DVECTOR p2;
+	_D3DVECTOR p3;
+	_D3DVECTOR n1;
+	_D3DVECTOR n2;
 	short* data;
 	short nQuads;
 	short nTris;
 
 	data = r->FaceData;
-	r->fnormals = (D3DVECTOR*)game_malloc(sizeof(D3DVECTOR) * (r->gt3cnt + r->gt4cnt));
+	r->fnormals = (_D3DVECTOR*)game_malloc(sizeof(_D3DVECTOR) * (r->gt3cnt + r->gt4cnt));
 	nQuads = *data++;
 
 	for (int i = 0; i < nQuads; i++)
@@ -944,7 +959,7 @@ void CreateVertexNormals(ROOM_INFO* r)
 		data += 4;
 	}
 
-	r->vnormals = (D3DVECTOR*)game_malloc(sizeof(D3DVECTOR) * r->nVerts);
+	r->vnormals = (_D3DVECTOR*)game_malloc(sizeof(_D3DVECTOR) * r->nVerts);
 
 	data = r->FaceData;
 	nQuads = *data++;

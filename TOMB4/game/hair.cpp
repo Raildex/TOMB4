@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "hair.h"
 #include "objects.h"
 #include "draw.h"
@@ -11,7 +11,20 @@
 #include "effect2.h"
 #include "lara.h"
 #include "gameflow.h"
-
+#include "gfleveloptions.h"
+#include "laramesh.h"
+#include "larainfo.h"
+#include "objectinfo.h"
+#include "hairstruct.h"
+#include "phdvector.h"
+#include "sphere.h"
+#include "animstruct.h"
+#include "iteminfo.h"
+#include "larawaterstatus.h"
+#include "roomflags.h"
+#include "roominfo.h"
+#include "types.h"
+#include <cstdlib>
 HAIR_STRUCT hairs[2][7];
 static long hair_wind = 0;
 static long hair_dwind_angle = 0;
@@ -458,7 +471,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 void GetCorrectStashPoints(long pigtail, long hair_node, long skin_node)
 {
 	HAIR_STRUCT* hair;
-	ushort num, rot1, rot2;
+	unsigned short num, rot1, rot2;
 
 	num = 0;
 	hair = &hairs[pigtail][hair_node - 1];
@@ -466,7 +479,7 @@ void GetCorrectStashPoints(long pigtail, long hair_node, long skin_node)
 	if (hair_node)
 		rot1 = hair->pos.y_rot;
 	else
-		rot1 = ushort(0x8000 - (CamRot.y << 4));
+		rot1 = unsigned short(0x8000 - (CamRot.y << 4));
 
 	rot2 = hair[2].pos.y_rot;
 

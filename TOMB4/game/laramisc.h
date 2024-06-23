@@ -1,5 +1,8 @@
 #pragma once
-#include "../global/types.h"
+#include "collinfo.h"
+
+struct ITEM_INFO;
+
 
 void LaraCheatyBits();
 void InitialiseLaraLoad(short item_number);

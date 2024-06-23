@@ -1,5 +1,10 @@
 #pragma once
-#include "../global/types.h"
+
+#include "matrixindices.h"
+
+struct ITEM_INFO;
+struct ROOM_INFO;
+struct STATIC_INFO;
 
 void InitInterpolate(long frac, long rate);
 void phd_PopMatrix_I();
@@ -49,7 +54,7 @@ extern long outside;
 extern short SkyPos;
 extern short SkyPos2;
 
-extern ushort LightningRGB[3];
-extern ushort LightningRGBs[3];
+extern unsigned short LightningRGB[3];
+extern unsigned short LightningRGBs[3];
 extern short LightningCount;
 extern short dLightningRand;

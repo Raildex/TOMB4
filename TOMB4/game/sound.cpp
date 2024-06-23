@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "sound.h"
 #include "../specific/3dmath.h"
 #include "../specific/dxsound.h"
@@ -6,6 +6,13 @@
 #include "camera.h"
 #include "gameflow.h"
 #include "control.h"
+#include "soundslot.h"
+#include "phd3dpos.h"
+#include "sampleinfo.h"
+#include "types.h"
+#include "roomflags.h"
+#include "roominfo.h"
+#include "languages.h"
 
 SAMPLE_INFO* sample_infos;
 SoundSlot LaSlot[32];
@@ -291,9 +298,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 	}
 
 	if (flag == 3)
-		dx = S_SoundPlaySampleLooped(sample, (ushort)volume, pitch, (short)pan);
+		dx = S_SoundPlaySampleLooped(sample, (unsigned short)volume, pitch, (short)pan);
 	else
-		dx = S_SoundPlaySample(sample, (ushort)volume, pitch, (short)pan);
+		dx = S_SoundPlaySample(sample, (unsigned short)volume, pitch, (short)pan);
 
 	if (dx >= 0)
 	{
@@ -329,9 +336,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 			LaSlot[slot].nSampleInfo = -1;
 
 			if (flag == 3)
-				dx = S_SoundPlaySampleLooped(sample, (ushort)volume, pitch, (short)pan);
+				dx = S_SoundPlaySampleLooped(sample, (unsigned short)volume, pitch, (short)pan);
 			else
-				dx = S_SoundPlaySample(sample, (ushort)volume, pitch, (short)pan);
+				dx = S_SoundPlaySample(sample, (unsigned short)volume, pitch, (short)pan);
 
 			if (dx >= 0)
 			{

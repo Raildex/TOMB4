@@ -1,6 +1,11 @@
 #pragma once
-#include "../global/types.h"
-
+#include "thread.h"
+#include <cstdio>
+struct TEXTURESTRUCT;
+struct SPRITESTRUCT;
+struct CHANGE_STRUCT;
+struct RANGE_STRUCT;
+struct AIOBJECT;
 unsigned int __stdcall LoadLevel(void* name);
 long S_LoadLevelFile(long num);
 void FreeLevel();

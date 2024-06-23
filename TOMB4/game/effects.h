@@ -1,6 +1,9 @@
 #pragma once
-#include "../global/types.h"
-
+struct ITEM_INFO;
+struct FX_INFO;
+struct OBJECT_VECTOR;
+struct PHD_3DPOS;
+struct GAME_VECTOR;
 void SetFog(ITEM_INFO* item);
 void finish_level_effect(ITEM_INFO* item);
 void turn180_effect(ITEM_INFO* item);

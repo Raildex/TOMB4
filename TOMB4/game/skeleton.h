@@ -1,5 +1,7 @@
 #pragma once
-#include "../global/types.h"
+
+struct ITEM_INFO;
+
 
 void TriggerRiseEffect(ITEM_INFO* item);
 void InitialiseSkeleton(short item_number);

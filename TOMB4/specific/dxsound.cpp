@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "dxsound.h"
 #include "dxshell.h"
 #include "function_stubs.h"
@@ -6,6 +6,11 @@
 #include "../game/sound.h"
 #include "LoadSave.h"
 #include "winmain.h"
+#include "dxinfo.h"
+#include "dxdirectsoundinfo.h"
+#include <MSAcm.h>
+#include <xaudio2.h>
+#include <xaudio2fx.h>
 
 #pragma warning(push)
 #pragma warning(disable : 4838)
@@ -81,11 +86,11 @@ void DSChangeVolume(long num, long volume)
 
 void DSAdjustPitch(long num, long pitch)
 {
-	ulong frequency;
+	unsigned long frequency;
 
 	if (XA_Voices[num])
 	{
-		frequency = ulong((float)pitch / 65536.0F * 22050.0F);
+		frequency = unsigned long((float)pitch / 65536.0F * 22050.0F);
 
 		if (frequency < 100)
 			frequency = 100;
@@ -197,11 +202,11 @@ bool InitSampleDecompress()
 	decompressed_samples_buffer = (char*)malloc(0x40000);
 	samples_buffer = (char*)malloc(0x4005A);
 	memset(&ACMStreamHeader, 0, sizeof(ACMStreamHeader));
-	ACMStreamHeader.pbSrc = (uchar*)(samples_buffer + 90);
+	ACMStreamHeader.pbSrc = (unsigned char*)(samples_buffer + 90);
 	ACMStreamHeader.cbStruct = 84;
 	ACMStreamHeader.cbSrcLength = 0x40000;
 	ACMStreamHeader.cbDstLength = 0x40000;
-	ACMStreamHeader.pbDst = (uchar*)decompressed_samples_buffer;
+	ACMStreamHeader.pbDst = (unsigned char*)decompressed_samples_buffer;
 	mmresult = acmStreamPrepareHeader(hACMStream, &ACMStreamHeader, 0);
 
 	if (mmresult != DS_OK)
@@ -289,7 +294,7 @@ long DSGetFreeChannel()
 	return -1;
 }
 
-long DXStartSample(long num, long volume, long pitch, long pan, ulong flags)
+long DXStartSample(long num, long volume, long pitch, long pan, unsigned long flags)
 {
 	IXAudio2SourceVoice* voice;
 	XAUDIO2_BUFFER* buffer;
@@ -344,12 +349,12 @@ void S_SoundStopSample(long num)
 	DXStopSample(num);
 }
 
-long S_SoundPlaySample(long num, ushort volume, long pitch, short pan)
+long S_SoundPlaySample(long num, unsigned short volume, long pitch, short pan)
 {
 	return DXStartSample(num, CalcVolume(volume), pitch, pan, 0);
 }
 
-long S_SoundPlaySampleLooped(long num, ushort volume, long pitch, short pan)
+long S_SoundPlaySampleLooped(long num, unsigned short volume, long pitch, short pan)
 {
 	return DXStartSample(num, CalcVolume(volume), pitch, pan, XAUDIO2_LOOP_INFINITE);
 }
@@ -376,7 +381,7 @@ long S_SoundSampleIsPlaying(long num)
 	return 0;
 }
 
-void S_SoundSetPanAndVolume(long num, short pan, ushort volume)
+void S_SoundSetPanAndVolume(long num, short pan, unsigned short volume)
 {
 	if (sound_active)
 	{

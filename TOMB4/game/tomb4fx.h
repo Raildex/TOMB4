@@ -1,7 +1,22 @@
 #pragma once
-#include "../global/types.h"
+struct LIGHTNING_STRUCT;
+struct PHD_VECTOR;
+struct ITEM_INFO;
+struct SVECTOR;
+struct PHD_3DPOS;
+struct NODEOFFSET_INFO;
+struct LIGHTNING_STRUCT;
+struct GUNSHELL_STRUCT;
+struct DRIP_STRUCT;
+struct SMOKE_SPARKS;
+struct BUBBLE_STRUCT;
+struct SHOCKWAVE_STRUCT;
+struct FIRE_SPARKS;
+struct BLOOD_STRUCT;
+struct GUNFLASH_STRUCT;
+struct FIRE_LIST;
 
-LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, long rgb, uchar flags, uchar size, uchar segments);
+LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, long rgb, unsigned char flags, unsigned char size, unsigned char segments);
 long ExplodingDeath2(short item_number, long mesh_bits, short Flags);
 void DrawGunshells();
 void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, long notLara, long weaponType, long shade);
@@ -51,17 +66,17 @@ void SetScreenFadeOut(short speed, short back);
 void SetScreenFadeIn(short speed);
 void Fade();
 
-extern NODEOFFSET_INFO NodeOffsets[16];
-extern LIGHTNING_STRUCT Lightning[16];
-extern GUNSHELL_STRUCT Gunshells[24];
-extern DRIP_STRUCT Drips[32];
-extern SMOKE_SPARKS smoke_spark[32];
-extern BUBBLE_STRUCT Bubbles[40];
-extern SHOCKWAVE_STRUCT ShockWaves[16];
-extern FIRE_SPARKS fire_spark[20];
-extern BLOOD_STRUCT blood[32];
-extern GUNFLASH_STRUCT Gunflashes[4];
-extern FIRE_LIST fires[32];
+extern NODEOFFSET_INFO NodeOffsets[];
+extern LIGHTNING_STRUCT Lightning[];
+extern GUNSHELL_STRUCT Gunshells[];
+extern DRIP_STRUCT Drips[];
+extern SMOKE_SPARKS smoke_spark[];
+extern BUBBLE_STRUCT Bubbles[];
+extern SHOCKWAVE_STRUCT ShockWaves[];
+extern FIRE_SPARKS fire_spark[];
+extern BLOOD_STRUCT blood[];
+extern GUNFLASH_STRUCT Gunflashes[];
+extern FIRE_LIST fires[];
 extern long next_fire_spark;
 extern long next_smoke_spark;
 extern long next_gunshell;

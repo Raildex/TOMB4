@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "sphinx.h"
 #include "box.h"
 #include "objects.h"
@@ -9,6 +9,17 @@
 #include "../specific/function_stubs.h"
 #include "effects.h"
 #include "lara.h"
+#include "iteminfo.h"
+#include "aiinfo.h"
+#include "objectinfo.h"
+#include "creatureinfo.h"
+#include "animstruct.h"
+#include "meshinfo.h"
+#include "floorinfo.h"
+#include "roominfo.h"
+#include "types.h"
+#include "biteinfo.h"
+#include <cstdlib>
 
 static BITE_INFO sphinx_bite = { 0, 0, 0, 6 };
 

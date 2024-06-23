@@ -1,6 +1,6 @@
 #pragma once
-#include "../global/types.h"
-
+#include "invobj.h"
+struct INVDRAWITEM;
 long LoadGame();
 long SaveGame();
 void init_new_inventry();
@@ -15,7 +15,7 @@ void insert_object_into_list(short num);
 void construct_object_list();
 void handle_object_changeover(long ringnum);
 void fade_ammo_selector();
-void spinback(ushort* cock);
+void spinback(unsigned short* cock);
 void update_laras_weapons_status();
 long have_i_got_item(short obj);
 void combine_revolver_lasersight(long flag);

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "tomb4fx.h"
 #include "../specific/function_stubs.h"
 #include "draw.h"
@@ -15,6 +15,30 @@
 #include "effects.h"
 #include "lara.h"
 #include "gameflow.h"
+#include "fxinfo.h"
+#include "iteminfo.h"
+#include "types.h"
+#include "objectinfo.h"
+#include "gunshellstruct.h"
+#include "smokesparks.h"
+#include "dripstruct.h"
+#include "roomflags.h"
+#include "firesparks.h"
+#include "roominfo.h"
+#include "gfleveloptions.h"
+#include "weapontypes.h"
+#include "firelist.h"
+#include "gamevector.h"
+#include "larainfo.h"
+#include "sparks.h"
+#include "gunflashstruct.h"
+#include "svector.h"
+#include "bloodstruct.h"
+#include "bubblestruct.h"
+#include "shockwavestruct.h"
+#include "lightningstruct.h"
+#include "nodeoffsetinfo.h"
+#include "fvector.h"
 
 NODEOFFSET_INFO NodeOffsets[16] =
 {
@@ -71,7 +95,7 @@ char tsv_buffer[16384];
 static PHD_VECTOR NodeVectors[16];
 
 
-LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, long rgb, uchar flags, uchar size, uchar segments)
+LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, long rgb, unsigned char flags, unsigned char size, unsigned char segments)
 {
 	LIGHTNING_STRUCT* lptr;
 	char* vptr;
@@ -296,14 +320,14 @@ void DrawGunshells()
 void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, long notLara, long weaponType, long shade)
 {
 	SMOKE_SPARKS* sptr;
-	uchar size;
+	unsigned char size;
 
 	sptr = &smoke_spark[GetFreeSmokeSpark()];
 	sptr->On = 1;
 	sptr->sShade = 0;
-	sptr->dShade = uchar(4 * shade);
+	sptr->dShade = unsigned char(4 * shade);
 	sptr->ColFadeSpeed = 4;
-	sptr->FadeToBlack = uchar(32 - 16 * notLara);
+	sptr->FadeToBlack = unsigned char(32 - 16 * notLara);
 	sptr->Life = (GetRandomControl() & 3) + 40;
 	sptr->sLife = sptr->Life;
 
@@ -641,16 +665,16 @@ void UpdateFireSparks()
 		if (sptr->sLife - sptr->Life < sptr->ColFadeSpeed)
 		{
 			fade = ((sptr->sLife - sptr->Life) << 16) / sptr->ColFadeSpeed;
-			sptr->R = uchar(sptr->sR + ((fade * (sptr->dR - sptr->sR)) >> 16));
-			sptr->G = uchar(sptr->sG + ((fade * (sptr->dG - sptr->sG)) >> 16));
-			sptr->B = uchar(sptr->sB + ((fade * (sptr->dB - sptr->sB)) >> 16));
+			sptr->R = unsigned char(sptr->sR + ((fade * (sptr->dR - sptr->sR)) >> 16));
+			sptr->G = unsigned char(sptr->sG + ((fade * (sptr->dG - sptr->sG)) >> 16));
+			sptr->B = unsigned char(sptr->sB + ((fade * (sptr->dB - sptr->sB)) >> 16));
 		}
 		else if (sptr->Life < sptr->FadeToBlack)
 		{
 			fade = ((sptr->Life - sptr->FadeToBlack) << 16) / sptr->FadeToBlack + 0x10000;
-			sptr->R = uchar((fade * sptr->dR) >> 16);
-			sptr->G = uchar((fade * sptr->dG) >> 16);
-			sptr->B = uchar((fade * sptr->dB) >> 16);
+			sptr->R = unsigned char((fade * sptr->dR) >> 16);
+			sptr->G = unsigned char((fade * sptr->dG) >> 16);
+			sptr->B = unsigned char((fade * sptr->dB) >> 16);
 
 			if (sptr->R < 8 && sptr->G < 8 && sptr->B < 8)
 			{
@@ -669,11 +693,11 @@ void UpdateFireSparks()
 			sptr->RotAng = (sptr->RotAng + sptr->RotAdd) & 0xFFF;
 
 		if (sptr->R < 24 && sptr->G < 24 && sptr->B < 24)
-			sptr->Def = uchar(objects[DEFAULT_SPRITES].mesh_index + 2);
+			sptr->Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 2);
 		else if (sptr->R < 80 && sptr->G < 80 && sptr->B < 80)
-			sptr->Def = uchar(objects[DEFAULT_SPRITES].mesh_index + 1);
+			sptr->Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 1);
 		else
-			sptr->Def = (uchar)objects[DEFAULT_SPRITES].mesh_index;
+			sptr->Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
 
 		fade = ((sptr->sLife - sptr->Life) << 16) / sptr->sLife;
 		sptr->Yvel += sptr->Gravity;
@@ -693,7 +717,7 @@ void UpdateFireSparks()
 		sptr->x += sptr->Xvel >> 5;
 		sptr->y += sptr->Yvel >> 5;
 		sptr->z += sptr->Zvel >> 5;
-		sptr->Size = uchar(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
+		sptr->Size = unsigned char(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
 	}
 }
 
@@ -773,9 +797,9 @@ void S_DrawFires()
 		if (S_GetObjectBounds(bounds))
 		{
 			if (fire->on == 1)
-				S_DrawFireSparks((uchar)fire->size, 255);
+				S_DrawFireSparks((unsigned char)fire->size, 255);
 			else
-				S_DrawFireSparks((uchar)fire->size, fire->on & 0xFF);
+				S_DrawFireSparks((unsigned char)fire->size, fire->on & 0xFF);
 		}
 
 		phd_PopMatrix();
@@ -851,12 +875,12 @@ void UpdateSmokeSparks()
 		if (sptr->sLife - sptr->Life < sptr->ColFadeSpeed)
 		{
 			fade = ((sptr->sLife - sptr->Life) << 16) / sptr->ColFadeSpeed;
-			sptr->Shade = uchar(sptr->sShade + (((sptr->dShade - sptr->sShade) * fade) >> 16));
+			sptr->Shade = unsigned char(sptr->sShade + (((sptr->dShade - sptr->sShade) * fade) >> 16));
 		}
 		else if (sptr->Life < sptr->FadeToBlack)
 		{
 			fade = ((sptr->Life - sptr->FadeToBlack) << 16) / sptr->FadeToBlack + 0x10000;
-			sptr->Shade = uchar((sptr->dShade * fade) >> 16);
+			sptr->Shade = unsigned char((sptr->dShade * fade) >> 16);
 
 			if (sptr->Shade < 8)
 			{
@@ -868,11 +892,11 @@ void UpdateSmokeSparks()
 			sptr->Shade = sptr->dShade;
 
 		if (sptr->Shade < 24)
-			sptr->Def = uchar(objects[DEFAULT_SPRITES].mesh_index + 2);
+			sptr->Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 2);
 		else if (sptr->Shade < 80)
-			sptr->Def = uchar(objects[DEFAULT_SPRITES].mesh_index + 1);
+			sptr->Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 1);
 		else
-			sptr->Def = (uchar)objects[DEFAULT_SPRITES].mesh_index;
+			sptr->Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
 
 		if (sptr->Flags & 0x10)
 			sptr->RotAng = (sptr->RotAng + sptr->RotAdd) & 0xFFF;
@@ -905,7 +929,7 @@ void UpdateSmokeSparks()
 			sptr->z += SmokeWindZ >> 1;
 		}
 
-		sptr->Size = uchar(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
+		sptr->Size = unsigned char(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
 	}
 }
 
@@ -1427,14 +1451,14 @@ void UpdateBlood()
 		if (bptr->sLife - bptr->Life < bptr->ColFadeSpeed)
 		{
 			fade = ((bptr->sLife - bptr->Life) << 16) / bptr->ColFadeSpeed;
-			bptr->Shade = uchar(bptr->sShade + ((fade * (bptr->dShade - bptr->sShade)) >> 16));
+			bptr->Shade = unsigned char(bptr->sShade + ((fade * (bptr->dShade - bptr->sShade)) >> 16));
 		}
 		else
 		{
 			if (bptr->Life < bptr->FadeToBlack)
 			{
 				fade = ((bptr->Life - bptr->FadeToBlack) << 16) / bptr->FadeToBlack + 0x10000;
-				bptr->Shade = uchar((bptr->dShade * fade) >> 16);
+				bptr->Shade = unsigned char((bptr->dShade * fade) >> 16);
 
 				if (bptr->Shade < 8)
 				{
@@ -1459,7 +1483,7 @@ void UpdateBlood()
 		bptr->x += bptr->Xvel >> 5;
 		bptr->y += bptr->Yvel >> 5;
 		bptr->z += bptr->Zvel >> 5;
-		bptr->Size = uchar(bptr->sSize + ((fade * (bptr->dSize - bptr->sSize)) >> 16));
+		bptr->Size = unsigned char(bptr->sSize + ((fade * (bptr->dSize - bptr->sSize)) >> 16));
 	}
 }
 
@@ -1467,7 +1491,7 @@ void TriggerBlood(long x, long y, long z, long angle, long num)
 {
 	BLOOD_STRUCT* bptr;
 	short ang, speed;
-	uchar size;
+	unsigned char size;
 
 	for (int i = 0; i < num; i++)
 	{
@@ -1798,7 +1822,7 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 		sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
 
 	sptr->Scalar = 1;
-	sptr->Def = uchar(objects[DEFAULT_SPRITES].mesh_index + 14);
+	sptr->Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 14);
 	sptr->MaxYvel = 0;
 	sptr->Gravity = (GetRandomControl() & 0x3F) + 64;
 	sptr->Size = (GetRandomControl() & 0x1F) + 32;

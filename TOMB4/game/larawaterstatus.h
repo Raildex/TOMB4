@@ -1,0 +1,11 @@
+#ifndef LARA_WATER_STATUS_INCLUDED
+#define LARA_WATER_STATUS_INCLUDED
+enum lara_water_status
+{
+	LW_ABOVE_WATER,
+	LW_UNDERWATER,
+	LW_SURFACE,
+	LW_FLYCHEAT,
+	LW_WADE
+};
+#endif

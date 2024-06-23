@@ -1,5 +1,7 @@
 #pragma once
-#include "../global/types.h"
+
+struct FX_INFO;
+
 
 long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num);
 void ControlBodyPart(short fx_number);

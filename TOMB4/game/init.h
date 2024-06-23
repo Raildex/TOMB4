@@ -1,5 +1,9 @@
 #pragma once
-#include "../global/types.h"
+
+struct PHD_VECTOR;
+struct ROPE_STRUCT;
+struct ITEM_INFO;
+
 
 void InitialiseMapper(short item_number);
 void InitialiseLightningConductor(short item_number);

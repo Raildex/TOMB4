@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "scorpion.h"
 #include "box.h"
 #include "objects.h"
@@ -11,7 +11,24 @@
 #include "lara.h"
 #include "deltapak.h"
 #include "gameflow.h"
-
+#include "sparks.h"
+#include "fxinfo.h"
+#include "aiinfo.h"
+#include "creatureinfo.h"
+#include "objectinfo.h"
+#include "aibits.h"
+#include "types.h"
+#include "animstruct.h"
+#include "biteinfo.h"
+#include "larainfo.h"
+#include "itemstatus.h"
+#include "weapontypes.h"
+#include "meshinfo.h"
+#include "roominfo.h"
+#include "floorinfo.h"
+#include "savegameinfo.h"
+#include "itemflags.h"
+#include <cstdlib>
 static BITE_INFO stinger{ 0, 0, 0, 8 };		//for the big one
 static BITE_INFO pincer{ 0, 0, 0, 23 };
 

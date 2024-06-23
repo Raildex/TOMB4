@@ -1,6 +1,7 @@
 #pragma once
-#include "../global/types.h"
-
+struct LOT_INFO;
+struct ITEM_INFO;
+struct CREATURE_INFO;
 void InitialiseLOTarray(long allocmem);
 void DisableBaddieAI(short item_number);
 void ClearLOT(LOT_INFO* lot);

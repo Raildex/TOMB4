@@ -1,11 +1,17 @@
-#include "../tomb4/pch.h"
+
 #include "3dmath.h"
 #include "d3dmatrix.h"
 #include "../game/spotcam.h"
 #include "../game/control.h"
 #include "function_stubs.h"
 #include "../game/lara.h"
-
+#include "phdvector.h"
+#include "larainfo.h"
+#include "phd3dpos.h"
+#include "spotcam.h"
+#include "types.h"
+#include <d3dtypes.h>
+#include <cmath>
 float one = 33554432.0F;
 float mone = 2048.0F;
 float FogStart = float(1024 * 12);
@@ -57,7 +63,7 @@ short phd_winxmin;
 short phd_winymax;
 short phd_winymin;
 
-static D3DMATRIX D3DMW2VMatrix;
+static _D3DMATRIX D3DMW2VMatrix;
 static float LfAspectCorrection;
 
 static void mInit()
@@ -319,7 +325,7 @@ static void mGenerateW2V(PHD_3DPOS* viewPos)
 	mMXPtr[M11] = mW2V[M11];
 	mMXPtr[M12] = mW2V[M12];
 
-	SetD3DMatrix(&D3DMW2VMatrix, mW2V);
+	Set_D3DMATRIX(&D3DMW2VMatrix, mW2V);
 	D3DInvCameraMatrix._11 = D3DMW2VMatrix._11;
 	D3DInvCameraMatrix._12 = D3DMW2VMatrix._21;
 	D3DInvCameraMatrix._13 = D3DMW2VMatrix._31;
@@ -684,7 +690,7 @@ void phd_GetVectorAngles(long x, long y, long z, short* angles)
 	angles[1] = atan;
 }
 
-ulong mGetAngle(long x, long z, long x1, long z1)
+unsigned long mGetAngle(long x, long z, long x1, long z1)
 {
 	long dx, dz, octant, swap, angle;
 
@@ -791,9 +797,9 @@ long phd_atan(long x, long y)
 	return result;
 }
 
-ulong phd_sqrt(ulong num)
+unsigned long phd_sqrt(unsigned long num)
 {
-	ulong base, result, tmp;
+	unsigned long base, result, tmp;
 
 	base = 0x40000000;
 	result = 0;
@@ -978,5 +984,5 @@ void phd_LookAt(long sx, long sy, long sz, long tx, long ty, long tz, short roll
 	CamPos.y = sy;
 	CamPos.z = sz;
 	phd_GenerateW2V(&viewPos);
-	S_InitD3DMatrix();
+	S_Init_D3DMATRIX();
 }

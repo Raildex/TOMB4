@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "troops.h"
 #include "box.h"
 #include "objects.h"
@@ -10,6 +10,15 @@
 #include "lara.h"
 #include "control.h"
 #include "lot.h"
+#include "aiinfo.h"
+#include "creatureinfo.h"
+#include "objectinfo.h"
+#include "aibits.h"
+#include "types.h"
+#include "animstruct.h"
+#include "biteinfo.h"
+#include "larainfo.h"
+#include <cstdlib>
 
 static BITE_INFO troop_gun = { 0, 300, 64, 7 };
 

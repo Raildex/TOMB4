@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "hammerhead.h"
 #include "box.h"
 #include "objects.h"
@@ -6,6 +6,11 @@
 #include "effects.h"
 #include "control.h"
 #include "lara.h"
+#include "creatureinfo.h"
+#include "aiinfo.h"
+#include "objectinfo.h"
+#include "animstruct.h"
+#include "biteinfo.h"
 
 static BITE_INFO hammerhead_bite = { 0, 0, 0, 12 };
 

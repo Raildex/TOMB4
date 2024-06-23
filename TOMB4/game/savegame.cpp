@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "savegame.h"
 #include "objects.h"
 #include "traps.h"
@@ -22,6 +22,26 @@
 #include "rope.h"
 #include "gameflow.h"
 #include "../specific/file.h"
+#include "savegameinfo.h"
+#include "objectinfo.h"
+#include "iteminfo.h"
+#include "types.h"
+#include "itemstatus.h"
+#include "weapontypes.h"
+#include "aiobject.h"
+#include "roominfo.h"
+#include "meshinfo.h"
+#include "itemflags.h"
+#include "camerainfo.h"
+#include "creatureinfo.h"
+#include "lotinfo.h"
+#include "jeepinfo.h"
+#include "bikeinfo.h"
+#include "ropestruct.h"
+#include "pendulum.h"
+#include "floorinfo.h"
+#include "objectvector.h"
+#include <windows.h>
 
 SAVEGAME_INFO savegame;
 
@@ -126,7 +146,7 @@ void ReadSG(void* pointer, long size)
 
 void SaveHubData(long index)
 {
-	savegame.HubSizes[index] = ushort(SGcount - savegame.HubOffsets[index]);
+	savegame.HubSizes[index] = unsigned short(SGcount - savegame.HubOffsets[index]);
 
 	if (index < 10)
 		savegame.HubSizes[index - 9] = savegame.HubSizes[index] + savegame.HubOffsets[index];
@@ -291,10 +311,10 @@ void sgRestoreGame()
 	RestoreLaraData(1);
 }
 
-long OpenSaveGame(uchar current_level, long saving)
+long OpenSaveGame(unsigned char current_level, long saving)
 {
-	ushort* curOffset;
-	ushort* nexOffset;
+	unsigned short* curOffset;
+	unsigned short* nexOffset;
 	long index, i, j;
 
 	index = 0;
@@ -357,11 +377,11 @@ void SaveLevelData(long FullSave)
 	OBJECT_INFO* obj;
 	MESH_INFO* mesh;
 	CREATURE_INFO* creature;
-	ulong flags;
+	unsigned long flags;
 	long k, flare_age;
-	ushort packed;
+	unsigned short packed;
 	short pos, word;
-	uchar byte;
+	unsigned char byte;
 	char lflags;
 
 	WriteSG(&FmvSceneTriggered, sizeof(long));
@@ -386,7 +406,7 @@ void SaveLevelData(long FullSave)
 	WriteSG(&fliptimer, sizeof(long));
 	WriteSG(&flip_status, sizeof(long));
 	WriteSG(cd_flags, 128);
-	WriteSG(&CurrentAtmosphere, sizeof(uchar));
+	WriteSG(&CurrentAtmosphere, sizeof(unsigned char));
 	word = 0;
 	k = 0;
 
@@ -421,14 +441,14 @@ void SaveLevelData(long FullSave)
 	for (int i = 0; i < 8; i++)
 		byte |= LibraryTab[i] << i;
 
-	WriteSG(&byte, sizeof(uchar));
-	WriteSG(&CurrentSequence, sizeof(uchar));
+	WriteSG(&byte, sizeof(unsigned char));
+	WriteSG(&CurrentSequence, sizeof(unsigned char));
 	byte = 0;
 
 	for (int i = 0; i < 6; i++)
 		byte |= SequenceUsed[i] << i;
 
-	WriteSG(&byte, sizeof(uchar));
+	WriteSG(&byte, sizeof(unsigned char));
 	WriteSG(Sequences, 3);
 
 	for (int i = 0; i < number_cameras; i++)
@@ -446,7 +466,7 @@ void SaveLevelData(long FullSave)
 		if (item->flags & IFL_CLEARBODY || (item->after_death && (item->object_number < GAME_PIECE1 || item->object_number > ENEMY_PIECE)))
 		{
 			packed = 0x2000;
-			WriteSG(&packed, sizeof(ushort));
+			WriteSG(&packed, sizeof(unsigned short));
 		}
 		else
 		{
@@ -496,7 +516,7 @@ void SaveLevelData(long FullSave)
 				if (obj->save_hitpoints && item->hit_points != obj->hit_points)
 					packed |= 0x4000;
 
-				WriteSG(&packed, sizeof(ushort));
+				WriteSG(&packed, sizeof(unsigned short));
 
 				if (obj->save_position)
 				{
@@ -509,8 +529,8 @@ void SaveLevelData(long FullSave)
 					pos = short(item->pos.z_pos >> 1);
 					WriteSG(&pos, sizeof(short));
 
-					byte = (uchar)item->room_number;
-					WriteSG(&byte, sizeof(uchar));
+					byte = (unsigned char)item->room_number;
+					WriteSG(&byte, sizeof(unsigned char));
 
 					WriteSG(&item->pos.y_rot, sizeof(short));
 
@@ -529,19 +549,19 @@ void SaveLevelData(long FullSave)
 
 				if (obj->save_anim)
 				{
-					byte = (uchar)item->current_anim_state;
-					WriteSG(&byte, sizeof(uchar));
+					byte = (unsigned char)item->current_anim_state;
+					WriteSG(&byte, sizeof(unsigned char));
 
-					byte = (uchar)item->goal_anim_state;
-					WriteSG(&byte, sizeof(uchar));
+					byte = (unsigned char)item->goal_anim_state;
+					WriteSG(&byte, sizeof(unsigned char));
 
-					byte = (uchar)item->required_anim_state;
-					WriteSG(&byte, sizeof(uchar));
+					byte = (unsigned char)item->required_anim_state;
+					WriteSG(&byte, sizeof(unsigned char));
 
 					if (item->object_number != LARA)
 					{
 						byte = item->anim_number - obj->anim_index;
-						WriteSG(&byte, sizeof(uchar));
+						WriteSG(&byte, sizeof(unsigned char));
 					}
 					else
 						WriteSG(&item->anim_number, sizeof(short));
@@ -569,7 +589,7 @@ void SaveLevelData(long FullSave)
 					if (obj->intelligent && item->data)
 						flags |= 0x80000000;
 
-					WriteSG(&flags, sizeof(ulong));
+					WriteSG(&flags, sizeof(unsigned long));
 
 					if (packed & 0x80)
 						WriteSG(&item->item_flags[0], sizeof(short));
@@ -602,7 +622,7 @@ void SaveLevelData(long FullSave)
 
 						WriteSG(&creature->ai_target.object_number, sizeof(short));
 						WriteSG(&creature->ai_target.room_number, sizeof(short));
-						WriteSG(&creature->ai_target.box_number, sizeof(ushort));
+						WriteSG(&creature->ai_target.box_number, sizeof(unsigned short));
 						WriteSG(&creature->ai_target.flags, sizeof(short));
 						WriteSG(&creature->ai_target.trigger_flags, sizeof(short));
 						WriteSG(&creature->ai_target.pos, sizeof(PHD_3DPOS));
@@ -618,8 +638,8 @@ void SaveLevelData(long FullSave)
 
 				if (obj->save_mesh)
 				{
-					WriteSG(&item->mesh_bits, sizeof(ulong));
-					WriteSG(&item->meshswap_meshbits, sizeof(ulong));
+					WriteSG(&item->mesh_bits, sizeof(unsigned long));
+					WriteSG(&item->meshswap_meshbits, sizeof(unsigned long));
 				}
 
 				if (item->object_number == MOTORBIKE)
@@ -629,7 +649,7 @@ void SaveLevelData(long FullSave)
 					WriteSG(item->data, sizeof(JEEPINFO));
 			}
 			else
-				WriteSG(&packed, sizeof(ushort));
+				WriteSG(&packed, sizeof(unsigned short));
 		}
 	}
 
@@ -657,7 +677,7 @@ void SaveLevelData(long FullSave)
 			item++;
 		}
 
-		WriteSG(&byte, sizeof(uchar));
+		WriteSG(&byte, sizeof(unsigned char));
 		item = &items[level_items];
 
 		for (int i = level_items; i < 256; i++)
@@ -697,7 +717,7 @@ void SaveLevelData(long FullSave)
 					byte++;
 			}
 
-			WriteSG(&byte, sizeof(uchar));
+			WriteSG(&byte, sizeof(unsigned char));
 
 			for (int j = 0; j < 128; j++)
 			{
@@ -750,7 +770,7 @@ void SaveLevelData(long FullSave)
 			item++;
 		}
 
-		WriteSG(&byte, sizeof(uchar));
+		WriteSG(&byte, sizeof(unsigned char));
 
 		if (byte)
 		{
@@ -794,11 +814,11 @@ void RestoreLevelData(long FullSave)
 	FLOOR_INFO* floor;
 	OBJECT_INFO* obj;
 	MESH_INFO* mesh;
-	ulong flags;
+	unsigned long flags;
 	long k, flare_age;
-	ushort word, packed, uroom_number, uword;
+	unsigned short word, packed, uroom_number, uword;
 	short sword, item_number, room_number, req, goal, current;
-	uchar numberof;
+	unsigned char numberof;
 	char byte, anim, lflags;
 
 	ReadSG(&FmvSceneTriggered, sizeof(long));
@@ -810,7 +830,7 @@ void RestoreLevelData(long FullSave)
 		if (sword & (1 << i))
 			FlipMap(i);
 
-		ReadSG(&uword, sizeof(ushort));
+		ReadSG(&uword, sizeof(unsigned short));
 		flipmap[i] = uword << 8;
 	}
 
@@ -818,7 +838,7 @@ void RestoreLevelData(long FullSave)
 	ReadSG(&fliptimer, sizeof(long));
 	ReadSG(&flip_status, sizeof(long));
 	ReadSG(cd_flags, 128);
-	ReadSG(&CurrentAtmosphere, sizeof(uchar));
+	ReadSG(&CurrentAtmosphere, sizeof(unsigned char));
 	k = 16;
 
 	for (int i = 0; i < number_rooms; i++)
@@ -833,7 +853,7 @@ void RestoreLevelData(long FullSave)
 			{
 				if (k == 16)
 				{
-					ReadSG(&uword, sizeof(ushort));
+					ReadSG(&uword, sizeof(unsigned short));
 					k = 0;
 				}
 
@@ -862,7 +882,7 @@ void RestoreLevelData(long FullSave)
 		byte >>= 1;
 	}
 
-	ReadSG(&CurrentSequence, sizeof(uchar));
+	ReadSG(&CurrentSequence, sizeof(unsigned char));
 	ReadSG(&byte, sizeof(char));
 
 	for (int i = 0; i < 6; i++)
@@ -883,7 +903,7 @@ void RestoreLevelData(long FullSave)
 	{
 		item = &items[i];
 		obj = &objects[item->object_number];
-		ReadSG(&packed, sizeof(ushort));
+		ReadSG(&packed, sizeof(unsigned short));
 
 		if (packed & 0x2000)
 		{
@@ -897,16 +917,16 @@ void RestoreLevelData(long FullSave)
 			{
 				uroom_number = 0;
 
-				ReadSG(&word, sizeof(ushort));
+				ReadSG(&word, sizeof(unsigned short));
 				item->pos.x_pos = (word << 1) | (packed >> 2) & 1;
 
 				ReadSG(&sword, sizeof(short));
 				item->pos.y_pos = (sword << 1) | (packed >> 3) & 1;
 
-				ReadSG(&word, sizeof(ushort));
+				ReadSG(&word, sizeof(unsigned short));
 				item->pos.z_pos = (word << 1) | (packed >> 4) & 1;
 
-				ReadSG(&uroom_number, sizeof(uchar));
+				ReadSG(&uroom_number, sizeof(unsigned char));
 				ReadSG(&item->pos.y_rot, sizeof(short));
 
 				if (packed & 1)
@@ -959,7 +979,7 @@ void RestoreLevelData(long FullSave)
 
 			if (obj->save_flags)
 			{
-				ReadSG(&flags, sizeof(ulong));
+				ReadSG(&flags, sizeof(unsigned long));
 				item->flags = (short)flags;
 
 				if (packed & 0x80)
@@ -1012,7 +1032,7 @@ void RestoreLevelData(long FullSave)
 
 						ReadSG(&creature->ai_target.object_number, sizeof(short));
 						ReadSG(&creature->ai_target.room_number, sizeof(short));
-						ReadSG(&creature->ai_target.box_number, sizeof(ushort));
+						ReadSG(&creature->ai_target.box_number, sizeof(unsigned short));
 						ReadSG(&creature->ai_target.flags, sizeof(short));
 						ReadSG(&creature->ai_target.trigger_flags, sizeof(short));
 						ReadSG(&creature->ai_target.pos, sizeof(PHD_3DPOS));
@@ -1030,8 +1050,8 @@ void RestoreLevelData(long FullSave)
 
 			if (obj->save_mesh)
 			{
-				ReadSG(&item->mesh_bits, sizeof(ulong));
-				ReadSG(&item->meshswap_meshbits, sizeof(ulong));
+				ReadSG(&item->mesh_bits, sizeof(unsigned long));
+				ReadSG(&item->meshswap_meshbits, sizeof(unsigned long));
 			}
 
 			if (item->object_number == MOTORBIKE)
@@ -1074,7 +1094,7 @@ void RestoreLevelData(long FullSave)
 
 	if (FullSave)
 	{
-		ReadSG(&numberof, sizeof(uchar));
+		ReadSG(&numberof, sizeof(unsigned char));
 
 		for (int i = 0; i < numberof; i++)
 		{
@@ -1115,7 +1135,7 @@ void RestoreLevelData(long FullSave)
 			{
 				ReadSG(&sword, sizeof(short));
 
-				ReadSG(&uword, sizeof(ushort));
+				ReadSG(&uword, sizeof(unsigned short));
 				Scarabs[i].pos.x_pos = uword << 1;
 				Scarabs[i].pos.x_pos |= sword & 1;
 
@@ -1123,7 +1143,7 @@ void RestoreLevelData(long FullSave)
 				Scarabs[i].pos.y_pos = req << 1;
 				Scarabs[i].pos.y_pos |= (sword >> 1) & 1;
 
-				ReadSG(&uword, sizeof(ushort));
+				ReadSG(&uword, sizeof(unsigned short));
 				Scarabs[i].pos.z_pos = uword << 1;
 				Scarabs[i].pos.z_pos |= (sword >> 2) & 1;
 
@@ -1151,7 +1171,7 @@ void RestoreLevelData(long FullSave)
 			for (int i = 0; i < 64; i++)
 			{
 				if (!(i & 0xF))
-					ReadSG(&uword, sizeof(ushort));
+					ReadSG(&uword, sizeof(unsigned short));
 
 				if (uword & 1 << (i & 0xF))
 					VonCroyCutFlags[i] = 1;

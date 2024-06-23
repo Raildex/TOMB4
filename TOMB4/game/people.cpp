@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "people.h"
 #include "sphere.h"
 #include "../specific/function_stubs.h"
@@ -10,6 +10,16 @@
 #include "box.h"
 #include "../specific/3dmath.h"
 #include "lara.h"
+#include "creatureinfo.h"
+#include "aiinfo.h"
+#include "animstruct.h"
+#include "larainfo.h"
+#include "objectinfo.h"
+#include "itemstatus.h"
+#include "biteinfo.h"
+#include "weapontypes.h"
+#include "gamevector.h"
+#include "types.h"
 
 short GunShot(long x, long y, long z, short speed, short yrot, short room_number)
 {

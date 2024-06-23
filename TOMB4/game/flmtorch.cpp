@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "flmtorch.h"
 #include "effect2.h"
 #include "../specific/function_stubs.h"
@@ -18,7 +18,26 @@
 #include "lara.h"
 #include "control.h"
 #include "tomb4fx.h"
-
+#include "iteminfo.h"
+#include "sparks.h"
+#include "animstruct.h"
+#include "larainfo.h"
+#include "weapontypes.h"
+#include "inputbuttons.h"
+#include "itemstatus.h"
+#include "itemflags.h"
+#include "larawaterstatus.h"
+#include "objectinfo.h"
+#include "laragunstatus.h"
+#include "phdvector.h"
+#include "laramesh.h"
+#include "phd3dpos.h"
+#include "collinfo.h"
+#include "staticinfo.h"
+#include "meshinfo.h"
+#include "roomflags.h"
+#include "roominfo.h"
+#include <cstdlib>
 static short FireBounds[12] = { 0, 0, 0, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 static ITEM_INFO* TorchItem = 0;
 
@@ -55,9 +74,9 @@ void TriggerTorchFlame(short item_number, long node)
 		sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
 
 	sptr->Gravity = -16 - (GetRandomControl() & 0x1F);
-	sptr->NodeNumber = (uchar)node;
+	sptr->NodeNumber = (unsigned char)node;
 	sptr->MaxYvel = -16 - (GetRandomControl() & 7);
-	sptr->FxObj = (uchar)item_number;
+	sptr->FxObj = (unsigned char)item_number;
 	sptr->Scalar = 1;
 	sptr->Size = (GetRandomControl() & 0x1F) + 80;
 	sptr->sSize = sptr->Size;

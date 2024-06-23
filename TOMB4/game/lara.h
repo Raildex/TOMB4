@@ -1,6 +1,7 @@
 #pragma once
-#include "../global/types.h"
-
+struct ITEM_INFO;
+struct COLL_INFO;
+struct LARA_INFO;
 void lara_void_func(ITEM_INFO* item, COLL_INFO* coll);
 void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll);
 void SetCornerAnim(ITEM_INFO* item, COLL_INFO* coll, short rot, short flip);
@@ -147,7 +148,7 @@ void LookUpDown();
 void LookLeftRight();
 long UseInventoryItems(ITEM_INFO* item);
 void LaraDeflectEdgeJump(ITEM_INFO* item, COLL_INFO* coll);
-void ApplyVelocityToRope(long node, ushort angle, ushort n);
+void ApplyVelocityToRope(long node, unsigned short angle, unsigned short n);
 long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll);
 long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll);
 long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll);

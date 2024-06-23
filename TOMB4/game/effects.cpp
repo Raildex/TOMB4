@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "effects.h"
 #include "../specific/polyinsert.h"
 #include "../specific/function_table.h"
@@ -23,6 +23,20 @@
 #include "savegame.h"
 #include "pickup.h"
 #include "gameflow.h"
+#include "types.h"
+#include "savegameinfo.h"
+#include "iteminfo.h"
+#include "laramesh.h"
+#include "objectinfo.h"
+#include "itemflags.h"
+#include "itemstatus.h"
+#include "roomflags.h"
+#include "splashsetup.h"
+#include "roominfo.h"
+#include "soundslot.h"
+#include "objectvector.h"
+#include "sampleinfo.h"
+#include "laragunstatus.h"
 
 FX_INFO* effects;
 OBJECT_VECTOR* sound_effects;
@@ -576,7 +590,7 @@ void SoundEffects()
 			else
 			{
 				GetPanVolume(slot);
-				S_SoundSetPanAndVolume(i, (short)slot->nPan, (ushort)slot->nVolume);
+				S_SoundSetPanAndVolume(i, (short)slot->nPan, (unsigned short)slot->nVolume);
 			}
 		}
 		else
@@ -588,7 +602,7 @@ void SoundEffects()
 			}
 			else
 			{
-				S_SoundSetPanAndVolume(i, (short)slot->nPan, (ushort)slot->nVolume);
+				S_SoundSetPanAndVolume(i, (short)slot->nPan, (unsigned short)slot->nVolume);
 				S_SoundSetPitch(i, slot->nPitch);
 				slot->nVolume = 0;
 			}

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "train.h"
 #include "../specific/3dmath.h"
 #include "../specific/output.h"
@@ -11,6 +11,10 @@
 #include "lara.h"
 #include "gameflow.h"
 #include "objects.h"
+#include "iteminfo.h"
+#include "types.h"
+#include "staticinfo.h"
+#include "trainstatic.h"
 
 static short dels_handy_train_map[128] =
 {

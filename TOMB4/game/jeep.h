@@ -1,5 +1,10 @@
 #pragma once
-#include "../global/types.h"
+
+struct BIKEINFO;
+struct PHD_VECTOR;
+struct ITEM_INFO;
+struct COLL_INFO;
+
 
 void InitialiseJeep(short item_number);
 void DrawJeepExtras(ITEM_INFO* item);

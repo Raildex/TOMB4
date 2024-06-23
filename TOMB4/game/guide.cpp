@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "guide.h"
 #include "box.h"
 #include "objects.h"
@@ -14,7 +14,20 @@
 #include "effects.h"
 #include "lara.h"
 #include "control.h"
-
+#include "phdvector.h"
+#include "biteinfo.h"
+#include "iteminfo.h"
+#include "aiinfo.h"
+#include "animstruct.h"
+#include "objectinfo.h"
+#include "roominfo.h"
+#include "creatureinfo.h"
+#include "aibits.h"
+#include "larainfo.h"
+#include "itemstatus.h"
+#include "itemflags.h"
+#include "types.h"
+#include <cstdlib>
 static BITE_INFO guide_hit = { 0, 20, 200, 18 };
 static BITE_INFO guide_lighter = { 30, 80, 50, 15 };
 

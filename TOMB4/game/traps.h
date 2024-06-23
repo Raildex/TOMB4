@@ -1,8 +1,10 @@
 #pragma once
-#include "../global/types.h"
+
 
 extern short SPxzoffs[8];
 extern short SPyoffs[8];
+struct ITEM_INFO;
+struct COLL_INFO;
 
 void FlameEmitterControl(short item_number);
 void TwoBlockPlatformFloor(ITEM_INFO* item, long x, long y, long z, long* height);

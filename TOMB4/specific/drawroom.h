@@ -1,11 +1,15 @@
 #pragma once
-#include "../global/types.h"
 
+struct TEXTUREBUCKET;
+struct MESH_DATA;
+struct ROOM_INFO;
+struct D3DTLBUMPVERTEX;
+struct _D3DVECTOR;
 void ProcessRoomDynamics(ROOM_INFO* r);
 void ProcessRoomVertices(ROOM_INFO* r);
 void ProcessRoomData(ROOM_INFO* r);
 void InsertRoom(ROOM_INFO* r);
-void CalcTriFaceNormal(D3DVECTOR* p1, D3DVECTOR* p2, D3DVECTOR* p3, D3DVECTOR* N);
+void CalcTriFaceNormal(_D3DVECTOR* p1, _D3DVECTOR* p2, _D3DVECTOR* p3, _D3DVECTOR* N);
 void ProcessMeshData(long num_meshes);
 void InitBuckets();
 void DrawBucket(TEXTUREBUCKET* bucket);
@@ -14,7 +18,7 @@ void DrawBuckets();
 void CreateVertexNormals(ROOM_INFO* r);
 
 extern MESH_DATA** mesh_vtxbuf;
-extern TEXTUREBUCKET Bucket[20];
+extern TEXTUREBUCKET Bucket[];
 extern float clip_left;
 extern float clip_top;
 extern float clip_right;

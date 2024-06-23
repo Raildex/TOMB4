@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "demigod.h"
 #include "items.h"
 #include "../specific/function_stubs.h"
@@ -15,6 +15,24 @@
 #include "effects.h"
 #include "lara.h"
 #include "gameflow.h"
+#include "fxinfo.h"
+#include "phd3dpos.h"
+#include "sparks.h"
+#include "smokesparks.h"
+#include "iteminfo.h"
+#include "roomflags.h"
+#include "objectinfo.h"
+#include "animstruct.h"
+#include "aiinfo.h"
+#include "itemstatus.h"
+#include "roominfo.h"
+#include "creatureinfo.h"
+#include "aibits.h"
+#include "larainfo.h"
+#include "laragunstatus.h"
+#include "floorinfo.h"
+#include "types.h"
+#include <cstdlib>
 
 void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type)
 {
@@ -108,7 +126,7 @@ void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv)
 
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
-	sptr->FxObj = (uchar)fx_number;
+	sptr->FxObj = (unsigned char)fx_number;
 	sptr->Scalar = 2;
 	sptr->Size = (GetRandomControl() & 7) + 64;
 	sptr->sSize = sptr->Size;

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "items.h"
 #include "effect2.h"
 #include "objects.h"
@@ -6,6 +6,16 @@
 #include "control.h"
 #include "effects.h"
 #include "lara.h"
+#include "itemflags.h"
+#include "larainfo.h"
+#include "iteminfo.h"
+#include "types.h"
+#include "animstruct.h"
+#include "itemstatus.h"
+#include "floorinfo.h"
+#include "objectinfo.h"
+#include "roominfo.h"
+#include "fxinfo.h"
 
 short next_fx_active;
 short next_item_active;

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "audio.h"
 #include "file.h"
 #include "function_stubs.h"
@@ -6,6 +6,7 @@
 #include "../game/control.h"
 #include "LoadSave.h"
 #include "winmain.h"
+#include <MSAcm.h>
 
 const char* TrackFileNames[112] =
 {
@@ -134,8 +135,8 @@ static char source_wav_format[50] =
 #pragma warning(pop)
 
 HACMDRIVER hACMDriver;
-uchar* wav_file_buffer = 0;
-uchar* ADPCMBuffer = 0;
+unsigned char* wav_file_buffer = 0;
+unsigned char* ADPCMBuffer = 0;
 bool acm_ready = 0;
 
 long XATrack = -1;
@@ -151,9 +152,9 @@ static HANDLE NotifyEventHandles[2];
 static HANDLE NotificationThreadHandle = 0;
 static FILE* audio_stream_fp;
 static CRITICAL_SECTION audio_cs;
-static uchar* audio_fp_write_ptr = 0;
-static uchar* pAudioWrite = 0;
-static ulong AudioBytes = 0;
+static unsigned char* audio_fp_write_ptr = 0;
+static unsigned char* pAudioWrite = 0;
+static unsigned long AudioBytes = 0;
 static long audio_buffer_size = 0;
 static long CurrentNotify = 0;
 static long NotifySize = 0;
@@ -282,11 +283,11 @@ BOOL __stdcall ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD f
 	hACMDriverID = hadid;
 	return 0;
 }
-
+long ACMHandleNotifications();
 long ACMSetupNotifications()
 {
 	DSBPOSITIONNOTIFY posNotif[5];
-	ulong ThreadId;
+	unsigned long ThreadId;
 	long result;
 
 	NotifyEventHandles[0] = CreateEvent(0, 0, 0, 0);
@@ -403,7 +404,7 @@ void FillADPCMBuffer(char* p, long track)
 long ACMHandleNotifications()
 {
 	char* write;
-	ulong wait, bytes;
+	unsigned long wait, bytes;
 
 	while ((wait = WaitForMultipleObjects(2, NotifyEventHandles, 0, INFINITE)) != WAIT_FAILED)
 	{
@@ -450,8 +451,8 @@ bool ACMInit()
 {
 	DSBUFFERDESC desc;
 	static WAVEFORMATEX wav_format;
-	static ulong StreamSize;
-	ulong version, pMetric;
+	static unsigned long StreamSize;
+	unsigned long version, pMetric;
 
 	version = acmGetVersion();
 	InitializeCriticalSection(&audio_cs);
@@ -471,8 +472,8 @@ bool ACMInit()
 		return 0;
 	}
 
-	ADPCMBuffer = (uchar*)malloc(0x5800);
-	wav_file_buffer = (uchar*)malloc(0x37000);
+	ADPCMBuffer = (unsigned char*)malloc(0x5800);
+	wav_file_buffer = (unsigned char*)malloc(0x37000);
 	wav_format.wFormatTag = WAVE_FORMAT_PCM;
 	acmMetrics(0, ACM_METRIC_MAX_SIZE_FORMAT, &pMetric);
 	acmFormatSuggest(hACMDriver, (LPWAVEFORMATEX)&source_wav_format, &wav_format, pMetric, ACM_FORMATSUGGESTF_WFORMATTAG);

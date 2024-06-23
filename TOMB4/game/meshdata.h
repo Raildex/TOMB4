@@ -1,0 +1,22 @@
+#ifndef MESH_DATA_INCLUDED
+#define MESH_DATA_INCLUDED
+struct IDirect3DVertexBuffer;
+struct _D3DVECTOR;
+struct MESH_DATA
+{
+	short x;
+	short y;
+	short z;
+	short r;
+	short flags;
+	short nVerts;
+	short nNorms;
+	short ngt4;
+	short* gt4;
+	short ngt3;
+	short* gt3;
+	long* prelight;
+	IDirect3DVertexBuffer* SourceVB;
+	_D3DVECTOR* Normals;
+};
+#endif

@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+struct DISPLAYPU;
 
 long FlashIt();
 void DrawGameInfo(long timed);
@@ -9,7 +9,7 @@ void InitialisePickUpDisplay();
 void DrawPickups();
 void AddDisplayPickup(short object_number);
 
-extern DISPLAYPU pickups[8];
+extern DISPLAYPU pickups[];
 extern long PickupX;
 extern short CurrentPickup;
 

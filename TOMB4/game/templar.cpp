@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "templar.h"
 #include "box.h"
 #include "objects.h"
@@ -11,7 +11,18 @@
 #include "sound.h"
 #include "control.h"
 #include "lara.h"
-
+#include "aiinfo.h"
+#include "creatureinfo.h"
+#include "objectinfo.h"
+#include "aibits.h"
+#include "types.h"
+#include "animstruct.h"
+#include "biteinfo.h"
+#include "larainfo.h"
+#include "roominfo.h"
+#include "meshinfo.h"
+#include "floorinfo.h"
+#include <cstdlib>
 static BITE_INFO templar_hit{ 0, 0, 0, 11 };
 
 void InitialiseTemplar(short item_number)

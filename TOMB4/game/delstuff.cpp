@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "delstuff.h"
 #include "../specific/specificfx.h"
 #include "../specific/3dmath.h"
@@ -12,13 +12,28 @@
 #include "../specific/function_stubs.h"
 #include "lara.h"
 #include "gameflow.h"
+#include "fvector.h"
+#include "iteminfo.h"
+#include "phdvector.h"
+#include "inputbuttons.h"
+#include "larainfo.h"
+#include "objectinfo.h"
+#include "roomflags.h"
+#include "roominfo.h"
+#include "weapontypes.h"
+#include "laragunstatus.h"
+#include "animstruct.h"
+#include "gfleveloptions.h"
+#include "types.h"
+#include <cmath>
+#include <windows.h>
 
 short* GLaraShadowframe;
 float lara_matrices[180];
 float lara_joint_matrices[180];
 long LaraNodeAmbient[2];
 long bLaraUnderWater;
-uchar LaraNodeUnderwater[15];
+unsigned char LaraNodeUnderwater[15];
 char SkinVertNums[40][12];
 char ScratchVertNums[40][12];
 char bLaraInWater;
@@ -72,7 +87,7 @@ static char NodesToStashFromScratch[15][4] =
 	{26, -1, 0, 0}
 };
 
-static uchar SkinUseMatrix[14][2] =
+static unsigned char SkinUseMatrix[14][2] =
 {
 	{255, 255},
 	{1, 2},
@@ -176,7 +191,7 @@ void DrawLara(ITEM_INFO* item, long mirror)
 
 		for (int j = 0; j < 4; j++)
 		{
-			stash = (uchar)NodesToStashFromScratch[i][j];
+			stash = (unsigned char)NodesToStashFromScratch[i][j];
 
 			if (stash == 255)
 				break;

@@ -1,5 +1,8 @@
 #pragma once
-#include "../global/types.h"
+
+struct ITEM_INFO;
+struct PHD_VECTOR;
+
 
 void DrawFlareInAir(ITEM_INFO* item);
 void draw_flare_meshes();

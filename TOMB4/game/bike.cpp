@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "bike.h"
 #include "../specific/function_stubs.h"
 #include "../specific/specificfx.h"
@@ -25,6 +25,26 @@
 #include "../specific/input.h"
 #include "newinv.h"
 #include "savegame.h"
+#include "bikeinfo.h"
+#include "iteminfo.h"
+#include "larainfo.h"
+#include "inputbuttons.h"
+#include "laragunstatus.h"
+#include "objectinfo.h"
+#include "sparks.h"
+#include "heighttypes.h"
+#include "animstruct.h"
+#include "roomflags.h"
+#include "itemflags.h"
+#include "weapontypes.h"
+#include "savegameinfo.h"
+#include "roominfo.h"
+#include "itemstatus.h"
+#include "staticinfo.h"
+#include "meshinfo.h"
+#include "laramesh.h"
+#include "types.h"
+#include <cstdlib>
 
 static ITEM_INFO* GlobalBikeItem;
 static long bikefspeed = 0;
@@ -255,14 +275,14 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 
 	if (thing)
 	{
-		sptr->dR = uchar((96 * velocity) >> 5);
-		sptr->dG = uchar((96 * velocity) >> 5);
-		sptr->dB = uchar((128 * velocity) >> 5);
+		sptr->dR = unsigned char((96 * velocity) >> 5);
+		sptr->dG = unsigned char((96 * velocity) >> 5);
+		sptr->dB = unsigned char((128 * velocity) >> 5);
 	}
 
 	sptr->ColFadeSpeed = 4;
 	sptr->FadeToBlack = 4;
-	sptr->Life = uchar((GetRandomControl() & 3) - (velocity >> 12) + 20);
+	sptr->Life = unsigned char((GetRandomControl() & 3) - (velocity >> 12) + 20);
 	sptr->sLife = sptr->Life;
 
 	if (sptr->Life < 9)
@@ -294,10 +314,10 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 		sptr->Flags = 522;
 
 	sptr->Scalar = 1;
-	sptr->Def = (uchar)objects[DEFAULT_SPRITES].mesh_index;
+	sptr->Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
 	sptr->Gravity = -4 - (GetRandomControl() & 3);
 	sptr->MaxYvel = -8 - (GetRandomControl() & 7);
-	sptr->dSize = uchar((GetRandomControl() & 7) + (velocity >> 7) + 32);
+	sptr->dSize = unsigned char((GetRandomControl() & 7) + (velocity >> 7) + 32);
 	sptr->sSize = sptr->dSize >> 1;
 	sptr->Size = sptr->dSize >> 1;
 }
@@ -1380,7 +1400,7 @@ void BikeControl(short item_number)
 	long front_left, front_right, front_mid;
 	long hitWall, h, driving, killed, pitch, oldY, hdiff, smokeVel;
 	short room_number, wheelRot, xRot, zRot;
-	static uchar ExhaustSmokeVel;
+	static unsigned char ExhaustSmokeVel;
 
 	driving = -1;
 	killed = 0;

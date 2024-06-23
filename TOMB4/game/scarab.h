@@ -1,5 +1,6 @@
 #pragma once
-#include "../global/types.h"
+#include "scarabstruct.h"
+
 
 void InitialiseScarab(short item_number);
 void ScarabControl(short item_number);

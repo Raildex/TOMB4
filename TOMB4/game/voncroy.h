@@ -1,5 +1,7 @@
 #pragma once
-#include "../global/types.h"
+
+struct ITEM_INFO;
+struct CREATURE_INFO;
 
 void SetCutSceneCamera(ITEM_INFO* item);
 void ClearCutSceneCamera();
@@ -9,5 +11,5 @@ void InitialiseVoncroy(short item_number);
 void VoncroyRaceControl(short item_number);
 void VoncroyControl(short item_number);
 
-extern uchar VonCroyCutFlags[64];
+extern unsigned char VonCroyCutFlags[];
 extern char bVoncroyCutScene;

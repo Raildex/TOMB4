@@ -1,0 +1,12 @@
+#ifndef LARA_GUN_STATUS_INCLUDED
+#define LARA_GUN_STATUS_INCLUDED
+enum lara_gun_status
+{
+	LG_NO_ARMS,
+	LG_HANDS_BUSY,
+	LG_DRAW_GUNS,
+	LG_UNDRAW_GUNS,
+	LG_READY,
+	LG_FLARE,
+};
+#endif

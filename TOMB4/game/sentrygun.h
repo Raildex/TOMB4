@@ -1,5 +1,7 @@
 #pragma once
-#include "../global/types.h"
+
+struct ITEM_INFO;
+
 
 void TriggerAutogunFlamethrower(ITEM_INFO* item);
 void InitialiseAutogun(short item_number);

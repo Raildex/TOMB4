@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "dog.h"
 #include "box.h"
 #include "objects.h"
@@ -7,7 +7,17 @@
 #include "../specific/3dmath.h"
 #include "lara.h"
 #include "control.h"
-
+#include "biteinfo.h"
+#include "iteminfo.h"
+#include "creatureinfo.h"
+#include "moodtype.h"
+#include "aiinfo.h"
+#include "animstruct.h"
+#include "aibits.h"
+#include "objectinfo.h"
+#include "itemstatus.h"
+#include "larainfo.h"
+#include "types.h"
 static BITE_INFO dog_bite = { 0, 0, 100, 3 };
 static char DeathAnims[4] = { 20, 21, 22, 21 };
 

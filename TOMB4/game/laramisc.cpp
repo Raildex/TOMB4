@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "laramisc.h"
 #include "objects.h"
 #include "laraswim.h"
@@ -21,6 +21,21 @@
 #include "gameflow.h"
 #include "../specific/file.h"
 #include "../specific/dxsound.h"
+#include "iteminfo.h"
+#include "animstruct.h"
+#include "larawaterstatus.h"
+#include "roomflags.h"
+#include "weapontypes.h"
+#include "larainfo.h"
+#include "laragunstatus.h"
+#include "animcommands.h"
+#include "sfxtypes.h"
+#include "roominfo.h"
+#include "itemflags.h"
+#include "objectinfo.h"
+#include "inputbuttons.h"
+#include "savegameinfo.h"
+#include <dinput.h>
 
 COLL_INFO mycoll;
 
@@ -184,7 +199,7 @@ void AnimateLara(ITEM_INFO* item)
 	ANIM_STRUCT* anim;
 	short* cmd;
 	long speed;
-	ushort type;
+	unsigned short type;
 
 	item->frame_number++;
 	anim = &anims[item->anim_number];

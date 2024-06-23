@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "clockworkbeetle.h"
 #include "lara_states.h"
 #include "items.h"
@@ -9,7 +9,15 @@
 #include "../specific/function_stubs.h"
 #include "../specific/3dmath.h"
 #include "lara.h"
-
+#include "iteminfo.h"
+#include "itemstatus.h"
+#include "phdvector.h"
+#include "larainfo.h"
+#include "animstruct.h"
+#include "laragunstatus.h"
+#include "roominfo.h"
+#include "types.h"
+#include <cstdlib>
 ITEM_INFO* TriggerClockworkBeetle(long flag)
 {
 	ITEM_INFO* item;

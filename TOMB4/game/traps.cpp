@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "traps.h"
 #include "control.h"
 #include "effect2.h"
@@ -20,12 +20,32 @@
 #include "camera.h"
 #include "../specific/input.h"
 #include "lara.h"
+#include "iteminfo.h"
+#include "types.h"
+#include "larainfo.h"
+#include "smokesparks.h"
+#include "animstruct.h"
+#include "itemstatus.h"
+#include "collinfo.h"
+#include "roominfo.h"
+#include "itemflags.h"
+#include "objectinfo.h"
+#include "dripstruct.h"
+#include "sparks.h"
+#include "fxinfo.h"
+#include "roomflags.h"
+#include "larawaterstatus.h"
+#include "laragunstatus.h"
+#include "inputbuttons.h"
+#include "floorinfo.h"
+#include "heighttypes.h"
+#include <cstdlib>
 
 short SPxzoffs[8] = { 0, 0, 0x200, 0, 0, 0, -0x200, 0 };
 short SPyoffs[8] = { -0x400, 0, -0x200, 0, 0, 0, -0x200, 0 };
 short SPDETyoffs[8] = { 0x400, 0x200, 0x200, 0x200, 0, 0x200, 0x200, 0x200 };
 
-static uchar Flame3xzoffs[16][2] =
+static unsigned char Flame3xzoffs[16][2] =
 {
 	{ 9, 9 },
 	{ 24, 9 },
@@ -85,7 +105,7 @@ char LibraryTab[8];
 void FlameEmitterControl(short item_number)
 {
 	ITEM_INFO* item;
-	ulong distance;
+	unsigned long distance;
 	long x, z;
 
 	item = &items[item_number];
@@ -529,7 +549,7 @@ void ControlSprinkler(short item_number)
 			if (!i)
 				size <<= 2;
 
-			smokeptr->dSize = (uchar)size;
+			smokeptr->dSize = (unsigned char)size;
 			smokeptr->sSize = smokeptr->dSize >> 3;
 			smokeptr->Size = smokeptr->dSize >> 3;
 		}
@@ -709,7 +729,7 @@ void ControlFallingSquishyBlock(short item_number)
 void ControlLRSquishyBlock(short item_number)
 {
 	ITEM_INFO* item;
-	ushort ang;
+	unsigned short ang;
 	short frame;
 
 	item = &items[item_number];
@@ -721,7 +741,7 @@ void ControlLRSquishyBlock(short item_number)
 
 	if (item->touch_bits)
 	{
-		ang = (ushort)phd_atan(item->pos.z_pos - lara_item->pos.z_pos, item->pos.x_pos - lara_item->pos.x_pos) - item->pos.y_rot;
+		ang = (unsigned short)phd_atan(item->pos.z_pos - lara_item->pos.z_pos, item->pos.x_pos - lara_item->pos.x_pos) - item->pos.y_rot;
 
 		if (!frame && ang > 0xA000 && ang < 0xE000)
 		{
@@ -1766,7 +1786,7 @@ long TestBoundsCollideTeethSpikes(ITEM_INFO* item)
 void ControlRollingBall(short item_number)
 {
 	ITEM_INFO* item;
-	ushort tyrot, destyrot;
+	unsigned short tyrot, destyrot;
 	short room_number, velnotadjusted;
 	long h, fx, fz, fh, fhf, bz, bh, bhf, rx, rh, rhf, lx, lh, lhf;
 
@@ -1952,7 +1972,7 @@ void ControlRollingBall(short item_number)
 	tyrot = item->pos.y_rot;
 
 	if (item->item_flags[1] || item->item_flags[0])
-		destyrot = ushort(phd_atan(item->item_flags[0], item->item_flags[0]));
+		destyrot = unsigned short(phd_atan(item->item_flags[0], item->item_flags[0]));
 	else
 		destyrot = item->pos.y_rot;
 
@@ -2349,7 +2369,7 @@ void OpenTrapDoor(ITEM_INFO* item)
 {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
-	ushort pitsky;
+	unsigned short pitsky;
 
 	pitsky = item->item_flags[3];
 	r = &room[item->room_number];
@@ -2377,7 +2397,7 @@ void CloseTrapDoor(ITEM_INFO* item)
 {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
-	ushort pitsky;
+	unsigned short pitsky;
 
 	r = &room[item->room_number];
 	floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];

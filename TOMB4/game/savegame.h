@@ -1,6 +1,5 @@
 #pragma once
-#include "../global/types.h"
-
+struct SAVEGAME_INFO;
 long CheckSumValid(char* buffer);
 void sgInitialiseHub(long dont_save_lara);
 void SaveLaraData();
@@ -13,7 +12,7 @@ void CreateCheckSum();
 void sgSaveLevel();
 void sgSaveGame();
 void sgRestoreGame();
-long OpenSaveGame(uchar current_level, long saving);
+long OpenSaveGame(unsigned char current_level, long saving);
 void SaveLevelData(long FullSave);
 void RestoreLevelData(long FullSave);
 

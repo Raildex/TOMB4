@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "draw.h"
 #include "../specific/3dmath.h"
 #include "../specific/output.h"
@@ -26,6 +26,25 @@
 #include "footprnt.h"
 #include "lara.h"
 #include "gameflow.h"
+#include "animstruct.h"
+#include "iteminfo.h"
+#include "fxinfo.h"
+#include "roominfo.h"
+#include "objectinfo.h"
+#include "itemstatus.h"
+#include "staticinfo.h"
+#include "meshinfo.h"
+#include "gfleveloptions.h"
+#include "fvector.h"
+#include "roomflags.h"
+#include "dynamic.h"
+#include "larainfo.h"
+#include "itemflags.h"
+#include "laramesh.h"
+#include "weapontypes.h"
+#include "laraarm.h"
+#include "biteinfo.h"
+#include "types.h"
 
 static BITE_INFO EnemyBites[2] =
 {
@@ -49,8 +68,8 @@ long outside;
 short SkyPos;
 short SkyPos2;
 
-ushort LightningRGB[3];
-ushort LightningRGBs[3];
+unsigned short LightningRGB[3];
+unsigned short LightningRGBs[3];
 short LightningCount;
 short dLightningRand;
 
@@ -171,11 +190,11 @@ void gar_RotYXZsuperpack_I(short** pprot1, short** pprot2, long skip)
 
 void gar_RotYXZsuperpack(short** pprot, long skip)
 {
-	ushort* prot;
+	unsigned short* prot;
 
 	while (skip)
 	{
-		prot = (ushort*)*pprot;
+		prot = (unsigned short*)*pprot;
 
 		if (prot[0] & 0xC000)
 			*pprot += 1;
@@ -185,7 +204,7 @@ void gar_RotYXZsuperpack(short** pprot, long skip)
 		skip--;
 	}
 
-	prot = (ushort*)*pprot;
+	prot = (unsigned short*)*pprot;
 
 	switch (prot[0] >> 14)
 	{
@@ -711,11 +730,11 @@ void DrawRooms(short CurrentRoom)
 				if (gfLevelFlags & GF_LIGHTNING)
 					DrawFlatSky(RGBA(LightningRGB[0], LightningRGB[1], LightningRGB[2], 44), SkyPos, -1536, 4);
 				else
-					DrawFlatSky(*(ulong*)&gfLayer1Col, SkyPos, -1536, 4);
+					DrawFlatSky(*(unsigned long*)&gfLayer1Col, SkyPos, -1536, 4);
 			}
 
 			if (gfLevelFlags & GF_LAYER2)
-				DrawFlatSky(0xFF000000 | *(ulong*)&gfLayer2Col, SkyPos2, -1536, 2);
+				DrawFlatSky(0xFF000000 | *(unsigned long*)&gfLayer2Col, SkyPos2, -1536, 2);
 
 			if (gfLevelFlags & GF_LAYER1 || gfLevelFlags & GF_LAYER2)
 				OutputSky();
@@ -917,11 +936,11 @@ void RenderIt(short CurrentRoom)
 				if (gfLevelFlags & GF_LIGHTNING)
 					DrawFlatSky(RGBA(LightningRGB[0], LightningRGB[1], LightningRGB[2], 44), SkyPos, -1536, 4);
 				else
-					DrawFlatSky(*(ulong*)&gfLayer1Col, SkyPos, -1536, 4);
+					DrawFlatSky(*(unsigned long*)&gfLayer1Col, SkyPos, -1536, 4);
 			}
 
 			if (gfLevelFlags & GF_LAYER2)
-				DrawFlatSky(0xFF000000 | *(ulong*)&gfLayer2Col, SkyPos2, -1536, 2);
+				DrawFlatSky(0xFF000000 | *(unsigned long*)&gfLayer2Col, SkyPos2, -1536, 2);
 
 			if (gfLevelFlags & GF_LAYER1 || gfLevelFlags & GF_LAYER2)
 				OutputSky();

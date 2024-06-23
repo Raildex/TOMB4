@@ -1,6 +1,7 @@
 #pragma once
-#include "../global/types.h"
+
 #include <cstdio>
+#include "phdvector.h"
 
 long GetRandomControl();
 void SeedRandomControl(long seed);
@@ -8,7 +9,7 @@ long GetRandomDraw();
 void SeedRandomDraw(long seed);
 void init_game_malloc();
 void* game_malloc(long size);
-void Log(ulong type, const char* s, ...);
+void Log(unsigned long type, const char* s, ...);
 
 extern FILE* logF;
 extern PHD_VECTOR CamPos;

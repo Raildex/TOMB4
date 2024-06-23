@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "pickup.h"
 #include "lara_states.h"
 #include "collide.h"
@@ -15,9 +15,24 @@
 #include "flmtorch.h"
 #include "lara.h"
 #include "deltapak.h"
+#include "animstruct.h"
+#include "itemstatus.h"
+#include "itemflags.h"
+#include "iteminfo.h"
+#include "objectinfo.h"
+#include "types.h"
+#include "meshinfo.h"
+#include "staticinfo.h"
+#include "roominfo.h"
+#include "laragunstatus.h"
+#include "larainfo.h"
+#include "weapontypes.h"
+#include "larawaterstatus.h"
+#include "inputbuttons.h"
+#include "phdvector.h"
 
-uchar NumRPickups;
-uchar RPickups[16];
+unsigned char NumRPickups;
+unsigned char RPickups[16];
 char KeyTriggerActive = 0;
 
 static short SarcophagusBounds[12] = { -512, 512, -100, 100, -512, 0, -1820, 1820, -5460, 5460, 0, 0 };

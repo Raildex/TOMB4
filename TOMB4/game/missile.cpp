@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "missile.h"
 #include "debris.h"
 #include "control.h"
@@ -8,6 +8,10 @@
 #include "effects.h"
 #include "../specific/3dmath.h"
 #include "camera.h"
+#include "shatteritem.h"
+#include "fxinfo.h"
+#include "types.h"
+#include <cstdlib>
 
 long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num)
 {

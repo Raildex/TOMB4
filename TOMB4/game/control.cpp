@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "control.h"
 #include "pickup.h"
 #include "../specific/function_stubs.h"
@@ -41,7 +41,43 @@
 #include "../specific/dxshell.h"
 #include "savegame.h"
 #include "../specific/file.h"
-
+#include "iteminfo.h"
+#include "animstruct.h"
+#include "roominfo.h"
+#include "meshinfo.h"
+#include "gameflow.h"
+#include "inputbuttons.h"
+#include "floorinfo.h"
+#include "floortypes.h"
+#include "trigobjtypes.h"
+#include "larainfo.h"
+#include "itemflags.h"
+#include "objectinfo.h"
+#include "triggertypes.h"
+#include "larawaterstatus.h"
+#include "creatureinfo.h"
+#include "savegameinfo.h"
+#include "fxinfo.h"
+#include "weapontypes.h"
+#include "fontflags.h"
+#include "carriedweaponflags.h"
+#include "gfleveloptions.h"
+#include "laragunstatus.h"
+#include "itemstatus.h"
+#include "camerainfo.h"
+#include "objectvector.h"
+#include "roomflags.h"
+#include "heighttypes.h"
+#include "boxinfo.h"
+#include "rangestruct.h"
+#include "changestruct.h"
+#include "shatteritem.h"
+#include "phd3dpos.h"
+#include "staticinfo.h"
+#include "weaponinfo.h"
+#include "animcommands.h"
+#include "sfxtypes.h"
+#include <dinput.h>
 ITEM_INFO* items;
 ANIM_STRUCT* anims;
 ROOM_INFO* room;
@@ -74,12 +110,12 @@ long InItemControlLoop = 0;
 short ItemNewRooms[256][2];
 short ItemNewRoomNo = 0;
 
-uchar CurrentAtmosphere;
-uchar IsAtmospherePlaying;
+unsigned char CurrentAtmosphere;
+unsigned char IsAtmospherePlaying;
 char cd_flags[128];
 
-ulong FmvSceneTriggered;
-ulong CutSceneTriggered;
+unsigned long FmvSceneTriggered;
+unsigned long CutSceneTriggered;
 long SetDebounce;
 long framecount = 0;
 long reset_flag = 0;
@@ -87,7 +123,7 @@ long WeaponDelay = 0;
 long LaserSightX;
 long LaserSightY;
 long LaserSightZ;
-ushort GlobalCounter = 0;
+unsigned short GlobalCounter = 0;
 short XSoff1;
 short XSoff2;
 short YSoff1;
@@ -598,7 +634,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags)
 	ITEM_INFO* camera_item;
 	long switch_off, flip, flip_available, neweffect, key, quad;
 	short camera_flags, camera_timer, type, trigger, value, flags, state;
-	static uchar HeavyTriggered;
+	static unsigned char HeavyTriggered;
 	char timer;
 
 	switch_off = 0;
@@ -634,7 +670,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags)
 	{
 		if (!heavy)
 		{
-			quad = ushort(lara_item->pos.y_rot + 8192) >> 14;
+			quad = unsigned short(lara_item->pos.y_rot + 8192) >> 14;
 
 			if ((1 << (quad + 8)) & *data)
 				lara.climb_status = 1;
@@ -868,7 +904,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags)
 					item->touch_bits = 0;
 					AddActiveItem(value);
 					item->status = ITEM_ACTIVE;
-					HeavyTriggered = (uchar)heavy;
+					HeavyTriggered = (unsigned char)heavy;
 				}
 			}
 
@@ -1392,7 +1428,7 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z)
 	ROOM_INFO* r;
 	short* data;
 	long height;
-	ushort trigger;
+	unsigned short trigger;
 	short type, dx, dz, xoff, yoff, tilt, hadj, tilt0, tilt1, tilt2, tilt3;
 
 	tiltxoff = 0;
@@ -2017,7 +2053,7 @@ void TriggerNormalCDTrack(short value, short flags, short type)
 	{
 		if (CurrentAtmosphere != value)
 		{
-			CurrentAtmosphere = (uchar)value;
+			CurrentAtmosphere = (unsigned char)value;
 
 			if (IsAtmospherePlaying)
 				S_CDPlay(value, 1);
@@ -2419,7 +2455,7 @@ long IsRoomOutside(long x, long y, long z)
 {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
-	uchar* pTable;
+	unsigned char* pTable;
 	long h, c;
 	short offset, room_no;
 
@@ -2456,7 +2492,7 @@ long IsRoomOutside(long x, long y, long z)
 	}
 	else
 	{
-		pTable = (uchar*)&OutsideRoomTable[offset];
+		pTable = (unsigned char*)&OutsideRoomTable[offset];
 
 		while (*pTable != 255)
 		{
@@ -2703,7 +2739,7 @@ void AnimateItem(ITEM_INFO* item)
 	ANIM_STRUCT* anim;
 	short* cmd;
 	long speed, speed2;
-	ushort type, num;
+	unsigned short type, num;
 
 	anim = &anims[item->anim_number];
 	item->touch_bits = 0;

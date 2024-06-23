@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "specificfx.h"
 #include "3dmath.h"
 #include "../game/delstuff.h"
@@ -22,6 +22,32 @@
 #include "output.h"
 #include "../game/lara_states.h"
 #include "../game/deltapak.h"
+#include "spritestruct.h"
+#include "iteminfo.h"
+#include "texturestruct.h"
+#include "fvector.h"
+#include "laramesh.h"
+#include "waterdust.h"
+#include "sparks.h"
+#include "bubblestruct.h"
+#include "objectinfo.h"
+#include "shockwavestruct.h"
+#include "splashstruct.h"
+#include "ripplestruct.h"
+#include "firesparks.h"
+#include "ropestruct.h"
+#include "bloodstruct.h"
+#include "smokesparks.h"
+#include "roominfo.h"
+#include "roomflags.h"
+#include "lightningstruct.h"
+#include "svector.h"
+#include "dripstruct.h"
+#include "wraithstruct.h"
+#include "meshdata.h"
+#include "types.h"
+#include "debrisstruct.h"
+#include <cstdlib>
 
 #define CIRCUMFERENCE_POINTS 32 // Number of points in the circumference
 #define LINE_POINTS	4	//number of points in each grid line
@@ -75,7 +101,7 @@ static char flare_table[121] =
 	-1
 };
 
-static uchar TargetGraphColTab[48] =
+static unsigned char TargetGraphColTab[48] =
 {
 	0, 0, 255,
 	0, 0, 255,
@@ -95,7 +121,7 @@ static uchar TargetGraphColTab[48] =
 	255, 255, 0
 };
 
-static uchar SplashLinks[347]
+static unsigned char SplashLinks[347]
 {
 	16, 18, 0, 2,
 	18, 20, 2, 4,
@@ -139,7 +165,7 @@ static long FadeEnd;
 
 static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item)
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT Tex;
 	PHD_VECTOR pos;
 	FVECTOR cv[CIRCUMFERENCE_POINTS];
@@ -289,7 +315,7 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item)
 static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item)
 {
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	PHD_VECTOR pos;
 	long* sXYZ;
@@ -449,7 +475,7 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item)
 
 void S_PrintShadow(short size, short* box, ITEM_INFO* item)
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT Tex;
 	PHD_VECTOR pos;
 	long* sXYZ;
@@ -619,7 +645,7 @@ void DrawTrainStrips()
 void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 {
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	long x1, y1, z1, x2, y2, z2, x3, y3, x4, y4;
 	long cR, cG, cB, c1, c2, s1, s2, s1h, s2h, scale;
@@ -791,7 +817,7 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 
 void DrawBikeSpeedo(long ux, long uy, long vel, long maxVel, long turboVel, long size, long unk)	//ux and uy are not used
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	float p, x, y, x0, y0, x1, y1;
 	long rSize, rVel, rMVel, rTVel, angle;
 
@@ -873,7 +899,7 @@ void DrawBikeSpeedo(long ux, long uy, long vel, long maxVel, long turboVel, long
 void Draw2DSprite(long x, long y, long slot, long unused, long unused2)
 {
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	long p, x0, y0;
 
@@ -920,7 +946,7 @@ void Draw2DSprite(long x, long y, long slot, long unused, long unused2)
 
 void DrawJeepSpeedo(long ux, long uy, long vel, long maxVel, long turboVel, long size, long spriteSlot)	//ux and uy are not used
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	float p, x, y, x0, y0, x1, y1;
 	long rSize, rVel, rMVel, rTVel, angle, sX, sY;
 
@@ -1011,12 +1037,12 @@ void DrawDebris()
 {
 	DEBRIS_STRUCT* dptr;
 	TEXTURESTRUCT* tex;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	long* XY;
 	long* Z;
 	long* offsets;
 	long r, g, b, c;
-	ushort drawbak;
+	unsigned short drawbak;
 
 	v = MyVertexBuffer;
 	XY = (long*)&tsv_buffer[0];
@@ -1134,7 +1160,7 @@ void DrawDebris()
 
 void DoScreenFade()
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	long a;
 
@@ -1189,11 +1215,11 @@ void DoScreenFade()
 
 void DrawPsxTile(long x_y, long height_width, long color, long u0, long u1)
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	float x, y, z, rhw, w, h;
 	long col;
-	ushort drawtype;
+	unsigned short drawtype;
 
 	v = MyVertexBuffer;
 	nPolyType = 6;
@@ -1276,7 +1302,7 @@ void DrawFlash()
 
 void S_DrawDarts(ITEM_INFO* item)
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	float fx, fy, fz;
 	long x1, y1, z1, x2, y2, z2, num, mxx, mxy, mxz;
 	float zv;
@@ -1322,7 +1348,7 @@ void S_DrawDarts(ITEM_INFO* item)
 	phd_PopMatrix();
 }
 
-void ClipCheckPoint(D3DTLVERTEX* v, float x, float y, float z, short* clip)
+void ClipCheckPoint(_D3DTLVERTEX* v, float x, float y, float z, short* clip)
 {
 	float perspz;
 	short clipdistance;
@@ -1362,9 +1388,9 @@ void ClipCheckPoint(D3DTLVERTEX* v, float x, float y, float z, short* clip)
 	clip[0] = clipdistance;
 }
 
-void DrawFlatSky(ulong color, long zpos, long ypos, long drawtype)
+void DrawFlatSky(unsigned long color, long zpos, long ypos, long drawtype)
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	FVECTOR vec[4];
 	TEXTURESTRUCT Tex;
 	short* clip;
@@ -1409,9 +1435,9 @@ void DrawFlatSky(ulong color, long zpos, long ypos, long drawtype)
 	ClipCheckPoint(&v[2], vec[2].x, vec[2].y, vec[2].z, clip);	//originally inlined
 	clip++;
 	ClipCheckPoint(&v[3], vec[3].x, vec[3].y, vec[3].z, clip);	//the only one that survived
-	Tex.drawtype = (ushort)drawtype;
+	Tex.drawtype = (unsigned short)drawtype;
 	Tex.flag = 0;
-	Tex.tpage = ushort(nTextures - 1);
+	Tex.tpage = unsigned short(nTextures - 1);
 	Tex.u1 = 0;
 	Tex.v1 = 0;
 	Tex.u2 = 1;
@@ -1484,7 +1510,7 @@ void ProjectTriPoints(PHD_VECTOR* pos, long& x, long& y, long& z)
 	z = long(mMXPtr[M20] * pos->x + mMXPtr[M21] * pos->y + mMXPtr[M22] * pos->z + mMXPtr[M23]);
 }
 
-void setXY4(D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y3, long x4, long y4, long z, short* clip)
+void setXY4(_D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y3, long x4, long y4, long z, short* clip)
 {
 	float zv;
 	short clip_distance;
@@ -1563,7 +1589,7 @@ void setXY4(D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y3
 	clip[3] = clip_distance;
 }
 
-void setXY3(D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y3, long z, short* clip)
+void setXY3(_D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y3, long z, short* clip)
 {
 	float zv;
 	short clip_distance;
@@ -1624,7 +1650,7 @@ void setXY3(D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y3
 	clip[2] = clip_distance;
 }
 
-void setXYZ4(D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long z2, long x3, long y3, long z3, long x4, long y4, long z4, short* clip)
+void setXYZ4(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long z2, long x3, long y3, long z3, long x4, long y4, long z4, short* clip)
 {
 	float zv;
 	short clip_distance;
@@ -1766,7 +1792,7 @@ void setXYZ4(D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long z
 	clip[3] = clip_distance;
 }
 
-void setXYZ3(D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long z2, long x3, long y3, long z3, short* clip)
+void setXYZ3(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long z2, long x3, long y3, long z3, short* clip)
 {
 	float zv;
 	short clip_distance;
@@ -1886,7 +1912,7 @@ void SetFade(long start, long end)
 void DrawLaserSightSprite()
 {
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	FVECTOR vec;
 	long* XY;
@@ -1942,7 +1968,7 @@ void DrawLaserSightSprite()
 void DrawSprite(long x, long y, long slot, long col, long size, long z)
 {
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	long s;
 
@@ -1980,7 +2006,7 @@ void DrawSprite(long x, long y, long slot, long col, long size, long z)
 
 void ShowTitle()
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	float x, y, w;
 
@@ -2025,7 +2051,7 @@ void ShowTitle()
 
 	tex.drawtype = 1;
 	tex.flag = 0;
-	tex.tpage = ushort(nTextures - 4);
+	tex.tpage = unsigned short(nTextures - 4);
 	tex.u1 = float(1.0F / 256.0F);
 	tex.v1 = float(1.0F / 256.0F);
 	tex.u2 = 1.0F - float(1.0F / 256.0F);
@@ -2066,7 +2092,7 @@ void ShowTitle()
 
 	tex.drawtype = 1;
 	tex.flag = 0;
-	tex.tpage = ushort(nTextures - 3);
+	tex.tpage = unsigned short(nTextures - 3);
 	tex.u1 = float(1.0F / 256.0F);
 	tex.v1 = float(1.0F / 256.0F);
 	tex.u2 = 1.0F - float(1.0F / 256.0F);
@@ -2115,9 +2141,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj)
 		if (room[camera.pos.room_number].flags & ROOM_NO_LENSFLARE)
 			return;
 
-		r = (uchar)gfLensFlareColour.r;
-		g = (uchar)gfLensFlareColour.g;
-		b = (uchar)gfLensFlareColour.b;
+		r = (unsigned char)gfLensFlareColour.r;
+		g = (unsigned char)gfLensFlareColour.g;
+		b = (unsigned char)gfLensFlareColour.b;
 		pos.x = x;
 		pos.y = y;
 		pos.z = z;
@@ -2285,7 +2311,7 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj)
 void InitTarget_2()
 {
 	OBJECT_INFO* obj;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 
 	obj = &objects[TARGET_GRAPHICS];
 
@@ -2311,7 +2337,7 @@ void InitTarget_2()
 void InitBinoculars()
 {
 	OBJECT_INFO* obj;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 
 	obj = &objects[BINOCULAR_GRAPHICS];
 
@@ -2337,13 +2363,13 @@ void InitBinoculars()
 void DrawBinoculars()
 {
 	MESH_DATA* mesh;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT* tex;
-	D3DTLVERTEX* vtx;
+	_D3DTLVERTEX* vtx;
 	short* clip;
 	short* quad;
 	short* tri;
-	ushort drawbak;
+	unsigned short drawbak;
 	short clipdistance;
 
 	vtx = MyVertexBuffer;
@@ -2463,14 +2489,14 @@ void DrawBinoculars()
 
 void DrawWraithTrail(ITEM_INFO* item)
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	WRAITH_STRUCT* wraith;
 	FVECTOR pos;
 	long* XY;
 	long* Z;
 	long* offsets;
 	float perspz;
-	ulong r, g, b;
+	unsigned long r, g, b;
 	long c0, c1, x0, y0, z0, x1, y1, z1;
 
 	v = MyVertexBuffer;
@@ -2572,7 +2598,7 @@ void DrawWraithTrail(ITEM_INFO* item)
 
 void DrawDrips()
 {
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	DRIP_STRUCT* drip;
 	FVECTOR vec;
 	long* XY;
@@ -2680,7 +2706,7 @@ void DrawBubbles()
 {
 	BUBBLE_STRUCT* bubble;
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	FVECTOR pos;
 	long* XY;
@@ -2798,7 +2824,7 @@ void DrawShockwaves()
 {
 	SHOCKWAVE_STRUCT* wave;
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* vtx;
+	_D3DTLVERTEX* vtx;
 	TEXTURESTRUCT tex;
 	FVECTOR p1, p2, p3;
 	long* XY;
@@ -2939,7 +2965,7 @@ void DrawShockwaves()
 void DrawTrainFloorStrip(long x, long z, TEXTURESTRUCT* tex, long y_and_flags)
 {
 	PHD_VECTOR* offsets;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	FVECTOR p1, p2, p3;
 	long* Z;
 	long* XY;
@@ -3062,13 +3088,13 @@ void S_DrawSplashes()	//	(also draws ripples and underwater blood (which is a ri
 	SPLASH_STRUCT* splash;
 	RIPPLE_STRUCT* ripple;
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	long* XY;
 	long* Z;
 	long* offsets;
-	uchar* links;
-	ulong c0, c1;
+	unsigned char* links;
+	unsigned long c0, c1;
 	long x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, linkNum, r, g, b;
 	short rads[6];
 	short yVals[6];
@@ -3444,14 +3470,14 @@ void S_DrawFireSparks(long size, long life)
 {
 	FIRE_SPARKS* sptr;
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	FVECTOR pos;
 	long* XY;
 	long* Z;
 	long* offsets;
 	float perspz;
-	ulong r, g, b, col;
+	unsigned long r, g, b, col;
 	long newSize, s, c, sx1, cx1, sx2, cx2;
 	long dx, dy, dz, x1, y1, x2, y2, x3, y3, x4, y4;
 	short ang;
@@ -3577,7 +3603,7 @@ void S_DrawFireSparks(long size, long life)
 void DrawRope(ROPE_STRUCT* rope)
 {
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	long dx, dy, d, b, w, spec;
 	long x1, y1, z1, x2, y2, z2, x3, y3, x4, y4;
@@ -3703,14 +3729,14 @@ void DrawBlood()
 {
 	BLOOD_STRUCT* bptr;
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	FVECTOR pos;
 	long* XY;
 	long* Z;
 	long* offsets;
 	float perspz;
-	ulong r, col;
+	unsigned long r, col;
 	long size, s, c;
 	long dx, dy, dz, x1, y1, x2, y2, x3, y3, x4, y4;
 	short ang;
@@ -3810,7 +3836,7 @@ void S_DrawSmokeSparks()
 {
 	SMOKE_SPARKS* sptr;
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	FVECTOR pos;
 	long* XY;
@@ -3964,7 +3990,7 @@ void DoUwEffect()
 {
 	WATER_DUST* p;
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	FVECTOR pos;
 	long* XY;
@@ -4119,7 +4145,7 @@ void DrawLightning()
 	SPRITESTRUCT* sprite;
 	PHD_VECTOR* vec;
 	SVECTOR* offsets;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	FVECTOR p1, p2, p3;
 	long* XY;

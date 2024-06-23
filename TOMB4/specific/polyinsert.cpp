@@ -1,9 +1,9 @@
-#include "../tomb4/pch.h"
+
 #include "polyinsert.h"
 #include "dxshell.h"
 #include "drawroom.h"
 #include "output.h"
-#include "d3dmatrix.h"
+#include "D3DMATRIX.h"
 #include "function_stubs.h"
 #include "../game/tomb4fx.h"
 #include "function_table.h"
@@ -16,6 +16,17 @@
 #include "winmain.h"
 #include "gamemain.h"
 #include "../game/gameflow.h"
+#include "fogbulbstruct.h"
+#include "../game/texture.h"
+#include "sortlist.h"
+#include "d3dtlbumpvertex.h"
+#include "types.h"
+#include "fvector.h"
+#include "gfleveloptions.h"
+#include "texturestruct.h"
+#include "texturebucket.h"
+#include <d3dtypes.h>
+#include <cmath>
 
 D3DTLBUMPVERTEX XYUVClipperBuffer[20];
 D3DTLBUMPVERTEX zClipperBuffer[20];
@@ -366,12 +377,12 @@ void CreateFogPos(FOGBULB_STRUCT* FogBulb)
 				FogBulb->vec.x = FogBulb->WorldPos.x - camera.pos.x;
 				FogBulb->vec.y = FogBulb->WorldPos.y - camera.pos.y;
 				FogBulb->vec.z = FogBulb->WorldPos.z - camera.pos.z;
-				SetD3DMatrix(&D3DMView, mW2V);
+				Set_D3DMATRIX(&D3DMView, mW2V);
 				mD3DTransform(&FogBulb->vec, &D3DMView);
 				FogBulb->pos.x = FogBulb->vec.x;
 				FogBulb->pos.y = FogBulb->vec.y;
 				FogBulb->pos.z = FogBulb->vec.z;
-				D3DNormalise((D3DVECTOR*)&FogBulb->vec);
+				D3DNormalise((_D3DVECTOR*)&FogBulb->vec);
 				FogBulb->vec.x = FogBulb->rad * FogBulb->vec.x + FogBulb->pos.x;
 				FogBulb->vec.y = FogBulb->rad * FogBulb->vec.y + FogBulb->pos.y;
 				FogBulb->vec.z = FogBulb->rad * FogBulb->vec.z + FogBulb->pos.z;
@@ -532,7 +543,7 @@ void InitialiseFogBulbs()
 	}
 }
 
-void OmniEffect(D3DTLVERTEX* v)
+void OmniEffect(_D3DTLVERTEX* v)
 {
 	FOGBULB_STRUCT* FogBulb;
 	FVECTOR pos;
@@ -606,7 +617,7 @@ void OmniEffect(D3DTLVERTEX* v)
 	}
 }
 
-void OmniFog(D3DTLVERTEX* v)
+void OmniFog(_D3DTLVERTEX* v)
 {
 	FOGBULB_STRUCT* FogBulb;
 	FVECTOR pos;
@@ -693,10 +704,10 @@ void OmniFog(D3DTLVERTEX* v)
 	}
 }
 
-void AddTriClippedSorted(D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided)
+void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided)
 {
 	D3DTLBUMPVERTEX* p;
-	D3DTLVERTEX* pV;
+	_D3DTLVERTEX* pV;
 	SORTLIST* sl;
 	TEXTURESTRUCT tex2;
 	short* c;
@@ -935,10 +946,10 @@ void AddTriClippedSorted(D3DTLVERTEX* v, short v0, short v1, short v2, TEXTUREST
 	v[v2].specular = specBak[2];
 }
 
-void AddQuadClippedSorted(D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided)
+void AddQuadClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided)
 {
 	D3DTLBUMPVERTEX* p;
-	D3DTLVERTEX* pV;
+	_D3DTLVERTEX* pV;
 	SORTLIST* sl;
 	TEXTURESTRUCT tex2;
 	short* c;
@@ -1137,7 +1148,7 @@ void AddQuadClippedSorted(D3DTLVERTEX* v, short v0, short v1, short v2, short v3
 	v[v3].specular = specBak[3];
 }
 
-void AddLineClippedSorted(D3DTLVERTEX* v0, D3DTLVERTEX* v1, short drawtype)
+void AddLineClippedSorted(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, short drawtype)
 {
 	D3DTLBUMPVERTEX* v;
 	SORTLIST* sl;
@@ -1220,7 +1231,7 @@ void SortPolyList(long count, SORTLIST** list)
 	DoSort(0, count - 1, list);
 }
 
-void mD3DTransform(FVECTOR* vec, D3DMATRIX* mx)
+void mD3DTransform(FVECTOR* vec, _D3DMATRIX* mx)
 {
 	float x, y, z;
 
@@ -1294,9 +1305,9 @@ void AddClippedPoly(D3DTLBUMPVERTEX* dest, long nPoints, D3DTLBUMPVERTEX* v, TEX
 	}
 }
 
-void AddTriClippedZBuffer(D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided)
+void AddTriClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided)
 {
-	D3DTLVERTEX* vtx;
+	_D3DTLVERTEX* vtx;
 	D3DTLBUMPVERTEX* p;
 	D3DTLBUMPVERTEX* bp;
 	TEXTURESTRUCT tex2;
@@ -1491,11 +1502,11 @@ void AddTriClippedZBuffer(D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 	v[v2].specular = specBak[2];
 }
 
-void AddQuadClippedZBuffer(D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided)
+void AddQuadClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided)
 {
 	D3DTLBUMPVERTEX* p;
 	D3DTLBUMPVERTEX* bp;
-	D3DTLVERTEX* vtx;
+	_D3DTLVERTEX* vtx;
 	TEXTURESTRUCT tex2;
 	long* nVtx;
 	short* c;
@@ -1655,7 +1666,7 @@ void AddQuadClippedZBuffer(D3DTLVERTEX* v, short v0, short v1, short v2, short v
 	v[v3].specular = specBak[3];
 }
 
-void SubdivideEdge(D3DTLVERTEX* v0, D3DTLVERTEX* v1, D3DTLVERTEX* v, short* c, float tu1, float tv1, float tu2, float tv2, float* tu, float* tv)
+void SubdivideEdge(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v, short* c, float tu1, float tv1, float tu2, float tv2, float* tu, float* tv)
 {
 	float zv;
 	short cf, r0, g0, b0, a0, r1, g1, b1, a1;
@@ -1724,9 +1735,9 @@ void SubdivideEdge(D3DTLVERTEX* v0, D3DTLVERTEX* v1, D3DTLVERTEX* v, short* c, f
 	v->specular = RGBA(r1, g1, b1, a1);
 }
 
-void SubdivideQuad(D3DTLVERTEX* v0, D3DTLVERTEX* v1, D3DTLVERTEX* v2, D3DTLVERTEX* v3, TEXTURESTRUCT* tex, long double_sided, long steps, short* c)
+void SubdivideQuad(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2, _D3DTLVERTEX* v3, TEXTURESTRUCT* tex, long double_sided, long steps, short* c)
 {
-	D3DTLVERTEX v[5];
+	_D3DTLVERTEX v[5];
 	TEXTURESTRUCT tex2;
 	float uv[10];
 	short aclip[5];
@@ -1825,9 +1836,9 @@ void SubdivideQuad(D3DTLVERTEX* v0, D3DTLVERTEX* v1, D3DTLVERTEX* v2, D3DTLVERTE
 	SubdivideQuad(&v[2], &v[4], &v[1], v3, &tex2, double_sided, steps - 1, bclip);
 }
 
-void SubdivideTri(D3DTLVERTEX* v0, D3DTLVERTEX* v1, D3DTLVERTEX* v2, TEXTURESTRUCT* tex, long double_sided, long steps, short* c)
+void SubdivideTri(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2, TEXTURESTRUCT* tex, long double_sided, long steps, short* c)
 {
-	D3DTLVERTEX v[3];
+	_D3DTLVERTEX v[3];
 	TEXTURESTRUCT tex2;
 	float uv[6];
 	short bclip[4];
@@ -1898,7 +1909,7 @@ void SubdivideTri(D3DTLVERTEX* v0, D3DTLVERTEX* v1, D3DTLVERTEX* v2, TEXTURESTRU
 	SubdivideQuad(&v[2], v, &v[1], v2, &tex2, double_sided, steps - 1, bclip);
 }
 
-void AddTriSubdivide(D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided)
+void AddTriSubdivide(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided)
 {
 	long steps;
 	short c[4];
@@ -1919,7 +1930,7 @@ void AddTriSubdivide(D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT
 	}
 }
 
-void AddQuadSubdivide(D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided)
+void AddQuadSubdivide(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided)
 {
 	long steps;
 	short c[4];

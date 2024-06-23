@@ -1,11 +1,23 @@
-#include "../tomb4/pch.h"
+
 #include "debris.h"
 #include "control.h"
 #include "../specific/function_stubs.h"
 #include "tomb4fx.h"
 #include "../specific/3dmath.h"
 #include "draw.h"
-
+#include "debrisstruct.h"
+#include "meshdata.h"
+#include "floorinfo.h"
+#include "roominfo.h"
+#include "roomflags.h"
+#include "phdvector.h"
+#include "texturestruct.h"
+#include "gamevector.h"
+#include "shatteritem.h"
+#include "meshinfo.h"
+#include "staticinfo.h"
+#include "types.h"
+#include <d3d.h>
 DEBRIS_STRUCT debris[256];
 long next_debris;
 short DebrisFlags;
@@ -123,7 +135,7 @@ void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels,
 
 	if (DebrisFlags & 1)
 	{
-		dptr->YRot = uchar(GetRandomControl() << 1);
+		dptr->YRot = unsigned char(GetRandomControl() << 1);
 		dptr->XRot = dptr->YRot;
 	}
 	else
@@ -205,12 +217,12 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	GAME_VECTOR vec;
 	float* vtx;
 	long* Vels;
-	ushort* face_data;
+	unsigned short* face_data;
 	short* meshp;
 	short* offsets;
 	short* RotVerts;
 	long lp, nVtx, nTris, nQuads, x, y, z;
-	ushort v1, v2, v3, c;
+	unsigned short v1, v2, v3, c;
 	short rnd, RotY, rgb;
 
 	rnd = 0;
@@ -288,7 +300,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	vec.room_number = RoomNumber;
 	DebrisMeshAmbient = room[RoomNumber].ambient;
 
-	face_data = (ushort*)mesh->gt3;
+	face_data = (unsigned short*)mesh->gt3;
 
 	while (nTris && Num)
 	{
@@ -365,7 +377,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 		nTris--;
 	}
 
-	face_data = (ushort*)mesh->gt4;
+	face_data = (unsigned short*)mesh->gt4;
 
 	while (nQuads && Num)
 	{

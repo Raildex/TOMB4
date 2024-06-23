@@ -1,6 +1,24 @@
 #pragma once
-#include "../global/types.h"
-
+#pragma pack(push,1)
+struct SPOTCAM
+{
+	long x;
+	long y;
+	long z;
+	long tx;
+	long ty;
+	long tz;
+	unsigned char sequence;
+	unsigned char camera;
+	short fov;
+	short roll;
+	short timer;
+	short speed;
+	short flags;
+	short room_number;
+	short pad;
+};
+#pragma pack(pop)
 void SetSplineData(long num, long cam);
 void InitialiseSpotCam(short Sequence);
 void InitSpotCamSequences();

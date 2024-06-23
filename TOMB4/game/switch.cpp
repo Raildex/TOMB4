@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "switch.h"
 #include "lara_states.h"
 #include "collide.h"
@@ -13,6 +13,20 @@
 #include "../specific/input.h"
 #include "lara.h"
 #include "newinv.h"
+#include "phdvector.h"
+#include "inputbuttons.h"
+#include "iteminfo.h"
+#include "itemstatus.h"
+#include "animstruct.h"
+#include "larainfo.h"
+#include "laragunstatus.h"
+#include "itemflags.h"
+#include "floortypes.h"
+#include "trigobjtypes.h"
+#include "types.h"
+#include "objectinfo.h"
+#include "larawaterstatus.h"
+#include "doordata.h"
 
 static PHD_VECTOR FullBlockSwitchPos = { 0, 256, 0 };
 static PHD_VECTOR SwitchPos = { 0, 0, 0 };
@@ -45,10 +59,10 @@ static short CrowbarBounds2[12] = { -256, 256, 0, 0, 256, 512, -1820, 1820, -546
 static short CogSwitchBounds[12] = { -512, 512, 0, 0, -1536, -512, -1820, 1820, -5460, 5460, -1820, 1820 };
 
 PHD_VECTOR OldPickupPos;
-uchar CurrentSequence;
-uchar Sequences[3];
-uchar SequenceUsed[6];
-uchar SequenceResults[3][3][3];
+unsigned char CurrentSequence;
+unsigned char Sequences[3];
+unsigned char SequenceUsed[6];
+unsigned char SequenceResults[3][3][3];
 
 void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 {
@@ -843,7 +857,7 @@ void FullBlockSwitchControl(short item_number)
 	else
 	{
 		item->item_flags[0] = 1;
-		Sequences[CurrentSequence] = (uchar)item->trigger_flags;
+		Sequences[CurrentSequence] = (unsigned char)item->trigger_flags;
 		CurrentSequence++;
 
 		if (CurrentSequence == 3 && SequenceUsed[SequenceResults[Sequences[0]][Sequences[1]][Sequences[2]]])

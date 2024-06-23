@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "horse.h"
 #include "objects.h"
 #include "box.h"
@@ -11,6 +11,19 @@
 #include "sphere.h"
 #include "effects.h"
 #include "lara.h"
+#include "iteminfo.h"
+#include "types.h"
+#include "objectinfo.h"
+#include "animstruct.h"
+#include "aiinfo.h"
+#include "creatureinfo.h"
+#include "weapontypes.h"
+#include "larainfo.h"
+#include "aibits.h"
+#include "sparks.h"
+#include "itemflags.h"
+#include "biteinfo.h"
+#include <cstdlib>
 
 static BITE_INFO horseman_axe = { 0, 0, 0, 6 };
 static BITE_INFO horseman_lfoot = { 0, 0, 0, 14 };

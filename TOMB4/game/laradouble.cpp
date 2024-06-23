@@ -1,9 +1,10 @@
-#include "../tomb4/pch.h"
+
 #include "laradouble.h"
 #include "box.h"
 #include "sound.h"
 #include "control.h"
 #include "lara.h"
+#include "iteminfo.h"
 
 void InitialiseLaraDouble(short item_number)
 {

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "wraith.h"
 #include "../specific/function_stubs.h"
 #include "effect2.h"
@@ -10,6 +10,14 @@
 #include "traps.h"
 #include "senet.h"
 #include "lara.h"
+#include "sparks.h"
+#include "wraithstruct.h"
+#include "iteminfo.h"
+#include "roominfo.h"
+#include "roomflags.h"
+#include "animstruct.h"
+#include "types.h"
+#include <cstdlib>
 
 static short WraithSpeed = 64;
 
@@ -43,7 +51,7 @@ void InitialiseWraith(short item_number)
 void TriggerWraithFlame(long x, long y, long z, short xv, short yv, short zv, long objnum)
 {
 	SPARKS* sptr;
-	uchar col;
+	unsigned char col;
 	
 	sptr = &spark[GetFreeSpark()];
 	sptr->On = 1;
@@ -101,9 +109,9 @@ void TriggerWraithFlame(long x, long y, long z, short xv, short yv, short zv, lo
 void TriggerWraithEffect(long x, long y, long z, short vel, long objnum)
 {
 	SPARKS* sptr;
-	ulong scol, dcol;
+	unsigned long scol, dcol;
 	long rad, ang;
-	uchar sr, sg, sb, dr, dg, db, col;
+	unsigned char sr, sg, sb, dr, dg, db, col;
 
 	if (objnum == WRAITH1)
 	{
@@ -140,8 +148,8 @@ void TriggerWraithEffect(long x, long y, long z, short vel, long objnum)
 	for (int i = 0; i < 15; i++)
 	{
 		sptr = &spark[GetFreeSpark()];
-		*(ulong*)&sptr->On = scol;	//just.. why
-		*(ulong*)&sptr->dR = dcol;
+		*(unsigned long*)&sptr->On = scol;	//just.. why
+		*(unsigned long*)&sptr->dR = dcol;
 		sptr->ColFadeSpeed = 4;
 		sptr->FadeToBlack = 7;
 		sptr->TransType = 2;
@@ -420,18 +428,18 @@ void WraithControl(short item_number)
 		if (item->object_number == WRAITH1)
 		{
 			wraith->r = (GetRandomControl() & 0x3F) - 64;
-			wraith->g = uchar((GetRandomControl() & 0x3F) + 16 * i + 16);
+			wraith->g = unsigned char((GetRandomControl() & 0x3F) + 16 * i + 16);
 			wraith->b = GetRandomControl() & 0xF;
 		}
 		else if (item->object_number == WRAITH2)
 		{
 			wraith->r = GetRandomControl() & 0xF;
-			wraith->g = uchar((GetRandomControl() & 0x3F) + 16 * i + 16);
+			wraith->g = unsigned char((GetRandomControl() & 0x3F) + 16 * i + 16);
 			wraith->b = (GetRandomControl() & 0x3F) - 64;
 		}
 		else
 		{
-			wraith->r = uchar((GetRandomControl() & 0x3F) + 8 * i + 16);
+			wraith->r = unsigned char((GetRandomControl() & 0x3F) + 8 * i + 16);
 			wraith->g = wraith->r;
 			wraith->b = (GetRandomControl() & 0xF) + wraith->g;
 		}

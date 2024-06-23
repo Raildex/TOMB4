@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "input.h"
 #include "dxshell.h"
 #include "../game/sound.h"
@@ -12,6 +12,17 @@
 #include "../game/savegame.h"
 #include "../game/gameflow.h"
 #include "../game/spotcam.h"
+#include "iteminfo.h"
+#include "gfleveloptions.h"
+#include "larainfo.h"
+#include "larawaterstatus.h"
+#include "laragunstatus.h"
+#include "weapontypes.h"
+#include "carriedweaponflags.h"
+#include "inputbuttons.h"
+#include "savegameinfo.h"
+#include <cstdio>
+#include <joystickapi.h>
 
 const char* KeyboardButtons[272] =
 {
@@ -429,7 +440,7 @@ long S_UpdateInput()
 
 	if (lara.gun_status == LG_READY)
 	{
-		savegame.AutoTarget = (uchar)App.AutoTarget;
+		savegame.AutoTarget = (unsigned char)App.AutoTarget;
 
 		if (linput & IN_LOOK)
 		{

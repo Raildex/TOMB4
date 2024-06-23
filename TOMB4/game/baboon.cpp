@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "baboon.h"
 #include "tomb4fx.h"
 #include "objects.h"
@@ -11,6 +11,20 @@
 #include "../specific/3dmath.h"
 #include "effects.h"
 #include "lara.h"
+#include "creatureinfo.h"
+#include "moodtype.h"
+#include "iteminfo.h"
+#include "aibits.h"
+#include "aiinfo.h"
+#include "animstruct.h"
+#include "objectinfo.h"
+#include "larainfo.h"
+#include "biteinfo.h"
+#include "itemstatus.h"
+#include "itemflags.h"
+#include "roominfo.h"
+#include "types.h"
+#include <cstdlib>
 
 static BITE_INFO baboon_hit = { 10, 10, 11, 4 };
 

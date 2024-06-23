@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "harpy.h"
 #include "effect2.h"
 #include "../specific/function_stubs.h"
@@ -12,6 +12,17 @@
 #include "lara.h"
 #include "control.h"
 #include "lot.h"
+#include "fxinfo.h"
+#include "types.h"
+#include "sparks.h"
+#include "iteminfo.h"
+#include "biteinfo.h"
+#include "objectinfo.h"
+#include "animstruct.h"
+#include "creatureinfo.h"
+#include "aiinfo.h"
+#include "larainfo.h"
+#include <cstdlib>
 
 static BITE_INFO right_hand = { 0, 128, 0, 2 };
 static BITE_INFO left_hand = { 0, 128, 0, 4 };
@@ -60,7 +71,7 @@ void TriggerHarpyMissileFlame(short fx_number, long xv, long yv, long zv)
 
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
-	sptr->FxObj = (uchar)fx_number;
+	sptr->FxObj = (unsigned char)fx_number;
 	sptr->Scalar = 2;
 	sptr->Size = (GetRandomControl() & 7) + 64;
 	sptr->sSize = sptr->Size;
@@ -132,7 +143,7 @@ void TriggerHarpySparks(long x, long y, long z, short xv, short yv, short zv)
 	sptr->Flags = 0;
 }
 
-void TriggerHarpyFlame(short item_number, uchar NodeNumber, short size)
+void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size)
 {
 	SPARKS* sptr;
 	long dx, dz;
@@ -173,10 +184,10 @@ void TriggerHarpyFlame(short item_number, uchar NodeNumber, short size)
 
 	sptr->MaxYvel = 0;
 	sptr->Gravity = (GetRandomControl() & 0x1F) + 16;
-	sptr->FxObj = (uchar)item_number;
+	sptr->FxObj = (unsigned char)item_number;
 	sptr->NodeNumber = NodeNumber;
 	sptr->Scalar = 2;
-	sptr->Size = uchar((GetRandomControl() & 0xF) + size);
+	sptr->Size = unsigned char((GetRandomControl() & 0xF) + size);
 	sptr->sSize = sptr->Size;
 	sptr->dSize = sptr->Size >> 4;
 }

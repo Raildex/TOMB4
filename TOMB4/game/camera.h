@@ -1,5 +1,13 @@
 #pragma once
-#include "../global/types.h"
+#include "camerainfo.h"
+#include "cameratype.h"
+#include "phdvector.h"
+#include "shatteritem.h"
+
+struct GAME_VECTOR;
+struct PHD_VECTOR;
+struct ITEM_INFO;
+struct SHATTER_ITEM;
 
 void InitialiseCamera();
 void MoveCamera(GAME_VECTOR* ideal, long speed);

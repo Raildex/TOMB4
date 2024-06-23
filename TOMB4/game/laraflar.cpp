@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "laraflar.h"
 #include "../specific/3dmath.h"
 #include "objects.h"
@@ -16,6 +16,17 @@
 #include "gameflow.h"
 #include "draw.h"
 #include "tomb4fx.h"
+#include "iteminfo.h"
+#include "larainfo.h"
+#include "itemstatus.h"
+#include "objectinfo.h"
+#include "roomflags.h"
+#include "laragunstatus.h"
+#include "animstruct.h"
+#include "types.h"
+#include "roominfo.h"
+#include "gfleveloptions.h"
+#include "laramesh.h"
 
 void DrawFlareInAir(ITEM_INFO* item)
 {

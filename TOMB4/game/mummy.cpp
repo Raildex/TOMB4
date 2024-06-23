@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "mummy.h"
 #include "box.h"
 #include "objects.h"
@@ -7,6 +7,15 @@
 #include "effects.h"
 #include "lara.h"
 #include "control.h"
+#include "creatureinfo.h"
+#include "aiinfo.h"
+#include "animstruct.h"
+#include "larainfo.h"
+#include "objectinfo.h"
+#include "itemstatus.h"
+#include "biteinfo.h"
+#include "weapontypes.h"
+#include <cstdlib>
 
 static BITE_INFO left_hand = { 0, 0, 0, 11 };
 static BITE_INFO right_hand = { 0, 0, 0, 14 };

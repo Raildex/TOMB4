@@ -1,11 +1,11 @@
-#include "../tomb4/pch.h"
+
 #include "newinv.h"
 #include "../specific/LoadSave.h"
 #include "../specific/3dmath.h"
 #include "objects.h"
 #include "draw.h"
 #include "../specific/output.h"
-#include "../specific/d3dmatrix.h"
+#include "d3dMATRIX.h"
 #include "lara2gun.h"
 #include "lara1gun.h"
 #include "text.h"
@@ -23,6 +23,25 @@
 #include "savegame.h"
 #include "../specific/dxsound.h"
 #include "../specific/drawbars.h"
+#include "inputbuttons.h"
+#include "invdrawitem.h"
+#include "larainfo.h"
+#include "iteminfo.h"
+#include "carriedweaponflags.h"
+#include "gfleveloptions.h"
+#include "weapontypes.h"
+#include "laragunstatus.h"
+#include "savegameinfo.h"
+#include "larawaterstatus.h"
+#include "objectinfo.h"
+#include "fontflags.h"
+#include "ringme.h"
+#include "menuthang.h"
+#include "ammolist.h"
+#include "animstruct.h"
+#include "combinelist.h"
+#include <dinput.h>
+#include <cstdio>
 
 #pragma warning(push)
 #pragma warning(disable : 4838)
@@ -332,7 +351,7 @@ static MENUTHANG current_options[3];
 static long compass_settle_thang;
 static short examine_mode = 0;
 static short stats_mode;
-static uchar current_selected_option;
+static unsigned char current_selected_option;
 static char menu_active;
 static char ammo_active;
 static char oldLaraBusy;
@@ -383,22 +402,22 @@ static long pcbright = 0x7F7F7F;
 static short inventry_xpos = 0;
 static short inventry_ypos = 0;
 
-static uchar go_left;
-static uchar go_right;
-static uchar go_up;
-static uchar go_down;
-static uchar go_select;
-static uchar go_deselect;
-static uchar left_repeat;
-static uchar left_debounce;
-static uchar right_repeat;
-static uchar right_debounce;
-static uchar up_debounce;
-static uchar down_debounce;
-static uchar select_debounce;
-static uchar deselect_debounce;
-static uchar friggrimmer;
-static uchar friggrimmer2;
+static unsigned char go_left;
+static unsigned char go_right;
+static unsigned char go_up;
+static unsigned char go_down;
+static unsigned char go_select;
+static unsigned char go_deselect;
+static unsigned char left_repeat;
+static unsigned char left_debounce;
+static unsigned char right_repeat;
+static unsigned char right_debounce;
+static unsigned char up_debounce;
+static unsigned char down_debounce;
+static unsigned char select_debounce;
+static unsigned char deselect_debounce;
+static unsigned char friggrimmer;
+static unsigned char friggrimmer2;
 static char loading_or_saving;
 static char use_the_bitch;
 
@@ -617,7 +636,7 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 	long* bone;
 	short* rotation1;
 	short* frmptr;
-	ulong bit;
+	unsigned long bit;
 	long poppush, alpha, compass;
 
 	anim = &anims[objects[item->object_number].anim_index];
@@ -1230,9 +1249,9 @@ void fade_ammo_selector()
 	}
 }
 
-void spinback(ushort* cock)
+void spinback(unsigned short* cock)
 {
-	ushort val, val2;
+	unsigned short val, val2;
 
 	val = *cock;
 

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "lara1gun.h"
 #include "traps.h"
 #include "objects.h"
@@ -23,6 +23,25 @@
 #include "lara.h"
 #include "savegame.h"
 #include "gameflow.h"
+#include "iteminfo.h"
+#include "roomflags.h"
+#include "objectinfo.h"
+#include "savegameinfo.h"
+#include "weapontypes.h"
+#include "types.h"
+#include "carriedweaponflags.h"
+#include "laramesh.h"
+#include "laragunstatus.h"
+#include "weaponinfo.h"
+#include "inputbuttons.h"
+#include "larawaterstatus.h"
+#include "animstruct.h"
+#include "gfleveloptions.h"
+#include "itemstatus.h"
+#include "splashsetup.h"
+#include "roominfo.h"
+#include "meshinfo.h"
+#include "itemflags.h"
 
 void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item)
 {

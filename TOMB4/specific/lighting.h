@@ -1,5 +1,13 @@
 #pragma once
-#include "../global/types.h"
+#include "pointlightstruct.h"
+#include "sunlightstruct.h"
+
+struct ITEM_INFO;
+struct FVECTOR;
+struct ROOM_INFO;
+struct PCLIGHT;
+struct DYNAMIC;
+
 
 void S_CalculateStaticMeshLight(long x, long y, long z, long shade, ROOM_INFO* r);
 void InitItemDynamicLighting(ITEM_INFO* item);

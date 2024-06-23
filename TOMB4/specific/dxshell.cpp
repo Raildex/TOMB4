@@ -1,8 +1,18 @@
-#include "../tomb4/pch.h"
+#include <windows.h>
 #include "dxshell.h"
 #include "function_stubs.h"
 #include "winmain.h"
-
+#include "dxdirectdrawinfo.h"
+#include "dxinfo.h"
+#include "dxdirectsoundinfo.h"
+#include "dxtextureinfo.h"
+#include "dxd3ddevice.h"
+#include "dxzbufferinfo.h"
+#include "dxflags.h"
+#include "dxdisplaymode.h"
+#include "dxptr.h"
+#include <dsound.h>
+#include <dinput.h>
 long DDSCL_FLAGS[11] =	// for DXSetCooperativeLevel logging
 {
 	DDSCL_ALLOWMODEX,
@@ -37,16 +47,16 @@ char tga_header[18] = { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 1, 0, 1, 16, 0 }
 
 DXPTR* G_dxptr;
 DXINFO* G_dxinfo;
-LPDIRECTDRAWX G_ddraw;
-LPDIRECT3DX G_d3d;
+IDirectDraw4* G_ddraw;
+IDirect3D3* G_d3d;
 HWND G_hwnd;
 char keymap[256];
 
 static char keymap2[256];
 
-void DXBitMask2ShiftCnt(ulong mask, uchar* shift, uchar* count)
+void DXBitMask2ShiftCnt(unsigned long mask, unsigned char* shift, unsigned char* count)
 {
-	uchar i;
+	unsigned char i;
 
 	for (i = 0; !(mask & 1); i++)
 		mask >>= 1;
@@ -122,7 +132,7 @@ long DXDDCreate(LPGUID pGuid, void** pDD4)
 	return 1;
 }
 
-long DXD3DCreate(LPDIRECTDRAWX pDD4, void** pD3D)
+long DXD3DCreate(IDirectDraw4* pDD4, void** pD3D)
 {
 	Log(2, "DXD3DCreate");
 
@@ -136,7 +146,7 @@ long DXD3DCreate(LPDIRECTDRAWX pDD4, void** pD3D)
 	return 1;
 }
 
-long DXSetCooperativeLevel(LPDIRECTDRAWX pDD4, HWND hwnd, long flags)
+long DXSetCooperativeLevel(IDirectDraw4* pDD4, HWND hwnd, long flags)
 {
 	char* ptr;
 	char buf[1024];
@@ -306,7 +316,7 @@ void DXFreeInfo(DXINFO* dxinfo)
 	free(dxinfo->DSInfo);
 }
 
-HRESULT __stdcall DXEnumDisplayModes(LPDDSURFACEDESCX lpDDSurfaceDesc2, LPVOID lpContext)
+HRESULT __stdcall DXEnumDisplayModes(_DDSURFACEDESC2* lpDDSurfaceDesc2, LPVOID lpContext)
 {
 	DXDIRECTDRAWINFO* DDInfo;
 	DXDISPLAYMODE* DM;
@@ -446,7 +456,7 @@ HRESULT __stdcall DXEnumZBufferFormats(LPDDPIXELFORMAT lpDDPixFmt, LPVOID lpCont
 	return D3DENUMRET_OK;
 }
 
-long DXCreateSurface(LPDIRECTDRAWX dd, LPDDSURFACEDESCX desc, LPDIRECTDRAWSURFACEX* surf)
+long DXCreateSurface(IDirectDraw4* dd, _DDSURFACEDESC2* desc, IDirectDrawSurface4** surf)
 {
 	Log(2, "DXCreateSurface");
 
@@ -457,7 +467,7 @@ long DXCreateSurface(LPDIRECTDRAWX dd, LPDDSURFACEDESCX desc, LPDIRECTDRAWSURFAC
 	return 0;
 }
 
-long DXSetVideoMode(LPDIRECTDRAWX dd, long dwWidth, long dwHeight, long dwBPP)
+long DXSetVideoMode(IDirectDraw4* dd, long dwWidth, long dwHeight, long dwBPP)
 {
 	Log(2, "DXSetVideoMode");
 	Log(5, "SetDisplayMode - %dx%dx%d", dwWidth, dwHeight, dwBPP);
@@ -468,7 +478,7 @@ long DXSetVideoMode(LPDIRECTDRAWX dd, long dwWidth, long dwHeight, long dwBPP)
 	return 1;
 }
 
-long DXCreateD3DDevice(LPDIRECT3DX d3d, GUID guid, LPDIRECTDRAWSURFACEX surf, LPDIRECT3DDEVICEX* device)
+long DXCreateD3DDevice(IDirect3D3* d3d, GUID guid, IDirectDrawSurface4* surf, IDirect3DDevice3** device)
 {
 	Log(2, "DXCreateD3DDevice");
 
@@ -484,7 +494,7 @@ long DXCreateD3DDevice(LPDIRECT3DX d3d, GUID guid, LPDIRECTDRAWSURFACEX surf, LP
 	}
 }
 
-long DXCreateViewport(LPDIRECT3DX d3d, LPDIRECT3DDEVICEX device, long w, long h, LPDIRECT3DVIEWPORTX* viewport)
+long DXCreateViewport(IDirect3D3* d3d, IDirect3DDevice3* device, long w, long h, IDirect3DViewport3** viewport)
 {
 	D3DVIEWPORT2 vp2;
 
@@ -582,20 +592,20 @@ void DXInitKeyboard(HWND hwnd, HINSTANCE hinstance)
 	memset(keymap2, 0, sizeof(keymap2));
 }
 
-void DXSaveScreen(LPDIRECTDRAWSURFACEX surf, const char* name)
+void DXSaveScreen(IDirectDrawSurface4* surf, const char* name)
 {
 	FILE* file;
-	DDSURFACEDESCX desc;
+	DDSURFACEDESC2 desc;
 	short* pSurf;
 	short* pDest;
 	char* pM;
-	ulong val;
+	unsigned long val;
 	static long num = 0;
 	long r, g, b;
 	char buf[16];
 
-	memset(&desc, 0, sizeof(DDSURFACEDESCX));
-	desc.dwSize = sizeof(DDSURFACEDESCX);
+	memset(&desc, 0, sizeof(DDSURFACEDESC2));
+	desc.dwSize = sizeof(DDSURFACEDESC2);
 	DXAttempt(surf->GetSurfaceDesc(&desc));
 	DXAttempt(surf->Lock(0, &desc, DDLOCK_WAIT, 0));
 	pSurf = (short*)desc.lpSurface;
@@ -612,9 +622,9 @@ void DXSaveScreen(LPDIRECTDRAWSURFACEX surf, const char* name)
 		pDest = (short*)pM;
 		pSurf += desc.dwHeight * (desc.lPitch / 2);
 
-		for (ulong h = 0; h < desc.dwHeight; h++)
+		for (unsigned long h = 0; h < desc.dwHeight; h++)
 		{
-			for (ulong w = 0; w < desc.dwWidth; w++)
+			for (unsigned long w = 0; w < desc.dwWidth; w++)
 			{
 				val = pSurf[w];
 
@@ -721,7 +731,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 	HWND desktop;
 	DEVMODE dev;
 	HDC hDC;
-	DDSURFACEDESCX desc;
+	DDSURFACEDESC2 desc;
 	RECT r;
 	long flag, CoopLevel;
 
@@ -778,8 +788,8 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 		ChangeDisplaySettings(&dev, 0);
 	}
 
-	memset(&desc, 0, sizeof(DDSURFACEDESCX));
-	desc.dwSize = sizeof(DDSURFACEDESCX);
+	memset(&desc, 0, sizeof(DDSURFACEDESC2));
+	desc.dwSize = sizeof(DDSURFACEDESC2);
 
 	if (Flags & DXF_FULLSCREEN)
 	{
@@ -877,8 +887,8 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 	if (Flags & DXF_ZBUFFER && Flags & DXF_HWR)
 	{
 		Log(3, "Creating ZBuffer");
-		memset(&desc, 0, sizeof(DDSURFACEDESCX));
-		desc.dwSize = sizeof(DDSURFACEDESCX);
+		memset(&desc, 0, sizeof(DDSURFACEDESC2));
+		desc.dwSize = sizeof(DDSURFACEDESC2);
 		desc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
 		desc.ddsCaps.dwCaps = DDSCAPS_VIDEOMEMORY | DDSCAPS_ZBUFFER;
 		desc.dwWidth = G_dxptr->dwRenderWidth;
@@ -957,10 +967,10 @@ HRESULT __stdcall DXEnumDirect3D(LPGUID lpGuid, LPSTR lpDeviceDescription, LPSTR
 {
 	DXDIRECTDRAWINFO* ddi;
 	DXD3DDEVICE* device;
-	LPDIRECT3DDEVICEX d3dDevice;
+	IDirect3DDevice3* d3dDevice;
 	DXDISPLAYMODE* dm;
-	LPDIRECTDRAWSURFACEX surf;
-	DDSURFACEDESCX desc;
+	IDirectDrawSurface4* surf;
+	DDSURFACEDESC2 desc;
 	long nD3DDevices;
 
 	ddi = (DXDIRECTDRAWINFO*)lpContext;
@@ -1017,8 +1027,8 @@ HRESULT __stdcall DXEnumDirect3D(LPGUID lpGuid, LPSTR lpDeviceDescription, LPSTR
 	}
 
 	Log(5, "Enumerate Texture Formats");
-	memset(&desc, 0, sizeof(DDSURFACEDESCX));
-	desc.dwSize = sizeof(DDSURFACEDESCX);
+	memset(&desc, 0, sizeof(DDSURFACEDESC2));
+	desc.dwSize = sizeof(DDSURFACEDESC2);
 	desc.dwFlags = DDSD_CAPS;
 	desc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_3DDEVICE;
 	DXSetCooperativeLevel(G_ddraw, G_hwnd, DDSCL_FULLSCREEN | DDSCL_NOWINDOWCHANGES | DDSCL_EXCLUSIVE);

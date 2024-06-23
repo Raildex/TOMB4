@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "wildboar.h"
 #include "box.h"
 #include "objects.h"
@@ -7,6 +7,14 @@
 #include "lara.h"
 #include "control.h"
 #include "lot.h"
+#include "iteminfo.h"
+#include "creatureinfo.h"
+#include "aiinfo.h"
+#include "animstruct.h"
+#include "objectinfo.h"
+#include "biteinfo.h"
+#include "types.h"
+#include <cstdlib>
 
 static BITE_INFO wildboar_bite = { 0, 0, 0, 14 };
 

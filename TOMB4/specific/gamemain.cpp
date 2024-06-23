@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "gamemain.h"
 #include "audio.h"
 #include "file.h"
@@ -12,6 +12,10 @@
 #include "../game/gameflow.h"
 #include "dxshell.h"
 #include "../game/savegame.h"
+#include "watertab.h"
+#include "savegameinfo.h"
+#include "timing.h"
+#include <process.h>
 
 LPDIRECT3DVERTEXBUFFER DestVB;
 WATERTAB WaterTable[22][64];
@@ -21,7 +25,7 @@ float vert_wibble_table[32];
 long SaveCounter;
 
 static float unused_vert_wibble_table[256];
-static uchar water_abs[4] = { 4, 8, 12, 16 };
+static unsigned char water_abs[4] = { 4, 8, 12, 16 };
 static short water_shimmer[4] = { 31, 63, 95, 127 };
 static short water_choppy[4] = { 16, 53, 90, 127 };
 
@@ -84,10 +88,10 @@ unsigned int __stdcall GameMain(void* ptr)
 	return 1;
 }
 
-ushort GetRandom(WATERTAB* wt, long lp)
+unsigned short GetRandom(WATERTAB* wt, long lp)
 {
 	long loop;
-	ushort ret;
+	unsigned short ret;
 
 	do
 	{
@@ -115,27 +119,27 @@ void init_water_table()
 		sSin = rcossin_tbl[i << 7];
 		WaterTable[0][i].shimmer = (63 * sSin) >> 15;
 		WaterTable[0][i].choppy = (16 * sSin) >> 12;
-		WaterTable[0][i].random = (uchar)GetRandom(&WaterTable[0][0], i);
+		WaterTable[0][i].random = (unsigned char)GetRandom(&WaterTable[0][0], i);
 		WaterTable[0][i].abs = 0;
 
 		WaterTable[1][i].shimmer = (32 * sSin) >> 15;
 		WaterTable[1][i].choppy = 0;
-		WaterTable[1][i].random = (uchar)GetRandom(&WaterTable[1][0], i);
+		WaterTable[1][i].random = (unsigned char)GetRandom(&WaterTable[1][0], i);
 		WaterTable[1][i].abs = -3;
 
 		WaterTable[2][i].shimmer = (64 * sSin) >> 15;
 		WaterTable[2][i].choppy = 0;
-		WaterTable[2][i].random = (uchar)GetRandom(&WaterTable[2][0], i);
+		WaterTable[2][i].random = (unsigned char)GetRandom(&WaterTable[2][0], i);
 		WaterTable[2][i].abs = 0;
 
 		WaterTable[3][i].shimmer = (96 * sSin) >> 15;
 		WaterTable[3][i].choppy = 0;
-		WaterTable[3][i].random = (uchar)GetRandom(&WaterTable[3][0], i);
+		WaterTable[3][i].random = (unsigned char)GetRandom(&WaterTable[3][0], i);
 		WaterTable[3][i].abs = 4;
 
 		WaterTable[4][i].shimmer = (127 * sSin) >> 15;
 		WaterTable[4][i].choppy = 0;
-		WaterTable[4][i].random = (uchar)GetRandom(&WaterTable[4][0], i);
+		WaterTable[4][i].random = (unsigned char)GetRandom(&WaterTable[4][0], i);
 		WaterTable[4][i].abs = 8;
 
 		for (int j = 0, k = 5; j < 4; j++, k += 4)
@@ -144,7 +148,7 @@ void init_water_table()
 			{
 				WaterTable[k + m][i].shimmer = -((sSin * water_shimmer[m]) >> 15);
 				WaterTable[k + m][i].choppy = sSin * water_choppy[j] >> 12;
-				WaterTable[k + m][i].random = (uchar)GetRandom(&WaterTable[k + m][0], i);
+				WaterTable[k + m][i].random = (unsigned char)GetRandom(&WaterTable[k + m][0], i);
 				WaterTable[k + m][i].abs = water_abs[m];
 			}
 		}
@@ -182,7 +186,7 @@ bool GameInitialise()
 long S_SaveGame(long slot_num)
 {
 	HANDLE file;
-	ulong bytes;
+	unsigned long bytes;
 	long days, hours, minutes, seconds;
 	char buffer[80], counter[16];
 
@@ -217,7 +221,7 @@ long S_SaveGame(long slot_num)
 long S_LoadGame(long slot_num)
 {
 	HANDLE file;
-	ulong bytes;
+	unsigned long bytes;
 	long value;
 	char buffer[80];
 

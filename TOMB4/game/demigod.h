@@ -1,5 +1,6 @@
 #pragma once
-#include "../global/types.h"
+
+struct PHD_3DPOS;
 
 void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type);
 void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv);

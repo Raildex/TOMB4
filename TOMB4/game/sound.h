@@ -1,6 +1,7 @@
 #pragma once
-#include "../global/types.h"
-
+struct SoundSlot;
+struct PHD_3DPOS;
+struct SAMPLE_INFO;
 void GetPanVolume(SoundSlot* slot);
 void StopSoundEffect(long sfx);
 void SOUND_Init();
@@ -9,7 +10,7 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags);
 void SayNo();
 
 extern SAMPLE_INFO* sample_infos;
-extern SoundSlot LaSlot[32];
+extern SoundSlot LaSlot[];
 extern short* sample_lut;
 extern long sound_active;
 

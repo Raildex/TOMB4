@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "skeleton.h"
 #include "items.h"
 #include "control.h"
@@ -16,6 +16,23 @@
 #include "debris.h"
 #include "lara.h"
 #include "savegame.h"
+#include "sparks.h"
+#include "fxinfo.h"
+#include "aiinfo.h"
+#include "creatureinfo.h"
+#include "objectinfo.h"
+#include "aibits.h"
+#include "types.h"
+#include "animstruct.h"
+#include "biteinfo.h"
+#include "larainfo.h"
+#include "itemstatus.h"
+#include "weapontypes.h"
+#include "meshinfo.h"
+#include "roominfo.h"
+#include "floorinfo.h"
+#include "savegameinfo.h"
+#include <cstdlib>
 
 static BITE_INFO skelly_hit = { 180, 0, 0, 16 };
 

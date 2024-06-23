@@ -1,12 +1,16 @@
-#include "../tomb4/pch.h"
+
 #include "texture.h"
 #include "dxshell.h"
 #include "function_stubs.h"
 #include "winmain.h"
 #include <cassert>
 #include <ddraw.h>
-#include <minwinbase.h>
-#include <winnt.h>
+#include "../game/texture.h"
+#include "dxinfo.h"
+#include "dxdirectdrawinfo.h"
+#include "dxd3ddevice.h"
+#include "dxflags.h"
+#include "dxtextureinfo.h"
 
 TEXTURE* Textures;
 long nTextures;
@@ -21,9 +25,9 @@ HRESULT WINAPI CreateMipMapFormat1(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 	int h = desc->dwHeight;
 	int offset = 256/desc->dwWidth;
 	long* lD = (long*)desc->lpSurface;
-	for (ulong y = 0; y < desc->dwHeight; y++)
+	for (unsigned long y = 0; y < desc->dwHeight; y++)
 	{
-		for (ulong x = 0; x < desc->dwWidth; x++) 
+		for (unsigned long x = 0; x < desc->dwWidth; x++) 
 		{
 			long value = *((long*)source + x * 256 / w + y * 0x10000 / h);
 			*lD++ = value;
@@ -35,15 +39,15 @@ HRESULT WINAPI CreateMipMapFormat1(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 }
 
 struct CreateMipMapFormat0Payload {
-	ulong rbpp;
-	ulong bbpp;
-	ulong gbpp;
-	ulong abpp;
-	ulong rshift;
-	ulong gshift;
-	ulong bshift;
-	ulong ashift;
-	ulong bpp;
+	unsigned long rbpp;
+	unsigned long bbpp;
+	unsigned long gbpp;
+	unsigned long abpp;
+	unsigned long rshift;
+	unsigned long gshift;
+	unsigned long bshift;
+	unsigned long ashift;
+	unsigned long bpp;
 	long* lS;
 };
 HRESULT WINAPI CreateMipMapFormat0(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC2 desc, LPVOID payload) {
@@ -57,12 +61,12 @@ HRESULT WINAPI CreateMipMapFormat0(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 	int offset = 256/desc->dwWidth;
 	long* lS = (long*)data->lS;
 	char* cD = (char*)desc->lpSurface;
-	for (ulong y = 0; y < desc->dwHeight; y++)
+	for (unsigned long y = 0; y < desc->dwHeight; y++)
 	{
-		for (ulong x = 0; x < desc->dwWidth; x++) 
+		for (unsigned long x = 0; x < desc->dwWidth; x++) 
 		{
-				ulong c, o, ro, go, bo, ao;
-				uchar r, g, b, a;
+				unsigned long c, o, ro, go, bo, ao;
+				unsigned char r, g, b, a;
 				c = *(lS + x * 256 / w + y * 0x10000 / h);
 				r = CLRR(c);
 				g = CLRG(c);
@@ -95,9 +99,9 @@ HRESULT WINAPI CreateMipMapFormat2(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 	int offset = 256/desc->dwWidth;
 	short* sS = (short*)source;
 	short* sD = (short*)desc->lpSurface;
-	for (ulong y = 0; y < desc->dwHeight; y++)
+	for (unsigned long y = 0; y < desc->dwHeight; y++)
 	{
-		for (ulong x = 0; x < desc->dwWidth; x++)
+		for (unsigned long x = 0; x < desc->dwWidth; x++)
 			*sD++ = *(sS + x * 256 / w + y * 0x10000 / h);
 	}
 	
@@ -106,21 +110,21 @@ HRESULT WINAPI CreateMipMapFormat2(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 	return DDENUMRET_OK;
 }
 
-LPDIRECTDRAWSURFACEX CreateTexturePage(long w, long h, long MipMapCount, long* pSrc, rgbfunc RGBM, long format)
+IDirectDrawSurface4* CreateTexturePage(long w, long h, long MipMapCount, long* pSrc, rgbfunc RGBM, long format)
 {
 	DXTEXTUREINFO* tex;
-	LPDIRECTDRAWSURFACEX tSurf;
-	DDSURFACEDESCX desc;
+	IDirectDrawSurface4* tSurf;
+	DDSURFACEDESC2 desc;
 	long* lS;
 	long* lD;
 	short* sS;
 	short* sD;
 	char* cD;
-	ulong c, o, ro, go, bo, ao;
-	uchar r, g, b, a;
+	unsigned long c, o, ro, go, bo, ao;
+	unsigned char r, g, b, a;
 
-	memset(&desc, 0, sizeof(DDSURFACEDESCX));
-	desc.dwSize = sizeof(DDSURFACEDESCX);
+	memset(&desc, 0, sizeof(DDSURFACEDESC2));
+	desc.dwSize = sizeof(DDSURFACEDESC2);
 	desc.dwWidth = w;
 	desc.dwHeight = h;
 

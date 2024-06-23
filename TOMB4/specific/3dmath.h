@@ -1,6 +1,8 @@
 #pragma once
-#include "../global/types.h"
-
+#include "matrixindices.h"
+#include "math_tbls.h"
+struct PHD_VECTOR;
+struct PHD_3DPOS;
 void phd_PushMatrix();
 void phd_PushUnitMatrix();
 void phd_SetTrans(long x, long y, long z);
@@ -12,10 +14,10 @@ void phd_RotYXZpack(long angles);
 void phd_RotYXZ(short y, short x, short z);
 void phd_TranslateAbs(long x, long y, long z);
 void phd_GetVectorAngles(long x, long y, long z, short* angles);
-ulong mGetAngle(long x, long z, long x1, long z1);
+unsigned long mGetAngle(long x, long z, long x1, long z1);
 void AlterFOV(short fov);
 long phd_atan(long x, long y);
-ulong phd_sqrt(ulong num);
+unsigned long phd_sqrt(unsigned long num);
 void ScaleCurrentMatrix(PHD_VECTOR* vec);
 void SetupZRange(long znear, long zfar);
 void InitWindow(long x, long y, long w, long h, long znear, long zfar, long fov, long a, long b);
@@ -87,12 +89,12 @@ __inline short phd_cos(long angle)
 
 __inline float fSin(long angle)
 {
-	return fcossin_tbl[(ushort)angle];
+	return fcossin_tbl[(unsigned short)angle];
 }
 
 __inline float fCos(long angle)
 {
-	return fcossin_tbl[ushort(angle + 0x4000)];
+	return fcossin_tbl[unsigned short(angle + 0x4000)];
 }
 
 __inline void mPopMatrix()

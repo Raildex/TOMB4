@@ -1,5 +1,8 @@
 #pragma once
-#include "../global/types.h"
+
+struct COLL_INFO;
+struct ITEM_INFO;
+struct PHD_VECTOR;
 
 void InitialiseBike(short item_number);
 void DrawBikeExtras(ITEM_INFO* item);

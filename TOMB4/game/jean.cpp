@@ -1,9 +1,13 @@
-#include "../tomb4/pch.h"
+
 #include "jean.h"
 #include "objects.h"
 #include "../specific/function_stubs.h"
 #include "control.h"
 #include "lara.h"
+#include "iteminfo.h"
+#include "animstruct.h"
+#include "objectinfo.h"
+#include "larainfo.h"
 
 void InitialiseJeanYves(short item_number)
 {

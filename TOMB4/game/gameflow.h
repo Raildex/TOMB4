@@ -1,49 +1,67 @@
 #pragma once
-#include "../global/types.h"
 
+#include "cvector.h"
+#include "phdvector.h"
+struct GAMEFLOW;
 void DoGameflow();
-void DoLevel(uchar Name, uchar Audio);
-void DoTitle(uchar Name, uchar Audio);
+void DoLevel(unsigned char Name, unsigned char Audio);
+void DoTitle(unsigned char Name, unsigned char Audio);
 void LoadGameflow();
 long DoCredits();
 
 extern GAMEFLOW* Gameflow;
 extern PHD_VECTOR gfLoadCam;
 extern PHD_VECTOR gfLoadTarget;
-extern uchar gfLoadRoom;
+extern unsigned char gfLoadRoom;
 extern PHD_VECTOR gfLensFlare;
 extern CVECTOR gfLensFlareColour;
 extern CVECTOR gfFog;
 extern CVECTOR gfLayer1Col;
 extern CVECTOR gfLayer2Col;
-extern ushort* gfStringOffset;
-extern ushort* gfFilenameOffset;
-extern uchar* gfScriptFile;
-extern uchar* gfLanguageFile;
+extern unsigned short* gfStringOffset;
+extern unsigned short* gfFilenameOffset;
+extern unsigned char* gfScriptFile;
+extern unsigned char* gfLanguageFile;
 extern char* gfStringWad;
 extern char* gfFilenameWad;
 extern long gfMirrorZPlane;
 extern long gfStatus;
-extern ushort gfLevelFlags;
-extern uchar gfCurrentLevel;
-extern uchar gfLevelComplete;
-extern uchar gfGameMode;
-extern uchar gfMirrorRoom;
-extern uchar gfNumMips;
-extern uchar gfRequiredStartPos;
-extern uchar gfMips[8];
-extern uchar gfLevelNames[40];
+extern unsigned short gfLevelFlags;
+extern unsigned char gfCurrentLevel;
+extern unsigned char gfLevelComplete;
+extern unsigned char gfGameMode;
+extern unsigned char gfMirrorRoom;
+extern unsigned char gfNumMips;
+extern unsigned char gfRequiredStartPos;
+extern unsigned char gfMips[8];
+extern unsigned char gfLevelNames[40];
 extern char gfUVRotate;
 extern char gfLayer1Vel;
 extern char gfLayer2Vel;
 
-extern ulong GameTimer;
-extern uchar bDoCredits;
+extern unsigned long GameTimer;
+extern unsigned char bDoCredits;
 extern char DEL_playingamefmv;
 extern char skipped_level;
 extern char Chris_Menu;
 extern char title_controls_locked_out;
-
+struct GAMEFLOW
+{
+	unsigned long CheatEnabled : 1;
+	unsigned long LoadSaveEnabled : 1;
+	unsigned long TitleEnabled : 1;
+	unsigned long PlayAnyLevel : 1;
+	unsigned long Language : 3;
+	unsigned long DemoDisc : 1;
+	unsigned long Unused : 24;
+	unsigned long InputTimeout;
+	unsigned char SecurityTag;
+	unsigned char nLevels;
+	unsigned char nFileNames;
+	unsigned char Pad;
+	unsigned short FileNameLen;
+	unsigned short ScriptLen;
+};
 enum gf_commands
 {
 	CMD_FMV = 0x80,

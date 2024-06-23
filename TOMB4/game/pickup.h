@@ -1,5 +1,8 @@
 #pragma once
-#include "../global/types.h"
+
+struct ITEM_INFO;
+struct COLL_INFO;
+
 
 void SarcophagusCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void KeyHoleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
@@ -13,6 +16,6 @@ void RegeneratePickups();
 void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll);
 
-extern uchar NumRPickups;
-extern uchar RPickups[16];
+extern unsigned char NumRPickups;
+extern unsigned char RPickups[16];
 extern char KeyTriggerActive;

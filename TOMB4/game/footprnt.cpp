@@ -1,4 +1,3 @@
-#include "../tomb4/pch.h"
 #include "footprnt.h"
 #include "delstuff.h"
 #include "control.h"
@@ -11,6 +10,17 @@
 #include "../specific/gamemain.h"
 #include "../specific/file.h"
 #include "lara.h"
+#include "footprint.h"
+#include "phdvector.h"
+#include "iteminfo.h"
+#include "texturestruct.h"
+#include "sfxtypes.h"
+#include "laramesh.h"
+#include "floorinfo.h"
+#include "spritestruct.h"
+#include "types.h"
+#include "objectinfo.h"
+#include <d3dtypes.h>
 
 #define PRINT_HEIGHT_CORRECTION 128 // The maximum difference between the footprint and the floor
 
@@ -58,7 +68,7 @@ void S_DrawFootPrints()
 {
 	FOOTPRINT* print;
 	SPRITESTRUCT* sprite;
-	D3DTLVERTEX* v;
+	_D3DTLVERTEX* v;
 	PHD_VECTOR pos[3];
 	TEXTURESTRUCT tex;
 	float u1, v1, u2, v2;

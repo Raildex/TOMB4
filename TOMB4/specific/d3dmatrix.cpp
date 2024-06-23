@@ -1,17 +1,19 @@
-#include "../tomb4/pch.h"
+
 #include "d3dmatrix.h"
 #include "dxshell.h"
 #include "3dmath.h"
 #include "winmain.h"
+#include <d3dtypes.h>
+#include <cmath>
 
-D3DMATRIX D3DMView;
-D3DMATRIX D3DLightMatrix;
-D3DMATRIX D3DInvCameraMatrix;
+_D3DMATRIX D3DMView;
+_D3DMATRIX D3DLightMatrix;
+_D3DMATRIX D3DInvCameraMatrix;
 
-static D3DMATRIX D3DMWorld;
-static D3DMATRIX D3DMProjection;
+static _D3DMATRIX D3DMWorld;
+static _D3DMATRIX D3DMProjection;
 
-D3DMATRIX* D3DIdentityMatrix(D3DMATRIX* mx)
+_D3DMATRIX* D3DIdentityMatrix(_D3DMATRIX* mx)
 {
 	mx->_11 = 1;
 	mx->_12 = 0;
@@ -35,7 +37,7 @@ D3DMATRIX* D3DIdentityMatrix(D3DMATRIX* mx)
 	return mx;
 }
 
-void SetD3DMatrix(D3DMATRIX* mx, float* imx)
+void Set_D3DMATRIX(_D3DMATRIX* mx, float* imx)
 {
 	D3DIdentityMatrix(mx);
 	mx->_11 = imx[M00];
@@ -54,11 +56,11 @@ void SetD3DMatrix(D3DMATRIX* mx, float* imx)
 
 void SetD3DViewMatrix()
 {
-	SetD3DMatrix(&D3DMView, mMXPtr);
+	Set_D3DMATRIX(&D3DMView, mMXPtr);
 	DXAttempt(App.dx.lpD3DDevice->SetTransform(D3DTRANSFORMSTATE_VIEW, &D3DMView));
 }
 
-void D3DTransform(D3DVECTOR* vec, D3DMATRIX* mx)
+void D3DTransform(_D3DVECTOR* vec, _D3DMATRIX* mx)
 {
 	float x, y, z;
 
@@ -70,7 +72,7 @@ void D3DTransform(D3DVECTOR* vec, D3DMATRIX* mx)
 	vec->z = z;
 }
 
-D3DVECTOR* D3DNormalise(D3DVECTOR* vec)
+_D3DVECTOR* D3DNormalise(_D3DVECTOR* vec)
 {
 	float val;
 
@@ -85,7 +87,7 @@ D3DVECTOR* D3DNormalise(D3DVECTOR* vec)
 	return vec;
 }
 
-void S_InitD3DMatrix()
+void S_Init_D3DMATRIX()
 {
 	D3DIdentityMatrix(&D3DMWorld);
 	D3DIdentityMatrix(&D3DMProjection);
@@ -94,7 +96,7 @@ void S_InitD3DMatrix()
 	DXAttempt(App.dx.lpD3DDevice->SetTransform(D3DTRANSFORMSTATE_PROJECTION, &D3DMProjection));
 }
 
-LPD3DMATRIX D3DMultMatrix(LPD3DMATRIX d, LPD3DMATRIX a, LPD3DMATRIX b)
+_D3DMATRIX* D3DMultMatrix(_D3DMATRIX* d, _D3DMATRIX* a, _D3DMATRIX* b)
 {
 	d->_11 = a->_11 * b->_11;
 	d->_11 += a->_12 * b->_21;

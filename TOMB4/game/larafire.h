@@ -1,5 +1,10 @@
 #pragma once
-#include "../global/types.h"
+
+
+struct WEAPON_INFO;
+struct LARA_ARM;
+struct GAME_VECTOR;
+struct ITEM_INFO;
 
 void InitialiseNewWeapon();
 void LaraTargetInfo(WEAPON_INFO* winfo);
@@ -13,4 +18,4 @@ long WeaponObjectMesh(long weapon_type);
 void DoProperDetection(short item_number, long x, long y, long z, long xv, long yv, long zv);
 void LaraGun();
 
-extern WEAPON_INFO weapons[9];
+extern WEAPON_INFO weapons[];

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "mirror.h"
 #include "delstuff.h"
 #include "../specific/function_table.h"
@@ -7,6 +7,10 @@
 #include "hair.h"
 #include "lara.h"
 #include "gameflow.h"
+#include "gunshellstruct.h"
+#include "iteminfo.h"
+#include "hairstruct.h"
+#include "larainfo.h"
 
 void Draw_Mirror_Lara()
 {

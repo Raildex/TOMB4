@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+
 
 bool LoadBinkStuff();
 void FreeBinkStuff();

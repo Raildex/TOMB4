@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "lot.h"
 #include "../specific/function_stubs.h"
 #include "objects.h"
@@ -6,6 +6,17 @@
 #include "camera.h"
 #include "lara.h"
 #include "control.h"
+#include "zonetype.h"
+#include "creatureinfo.h"
+#include "lotinfo.h"
+#include "boxnode.h"
+#include "roominfo.h"
+#include "phd3dpos.h"
+#include "types.h"
+#include "iteminfo.h"
+#include "larainfo.h"
+#include "itemstatus.h"
+#include "floorinfo.h"
 
 CREATURE_INFO* baddie_slots;
 

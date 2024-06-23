@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+
 #include "camera.h"
 #include "../specific/3dmath.h"
 #include "../specific/function_stubs.h"
@@ -12,6 +12,21 @@
 #include "effect2.h"
 #include "lara.h"
 #include "savegame.h"
+#include "iteminfo.h"
+#include "larainfo.h"
+#include "oldcamera.h"
+#include "inputbuttons.h"
+#include "savegameinfo.h"
+#include "weapontypes.h"
+#include "roomflags.h"
+#include "roominfo.h"
+#include "objectvector.h"
+#include "shatteritem.h"
+#include "camerainfo.h"
+#include "phdvector.h"
+#include "cameratype.h"
+#include "types.h"
+#include <cstdlib>
 
 CAMERA_INFO camera;
 

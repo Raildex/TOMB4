@@ -1,5 +1,7 @@
 #pragma once
-#include "../global/types.h"
+
+struct COLL_INFO;
+struct ITEM_INFO;
 
 void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void InitialiseElementPuzzle(short item_number);
