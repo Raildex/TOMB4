@@ -78,8 +78,6 @@ long nAnimUVRanges;
 long number_cameras;
 short nAIObjects;
 
-static FILE* level_fp;
-static char* FileData;
 static char* CompressedData;
 static long num_items;
 
@@ -108,8 +106,8 @@ unsigned int __stdcall LoadLevel(void* name)
 	S_LoadBar();
 
 	CompressedData = 0;
-	FileData = 0;
-	level_fp = 0;
+	char* FileData = 0;
+	FILE* level_fp = 0;
 	level_fp = FileOpen((const char*)name);
 
 	if (level_fp)
@@ -120,7 +118,7 @@ unsigned int __stdcall LoadLevel(void* name)
 		fread(&BTPages, 1, 2, level_fp);
 
 		Log(7, "Process Level Data");
-		LoadTextures(RTPages, OTPages, BTPages);
+		LoadTextures(RTPages, OTPages, BTPages, level_fp, &FileData);
 		fread(&size, 1, 4, level_fp);
 		fread(&compressedSize, 1, 4, level_fp);
 		CompressedData = (char*)malloc(compressedSize);
@@ -132,41 +130,41 @@ unsigned int __stdcall LoadLevel(void* name)
 		pData = FileData;
 		S_LoadBar();
 
-		LoadRooms();
+		LoadRooms(&FileData);
 		S_LoadBar();
 
-		LoadObjects();
+		LoadObjects(&FileData);
 		S_LoadBar();
 
-		LoadSprites();
+		LoadSprites(&FileData);
 		S_LoadBar();
 
-		LoadCameras();
+		LoadCameras(&FileData);
 		S_LoadBar();
 
-		LoadSoundEffects();
+		LoadSoundEffects(&FileData);
 		S_LoadBar();
 
-		LoadBoxes();
+		LoadBoxes(&FileData);
 		S_LoadBar();
 
-		LoadAnimatedTextures();
+		LoadAnimatedTextures(&FileData);
 		S_LoadBar();
 
-		LoadTextureInfos();
+		LoadTextureInfos(&FileData);
 		S_LoadBar();
 
-		LoadItems();
+		LoadItems(&FileData);
 		S_LoadBar();
 
-		LoadAIInfo();
+		LoadAIInfo(&FileData);
 		S_LoadBar();
 
-		LoadCinematic();
+		LoadCinematic(&FileData);
 		S_LoadBar();
 
 		if (acm_ready && !App.SoundDisabled)
-			LoadSamples();
+			LoadSamples(level_fp, &FileData);
 
 		free(pData);
 		S_LoadBar();
@@ -366,7 +364,7 @@ long LoadFile(const char* name, char** dest)
 	return size;
 }
 
-bool LoadTextures(long RTPages, long OTPages, long BTPages)
+bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char** FileData)
 {
 	DXTEXTUREINFO* dxtex;
 	IDirectDrawSurface4* tSurf;
@@ -399,10 +397,10 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 		fread(&compressedSize, 1, 4, level_fp);
 
 		CompressedData = (char*)malloc(compressedSize);
-		FileData = (char*)malloc(size);
+		*FileData = (char*)malloc(size);
 
 		fread(CompressedData, compressedSize, 1, level_fp);
-		Decompress(FileData, CompressedData, compressedSize, size);
+		Decompress(*FileData, CompressedData, compressedSize, size);
 
 		fread(&size, 1, 4, level_fp);
 		fread(&compressedSize, 1, 4, level_fp);
@@ -419,19 +417,19 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 		fread(&compressedSize, 1, 4, level_fp);
 
 		CompressedData = (char*)malloc(compressedSize);
-		FileData = (char*)malloc(size);
+		*FileData = (char*)malloc(size);
 		fread(CompressedData, compressedSize, 1, level_fp);
-		Decompress(FileData, CompressedData, compressedSize, size);
+		Decompress(*FileData, CompressedData, compressedSize, size);
 		free(CompressedData);
 	}
 
-	pData = FileData;
+	pData = *FileData;
 
 	Log(5, "RTPages %d", RTPages);
 	size = RTPages * skip * 0x10000;
 	TextureData = (unsigned char*)malloc(size);
-	memcpy(TextureData, FileData, size);
-	FileData += size;
+	memcpy(TextureData, *FileData, size);
+	*FileData += size;
 	S_LoadBar();
 
 	for (int i = 0; i < RTPages; i++)
@@ -454,8 +452,8 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	Log(5, "OTPages %d", OTPages);
 	size = OTPages * skip * 0x10000;
 	TextureData = (unsigned char*)malloc(size);
-	memcpy(TextureData, FileData, size);
-	FileData += size;
+	memcpy(TextureData, *FileData, size);
+	*FileData += size;
 	S_LoadBar();
 
 	for (int i = 0; i < OTPages; i++)
@@ -482,8 +480,8 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	{
 		size = BTPages * skip * 0x10000;
 		TextureData = (unsigned char*)malloc(size);
-		memcpy(TextureData, FileData, size);
-		FileData += size;
+		memcpy(TextureData, *FileData, size);
+		*FileData += size;
 
 		for (int i = 0; i < BTPages; i++)
 		{
@@ -527,12 +525,12 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	fread(&size, 1, 4, level_fp);
 	fread(&compressedSize, 1, 4, level_fp);
 	CompressedData = (char*)malloc(compressedSize);
-	FileData = (char*)malloc(size);
+	*FileData = (char*)malloc(size);
 	fread(CompressedData, compressedSize, 1, level_fp);
-	Decompress(FileData, CompressedData, compressedSize, size);
+	Decompress(*FileData, CompressedData, compressedSize, size);
 	free(CompressedData);
 
-	pData = FileData;
+	pData = *FileData;
 	TextureData = (unsigned char*)malloc(0x40000);
 
 	if (!gfCurrentLevel)	//main menu logo
@@ -591,8 +589,8 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	}
 
 	//font
-	memcpy(TextureData, FileData, 0x40000);
-	FileData += 0x40000;
+	memcpy(TextureData, *FileData, 0x40000);
+	*FileData += 0x40000;
 
 	Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
 	nTex = nTextures;
@@ -606,8 +604,8 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	Textures[nTex].bump = 0;
 
 	//sky
-	memcpy(TextureData, FileData, 0x40000);
-	FileData += 0x40000;
+	memcpy(TextureData, *FileData, 0x40000);
+	*FileData += 0x40000;
 
 	Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
 	nTex = nTextures;
@@ -625,7 +623,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	return 1;
 }
 
-bool LoadRooms()
+bool LoadRooms(char** FileData)
 {
 	ROOM_INFO* r;
 	long size, nDoors;
@@ -633,9 +631,9 @@ bool LoadRooms()
 	Log(2, "LoadRooms");
 	wibble = 0;
 	NumLevelFogBulbs = 0;
-	FileData += sizeof(long);
-	number_rooms = *(short*)FileData;
-	FileData += sizeof(short);
+	*FileData += sizeof(long);
+	number_rooms = *(short*)*FileData;
+	*FileData += sizeof(short);
 	Log(7, "Number Of Rooms %d", number_rooms);
 
 	if (number_rooms < 0 || number_rooms > 1024)
@@ -653,75 +651,75 @@ bool LoadRooms()
 	{
 		r = &room[i];
 
-		r->x = *(long*)FileData;
-		FileData += sizeof(long);
+		r->x = *(long*)*FileData;
+		*FileData += sizeof(long);
 
 		r->y = 0;
 
-		r->z = *(long*)FileData;
-		FileData += sizeof(long);
+		r->z = *(long*)*FileData;
+		*FileData += sizeof(long);
 
-		r->minfloor = *(long*)FileData;
-		FileData += sizeof(long);
+		r->minfloor = *(long*)*FileData;
+		*FileData += sizeof(long);
 
-		r->maxceiling = *(long*)FileData;
-		FileData += sizeof(long);
+		r->maxceiling = *(long*)*FileData;
+		*FileData += sizeof(long);
 
-		size = *(long*)FileData;
-		FileData += sizeof(long);
+		size = *(long*)*FileData;
+		*FileData += sizeof(long);
 		r->data = (short*)game_malloc(size * sizeof(short));
-		memcpy(r->data, FileData, size * sizeof(short));
-		FileData += size * sizeof(short);
+		memcpy(r->data, *FileData, size * sizeof(short));
+		*FileData += size * sizeof(short);
 
-		nDoors = *(short*)FileData;
-		FileData += sizeof(short);
+		nDoors = *(short*)*FileData;
+		*FileData += sizeof(short);
 
 		if (nDoors)
 		{
 			r->door = (short*)game_malloc((16 * nDoors + 1) * sizeof(short));
 			r->door[0] = (short)nDoors;
-			memcpy(r->door + 1, FileData, 16 * nDoors * sizeof(short));
-			FileData += 16 * nDoors * sizeof(short);
+			memcpy(r->door + 1, *FileData, 16 * nDoors * sizeof(short));
+			*FileData += 16 * nDoors * sizeof(short);
 		}
 		else
 			r->door = 0;
 
-		r->x_size = *(short*)FileData;
-		FileData += sizeof(short);
+		r->x_size = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		r->y_size = *(short*)FileData;
-		FileData += sizeof(short);
+		r->y_size = *(short*)*FileData;
+		*FileData += sizeof(short);
 
 		size = r->x_size * r->y_size * sizeof(FLOOR_INFO);
 		r->floor = (FLOOR_INFO*)game_malloc(size);
-		memcpy(r->floor, FileData, size);
-		FileData += size;
+		memcpy(r->floor, *FileData, size);
+		*FileData += size;
 
-		r->ambient = *(long*)FileData;
-		FileData += sizeof(long);
+		r->ambient = *(long*)*FileData;
+		*FileData += sizeof(long);
 
-		r->num_lights = *(short*)FileData;
-		FileData += sizeof(short);
+		r->num_lights = *(short*)*FileData;
+		*FileData += sizeof(short);
 
 		if (r->num_lights)
 		{
 			size = sizeof(LIGHTINFO) * r->num_lights;
 			r->light = (LIGHTINFO*)game_malloc(size);
-			memcpy(r->light, FileData, size);
-			FileData += size;
+			memcpy(r->light, *FileData, size);
+			*FileData += size;
 		}
 		else
 			r->light = 0;
 
-		r->num_meshes = *(short*)FileData;
-		FileData += sizeof(short);
+		r->num_meshes = *(short*)*FileData;
+		*FileData += sizeof(short);
 
 		if (r->num_meshes)
 		{
 			size = sizeof(MESH_INFO) * r->num_meshes;
 			r->mesh = (MESH_INFO*)game_malloc(size);
-			memcpy(r->mesh, FileData, size);
-			FileData += size;
+			memcpy(r->mesh, *FileData, size);
+			*FileData += size;
 
 			for (int j = 0; j < r->num_meshes; j++)
 				r->mesh[j].Flags = 1;
@@ -729,20 +727,20 @@ bool LoadRooms()
 		else
 			r->mesh = 0;
 
-		r->flipped_room = *(short*)FileData;
-		FileData += sizeof(short);
+		r->flipped_room = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		r->flags = *(short*)FileData;
-		FileData += sizeof(short);
+		r->flags = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		r->MeshEffect = *(char*)FileData;
-		FileData += sizeof(char);
+		r->MeshEffect = *(char*)*FileData;
+		*FileData += sizeof(char);
 
-		r->ReverbType = *(char*)FileData;
-		FileData += sizeof(char);
+		r->ReverbType = *(char*)*FileData;
+		*FileData += sizeof(char);
 
-		r->FlipNumber = *(char*)FileData;
-		FileData += sizeof(char);
+		r->FlipNumber = *(char*)*FileData;
+		*FileData += sizeof(char);
 
 		r->left = 0x7FFF;
 		r->top = 0x7FFF;
@@ -755,16 +753,16 @@ bool LoadRooms()
 	}
 
 	BuildOutsideTable();
-	size = *(long*)FileData;
-	FileData += sizeof(long);
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
 	floor_data = (short*)game_malloc(2 * size);
-	memcpy(floor_data, FileData, 2 * size);
-	FileData += sizeof(short) * size;
+	memcpy(floor_data, *FileData, 2 * size);
+	*FileData += sizeof(short) * size;
 	Log(0, "Floor Data Size %d @ %x", size, floor_data);
 	return 1;
 }
 
-bool LoadObjects()
+bool LoadObjects(char** FileData)
 {
 	OBJECT_INFO* obj;
 	STATIC_INFO* stat;
@@ -777,85 +775,85 @@ bool LoadObjects()
 	memset(objects, 0, sizeof(objects));
 	memset(static_objects, 0, sizeof(STATIC_INFO) * NUMBER_STATIC_OBJECTS);
 
-	size = *(long*)FileData;
-	FileData += sizeof(long);
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
 	mesh_base = (short*)game_malloc(size * sizeof(short));
-	memcpy(mesh_base, FileData, size * sizeof(short));
-	FileData += size * sizeof(short);
+	memcpy(mesh_base, *FileData, size * sizeof(short));
+	*FileData += size * sizeof(short);
 
-	size = *(long*)FileData;
-	FileData += sizeof(long);
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
 	meshes = (short**)game_malloc(2 * size * sizeof(short*));
-	memcpy(meshes, FileData, size * sizeof(short*));
-	FileData += size * sizeof(short*);
+	memcpy(meshes, *FileData, size * sizeof(short*));
+	*FileData += size * sizeof(short*);
 
 	for (int i=0;i<size;i++)
 		meshes[i] = mesh_base + (long)meshes[i] / 2;
 
 	num_meshes = size;
 
-	num_anims = *(long*)FileData;
-	FileData += sizeof(long);
+	num_anims = *(long*)*FileData;
+	*FileData += sizeof(long);
 	anims = (ANIM_STRUCT*)game_malloc(sizeof(ANIM_STRUCT) * num_anims);
-	memcpy(anims, FileData, sizeof(ANIM_STRUCT) * num_anims);
-	FileData += sizeof(ANIM_STRUCT) * num_anims;
+	memcpy(anims, *FileData, sizeof(ANIM_STRUCT) * num_anims);
+	*FileData += sizeof(ANIM_STRUCT) * num_anims;
 
-	size = *(long*)FileData;
-	FileData += sizeof(long);
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
 	changes = (CHANGE_STRUCT*)game_malloc(sizeof(CHANGE_STRUCT) * size);
-	memcpy(changes, FileData, sizeof(CHANGE_STRUCT) * size);
-	FileData += sizeof(CHANGE_STRUCT) * size;
+	memcpy(changes, *FileData, sizeof(CHANGE_STRUCT) * size);
+	*FileData += sizeof(CHANGE_STRUCT) * size;
 
-	size = *(long*)FileData;
-	FileData += sizeof(long);
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
 	ranges = (RANGE_STRUCT*)game_malloc(sizeof(RANGE_STRUCT) * size);
-	memcpy(ranges, FileData, sizeof(RANGE_STRUCT) * size);
-	FileData += sizeof(RANGE_STRUCT) * size;
+	memcpy(ranges, *FileData, sizeof(RANGE_STRUCT) * size);
+	*FileData += sizeof(RANGE_STRUCT) * size;
 
-	size = *(long*)FileData;
-	FileData += sizeof(long);
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
 	commands = (short*)game_malloc(sizeof(short) * size);
-	memcpy(commands, FileData, sizeof(short) * size);
-	FileData += sizeof(short) * size;
+	memcpy(commands, *FileData, sizeof(short) * size);
+	*FileData += sizeof(short) * size;
 
-	size = *(long*)FileData;
-	FileData += sizeof(long);
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
 	bones = (long*)game_malloc(sizeof(long) * size);
-	memcpy(bones, FileData, sizeof(long) * size);
-	FileData += sizeof(long) * size;
+	memcpy(bones, *FileData, sizeof(long) * size);
+	*FileData += sizeof(long) * size;
 
-	size = *(long*)FileData;
-	FileData += sizeof(long);
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
 	frames = (short*)game_malloc(sizeof(short) * size);
-	memcpy(frames, FileData, sizeof(short) * size);
-	FileData += sizeof(short) * size;
+	memcpy(frames, *FileData, sizeof(short) * size);
+	*FileData += sizeof(short) * size;
 
 	for (int i = 0; i < num_anims; i++)
 		anims[i].frame_ptr = (short*)((long)anims[i].frame_ptr + (long)frames);
 
-	num = *(long*)FileData;
-	FileData += sizeof(long);
+	num = *(long*)*FileData;
+	*FileData += sizeof(long);
 
 	for (int i = 0; i < num; i++)
 	{
-		slot = *(long*)FileData;
-		FileData += sizeof(long);
+		slot = *(long*)*FileData;
+		*FileData += sizeof(long);
 		obj = &objects[slot];
 
-		obj->nmeshes = *(short*)FileData;
-		FileData += sizeof(short);
+		obj->nmeshes = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		obj->mesh_index = *(short*)FileData;
-		FileData += sizeof(short);
+		obj->mesh_index = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		obj->bone_index = *(long*)FileData;
-		FileData += sizeof(long);
+		obj->bone_index = *(long*)*FileData;
+		*FileData += sizeof(long);
 
-		obj->frame_base = (short*)(*(short**)FileData);
-		FileData += sizeof(short*);
+		obj->frame_base = (short*)(*(short**)*FileData);
+		*FileData += sizeof(short*);
 
-		obj->anim_index = *(short*)FileData;
-		FileData += sizeof(short);
+		obj->anim_index = *(short*)*FileData;
+		*FileData += sizeof(short);
 
 		obj->loaded = 1;
 	}
@@ -881,26 +879,26 @@ bool LoadObjects()
 
 	InitialiseObjects();
 
-	num = *(long*)FileData;	//statics
-	FileData += sizeof(long);
+	num = *(long*)*FileData;	//statics
+	*FileData += sizeof(long);
 
 	for (int i = 0; i < num; i++)
 	{
-		slot = *(long*)FileData;
-		FileData += sizeof(long);
+		slot = *(long*)*FileData;
+		*FileData += sizeof(long);
 		stat = &static_objects[slot];
 
-		stat->mesh_number = *(short*)FileData;
-		FileData += sizeof(short);
+		stat->mesh_number = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		memcpy(&stat->x_minp, FileData, 6 * sizeof(short));
-		FileData += 6 * sizeof(short);
+		memcpy(&stat->x_minp, *FileData, 6 * sizeof(short));
+		*FileData += 6 * sizeof(short);
 
-		memcpy(&stat->x_minc, FileData, 6 * sizeof(short));
-		FileData += 6 * sizeof(short);
+		memcpy(&stat->x_minc, *FileData, 6 * sizeof(short));
+		*FileData += 6 * sizeof(short);
 
-		stat->flags = *(short*)FileData;
-		FileData += sizeof(short);
+		stat->flags = *(short*)*FileData;
+		*FileData += sizeof(short);
 	}
 
 	for (int i = 0; i < NUMBER_STATIC_OBJECTS; i++)
@@ -913,7 +911,7 @@ bool LoadObjects()
 	return 1;
 }
 
-bool LoadSprites()
+bool LoadSprites(char** FileData)
 {
 	STATIC_INFO* stat;
 	OBJECT_INFO* obj;
@@ -922,16 +920,16 @@ bool LoadSprites()
 	long num_sprites, num_slots, slot;
 
 	Log(2, "LoadSprites");
-	FileData += 3;
-	num_sprites = *(long*)FileData;
-	FileData += sizeof(long);
+	*FileData += 3;
+	num_sprites = *(long*)*FileData;
+	*FileData += sizeof(long);
 	spriteinfo = (SPRITESTRUCT*)game_malloc(sizeof(SPRITESTRUCT) * num_sprites);
 
 	for (int i = 0; i < num_sprites; i++)
 	{
 		sptr = &spriteinfo[i];
-		memcpy(&sprite, FileData, sizeof(PHDSPRITESTRUCT));
-		FileData += sizeof(PHDSPRITESTRUCT);
+		memcpy(&sprite, *FileData, sizeof(PHDSPRITESTRUCT));
+		*FileData += sizeof(PHDSPRITESTRUCT);
 		sptr->height = sprite.height;
 		sptr->offset = sprite.offset;
 		sptr->tpage = sprite.tpage;
@@ -947,33 +945,33 @@ bool LoadSprites()
 		sptr->tpage++;
 	}
 
-	num_slots = *(long*)FileData;
-	FileData += sizeof(long);
+	num_slots = *(long*)*FileData;
+	*FileData += sizeof(long);
 
 	if (num_slots <= 0)
 		return 1;
 
 	for (int i = 0; i < num_slots; i++)
 	{
-		slot = *(long*)FileData;
-		FileData += sizeof(long);
+		slot = *(long*)*FileData;
+		*FileData += sizeof(long);
 
 		if (slot >= NUMBER_OBJECTS)
 		{
 			slot -= NUMBER_OBJECTS;
 			stat = &static_objects[slot];
-			stat->mesh_number = *(short*)FileData;
-			FileData += sizeof(short);
-			stat->mesh_number = *(short*)FileData;
-			FileData += sizeof(short);
+			stat->mesh_number = *(short*)*FileData;
+			*FileData += sizeof(short);
+			stat->mesh_number = *(short*)*FileData;
+			*FileData += sizeof(short);
 		}
 		else
 		{
 			obj = &objects[slot];
-			obj->nmeshes = *(short*)FileData;
-			FileData += sizeof(short);
-			obj->mesh_index = *(short*)FileData;
-			FileData += sizeof(short);
+			obj->nmeshes = *(short*)*FileData;
+			*FileData += sizeof(short);
+			obj->mesh_index = *(short*)*FileData;
+			*FileData += sizeof(short);
 			obj->loaded = 1;
 		}
 	}
@@ -981,79 +979,79 @@ bool LoadSprites()
 	return 1;
 }
 
-bool LoadCameras()
+bool LoadCameras(char** FileData)
 {
 	Log(2, "LoadCameras");
-	number_cameras = *(long*)FileData;
-	FileData += sizeof(long);
+	number_cameras = *(long*)*FileData;
+	*FileData += sizeof(long);
 
 	if (number_cameras)
 	{
 		camera.fixed = (OBJECT_VECTOR*)game_malloc(number_cameras * sizeof(OBJECT_VECTOR));
-		memcpy(camera.fixed, FileData, number_cameras * sizeof(OBJECT_VECTOR));
-		FileData += number_cameras * sizeof(OBJECT_VECTOR);
+		memcpy(camera.fixed, *FileData, number_cameras * sizeof(OBJECT_VECTOR));
+		*FileData += number_cameras * sizeof(OBJECT_VECTOR);
 	}
 
-	number_spotcams = *(short*)FileData;
-	FileData += sizeof(long);				//<<---- look at me
+	number_spotcams = *(short*)*FileData;
+	*FileData += sizeof(long);				//<<---- look at me
 
 	if (number_spotcams)
 	{
-		memcpy(SpotCam, FileData, number_spotcams * sizeof(SPOTCAM));
-		FileData += number_spotcams * sizeof(SPOTCAM);
+		memcpy(SpotCam, *FileData, number_spotcams * sizeof(SPOTCAM));
+		*FileData += number_spotcams * sizeof(SPOTCAM);
 	}
 
 	return 1;
 }
 
-bool LoadSoundEffects()
+bool LoadSoundEffects(char** FileData)
 {
 	Log(2, "LoadSoundEffects");
-	number_sound_effects = *(long*)FileData;
-	FileData += sizeof(long);
+	number_sound_effects = *(long*)*FileData;
+	*FileData += sizeof(long);
 	Log(8, "Number of SFX %d", number_sound_effects);
 
 	if (number_sound_effects)
 	{
 		sound_effects = (OBJECT_VECTOR*)game_malloc(number_sound_effects * sizeof(OBJECT_VECTOR));
-		memcpy(sound_effects, FileData, number_sound_effects * sizeof(OBJECT_VECTOR));
-		FileData += number_sound_effects * sizeof(OBJECT_VECTOR);
+		memcpy(sound_effects, *FileData, number_sound_effects * sizeof(OBJECT_VECTOR));
+		*FileData += number_sound_effects * sizeof(OBJECT_VECTOR);
 	}
 
 	return 1;
 }
 
-bool LoadBoxes()
+bool LoadBoxes(char** FileData)
 {
 	BOX_INFO* box;
 	long size;
 
 	Log(2, "LoadBoxes");
-	num_boxes = *(long*)FileData;
-	FileData += sizeof(long);
+	num_boxes = *(long*)*FileData;
+	*FileData += sizeof(long);
 
 	boxes = (BOX_INFO*)game_malloc(sizeof(BOX_INFO) * num_boxes);
-	memcpy(boxes, FileData, sizeof(BOX_INFO) * num_boxes);
-	FileData += sizeof(BOX_INFO) * num_boxes;
+	memcpy(boxes, *FileData, sizeof(BOX_INFO) * num_boxes);
+	*FileData += sizeof(BOX_INFO) * num_boxes;
 
-	size = *(long*)FileData;
-	FileData += sizeof(long);
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
 	overlap = (unsigned short*)game_malloc(sizeof(unsigned short) * size);
-	memcpy(overlap, FileData, sizeof(unsigned short) * size);
-	FileData += sizeof(unsigned short) * size;
+	memcpy(overlap, *FileData, sizeof(unsigned short) * size);
+	*FileData += sizeof(unsigned short) * size;
 
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
 			ground_zone[j][i] = (short*)game_malloc(sizeof(short) * num_boxes);
-			memcpy(ground_zone[j][i], FileData, sizeof(short) * num_boxes);
-			FileData += sizeof(short) * num_boxes;
+			memcpy(ground_zone[j][i], *FileData, sizeof(short) * num_boxes);
+			*FileData += sizeof(short) * num_boxes;
 		}
 
 		ground_zone[4][i] = (short*)game_malloc(sizeof(short) * num_boxes);
-		memcpy(ground_zone[4][i], FileData, sizeof(short) * num_boxes);
-		FileData += sizeof(short) * num_boxes;
+		memcpy(ground_zone[4][i], *FileData, sizeof(short) * num_boxes);
+		*FileData += sizeof(short) * num_boxes;
 	}
 
 	for (int i = 0; i < num_boxes; i++)
@@ -1069,39 +1067,39 @@ bool LoadBoxes()
 	return 1;
 }
 
-bool LoadAnimatedTextures()
+bool LoadAnimatedTextures(char** FileData)
 {
 	long num_anim_ranges;
 
-	num_anim_ranges = *(long*)FileData;
-	FileData += sizeof(long);
+	num_anim_ranges = *(long*)*FileData;
+	*FileData += sizeof(long);
 	aranges = (short*)game_malloc(num_anim_ranges * 2);
-	memcpy(aranges, FileData, num_anim_ranges * 2);
-	FileData += num_anim_ranges * sizeof(short);
-	nAnimUVRanges = *(char*)FileData;
-	FileData += sizeof(char);
+	memcpy(aranges, *FileData, num_anim_ranges * 2);
+	*FileData += num_anim_ranges * sizeof(short);
+	nAnimUVRanges = *(char*)*FileData;
+	*FileData += sizeof(char);
 	return 1;
 }
 
-bool LoadTextureInfos()
+bool LoadTextureInfos(char** FileData)
 {
 	TEXTURESTRUCT* t;
 	PHDTEXTURESTRUCT tex;
 	long val;
 
 	Log(2, "LoadTextureInfos");
-	FileData += 3;
+	*FileData += 3;
 
-	val = *(long*)FileData;
-	FileData += sizeof(long);
+	val = *(long*)*FileData;
+	*FileData += sizeof(long);
 	Log(5, "Texture Infos : %d", val);
 	textinfo = (TEXTURESTRUCT*)game_malloc(val * sizeof(TEXTURESTRUCT));
 
 	for (int i = 0; i < val; i++)
 	{
 		t = &textinfo[i];
-		memcpy(&tex, FileData, sizeof(PHDTEXTURESTRUCT));
-		FileData += sizeof(PHDTEXTURESTRUCT);
+		memcpy(&tex,*FileData, sizeof(PHDTEXTURESTRUCT));
+		*FileData += sizeof(PHDTEXTURESTRUCT);
 		t->drawtype = tex.drawtype;
 		t->tpage = tex.tpage & 0x7FFF;
 		t->flag = tex.tpage ^ (tex.tpage ^ tex.flag) & 0x7FFF;
@@ -1120,7 +1118,7 @@ bool LoadTextureInfos()
 	return 1;
 }
 
-bool LoadItems()
+bool LoadItems(char** FileData)
 {
 	ITEM_INFO* item;
 	ROOM_INFO* r;
@@ -1129,8 +1127,8 @@ bool LoadItems()
 	long x, y, z;
 
 	Log(2, "LoadItems");
-	num_items = *(long*)FileData;
-	FileData += 4;
+	num_items = *(long*)*FileData;
+	*FileData += 4;
 
 	if (!num_items)
 		return 1;
@@ -1143,32 +1141,32 @@ bool LoadItems()
 	{
 		item = &items[i];
 
-		item->object_number = *(short*)FileData;
-		FileData += sizeof(short);
+		item->object_number = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		item->room_number = *(short*)FileData;
-		FileData += sizeof(short);
+		item->room_number = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		item->pos.x_pos = *(long*)FileData;
-		FileData += sizeof(long);
+		item->pos.x_pos = *(long*)*FileData;
+		*FileData += sizeof(long);
 
-		item->pos.y_pos = *(long*)FileData;
-		FileData += sizeof(long);
+		item->pos.y_pos = *(long*)*FileData;
+		*FileData += sizeof(long);
 
-		item->pos.z_pos = *(long*)FileData;
-		FileData += sizeof(long);
+		item->pos.z_pos = *(long*)*FileData;
+		*FileData += sizeof(long);
 
-		item->pos.y_rot = *(short*)FileData;
-		FileData += sizeof(short);
+		item->pos.y_rot = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		item->shade = *(short*)FileData;
-		FileData += sizeof(short);
+		item->shade = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		item->trigger_flags = *(short*)FileData;
-		FileData += sizeof(short);
+		item->trigger_flags = *(short*)*FileData;
+		*FileData += sizeof(short);
 
-		item->flags = *(short*)FileData;
-		FileData += sizeof(short);
+		item->flags = *(short*)*FileData;
+		*FileData += sizeof(short);
 	}
 
 	for (int i = 0; i < num_items; i++)
@@ -1207,41 +1205,41 @@ bool LoadItems()
 	return 1;
 }
 
-bool LoadCinematic()
+bool LoadCinematic(char** FileData)
 {
-	FileData += sizeof(short);
+	*FileData += sizeof(short);
 	return 1;
 }
 
-bool LoadAIInfo()
+bool LoadAIInfo(char** FileData)
 {
 	long num_ai;
 
-	num_ai = *(long*)FileData;
-	FileData += sizeof(long);
+	num_ai = *(long*)*FileData;
+	*FileData += sizeof(long);
 
 	if (num_ai)
 	{
 		nAIObjects = (short)num_ai;
 		AIObjects = (AIOBJECT*)game_malloc(sizeof(AIOBJECT) * num_ai);
-		memcpy(AIObjects, FileData, sizeof(AIOBJECT) * num_ai);
-		FileData += sizeof(AIOBJECT) * num_ai;
+		memcpy(AIObjects, *FileData, sizeof(AIOBJECT) * num_ai);
+		*FileData += sizeof(AIOBJECT) * num_ai;
 	}
 
 	return 1;
 }
 
-bool LoadSamples()
+bool LoadSamples(FILE* level_fp, char** FileData)
 {
 	long num_samples, uncomp_size, comp_size;
 	static long num_sample_infos;
 
 	Log(2, "LoadSamples");
 	sample_lut = (short*)game_malloc(MAX_SAMPLES * sizeof(short));
-	memcpy(sample_lut, FileData, MAX_SAMPLES * sizeof(short));
-	FileData += MAX_SAMPLES * sizeof(short);
-	num_sample_infos = *(long*)FileData;
-	FileData += sizeof(long);
+	memcpy(sample_lut, *FileData, MAX_SAMPLES * sizeof(short));
+	*FileData += MAX_SAMPLES * sizeof(short);
+	num_sample_infos = *(long*)*FileData;
+	*FileData += sizeof(long);
 	Log(8, "Number Of Sample Infos %d", num_sample_infos);
 
 	if (!num_sample_infos)
@@ -1251,10 +1249,10 @@ bool LoadSamples()
 	}
 
 	sample_infos = (SAMPLE_INFO*)game_malloc(sizeof(SAMPLE_INFO) * num_sample_infos);
-	memcpy(sample_infos, FileData, sizeof(SAMPLE_INFO) * num_sample_infos);
-	FileData += sizeof(SAMPLE_INFO) * num_sample_infos;
-	num_samples = *(long*)FileData;
-	FileData += sizeof(long);
+	memcpy(sample_infos, *FileData, sizeof(SAMPLE_INFO) * num_sample_infos);
+	*FileData += sizeof(SAMPLE_INFO) * num_sample_infos;
+	num_samples = *(long*)*FileData;
+	*FileData += sizeof(long);
 
 	if (!num_samples)
 	{
