@@ -51,7 +51,7 @@ void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item) {
 	if(baddie == lara_item && lara_item->hit_points > 0) {
 		lara_item->hit_points -= 50;
 
-		if(!(room[item->room_number].flags & ROOM_UNDERWATER) && lara_item->hit_points <= 50)
+		if(!(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) && lara_item->hit_points <= 50)
 			LaraBurn();
 	} else if(!item->item_flags[2]) {
 		baddie->hit_status = 1;
@@ -714,7 +714,7 @@ void ControlCrossbow(short item_number) {
 	oldPos.y = item->pos.y_pos;
 	oldPos.z = item->pos.z_pos;
 
-	if(room[item->room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
 		if(item->speed > 64)
 			item->speed -= item->speed >> 4;
 
@@ -747,7 +747,7 @@ void ControlCrossbow(short item_number) {
 	if(item->room_number != room_number)
 		ItemNewRoom(item_number, room_number);
 
-	r = &room[room_number];
+	r = GetRoom(currentLevel,room_number);
 
 	if(r->flags & ROOM_UNDERWATER && abovewater) {
 		TriggerSmallSplash(item->pos.x_pos, r->maxceiling, item->pos.z_pos, 8);
@@ -831,7 +831,7 @@ void ControlCrossbow(short item_number) {
 	}
 
 	if(exploded) {
-		if(room[item->room_number].flags & ROOM_UNDERWATER)
+		if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER)
 			TriggerUnderwaterExplosion(item, 0);
 		else {
 			item->pos.y_pos -= 128;
@@ -922,7 +922,7 @@ void ControlGrenade(short item_number) {
 				item2->item_flags[0] = 4;
 				item2->item_flags[2] = item->item_flags[2];
 
-				if(room[item2->room_number].flags & ROOM_UNDERWATER)
+				if(GetRoom(currentLevel,item2->room_number)->flags & ROOM_UNDERWATER)
 					item2->hit_points = 1;
 				else
 					item2->hit_points = 3000;
@@ -937,7 +937,7 @@ void ControlGrenade(short item_number) {
 	oldPos.z = item->pos.z_pos;
 	item->shade = -0x3DF0;
 
-	if(room[item->room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
 		abovewater = 0;
 		item->fallspeed += (5 - item->fallspeed) >> 1;
 		item->speed -= item->speed >> 2;
@@ -1001,9 +1001,9 @@ void ControlGrenade(short item_number) {
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if(room[room_number].flags & ROOM_UNDERWATER && abovewater) {
+	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER && abovewater) {
 		splash_setup.x = item->pos.x_pos;
-		splash_setup.y = room[room_number].maxceiling;
+		splash_setup.y = GetRoom(currentLevel,room_number)->maxceiling;
 		splash_setup.z = item->pos.z_pos;
 		splash_setup.InnerRad = 32;
 		splash_setup.InnerSize = 8;
@@ -1133,7 +1133,7 @@ void ControlGrenade(short item_number) {
 
 			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
-		} else if(room[item->room_number].flags & ROOM_UNDERWATER)
+		} else if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER)
 			TriggerUnderwaterExplosion(item, 0);
 		else {
 			item->pos.y_pos -= 128;

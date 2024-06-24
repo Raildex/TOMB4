@@ -1545,7 +1545,7 @@ void trigger_item_in_room(long room_number, long object_number) {
 	ITEM_INFO* item;
 	short item_number;
 
-	for(item_number = room[room_number].item_number; item_number != NO_ITEM; item_number = item->next_item) {
+	for(item_number = GetRoom(currentLevel,room_number)->item_number; item_number != NO_ITEM; item_number = item->next_item) {
 		item = &items[item_number];
 
 		if(item->object_number == object_number) {
@@ -1563,7 +1563,7 @@ void untrigger_item_in_room(long room_number, long object_number) {
 	ITEM_INFO* item;
 	short item_number;
 
-	for(item_number = room[room_number].item_number; item_number != NO_ITEM; item_number = item->next_item) {
+	for(item_number = GetRoom(currentLevel,room_number)->item_number; item_number != NO_ITEM; item_number = item->next_item) {
 		item = &items[item_number];
 
 		if(item->object_number == object_number) {

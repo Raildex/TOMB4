@@ -2023,7 +2023,7 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 		b = 255;
 		rn = lfobj->room_number;
 	} else {
-		if(room[camera.pos.room_number].flags & ROOM_NO_LENSFLARE)
+		if(GetRoom(currentLevel,camera.pos.room_number)->flags & ROOM_NO_LENSFLARE)
 			return;
 
 		r = (unsigned char)gfLensFlareColour.r;
@@ -2068,7 +2068,7 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 	}
 
 	if(rn != 255) {
-		if(room[rn].flags & ROOM_NOT_INSIDE || lfobj) {
+		if(GetRoom(currentLevel,rn)->flags & ROOM_NOT_INSIDE || lfobj) {
 			start.y = camera.pos.y;
 			start.z = camera.pos.z;
 			start.x = camera.pos.x;
@@ -2480,7 +2480,7 @@ void DrawDrips() {
 
 		pos[1] -= drip->Yvel >> 6;
 
-		if(room[drip->RoomNumber].flags & ROOM_NOT_INSIDE) {
+		if(GetRoom(currentLevel,drip->RoomNumber)->flags & ROOM_NOT_INSIDE) {
 			pos[0] -= SmokeWindX >> 1;
 			pos[1] -= SmokeWindZ >> 1;
 		}
@@ -3776,7 +3776,7 @@ void DoUwEffect() {
 			p->pos.y = lara_item->pos.y_pos + y;
 			p->pos.z = lara_item->pos.z_pos + z;
 
-			if(IsRoomOutside(p->pos.x, p->pos.y, p->pos.z) < 0 || !(room[IsRoomOutsideNo].flags & ROOM_UNDERWATER)) {
+			if(IsRoomOutside(p->pos.x, p->pos.y, p->pos.z) < 0 || !(GetRoom(currentLevel,IsRoomOutsideNo)->flags & ROOM_UNDERWATER)) {
 				p->pos.x = 0;
 				continue;
 			}

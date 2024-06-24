@@ -24,6 +24,7 @@
 #include "roominfo.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
 short ElementPuzzleBounds[12] = { 0, 0, -64, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 
 void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
@@ -178,7 +179,7 @@ void ControlElementPuzzle(short item_number) {
 
 			KillItem(item_number);
 		} else {
-			for(itemNum = room[item->room_number].item_number; itemNum != NO_ITEM; itemNum = item2->next_item) {
+			for(itemNum = GetRoom(currentLevel,item->room_number)->item_number; itemNum != NO_ITEM; itemNum = item2->next_item) {
 				item2 = &items[itemNum];
 
 				if(item2->object_number == FLAME_EMITTER2) {

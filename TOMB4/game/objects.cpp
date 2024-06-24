@@ -691,7 +691,7 @@ void SmashObject(short item_number) {
 	long sector;
 
 	item = &items[item_number];
-	r = &room[item->room_number];
+	r = GetRoom(currentLevel,item->room_number);
 	sector = ((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10);
 	box = &boxes[r->floor[sector].box];
 
@@ -766,7 +766,7 @@ void EarthQuake(short item_number) {
 		camera.bounce = -item->item_flags[0];
 
 		if(GetRandomControl() < 1024) {
-			for(earth_item = room[item->room_number].item_number; earth_item != NO_ITEM; earth_item = item->next_item) {
+			for(earth_item = GetRoom(currentLevel,item->room_number)->item_number; earth_item != NO_ITEM; earth_item = item->next_item) {
 				item = &items[earth_item];
 
 				if(item->object_number == FLAME_EMITTER && item->status != ITEM_ACTIVE && item->status != ITEM_DEACTIVATED) {

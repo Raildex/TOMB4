@@ -1678,7 +1678,7 @@ void BaddyObjects() {
 	}
 }
 
-void BuildOutsideTable() {
+void BuildOutsideTable(LEVEL_INFO* lvl) {
 	ROOM_INFO* r;
 	unsigned char* pTable;
 	unsigned char* oTable;
@@ -1692,20 +1692,20 @@ void BuildOutsideTable() {
 	memset(OutsideRoomTable, 0xFF, 0xB640);
 	memset(flipped, 0, 255);
 
-	for(int i = 0; i < number_rooms; i++) {
-		r = &room[i];
+	for(int i = 0; i < GetNumRooms(lvl); i++) {
+		r = GetRoom(currentLevel,i);
 
 		if(r->flipped_room != -1)
 			flipped[r->flipped_room] = 1;
 	}
 
-	r = &room[0];
+	r = GetRoom(currentLevel,0);
 	printf("X %d, Y %d, Z %d, Xs %d, Ys %d\n", r->x, r->y, r->z, r->x_size, r->y_size);
 
 	for(int y = 0; y < 108; y += 4) {
 		for(int x = 0; x < 108; x += 4) {
-			for(int i = 0; i < number_rooms; i++) {
-				r = &room[i];
+			for(int i = 0; i < GetNumRooms(lvl); i++) {
+				r = GetRoom(currentLevel,i);
 
 				if(flipped[i])
 					continue;
@@ -1949,7 +1949,7 @@ void GetCarriedItems() {
 		baddy->carried_item = NO_ITEM;
 
 		if(GetObjectInfo(currentLevel,baddy->object_number)->intelligent && baddy->object_number != SCORPION) {
-			item_num = room[baddy->room_number].item_number;
+			item_num = GetRoom(currentLevel,baddy->room_number)->item_number;
 
 			while(item_num != NO_ITEM) {
 				pickup = &items[item_num];

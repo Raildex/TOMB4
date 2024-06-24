@@ -82,11 +82,9 @@
 
 ITEM_INFO* items;
 ANIM_STRUCT* anims;
-ROOM_INFO* room;
 short** meshes;
 long* bones;
 long level_items;
-short number_rooms;
 
 short* OutsideRoomOffsets;
 char* OutsideRoomTable;
@@ -511,15 +509,15 @@ void FlipMap(long FlipNumber) {
 	CREATURE_INFO* cinfo;
 	ROOM_INFO temp;
 
-	for(int i = 0; i < number_rooms; i++) {
-		r = &room[i];
+	for(int i = 0; i < GetNumRooms(currentLevel); i++) {
+		r = GetRoom(currentLevel,i);
 
 		if(r->flipped_room >= 0 && r->FlipNumber == FlipNumber) {
 			for(int j = r->item_number; j != NO_ITEM; j = items[j].next_item)
 				items[j].il.room_number = 255;
 
 			RemoveRoomFlipItems(r);
-			flipped = &room[r->flipped_room];
+			flipped = GetRoom(currentLevel,r->flipped_room);
 			memcpy(&temp, r, sizeof(temp));
 			memcpy(r, flipped, sizeof(ROOM_INFO));
 			memcpy(flipped, &temp, sizeof(ROOM_INFO));
@@ -993,7 +991,7 @@ short GetDoor(FLOOR_INFO* floor) {
 	if(!floor->index)
 		return 255;
 
-	data = &floor_data[floor->index];
+	data = GetFloorData(currentLevel,floor->index);
 	type = *data++;
 
 	if((type & 0x1F) == TILT_TYPE || (type & 0x1F) == SPLIT1 || (type & 0x1F) == SPLIT2 || (type & 0x1F) == NOCOLF1B || (type & 0x1F) == NOCOLF1T || (type & 0x1F) == NOCOLF2B || (type & 0x1F) == NOCOLF2T) {
@@ -1024,7 +1022,7 @@ long CheckNoColFloorTriangle(FLOOR_INFO* floor, long x, long z) {
 	if(!floor->index)
 		return 0;
 
-	type = floor_data[floor->index] & 0x1F;
+	type = *(GetFloorData(currentLevel, floor->index)) & 0x1F;
 
 	if(type == NOCOLF1T || type == NOCOLF1B || type == NOCOLF2T || type == NOCOLF2B) {
 		x &= 0x3FF;
@@ -1073,7 +1071,7 @@ long CheckNoColCeilingTriangle(FLOOR_INFO* floor, long x, long z) {
 	if(!floor->index)
 		return 0;
 
-	data = &floor_data[floor->index];
+	data = GetFloorData(currentLevel,floor->index);
 	type = *data & 0x1F;
 
 	if(type == TILT_TYPE || type == SPLIT1 || type == SPLIT2 || type == NOCOLF1T || type == NOCOLF1B || type == NOCOLF2T || type == NOCOLF2B) {
@@ -1129,7 +1127,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 	long x_floor, y_floor;
 	short door;
 
-	r = &room[*room_number];
+	r = GetRoom(currentLevel,*room_number);
 
 	do {
 		x_floor = (z - r->z) >> 10;
@@ -1161,7 +1159,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 			break;
 
 		*room_number = door;
-		r = &room[door];
+		r = GetRoom(currentLevel,door);
 
 	} while(door != 255);
 
@@ -1172,7 +1170,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 					break;
 
 				*room_number = floor->sky_room;
-				r = &room[floor->sky_room];
+				r = GetRoom(currentLevel,floor->sky_room);
 				floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
 
 				if(y >= GetMinimumCeiling(floor, x, z))
@@ -1186,7 +1184,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 				break;
 
 			*room_number = floor->pit_room;
-			r = &room[floor->pit_room];
+			r = GetRoom(currentLevel,floor->pit_room);
 			floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
 
 			if(y < GetMaximumFloor(floor, x, z))
@@ -1206,7 +1204,7 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 	long x_floor, y_floor;
 	short data;
 
-	r = &room[room_number];
+	r = GetRoom(currentLevel,room_number);
 
 	do {
 		x_floor = (z - r->z) >> 10;
@@ -1236,7 +1234,7 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 
 		if(data != 255) {
 			room_number = data;
-			r = &room[data];
+			r = GetRoom(currentLevel,data);
 		}
 
 	} while(data != 255);
@@ -1246,7 +1244,7 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 			if(CheckNoColCeilingTriangle(floor, x, z) == 1)
 				break;
 
-			r = &room[floor->sky_room];
+			r = GetRoom(currentLevel,floor->sky_room);
 
 			if(!(r->flags & ROOM_UNDERWATER))
 				break;
@@ -1260,7 +1258,7 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 			if(CheckNoColFloorTriangle(floor, x, z) == 1)
 				break;
 
-			r = &room[floor->pit_room];
+			r = GetRoom(currentLevel,floor->pit_room);
 
 			if(r->flags & ROOM_UNDERWATER)
 				return GetMaximumFloor(floor, x, z);
@@ -1289,7 +1287,7 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 		if(CheckNoColFloorTriangle(floor, x, z) == 1)
 			break;
 
-		r = &room[floor->pit_room];
+		r = GetRoom(currentLevel,floor->pit_room);
 		floor = &r->floor[((z - r->z) >> 10) + ((x - r->x) >> 10) * r->x_size];
 	}
 
@@ -1303,7 +1301,7 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 	if(!floor->index)
 		return height;
 
-	data = &floor_data[floor->index];
+	data = GetFloorData(currentLevel,floor->index);
 
 	do {
 		type = *data++;
@@ -1484,7 +1482,7 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 		if(CheckNoColCeilingTriangle(floor, x, z) == 1)
 			break;
 
-		r = &room[f->sky_room];
+		r = GetRoom(currentLevel,f->sky_room);
 		xoff = (z - r->z) >> 10;
 		yoff = (x - r->x) >> 10;
 		f = &r->floor[xoff + r->x_size * yoff];
@@ -1496,7 +1494,7 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 		return NO_HEIGHT;
 
 	if(f->index) {
-		data = &floor_data[f->index];
+		data = GetFloorData(currentLevel,f->index);
 		type = *data++;
 		ended = 0;
 
@@ -1585,14 +1583,14 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 		if(CheckNoColFloorTriangle(floor, x, z) == 1)
 			break;
 
-		r = &room[floor->pit_room];
+		r = GetRoom(currentLevel,floor->pit_room);
 		xoff = (z - r->z) >> 10;
 		yoff = (x - r->x) >> 10;
 		floor = &r->floor[xoff + r->x_size * yoff];
 	}
 
 	if(floor->index) {
-		data = &floor_data[floor->index];
+		data = GetFloorData(currentLevel,floor->index);
 
 		do {
 			type = *data++;
@@ -2201,7 +2199,7 @@ long IsRoomOutside(long x, long y, long z) {
 		return -2;
 
 	if(offset < 0) {
-		r = &room[offset & 0x7FFF];
+		r = GetRoom(currentLevel,offset & 0x7FFF);
 
 		if(y >= r->maxceiling && y <= r->minfloor && z >= r->z + 1024 && z <= ((r->x_size - 1) << 10) + r->z && x >= r->x + 1024 && x <= ((r->y_size - 1) << 10) + r->x) {
 			IsRoomOutsideNo = offset & 0x7FFF;
@@ -2222,7 +2220,7 @@ long IsRoomOutside(long x, long y, long z) {
 		pTable = (unsigned char*)&OutsideRoomTable[offset];
 
 		while(*pTable != 255) {
-			r = &room[*pTable];
+			r = GetRoom(currentLevel,*pTable);
 
 			if(y >= r->maxceiling && y <= r->minfloor && z >= r->z + 1024 && z <= ((r->x_size - 1) << 10) + r->z && x >= r->x + 1024 && x <= ((r->y_size - 1) << 10) + r->x) {
 				IsRoomOutsideNo = *pTable;
@@ -2263,7 +2261,7 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 	ClosestDist = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
 
 	for(int i = 0; i < number_los_rooms; i++) {
-		r = &room[los_rooms[i]];
+		r = GetRoom(currentLevel,los_rooms[i]);
 
 		for(item_number = r->item_number; item_number != NO_ITEM; item_number = item->next_item) {
 			item = &items[item_number];
@@ -2511,7 +2509,7 @@ void AnimateItem(ITEM_INFO* item) {
 					type = cmd[1] & 0xC000;
 
 					if(GetObjectInfo(currentLevel,item->object_number)->water_creature) {
-						if(room[item->room_number].flags & ROOM_UNDERWATER)
+						if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER)
 							SoundEffect(num, &item->pos, SFX_WATER);
 						else
 							SoundEffect(num, &item->pos, SFX_DEFAULT);
@@ -2520,7 +2518,7 @@ void AnimateItem(ITEM_INFO* item) {
 						item->pos.y_pos = lara_item->pos.y_pos - 762;
 						item->pos.z_pos = lara_item->pos.z_pos;
 						SoundEffect(num, &item->pos, SFX_DEFAULT);
-					} else if(room[item->room_number].flags & ROOM_UNDERWATER) {
+					} else if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
 						if(type == SFX_LANDANDWATER || type == SFX_WATERONLY)
 							SoundEffect(num, &item->pos, SFX_DEFAULT);
 					} else if(type == SFX_LANDANDWATER || type == SFX_LANDONLY)
@@ -2845,7 +2843,7 @@ long GetMaximumFloor(FLOOR_INFO* floor, long x, long z) {
 	height = floor->floor << 8;
 
 	if(height != NO_HEIGHT && floor->index) {
-		data = &floor_data[floor->index];
+		data = GetFloorData(currentLevel,floor->index);
 		type = *data++;
 		h1 = 0;
 		h2 = 0;
@@ -2904,7 +2902,7 @@ long GetMinimumCeiling(FLOOR_INFO* floor, long x, long z) {
 	height = floor->ceiling << 8;
 
 	if(height != NO_HEIGHT && floor->index) {
-		data = &floor_data[floor->index];
+		data = GetFloorData(currentLevel,floor->index);
 		type = *data++;
 		ended = 0;
 

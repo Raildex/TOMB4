@@ -1,10 +1,11 @@
 #pragma once
 
 
+#include "levelinfo.h"
 void ObjectObjects();
 void TrapObjects();
 void BaddyObjects();
-void BuildOutsideTable();
+void BuildOutsideTable(LEVEL_INFO* lvl);
 void reset_cutseq_vars();
 void ClearFootPrints();
 void InitialiseGameFlags();

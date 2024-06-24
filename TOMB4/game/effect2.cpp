@@ -67,7 +67,7 @@ void ControlSmokeEmitter(short item_number) {
 	if(!TriggerActive(item))
 		return;
 
-	if(item->object_number == STEAM_EMITTER && room[item->room_number].flags & ROOM_UNDERWATER) {
+	if(item->object_number == STEAM_EMITTER && GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
 		if(item->item_flags[0] || !(GetRandomControl() & 0x1F) || item->trigger_flags == 1) {
 			if(!(GetRandomControl() & 3) || item->item_flags[1]) {
 				pos.x_pos = (GetRandomControl() & 0x3F) + item->pos.x_pos - 32;
@@ -210,7 +210,7 @@ void ControlSmokeEmitter(short item_number) {
 		sptr->Friction = 3;
 		sptr->Flags = 538;
 
-		if(room[item->room_number].flags & ROOM_OUTSIDE)
+		if(GetRoom(currentLevel,item->room_number)->flags & ROOM_OUTSIDE)
 			sptr->Flags = 794;
 
 		sptr->RotAng = GetRandomControl() & 0xFFF;
@@ -607,7 +607,7 @@ void ControlEnemyMissile(short fx_number) {
 			ExplodeFX(fx, 0, -32);
 
 		if(fx->flag1 == 1) {
-			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x18008040, (((~room[fx->room_number].flags & 0xFF) >> 4) & 2) << 16); // decipher me
+			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x18008040, (((~GetRoom(currentLevel,fx->room_number)->flags & 0xFF) >> 4) & 2) << 16); // decipher me
 			TriggerExplosionSparks(ox, oy, oz, 3, -2, 2, fx->room_number);
 		} else if(fx->flag1 == 0)
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x10008040, 0);
@@ -644,7 +644,7 @@ void ControlEnemyMissile(short fx_number) {
 			LaraBurn();
 			lara.BurnGreen = 1;
 		} else if(fx->flag1 == 0)
-			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0x580018, 48, 0x10008040, (((~room[fx->room_number].flags & 0xFF) >> 4) & 2) << 16);
+			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0x580018, 48, 0x10008040, (((~GetRoom(currentLevel,fx->room_number)->flags & 0xFF) >> 4) & 2) << 16);
 		else if(fx->flag1 == 3 || fx->flag1 == 4)
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x10004080, 0x10000);
 		else if(fx->flag1 == 5)

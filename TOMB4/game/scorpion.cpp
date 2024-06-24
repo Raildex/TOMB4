@@ -127,7 +127,7 @@ void ScorpionControl(short item_number) {
 				item->status = ITEM_INVISIBLE;
 				scorpion->maximum_turn = 0;
 
-				for(target_num = room[item->room_number].item_number; target_num != NO_ITEM; target_num = enemy->next_item) {
+				for(target_num = GetRoom(currentLevel,item->room_number)->item_number; target_num != NO_ITEM; target_num = enemy->next_item) {
 					enemy = &items[target_num];
 
 					if(enemy->object_number == TROOPS && enemy->trigger_flags == 1) {

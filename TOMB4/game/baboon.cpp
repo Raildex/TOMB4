@@ -355,7 +355,7 @@ void FindCrowbarSwitch(ITEM_INFO* item, short switch_index) {
 	ITEM_INFO* item2;
 	short item_num;
 
-	for(item_num = room[item->room_number].item_number; item_num != NO_ITEM; item_num = item2->next_item) {
+	for(item_num = GetRoom(currentLevel,item->room_number)->item_number; item_num != NO_ITEM; item_num = item2->next_item) {
 		item2 = &items[item_num];
 
 		if(item2->object_number == COG)

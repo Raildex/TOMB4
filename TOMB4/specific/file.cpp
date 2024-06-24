@@ -73,7 +73,6 @@ AIOBJECT* AIObjects;
 short* aranges;
 short* frames;
 short* commands;
-short* floor_data;
 short* mesh_base;
 long nAnimUVRanges;
 long number_cameras;
@@ -130,7 +129,7 @@ unsigned int __stdcall LoadLevel(void* name) {
 		pData = FileData;
 		S_LoadBar();
 
-		LoadRooms(&FileData);
+		LoadRooms(&FileData,currentLevel);
 		S_LoadBar();
 
 		LoadObjects(&FileData);
@@ -228,18 +227,6 @@ void FreeLevel() {
 		if(mesh->SourceVB) {
 			Log(4, "Released %s @ %x - RefCnt = %d", "Mesh VB", mesh->SourceVB, mesh->SourceVB->Release());
 			mesh->SourceVB = 0;
-		}
-	}
-
-	if(room) {
-		for(int i = 0; i < number_rooms; i++) {
-			r = &room[i];
-
-			if(r->SourceVB) {
-				Log(4, "Released %s @ %x - RefCnt = %d", "Source VB", r->SourceVB, r->SourceVB->Release());
-				r->SourceVB = 0;
-			} else
-				Log(1, "%s Attempt To Release NULL Ptr", "Source VB");
 		}
 	}
 
@@ -587,136 +574,6 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 
 	free(TextureData);
 	free(pData);
-	return 1;
-}
-
-bool LoadRooms(char** FileData) {
-	ROOM_INFO* r;
-	long size, nDoors;
-
-	Log(2, "LoadRooms");
-	wibble = 0;
-	NumLevelFogBulbs = 0;
-	*FileData += sizeof(long);
-	number_rooms = *(short*)*FileData;
-	*FileData += sizeof(short);
-	Log(7, "Number Of Rooms %d", number_rooms);
-
-	if(number_rooms < 0 || number_rooms > 1024) {
-		Log(1, "Incorrect Number Of Rooms");
-		return 0;
-	}
-
-	room = (ROOM_INFO*)game_malloc(number_rooms * sizeof(ROOM_INFO));
-
-	if(!room)
-		return 0;
-
-	for(int i = 0; i < number_rooms; i++) {
-		r = &room[i];
-
-		r->x = *(long*)*FileData;
-		*FileData += sizeof(long);
-
-		r->y = 0;
-
-		r->z = *(long*)*FileData;
-		*FileData += sizeof(long);
-
-		r->minfloor = *(long*)*FileData;
-		*FileData += sizeof(long);
-
-		r->maxceiling = *(long*)*FileData;
-		*FileData += sizeof(long);
-
-		size = *(long*)*FileData;
-		*FileData += sizeof(long);
-		r->data = (short*)game_malloc(size * sizeof(short));
-		memcpy(r->data, *FileData, size * sizeof(short));
-		*FileData += size * sizeof(short);
-
-		nDoors = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		if(nDoors) {
-			r->door = (short*)game_malloc((16 * nDoors + 1) * sizeof(short));
-			r->door[0] = (short)nDoors;
-			memcpy(r->door + 1, *FileData, 16 * nDoors * sizeof(short));
-			*FileData += 16 * nDoors * sizeof(short);
-		} else
-			r->door = 0;
-
-		r->x_size = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		r->y_size = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		size = r->x_size * r->y_size * sizeof(FLOOR_INFO);
-		r->floor = (FLOOR_INFO*)game_malloc(size);
-		memcpy(r->floor, *FileData, size);
-		*FileData += size;
-
-		r->ambient = *(long*)*FileData;
-		*FileData += sizeof(long);
-
-		r->num_lights = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		if(r->num_lights) {
-			size = sizeof(LIGHTINFO) * r->num_lights;
-			r->light = (LIGHTINFO*)game_malloc(size);
-			memcpy(r->light, *FileData, size);
-			*FileData += size;
-		} else
-			r->light = 0;
-
-		r->num_meshes = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		if(r->num_meshes) {
-			size = sizeof(MESH_INFO) * r->num_meshes;
-			r->mesh = (MESH_INFO*)game_malloc(size);
-			memcpy(r->mesh, *FileData, size);
-			*FileData += size;
-
-			for(int j = 0; j < r->num_meshes; j++)
-				r->mesh[j].Flags = 1;
-		} else
-			r->mesh = 0;
-
-		r->flipped_room = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		r->flags = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		r->MeshEffect = *(char*)*FileData;
-		*FileData += sizeof(char);
-
-		r->ReverbType = *(char*)*FileData;
-		*FileData += sizeof(char);
-
-		r->FlipNumber = *(char*)*FileData;
-		*FileData += sizeof(char);
-
-		r->left = 0x7FFF;
-		r->top = 0x7FFF;
-		r->bound_active = 0;
-		r->right = 0;
-		r->bottom = 0;
-		r->item_number = NO_ITEM;
-		r->fx_number = NO_ITEM;
-		ProcessRoomData(r);
-	}
-
-	BuildOutsideTable();
-	size = *(long*)*FileData;
-	*FileData += sizeof(long);
-	floor_data = (short*)game_malloc(2 * size);
-	memcpy(floor_data, *FileData, 2 * size);
-	*FileData += sizeof(short) * size;
-	Log(0, "Floor Data Size %d @ %x", size, floor_data);
 	return 1;
 }
 
@@ -1100,8 +957,8 @@ bool LoadItems(char** FileData) {
 	for(int i = 0; i < num_items; i++)
 		InitialiseItem(i);
 
-	for(int i = 0; i < number_rooms; i++) {
-		r = &room[i];
+	for(int i = 0; i < GetNumRooms(currentLevel); i++) {
+		r = GetRoom(currentLevel,i);
 
 		for(int j = 0; j < r->num_meshes; j++) {
 			x = (r->mesh[j].x - r->x) >> 10;

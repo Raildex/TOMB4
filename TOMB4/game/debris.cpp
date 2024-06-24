@@ -66,7 +66,7 @@ void UpdateDebris() {
 				if(dptr->Yvel)
 					dptr->YRot += dptr->Speed >> 5;
 
-				if(room[dptr->RoomNumber].flags & ROOM_UNDERWATER)
+				if(GetRoom(currentLevel,dptr->RoomNumber)->flags & ROOM_UNDERWATER)
 					dptr->Yvel -= dptr->Yvel >> 2;
 			}
 		}
@@ -274,7 +274,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	Vels = (long*)&tsv_buffer[1536];
 	offsets = (short*)&tsv_buffer[1548];
 	vec.room_number = RoomNumber;
-	DebrisMeshAmbient = room[RoomNumber].ambient;
+	DebrisMeshAmbient = GetRoom(currentLevel,RoomNumber)->ambient;
 
 	face_data = (unsigned short*)mesh->gt3;
 

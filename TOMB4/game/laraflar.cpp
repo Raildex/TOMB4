@@ -259,7 +259,7 @@ void draw_flare() {
 			draw_flare_meshes();
 		else if(ani >= 72 && ani <= 93) {
 			if(ani == 72) {
-				if(room[lara_item->room_number].flags & ROOM_UNDERWATER)
+				if(GetRoom(currentLevel,lara_item->room_number)->flags & ROOM_UNDERWATER)
 					SoundEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_WATER);
 				else
 					SoundEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_DEFAULT);
@@ -387,7 +387,7 @@ void FlareControl(short item_number) {
 	flare->pos.x_pos += xv;
 	flare->pos.z_pos += zv;
 
-	if(room[flare->room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,flare->room_number)->flags & ROOM_UNDERWATER) {
 		flare->fallspeed += (5 - flare->fallspeed) >> 1;
 		flare->speed += (5 - flare->speed) >> 1;
 	} else

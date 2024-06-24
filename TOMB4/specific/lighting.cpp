@@ -22,7 +22,7 @@
 #include "roominfo.h"
 #include "pclightinfo.h"
 #include <cmath>
-
+#include "levelinfo.h"
 ITEM_INFO* current_item;
 long StaticMeshShade;
 long ambientR, ambientG, ambientB;
@@ -247,7 +247,7 @@ void CreateLightList(ITEM_INFO* item) {
 	long bakNum, dx, dy, dz, range;
 	bool in_range;
 
-	r = &room[item->room_number];
+	r = GetRoom(currentLevel,item->room_number);
 
 	if(item->il.room_number != item->room_number) {
 		bakPtr = item->il.pCurrentLights;
@@ -462,7 +462,7 @@ void CalcAmbientLight(ITEM_INFO* item) {
 
 	room_number = item->room_number;
 	GetFloor(item->il.item_pos.x, item->il.item_pos.y, item->il.item_pos.z, &room_number);
-	r = &room[room_number];
+	r = GetRoom(currentLevel,room_number);
 
 	if(item->il.ambient != r->ambient) {
 		if(item->il.fcnt == -1) {

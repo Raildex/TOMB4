@@ -144,7 +144,7 @@ void InitialiseLaraLoad(short item_number) {
 }
 
 void InitialiseLaraAnims(ITEM_INFO* item) {
-	if(room[item->room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
 		item->anim_number = ANIM_TREAD;
 		item->frame_number = anims[ANIM_TREAD].frame_base;
 		item->current_anim_state = AS_TREAD;
@@ -334,7 +334,7 @@ void LaraControl(short item_number) {
 		DashTimer++;
 
 	lara.IsDucked = 0;
-	room_water_state = room[l->room_number].flags & ROOM_UNDERWATER;
+	room_water_state = GetRoom(currentLevel,l->room_number)->flags & ROOM_UNDERWATER;
 	wd = GetWaterDepth(l->pos.x_pos, l->pos.y_pos, l->pos.z_pos, l->room_number);
 	wh = GetWaterHeight(l->pos.x_pos, l->pos.y_pos, l->pos.z_pos, l->room_number);
 
@@ -523,7 +523,7 @@ void LaraControl(short item_number) {
 			break;
 		}
 	}
-	S_SetReverbType(room[camera.pos.room_number].ReverbType);
+	S_SetReverbType(GetRoom(currentLevel,camera.pos.room_number)->ReverbType);
 
 	if(l->hit_points <= 0) {
 		l->hit_points = -1;

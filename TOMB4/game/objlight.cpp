@@ -14,7 +14,7 @@
 #include "roomflags.h"
 #include "roominfo.h"
 #include <cstdlib>
-
+#include "levelinfo.h"
 void ControlPulseLight(short item_number) {
 	ITEM_INFO* item;
 	long sin, r, g, b;
@@ -39,7 +39,7 @@ void ControlPulseLight(short item_number) {
 	} else if(item->trigger_flags == 2) {
 		SoundEffect(SFX_MAPPER_PYRAMID_OPEN, &item->pos, 0);
 
-		if(room[camera.pos.room_number].flags & ROOM_NOT_INSIDE) {
+		if(GetRoom(currentLevel,camera.pos.room_number)->flags & ROOM_NOT_INSIDE) {
 			FlashFadeR = 64;
 			FlashFadeG = 128;
 			FlashFadeB = 128;

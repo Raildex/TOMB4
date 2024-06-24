@@ -306,9 +306,9 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	sptr = &smoke_spark[GetFreeSmokeSpark()];
 	sptr->On = 1;
 	sptr->sShade = 0;
-	sptr->dShade = unsigned char(4 * shade);
+	sptr->dShade = (unsigned char)(4 * shade);
 	sptr->ColFadeSpeed = 4;
-	sptr->FadeToBlack = unsigned char(32 - 16 * notLara);
+	sptr->FadeToBlack = (unsigned char)(32 - 16 * notLara);
 	sptr->Life = (GetRandomControl() & 3) + 40;
 	sptr->sLife = sptr->Life;
 
@@ -333,7 +333,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	sptr->Friction = 4;
 
 	if(GetRandomControl() & 1) {
-		if(room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+		if(GetRoom(currentLevel,lara_item->room_number)->flags & ROOM_NOT_INSIDE)
 			sptr->Flags = 272;
 
 		else
@@ -345,7 +345,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 			sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
 		else
 			sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
-	} else if(room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+	} else if(GetRoom(currentLevel,lara_item->room_number)->flags & ROOM_NOT_INSIDE)
 		sptr->Flags = 256;
 	else
 		sptr->Flags = 0;
@@ -413,7 +413,7 @@ void UpdateDrips() {
 
 		drip->Yvel += drip->Gravity;
 
-		if(room[drip->RoomNumber].flags & ROOM_NOT_INSIDE) {
+		if(GetRoom(currentLevel,drip->RoomNumber)->flags & ROOM_NOT_INSIDE) {
 			drip->x += SmokeWindX >> 1;
 			drip->z += SmokeWindZ >> 1;
 		}
@@ -422,7 +422,7 @@ void UpdateDrips() {
 		floor = GetFloor(drip->x, drip->y, drip->z, &drip->RoomNumber);
 		h = GetHeight(floor, drip->x, drip->y, drip->z);
 
-		if(room[drip->RoomNumber].flags & ROOM_UNDERWATER || drip->y > h)
+		if(GetRoom(currentLevel,drip->RoomNumber)->flags & ROOM_UNDERWATER || drip->y > h)
 			drip->On = 0;
 	}
 }
@@ -608,14 +608,14 @@ void UpdateFireSparks() {
 
 		if(sptr->sLife - sptr->Life < sptr->ColFadeSpeed) {
 			fade = ((sptr->sLife - sptr->Life) << 16) / sptr->ColFadeSpeed;
-			sptr->R = unsigned char(sptr->sR + ((fade * (sptr->dR - sptr->sR)) >> 16));
-			sptr->G = unsigned char(sptr->sG + ((fade * (sptr->dG - sptr->sG)) >> 16));
-			sptr->B = unsigned char(sptr->sB + ((fade * (sptr->dB - sptr->sB)) >> 16));
+			sptr->R = (unsigned char)(sptr->sR + ((fade * (sptr->dR - sptr->sR)) >> 16));
+			sptr->G = (unsigned char)(sptr->sG + ((fade * (sptr->dG - sptr->sG)) >> 16));
+			sptr->B = (unsigned char)(sptr->sB + ((fade * (sptr->dB - sptr->sB)) >> 16));
 		} else if(sptr->Life < sptr->FadeToBlack) {
 			fade = ((sptr->Life - sptr->FadeToBlack) << 16) / sptr->FadeToBlack + 0x10000;
-			sptr->R = unsigned char((fade * sptr->dR) >> 16);
-			sptr->G = unsigned char((fade * sptr->dG) >> 16);
-			sptr->B = unsigned char((fade * sptr->dB) >> 16);
+			sptr->R = (unsigned char)((fade * sptr->dR) >> 16);
+			sptr->G = (unsigned char)((fade * sptr->dG) >> 16);
+			sptr->B = (unsigned char)((fade * sptr->dB) >> 16);
 
 			if(sptr->R < 8 && sptr->G < 8 && sptr->B < 8) {
 				sptr->On = 0;
@@ -631,9 +631,9 @@ void UpdateFireSparks() {
 			sptr->RotAng = (sptr->RotAng + sptr->RotAdd) & 0xFFF;
 
 		if(sptr->R < 24 && sptr->G < 24 && sptr->B < 24)
-			sptr->Def = unsigned char(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 2);
+			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 2);
 		else if(sptr->R < 80 && sptr->G < 80 && sptr->B < 80)
-			sptr->Def = unsigned char(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 1);
+			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 1);
 		else
 			sptr->Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
 
@@ -653,7 +653,7 @@ void UpdateFireSparks() {
 		sptr->x += sptr->Xvel >> 5;
 		sptr->y += sptr->Yvel >> 5;
 		sptr->z += sptr->Zvel >> 5;
-		sptr->Size = unsigned char(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
+		sptr->Size = (unsigned char)(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
 	}
 }
 
@@ -715,7 +715,7 @@ void S_DrawFires() {
 		bounds[4] = -size;
 		bounds[5] = size;
 
-		r = &room[fire->room_number];
+		r = GetRoom(currentLevel,fire->room_number);
 		phd_left = r->left;
 		phd_right = r->right;
 		phd_top = r->top;
@@ -791,10 +791,10 @@ void UpdateSmokeSparks() {
 
 		if(sptr->sLife - sptr->Life < sptr->ColFadeSpeed) {
 			fade = ((sptr->sLife - sptr->Life) << 16) / sptr->ColFadeSpeed;
-			sptr->Shade = unsigned char(sptr->sShade + (((sptr->dShade - sptr->sShade) * fade) >> 16));
+			sptr->Shade = (unsigned char)(sptr->sShade + (((sptr->dShade - sptr->sShade) * fade) >> 16));
 		} else if(sptr->Life < sptr->FadeToBlack) {
 			fade = ((sptr->Life - sptr->FadeToBlack) << 16) / sptr->FadeToBlack + 0x10000;
-			sptr->Shade = unsigned char((sptr->dShade * fade) >> 16);
+			sptr->Shade = (unsigned char)((sptr->dShade * fade) >> 16);
 
 			if(sptr->Shade < 8) {
 				sptr->On = 0;
@@ -804,9 +804,9 @@ void UpdateSmokeSparks() {
 			sptr->Shade = sptr->dShade;
 
 		if(sptr->Shade < 24)
-			sptr->Def = unsigned char(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 2);
+			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 2);
 		else if(sptr->Shade < 80)
-			sptr->Def = unsigned char(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 1);
+			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 1);
 		else
 			sptr->Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
 
@@ -838,7 +838,7 @@ void UpdateSmokeSparks() {
 			sptr->z += SmokeWindZ >> 1;
 		}
 
-		sptr->Size = unsigned char(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
+		sptr->Size = (unsigned char)(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
 	}
 }
 
@@ -870,7 +870,7 @@ void TriggerShatterSmoke(long x, long y, long z) {
 			sptr->RotAdd = -64 - (GetRandomControl() & 0x3F);
 		else
 			sptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
-	} else if(room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+	} else if(GetRoom(currentLevel,lara_item->room_number)->flags & ROOM_NOT_INSIDE)
 		sptr->Flags = 256;
 	else
 		sptr->Flags = 0;
@@ -1046,7 +1046,7 @@ void UpdateGunShells() {
 		oroom = shell->room_number;
 		shell->counter--;
 
-		if(room[oroom].flags & ROOM_UNDERWATER) {
+		if(GetRoom(currentLevel,oroom)->flags & ROOM_UNDERWATER) {
 			shell->fallspeed++;
 
 			if(shell->fallspeed > 8)
@@ -1066,9 +1066,9 @@ void UpdateGunShells() {
 		shell->pos.z_pos += shell->speed * phd_cos(shell->DirXrot) >> (W2V_SHIFT + 1);
 		floor = GetFloor(shell->pos.x_pos, shell->pos.y_pos, shell->pos.z_pos, &shell->room_number);
 
-		if(room[shell->room_number].flags & ROOM_UNDERWATER && !(room[oroom].flags & ROOM_UNDERWATER)) {
-			TriggerSmallSplash(shell->pos.x_pos, room[shell->room_number].maxceiling, shell->pos.z_pos, 8);
-			SetupRipple(shell->pos.x_pos, room[shell->room_number].maxceiling, shell->pos.z_pos, (GetRandomControl() & 3) + 8, 2);
+		if(GetRoom(currentLevel,shell->room_number)->flags & ROOM_UNDERWATER && !(GetRoom(currentLevel,oroom)->flags & ROOM_UNDERWATER)) {
+			TriggerSmallSplash(shell->pos.x_pos, GetRoom(currentLevel,shell->room_number)->maxceiling, shell->pos.z_pos, 8);
+			SetupRipple(shell->pos.x_pos, GetRoom(currentLevel,shell->room_number)->maxceiling, shell->pos.z_pos, (GetRandomControl() & 3) + 8, 2);
 			shell->fallspeed >>= 5;
 			continue;
 		}
@@ -1303,11 +1303,11 @@ void UpdateBlood() {
 
 		if(bptr->sLife - bptr->Life < bptr->ColFadeSpeed) {
 			fade = ((bptr->sLife - bptr->Life) << 16) / bptr->ColFadeSpeed;
-			bptr->Shade = unsigned char(bptr->sShade + ((fade * (bptr->dShade - bptr->sShade)) >> 16));
+			bptr->Shade = (unsigned char)(bptr->sShade + ((fade * (bptr->dShade - bptr->sShade)) >> 16));
 		} else {
 			if(bptr->Life < bptr->FadeToBlack) {
 				fade = ((bptr->Life - bptr->FadeToBlack) << 16) / bptr->FadeToBlack + 0x10000;
-				bptr->Shade = unsigned char((bptr->dShade * fade) >> 16);
+				bptr->Shade = (unsigned char)((bptr->dShade * fade) >> 16);
 
 				if(bptr->Shade < 8) {
 					bptr->On = 0;
@@ -1329,7 +1329,7 @@ void UpdateBlood() {
 		bptr->x += bptr->Xvel >> 5;
 		bptr->y += bptr->Yvel >> 5;
 		bptr->z += bptr->Zvel >> 5;
-		bptr->Size = unsigned char(bptr->sSize + ((fade * (bptr->dSize - bptr->sSize)) >> 16));
+		bptr->Size = (unsigned char)(bptr->sSize + ((fade * (bptr->dSize - bptr->sSize)) >> 16));
 	}
 }
 
@@ -1417,7 +1417,7 @@ void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long biggest) {
 
 	GetFloor(pos->x_pos, pos->y_pos, pos->z_pos, &room_number);
 
-	if(room[room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER) {
 		bubble_num = GetFreeBubble();
 
 		if(bubble_num != -1) {
@@ -1462,8 +1462,8 @@ void UpdateBubbles() {
 			continue;
 		}
 
-		if(!(room[room_number].flags & ROOM_UNDERWATER)) {
-			SetupRipple(bubble->pos.x, room[bubble->room_number].maxceiling, bubble->pos.z, (GetRandomControl() & 0xF) + 48, 2);
+		if(!(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER)) {
+			SetupRipple(bubble->pos.x, GetRoom(currentLevel,bubble->room_number)->maxceiling, bubble->pos.z, (GetRandomControl() & 0xF) + 48, 2);
 			bubble->size = 0;
 			continue;
 		}
@@ -1633,7 +1633,7 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 		sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
 
 	sptr->Scalar = 1;
-	sptr->Def = unsigned char(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 14);
+	sptr->Def = (unsigned char)(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 14);
 	sptr->MaxYvel = 0;
 	sptr->Gravity = (GetRandomControl() & 0x3F) + 64;
 	sptr->Size = (GetRandomControl() & 0x1F) + 32;
@@ -1813,7 +1813,7 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number) {
 	SMOKE_SPARKS* sptr;
 	long uw;
 
-	if(room[room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER) {
 		TriggerExplosionBubble(x, y, z, (short)room_number);
 		uw = 1;
 	} else
@@ -1844,7 +1844,7 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number) {
 		sptr->Friction = 85;
 	}
 
-	if(room[room_number].flags & ROOM_NOT_INSIDE)
+	if(GetRoom(currentLevel,room_number)->flags & ROOM_NOT_INSIDE)
 		sptr->Flags = 272;
 	else
 		sptr->Flags = 16;

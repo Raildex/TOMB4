@@ -13,7 +13,7 @@
 #include "roomflags.h"
 #include "roominfo.h"
 #include "languages.h"
-
+#include "levelinfo.h"
 SAMPLE_INFO* sample_infos;
 SoundSlot LaSlot[32];
 short* sample_lut;
@@ -124,7 +124,7 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 		}
 	}
 
-	if(!sound_active || !(flags & SFX_ALWAYS) && (flags & SFX_WATER) != (room[camera.pos.room_number].flags & ROOM_UNDERWATER))
+	if(!sound_active || !(flags & SFX_ALWAYS) && (flags & SFX_WATER) != (GetRoom(currentLevel,camera.pos.room_number)->flags & ROOM_UNDERWATER))
 		return 0;
 
 	lut = sample_lut[sfx];

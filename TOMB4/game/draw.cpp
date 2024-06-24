@@ -293,7 +293,7 @@ void S_InsertRoom(short room_number) {
 	ROOM_INFO* r;
 
 	current_room = room_number;
-	r = &room[room_number];
+	r = GetRoom(currentLevel,room_number);
 	phd_TranslateAbs(0, 0, 0);
 	phd_left = r->left;
 	phd_right = r->right;
@@ -306,7 +306,7 @@ void CalculateObjectLighting(ITEM_INFO* item, short* frame) {
 	long x, y, z;
 
 	if(item->shade >= 0)
-		S_CalculateStaticMeshLight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->shade & 0x7FFF, &room[item->room_number]);
+		S_CalculateStaticMeshLight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->shade & 0x7FFF, GetRoom(currentLevel,item->room_number));
 	else {
 		phd_PushUnitMatrix();
 		phd_SetTrans(0, 0, 0);
@@ -587,7 +587,7 @@ void DrawRooms(short CurrentRoom) {
 	short lr;
 
 	current_room = CurrentRoom;
-	r = &room[CurrentRoom];
+	r = GetRoom(currentLevel,CurrentRoom);
 	r->test_left = 0;
 	r->test_top = 0;
 	phd_left = 0;
@@ -798,7 +798,7 @@ void RenderIt(short CurrentRoom) {
 	ROOM_INFO* r;
 
 	current_room = CurrentRoom;
-	r = &room[CurrentRoom];
+	r = GetRoom(currentLevel,CurrentRoom);
 	r->test_left = 0;
 	r->test_top = 0;
 	phd_left = 0;
@@ -907,7 +907,7 @@ void GetRoomBounds() {
 	while(room_list_start != room_list_end) {
 		rn = draw_room_list[room_list_start % 128];
 		room_list_start++;
-		r = &room[rn];
+		r = GetRoom(currentLevel,rn);
 		r->bound_active -= 2;
 
 		if(r->test_left < r->left)
@@ -971,7 +971,7 @@ void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom) {
 	static FVECTOR vbuf[4];
 	float x, y, z, tooNear, tooFar, tL, tR, tT, tB;
 
-	r = &room[rn];
+	r = GetRoom(currentLevel,rn);
 
 	if(r->left <= actualRoom->test_left && r->right >= actualRoom->test_right && r->top <= actualRoom->test_top && r->bottom >= actualRoom->test_bottom)
 		return;
@@ -1139,7 +1139,7 @@ void PrintObjects(short room_number) {
 
 	current_room = room_number;
 	nPolyType = 1;
-	r = &room[room_number];
+	r = GetRoom(currentLevel,room_number);
 	r->bound_active = 0;
 	phd_PushMatrix();
 	phd_TranslateAbs(r->x, r->y, r->z);
@@ -1397,7 +1397,7 @@ void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds) {
 	short rotatedBounds[6];
 	short nDoors;
 
-	r = &room[ClipRoomNum];
+	r = GetRoom(currentLevel,ClipRoomNum);
 
 	if(item->object_number >= ANIMATING1 && item->object_number <= ANIMATING16 || item->object_number >= DOOR_TYPE1 && item->object_number <= DOOR_TYPE8) {
 		phd_left = r->left;

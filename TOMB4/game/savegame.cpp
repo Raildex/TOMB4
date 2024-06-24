@@ -377,8 +377,8 @@ void SaveLevelData(long FullSave) {
 	word = 0;
 	k = 0;
 
-	for(int i = 0; i < number_rooms; i++) {
-		r = &room[i];
+	for(int i = 0; i < GetNumRooms(currentLevel); i++) {
+		r = GetRoom(currentLevel,i);
 
 		for(int j = 0; j < r->num_meshes; j++) {
 			mesh = &r->mesh[j];
@@ -771,8 +771,8 @@ void RestoreLevelData(long FullSave) {
 	ReadSG(&CurrentAtmosphere, sizeof(unsigned char));
 	k = 16;
 
-	for(int i = 0; i < number_rooms; i++) {
-		r = &room[i];
+	for(int i = 0; i < GetNumRooms(currentLevel); i++) {
+		r = GetRoom(currentLevel,i);
 
 		for(int j = 0; j < r->num_meshes; j++) {
 			mesh = &r->mesh[j];

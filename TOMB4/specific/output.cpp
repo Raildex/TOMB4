@@ -245,7 +245,7 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 		MyVertexBuffer[i].sz = vPos.z;
 
 		if(current_item) {
-			if(!(room[current_item->room_number].flags & ROOM_UNDERWATER) && camera.underwater) {
+			if(!(GetRoom(currentLevel,current_item->room_number)->flags & ROOM_UNDERWATER) && camera.underwater) {
 				cR = (cR * water_color_R) >> 8;
 				cG = (cG * water_color_G) >> 8;
 				cB = (cB * water_color_B) >> 8;
@@ -434,7 +434,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 		MyVertexBuffer[i].sy = vPos.y;
 		MyVertexBuffer[i].sz = vPos.z;
 
-		if(!(room[current_item->room_number].flags & ROOM_UNDERWATER) && camera.underwater) {
+		if(!(GetRoom(currentLevel,current_item->room_number)->flags & ROOM_UNDERWATER) && camera.underwater) {
 			cR = (cR * water_color_R) >> 8;
 			cG = (cG * water_color_G) >> 8;
 			cB = (cB * water_color_B) >> 8;
@@ -1020,7 +1020,7 @@ void RenderLoadPic(long unused) {
 	camera.target.y = gfLoadTarget.y;
 	camera.target.z = gfLoadTarget.z;
 	camera.pos.room_number = gfLoadRoom;
-	camera.underwater = room[gfLoadRoom].flags & ROOM_UNDERWATER;
+	camera.underwater = GetRoom(currentLevel,gfLoadRoom)->flags & ROOM_UNDERWATER;
 
 	if(gfLoadRoom == 255)
 		return;

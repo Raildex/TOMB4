@@ -463,7 +463,7 @@ void GuideControl(short item_number) {
 		} else if(item->frame_number == anims[item->anim_number].frame_base + 35) {
 			item->meshswap_meshbits &= ~0x40000;
 
-			for(candidate_num = room[item->room_number].item_number; candidate_num != NO_ITEM; candidate_num = candidate->next_item) {
+			for(candidate_num = GetRoom(currentLevel,item->room_number)->item_number; candidate_num != NO_ITEM; candidate_num = candidate->next_item) {
 				candidate = &items[candidate_num];
 
 				if(candidate->object_number >= ANIMATING1 && candidate->object_number <= ANIMATING15 && !((item->pos.z_pos ^ candidate->pos.z_pos) & ~0x3FF) && !((item->pos.x_pos ^ candidate->pos.x_pos) & ~0x3FF)) {

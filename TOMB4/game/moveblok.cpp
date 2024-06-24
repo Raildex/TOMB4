@@ -119,7 +119,7 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 
 	room_number = item->room_number;
 	floor = GetFloor(x, y - 256, z, &room_number);
-	r = &room[room_number];
+	r = GetRoom(currentLevel,room_number);
 	rx = (x - r->x) >> 10;
 	rz = (z - r->z) >> 10;
 
@@ -197,7 +197,7 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 	z = item->pos.z_pos + destz;
 	room_number = item->room_number;
 	floor = GetFloor(x, y - 256, z, &room_number);
-	r = &room[room_number];
+	r = GetRoom(currentLevel,room_number);
 	rx = (x - r->x) >> 10;
 	rz = (z - r->z) >> 10;
 
@@ -254,7 +254,7 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 	z = lara_item->pos.z_pos + destz;
 	room_number = lara_item->room_number;
 	GetFloor(x, y, z, &room_number);
-	r = &room[room_number];
+	r = GetRoom(currentLevel,room_number);
 	rx = (x - r->x) >> 10;
 	rz = (z - r->z) >> 10;
 

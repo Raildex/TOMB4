@@ -328,7 +328,7 @@ void DrawScaledSpike(ITEM_INFO* item) {
 			}
 		}
 
-		r = &room[item->room_number];
+		r = GetRoom(currentLevel,item->room_number);
 		phd_left = r->left;
 		phd_right = r->right;
 		phd_top = r->top;
@@ -547,7 +547,7 @@ void ControlMineHelicopter(short item_number) {
 		FlashFadeB = 64;
 		FlashFader = 32;
 
-		for(sentries = room[item->room_number].item_number; sentries != NO_ITEM; sentries = sentry->next_item) {
+		for(sentries = GetRoom(currentLevel,item->room_number)->item_number; sentries != NO_ITEM; sentries = sentry->next_item) {
 			sentry = &items[sentries];
 
 			if(sentry->object_number == SENTRY_GUN)
@@ -879,7 +879,7 @@ void ControlHammer(short item_number) {
 
 		if(frame == 8) {
 			if(item->trigger_flags == 2) {
-				for(target_item = room[item->room_number].item_number; target_item != NO_ITEM; target_item = item2->next_item) {
+				for(target_item = GetRoom(currentLevel,item->room_number)->item_number; target_item != NO_ITEM; target_item = item2->next_item) {
 					item2 = &items[target_item];
 
 					if(item2->object_number == OBELISK && item2->pos.y_rot == -0x4000 && items[item2->item_flags[0]].pos.y_rot == 0x4000 && !items[item2->item_flags[1]].pos.y_rot) {
@@ -893,7 +893,7 @@ void ControlHammer(short item_number) {
 				SoundEffect(SFX_DOOR_GEN_THUD, &item->pos, SFX_DEFAULT);
 				SoundEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
 			} else {
-				for(target_item = room[item->room_number].item_number; target_item != NO_ITEM; target_item = item2->next_item) {
+				for(target_item = GetRoom(currentLevel,item->room_number)->item_number; target_item != NO_ITEM; target_item = item2->next_item) {
 					item2 = &items[target_item];
 
 					if(item2->object_number >= PUSHABLE_OBJECT1 && item2->object_number <= PUSHABLE_OBJECT4 && item2->pos.x_pos == item->pos.x_pos && item2->pos.z_pos == item->pos.z_pos) {
@@ -904,7 +904,7 @@ void ControlHammer(short item_number) {
 				}
 
 				if(hammered) {
-					for(target_item = room[item->room_number].item_number; target_item != NO_ITEM; target_item = item2->next_item) {
+					for(target_item = GetRoom(currentLevel,item->room_number)->item_number; target_item != NO_ITEM; target_item = item2->next_item) {
 						item2 = &items[target_item];
 
 						if(item2->object_number == PUZZLE_ITEM4_COMBO1 || item2->object_number == PUZZLE_ITEM4_COMBO2 || item2->object_number == PUZZLE_ITEM5) {
@@ -986,7 +986,7 @@ void ControlBurningFloor(short item_number) {
 
 	if(!item->item_flags[3]) {
 		nSpheres = 0;
-		torch_num = room[item->room_number].item_number;
+		torch_num = GetRoom(currentLevel,item->room_number)->item_number;
 
 		while(1) {
 			torch = &items[torch_num];
@@ -1454,7 +1454,7 @@ void FlameEmitter2Control(short item_number) {
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-		if(room[room_number].flags & ROOM_UNDERWATER) {
+		if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER) {
 			FlashFadeR = 255;
 			FlashFadeG = 128;
 			FlashFadeB = 0;
@@ -2028,8 +2028,8 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				ForcedFixedCamera.z = item->pos.z_pos - ((2048 * phd_cos(item->pos.y_rot) >> W2V_SHIFT));
 				y = item->pos.y_pos - 2048;
 
-				if(y < room[item->room_number].maxceiling)
-					y = room[item->room_number].maxceiling;
+				if(y < GetRoom(currentLevel,item->room_number)->maxceiling)
+					y = GetRoom(currentLevel,item->room_number)->maxceiling;
 
 				ForcedFixedCamera.y = y;
 				ForcedFixedCamera.room_number = item->room_number;
@@ -2046,17 +2046,17 @@ void OpenTrapDoor(ITEM_INFO* item) {
 	unsigned short pitsky;
 
 	pitsky = item->item_flags[3];
-	r = &room[item->room_number];
+	r = GetRoom(currentLevel,item->room_number);
 	floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 
 	if(item->pos.y_pos == r->minfloor) {
 		floor->pit_room = pitsky & 0xFF;
-		r = &room[floor->pit_room];
+		r = GetRoom(currentLevel,floor->pit_room);
 		floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 		floor->sky_room = pitsky >> 8;
 	} else {
 		floor->sky_room = pitsky >> 8;
-		r = &room[floor->sky_room];
+		r = GetRoom(currentLevel,floor->sky_room);
 		floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 		floor->pit_room = pitsky & 0xFF;
 	}
@@ -2069,13 +2069,13 @@ void CloseTrapDoor(ITEM_INFO* item) {
 	FLOOR_INFO* floor;
 	unsigned short pitsky;
 
-	r = &room[item->room_number];
+	r = GetRoom(currentLevel,item->room_number);
 	floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 
 	if(item->pos.y_pos == r->minfloor) {
 		pitsky = floor->pit_room;
 		floor->pit_room = 255;
-		r = &room[pitsky];
+		r = GetRoom(currentLevel,pitsky);
 		floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 		pitsky |= floor->sky_room << 8;
 		floor->sky_room = 255;
@@ -2084,7 +2084,7 @@ void CloseTrapDoor(ITEM_INFO* item) {
 	} else if(item->pos.y_pos == r->maxceiling) {
 		pitsky = floor->sky_room;
 		floor->sky_room = 255;
-		r = &room[pitsky];
+		r = GetRoom(currentLevel,pitsky);
 		floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 		pitsky <<= 8;
 		pitsky |= floor->pit_room;

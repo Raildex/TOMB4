@@ -468,7 +468,7 @@ void DrawGodHead(ITEM_INFO* item) {
 	short* frm[2];
 	long rate, oldAlpha, alpha;
 
-	r = &room[item->room_number];
+	r = GetRoom(currentLevel,item->room_number);
 	phd_left = r->left;
 	phd_right = r->right;
 	phd_top = r->top;

@@ -130,7 +130,7 @@ void TemplarControl(short item_number) {
 			item->pos.y_rot += 182;
 
 		if(item->frame_number > anims[item->anim_number].frame_base + 42 && item->frame_number < anims[item->anim_number].frame_base + 51) {
-			r = &room[item->room_number];
+			r = GetRoom(currentLevel,item->room_number);
 			pos.x = 0;
 			pos.y = 0;
 			pos.z = 0;

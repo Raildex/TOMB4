@@ -199,7 +199,7 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 }
 
 void JeepExplode(ITEM_INFO* item) {
-	if(room[item->room_number].flags & ROOM_UNDERWATER)
+	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER)
 		TriggerUnderwaterExplosion(item, 1);
 	else {
 		TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -2, 0, item->room_number);
@@ -327,7 +327,7 @@ void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		lara.gun_status = LG_HANDS_BUSY;
 
-		for(short item_num = room[item->room_number].item_number; item_num != NO_ITEM; item_num = item2->next_item) {
+		for(short item_num = GetRoom(currentLevel,item->room_number)->item_number; item_num != NO_ITEM; item_num = item2->next_item) {
 			item2 = &items[item_num];
 
 			if(item2->object_number == ENEMY_JEEP) {
@@ -802,7 +802,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 		}
 	}
 
-	if(room[item->room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
 		lara_item->goal_anim_state = 11;
 		lara_item->hit_points = 0;
 		JeepExplode(item);
@@ -945,7 +945,7 @@ void JeepBaddieCollision(ITEM_INFO* item) {
 	jeep = (JEEPINFO*)item->data;
 	room_count = 1;
 	jroomies[0] = item->room_number;
-	doors = room[item->room_number].door;
+	doors = GetRoom(currentLevel,item->room_number)->door;
 
 	for(int i = *doors++; i > 0; i--, doors += 16) {
 		for(j = 0; j < room_count; j++) {
@@ -960,7 +960,7 @@ void JeepBaddieCollision(ITEM_INFO* item) {
 	}
 
 	for(int i = 0; i < room_count; i++) {
-		for(item_number = room[jroomies[i]].item_number; item_number != NO_ITEM; item_number = collided->next_item) {
+		for(item_number = GetRoom(currentLevel,jroomies[i])->item_number; item_number != NO_ITEM; item_number = collided->next_item) {
 			collided = &items[item_number];
 			obj = GetObjectInfo(currentLevel,collided->object_number);
 
@@ -1019,7 +1019,7 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 	JeepBounds[5] = z - 256;
 	room_count = 1;
 	jroomies[0] = room_number;
-	doors = room[room_number].door;
+	doors = GetRoom(currentLevel,room_number)->door;
 
 	for(int i = *doors++; i > 0; i--, doors += 16) {
 		for(j = 0; j < room_count; j++) {
@@ -1035,7 +1035,7 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 
 	for(int i = 0; i < room_count; i++) {
 		rn = jroomies[i];
-		r = &room[rn];
+		r = GetRoom(currentLevel,rn);
 		mesh = r->mesh;
 
 		for(j = r->num_meshes; j > 0; j--, mesh++) {

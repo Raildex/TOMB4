@@ -44,7 +44,6 @@ extern AIOBJECT* AIObjects;
 extern short* aranges;
 extern short* frames;
 extern short* commands;
-extern short* floor_data;
 extern short* mesh_base;
 extern long nAnimUVRanges;
 extern long number_cameras;

@@ -286,7 +286,7 @@ void FlameTorchControl(short item_number) {
 	item->pos.x_pos += xv;
 	item->pos.z_pos += zv;
 
-	if(room[item->room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
 		item->fallspeed += (5 - item->fallspeed) >> 1;
 		item->speed += (5 - item->speed) >> 1;
 

@@ -18,6 +18,7 @@
 #include "roominfo.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
 ITEM_INFO* TriggerClockworkBeetle(long flag) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
@@ -50,7 +51,7 @@ ITEM_INFO* TriggerClockworkBeetle(long flag) {
 			AddActiveItem(item_number);
 
 			if(item->item_flags[0]) {
-				for(item_number = room[item->room_number].item_number; item_number != NO_ITEM; item_number = item2->next_item) {
+				for(item_number = GetRoom(currentLevel,item->room_number)->item_number; item_number != NO_ITEM; item_number = item2->next_item) {
 					item2 = &items[item_number];
 
 					if(item2->object_number == MAPPER) {
@@ -197,7 +198,7 @@ void ControlClockworkBeetle(short item_number) {
 					lara.beetle_uses--;
 					item->item_flags[2] = 5;
 
-					for(int i = room[item->room_number].item_number; i != NO_ITEM; i = item2->next_item) {
+					for(int i = GetRoom(currentLevel,item->room_number)->item_number; i != NO_ITEM; i = item2->next_item) {
 						item2 = &items[i];
 
 						if(item2->object_number == MAPPER) {

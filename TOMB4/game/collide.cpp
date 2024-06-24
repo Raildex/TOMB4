@@ -64,7 +64,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 	short room_count, statics_count, items_count, item_number, next_item;
 
 	rooms[0] = item->room_number;
-	r = &room[rooms[0]];
+	r = GetRoom(currentLevel,rooms[0]);
 	doors = r->door;
 	room_count = 1;
 	statics_count = 0;
@@ -85,7 +85,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 
 	if(StoredStatics) {
 		for(int i = 0; i < room_count; i++) {
-			r = &room[rooms[i]];
+			r = GetRoom(currentLevel,rooms[i]);
 			mesh = r->mesh;
 
 			for(j = r->num_meshes; j > 0; j--, mesh++) {
@@ -121,7 +121,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 	}
 
 	for(int i = 0; i < room_count; i++) {
-		item_number = room[rooms[i]].item_number;
+		item_number = GetRoom(currentLevel,rooms[i])->item_number;
 
 		while(item_number != NO_ITEM) {
 			item2 = &items[item_number];
@@ -326,7 +326,7 @@ void CreatureCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				rz = (l->pos.z_pos - item->pos.z_pos) - ((c * z - s * x) >> W2V_SHIFT);
 
 				if(bounds[3] - bounds[2] > 256) {
-					lara.hit_direction = unsigned short((l->pos.y_rot - phd_atan(rz, rx) - 0x6000)) >> W2V_SHIFT;
+					lara.hit_direction = (unsigned short)((l->pos.y_rot - phd_atan(rz, rx) - 0x6000)) >> W2V_SHIFT;
 					lara.hit_frame++;
 
 					if(lara.hit_frame > 30)
@@ -363,7 +363,7 @@ short GetTiltType(FLOOR_INFO* floor, long x, long y, long z) {
 		if(CheckNoColFloorTriangle(floor, x, z) == 1)
 			break;
 
-		r = &room[floor->pit_room];
+		r = GetRoom(currentLevel,floor->pit_room);
 		floor = &r->floor[((z - r->z) >> 10) + (((x - r->x) >> 10) * r->x_size)];
 	}
 
@@ -371,7 +371,7 @@ short GetTiltType(FLOOR_INFO* floor, long x, long y, long z) {
 		return 0;
 
 	if(floor->index) {
-		data = &floor_data[floor->index];
+		data = GetFloorData(currentLevel,floor->index);
 		type = (data[0] & 0x1F);
 
 		if(type == TILT_TYPE)
@@ -430,7 +430,7 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 	lzmax = z + coll->radius;
 	num_nearby_rooms = 1;
 	nearby_rooms[0] = room_number;
-	door = room[room_number].door;
+	door = GetRoom(currentLevel,room_number)->door;
 
 	if(door) {
 		for(i = *door++; i > 0; i--) {
@@ -449,7 +449,7 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 	}
 
 	for(i = 0; i < num_nearby_rooms; i++) {
-		r = &room[nearby_rooms[i]];
+		r = GetRoom(currentLevel,nearby_rooms[i]);
 		mesh = r->mesh;
 
 		for(j = r->num_meshes; j > 0; j--, mesh++) {
@@ -529,7 +529,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 
 	num_nearby_rooms = 1;
 	nearby_rooms[0] = l->room_number;
-	door = room[nearby_rooms[0]].door;
+	door = GetRoom(currentLevel,nearby_rooms[0])->door;
 
 	if(door) {
 		for(i = *door++; i > 0; i--) {
@@ -548,7 +548,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 	}
 
 	for(i = 0; i < num_nearby_rooms; i++) {
-		r = &room[nearby_rooms[i]];
+		r = GetRoom(currentLevel,nearby_rooms[i]);
 		item_number = r->item_number;
 
 		while(item_number != NO_ITEM) {
@@ -570,7 +570,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 		}
 
 		if(coll->enable_baddie_push) {
-			r = &room[nearby_rooms[i]];
+			r = GetRoom(currentLevel,nearby_rooms[i]);
 			mesh = r->mesh;
 
 			for(j = r->num_meshes; j > 0; j--, mesh++) {
@@ -686,7 +686,7 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		z = (bounds[4] + bounds[5]) / 2;
 		dx -= (c * x + s * z) >> W2V_SHIFT;
 		dz -= (c * z - s * x) >> W2V_SHIFT;
-		lara.hit_direction = unsigned short(l->pos.y_rot - phd_atan(dz, dx) - 24576) >> W2V_SHIFT; // hmmmmm
+		lara.hit_direction = (unsigned short)(l->pos.y_rot - phd_atan(dz, dx) - 24576) >> W2V_SHIFT; // hmmmmm
 
 		if(!lara.hit_frame)
 			SoundEffect(SFX_LARA_INJURY, &l->pos, SFX_DEFAULT);
@@ -890,7 +890,7 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 
 	if(!lara.IsMoving) {
 		if(lara.water_status != LW_UNDERWATER) {
-			switch(((unsigned long(mGetAngle(dest->x_pos, dest->z_pos, pos->x_pos, pos->z_pos) + 8192) >> 14) - (unsigned short(dest->y_rot + 8192) >> 14)) & 3) {
+			switch((((unsigned long)(mGetAngle(dest->x_pos, dest->z_pos, pos->x_pos, pos->z_pos) + 8192) >> 14) - ((unsigned short)(dest->y_rot + 8192) >> 14)) & 3) {
 			case 0:
 				lara_item->anim_number = 65;
 				lara_item->frame_number = anims[lara_item->anim_number].frame_base;
@@ -1117,7 +1117,7 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	coll->shift.x = 0;
 	coll->shift.y = 0;
 	coll->shift.z = 0;
-	coll->quadrant = unsigned short(coll->facing + 0x2000) / 0x4000;
+	coll->quadrant = (unsigned short)(coll->facing + 0x2000) / 0x4000;
 
 	ang = abs(lara_item->pos.y_rot - coll->facing) > 0x7000 ? 0x3000 : 0x4000;
 	xright2 = (250 * phd_sin(coll->facing + ang)) >> W2V_SHIFT;

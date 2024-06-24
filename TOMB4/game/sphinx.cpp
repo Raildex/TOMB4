@@ -59,7 +59,7 @@ void SphinxControl(short item_number) {
 	h1 = GetHeight(floor, x, item->pos.y_pos, z);
 
 	if(item->current_anim_state == 5 && floor->stopper) {
-		r = &room[item->room_number];
+		r = GetRoom(currentLevel,item->room_number);
 
 		for(int i = 0; i < r->num_meshes; i++) {
 			mesh = &r->mesh[i];

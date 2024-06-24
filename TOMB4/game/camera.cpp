@@ -27,7 +27,7 @@
 #include "cameratype.h"
 #include "types.h"
 #include <cstdlib>
-
+#include "levelinfo.h"
 CAMERA_INFO camera;
 
 GAME_VECTOR ForcedFixedCamera;
@@ -1163,7 +1163,7 @@ void CalculateCamera() {
 			camera.speed = 1;
 	}
 
-	if(room[camera.pos.room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,camera.pos.room_number)->flags & ROOM_UNDERWATER) {
 		SoundEffect(SFX_UNDERWATER, 0, SFX_ALWAYS);
 
 		if(!camera.underwater)

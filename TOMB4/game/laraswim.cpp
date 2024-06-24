@@ -24,7 +24,7 @@
 #include "camerainfo.h"
 #include "objectvector.h"
 #include <cstdlib>
-
+#include "levelinfo.h"
 static void lara_as_swimcheat(ITEM_INFO* item, COLL_INFO* coll) {
 	if(input & IN_FORWARD)
 		item->pos.x_rot -= 546;
@@ -282,7 +282,7 @@ long GetWaterDepth(long x, long y, long z, short room_number) {
 	long x_floor, y_floor, h;
 	short door;
 
-	r = &room[room_number];
+	r = GetRoom(currentLevel,room_number);
 
 	do {
 		x_floor = (z - r->z) >> 10;
@@ -312,14 +312,14 @@ long GetWaterDepth(long x, long y, long z, short room_number) {
 
 		if(door != 255) {
 			room_number = door;
-			r = &room[door];
+			r = GetRoom(currentLevel,door);
 		}
 
 	} while(door != 255);
 
 	if(r->flags & ROOM_UNDERWATER) {
 		while(floor->sky_room != 255) {
-			r = &room[floor->sky_room];
+			r = GetRoom(currentLevel,floor->sky_room);
 
 			if(!(r->flags & ROOM_UNDERWATER)) {
 				h = GetMinimumCeiling(floor, x, z);
@@ -333,7 +333,7 @@ long GetWaterDepth(long x, long y, long z, short room_number) {
 		return 0x7FFF;
 	} else {
 		while(floor->pit_room != 255) {
-			r = &room[floor->pit_room];
+			r = GetRoom(currentLevel,floor->pit_room);
 
 			if(r->flags & ROOM_UNDERWATER) {
 				h = GetMaximumFloor(floor, x, z);

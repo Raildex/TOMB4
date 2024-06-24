@@ -45,7 +45,7 @@ void InitialiseCroc(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 
-	if(room[item->room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
 		item->anim_number = GetObjectInfo(currentLevel,CROCODILE)->anim_index + 12;
 		item->frame_number = anims[item->anim_number].frame_base;
 		item->current_anim_state = 8;
@@ -99,7 +99,7 @@ void CrocControl(short item_number) {
 		item->hit_points = 0;
 
 		if(item->current_anim_state != 7 && item->current_anim_state != 10) {
-			if(room[item->room_number].flags & ROOM_UNDERWATER) {
+			if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
 				item->anim_number = GetObjectInfo(currentLevel,CROCODILE)->anim_index + 16;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 10;
@@ -113,7 +113,7 @@ void CrocControl(short item_number) {
 			}
 		}
 
-		if(room[item->room_number].flags & ROOM_UNDERWATER)
+		if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER)
 			CreatureFloat(item_number);
 	} else {
 		if(item->ai_bits)
@@ -270,8 +270,8 @@ void CrocControl(short item_number) {
 	room_number = item->room_number;
 	GetFloor(x, item->pos.y_pos, z, &room_number);
 
-	if(room[item->room_number].flags & ROOM_UNDERWATER) {
-		if(room[room_number].flags & 1) {
+	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
+		if(GetRoom(currentLevel,room_number)->flags & 1) {
 			if(item->current_anim_state == 2) {
 				item->required_anim_state = 3;
 				item->goal_anim_state = 3;

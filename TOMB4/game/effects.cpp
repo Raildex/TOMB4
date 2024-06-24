@@ -410,7 +410,7 @@ void WadeSplash(ITEM_INFO* item, long water, long depth) {
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if(!(room[room_number].flags & ROOM_UNDERWATER))
+	if(!(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER))
 		return;
 
 	bounds = GetBestFrame(item);
@@ -449,7 +449,7 @@ void Splash(ITEM_INFO* item) {
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if(room[room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER) {
 		splash_setup.x = item->pos.x_pos;
 		splash_setup.y = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, room_number);
 		splash_setup.z = item->pos.z_pos;
@@ -469,7 +469,7 @@ void Splash(ITEM_INFO* item) {
 }
 
 short DoBloodSplat(long x, long y, long z, short speed, short ang, short room_number) {
-	if(room[room_number].flags & ROOM_UNDERWATER)
+	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER)
 		TriggerUnderwaterBlood(x, y, z, speed);
 	else
 		TriggerBlood(x, y, z, ang >> 4, speed);

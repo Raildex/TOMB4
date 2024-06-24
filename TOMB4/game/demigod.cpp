@@ -164,7 +164,7 @@ void TriggerHammerSmoke(long x, long y, long z, long num) {
 				sptr->RotAdd = -64 - (GetRandomControl() & 0x3F);
 			else
 				sptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
-		} else if(room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+		} else if(GetRoom(currentLevel,lara_item->room_number)->flags & ROOM_NOT_INSIDE)
 			sptr->Flags = 256;
 		else
 			sptr->Flags = 0;
@@ -290,7 +290,7 @@ void DemigodControl(short item_number) {
 
 	if(false /*gfCurrentLevel == 24)*/) // Chambers of Tulun
 	{
-		r = &room[lara_item->room_number];
+		r = GetRoom(currentLevel,lara_item->room_number);
 		zone = ground_zone[god->LOT.zone][flip_status];
 		lara_item->box_number = r->floor[((lara_item->pos.z_pos - r->z) >> 10) + r->x_size * ((lara_item->pos.x_pos - r->x) >> 10)].box;
 

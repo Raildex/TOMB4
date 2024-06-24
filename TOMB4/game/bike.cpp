@@ -350,7 +350,7 @@ static long CanGetOff(short num) // always called with num = 1
 }
 
 void BikeExplode(ITEM_INFO* item) {
-	if(room[item->room_number].flags & ROOM_UNDERWATER)
+	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER)
 		TriggerUnderwaterExplosion(item, 1);
 	else {
 		TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -2, 0, item->room_number);
@@ -525,7 +525,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 		}
 	}
 
-	if(room[item->room_number].flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
 		lara_item->goal_anim_state = 20;
 		lara_item->hit_points = 0;
 		BikeExplode(item);
@@ -738,7 +738,7 @@ long BikeBaddieCollision(ITEM_INFO* bike) {
 
 	room_count = 1;
 	broomies[0] = bike->room_number;
-	doors = room[bike->room_number].door;
+	doors = GetRoom(currentLevel,bike->room_number)->door;
 
 	for(int i = *doors++; i > 0; i--, doors += 16) {
 		for(j = 0; j < room_count; j++) {
@@ -753,7 +753,7 @@ long BikeBaddieCollision(ITEM_INFO* bike) {
 	}
 
 	for(int i = 0; i < room_count; i++) {
-		for(item_number = room[broomies[i]].item_number; item_number != NO_ITEM; item_number = item->next_item) {
+		for(item_number = GetRoom(currentLevel,broomies[i])->item_number; item_number != NO_ITEM; item_number = item->next_item) {
 			item = &items[item_number];
 
 			if(item->collidable && item->status != ITEM_INVISIBLE && item != lara_item && item != bike) {
@@ -806,7 +806,7 @@ void BikeCollideStaticObjects(long x, long y, long z, short room_number, long he
 	BikeBounds[5] = z - 256;
 	room_count = 1;
 	broomies[0] = room_number;
-	doors = room[room_number].door;
+	doors = GetRoom(currentLevel,room_number)->door;
 
 	for(int i = *doors++; i > 0; i--, doors += 16) {
 		for(j = 0; j < room_count; j++) {
@@ -822,7 +822,7 @@ void BikeCollideStaticObjects(long x, long y, long z, short room_number, long he
 
 	for(int i = 0; i < room_count; i++) {
 		rn = broomies[i];
-		r = &room[rn];
+		r = GetRoom(currentLevel,rn);
 		mesh = r->mesh;
 
 		for(j = r->num_meshes; j > 0; j--, mesh++) {

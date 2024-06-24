@@ -174,7 +174,7 @@ void RagheadControl(short item_number) {
 		long_jump_ahead = 1;
 
 	if(item->item_flags[1] != item->room_number && gfCurrentLevel != 5) {
-		for(target_num = room[item->room_number].item_number; target_num != NO_ITEM; target_num = target->next_item) {
+		for(target_num = GetRoom(currentLevel,item->room_number)->item_number; target_num != NO_ITEM; target_num = target->next_item) {
 			target = &items[target_num];
 
 			if(target->object_number == SMALLMEDI_ITEM || target->object_number == UZI_AMMO_ITEM) {
@@ -254,7 +254,7 @@ void RagheadControl(short item_number) {
 			raghead->LOT.is_jumping = 1;
 
 			if(item->trigger_flags > 999) {
-				for(target_num = room[2].item_number; target_num != NO_ITEM; target_num = target->next_item) {
+				for(target_num = GetRoom(currentLevel,2)->item_number; target_num != NO_ITEM; target_num = target->next_item) {
 					target = &items[target_num];
 
 					if(target->trigger_flags / 1000 == item->trigger_flags / 1000 + 1) {
