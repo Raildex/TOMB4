@@ -610,7 +610,7 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 	unsigned long bit;
 	long poppush, alpha, compass;
 
-	anim = &anims[GetObjectInfo(currentLevel,item->object_number)->anim_index];
+	anim = GetAnim(currentLevel,GetObjectInfo(currentLevel,item->object_number)->anim_index);
 	frmptr = anim->frame_ptr;
 	object = GetObjectInfo(currentLevel,item->object_number);
 	phd_PushMatrix();
@@ -631,7 +631,7 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 	}
 
 	bit = 1;
-	meshpp = &meshes[object->mesh_index];
+	meshpp = GetMeshPointer(currentLevel,object->mesh_index);
 	bone = &bones[object->bone_index];
 
 	if(!shagflag)

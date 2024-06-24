@@ -246,8 +246,8 @@ void InitialiseNewWeapon() {
 		break;
 
 	default:
-		lara.left_arm.frame_base = anims[lara_item->anim_number].frame_ptr;
-		lara.right_arm.frame_base = anims[lara_item->anim_number].frame_ptr;
+		lara.left_arm.frame_base = GetAnim(currentLevel,lara_item->anim_number)->frame_ptr;
+		lara.right_arm.frame_base = GetAnim(currentLevel,lara_item->anim_number)->frame_ptr;
 		break;
 	}
 }
@@ -1123,7 +1123,7 @@ void LaraGun() {
 
 	case LG_HANDS_BUSY:
 
-		if(lara.gun_type == WEAPON_FLARE && lara.mesh_ptrs[LM_LHAND] == meshes[GetObjectInfo(currentLevel,FLARE_ANIM)->mesh_index + LM_LHAND * 2]) {
+		if(lara.gun_type == WEAPON_FLARE && lara.mesh_ptrs[LM_LHAND] == GetMesh(currentLevel,GetObjectInfo(currentLevel,FLARE_ANIM)->mesh_index + LM_LHAND * 2)) {
 			lara.flare_control_left = lara.vehicle != NO_ITEM || CheckForHoldingState(lara_item->current_anim_state);
 			DoFlareInHand(lara.flare_age);
 			set_flare_arm(lara.left_arm.frame_number);
@@ -1169,7 +1169,7 @@ void LaraGun() {
 		break;
 
 	case LG_UNDRAW_GUNS:
-		lara.mesh_ptrs[LM_HEAD] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_HEAD * 2];
+		lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_HEAD * 2);
 
 		switch(lara.gun_type) {
 		case WEAPON_PISTOLS:
@@ -1194,9 +1194,9 @@ void LaraGun() {
 	case LG_READY:
 
 		if(input & IN_ACTION)
-			lara.mesh_ptrs[LM_HEAD] = meshes[GetObjectInfo(currentLevel,LARA_SCREAM)->mesh_index + LM_HEAD * 2];
+			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_SCREAM)->mesh_index + LM_HEAD * 2);
 		else
-			lara.mesh_ptrs[LM_HEAD] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_HEAD * 2];
+			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_HEAD * 2);
 
 		if(camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA && camera.type != HEAVY_CAMERA)
 			camera.type = COMBAT_CAMERA;

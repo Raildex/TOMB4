@@ -12,11 +12,11 @@
 #include "fxinfo.h"
 #include "types.h"
 #include <cstdlib>
-
+#include "levelinfo.h"
 long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num) {
 	short** meshpp;
 
-	meshpp = &meshes[fx->frame_number];
+	meshpp = GetMeshPointer(currentLevel,fx->frame_number);
 	ShatterItem.YRot = fx->pos.y_rot;
 	ShatterItem.meshp = *meshpp;
 	ShatterItem.Sphere.x = fx->pos.x_pos;

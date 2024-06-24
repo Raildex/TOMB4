@@ -93,7 +93,7 @@ void SaveLaraData() {
 	ITEM_INFO* item;
 
 	for(int i = 0; i < 15; i++)
-		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] - (long)mesh_base);
+		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] - (long)GetMeshBase(currentLevel));
 
 	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base - (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base - (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
@@ -101,7 +101,7 @@ void SaveLaraData() {
 	memcpy(&savegame.Lara, &lara, sizeof(savegame.Lara));
 
 	for(int i = 0; i < 15; i++)
-		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)mesh_base);
+		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)GetMeshBase(currentLevel));
 
 	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
@@ -187,7 +187,7 @@ void RestoreLaraData(long FullSave) {
 		}
 	} else {
 		for(int i = 0; i < 15; i++)
-			lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)mesh_base);
+			lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)GetMeshBase(currentLevel));
 	}
 
 	CutSceneTriggered = savegame.cutscene_triggered;

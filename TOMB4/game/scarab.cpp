@@ -35,7 +35,7 @@ void InitialiseScarab(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,BIG_BEETLE)->anim_index + 3;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -67,7 +67,7 @@ void ScarabControl(short item_number) {
 				item->pos.y_pos = item->floor;
 			} else {
 				item->anim_number = GetObjectInfo(currentLevel,BIG_BEETLE)->anim_index + 5;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->gravity_status = 1;
 				item->current_anim_state = 6;
 				item->speed = 0;
@@ -314,7 +314,7 @@ void DrawScarabs() {
 	SCARAB_STRUCT* fx;
 	short** meshpp;
 
-	meshpp = &meshes[GetObjectInfo(currentLevel,LITTLE_BEETLE)->mesh_index + (wibble >> 2 & 2)];
+	meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,LITTLE_BEETLE)->mesh_index + (wibble >> 2 & 2));
 
 	for(int i = 0; i < 128; i++) {
 		fx = &Scarabs[i];

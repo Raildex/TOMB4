@@ -111,9 +111,9 @@ void InitialiseItem(short item_num) {
 
 	item = &items[item_num];
 	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
-	item->frame_number = anims[item->anim_number].frame_base;
-	item->current_anim_state = anims[item->anim_number].current_anim_state;
-	item->goal_anim_state = anims[item->anim_number].current_anim_state;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->current_anim_state = GetAnim(currentLevel,item->anim_number)->current_anim_state;
+	item->goal_anim_state = GetAnim(currentLevel,item->anim_number)->current_anim_state;
 	item->required_anim_state = 0;
 	item->pos.x_rot = 0;
 	item->pos.z_rot = 0;

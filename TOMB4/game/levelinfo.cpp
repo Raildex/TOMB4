@@ -1,11 +1,18 @@
 #include "levelinfo.h"
+#include "animstruct.h"
+#include "changestruct.h"
 #include "control.h"
+#include "d3dmatrix.h"
 #include "drawroom.h"
+#include "dxshell.h"
 #include "effect2.h"
 #include "function_stubs.h"
+#include "laraskin.h"
+#include "meshdata.h"
 #include "objectinfo.h"
 #include "objects.h"
 #include "polyinsert.h"
+#include "rangestruct.h"
 #include "roominfo.h"
 #include "setup.h"
 #include "staticinfo.h"
@@ -14,6 +21,7 @@
 #include "lightinfo.h"
 #include "meshinfo.h"
 #include "types.h"
+#include "winmain.h"
 LEVEL_INFO* currentLevel;
 struct LEVEL_INFO {
 	OBJECT_INFO* objects;
@@ -21,6 +29,14 @@ struct LEVEL_INFO {
 	long nRooms;
 	ROOM_INFO* rooms;
 	short* floor_data;
+	short* mesh_base;
+	short** meshes;
+	ANIM_STRUCT* anims;
+	RANGE_STRUCT* ranges;
+	CHANGE_STRUCT* changes;
+	short* commands;
+	long* bones;
+	short* frames;
 };
 
 LEVEL_INFO* CreateLevel() {
@@ -28,6 +44,145 @@ LEVEL_INFO* CreateLevel() {
 	lvl->objects = (OBJECT_INFO*)calloc(NUMBER_OBJECTS,sizeof(OBJECT_INFO));
 	lvl->statics = (STATIC_INFO*)calloc(NUMBER_STATIC_OBJECTS, sizeof(STATIC_INFO));
 	return lvl;
+}
+
+bool LoadObjects(char** FileData,LEVEL_INFO* lvl) {
+	OBJECT_INFO* obj;
+	STATIC_INFO* stat;
+	short** mesh;
+	short** mesh_size;
+	long size, num, slot;
+	static long num_meshes, num_anims;
+
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
+	lvl->mesh_base = (short*)calloc(size, sizeof(short));
+	memcpy(lvl->mesh_base, *FileData, size * sizeof(short));
+	*FileData += size * sizeof(short);
+
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
+	lvl->meshes = (short**)calloc(2 * size, sizeof(short*));
+	memcpy(lvl->meshes, *FileData, size * sizeof(short*));
+	*FileData += size * sizeof(short*);
+
+	for(int i = 0; i < size; i++)
+		lvl->meshes[i] = lvl->mesh_base + (long)lvl->meshes[i] / 2;
+
+	num_meshes = size;
+
+	num_anims = *(long*)*FileData;
+	*FileData += sizeof(long);
+	lvl->anims = (ANIM_STRUCT*)calloc(num_anims,sizeof(ANIM_STRUCT));
+	memcpy(lvl->anims, *FileData, sizeof(ANIM_STRUCT) * num_anims);
+	*FileData += sizeof(ANIM_STRUCT) * num_anims;
+
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
+	lvl->changes = (CHANGE_STRUCT*)calloc(size,sizeof(CHANGE_STRUCT));
+	memcpy(lvl->changes, *FileData, sizeof(CHANGE_STRUCT) * size);
+	*FileData += sizeof(CHANGE_STRUCT) * size;
+
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
+	lvl->ranges = (RANGE_STRUCT*)calloc(size,sizeof(RANGE_STRUCT) );
+	memcpy(lvl->ranges, *FileData, sizeof(RANGE_STRUCT) * size);
+	*FileData += sizeof(RANGE_STRUCT) * size;
+
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
+	lvl->commands = (short*)calloc(size,sizeof(short));
+	memcpy(lvl->commands, *FileData, sizeof(short) * size);
+	*FileData += sizeof(short) * size;
+
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
+	bones = (long*)calloc(size,sizeof(long));
+	memcpy(bones, *FileData, sizeof(long) * size);
+	*FileData += sizeof(long) * size;
+
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
+	lvl->frames = (short*)calloc(size,sizeof(short));
+	memcpy(lvl->frames, *FileData, sizeof(short) * size);
+	*FileData += sizeof(short) * size;
+
+	for(int i = 0; i < num_anims; i++)
+		lvl->anims[i].frame_ptr = (short*)((long)lvl->anims[i].frame_ptr + (long)lvl->frames);
+
+	num = *(long*)*FileData;
+	*FileData += sizeof(long);
+
+	for(int i = 0; i < num; i++) {
+		slot = *(long*)*FileData;
+		*FileData += sizeof(long);
+		obj = GetObjectInfo(currentLevel,slot);
+
+		obj->nmeshes = *(short*)*FileData;
+		*FileData += sizeof(short);
+
+		obj->mesh_index = *(short*)*FileData;
+		*FileData += sizeof(short);
+
+		obj->bone_index = *(long*)*FileData;
+		*FileData += sizeof(long);
+
+		obj->frame_base = (short*)(*(short**)*FileData);
+		*FileData += sizeof(short*);
+
+		obj->anim_index = *(short*)*FileData;
+		*FileData += sizeof(short);
+
+		obj->loaded = 1;
+	}
+
+	CreateSkinningData();
+
+	for(int i = 0; i < NUMBER_OBJECTS; i++) {
+		obj = GetObjectInfo(currentLevel,i);
+		obj->mesh_index *= 2;
+	}
+
+	mesh = lvl->meshes;
+	mesh_size = &lvl->meshes[num_meshes];
+	memcpy(mesh_size, mesh, num_meshes * 4);
+
+	for(int i = 0; i < num_meshes; i++) {
+		*mesh++ = *mesh_size;
+		*mesh++ = *mesh_size;
+		mesh_size++;
+	}
+
+	InitialiseObjects();
+
+	num = *(long*)*FileData; // statics
+	*FileData += sizeof(long);
+
+	for(int i = 0; i < num; i++) {
+		slot = *(long*)*FileData;
+		*FileData += sizeof(long);
+		stat = GetStaticObject(currentLevel,slot);
+
+		stat->mesh_number = *(short*)*FileData;
+		*FileData += sizeof(short);
+
+		memcpy(&stat->x_minp, *FileData, 6 * sizeof(short));
+		*FileData += 6 * sizeof(short);
+
+		memcpy(&stat->x_minc, *FileData, 6 * sizeof(short));
+		*FileData += 6 * sizeof(short);
+
+		stat->flags = *(short*)*FileData;
+		*FileData += sizeof(short);
+	}
+
+	for(int i = 0; i < NUMBER_STATIC_OBJECTS; i++) {
+		stat = GetStaticObject(currentLevel,i);
+		stat->mesh_number *= 2;
+	}
+
+	ProcessMeshData(lvl,num_meshes * 2);
+	return 1;
 }
 
 void DestroyRoom(ROOM_INFO* r) {
@@ -70,6 +225,17 @@ STATIC_INFO* GetStaticObject(LEVEL_INFO* lvl, long type) {
 
 short* GetStaticObjectBounds(LEVEL_INFO* lvl,long type) {
 	return &((lvl->statics + type)->x_minc);
+}
+
+short** GetMeshPointer(LEVEL_INFO* lvl, long mesh) {
+	return lvl->meshes+mesh;
+}
+
+short* GetMesh(LEVEL_INFO* lvl, long mesh) {
+	return lvl->meshes[mesh];
+}
+short* GetMeshBase(LEVEL_INFO* lvl) {
+	return lvl->mesh_base;
 }
 
 bool LoadRooms(char** FileData, LEVEL_INFO* lvl) {
@@ -202,6 +368,132 @@ bool LoadRooms(char** FileData, LEVEL_INFO* lvl) {
 	return 1;
 }
 
+void ProcessMeshData(LEVEL_INFO* lvl, long num_meshes) {
+	MESH_DATA* mesh;
+	D3DVERTEX* vtx;
+	D3DVERTEXBUFFERDESC buf;
+	short* mesh_ptr;
+	short* last_mesh_ptr;
+	long lp;
+	short c;
+
+	Log(2, "ProcessMeshData %d", num_meshes);
+	num_level_meshes = num_meshes;
+	mesh_vtxbuf = (MESH_DATA**)malloc(4 * num_meshes);
+	lvl->mesh_base = (short*)mesh_vtxbuf;
+	last_mesh_ptr = 0;
+	mesh = (MESH_DATA*)num_meshes;
+
+	for(int i = 0; i < num_meshes; i++) {
+		mesh_ptr = GetMesh(currentLevel,i);
+
+		if(mesh_ptr == last_mesh_ptr) {
+			lvl->meshes[i] = (short*)mesh;
+			mesh_vtxbuf[i] = mesh;
+		} else {
+			last_mesh_ptr = mesh_ptr;
+			mesh = (MESH_DATA*)malloc(sizeof(MESH_DATA));
+			memset(mesh, 0, sizeof(MESH_DATA));
+			*GetMeshPointer(currentLevel,i) = (short*)mesh;
+			mesh_vtxbuf[i] = mesh;
+			mesh->x = mesh_ptr[0];
+			mesh->y = mesh_ptr[1];
+			mesh->z = mesh_ptr[2];
+			mesh->r = mesh_ptr[3];
+			mesh->flags = mesh_ptr[4];
+			mesh->nVerts = mesh_ptr[5] & 0xFF;
+			lp = 0;
+
+			if(!mesh->nVerts)
+				lp = mesh_ptr[5] >> 8;
+
+			mesh_ptr += 6;
+
+			if(mesh->nVerts) {
+				buf.dwNumVertices = mesh->nVerts;
+				buf.dwSize = sizeof(D3DVERTEXBUFFERDESC);
+				buf.dwCaps = 0;
+				buf.dwFVF = D3DFVF_TEX1 | D3DFVF_NORMAL | D3DFVF_XYZ;
+				DXAttempt(App.dx.lpD3D->CreateVertexBuffer(&buf, &mesh->SourceVB, 0, 0));
+				mesh->SourceVB->Lock(DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0);
+
+				for(int j = 0; j < mesh->nVerts; j++) {
+					vtx[j].x = mesh_ptr[0];
+					vtx[j].y = mesh_ptr[1];
+					vtx[j].z = mesh_ptr[2];
+					mesh_ptr += 3;
+				}
+
+				mesh->nNorms = mesh_ptr[0];
+				mesh_ptr++;
+
+				if(!mesh->nNorms)
+					mesh->nNorms = mesh->nVerts;
+
+				if(mesh->nNorms > 0) {
+					mesh->Normals = (_D3DVECTOR*)malloc(mesh->nNorms * sizeof(_D3DVECTOR));
+
+					for(int j = 0; j < mesh->nVerts; j++) {
+						vtx[j].nx = mesh_ptr[0];
+						vtx[j].ny = mesh_ptr[1];
+						vtx[j].nz = mesh_ptr[2];
+						mesh_ptr += 3;
+						D3DNormalise((_D3DVECTOR*)&vtx[j].nx);
+						mesh->Normals[j].x = vtx[j].nx;
+						mesh->Normals[j].y = vtx[j].ny;
+						mesh->Normals[j].z = vtx[j].nz;
+					}
+
+					mesh->prelight = 0;
+				} else {
+					mesh->Normals = 0;
+					mesh->prelight = (long*)malloc(4 * mesh->nVerts);
+
+					for(int j = 0; j < mesh->nVerts; j++) {
+						c = 255 - (mesh_ptr[0] >> 5);
+						mesh->prelight[j] = RGBONLY(c, c, c);
+						mesh_ptr++;
+					}
+				}
+
+				mesh->SourceVB->Unlock();
+			} else
+				mesh_ptr += 6 * lp + 1;
+
+			mesh->ngt4 = mesh_ptr[0];
+			mesh_ptr++;
+
+			if(mesh->ngt4) {
+				mesh->gt4 = (short*)malloc(12 * mesh->ngt4);
+				lp = 6 * mesh->ngt4;
+
+				for(int j = 0; j < lp; j++)
+					mesh->gt4[j] = mesh_ptr[j];
+
+				mesh_ptr += lp;
+			}
+
+			mesh->ngt3 = mesh_ptr[0];
+			mesh_ptr++;
+
+			if(mesh->ngt3) {
+				mesh->gt3 = (short*)malloc(10 * mesh->ngt3);
+				lp = 5 * mesh->ngt3;
+
+				for(int j = 0; j < lp; j++)
+					mesh->gt3[j] = mesh_ptr[j];
+			}
+		}
+	}
+
+	Log(2, "End ProcessMeshData");
+}
+
+
 long GetNumRooms(LEVEL_INFO* lvl) {
 	return lvl->nRooms;
+}
+
+ANIM_STRUCT* GetAnim(LEVEL_INFO* lvl, long anim) {
+	return lvl->anims + anim;
 }

@@ -35,7 +35,7 @@ void InitialiseDog(short item_number) {
 	} else
 		item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 8;
 
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 }
 
 void DogControl(short item_number) {
@@ -60,7 +60,7 @@ void DogControl(short item_number) {
 			item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;
 		else if(item->current_anim_state != 11) {
 			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + DeathAnims[GetRandomControl() & 3];
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			item->current_anim_state = 11;
 		}
 	} else {
@@ -100,7 +100,7 @@ void DogControl(short item_number) {
 		}
 
 		random = (short)GetRandomControl();
-		frame = item->frame_number - anims[item->anim_number].frame_base;
+		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 
 		switch(item->current_anim_state) {
 		case 0:

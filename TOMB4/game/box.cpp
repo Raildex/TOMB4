@@ -1207,7 +1207,7 @@ void CreatureFloat(short item_number) {
 	if(item->room_number != room_number)
 		ItemNewRoom(item_number, room_number);
 
-	if(item->pos.y_pos <= water_level && item->frame_number == anims[item->anim_number].frame_base) {
+	if(item->pos.y_pos <= water_level && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
 		item->status = ITEM_DEACTIVATED;
 		item->collidable = 0;
 		item->pos.y_pos = water_level;
@@ -1325,10 +1325,10 @@ long CreatureVault(short item_number, short angle, long vault, long shift) {
 
 void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara_anim) {
 	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + kill_anim;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = kill_state;
 	lara_item->anim_number = lara_anim;
-	lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+	lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 	lara_item->current_anim_state = 8;
 	lara_item->goal_anim_state = 8;
 	lara_item->pos.x_pos = item->pos.x_pos;

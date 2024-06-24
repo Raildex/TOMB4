@@ -293,7 +293,7 @@ void DrawGunshells() {
 			phd_PushMatrix();
 			phd_TranslateAbs(p->pos.x_pos, p->pos.y_pos, p->pos.z_pos);
 			phd_RotYXZ(p->pos.y_rot, p->pos.x_rot, p->pos.z_rot);
-			phd_PutPolygons(meshes[obj->mesh_index], -1);
+			phd_PutPolygons(GetMesh(currentLevel,obj->mesh_index), -1);
 			phd_PopMatrix();
 		}
 	}
@@ -896,14 +896,14 @@ void DrawWeaponMissile(ITEM_INFO* item) {
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	phd_PutPolygons_train(meshes[GetObjectInfo(currentLevel,item->object_number)->mesh_index], 0);
+	phd_PutPolygons_train(GetMesh(currentLevel,GetObjectInfo(currentLevel,item->object_number)->mesh_index), 0);
 	phd_PopMatrix();
 
 	if(gfLevelFlags & GF_MIRROR && item->room_number == gfMirrorRoom) {
 		phd_PushMatrix();
 		phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, 2 * gfMirrorZPlane - item->pos.z_pos);
 		phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-		phd_PutPolygons_train(meshes[GetObjectInfo(currentLevel,item->object_number)->mesh_index], 0);
+		phd_PutPolygons_train(GetMesh(currentLevel,GetObjectInfo(currentLevel,item->object_number)->mesh_index), 0);
 		phd_PopMatrix();
 	}
 }
@@ -1244,7 +1244,7 @@ void DrawGunflashes() {
 		mMXPtr[M23] = flash->mx[M23];
 		phd_RotZ(short(GetRandomDraw() << 1));
 		GlobalAmbient = 0xFF2F2F00;
-		phd_PutPolygons(meshes[GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index], -1);
+		phd_PutPolygons(GetMesh(currentLevel,GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index), -1);
 		flash->on = 0;
 	}
 

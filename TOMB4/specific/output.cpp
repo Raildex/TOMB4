@@ -755,7 +755,7 @@ void phd_PutPolygons(short* objptr, long clip) {
 	if(!objptr)
 		return;
 
-	if(objptr == meshes[GetObjectInfo(currentLevel,LARA_DOUBLE)->mesh_index] || objptr == meshes[GetObjectInfo(currentLevel,LARA_DOUBLE)->mesh_index + 2])
+	if(objptr == GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_DOUBLE)->mesh_index) || objptr == GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_DOUBLE)->mesh_index + 2))
 		envmap_sprite = &spriteinfo[GetObjectInfo(currentLevel,SKY_GRAPHICS)->mesh_index];
 	else
 		envmap_sprite = &spriteinfo[GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11];

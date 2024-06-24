@@ -126,7 +126,7 @@ void InitialiseSkeleton(short item_number) {
 		item->status += ITEM_ACTIVE;
 	}
 
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 }
 
 void SkeletonControl(short item_number) {
@@ -195,7 +195,7 @@ void SkeletonControl(short item_number) {
 			item->pos.y_rot += info.angle;
 		}
 
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		skelly->LOT.is_jumping = 1;
 		item->hit_points = 25;
 		CreatureAnimation(item_number, angle, 0);
@@ -262,7 +262,7 @@ void SkeletonControl(short item_number) {
 	switch(item->current_anim_state) {
 	case 0:
 
-		if(item->frame_number - anims[item->anim_number].frame_base < 32)
+		if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base < 32)
 			TriggerRiseEffect(item);
 
 		break;
@@ -289,7 +289,7 @@ void SkeletonControl(short item_number) {
 			else if(jump_ahead || long_jump_ahead) {
 				skelly->maximum_turn = 0;
 				item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 40;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 21;
 
 				if(long_jump_ahead)
@@ -300,12 +300,12 @@ void SkeletonControl(short item_number) {
 				skelly->LOT.is_jumping = 1;
 			} else if(jump_left) {
 				item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 34;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 19;
 				item->goal_anim_state = 19;
 			} else if(jump_right) {
 				item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 37;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 20;
 				item->goal_anim_state = 20;
 			} else if(skelly->mood == ESCAPE_MOOD) {
@@ -371,7 +371,7 @@ void SkeletonControl(short item_number) {
 		else
 			item->pos.y_rot += 1092;
 
-		if(item->frame_number > anims[item->anim_number].frame_base + 15) {
+		if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 15) {
 			r = GetRoom(currentLevel,item->room_number);
 			pos.x = 0;
 			pos.y = 0;
@@ -436,7 +436,7 @@ void SkeletonControl(short item_number) {
 	case 12:
 	case 13:
 
-		if(item->frame_number < anims[item->anim_number].frame_base + 20) {
+		if(item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 20) {
 			item->hit_points = 25;
 			skelly->maximum_turn = 0;
 			break;
@@ -454,7 +454,7 @@ void SkeletonControl(short item_number) {
 		if(h > item->pos.y_pos + 1024) {
 			skelly->maximum_turn = 0;
 			item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 47;
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			item->current_anim_state = 24;
 			item->gravity_status = 1;
 		} else if(!(GetRandomControl() & 0x1F))
@@ -515,7 +515,7 @@ void SkeletonControl(short item_number) {
 				if(h > item->pos.y_pos + 1024) {
 					skelly->maximum_turn = 0;
 					item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 44;
-					item->frame_number = anims[item->anim_number].frame_base;
+					item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 					item->current_anim_state = 23;
 					skelly->LOT.is_jumping = 0;
 					item->gravity_status = 1;
@@ -550,7 +550,7 @@ void SkeletonControl(short item_number) {
 			if(h > item->pos.y_pos + 1280) {
 				skelly->maximum_turn = 0;
 				item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 44;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 23;
 				skelly->LOT.is_jumping = 0;
 				item->gravity_status = 1;

@@ -1,5 +1,6 @@
 #pragma once
 
+struct LEVEL_INFO;
 struct TEXTUREBUCKET;
 struct MESH_DATA;
 struct ROOM_INFO;
@@ -10,7 +11,7 @@ void ProcessRoomVertices(ROOM_INFO* r);
 void ProcessRoomData(ROOM_INFO* r);
 void InsertRoom(ROOM_INFO* r);
 void CalcTriFaceNormal(_D3DVECTOR* p1, _D3DVECTOR* p2, _D3DVECTOR* p3, _D3DVECTOR* N);
-void ProcessMeshData(long num_meshes);
+void ProcessMeshData(LEVEL_INFO* lvl,long num_meshes);
 void InitBuckets();
 void DrawBucket(TEXTUREBUCKET* bucket);
 void FindBucket(long tpage, D3DTLBUMPVERTEX** Vpp, long** nVtxpp);

@@ -94,7 +94,7 @@ void ControlClockworkBeetle(short item_number) {
 
 	if(lara_item->anim_number == ANIM_USEBEETLE) {
 		frame = lara_item->frame_number;
-		base = anims[ANIM_USEBEETLE].frame_base;
+		base = GetAnim(currentLevel,ANIM_USEBEETLE)->frame_base;
 
 		if(frame < base + 14) {
 			item->status = ITEM_INVISIBLE;

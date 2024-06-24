@@ -16,7 +16,7 @@ void InitialiseJeanYves(short item_number) {
 	item->goal_anim_state = 1;
 	item->current_anim_state = 1;
 	item->anim_number = GetObjectInfo(currentLevel,JEAN_YVES)->anim_index;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 }
 
 void JeanYvesControl(short item_number) {
@@ -33,7 +33,7 @@ void JeanYvesControl(short item_number) {
 		item->goal_anim_state = random + 1;
 		item->current_anim_state = item->goal_anim_state;
 		item->anim_number = GetObjectInfo(currentLevel,JEAN_YVES)->anim_index + random;
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		item->trigger_flags = lara.highest_location;
 	} else {
 		if(GetRandomControl() & 3)

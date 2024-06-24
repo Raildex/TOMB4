@@ -32,7 +32,7 @@ void InitialiseTemplar(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->anim_index + 2;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 	item->mesh_bits &= ~0x800;
@@ -129,7 +129,7 @@ void TemplarControl(short item_number) {
 		else
 			item->pos.y_rot += 182;
 
-		if(item->frame_number > anims[item->anim_number].frame_base + 42 && item->frame_number < anims[item->anim_number].frame_base + 51) {
+		if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 42 && item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 51) {
 			r = GetRoom(currentLevel,item->room_number);
 			pos.x = 0;
 			pos.y = 0;

@@ -37,7 +37,7 @@ void DrawFlareInAir(ITEM_INFO* item) {
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos - bounds[3], item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	phd_PutPolygons_train(meshes[GetObjectInfo(currentLevel,FLARE_ITEM)->mesh_index], 0);
+	phd_PutPolygons_train(GetMesh(currentLevel,GetObjectInfo(currentLevel,FLARE_ITEM)->mesh_index), 0);
 	phd_PopMatrix();
 
 	if(gfLevelFlags & GF_MIRROR) {
@@ -45,18 +45,18 @@ void DrawFlareInAir(ITEM_INFO* item) {
 			phd_PushMatrix();
 			phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, 2 * gfMirrorZPlane - item->pos.z_pos);
 			phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-			phd_PutPolygons_train(meshes[GetObjectInfo(currentLevel,FLARE_ITEM)->mesh_index], 0);
+			phd_PutPolygons_train(GetMesh(currentLevel,GetObjectInfo(currentLevel,FLARE_ITEM)->mesh_index), 0);
 			phd_PopMatrix();
 		}
 	}
 }
 
 void draw_flare_meshes() {
-	lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,FLARE_ANIM)->mesh_index + LM_LHAND * 2];
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,FLARE_ANIM)->mesh_index + LM_LHAND * 2);
 }
 
 void undraw_flare_meshes() {
-	lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2];
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2);
 }
 
 long DoFlareLight(PHD_VECTOR* pos, long flare_age) {
@@ -226,7 +226,7 @@ void set_flare_arm(long frame) {
 	}
 
 	lara.left_arm.anim_number = anim_base;
-	lara.left_arm.frame_base = anims[anim_base].frame_ptr;
+	lara.left_arm.frame_base = GetAnim(currentLevel,anim_base)->frame_ptr;
 }
 
 void ready_flare() {
@@ -289,7 +289,7 @@ void undraw_flare() {
 	if(lara_item->goal_anim_state == AS_STOP && lara.vehicle == NO_ITEM) {
 		if(lara_item->anim_number == ANIM_BREATH) {
 			lara_item->anim_number = ANIM_THROWFLARE;
-			ani2 = ani + anims[ANIM_THROWFLARE].frame_base;
+			ani2 = ani + GetAnim(currentLevel,ANIM_THROWFLARE)->frame_base;
 			lara.flare_frame = ani2;
 			lara_item->frame_number = ani2;
 		}
@@ -297,7 +297,7 @@ void undraw_flare() {
 		if(lara_item->anim_number == ANIM_THROWFLARE) {
 			lara.flare_control_left = 0;
 
-			if(ani2 >= anims[ANIM_THROWFLARE].frame_base + 31) {
+			if(ani2 >= GetAnim(currentLevel,ANIM_THROWFLARE)->frame_base + 31) {
 				lara.request_gun_type = lara.last_gun_type;
 				lara.gun_type = lara.last_gun_type;
 				lara.gun_status = LG_NO_ARMS;
@@ -306,10 +306,10 @@ void undraw_flare() {
 				lara.right_arm.lock = 0;
 				lara.left_arm.lock = 0;
 				lara_item->anim_number = ANIM_STOP;
-				lara_item->frame_number = anims[ANIM_STOP].frame_base;
+				lara_item->frame_number = GetAnim(currentLevel,ANIM_STOP)->frame_base;
 				lara_item->current_anim_state = AS_STOP;
 				lara_item->goal_anim_state = AS_STOP;
-				lara.flare_frame = anims[ANIM_STOP].frame_base;
+				lara.flare_frame = GetAnim(currentLevel,ANIM_STOP)->frame_base;
 				return;
 			}
 
@@ -318,7 +318,7 @@ void undraw_flare() {
 		}
 	} else if(lara_item->current_anim_state == AS_STOP && lara.vehicle == NO_ITEM) {
 		lara_item->anim_number = ANIM_STOP;
-		lara_item->frame_number = anims[ANIM_STOP].frame_base;
+		lara_item->frame_number = GetAnim(currentLevel,ANIM_STOP)->frame_base;
 	}
 
 	if(ani >= 33 && ani < 72)

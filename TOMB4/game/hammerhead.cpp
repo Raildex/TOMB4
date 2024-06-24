@@ -20,7 +20,7 @@ void InitialiseHammerhead(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,HAMMERHEAD)->anim_index + 8;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 0;
 	item->goal_anim_state = 0;
 }
@@ -42,7 +42,7 @@ void HammerheadControl(short item_number) {
 
 		if(item->current_anim_state != 5) {
 			item->anim_number = GetObjectInfo(currentLevel,HAMMERHEAD)->anim_index + 4;
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			item->current_anim_state = 5;
 		}
 

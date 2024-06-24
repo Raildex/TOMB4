@@ -39,7 +39,7 @@ void InitialiseTroop(short item_number) {
 		item->goal_anim_state = 1;
 	}
 
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 }
 
 void TroopControl(short item_number) {
@@ -81,9 +81,9 @@ void TroopControl(short item_number) {
 					item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 23;
 
 					if(item->current_anim_state == 16)
-						item->frame_number = anims[item->anim_number].frame_base + 37;
+						item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base + 37;
 					else
-						item->frame_number = anims[item->anim_number].frame_base;
+						item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 
 					item->current_anim_state = 15;
 					item->goal_anim_state = 15;
@@ -93,7 +93,7 @@ void TroopControl(short item_number) {
 					item->item_flags[0]++;
 			} else {
 				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 19;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 7;
 			}
 		}
@@ -326,7 +326,7 @@ void TroopControl(short item_number) {
 			if(item->current_anim_state != 17 && item->current_anim_state != 16) {
 				troop->maximum_turn = 0;
 				item->anim_number = GetObjectInfo(currentLevel,TROOPS)->anim_index + 28;
-				item->frame_number = anims[item->anim_number].frame_base + (GetRandomControl() & 7);
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base + (GetRandomControl() & 7);
 				item->current_anim_state = 17;
 			}
 		}

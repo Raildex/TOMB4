@@ -30,7 +30,7 @@ void InitialiseSphinx(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,SPHINX)->anim_index + 1;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -162,7 +162,7 @@ void SphinxControl(short item_number) {
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 		GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
-		if(item->frame_number == anims[item->anim_number].frame_base) {
+		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
 			TestTriggers(trigger_index, 1, 0);
 
 			if(item->touch_bits & 0x40) {

@@ -16,7 +16,7 @@
 #include "laragunstatus.h"
 #include "inputbuttons.h"
 #include <d3dtypes.h>
-
+#include "levelinfo.h"
 static PENDULUM NullPendulum = { { 0, 0, 0 }, { 0, 0, 0 }, 0, 0 };
 
 ROPE_STRUCT RopeList[64];
@@ -481,14 +481,14 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			if(l->current_anim_state == AS_REACH) {
 				l->anim_number = 379;
 				l->current_anim_state = AS_ROPEFWD;
-				lara.RopeFrame = (anims[ANIM_SWINGFWD].frame_base + 32) << 8;
-				lara.RopeDFrame = (anims[ANIM_SWINGFWD].frame_base + 60) << 8;
+				lara.RopeFrame = (GetAnim(currentLevel,ANIM_SWINGFWD)->frame_base + 32) << 8;
+				lara.RopeDFrame = (GetAnim(currentLevel,ANIM_SWINGFWD)->frame_base + 60) << 8;
 			} else {
 				l->anim_number = ANIM_UPJUMP2ROPE;
 				l->current_anim_state = AS_ROPE;
 			}
 
-			l->frame_number = anims[l->anim_number].frame_base;
+			l->frame_number = GetAnim(currentLevel,l->anim_number)->frame_base;
 			l->gravity_status = 0;
 			l->fallspeed = 0;
 			lara.gun_status = LG_HANDS_BUSY;

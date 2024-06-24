@@ -91,8 +91,8 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 			else
 				spaz = lara.IsDucked ? ANIM_SPAZ_DUCKL : ANIM_SPAZ_LEFT;
 
-			frame = anims[spaz].frame_ptr;
-			size = anims[spaz].interpolation >> 8;
+			frame = GetAnim(currentLevel,spaz)->frame_ptr;
+			size = GetAnim(currentLevel,spaz)->interpolation >> 8;
 			frame += lara.hit_frame * size;
 			frm[0] = frame;
 			frac = 0;
@@ -471,7 +471,7 @@ void DrawHair() {
 
 	for(int i = 0; i < 2; i++) {
 		ii = i * 6;
-		meshpp = &meshes[GetObjectInfo(currentLevel,HAIR)->mesh_index];
+		meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,HAIR)->mesh_index);
 		meshpp += 2;
 
 		hair = &hairs[i][1];
@@ -493,7 +493,7 @@ void DrawHair() {
 			phd_PopMatrix();
 		}
 
-		meshpp = &meshes[GetObjectInfo(currentLevel,HAIR)->mesh_index];
+		meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,HAIR)->mesh_index);
 
 		for(int j = 0; j < 6; j += 2, meshpp += 4) {
 			SkinVerticesToScratch(28 + ii + j);

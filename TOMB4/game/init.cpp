@@ -344,7 +344,7 @@ void InitialiseSethBlade(short item_number) {
 
 	item = &items[item_number];
 	item->anim_number = GetObjectInfo(currentLevel,SETH_BLADE)->anim_index + 1;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 2;
 	item->goal_anim_state = 2;
 	item->item_flags[2] = abs(item->trigger_flags);
@@ -357,7 +357,7 @@ void InitialiseObelisk(short item_number) {
 
 	item = &items[item_number];
 	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 3;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	AddActiveItem(item_number);
 	item->status = ITEM_ACTIVE;
 

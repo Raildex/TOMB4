@@ -81,8 +81,6 @@
 #include "levelinfo.h"
 
 ITEM_INFO* items;
-ANIM_STRUCT* anims;
-short** meshes;
 long* bones;
 long level_items;
 
@@ -2169,7 +2167,7 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits) {
 
 	GetSpheres(item, Slist, 3);
 	object = GetObjectInfo(currentLevel,item->object_number);
-	meshpp = &meshes[object->mesh_index + Node * 2];
+	meshpp = GetMeshPointer(currentLevel,object->mesh_index + Node * 2);
 	ShatterItem.Bit = 1 << Node;
 	ShatterItem.meshp = *meshpp;
 	ShatterItem.Sphere.x = Slist[Node].x;
@@ -2427,14 +2425,14 @@ void AnimateItem(ITEM_INFO* item) {
 	long speed, speed2;
 	unsigned short type, num;
 
-	anim = &anims[item->anim_number];
+	anim = GetAnim(currentLevel,item->anim_number);
 	item->touch_bits = 0;
 	item->hit_status = 0;
 	item->frame_number++;
 
 	if(anim->number_changes > 0) {
 		if(GetChange(item, anim)) {
-			anim = &anims[item->anim_number];
+			anim = GetAnim(currentLevel,item->anim_number);
 			item->current_anim_state = anim->current_anim_state;
 
 			if(item->required_anim_state == item->current_anim_state)
@@ -2478,7 +2476,7 @@ void AnimateItem(ITEM_INFO* item) {
 
 		item->anim_number = anim->jump_anim_num;
 		item->frame_number = anim->jump_frame_num;
-		anim = &anims[item->anim_number];
+		anim = GetAnim(currentLevel,item->anim_number);
 
 		if(item->current_anim_state != anim->current_anim_state) {
 			item->current_anim_state = anim->current_anim_state;
@@ -2754,7 +2752,7 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	else {
 		item = &items[item_number];
 		obj = GetObjectInfo(currentLevel,item->object_number);
-		meshpp = &meshes[obj->mesh_index];
+		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
 
 		GetSpheres(item, Slist, 1);
 		bit = 1;

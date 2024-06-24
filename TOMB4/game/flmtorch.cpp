@@ -128,7 +128,7 @@ void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			}
 
 			l->current_anim_state = AS_CONTROLLED;
-			l->frame_number = anims[l->anim_number].frame_base;
+			l->frame_number = GetAnim(currentLevel,l->anim_number)->frame_base;
 			lara.flare_control_left = 0;
 			lara.left_arm.lock = 3;
 			lara.GeneralPtr = (void*)item_number;
@@ -137,7 +137,7 @@ void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		item->pos.y_rot = rot;
 	}
 
-	if(lara.GeneralPtr == (void*)item_number && item->status != ITEM_ACTIVE && l->current_anim_state == AS_CONTROLLED && l->anim_number >= ANIM_LIGHT_TORCH1 && l->anim_number <= ANIM_LIGHT_TORCH5 && l->frame_number - anims[l->anim_number].frame_base == 40) {
+	if(lara.GeneralPtr == (void*)item_number && item->status != ITEM_ACTIVE && l->current_anim_state == AS_CONTROLLED && l->anim_number >= ANIM_LIGHT_TORCH1 && l->anim_number <= ANIM_LIGHT_TORCH5 && l->frame_number - GetAnim(currentLevel,l->anim_number)->frame_base == 40) {
 		if(item->object_number == SPRINKLER) {
 			l->item_flags[3] = 0;
 			lara.LitTorch = 0;
@@ -189,7 +189,7 @@ void DoFlameTorch() {
 				lara.request_gun_type = WEAPON_NONE;
 				lara.gun_status = LG_NO_ARMS;
 			} else if(lara.left_arm.frame_number == 12) {
-				lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2];
+				lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2);
 				CreateFlare(BURNING_TORCH_ITEM, 1);
 			}
 		}
@@ -208,7 +208,7 @@ void DoFlameTorch() {
 			lara.gun_type = WEAPON_NONE;
 			lara.gun_status = LG_NO_ARMS;
 		} else if(lara.left_arm.frame_number == 36) {
-			lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2];
+			lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2);
 			CreateFlare(BURNING_TORCH_ITEM, 0);
 		}
 
@@ -230,7 +230,7 @@ void DoFlameTorch() {
 	if(lara.flare_control_left)
 		lara.gun_status = LG_READY;
 
-	lara.left_arm.frame_base = anims[lara.left_arm.anim_number].frame_ptr;
+	lara.left_arm.frame_base = GetAnim(currentLevel,lara.left_arm.anim_number)->frame_ptr;
 
 	if(lara.LitTorch) {
 		pos.x = -32;
@@ -257,8 +257,8 @@ void GetFlameTorch() {
 	lara.gun_status = LG_READY;
 	lara.left_arm.lock = 0;
 	lara.left_arm.frame_number = 0;
-	lara.left_arm.frame_base = anims[GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index].frame_ptr;
-	lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,TORCH_ANIM)->mesh_index + LM_LHAND * 2];
+	lara.left_arm.frame_base = GetAnim(currentLevel,GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index)->frame_ptr;
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,TORCH_ANIM)->mesh_index + LM_LHAND * 2);
 }
 
 void FlameTorchControl(short item_number) {

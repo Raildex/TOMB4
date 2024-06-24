@@ -60,10 +60,10 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			if(TestLaraPosition(ScalesBounds, item, l)) {
 				if(l->anim_number == ANIM_POURWATERSKIN) {
 					l->anim_number = ANIM_FILLSCALE;
-					l->frame_number = anims[ANIM_FILLSCALE].frame_base;
-				} else if(l->frame_number == anims[ANIM_FILLSCALE].frame_base + 51)
+					l->frame_number = GetAnim(currentLevel,ANIM_FILLSCALE)->frame_base;
+				} else if(l->frame_number == GetAnim(currentLevel,ANIM_FILLSCALE)->frame_base + 51)
 					SoundEffect(SFX_POUR, &l->pos, SFX_DEFAULT);
-				else if(l->frame_number == anims[ANIM_FILLSCALE].frame_base + 74) {
+				else if(l->frame_number == GetAnim(currentLevel,ANIM_FILLSCALE)->frame_base + 74) {
 					AddActiveItem(item_number);
 					item->status = ITEM_ACTIVE;
 
@@ -94,7 +94,7 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 	}
 
-	if(l->frame_number >= anims[ANIM_POURWATERSKIN].frame_base + 44 && l->frame_number <= anims[ANIM_POURWATERSKIN].frame_base + 72 || l->frame_number >= anims[ANIM_FILLSCALE].frame_base + 51 && l->frame_number <= anims[ANIM_FILLSCALE].frame_base + 74) {
+	if(l->frame_number >= GetAnim(currentLevel,ANIM_POURWATERSKIN)->frame_base + 44 && l->frame_number <= GetAnim(currentLevel,ANIM_POURWATERSKIN)->frame_base + 72 || l->frame_number >= GetAnim(currentLevel,ANIM_FILLSCALE)->frame_base + 51 && l->frame_number <= GetAnim(currentLevel,ANIM_FILLSCALE)->frame_base + 74) {
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
@@ -119,7 +119,7 @@ long ReTriggerAhmet(short item_number) {
 
 	item = &items[item_number];
 
-	if(item->current_anim_state == 7 && item->frame_number == anims[item->anim_number].frame_end) {
+	if(item->current_anim_state == 7 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end) {
 		FlashFadeR = 255;
 		FlashFadeG = 64;
 		FlashFadeB = 0;
@@ -133,7 +133,7 @@ long ReTriggerAhmet(short item_number) {
 			ItemNewRoom(item_number, IsRoomOutsideNo);
 
 		item->anim_number = GetObjectInfo(currentLevel,AHMET)->anim_index;
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 		item->hit_points = GetObjectInfo(currentLevel,AHMET)->hit_points;
@@ -160,7 +160,7 @@ void ScalesControl(short item_number) {
 
 	item = &items[item_number];
 
-	if(item->frame_number == anims[item->anim_number].frame_end) {
+	if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end) {
 		if(item->current_anim_state == 1 || item->item_flags[1]) {
 			if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index) {
 				RemoveActiveItem(item_number);
@@ -217,7 +217,7 @@ void InitialiseAhmet(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,AHMET)->anim_index;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 	item->item_flags[0] = short(item->pos.x_pos >> 10);
@@ -251,13 +251,13 @@ void AhmetControl(short item_number) {
 
 	if(item->hit_points <= 0) {
 		if(item->current_anim_state == 7) {
-			if(item->frame_number == anims[item->anim_number].frame_end) {
-				item->frame_number = anims[item->anim_number].frame_end - 1;
+			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end) {
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_end - 1;
 				return;
 			}
 		} else {
 			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 10;
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			item->current_anim_state = 7;
 			lara.spaz_effect_count = item_number;
 		}
@@ -290,7 +290,7 @@ void AhmetControl(short item_number) {
 
 		ahmet->enemy = enemy;
 		frame = item->frame_number;
-		base = anims[item->anim_number].frame_base;
+		base = GetAnim(currentLevel,item->anim_number)->frame_base;
 
 		switch(item->current_anim_state) {
 		case 1:

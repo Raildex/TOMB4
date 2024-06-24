@@ -34,7 +34,7 @@ void InitialiseBaboon(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,BABOON_NORMAL)->anim_index + 2;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->goal_anim_state = 6;
 	item->current_anim_state = 6;
 	item->item_flags[0] = (short)(item->pos.z_pos >> 2 & 0xFFFFFF00 | item->pos.x_pos >> 10);
@@ -65,9 +65,9 @@ void BaboonControl(short item_number) {
 		if(item->hit_points <= 0 && item->hit_points != -16384) {
 			if(item->current_anim_state != 11 && item->current_anim_state != 21) {
 				item->anim_number = GetObjectInfo(currentLevel,BABOON_NORMAL)->anim_index + 14;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 11;
-			} else if(item->current_anim_state == 11 && item->frame_number == anims[item->anim_number].frame_end)
+			} else if(item->current_anim_state == 11 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end)
 				ReTriggerBaboon(item_number);
 		} else {
 			GetAITarget(baboon);
@@ -179,7 +179,7 @@ void BaboonControl(short item_number) {
 					item->pos.y_rot = item2->pos.y_rot;
 					item->pos.z_rot = item2->pos.z_rot;
 					item->anim_number = GetObjectInfo(currentLevel,BABOON_NORMAL)->anim_index + 31;
-					item->frame_number = anims[item->anim_number].frame_base;
+					item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 					item->goal_anim_state = 21;
 					item->current_anim_state = 21;
 					room_number = item->room_number;
@@ -217,7 +217,7 @@ void BaboonControl(short item_number) {
 				item2 = baboon->enemy;
 
 				if(item2) {
-					if(item2->object_number == KEY_ITEM4 && item->frame_number == anims[item->anim_number].frame_base + 12) {
+					if(item2->object_number == KEY_ITEM4 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 12) {
 						if(item2->room_number != 255 && item2->status != ITEM_INVISIBLE && !(item2->flags & IFL_CLEARBODY)) {
 							item->carried_item = item2 - items;
 							RemoveDrawnItem(item->carried_item);
@@ -234,7 +234,7 @@ void BaboonControl(short item_number) {
 						}
 
 						baboon->enemy = 0;
-					} else if(item2->object_number == AI_AMBUSH && item->frame_number == anims[item->anim_number].frame_base + 12) {
+					} else if(item2->object_number == AI_AMBUSH && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 12) {
 						item->ai_bits = 0;
 						item2 = &items[item->carried_item];
 						item2->pos.x_pos = item->pos.x_pos;
@@ -336,7 +336,7 @@ void BaboonControl(short item_number) {
 				GetObjectInfo(currentLevel,item->object_number)->HitEffect = 0;
 				item->hit_points = -16384;
 
-				if(item->frame_number == anims[item->anim_number].frame_base + 212) {
+				if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 212) {
 					TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos + 1024, item->room_number, 1, 0);
 					item->trigger_flags = 1;
 				}
@@ -379,7 +379,7 @@ void ReTriggerBaboon(short item_number) {
 		ItemNewRoom(item_number, IsRoomOutsideNo);
 
 	item->anim_number = GetObjectInfo(currentLevel,BABOON_NORMAL)->anim_index + 2;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->goal_anim_state = 6;
 	item->current_anim_state = 6;
 	item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;

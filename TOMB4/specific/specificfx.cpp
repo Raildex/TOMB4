@@ -2184,7 +2184,7 @@ void InitTarget_2() {
 	if(!obj->loaded)
 		return;
 
-	targetMeshP = (MESH_DATA*)meshes[obj->mesh_index];
+	targetMeshP = (MESH_DATA*)GetMesh(currentLevel,obj->mesh_index);
 	targetMeshP->SourceVB->Lock(DDLOCK_READONLY, (void**)&v, 0);
 
 	for(int i = 0; i < targetMeshP->nVerts; i++) {
@@ -2208,7 +2208,7 @@ void InitBinoculars() {
 	if(!obj->loaded)
 		return;
 
-	binocsMeshP = (MESH_DATA*)meshes[obj->mesh_index];
+	binocsMeshP = (MESH_DATA*)GetMesh(currentLevel,obj->mesh_index);
 	binocsMeshP->SourceVB->Lock(DDLOCK_READONLY, (void**)&v, 0);
 
 	for(int i = 0; i < binocsMeshP->nVerts; i++) {

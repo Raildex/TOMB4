@@ -295,12 +295,12 @@ void MovableBlock(short item_number) {
 	pos.x = 0;
 	pos.y = 0;
 	pos.z = 0;
-	quadrant = unsigned short(lara_item->pos.y_rot + 0x2000) / 0x4000;
+	quadrant = (unsigned short)(lara_item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch(lara_item->anim_number) {
 	case ANIM_PUSH:
 		frame = lara_item->frame_number;
-		base = anims[ANIM_PUSH].frame_base;
+		base = GetAnim(currentLevel,ANIM_PUSH)->frame_base;
 
 		if((frame < base + 30 || frame > base + 67) && (frame < base + 78 || frame > base + 125) && (frame < base + 140 || frame > base + 160)) {
 			if(sfx) {
@@ -349,7 +349,7 @@ void MovableBlock(short item_number) {
 		}
 
 
-		if(lara_item->frame_number == anims[lara_item->anim_number].frame_end - 1) {
+		if(lara_item->frame_number == GetAnim(currentLevel,lara_item->anim_number)->frame_end - 1) {
 			if(input & IN_ACTION) {
 				if(!TestBlockPush(item, 1024, quadrant))
 					lara_item->goal_anim_state = 2;
@@ -361,7 +361,7 @@ void MovableBlock(short item_number) {
 
 	case ANIM_PULL:
 		frame = lara_item->frame_number;
-		base = anims[ANIM_PULL].frame_base;
+		base = GetAnim(currentLevel,ANIM_PULL)->frame_base;
 
 		if((frame < base + 40 || frame > base + 122) && (frame < base + 130 || frame > base + 170)) {
 			if(sfx) {
@@ -409,7 +409,7 @@ void MovableBlock(short item_number) {
 			break;
 		}
 
-		if(lara_item->frame_number == anims[lara_item->anim_number].frame_end - 1) {
+		if(lara_item->frame_number == GetAnim(currentLevel,lara_item->anim_number)->frame_end - 1) {
 			if(input & IN_ACTION) {
 				if(!TestBlockPull(item, 1024, quadrant))
 					lara_item->goal_anim_state = 2;
@@ -423,12 +423,13 @@ void MovableBlock(short item_number) {
 	case 418:
 		frame = lara_item->frame_number;
 
-		if(frame == anims[417].frame_base || frame == anims[418].frame_base) {
+		if(frame == GetAnim(currentLevel,417)->frame_base || 
+		frame == GetAnim(currentLevel,418)->frame_base) {
 			item->pos.x_pos = (item->pos.x_pos & -512) | 512;
 			item->pos.z_pos = (item->pos.z_pos & -512) | 512;
 		}
 
-		if(frame == anims[lara_item->anim_number].frame_end) {
+		if(frame == GetAnim(currentLevel,lara_item->anim_number)->frame_end) {
 			room_number = item->room_number;
 			GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos);
 			TestTriggers(trigger_index, 1, item->flags & IFL_CODEBITS);
@@ -467,14 +468,14 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 			item->pos.y_rot = (laraitem->pos.y_rot + 0x2000) & 0xC000;
 
 			if(TestLaraPosition(MovingBlockBounds, item, laraitem)) {
-				if((unsigned short(yrot + 0x2000) / 0x4000) + ((unsigned short)item->pos.y_rot / 0x4000) & 1)
+				if(((unsigned short)(yrot + 0x2000) / 0x4000) + ((unsigned short)item->pos.y_rot / 0x4000) & 1)
 					MovingBlockPos.z = bounds[0] - 35;
 				else
 					MovingBlockPos.z = bounds[4] - 35;
 
 				if(MoveLaraPosition(&MovingBlockPos, item, laraitem)) {
 					laraitem->anim_number = ANIM_PPREADY;
-					laraitem->frame_number = anims[ANIM_PPREADY].frame_base;
+					laraitem->frame_number = GetAnim(currentLevel,ANIM_PPREADY)->frame_base;
 					laraitem->current_anim_state = AS_PPREADY;
 					laraitem->goal_anim_state = AS_PPREADY;
 					lara.IsMoving = 0;
@@ -489,7 +490,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 
 			item->pos.y_rot = yrot;
 		}
-	} else if(laraitem->current_anim_state == AS_PPREADY && laraitem->frame_number == anims[ANIM_PPREADY].frame_base + 19 && (ITEM_INFO*)lara.CornerX == item) {
+	} else if(laraitem->current_anim_state == AS_PPREADY && laraitem->frame_number == GetAnim(currentLevel,ANIM_PPREADY)->frame_base + 19 && (ITEM_INFO*)lara.CornerX == item) {
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
@@ -648,7 +649,7 @@ void DrawPlanetEffect(ITEM_INFO* item) {
 	CalculateObjectLighting(item, frm[0]);
 
 	obj = GetObjectInfo(currentLevel,item->object_number);
-	meshpp = &meshes[obj->mesh_index];
+	meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
 	bone = &bones[obj->bone_index];
 	phd_TranslateRel(frm[0][6], frm[0][7], frm[0][8]);
 	rot = frm[0] + 9;

@@ -342,7 +342,7 @@ void DrawScaledSpike(ITEM_INFO* item) {
 		clip = S_GetObjectInfoBounds(frm[0]);
 
 		if(clip) {
-			meshpp = &meshes[GetObjectInfo(currentLevel,item->object_number)->mesh_index];
+			meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,item->object_number)->mesh_index);
 
 			if(item->object_number == EXPANDING_PLATFORM) {
 				scale.x = 16384;
@@ -567,7 +567,7 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	if(item->trigger_flags || item->item_flags[3])
 		return;
 
-	if(l->anim_number == ANIM_MINEDETECT && l->frame_number >= anims[ANIM_MINEDETECT].frame_base + 57) {
+	if(l->anim_number == ANIM_MINEDETECT && l->frame_number >= GetAnim(currentLevel,ANIM_MINEDETECT)->frame_base + 57) {
 		for(int i = 0; i < level_items; i++) {
 			mines = &items[i];
 
@@ -598,7 +598,7 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		ExplodeItemNode(item, 0, 0, 128);
 		KillItem(item_number);
 		l->anim_number = ANIM_MINEDEATH;
-		l->frame_number = anims[ANIM_MINEDEATH].frame_base;
+		l->frame_number = GetAnim(currentLevel,ANIM_MINEDEATH)->frame_base;
 		l->current_anim_state = AS_DEATH;
 		l->speed = 0;
 		SoundEffect(SFX_MINE_EXP_OVERLAY, &item->pos, SFX_DEFAULT);
@@ -611,13 +611,13 @@ void FallingSquishyBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* co
 	item = &items[item_number];
 
 	if(TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l)) {
-		if(item->frame_number - anims[item->anim_number].frame_base <= 8) {
+		if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base <= 8) {
 			item->frame_number += 2;
 			l->hit_points = 0;
 			l->current_anim_state = AS_DEATH;
 			l->goal_anim_state = AS_DEATH;
 			l->anim_number = ANIM_FBLOCK_DEATH;
-			l->frame_number = anims[ANIM_FBLOCK_DEATH].frame_base + 50;
+			l->frame_number = GetAnim(currentLevel,ANIM_FBLOCK_DEATH)->frame_base + 50;
 			l->fallspeed = 0;
 			l->speed = 0;
 
@@ -639,7 +639,7 @@ void ControlFallingSquishyBlock(short item_number) {
 			camera.bounce = (item->item_flags[0] - 92) >> 1;
 			item->item_flags[0]++;
 		} else {
-			if(item->frame_number - anims[item->anim_number].frame_base == 8)
+			if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base == 8)
 				camera.bounce = -96;
 
 			AnimateItem(item);
@@ -657,7 +657,7 @@ void ControlLRSquishyBlock(short item_number) {
 	if(!TriggerActive(item))
 		return;
 
-	frame = item->frame_number - anims[item->anim_number].frame_base;
+	frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 
 	if(item->touch_bits) {
 		ang = (unsigned short)phd_atan(item->pos.z_pos - lara_item->pos.z_pos, item->pos.x_pos - lara_item->pos.x_pos) - item->pos.y_rot;
@@ -696,7 +696,7 @@ void ControlSethBlade(short item_number) {
 		} else if(!item->item_flags[2] && item->trigger_flags > 0)
 			item->item_flags[2] = item->trigger_flags;
 	} else {
-		frame = item->frame_number - anims[item->anim_number].frame_base;
+		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 
 		if(frame && frame <= 6)
 			*(long*)&item->item_flags[0] = -1;
@@ -717,14 +717,14 @@ void ControlPlinthBlade(short item_number) {
 	item = &items[item_number];
 
 	if(TriggerActive(item)) {
-		if(item->frame_number == anims[item->anim_number].frame_end)
+		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end)
 			item->item_flags[3] = 0;
 		else
 			item->item_flags[3] = 200;
 
 		AnimateItem(item);
 	} else
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 }
 
 void ControlMovingBlade(short item_number) {
@@ -736,7 +736,7 @@ void ControlMovingBlade(short item_number) {
 		item->item_flags[3] = 50;
 		AnimateItem(item);
 	} else
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 }
 
 void ControlCatwalkBlade(short item_number) {
@@ -745,14 +745,15 @@ void ControlCatwalkBlade(short item_number) {
 	item = &items[item_number];
 
 	if(TriggerActive(item)) {
-		if(item->frame_number == anims[item->anim_number].frame_end || item->frame_number - anims[item->anim_number].frame_base < 38)
+		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end || 
+		item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base < 38)
 			item->item_flags[3] = 0;
 		else
 			item->item_flags[3] = 100;
 
 		AnimateItem(item);
 	} else
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 }
 
 void ControlBirdBlade(short item_number) {
@@ -763,7 +764,7 @@ void ControlBirdBlade(short item_number) {
 	item->item_flags[3] = 100;
 
 	if(TriggerActive(item)) {
-		frame = item->frame_number - anims[item->anim_number].frame_base;
+		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 
 		if(frame <= 14 || frame >= 31)
 			*(long*)&item->item_flags[0] = 0;
@@ -772,7 +773,7 @@ void ControlBirdBlade(short item_number) {
 
 		AnimateItem(item);
 	} else {
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		*(long*)&item->item_flags[0] = 0;
 	}
 }
@@ -784,7 +785,7 @@ void Control4xFloorRoofBlade(short item_number) {
 	item = &items[item_number];
 
 	if(TriggerActive(item)) {
-		frame = item->frame_number - anims[item->anim_number].frame_base;
+		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 
 		if(frame <= 5 || frame >= 58 || frame >= 8 && frame <= 54)
 			*(long*)&item->item_flags[0] = 0;
@@ -799,7 +800,7 @@ void Control4xFloorRoofBlade(short item_number) {
 
 		AnimateItem(item);
 	} else {
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		*(long*)&item->item_flags[0] = 0;
 	}
 }
@@ -809,7 +810,7 @@ void ControlSpikeball(short item_number) {
 	short frame;
 
 	item = &items[item_number];
-	frame = item->frame_number - anims[item->anim_number].frame_base;
+	frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 
 	if(TriggerActive(item)) {
 		if((frame <= 14 || frame >= 24) && (frame < 138 || frame > 140)) {
@@ -826,7 +827,7 @@ void ControlSpikeball(short item_number) {
 
 		AnimateItem(item);
 	} else {
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		*(long*)&item->item_flags[0] = 0;
 	}
 }
@@ -838,7 +839,7 @@ void ControlHammer(short item_number) {
 	short frame, target_item;
 
 	item = &items[item_number];
-	frame = item->frame_number - anims[item->anim_number].frame_base;
+	frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->item_flags[3] = 150;
 
 	if(!TriggerActive(item)) {
@@ -864,7 +865,7 @@ void ControlHammer(short item_number) {
 				item->item_flags[2] = 0;
 		} else {
 			item->anim_number = GetObjectInfo(currentLevel,HAMMER)->anim_index + 1;
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			item->current_anim_state = 2;
 			item->goal_anim_state = 2;
 			item->item_flags[2] = 60;
@@ -1234,7 +1235,7 @@ void ControlScaledSpike(short item_number) {
 
 				if(item->pos.y_pos >= lara_item->pos.y_pos && dy - lara_item->pos.y_pos < 50) {
 					lara_item->anim_number = ANIM_SPIKED;
-					lara_item->frame_number = anims[ANIM_SPIKED].frame_base;
+					lara_item->frame_number = GetAnim(currentLevel,ANIM_SPIKED)->frame_base;
 					lara_item->current_anim_state = AS_DEATH;
 					lara_item->goal_anim_state = AS_DEATH;
 					lara_item->gravity_status = 0;
@@ -1721,7 +1722,7 @@ void RollingBallCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	if(TriggerActive(item) && (item->item_flags[0] || item->fallspeed)) {
 		lara_item->anim_number = ANIM_RBALL_DEATH;
-		lara_item->frame_number = anims[ANIM_RBALL_DEATH].frame_base;
+		lara_item->frame_number = GetAnim(currentLevel,ANIM_RBALL_DEATH)->frame_base;
 		lara_item->current_anim_state = AS_DEATH;
 		lara_item->goal_anim_state = AS_DEATH;
 		lara_item->gravity_status = 0;
@@ -1986,7 +1987,7 @@ void CeilingTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) 
 		l->gravity_status = 0;
 		l->fallspeed = 0;
 		l->anim_number = ANIM_PULLTRAP;
-		l->frame_number = anims[ANIM_PULLTRAP].frame_base;
+		l->frame_number = GetAnim(currentLevel,ANIM_PULLTRAP)->frame_base;
 		l->current_anim_state = AS_PULLTRAP;
 		AddActiveItem(item_number);
 		item->status = ITEM_ACTIVE;
@@ -2012,7 +2013,7 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(FloorTrapDoorBounds, item, l)) {
 			if(MoveLaraPosition(&FloorTrapDoorPos, item, l)) {
 				l->anim_number = ANIM_LIFTTRAP;
-				l->frame_number = anims[ANIM_LIFTTRAP].frame_base;
+				l->frame_number = GetAnim(currentLevel,ANIM_LIFTTRAP)->frame_base;
 				l->current_anim_state = AS_LIFTTRAP;
 				lara.IsMoving = 0;
 				lara.head_x_rot = 0;
@@ -2204,7 +2205,7 @@ void ControlObelisk(short item_number) {
 
 			if(input & IN_ACTION) {
 				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 1;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			} else
 				stop = 1;
 		}
@@ -2215,14 +2216,14 @@ void ControlObelisk(short item_number) {
 
 			if(input & IN_ACTION) {
 				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 5;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			} else
 				stop = 1;
 		}
 
 		if(stop) {
 			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 3;
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		}
 
 		if(item->trigger_flags == 2) {

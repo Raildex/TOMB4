@@ -36,7 +36,7 @@ static PISTOL_DEF PistolTable[4] = {
 void undraw_pistol_mesh_left(long weapon_type) {
 	if(weapon_type != WEAPON_REVOLVER) {
 		WeaponObject(weapon_type);
-		lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2];
+		lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2);
 
 		if(weapon_type == WEAPON_PISTOLS)
 			lara.holster = LARA_HOLSTERS_PISTOLS;
@@ -47,7 +47,7 @@ void undraw_pistol_mesh_left(long weapon_type) {
 
 void undraw_pistol_mesh_right(long weapon_type) {
 	WeaponObject(weapon_type);
-	lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_RHAND * 2];
+	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_RHAND * 2);
 
 	if(weapon_type == WEAPON_PISTOLS)
 		lara.holster = LARA_HOLSTERS_PISTOLS;
@@ -76,7 +76,7 @@ static void set_arm_info(LARA_ARM* arm, long frame) {
 
 	arm->anim_number = (short)anim_base;
 	arm->frame_number = (short)frame;
-	arm->frame_base = anims[anim_base].frame_ptr;
+	arm->frame_base = GetAnim(currentLevel,anim_base)->frame_ptr;
 }
 
 void ready_pistols(long weapon_type) {
@@ -101,10 +101,10 @@ void draw_pistol_meshes(long weapon_type) {
 
 	mesh_index = GetObjectInfo(currentLevel,WeaponObjectMesh(weapon_type))->mesh_index;
 	lara.holster = LARA_HOLSTERS;
-	lara.mesh_ptrs[LM_RHAND] = meshes[mesh_index + LM_RHAND * 2];
+	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,mesh_index + LM_RHAND * 2);
 
 	if(weapon_type != WEAPON_REVOLVER)
-		lara.mesh_ptrs[LM_LHAND] = meshes[mesh_index + LM_LHAND * 2];
+		lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,mesh_index + LM_LHAND * 2);
 }
 
 void draw_pistols(long weapon_type) {

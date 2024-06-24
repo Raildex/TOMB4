@@ -380,7 +380,7 @@ void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(GameStixBounds, item, l)) {
 			if(MoveLaraPosition(&GameStixPos, item, l)) {
 				l->anim_number = ANIM_THROWSTIX;
-				l->frame_number = anims[ANIM_THROWSTIX].frame_base;
+				l->frame_number = GetAnim(currentLevel,ANIM_THROWSTIX)->frame_base;
 				l->current_anim_state = AS_CONTROLLED;
 				lara.IsMoving = 0;
 				lara.head_x_rot = 0;
@@ -483,7 +483,7 @@ void DrawGodHead(ITEM_INFO* item) {
 	rate = S_GetObjectInfoBounds(frm[0]);
 
 	if(rate) {
-		meshpp = &meshes[GetObjectInfo(currentLevel,item->object_number)->mesh_index];
+		meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,item->object_number)->mesh_index);
 		scalar.x = 0x4000;
 		scalar.y = 0x4000;
 		scalar.z = item->item_flags[1] << 2;

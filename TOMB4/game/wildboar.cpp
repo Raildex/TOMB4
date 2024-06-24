@@ -25,7 +25,7 @@ void InitialiseWildboar(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,WILD_BOAR)->anim_index + 6;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -55,7 +55,7 @@ void WildboarControl(short item_number) {
 
 		if(item->current_anim_state != 5) {
 			item->anim_number = GetObjectInfo(currentLevel,WILD_BOAR)->anim_index + 5;
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			item->current_anim_state = 5;
 		}
 	} else {

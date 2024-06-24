@@ -53,7 +53,7 @@ void InitialiseScorpion(short item_number) {
 		item->goal_anim_state = 1;
 	}
 
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 }
 
 void ScorpionControl(short item_number) {
@@ -122,7 +122,7 @@ void ScorpionControl(short item_number) {
 			if(item->trigger_flags > 0 && item->trigger_flags < 7) {
 				cutseq_num = 4;
 				item->anim_number = GetObjectInfo(currentLevel,SCORPION)->anim_index + 5;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 6;
 				item->status = ITEM_INVISIBLE;
 				scorpion->maximum_turn = 0;
@@ -141,7 +141,7 @@ void ScorpionControl(short item_number) {
 				s = 0;
 			} else if(item->current_anim_state != 7) {
 				item->anim_number = GetObjectInfo(currentLevel,SCORPION)->anim_index + 5;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 6;
 				s = 0;
 			}
@@ -149,7 +149,7 @@ void ScorpionControl(short item_number) {
 
 		if(s) {
 			if(cutseq_num == 4) {
-				item->frame_number = anims[item->anim_number].frame_end - 1;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_end - 1;
 				item->status = ITEM_INVISIBLE;
 			} else if(item->current_anim_state == 6) {
 				if(item->status == ITEM_INVISIBLE)
@@ -280,7 +280,7 @@ void ScorpionControl(short item_number) {
 		case 8:
 			scorpion->maximum_turn = 0;
 
-			if(item->frame_number == anims[item->anim_number].frame_end)
+			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end)
 				item->trigger_flags++;
 
 			if(enemy && enemy->hit_points <= 0 || item->trigger_flags > 6) {
@@ -316,7 +316,7 @@ void InitialiseSmlscorp(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,SMALL_SCORPION)->anim_index + 2;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -340,7 +340,7 @@ void SmlscorpControl(short item_number) {
 
 		if(item->current_anim_state != 6 && item->current_anim_state != 7) {
 			item->anim_number = GetObjectInfo(currentLevel,SMALL_SCORPION)->anim_index + 5;
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			item->current_anim_state = 6;
 		}
 	} else {
@@ -408,7 +408,7 @@ void SmlscorpControl(short item_number) {
 				item->pos.y_rot += 1092;
 
 			if(!scorpion->flags && item->touch_bits & 0x1B00100) {
-				if(item->frame_number > anims[item->anim_number].frame_base + 20 && item->frame_number < anims[item->anim_number].frame_base + 32) {
+				if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 20 && item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 32) {
 					lara_item->hit_points -= 20;
 					lara_item->hit_status = 1;
 

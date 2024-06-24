@@ -25,7 +25,7 @@ void InitialiseBat(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,BAT)->anim_index + 5;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->goal_anim_state = 6;
 	item->current_anim_state = 6;
 }
@@ -49,7 +49,7 @@ void BatControl(short item_number) {
 	if(item->hit_points <= 0) {
 		if(item->current_anim_state == 3) {
 			item->anim_number = GetObjectInfo(currentLevel,BAT)->anim_index + 1;
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			item->current_anim_state = 2;
 			item->goal_anim_state = 2;
 		} else {
@@ -61,7 +61,7 @@ void BatControl(short item_number) {
 				item->gravity_status = 1;
 				item->speed = 0;
 				item->anim_number = GetObjectInfo(currentLevel,BAT)->anim_index + 3;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 4;
 				item->goal_anim_state = 4;
 			}

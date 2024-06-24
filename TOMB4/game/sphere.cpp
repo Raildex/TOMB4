@@ -50,7 +50,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 	rot = frame + 9;
 	gar_RotYXZsuperpack(&rot, 0);
 	obj = GetObjectInfo(currentLevel,item->object_number);
-	meshpp = &meshes[obj->mesh_index];
+	meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
 	meshp = *meshpp;
 	meshpp += 2;
 	bone = &bones[obj->bone_index];

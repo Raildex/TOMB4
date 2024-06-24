@@ -520,7 +520,7 @@ void SethControl(short item_number) {
 		case 4:
 
 			if(can_jump) {
-				if(item->anim_number == GetObjectInfo(currentLevel,45)->anim_index + 15 && item->frame_number == anims[item->anim_number].frame_base) {
+				if(item->anim_number == GetObjectInfo(currentLevel,45)->anim_index + 15 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
 					seth->LOT.is_jumping = 1;
 					seth->maximum_turn = 0;
 				}
@@ -551,7 +551,7 @@ void SethControl(short item_number) {
 
 		case 7:
 
-			if(item->anim_number == GetObjectInfo(currentLevel,SETHA)->anim_index + 17 && item->frame_number == anims[item->anim_number].frame_end && GetRandomControl() & 1)
+			if(item->anim_number == GetObjectInfo(currentLevel,SETHA)->anim_index + 17 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end && GetRandomControl() & 1)
 				item->required_anim_state = 10;
 
 			break;
@@ -568,7 +568,7 @@ void SethControl(short item_number) {
 				item->pos.y_rot += 546;
 
 			if(!seth->flags && item->touch_bits) {
-				if(item->frame_number > anims[item->anim_number].frame_base + 15 && item->frame_number < anims[item->anim_number].frame_base + 26) {
+				if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 15 && item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 26) {
 					lara_item->hit_points -= 250;
 					lara_item->hit_status = 1;
 					seth->flags = 1;
@@ -651,7 +651,7 @@ void SethControl(short item_number) {
 				item->goal_anim_state = 6;
 			}
 
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		}
 	}
 

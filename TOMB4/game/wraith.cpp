@@ -318,7 +318,7 @@ void WraithControl(short item_number) {
 				target->trigger_flags--;
 
 				if(target->trigger_flags > 0)
-					target->frame_number = anims[target->anim_number].frame_base;
+					target->frame_number = GetAnim(currentLevel,target->anim_number)->frame_base;
 
 				KillItem(item_number);
 			}

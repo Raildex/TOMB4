@@ -138,7 +138,7 @@ void ControlDeathSlide(short item_number) {
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 		item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		RemoveActiveItem(item_number);
 	}
 }

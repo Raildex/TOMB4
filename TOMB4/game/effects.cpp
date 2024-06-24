@@ -203,10 +203,10 @@ void ActivateKey(ITEM_INFO* item) {
 void SwapCrowbar(ITEM_INFO* item) {
 	short* tmp;
 
-	tmp = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + 2 * LM_RHAND];
+	tmp = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + 2 * LM_RHAND);
 
 	if(lara.mesh_ptrs[LM_RHAND] == tmp)
-		lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,CROWBAR_ANIM)->mesh_index + (2 * LM_RHAND)];
+		lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,CROWBAR_ANIM)->mesh_index + (2 * LM_RHAND));
 	else
 		lara.mesh_ptrs[LM_RHAND] = tmp;
 }
@@ -283,24 +283,24 @@ void draw_right_gun(ITEM_INFO* item) {
 	short* tmp;
 
 	tmp = lara.mesh_ptrs[LM_RTHIGH];
-	lara.mesh_ptrs[LM_RTHIGH] = meshes[GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RTHIGH * 2];
-	meshes[GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RTHIGH * 2] = tmp;
+	lara.mesh_ptrs[LM_RTHIGH] = GetMesh(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RTHIGH * 2);
+	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RTHIGH * 2) = tmp;
 
 	tmp = lara.mesh_ptrs[LM_RHAND];
-	lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RHAND * 2];
-	meshes[GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RHAND * 2] = tmp;
+	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RHAND * 2);
+	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RHAND * 2) = tmp;
 }
 
 void draw_left_gun(ITEM_INFO* item) {
 	short* tmp;
 
 	tmp = lara.mesh_ptrs[LM_LTHIGH];
-	lara.mesh_ptrs[LM_LTHIGH] = meshes[GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LTHIGH * 2];
-	meshes[GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LTHIGH * 2] = tmp;
+	lara.mesh_ptrs[LM_LTHIGH] = GetMesh(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LTHIGH * 2);
+	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LTHIGH * 2) = tmp;
 
 	tmp = lara.mesh_ptrs[LM_LHAND];
-	lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LHAND * 2];
-	meshes[GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LHAND * 2] = tmp;
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LHAND * 2);
+	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LHAND * 2) = tmp;
 }
 
 void shoot_right_gun(ITEM_INFO* item) {
@@ -318,9 +318,9 @@ void swap_meshes_with_meshswap1(ITEM_INFO* item) {
 	obj = GetObjectInfo(currentLevel,item->object_number);
 
 	for(int i = 0; i < obj->nmeshes; i++) {
-		tmp = meshes[obj->mesh_index + i * 2];
-		meshes[obj->mesh_index + i] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + i * 2];
-		meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + i * 2] = tmp;
+		tmp = GetMesh(currentLevel,obj->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel,obj->mesh_index + i) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + i * 2) = tmp;
 	}
 }
 
@@ -331,9 +331,9 @@ void swap_meshes_with_meshswap2(ITEM_INFO* item) {
 	obj = GetObjectInfo(currentLevel,item->object_number);
 
 	for(int i = 0; i < obj->nmeshes; i++) {
-		tmp = meshes[obj->mesh_index + i * 2];
-		meshes[obj->mesh_index + i] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + i * 2];
-		meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + i * 2] = tmp;
+		tmp = GetMesh(currentLevel,obj->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel,obj->mesh_index + i) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + i * 2) = tmp;
 	}
 }
 
@@ -344,13 +344,13 @@ void swap_meshes_with_meshswap3(ITEM_INFO* item) {
 	obj = GetObjectInfo(currentLevel,item->object_number);
 
 	for(int i = 0; i < obj->nmeshes; i++) {
-		tmp = meshes[obj->mesh_index + i * 2];
-		meshes[obj->mesh_index + i] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + i * 2];
+		tmp = GetMesh(currentLevel,obj->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel,obj->mesh_index + i) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + i * 2);
 
 		if(item == lara_item)
-			lara.mesh_ptrs[i] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + i * 2];
+			lara.mesh_ptrs[i] = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + i * 2);
 
-		meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + i * 2] = tmp;
+		*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + i * 2) = tmp;
 	}
 }
 
@@ -371,11 +371,11 @@ void ClearScarabsPatch(ITEM_INFO* item) {
 }
 
 void MeshSwapToPour(ITEM_INFO* item) {
-	lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,item->item_flags[2])->mesh_index + LM_LHAND * 2];
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,item->item_flags[2])->mesh_index + LM_LHAND * 2);
 }
 
 void MeshSwapFromPour(ITEM_INFO* item) {
-	lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + LM_LHAND * 2];
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + LM_LHAND * 2);
 }
 
 void void_effect(ITEM_INFO* item) {

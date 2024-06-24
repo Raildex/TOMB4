@@ -30,6 +30,8 @@
 #include "collinfo.h"
 #include "boxinfo.h"
 #include "types.h"
+#include "levelinfo.h"
+
 static PHD_VECTOR CrowbarDoorPos = { -412, 0, 140 };
 static PHD_VECTOR PullDoorPos = { -201, 0, 322 };
 static PHD_VECTOR PushDoorPos = { 201, 0, -702 };
@@ -186,7 +188,7 @@ void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 
 			if(MoveLaraPosition(&CrowbarDoorPos, item, l)) {
 				l->anim_number = ANIM_CROWBARDOOR;
-				l->frame_number = anims[ANIM_CROWBARDOOR].frame_base;
+				l->frame_number = GetAnim(currentLevel,ANIM_CROWBARDOOR)->frame_base;
 				l->current_anim_state = AS_CONTROLLED;
 				item->pos.y_rot ^= 0x8000;
 				AddActiveItem(item_num);
@@ -257,7 +259,7 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 			if(pull) {
 				if(MoveLaraPosition(&PullDoorPos, item, l)) {
 					l->anim_number = ANIM_PULLDOOR;
-					l->frame_number = anims[ANIM_PULLDOOR].frame_base;
+					l->frame_number = GetAnim(currentLevel,ANIM_PULLDOOR)->frame_base;
 					item->goal_anim_state = 3;
 					goin = 1;
 				} else
@@ -266,7 +268,7 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 				if(item->object_number < KICK_DOOR1) {
 					if(MoveLaraPosition(&PushDoorPos, item, l)) {
 						l->anim_number = ANIM_PUSHDOOR;
-						l->frame_number = anims[ANIM_PUSHDOOR].frame_base;
+						l->frame_number = GetAnim(currentLevel,ANIM_PUSHDOOR)->frame_base;
 						item->goal_anim_state = 2;
 						goin = 1;
 					} else
@@ -274,7 +276,7 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 				} else {
 					if(MoveLaraPosition(&KickDoorPos, item, l)) {
 						l->anim_number = ANIM_KICKDOOR;
-						l->frame_number = anims[ANIM_KICKDOOR].frame_base;
+						l->frame_number = GetAnim(currentLevel,ANIM_KICKDOOR)->frame_base;
 						item->goal_anim_state = 2;
 						goin = 1;
 					} else
@@ -312,7 +314,7 @@ void DoubleDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(PushPullKickDoorBounds, item, l)) {
 			if(MoveLaraPosition(&DoubleDoorPos, item, l)) {
 				l->anim_number = ANIM_TWODOOR;
-				l->frame_number = anims[ANIM_TWODOOR].frame_base;
+				l->frame_number = GetAnim(currentLevel,ANIM_TWODOOR)->frame_base;
 				l->current_anim_state = AS_TWODOOR;
 				AddActiveItem(item_num);
 				item->status = ITEM_ACTIVE;
@@ -344,7 +346,7 @@ void UnderwaterDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(UnderwaterDoorBounds, item, l)) {
 			if(MoveLaraPosition(&UnderwaterDoorPos, item, l)) {
 				l->anim_number = ANIM_WATERDOOR;
-				l->frame_number = anims[ANIM_WATERDOOR].frame_base;
+				l->frame_number = GetAnim(currentLevel,ANIM_WATERDOOR)->frame_base;
 				l->current_anim_state = AS_CONTROLLED;
 				l->fallspeed = 0;
 				item->status = ITEM_ACTIVE;

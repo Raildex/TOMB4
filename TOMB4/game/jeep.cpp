@@ -155,14 +155,14 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 	sptr->sB = 0;
 
 	if(thing) {
-		sptr->dR = unsigned char((16 * velocity) >> 5);
-		sptr->dG = unsigned char((16 * velocity) >> 5);
-		sptr->dB = unsigned char((32 * velocity) >> 5);
+		sptr->dR = (unsigned char)((16 * velocity) >> 5);
+		sptr->dG = (unsigned char)((16 * velocity) >> 5);
+		sptr->dB = (unsigned char)((32 * velocity) >> 5);
 	}
 
 	sptr->ColFadeSpeed = 4;
 	sptr->FadeToBlack = 4;
-	sptr->Life = unsigned char((GetRandomControl() & 3) - (velocity >> 12) + 20);
+	sptr->Life = (unsigned char)((GetRandomControl() & 3) - (velocity >> 12) + 20);
 	sptr->sLife = sptr->Life;
 
 	if(sptr->Life < 9) {
@@ -193,7 +193,7 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 	sptr->Scalar = 1;
 	sptr->Gravity = -4 - (GetRandomControl() & 3);
 	sptr->MaxYvel = -8 - (GetRandomControl() & 7);
-	sptr->dSize = unsigned char((GetRandomControl() & 7) + (velocity >> 7) + 32);
+	sptr->dSize = (unsigned char)((GetRandomControl() & 7) + (velocity >> 7) + 32);
 	sptr->sSize = sptr->dSize >> 1;
 	sptr->Size = sptr->dSize >> 1;
 }
@@ -217,10 +217,10 @@ void JeepExplode(ITEM_INFO* item) {
 }
 
 static long JeepCheckGetOut() {
-	if(lara_item->current_anim_state == 10 && lara_item->frame_number == anims[lara_item->anim_number].frame_end) {
+	if(lara_item->current_anim_state == 10 && lara_item->frame_number == GetAnim(currentLevel,lara_item->anim_number)->frame_end) {
 		lara_item->pos.y_rot += 0x4000;
 		lara_item->anim_number = ANIM_STOP;
-		lara_item->frame_number = anims[ANIM_STOP].frame_base;
+		lara_item->frame_number = GetAnim(currentLevel,ANIM_STOP)->frame_base;
 		lara_item->current_anim_state = AS_STOP;
 		lara_item->goal_anim_state = AS_STOP;
 		lara_item->pos.x_pos -= 512 * phd_sin(lara_item->pos.y_rot) >> W2V_SHIFT;
@@ -346,7 +346,7 @@ void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		l->current_anim_state = 9;
 		l->goal_anim_state = 9;
-		l->frame_number = anims[l->anim_number].frame_base;
+		l->frame_number = GetAnim(currentLevel,l->anim_number)->frame_base;
 		item->hit_points = 1;
 		l->pos.x_pos = item->pos.x_pos;
 		l->pos.y_pos = item->pos.y_pos;
@@ -497,7 +497,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 		else
 			lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 6;
 
-		lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+		lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 		lara_item->current_anim_state = 11;
 		lara_item->goal_anim_state = 11;
 	} else if(hitWall && state != 4 && state != 5 && state != 2 && state != 3 && state != 11 && jeep->velocity > 10922 && !killed) {
@@ -527,7 +527,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 			break;
 		}
 
-		lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+		lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 	} else {
 		switch(lara_item->current_anim_state) {
 		case 0:
@@ -615,7 +615,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 					lara_item->current_anim_state = 15;
 					lara_item->goal_anim_state = 15;
 					lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 40;
-					lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+					lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 					break;
 				}
 			} else if(input & (IN_RSTEP | IN_RIGHT))
@@ -629,12 +629,12 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(lara_item->anim_number == GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 4 && !jeep->velocity) {
 				lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 32;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base + 14;
+				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base + 14;
 			}
 
 			if(lara_item->anim_number == GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 32 && jeep->velocity) {
 				lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 4;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 			}
 
 			break;
@@ -654,7 +654,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 					lara_item->current_anim_state = 14;
 					lara_item->goal_anim_state = 14;
 					lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 41;
-					lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+					lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 					break;
 				}
 			} else if(input & (IN_LSTEP | IN_LEFT))
@@ -668,12 +668,12 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(lara_item->anim_number == GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 16 && !jeep->velocity) {
 				lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 33;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base + 14;
+				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base + 14;
 			}
 
 			if(lara_item->anim_number == GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 33 && jeep->velocity) {
 				lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 16;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 			}
 
 			break;
@@ -713,7 +713,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 						lara_item->current_anim_state = 8;
 						lara_item->goal_anim_state = 8;
 						lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 44;
-						lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+						lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 						break;
 					}
 				}
@@ -727,12 +727,12 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(lara_item->anim_number == GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 30 && !jeep->velocity) {
 				lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 37;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base + 14;
+				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base + 14;
 			}
 
 			if(lara_item->anim_number == GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 37 && jeep->velocity) {
 				lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 30;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 			}
 
 			break;
@@ -749,7 +749,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 						lara_item->current_anim_state = 7;
 						lara_item->goal_anim_state = 7;
 						lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 44;
-						lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+						lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 						break;
 					}
 				}
@@ -763,12 +763,12 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(lara_item->anim_number == GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 27 && !jeep->velocity) {
 				lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 36;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base + 14;
+				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base + 14;
 			}
 
 			if(lara_item->anim_number == GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 36 && jeep->velocity) {
 				lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 27;
-				lara_item->frame_number = anims[lara_item->anim_number].frame_base;
+				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 			}
 
 			break;
@@ -1411,7 +1411,7 @@ void JeepControl(short item_number) {
 		AnimateJeep(item, hitWall, killed);
 		AnimateItem(lara_item);
 		item->anim_number = GetObjectInfo(currentLevel,JEEP)->anim_index + lara_item->anim_number - GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index;
-		item->frame_number = lara_item->frame_number + anims[item->anim_number].frame_base - anims[lara_item->anim_number].frame_base;
+		item->frame_number = lara_item->frame_number + GetAnim(currentLevel,item->anim_number)->frame_base - GetAnim(currentLevel,lara_item->anim_number)->frame_base;
 		camera.target_elevation = -5460;
 		camera.target_distance = 2048;
 
@@ -1467,9 +1467,9 @@ void JeepStart(ITEM_INFO* item, ITEM_INFO* l) {
 	l->current_anim_state = 0;
 	l->goal_anim_state = 0;
 	l->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 14;
-	l->frame_number = anims[l->anim_number].frame_base;
+	l->frame_number = GetAnim(currentLevel,l->anim_number)->frame_base;
 	item->anim_number = l->anim_number + GetObjectInfo(currentLevel,JEEP)->anim_index - GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index;
-	item->frame_number = l->frame_number + anims[item->anim_number].frame_base - anims[l->anim_number].frame_base;
+	item->frame_number = l->frame_number + GetAnim(currentLevel,item->anim_number)->frame_base - GetAnim(currentLevel,l->anim_number)->frame_base;
 	item->flags |= IFL_TRIGGERED;
 	item->hit_points = 1;
 	jeep->unused1 = 0;
@@ -1521,7 +1521,7 @@ void InitialiseEnemyJeep(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 14;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 0;
 	item->goal_anim_state = 0;
 	item->mesh_bits = 0xFFFDBFFF;
@@ -1691,7 +1691,7 @@ void EnemyJeepControl(short item_number) {
 	} else if(_h2 > item->floor + 512 && item->current_anim_state != 5) {
 		item->item_flags[1] = 0;
 		item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 8;
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		item->current_anim_state = 5;
 		item->goal_anim_state = 1;
 	}
@@ -1704,7 +1704,7 @@ void EnemyJeepControl(short item_number) {
 
 		if(lara.location < item->item_flags[3] && item->current_anim_state != 2 && item->goal_anim_state != 2) {
 			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 1;
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			item->current_anim_state = 2;
 			item->goal_anim_state = 2;
 

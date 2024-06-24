@@ -56,10 +56,10 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(ElementPuzzleBounds, item, l)) {
 			if(l->anim_number == ANIM_POURWATERSKIN && lara_item->item_flags[2] == mesh) {
 				l->anim_number = ANIM_FILLSCALE;
-				l->frame_number = anims[ANIM_FILLSCALE].frame_base;
+				l->frame_number = GetAnim(currentLevel,ANIM_FILLSCALE)->frame_base;
 			}
 
-			if(l->frame_number == anims[ANIM_FILLSCALE].frame_base + 74 && lara_item->item_flags[2] == mesh) {
+			if(l->frame_number == GetAnim(currentLevel,ANIM_FILLSCALE)->frame_base + 74 && lara_item->item_flags[2] == mesh) {
 				if(!item->trigger_flags) {
 					item->mesh_bits = 48;
 					TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
@@ -90,7 +90,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(ElementPuzzleBounds, item, l)) {
 			y = abs(item->pos.y_pos - l->pos.y_pos);
 			l->anim_number = short((y >> 8) + ANIM_LIGHT_TORCH3);
-			l->frame_number = anims[l->anim_number].frame_base;
+			l->frame_number = GetAnim(currentLevel,l->anim_number)->frame_base;
 			l->current_anim_state = AS_CONTROLLED;
 			lara.flare_control_left = 0;
 			lara.left_arm.lock = 3;
@@ -98,7 +98,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 
 		item->pos.y_rot = rotY;
-	} else if(l->anim_number == ANIM_LIGHT_TORCH3 && l->frame_number == anims[ANIM_LIGHT_TORCH3].frame_base + 16 && item->item_flags[0] == 2) {
+	} else if(l->anim_number == ANIM_LIGHT_TORCH3 && l->frame_number == GetAnim(currentLevel,ANIM_LIGHT_TORCH3)->frame_base + 16 && item->item_flags[0] == 2) {
 		TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
 		AddActiveItem(item_number);
 		item->item_flags[0] = 3;

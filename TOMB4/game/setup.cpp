@@ -894,17 +894,17 @@ void BaddyObjects() {
 		bones[obj->bone_index + 24] |= 8;
 		bones[obj->bone_index + 80] |= 4;
 		bones[obj->bone_index + 80] |= 8;
-		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 14];
-		meshes[obj->mesh_index + 31] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 36];
+		*GetMeshPointer(currentLevel,obj->mesh_index + 15) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 14);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 31) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 30);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 37) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 36);
 	}
 
 	obj = GetObjectInfo(currentLevel,VON_CROY_MIP);
 
 	if(obj->loaded) {
-		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 14];
-		meshes[obj->mesh_index + 31] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 36];
+		*GetMeshPointer(currentLevel,obj->mesh_index + 15) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 14);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 31) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 30);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 37) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 36);
 	}
 
 	obj = GetObjectInfo(currentLevel,GUIDE);
@@ -930,17 +930,17 @@ void BaddyObjects() {
 		bones[obj->bone_index + 24] |= 8;
 		bones[obj->bone_index + 80] |= 4;
 		bones[obj->bone_index + 80] |= 8;
-		meshes[obj->mesh_index + 31] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 36];
-		meshes[obj->mesh_index + 43] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 42];
+		*GetMeshPointer(currentLevel,obj->mesh_index + 31) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 30);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 37) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 36);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 43) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 42);
 	}
 
 	obj = GetObjectInfo(currentLevel,GUIDE_MIP);
 
 	if(obj->loaded) {
-		meshes[obj->mesh_index + 31] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 36];
-		meshes[obj->mesh_index + 43] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 42];
+		*GetMeshPointer(currentLevel,obj->mesh_index + 31) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 30);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 37) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 36);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 43) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 42);
 	}
 
 	obj = GetObjectInfo(currentLevel,RAGHEAD);
@@ -966,11 +966,11 @@ void BaddyObjects() {
 		bones[obj->bone_index + 28] |= 8;
 		bones[obj->bone_index + 88] |= 4;
 		bones[obj->bone_index + 88] |= 8;
-		meshes[obj->mesh_index + 9] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 14];
+		*GetMeshPointer(currentLevel,obj->mesh_index + 9) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 8);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 15) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 14);
 
 		for(int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 2 * i + 22];
+			*GetMeshPointer(currentLevel,obj->mesh_index + 2 * i + 23) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 2 * i + 22);
 
 		if(GetObjectInfo(currentLevel,SUPER_RAGHEAD)->loaded)
 			obj->anim_index = GetObjectInfo(currentLevel,SUPER_RAGHEAD)->anim_index;
@@ -979,11 +979,11 @@ void BaddyObjects() {
 	obj = GetObjectInfo(currentLevel,RAGHEAD_MIP);
 
 	if(obj->loaded) {
-		meshes[obj->mesh_index + 9] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 14];
+		*GetMeshPointer(currentLevel,obj->mesh_index + 9) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 8);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 15) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 14);
 
 		for(int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 2 * i + 22];
+			*GetMeshPointer(currentLevel,obj->mesh_index + 2 * i + 23) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 2 * i + 22);
 	}
 
 	obj = GetObjectInfo(currentLevel,SUPER_RAGHEAD);
@@ -1009,21 +1009,21 @@ void BaddyObjects() {
 		bones[obj->bone_index + 28] |= 8;
 		bones[obj->bone_index + 88] |= 4;
 		bones[obj->bone_index + 88] |= 8;
-		meshes[obj->mesh_index + 9] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 14];
+		*GetMeshPointer(currentLevel,obj->mesh_index + 9) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 8);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 15) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 14);
 
 		for(int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 2 * i + 22];
+			*GetMeshPointer(currentLevel,obj->mesh_index + 2 * i + 23) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 2 * i + 22);
 	}
 
 	obj = GetObjectInfo(currentLevel,SUPER_RAGHEAD_MIP);
 
 	if(obj->loaded) {
-		meshes[obj->mesh_index + 9] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 14];
+		*GetMeshPointer(currentLevel,obj->mesh_index + 9) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 8);
+		*GetMeshPointer(currentLevel,obj->mesh_index + 15) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 14);
 
 		for(int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 2 * i + 22];
+			*GetMeshPointer(currentLevel,obj->mesh_index + 2 * i + 23) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 2 * i + 22);
 	}
 
 	obj = GetObjectInfo(currentLevel,SCORPION);
@@ -1972,7 +1972,7 @@ void InitTarget() {
 	short* meshp;
 	short nVtx;
 
-	meshpp = &meshes[GetObjectInfo(currentLevel,TARGET_GRAPHICS)->mesh_index];
+	meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,TARGET_GRAPHICS)->mesh_index);
 	meshp = *meshpp;
 	targetMeshP = (MESH_DATA*)meshp;
 	nVtx = meshp[4] & 0xFF;

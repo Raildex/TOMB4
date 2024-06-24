@@ -270,7 +270,7 @@ void InitialiseHarpy(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,HARPY)->anim_index + 4;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -304,7 +304,7 @@ void HarpyControl(short item_number) {
 					item->pos.y_pos = item->floor;
 				} else {
 					item->anim_number = GetObjectInfo(currentLevel,HARPY)->anim_index + 5;
-					item->frame_number = anims[item->anim_number].frame_base;
+					item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 					item->current_anim_state = 9;
 					item->gravity_status = 1;
 					item->speed = 0;

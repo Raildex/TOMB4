@@ -83,7 +83,7 @@ void CreateSkinningData() {
 		SkinXYZPtr->y = 0;
 		SkinXYZPtr->z = 0;
 		obj = GetObjectInfo(currentLevel,LARA_SKIN);
-		meshpp = &meshes[obj->mesh_index];
+		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
 		bone = &bones[obj->bone_index];
 		aboveMeshNum = SkinJoints[i][0];
 		belowMeshNum = SkinJoints[i][1];
@@ -124,7 +124,7 @@ void CreateSkinningData() {
 		SkinXYZPtr->x = 0;
 		SkinXYZPtr->y = 0;
 		SkinXYZPtr->z = 0;
-		meshpp = &meshes[obj->mesh_index];
+		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
 		bone = &bones[obj->bone_index];
 
 		if(belowMeshNum) {
@@ -161,7 +161,7 @@ void CreateSkinningData() {
 		SkinXYZPtr->y = 0;
 		SkinXYZPtr->z = 0;
 		obj = GetObjectInfo(currentLevel,LARA_SKIN_JOINTS);
-		meshpp = &meshes[obj->mesh_index + 1];
+		meshpp = GetMeshPointer(currentLevel,obj->mesh_index + 1);
 		bone = &bones[obj->bone_index];
 		jointMeshNum = i + 1;
 
@@ -302,7 +302,7 @@ void CreateSkinningData() {
 	}
 
 	obj = GetObjectInfo(currentLevel,HAIR);
-	meshpp = &meshes[obj->mesh_index];
+	meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
 
 	for(int i = 0; i < 3; i++, meshpp += 2) {
 		hairMesh = (MESH_DATA*)*meshpp;
@@ -323,7 +323,7 @@ void OptomiseSkinningData() {
 
 
 	object = GetObjectInfo(currentLevel,LARA_SKIN_JOINTS);
-	meshpp = &meshes[object->mesh_index + 1];
+	meshpp = GetMeshPointer(currentLevel,object->mesh_index + 1);
 
 	for(c = 0; c < 14; ++c) {
 		JointMesh = *meshpp;

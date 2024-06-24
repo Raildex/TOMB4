@@ -407,7 +407,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 			data = (short*)item->data;
 
 		bit = 1;
-		meshpp = &meshes[obj->mesh_index];
+		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
 		bone = &bones[obj->bone_index];
 
 		if(frac) {
@@ -463,7 +463,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 					phd_RotYXZ_I(0, -0x3FFC, short((rnd << 14) + (rnd >> 2) - 4096));
 					mInterpolateMatrix();
 					// empty func call here
-					phd_PutPolygons(meshes[GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index], clip);
+					phd_PutPolygons(GetMesh(currentLevel,GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index), clip);
 					phd_PopMatrix_I();
 					item->fired_weapon--;
 				}
@@ -517,7 +517,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 					phd_RotX(-16380);
 					phd_TranslateRel(bite->x, bite->y, bite->z);
 					// empty func call here
-					phd_PutPolygons(meshes[GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index], clip);
+					phd_PutPolygons(GetMesh(currentLevel,GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index), clip);
 					phd_PopMatrix();
 					item->fired_weapon--;
 				}
@@ -547,8 +547,8 @@ static void DoMirrorStuff() {
 			if(lara.gun_type == WEAPON_REVOLVER) {
 				lara.left_arm.anim_number = GetObjectInfo(currentLevel,SIXSHOOTER_ANIM)->anim_index + 3;
 				lara.right_arm.anim_number = GetObjectInfo(currentLevel,SIXSHOOTER_ANIM)->anim_index + 3;
-				lara.left_arm.frame_number = anims[lara.left_arm.anim_number].frame_base;
-				lara.right_arm.frame_number = anims[lara.right_arm.anim_number].frame_base;
+				lara.left_arm.frame_number = GetAnim(currentLevel,lara.left_arm.anim_number)->frame_base;
+				lara.right_arm.frame_number = GetAnim(currentLevel,lara.right_arm.anim_number)->frame_base;
 			}
 
 			if(lara.gun_type == WEAPON_CROSSBOW) {
@@ -558,12 +558,12 @@ static void DoMirrorStuff() {
 				lara.right_arm.frame_number = 0;
 			}
 
-			lara.left_arm.frame_base = anims[lara.left_arm.anim_number].frame_ptr;
-			lara.right_arm.frame_base = anims[lara.right_arm.anim_number].frame_ptr;
+			lara.left_arm.frame_base = GetAnim(currentLevel,lara.left_arm.anim_number)->frame_ptr;
+			lara.right_arm.frame_base = GetAnim(currentLevel,lara.right_arm.anim_number)->frame_ptr;
 		} else {
 			lara_item->anim_number = ANIM_BINOCS;
-			lara_item->frame_number = anims[ANIM_BINOCS].frame_base;
-			lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 2 * LM_RHAND];
+			lara_item->frame_number = GetAnim(currentLevel,ANIM_BINOCS)->frame_base;
+			lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 2 * LM_RHAND);
 		}
 	}
 
@@ -576,7 +576,7 @@ static void DoMirrorStuff() {
 		if(!LaserSight) {
 			lara_item->anim_number = old_anim;
 			lara_item->frame_number = old_frame;
-			lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + 2 * LM_RHAND];
+			lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + 2 * LM_RHAND);
 		}
 	}
 }
@@ -670,7 +670,7 @@ void DrawRooms(short CurrentRoom) {
 			phd_PopMatrix();
 
 			if(gfLevelFlags & GF_HORIZON) {
-				phd_PutPolygonSkyMesh(meshes[GetObjectInfo(currentLevel,HORIZON)->mesh_index], -1);
+				phd_PutPolygonSkyMesh(GetMesh(currentLevel,GetObjectInfo(currentLevel,HORIZON)->mesh_index), -1);
 				OutputSky();
 			}
 
@@ -861,7 +861,7 @@ void RenderIt(short CurrentRoom) {
 			phd_PopMatrix();
 
 			if(gfLevelFlags & GF_HORIZON) {
-				phd_PutPolygonSkyMesh(meshes[GetObjectInfo(currentLevel,HORIZON)->mesh_index], -1);
+				phd_PutPolygonSkyMesh(GetMesh(currentLevel,GetObjectInfo(currentLevel,HORIZON)->mesh_index), -1);
 				OutputSky();
 			}
 
@@ -1115,9 +1115,9 @@ void DrawEffect(short fx_num) {
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
 
 			if(obj->nmeshes)
-				meshp = meshes[obj->mesh_index];
+				meshp = GetMesh(currentLevel,obj->mesh_index);
 			else
-				meshp = meshes[fx->frame_number];
+				meshp = GetMesh(currentLevel,fx->frame_number);
 
 			// empty func call here
 			phd_PutPolygons(meshp, -1);
@@ -1168,7 +1168,7 @@ void PrintObjects(short room_number) {
 
 			if(clip) {
 				S_CalculateStaticMeshLight(mesh->x, mesh->y, mesh->z, mesh->shade, r);
-				phd_PutPolygons(meshes[sinfo->mesh_number], clip);
+				phd_PutPolygons(GetMesh(currentLevel,sinfo->mesh_number), clip);
 			}
 
 			phd_PopMatrix();
@@ -1224,7 +1224,7 @@ long GetFrames(ITEM_INFO* item, short* frm[], long* rate) {
 	ANIM_STRUCT* anim;
 	long frame, size, frac, num;
 
-	anim = &anims[item->anim_number];
+	anim = GetAnim(currentLevel,item->anim_number);
 	frm[0] = anim->frame_ptr;
 	frm[1] = anim->frame_ptr;
 	*rate = anim->interpolation & 0xFF;

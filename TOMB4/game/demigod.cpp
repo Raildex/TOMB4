@@ -190,7 +190,7 @@ void DoDemigodEffects(short item_number) {
 	anim = item->anim_number - GetObjectInfo(currentLevel,item->object_number)->anim_index;
 
 	if(anim == 8 || anim == 19) {
-		if(item->frame_number == anims[item->anim_number].frame_base) {
+		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
 			pos1.x = -544;
 			pos1.y = 96;
 			pos1.z = 0;
@@ -212,7 +212,7 @@ void DoDemigodEffects(short item_number) {
 				TriggerDemigodMissile(&pos, item->room_number, 5);
 		}
 	} else if(anim == 16) {
-		frame = item->frame_number - anims[item->anim_number].frame_base;
+		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 
 		if(frame >= 8 && frame <= 64) {
 			pos1.x = 0;
@@ -241,7 +241,7 @@ void InitialiseDemigod(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 0;
 	item->goal_anim_state = 0;
 
@@ -310,11 +310,11 @@ void DemigodControl(short item_number) {
 		if(item->current_anim_state != 8 && item->current_anim_state != 15) {
 			if(item->current_anim_state == 1 || item->current_anim_state == 2) {
 				item->anim_number = GetObjectInfo(currentLevel,objnum)->anim_index + 27;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 15;
 			} else {
 				item->anim_number = GetObjectInfo(currentLevel,objnum)->anim_index + 12;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 8;
 			}
 		}
@@ -553,7 +553,7 @@ void DemigodControl(short item_number) {
 
 		case 14:
 
-			if(item->frame_number - anims[item->anim_number].frame_base == 26) {
+			if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base == 26) {
 				pos.x = 80;
 				pos.y = -8;
 				pos.z = -40;
@@ -577,7 +577,7 @@ void DemigodControl(short item_number) {
 					lara.head_x_rot = 0;
 					lara.head_y_rot = 0;
 					lara_item->anim_number = ANIM_FALLDOWN;
-					lara_item->frame_number = anims[ANIM_FALLDOWN].frame_base;
+					lara_item->frame_number = GetAnim(currentLevel,ANIM_FALLDOWN)->frame_base;
 					lara_item->current_anim_state = AS_FORWARDJUMP;
 					lara_item->goal_anim_state = AS_FORWARDJUMP;
 					lara_item->pos.x_pos += -50 * phd_sin(lara_item->pos.y_rot) >> W2V_SHIFT;

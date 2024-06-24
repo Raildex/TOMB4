@@ -50,7 +50,7 @@ void InitialiseInjuredSas(short item_number) {
 		item->goal_anim_state = 4;
 	}
 
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 }
 
 void InjuredSasControl(short item_number) {
@@ -79,7 +79,7 @@ void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(DragSASBounds, item, l)) {
 			if(MoveLaraPosition(&DragSASPos, item, l)) {
 				l->anim_number = ANIM_DRAGSAS;
-				l->frame_number = anims[ANIM_DRAGSAS].frame_base;
+				l->frame_number = GetAnim(currentLevel,ANIM_DRAGSAS)->frame_base;
 				l->current_anim_state = AS_CONTROLLED;
 				l->pos.y_rot = item->pos.y_rot;
 				lara.IsMoving = 0;
@@ -96,7 +96,7 @@ void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 	} else {
 		if(item->status == ITEM_ACTIVE) {
-			if(item->frame_number == anims[item->anim_number].frame_end) {
+			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end) {
 				x = (2048 * phd_sin(l->pos.y_rot)) >> W2V_SHIFT;
 				z = (2048 * phd_cos(l->pos.y_rot)) >> W2V_SHIFT;
 				TestTriggersAtXYZ(l->pos.x_pos - x, l->pos.y_pos, l->pos.z_pos - z, l->room_number, 1, 0);
@@ -178,7 +178,7 @@ void InitialiseSas(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,SAS)->anim_index + 12;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -214,7 +214,7 @@ void SasControl(short item_number) {
 	if(item->hit_points <= 0) {
 		if(item->current_anim_state != 7) {
 			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 19;
-			item->frame_number = anims[item->anim_number].frame_base;
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 			item->current_anim_state = 7;
 		}
 	} else {
@@ -467,7 +467,7 @@ void SasControl(short item_number) {
 				yrot = 0;
 			}
 
-			if(item->frame_number == anims[item->anim_number].frame_base + 20) {
+			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 20) {
 				if(!sas->enemy->speed) {
 					xrot = xrot + (GetRandomControl() & 0x1FF) - 256;
 					yrot = yrot + (GetRandomControl() & 0x1FF) - 256;
@@ -494,7 +494,7 @@ void SasControl(short item_number) {
 		if(lara.blindTimer > 100 && item->current_anim_state != 17) {
 			sas->maximum_turn = 0;
 			item->anim_number = GetObjectInfo(currentLevel,SAS)->anim_index + 28;
-			item->frame_number = anims[item->anim_number].frame_base + (GetRandomControl() & 7);
+			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base + (GetRandomControl() & 7);
 			item->current_anim_state = 17;
 		}
 	}

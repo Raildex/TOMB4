@@ -39,7 +39,7 @@ void InitialiseGuide(short item_number) {
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,GUIDE)->anim_index + 4;
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 
@@ -88,7 +88,7 @@ void GuideControl(short item_number) {
 		TriggerDynamic(pos.x, pos.y, pos.z, 15, r, g, b);
 
 		if(item->anim_number == GetObjectInfo(currentLevel,GUIDE)->anim_index + 61) {
-			if(item->frame_number > anims[item->anim_number].frame_base + 32 && item->frame_number < anims[item->anim_number].frame_base + 42) {
+			if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 32 && item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 42) {
 				x = (rnd & 0x3F) + pos.x - 32;
 				y = ((rnd >> 3) & 0x3F) + pos.y - 128;
 				z = pos.z + ((rnd >> 6) & 0x3F) - 32;
@@ -327,7 +327,7 @@ void GuideControl(short item_number) {
 		pos.y = guide_lighter.y;
 		pos.z = guide_lighter.z;
 		GetJointAbsPosition(item, &pos, guide_lighter.mesh_num);
-		frame = item->frame_number - anims[item->anim_number].frame_base;
+		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 
 		if(frame == 32)
 			item->meshswap_meshbits |= 0x8000;
@@ -398,7 +398,8 @@ void GuideControl(short item_number) {
 		if(guide->flags || !enemy)
 			break;
 
-		if(item->frame_number > anims[item->anim_number].frame_base + 15 && item->frame_number < anims[item->anim_number].frame_base + 26) {
+		if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 15 && 
+		item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 26) {
 			x = abs(enemy->pos.x_pos - item->pos.x_pos);
 			y = abs(enemy->pos.y_pos - item->pos.y_pos);
 			z = abs(enemy->pos.z_pos - item->pos.z_pos);
@@ -439,7 +440,7 @@ void GuideControl(short item_number) {
 
 		if(item->required_anim_state == 43)
 			item->goal_anim_state = 43;
-		else if(item->anim_number != GetObjectInfo(currentLevel,GUIDE)->anim_index + 57 && item->frame_number == anims[item->anim_number].frame_end - 20) {
+		else if(item->anim_number != GetObjectInfo(currentLevel,GUIDE)->anim_index + 57 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end - 20) {
 			item->goal_anim_state = 1;
 			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			guide->reached_goal = 0;
@@ -452,7 +453,7 @@ void GuideControl(short item_number) {
 
 	case 37:
 
-		if(item->frame_number == anims[item->anim_number].frame_base) {
+		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
 			got_torch = 1;
 			item->pos.x_pos = enemy->pos.x_pos;
 			item->pos.y_pos = enemy->pos.y_pos;
@@ -460,7 +461,7 @@ void GuideControl(short item_number) {
 			item->pos.x_rot = enemy->pos.x_rot;
 			item->pos.y_rot = enemy->pos.y_rot;
 			item->pos.z_rot = enemy->pos.z_rot;
-		} else if(item->frame_number == anims[item->anim_number].frame_base + 35) {
+		} else if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 35) {
 			item->meshswap_meshbits &= ~0x40000;
 
 			for(candidate_num = GetRoom(currentLevel,item->room_number)->item_number; candidate_num != NO_ITEM; candidate_num = candidate->next_item) {
@@ -486,18 +487,18 @@ void GuideControl(short item_number) {
 
 	case 38:
 
-		if(item->frame_number == anims[item->anim_number].frame_base) {
+		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
 			item->pos.x_pos = enemy->pos.x_pos;
 			item->pos.y_pos = enemy->pos.y_pos;
 			item->pos.z_pos = enemy->pos.z_pos;
-		} else if(item->frame_number == anims[item->anim_number].frame_base + 42) {
+		} else if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 42) {
 			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			item->pos.y_rot = enemy->pos.y_rot;
 			guide->reached_goal = 0;
 			guide->enemy = 0;
 			item->ai_bits = FOLLOW;
 			item->item_flags[3]++;
-		} else if(item->frame_number < anims[item->anim_number].frame_base + 42) {
+		} else if(item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 42) {
 			dy = enemy->pos.y_rot - item->pos.y_rot;
 
 			if(dy > 364)
@@ -510,21 +511,21 @@ void GuideControl(short item_number) {
 
 	case 39:
 
-		if(item->frame_number < anims[item->anim_number].frame_base + 20) {
+		if(item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 20) {
 			dy = enemy->pos.y_rot - item->pos.y_rot;
 
 			if(dy > 364)
 				item->pos.y_rot += 364;
 			else if(dy < -364)
 				item->pos.y_rot -= 364;
-		} else if(item->frame_number == anims[item->anim_number].frame_base + 20) {
+		} else if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 20) {
 			item->goal_anim_state = 1;
 			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			guide->reached_goal = 0;
 			guide->enemy = 0;
 			item->ai_bits = FOLLOW;
 			item->item_flags[3]++;
-		} else if(item->frame_number == anims[item->anim_number].frame_base + 70 && item->room_number == 70) {
+		} else if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 70 && item->room_number == 70) {
 			item->required_anim_state = 3;
 			item->meshswap_meshbits |= 0x200000;
 			SoundEffect(SFX_GUIDE_SCARE, &item->pos, SFX_DEFAULT);

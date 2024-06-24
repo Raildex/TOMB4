@@ -154,12 +154,12 @@ void FireCrossbow(PHD_3DPOS* pos) {
 
 void draw_shotgun_meshes(long weapon_type) {
 	lara.back_gun = 0;
-	lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,WeaponObjectMesh(weapon_type))->mesh_index + 2 * LM_RHAND];
+	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,WeaponObjectMesh(weapon_type))->mesh_index + 2 * LM_RHAND);
 }
 
 void undraw_shotgun_meshes(long weapon_type) {
 	lara.back_gun = (short)WeaponObject(weapon_type);
-	lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + 2 * LM_RHAND];
+	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + 2 * LM_RHAND);
 }
 
 void ready_shotgun(long weapon_type) {
@@ -367,7 +367,7 @@ void AnimateShotgun(long weapon_type) {
 
 	case 2:
 
-		if(item->frame_number == anims[item->anim_number].frame_base) {
+		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
 			item->goal_anim_state = 4;
 
 			if(lara.water_status != 1 && !harpoon_fired) {
@@ -397,7 +397,7 @@ void AnimateShotgun(long weapon_type) {
 			SoundEffect(SFX_MP5_FIRE, &lara_item->pos, SFX_DEFAULT);
 		} else if(weapon_type == 4 && !(input & IN_ACTION) && !lara.left_arm.lock)
 			item->goal_anim_state = 4;
-		if(item->frame_number - anims[item->anim_number].frame_base == 12 && weapon_type == WEAPON_SHOTGUN)
+		if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base == 12 && weapon_type == WEAPON_SHOTGUN)
 			TriggerGunShell(1, SHOTGUNSHELL, 4);
 
 		break;
@@ -419,8 +419,8 @@ void AnimateShotgun(long weapon_type) {
 	}
 
 	AnimateItem(item);
-	lara.right_arm.frame_base = anims[item->anim_number].frame_ptr;
-	lara.right_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
+	lara.right_arm.frame_base = GetAnim(currentLevel,item->anim_number)->frame_ptr;
+	lara.right_arm.frame_number = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 	lara.right_arm.anim_number = item->anim_number;
 	lara.left_arm.frame_base = lara.right_arm.frame_base;
 	lara.left_arm.frame_number = lara.right_arm.frame_number;
@@ -634,7 +634,7 @@ void draw_shotgun(long weapon_type) {
 		else
 			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 1;
 
-		item->frame_number = anims[item->anim_number].frame_base;
+		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 		item->status = ITEM_ACTIVE;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
@@ -648,15 +648,15 @@ void draw_shotgun(long weapon_type) {
 
 	if(!item->current_anim_state || item->current_anim_state == 6)
 		ready_shotgun(weapon_type);
-	else if(item->frame_number - anims[item->anim_number].frame_base == weapons[weapon_type].draw_frame)
+	else if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base == weapons[weapon_type].draw_frame)
 		draw_shotgun_meshes(weapon_type);
 	else if(lara.water_status == LW_UNDERWATER)
 		item->goal_anim_state = 6;
 
-	lara.left_arm.frame_base = anims[item->anim_number].frame_ptr;
-	lara.right_arm.frame_base = anims[item->anim_number].frame_ptr;
-	lara.left_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
-	lara.right_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
+	lara.left_arm.frame_base = GetAnim(currentLevel,item->anim_number)->frame_ptr;
+	lara.right_arm.frame_base = GetAnim(currentLevel,item->anim_number)->frame_ptr;
+	lara.left_arm.frame_number = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+	lara.right_arm.frame_number = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 	lara.left_arm.anim_number = item->anim_number;
 	lara.right_arm.anim_number = item->anim_number;
 }
@@ -682,12 +682,12 @@ void undraw_shotgun(long weapon_type) {
 		lara.weapon_item = NO_ITEM;
 		lara.right_arm.frame_number = 0;
 		lara.left_arm.frame_number = 0;
-	} else if(item->current_anim_state == 3 && anims[item->anim_number].frame_base == item->frame_number - (weapon_type == WEAPON_GRENADE ? 16 : 21))
+	} else if(item->current_anim_state == 3 && GetAnim(currentLevel,item->anim_number)->frame_base == item->frame_number - (weapon_type == WEAPON_GRENADE ? 16 : 21))
 		undraw_shotgun_meshes(weapon_type);
 
-	lara.right_arm.frame_base = anims[item->anim_number].frame_ptr;
+	lara.right_arm.frame_base = GetAnim(currentLevel,item->anim_number)->frame_ptr;
 	lara.left_arm.frame_base = lara.right_arm.frame_base;
-	lara.right_arm.frame_number = item->frame_number - anims[item->anim_number].frame_base;
+	lara.right_arm.frame_number = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
 	lara.left_arm.frame_number = lara.right_arm.frame_number;
 	lara.right_arm.anim_number = item->anim_number;
 	lara.left_arm.anim_number = lara.right_arm.anim_number;

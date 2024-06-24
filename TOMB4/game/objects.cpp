@@ -59,7 +59,7 @@ void ControlMapper(short item_number) {
 	if(!TriggerActive(item))
 		return;
 
-	if(item->frame_number - anims[item->anim_number].frame_base >= 200) {
+	if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base >= 200) {
 		SoundEffect(SFX_MAPPER_LAZER, &item->pos, SFX_DEFAULT);
 		item->mesh_bits |= 2;
 		pos.x = 0;
@@ -287,7 +287,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		if(GLOBAL_inventoryitemchosen == PUZZLE_ITEM5) {
 			l->anim_number = ANIM_PLINTHHI;
-			l->frame_number = anims[ANIM_PLINTHHI].frame_base;
+			l->frame_number = GetAnim(currentLevel,ANIM_PLINTHHI)->frame_base;
 			l->current_anim_state = AS_CONTROLLED;
 			lara.gun_status = LG_HANDS_BUSY;
 			GLOBAL_inventoryitemchosen = NO_ITEM;
@@ -296,7 +296,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	} else if(item->item_flags[1]) {
 		if(GLOBAL_inventoryitemchosen == PUZZLE_ITEM5) {
 			l->anim_number = ANIM_PLINTHHI;
-			l->frame_number = anims[ANIM_PLINTHHI].frame_base;
+			l->frame_number = GetAnim(currentLevel,ANIM_PLINTHHI)->frame_base;
 			l->current_anim_state = AS_CONTROLLED;
 			lara.gun_status = LG_HANDS_BUSY;
 			GLOBAL_inventoryitemchosen = NO_ITEM;
@@ -304,7 +304,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 	}
 
-	if(l->anim_number == ANIM_PLINTHHI && l->frame_number == anims[ANIM_PLINTHHI].frame_base + 45) {
+	if(l->anim_number == ANIM_PLINTHHI && l->frame_number == GetAnim(currentLevel,ANIM_PLINTHHI)->frame_base + 45) {
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 		GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
@@ -597,7 +597,7 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(PoleBounds, item, l)) {
 			if(MoveLaraPosition(&PolePos, item, l)) {
 				l->anim_number = ANIM_STAT2POLE;
-				l->frame_number = anims[ANIM_STAT2POLE].frame_base;
+				l->frame_number = GetAnim(currentLevel,ANIM_STAT2POLE)->frame_base;
 				l->current_anim_state = AS_POLESTAT;
 				lara.IsMoving = 0;
 				lara.gun_status = LG_HANDS_BUSY;
@@ -619,11 +619,11 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 			if(l->current_anim_state == AS_REACH) {
 				PolePosR.y = l->pos.y_pos - item->pos.y_pos + 10;
 				l->anim_number = ANIM_REACH2POLE;
-				l->frame_number = anims[ANIM_REACH2POLE].frame_base;
+				l->frame_number = GetAnim(currentLevel,ANIM_REACH2POLE)->frame_base;
 			} else {
 				PolePosR.y = l->pos.y_pos - item->pos.y_pos + 66;
 				l->anim_number = ANIM_JUMP2POLE;
-				l->frame_number = anims[ANIM_JUMP2POLE].frame_base;
+				l->frame_number = GetAnim(currentLevel,ANIM_JUMP2POLE)->frame_base;
 			}
 
 			AlignLaraPosition(&PolePosR, item, l);
@@ -656,7 +656,7 @@ void ControlAnimatingSlots(short item_number) {
 			GetJointAbsPosition(item, &pos, 0);
 			SoundEffect(SFX_HELICOPTER_LOOP, (PHD_3DPOS*)&pos, SFX_DEFAULT);
 
-			if(item->frame_number == anims[item->anim_number].frame_end)
+			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end)
 				item->flags &= ~IFL_CODEBITS;
 		}
 	} else if(item->trigger_flags == 2)

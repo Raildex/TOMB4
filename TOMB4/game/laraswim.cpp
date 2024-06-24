@@ -71,7 +71,7 @@ void lara_as_swim(ITEM_INFO* item, COLL_INFO* coll) {
 	if(input & IN_ROLL) {
 		item->current_anim_state = AS_WATERROLL;
 		item->anim_number = ANIM_WATERROLL;
-		item->frame_number = anims[ANIM_WATERROLL].frame_base;
+		item->frame_number = GetAnim(currentLevel,ANIM_WATERROLL)->frame_base;
 	} else {
 		SwimTurn(item);
 		item->fallspeed += 8;
@@ -151,7 +151,7 @@ void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(lara.water_status == LW_FLYCHEAT) {
 		item->anim_number = ANIM_FASTFALL;
-		item->frame_number = anims[ANIM_FASTFALL].frame_base + 5;
+		item->frame_number = GetAnim(currentLevel,ANIM_FASTFALL)->frame_base + 5;
 	}
 }
 
@@ -187,7 +187,7 @@ void lara_as_glide(ITEM_INFO* item, COLL_INFO* coll) {
 		if(input & IN_ROLL) {
 			item->current_anim_state = AS_WATERROLL;
 			item->anim_number = ANIM_WATERROLL;
-			item->frame_number = anims[ANIM_WATERROLL].frame_base;
+			item->frame_number = GetAnim(currentLevel,ANIM_WATERROLL)->frame_base;
 		} else {
 			SwimTurn(item);
 
@@ -214,7 +214,7 @@ void lara_as_tread(ITEM_INFO* item, COLL_INFO* coll) {
 	if(input & IN_ROLL) {
 		item->current_anim_state = AS_WATERROLL;
 		item->anim_number = ANIM_WATERROLL;
-		item->frame_number = anims[ANIM_WATERROLL].frame_base;
+		item->frame_number = GetAnim(currentLevel,ANIM_WATERROLL)->frame_base;
 		return;
 	}
 
@@ -387,7 +387,7 @@ void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll) {
 		item->fallspeed = 0;
 	} else if(wd <= 512) {
 		item->anim_number = ANIM_SWIM2QSTND;
-		item->frame_number = anims[ANIM_SWIM2QSTND].frame_base;
+		item->frame_number = GetAnim(currentLevel,ANIM_SWIM2QSTND)->frame_base;
 		item->current_anim_state = AS_WATEROUT;
 		item->goal_anim_state = AS_STOP;
 		item->pos.x_rot = 0;

@@ -38,7 +38,7 @@ void InitialiseMummy(short item_number) {
 		item->goal_anim_state = 0;
 	}
 
-	item->frame_number = anims[item->anim_number].frame_base;
+	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 }
 
 void MummyControl(short item_number) {
@@ -70,7 +70,7 @@ void MummyControl(short item_number) {
 		if(item->current_anim_state != 7 && item->current_anim_state != 5 && item->current_anim_state != 8) {
 			if(!(GetRandomControl() & 3) && (lara.gun_type == WEAPON_SHOTGUN || lara.gun_type == WEAPON_GRENADE || lara.gun_type == WEAPON_REVOLVER)) {
 				item->anim_number = GetObjectInfo(currentLevel,MUMMY)->anim_index + 10;
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 7;
 				item->pos.y_rot += info.angle;
 				mummy->maximum_turn = 0;
@@ -83,7 +83,7 @@ void MummyControl(short item_number) {
 					item->current_anim_state = 5;
 				}
 
-				item->frame_number = anims[item->anim_number].frame_base;
+				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->pos.y_rot += info.angle;
 			}
 
@@ -139,7 +139,7 @@ void MummyControl(short item_number) {
 			if(item->trigger_flags == 1) {
 				mummy->maximum_turn = 0;
 
-				if(item->frame_number == anims[item->anim_number].frame_end)
+				if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end)
 					item->trigger_flags = 0;
 			} else {
 				mummy->maximum_turn = 1274;
@@ -182,7 +182,7 @@ void MummyControl(short item_number) {
 				item->pos.y_rot += 1274;
 
 			if(!mummy->flags && item->touch_bits & 0x4800) {
-				if(item->frame_number > anims[item->anim_number].frame_base + 13 && item->frame_number < anims[item->anim_number].frame_base + 22) {
+				if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 13 && item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 22) {
 					lara_item->hit_points -= 100;
 					lara_item->hit_status = 1;
 

@@ -52,7 +52,7 @@ void DrawTrainObjects() {
 	phd_TranslateAbs(lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, 47168);
 
 	for(int i = 0; i < 8; i++) {
-		phd_PutPolygons_train(meshes[GetStaticObject(currentLevel,obj[0])->mesh_number], x);
+		phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,obj[0])->mesh_number), x);
 		obj++;
 		x += 6144;
 	}
@@ -61,7 +61,7 @@ void DrawTrainObjects() {
 
 	phd_PushMatrix();
 	phd_TranslateAbs(x + lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, 47168);
-	phd_PutPolygons_train(meshes[GetStaticObject(currentLevel,obj[0])->mesh_number], 0);
+	phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,obj[0])->mesh_number), 0);
 	phd_PopMatrix();
 
 	obj = &dels_handy_train_map[32 - ((trainmappos / 6144 - lara_item->pos.x_pos / 6144 + 8) & 0x1F)];
@@ -72,7 +72,7 @@ void DrawTrainObjects() {
 	x2 = x + 49152;
 
 	for(int i = 0; i < 8; i++) {
-		phd_PutPolygons_train(meshes[GetStaticObject(currentLevel,obj[0])->mesh_number], -x);
+		phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,obj[0])->mesh_number), -x);
 		obj++;
 		x += 6144;
 	}
@@ -82,7 +82,7 @@ void DrawTrainObjects() {
 	phd_PushMatrix();
 	phd_TranslateAbs(x2 + lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, 58304);
 	phd_RotY(32760);
-	phd_PutPolygons_train(meshes[GetStaticObject(currentLevel,obj[0])->mesh_number], 0);
+	phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,obj[0])->mesh_number), 0);
 	phd_PopMatrix();
 
 	p = &dels_handy_train_map2[32 - ((trainmappos / 6144 - lara_item->pos.x_pos / 6144 + 8) & 0x1F)];
@@ -92,7 +92,7 @@ void DrawTrainObjects() {
 	for(int i = 0; i < 8; i++) {
 		if(p->type != NO_ITEM) {
 			phd_TranslateAbs(lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, p->zoff + 52224);
-			phd_PutPolygons_train(meshes[GetStaticObject(currentLevel,p->type)->mesh_number], x);
+			phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,p->type)->mesh_number), x);
 		}
 
 		p++;
@@ -101,7 +101,7 @@ void DrawTrainObjects() {
 
 	if(p->type != NO_ITEM) {
 		phd_TranslateAbs(x + lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, p->zoff + 52224);
-		phd_PutPolygons_train(meshes[GetStaticObject(currentLevel,p->type)->mesh_number], 0);
+		phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,p->type)->mesh_number), 0);
 	}
 
 	phd_PopMatrix();
