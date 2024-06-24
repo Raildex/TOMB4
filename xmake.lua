@@ -1,4 +1,5 @@
 set_project("TRNG successor")
+set_allowedarchs("x86")
 set_policy("package.install_locally", true)
 set_policy("build.warning", true)
 add_rules("mode.debug","mode.release","mode.releasedbg","mode.minsizerel","plugin.compile_commands.autoupdate", {outputdir = "$(buildir)"})
