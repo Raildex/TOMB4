@@ -33,6 +33,7 @@
 #include "animstruct.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
 static short StarGateBounds[24] = {
 	-512, 512, -1024, -896, -96, 96,
 	-512, 512, -128, 0, -96, 96,
@@ -144,13 +145,13 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 				continue;
 			}
 
-			if(item2->object_number == BURNING_FLOOR || !objects[item2->object_number].collision && item2->object_number != LARA) // don't get objects without collision
+			if(item2->object_number == BURNING_FLOOR || !GetObjectInfo(currentLevel,item2->object_number)->collision && item2->object_number != LARA) // don't get objects without collision
 			{
 				item_number = next_item;
 				continue;
 			}
 
-			if(!objects[item2->object_number].draw_routine && item2->object_number != LARA || !item2->mesh_bits) // don't get objects that are not drawn
+			if(!GetObjectInfo(currentLevel,item2->object_number)->draw_routine && item2->object_number != LARA || !item2->mesh_bits) // don't get objects that are not drawn
 			{
 				item_number = next_item;
 				continue;
@@ -555,13 +556,13 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 			nex = item->next_item;
 
 			if(item->collidable && item->status != ITEM_INVISIBLE) {
-				if(objects[item->object_number].collision) {
+				if(GetObjectInfo(currentLevel,item->object_number)->collision) {
 					dx = l->pos.x_pos - item->pos.x_pos;
 					dy = l->pos.y_pos - item->pos.y_pos;
 					dz = l->pos.z_pos - item->pos.z_pos;
 
 					if(dx > -3072 && dx < 3072 && dy > -3072 && dy < 3072 && dz > -3072 && dz < 3072)
-						objects[item->object_number].collision(item_number, l, coll);
+						GetObjectInfo(currentLevel,item->object_number)->collision(item_number, l, coll);
 				}
 			}
 

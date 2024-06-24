@@ -9,6 +9,7 @@
 #include "gfleveloptions.h"
 #include <cstdlib>
 #include <cstring>
+#include "levelinfo.h"
 
 static unsigned char SkinJoints[14][4] = {
 	{ 0, 1, 1, 3 },
@@ -81,7 +82,7 @@ void CreateSkinningData() {
 		SkinXYZPtr->x = 0;
 		SkinXYZPtr->y = 0;
 		SkinXYZPtr->z = 0;
-		obj = &objects[LARA_SKIN];
+		obj = GetObjectInfo(currentLevel,LARA_SKIN);
 		meshpp = &meshes[obj->mesh_index];
 		bone = &bones[obj->bone_index];
 		aboveMeshNum = SkinJoints[i][0];
@@ -159,7 +160,7 @@ void CreateSkinningData() {
 		SkinXYZPtr->x = 0;
 		SkinXYZPtr->y = 0;
 		SkinXYZPtr->z = 0;
-		obj = &objects[LARA_SKIN_JOINTS];
+		obj = GetObjectInfo(currentLevel,LARA_SKIN_JOINTS);
 		meshpp = &meshes[obj->mesh_index + 1];
 		bone = &bones[obj->bone_index];
 		jointMeshNum = i + 1;
@@ -300,7 +301,7 @@ void CreateSkinningData() {
 		}
 	}
 
-	obj = &objects[HAIR];
+	obj = GetObjectInfo(currentLevel,HAIR);
 	meshpp = &meshes[obj->mesh_index];
 
 	for(int i = 0; i < 3; i++, meshpp += 2) {
@@ -321,7 +322,7 @@ void OptomiseSkinningData() {
 	unsigned char RemapTable[32];
 
 
-	object = &objects[LARA_SKIN_JOINTS];
+	object = GetObjectInfo(currentLevel,LARA_SKIN_JOINTS);
 	meshpp = &meshes[object->mesh_index + 1];
 
 	for(c = 0; c < 14; ++c) {

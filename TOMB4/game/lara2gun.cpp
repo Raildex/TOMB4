@@ -25,7 +25,7 @@
 #include "iteminfo.h"
 #include "savegameinfo.h"
 #include "gfleveloptions.h"
-
+#include "levelinfo.h"
 static PISTOL_DEF PistolTable[4] = {
 	{ LARA, 0, 0, 0, 0 },
 	{ PISTOLS_ANIM, 4, 5, 13, 24 },
@@ -36,7 +36,7 @@ static PISTOL_DEF PistolTable[4] = {
 void undraw_pistol_mesh_left(long weapon_type) {
 	if(weapon_type != WEAPON_REVOLVER) {
 		WeaponObject(weapon_type);
-		lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + LM_LHAND * 2];
+		lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2];
 
 		if(weapon_type == WEAPON_PISTOLS)
 			lara.holster = LARA_HOLSTERS_PISTOLS;
@@ -47,7 +47,7 @@ void undraw_pistol_mesh_left(long weapon_type) {
 
 void undraw_pistol_mesh_right(long weapon_type) {
 	WeaponObject(weapon_type);
-	lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA].mesh_index + LM_RHAND * 2];
+	lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_RHAND * 2];
 
 	if(weapon_type == WEAPON_PISTOLS)
 		lara.holster = LARA_HOLSTERS_PISTOLS;
@@ -62,7 +62,7 @@ static void set_arm_info(LARA_ARM* arm, long frame) {
 	long anim_base;
 
 	p = &PistolTable[lara.gun_type];
-	anim_base = objects[p->ObjectNum].anim_index;
+	anim_base = GetObjectInfo(currentLevel,p->ObjectNum)->anim_index;
 
 	if(frame >= p->Draw1Anim) {
 		if(frame >= p->Draw2Anim) {
@@ -92,14 +92,14 @@ void ready_pistols(long weapon_type) {
 	lara.target = 0;
 	lara.right_arm.lock = 0;
 	lara.left_arm.lock = 0;
-	lara.right_arm.frame_base = objects[WeaponObject(weapon_type)].frame_base;
+	lara.right_arm.frame_base = GetObjectInfo(currentLevel,WeaponObject(weapon_type))->frame_base;
 	lara.left_arm.frame_base = lara.right_arm.frame_base;
 }
 
 void draw_pistol_meshes(long weapon_type) {
 	long mesh_index;
 
-	mesh_index = objects[WeaponObjectMesh(weapon_type)].mesh_index;
+	mesh_index = GetObjectInfo(currentLevel,WeaponObjectMesh(weapon_type))->mesh_index;
 	lara.holster = LARA_HOLSTERS;
 	lara.mesh_ptrs[LM_RHAND] = meshes[mesh_index + LM_RHAND * 2];
 

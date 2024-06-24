@@ -25,7 +25,7 @@
 #include "roominfo.h"
 #include "types.h"
 #include <cstdlib>
-
+#include "levelinfo.h"
 static BITE_INFO baboon_hit = { 10, 10, 11, 4 };
 
 void InitialiseBaboon(short item_number) {
@@ -33,7 +33,7 @@ void InitialiseBaboon(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[BABOON_NORMAL].anim_index + 2;
+	item->anim_number = GetObjectInfo(currentLevel,BABOON_NORMAL)->anim_index + 2;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->goal_anim_state = 6;
 	item->current_anim_state = 6;
@@ -64,7 +64,7 @@ void BaboonControl(short item_number) {
 
 		if(item->hit_points <= 0 && item->hit_points != -16384) {
 			if(item->current_anim_state != 11 && item->current_anim_state != 21) {
-				item->anim_number = objects[BABOON_NORMAL].anim_index + 14;
+				item->anim_number = GetObjectInfo(currentLevel,BABOON_NORMAL)->anim_index + 14;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 11;
 			} else if(item->current_anim_state == 11 && item->frame_number == anims[item->anim_number].frame_end)
@@ -178,7 +178,7 @@ void BaboonControl(short item_number) {
 					item->pos.x_rot = item2->pos.x_rot;
 					item->pos.y_rot = item2->pos.y_rot;
 					item->pos.z_rot = item2->pos.z_rot;
-					item->anim_number = objects[BABOON_NORMAL].anim_index + 31;
+					item->anim_number = GetObjectInfo(currentLevel,BABOON_NORMAL)->anim_index + 31;
 					item->frame_number = anims[item->anim_number].frame_base;
 					item->goal_anim_state = 21;
 					item->current_anim_state = 21;
@@ -333,7 +333,7 @@ void BaboonControl(short item_number) {
 				break;
 
 			case 21:
-				objects[item->object_number].HitEffect = 0;
+				GetObjectInfo(currentLevel,item->object_number)->HitEffect = 0;
 				item->hit_points = -16384;
 
 				if(item->frame_number == anims[item->anim_number].frame_base + 212) {
@@ -378,11 +378,11 @@ void ReTriggerBaboon(short item_number) {
 	if(item->room_number != IsRoomOutsideNo)
 		ItemNewRoom(item_number, IsRoomOutsideNo);
 
-	item->anim_number = objects[BABOON_NORMAL].anim_index + 2;
+	item->anim_number = GetObjectInfo(currentLevel,BABOON_NORMAL)->anim_index + 2;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->goal_anim_state = 6;
 	item->current_anim_state = 6;
-	item->hit_points = objects[item->object_number].hit_points;
+	item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;
 	RemoveActiveItem(item_number);
 	item->flags &= ~(IFL_INVISIBLE | IFL_CODEBITS);
 	item->after_death = 0;

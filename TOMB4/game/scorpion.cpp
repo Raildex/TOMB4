@@ -29,6 +29,8 @@
 #include "savegameinfo.h"
 #include "itemflags.h"
 #include <cstdlib>
+#include "levelinfo.h"
+
 static BITE_INFO stinger{ 0, 0, 0, 8 }; // for the big one
 static BITE_INFO pincer{ 0, 0, 0, 23 };
 
@@ -42,11 +44,11 @@ void InitialiseScorpion(short item_number) {
 	InitialiseCreature(item_number);
 
 	if(item->trigger_flags == 1) {
-		item->anim_number = objects[SCORPION].anim_index + 7;
+		item->anim_number = GetObjectInfo(currentLevel,SCORPION)->anim_index + 7;
 		item->current_anim_state = 8;
 		item->goal_anim_state = 8;
 	} else {
-		item->anim_number = objects[SCORPION].anim_index + 2;
+		item->anim_number = GetObjectInfo(currentLevel,SCORPION)->anim_index + 2;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 	}
@@ -119,7 +121,7 @@ void ScorpionControl(short item_number) {
 		if(item->current_anim_state != 6) {
 			if(item->trigger_flags > 0 && item->trigger_flags < 7) {
 				cutseq_num = 4;
-				item->anim_number = objects[SCORPION].anim_index + 5;
+				item->anim_number = GetObjectInfo(currentLevel,SCORPION)->anim_index + 5;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 6;
 				item->status = ITEM_INVISIBLE;
@@ -138,7 +140,7 @@ void ScorpionControl(short item_number) {
 
 				s = 0;
 			} else if(item->current_anim_state != 7) {
-				item->anim_number = objects[SCORPION].anim_index + 5;
+				item->anim_number = GetObjectInfo(currentLevel,SCORPION)->anim_index + 5;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 6;
 				s = 0;
@@ -313,7 +315,7 @@ void InitialiseSmlscorp(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[SMALL_SCORPION].anim_index + 2;
+	item->anim_number = GetObjectInfo(currentLevel,SMALL_SCORPION)->anim_index + 2;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
@@ -337,7 +339,7 @@ void SmlscorpControl(short item_number) {
 		item->hit_points = 0;
 
 		if(item->current_anim_state != 6 && item->current_anim_state != 7) {
-			item->anim_number = objects[SMALL_SCORPION].anim_index + 5;
+			item->anim_number = GetObjectInfo(currentLevel,SMALL_SCORPION)->anim_index + 5;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 6;
 		}

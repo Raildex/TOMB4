@@ -583,5 +583,3 @@ enum static_types {
 	SHATTER9,
 	NUMBER_STATIC_OBJECTS
 };
-
-extern OBJECT_INFO objects[NUMBER_OBJECTS];

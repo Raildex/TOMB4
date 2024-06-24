@@ -34,6 +34,7 @@
 #include "splashstruct.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
 
 DYNAMIC dynamics[MAX_DYNAMICS * 2];
 SPLASH_STRUCT splashes[4];
@@ -910,7 +911,7 @@ void TriggerExplosionBubble(long x, long y, long z, short room_number) {
 	sptr->Friction = 0;
 	sptr->Flags = 2058;
 	sptr->Scalar = 3;
-	sptr->Def = objects[DEFAULT_SPRITES].mesh_index + 13;
+	sptr->Def = GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 13;
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
 	size = (GetRandomControl() & 7) + 63;
@@ -991,7 +992,7 @@ long GetFreeSpark() {
 			next_spark = (free + 1) & 0xFF;
 			spark[free].extras = 0;
 			spark[free].Dynamic = -1;
-			spark[free].Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
+			spark[free].Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
 			return free;
 		}
 	}
@@ -1011,7 +1012,7 @@ long GetFreeSpark() {
 	next_spark = (free + 1) & 0xFF;
 	spark[free].extras = 0;
 	spark[free].Dynamic = -1;
-	spark[free].Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
+	spark[free].Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
 	return free;
 }
 
@@ -1241,7 +1242,7 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 			sptr->RotAdd = ((rnd >> 1) & 0x3F) + 64;
 
 		sptr->Scalar = 3;
-		sptr->Def = objects[DEFAULT_SPRITES].mesh_index + 12;
+		sptr->Def = GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 12;
 		sptr->Size = ((rnd >> 10) & 7) + 8;
 		sptr->sSize = sptr->Size;
 		sptr->dSize = 1;

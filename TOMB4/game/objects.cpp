@@ -40,8 +40,7 @@
 #include "types.h"
 #include "floorinfo.h"
 #include <cstdlib>
-OBJECT_INFO objects[NUMBER_OBJECTS];
-
+#include "levelinfo.h"
 static short StatuePlinthBounds[12] = { 0, 0, -64, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 static short PoleBounds[12] = { -256, 256, 0, 0, -512, 512, -1820, 1820, -5460, 5460, -1820, 1820 };
 static PHD_VECTOR PolePos = { 0, 0, -208 };
@@ -381,7 +380,7 @@ void ControlBurningRope(short item_number) {
 	if(!TriggerActive(item))
 		return;
 
-	nmeshes = objects[item->object_number].nmeshes - 1;
+	nmeshes = GetObjectInfo(currentLevel,item->object_number)->nmeshes - 1;
 
 	if(!(GlobalCounter & 3)) {
 		GetSpheres(item, Slist, 1);
@@ -528,7 +527,7 @@ void AnimateWaterfalls() {
 	off = (float)vOff * float(1.0F / 256.0F);
 
 	for(int i = 0; i < 3; i++) {
-		obj = &objects[WATERFALL1 + i];
+		obj = GetObjectInfo(currentLevel,WATERFALL1 + i);
 
 		if(obj->loaded) {
 			tex = AnimatingWaterfalls[i];

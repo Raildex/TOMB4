@@ -33,6 +33,9 @@
 #include "floorinfo.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
+
+
 
 void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type) {
 	FX_INFO* fx;
@@ -63,7 +66,7 @@ void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type) {
 		if(type >= 4)
 			type--;
 
-		fx->frame_number = objects[BUBBLES].mesh_index + type * 2;
+		fx->frame_number = GetObjectInfo(currentLevel,BUBBLES)->mesh_index + type * 2;
 	}
 }
 
@@ -184,7 +187,7 @@ void DoDemigodEffects(short item_number) {
 	short anim, frame;
 
 	item = &items[item_number];
-	anim = item->anim_number - objects[item->object_number].anim_index;
+	anim = item->anim_number - GetObjectInfo(currentLevel,item->object_number)->anim_index;
 
 	if(anim == 8 || anim == 19) {
 		if(item->frame_number == anims[item->anim_number].frame_base) {
@@ -237,7 +240,7 @@ void InitialiseDemigod(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[item->object_number].anim_index;
+	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 0;
 	item->goal_anim_state = 0;
@@ -269,7 +272,7 @@ void DemigodControl(short item_number) {
 		item2 = &items[objnum];
 
 		if(item2->status == ITEM_ACTIVE && item2->active) {
-			item->hit_points = objects[item->object_number].hit_points;
+			item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;
 			return;
 		}
 	}
@@ -306,11 +309,11 @@ void DemigodControl(short item_number) {
 
 		if(item->current_anim_state != 8 && item->current_anim_state != 15) {
 			if(item->current_anim_state == 1 || item->current_anim_state == 2) {
-				item->anim_number = objects[objnum].anim_index + 27;
+				item->anim_number = GetObjectInfo(currentLevel,objnum)->anim_index + 27;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 15;
 			} else {
-				item->anim_number = objects[objnum].anim_index + 12;
+				item->anim_number = GetObjectInfo(currentLevel,objnum)->anim_index + 12;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 8;
 			}
@@ -455,7 +458,7 @@ void DemigodControl(short item_number) {
 
 			god->maximum_turn = 0;
 
-			if(item->anim_number == objects[objnum].anim_index + 6) {
+			if(item->anim_number == GetObjectInfo(currentLevel,objnum)->anim_index + 6) {
 				if(abs(info.angle) < 1274)
 					item->pos.y_rot += info.angle;
 				else if(info.angle < 0)
@@ -512,7 +515,7 @@ void DemigodControl(short item_number) {
 
 			god->maximum_turn = 0;
 
-			if(item->anim_number == objects[objnum].anim_index + 6) {
+			if(item->anim_number == GetObjectInfo(currentLevel,objnum)->anim_index + 6) {
 				if(abs(info.angle) < 1274)
 					item->pos.y_rot += info.angle;
 				else if(info.angle < 0)

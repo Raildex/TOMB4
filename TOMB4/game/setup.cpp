@@ -77,15 +77,15 @@
 #include "carriedweaponflags.h"
 #include <cstdlib>
 #include <cstring>
-
+#include "levelinfo.h"
 void ObjectObjects() {
 	OBJECT_INFO* obj;
 
-	obj = &objects[CAMERA_TARGET];
+	obj = GetObjectInfo(currentLevel,CAMERA_TARGET);
 	obj->using_drawanimating_item = 0;
 	obj->draw_routine = 0;
 
-	obj = &objects[FLARE_ITEM];
+	obj = GetObjectInfo(currentLevel,FLARE_ITEM);
 	obj->initialise = 0;
 	obj->control = FlareControl;
 	obj->collision = PickUpCollision;
@@ -97,7 +97,7 @@ void ObjectObjects() {
 	obj->save_flags = 1;
 
 	for(int i = SMASH_OBJECT1; i <= SMASH_OBJECT8; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialiseSmashObject;
 		obj->control = SmashObjectControl;
 		obj->collision = ObjectCollision;
@@ -105,20 +105,20 @@ void ObjectObjects() {
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[BRIDGE_FLAT];
+	obj = GetObjectInfo(currentLevel,BRIDGE_FLAT);
 	obj->floor = BridgeFlatFloor;
 	obj->ceiling = BridgeFlatCeiling;
 
-	obj = &objects[BRIDGE_TILT1];
+	obj = GetObjectInfo(currentLevel,BRIDGE_TILT1);
 	obj->floor = BridgeTilt1Floor;
 	obj->ceiling = BridgeTilt1Ceiling;
 
-	obj = &objects[BRIDGE_TILT2];
+	obj = GetObjectInfo(currentLevel,BRIDGE_TILT2);
 	obj->floor = BridgeTilt2Floor;
 	obj->ceiling = BridgeTilt2Ceiling;
 
 	for(int i = SWITCH_TYPE1; i <= SWITCH_TYPE6; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->control = SwitchControl;
 		obj->collision = SwitchCollision;
 		obj->save_flags = 1;
@@ -126,56 +126,56 @@ void ObjectObjects() {
 	}
 
 	for(int i = SEQUENCE_SWITCH1; i <= SEQUENCE_SWITCH3; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->control = FullBlockSwitchControl;
 		obj->collision = FullBlockSwitchCollision;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[UNDERWATER_SWITCH1];
+	obj = GetObjectInfo(currentLevel,UNDERWATER_SWITCH1);
 	obj->control = SwitchControl;
 	obj->collision = SwitchCollision2;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[UNDERWATER_SWITCH2];
+	obj = GetObjectInfo(currentLevel,UNDERWATER_SWITCH2);
 	obj->control = SwitchControl;
 	obj->collision = UnderwaterSwitchCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[TURN_SWITCH];
+	obj = GetObjectInfo(currentLevel,TURN_SWITCH);
 	obj->control = TurnSwitchControl;
 	obj->collision = TurnSwitchCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[COG_SWITCH];
+	obj = GetObjectInfo(currentLevel,COG_SWITCH);
 	obj->control = CogSwitchControl;
 	obj->collision = CogSwitchCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[LEVER_SWITCH];
+	obj = GetObjectInfo(currentLevel,LEVER_SWITCH);
 	obj->control = SwitchControl;
 	obj->collision = RailSwitchCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[JUMP_SWITCH];
+	obj = GetObjectInfo(currentLevel,JUMP_SWITCH);
 	obj->control = SwitchControl;
 	obj->collision = JumpSwitchCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[CROWBAR_SWITCH];
+	obj = GetObjectInfo(currentLevel,CROWBAR_SWITCH);
 	obj->control = SwitchControl;
 	obj->collision = CrowbarSwitchCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[PULLEY];
+	obj = GetObjectInfo(currentLevel,PULLEY);
 	obj->initialise = InitialisePulley;
 	obj->control = SwitchControl;
 	obj->collision = PulleyCollision;
@@ -183,7 +183,7 @@ void ObjectObjects() {
 	obj->save_anim = 1;
 
 	for(int i = DOOR_TYPE1; i <= DOOR_TYPE8; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialiseDoor;
 		obj->control = DoorControl;
 		obj->collision = DoorCollision;
@@ -191,21 +191,21 @@ void ObjectObjects() {
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[UNDERWATER_DOOR];
+	obj = GetObjectInfo(currentLevel,UNDERWATER_DOOR);
 	obj->initialise = InitialiseDoor;
 	obj->control = PushPullKickDoorControl;
 	obj->collision = UnderwaterDoorCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[DOUBLE_DOORS];
+	obj = GetObjectInfo(currentLevel,DOUBLE_DOORS);
 	obj->initialise = InitialiseDoor;
 	obj->control = PushPullKickDoorControl;
 	obj->collision = DoubleDoorCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[SEQUENCE_DOOR1];
+	obj = GetObjectInfo(currentLevel,SEQUENCE_DOOR1);
 	obj->initialise = InitialiseDoor;
 	obj->control = SequenceDoorControl;
 	obj->collision = DoorCollision;
@@ -213,7 +213,7 @@ void ObjectObjects() {
 	obj->save_anim = 1;
 
 	for(int i = PUSHPULL_DOOR1; i <= KICK_DOOR2; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialiseDoor;
 		obj->control = PushPullKickDoorControl;
 		obj->collision = PushPullKickDoorCollision;
@@ -222,7 +222,7 @@ void ObjectObjects() {
 	}
 
 	for(int i = FLOOR_TRAPDOOR1; i <= FLOOR_TRAPDOOR2; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialiseTrapDoor;
 		obj->control = TrapDoorControl;
 		obj->collision = FloorTrapDoorCollision;
@@ -231,7 +231,7 @@ void ObjectObjects() {
 	}
 
 	for(int i = CEILING_TRAPDOOR1; i <= CEILING_TRAPDOOR2; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialiseTrapDoor;
 		obj->control = TrapDoorControl;
 		obj->collision = CeilingTrapDoorCollision;
@@ -240,7 +240,7 @@ void ObjectObjects() {
 	}
 
 	for(int i = TRAPDOOR1; i <= TRAPDOOR3; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialiseTrapDoor;
 		obj->control = TrapDoorControl;
 		obj->save_flags = 1;
@@ -248,7 +248,7 @@ void ObjectObjects() {
 	}
 
 	for(int i = PUZZLE_ITEM1; i <= SECRET_MAP; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialisePickUp;
 		obj->control = AnimatingPickUp;
 		obj->collision = PickUpCollision;
@@ -257,7 +257,7 @@ void ObjectObjects() {
 	}
 
 	for(int i = PISTOLS_ITEM; i <= BINOCULARS_ITEM; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialisePickUp;
 		obj->control = AnimatingPickUp;
 		obj->collision = PickUpCollision;
@@ -265,48 +265,48 @@ void ObjectObjects() {
 		obj->save_flags = 1;
 	}
 
-	obj = &objects[BURNING_TORCH_ITEM];
+	obj = GetObjectInfo(currentLevel,BURNING_TORCH_ITEM);
 	obj->initialise = 0;
 	obj->control = FlameTorchControl;
 	obj->save_position = 1;
 	obj->save_flags = 1;
 
-	obj = &objects[WATERSKIN1_EMPTY];
+	obj = GetObjectInfo(currentLevel,WATERSKIN1_EMPTY);
 	obj->initialise = InitialisePickUp;
 	obj->control = AnimatingPickUp;
 	obj->collision = PickUpCollision;
 	obj->save_position = 1;
 	obj->save_flags = 1;
 
-	obj = &objects[WATERSKIN2_EMPTY];
+	obj = GetObjectInfo(currentLevel,WATERSKIN2_EMPTY);
 	obj->initialise = InitialisePickUp;
 	obj->control = AnimatingPickUp;
 	obj->collision = PickUpCollision;
 	obj->save_position = 1;
 	obj->save_flags = 1;
 
-	obj = &objects[CROSSBOW_BOLT];
+	obj = GetObjectInfo(currentLevel,CROSSBOW_BOLT);
 	obj->initialise = 0;
 	obj->control = ControlCrossbow;
 	obj->collision = 0;
 	obj->draw_routine = DrawWeaponMissile;
 	obj->using_drawanimating_item = 0;
 
-	obj = &objects[GRENADE];
+	obj = GetObjectInfo(currentLevel,GRENADE);
 	obj->initialise = 0;
 	obj->control = ControlGrenade;
 	obj->collision = 0;
 	obj->draw_routine = DrawWeaponMissile;
 	obj->using_drawanimating_item = 0;
 
-	obj = &objects[FLARE_INV_ITEM];
+	obj = GetObjectInfo(currentLevel,FLARE_INV_ITEM);
 	obj->initialise = InitialisePickUp;
 	obj->control = AnimatingPickUp;
 	obj->collision = PickUpCollision;
 	obj->save_position = 1;
 	obj->save_flags = 1;
 
-	obj = &objects[COMPASS_ITEM];
+	obj = GetObjectInfo(currentLevel,COMPASS_ITEM);
 	obj->initialise = InitialisePickUp;
 	obj->control = AnimatingPickUp;
 	obj->collision = PickUpCollision;
@@ -314,13 +314,13 @@ void ObjectObjects() {
 	obj->save_flags = 1;
 
 	for(int i = KEY_HOLE1; i <= KEY_HOLE12; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->collision = KeyHoleCollision;
 		obj->save_flags = 1;
 	}
 
 	for(int i = PUZZLE_HOLE1; i <= PUZZLE_HOLE12; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->control = ControlAnimatingSlots;
 		obj->collision = PuzzleHoleCollision;
 		obj->save_flags = 1;
@@ -328,21 +328,21 @@ void ObjectObjects() {
 	}
 
 	for(int i = PUZZLE_DONE1; i <= PUZZLE_DONE12; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->control = ControlAnimatingSlots;
 		obj->collision = PuzzleDoneCollision;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[SARCOPHAGUS];
+	obj = GetObjectInfo(currentLevel,SARCOPHAGUS);
 	obj->control = ControlAnimatingSlots;
 	obj->collision = SarcophagusCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
 	for(int i = ANIMATING1; i <= ANIMATING12; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->control = ControlAnimatingSlots;
 		obj->collision = ObjectCollision;
 		obj->save_flags = 1;
@@ -350,111 +350,111 @@ void ObjectObjects() {
 	}
 
 	for(int i = ANIMATING13; i <= ANIMATING16_MIP; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->control = ControlAnimatingSlots;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->HitEffect = 0;
 	}
 
-	obj = &objects[FIREROPE];
+	obj = GetObjectInfo(currentLevel,FIREROPE);
 	obj->control = ControlBurningRope;
 	obj->collision = BurningRopeCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[EXPANDING_PLATFORM];
+	obj = GetObjectInfo(currentLevel,EXPANDING_PLATFORM);
 	obj->initialise = InitialiseRaisingBlock;
 	obj->control = ControlRaisingBlock;
 	obj->draw_routine = DrawScaledSpike;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[SQUISHY_BLOCK1];
+	obj = GetObjectInfo(currentLevel,SQUISHY_BLOCK1);
 	obj->control = ControlLRSquishyBlock;
 	obj->collision = ObjectCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[SQUISHY_BLOCK2];
+	obj = GetObjectInfo(currentLevel,SQUISHY_BLOCK2);
 	obj->control = ControlFallingSquishyBlock;
 	obj->collision = FallingSquishyBlockCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[MAPPER];
+	obj = GetObjectInfo(currentLevel,MAPPER);
 	obj->initialise = InitialiseMapper;
 	obj->control = ControlMapper;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[OBELISK];
+	obj = GetObjectInfo(currentLevel,OBELISK);
 	obj->initialise = InitialiseObelisk;
 	obj->control = ControlObelisk;
 	obj->collision = ObjectCollision;
 	obj->save_position = 1;
 	obj->save_flags = 1;
 
-	obj = &objects[ELEMENT_PUZZLE];
+	obj = GetObjectInfo(currentLevel,ELEMENT_PUZZLE);
 	obj->initialise = InitialiseElementPuzzle;
 	obj->control = ControlElementPuzzle;
 	obj->collision = ElementPuzzleCollision;
 	obj->save_flags = 1;
 	obj->save_mesh = 1;
 
-	obj = &objects[STATUE_PLINTH];
+	obj = GetObjectInfo(currentLevel,STATUE_PLINTH);
 	obj->initialise = InitialiseStatuePlinth;
 	obj->collision = StatuePlinthCollision;
 	obj->save_flags = 1;
 	obj->save_mesh = 1;
 
 	for(int i = SWITCH_TYPE7; i <= SWITCH_TYPE8; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->control = ControlAnimatingSlots;
 		obj->collision = SwitchType78Collision;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[SWITCH_TYPE7];
+	obj = GetObjectInfo(currentLevel,SWITCH_TYPE7);
 	obj->save_mesh = 1;
 
-	obj = &objects[SCALES];
+	obj = GetObjectInfo(currentLevel,SCALES);
 	obj->control = ScalesControl;
 	obj->collision = ScalesCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 	obj->HitEffect = 0;
 
-	obj = &objects[TEETH_SPIKES];
+	obj = GetObjectInfo(currentLevel,TEETH_SPIKES);
 	obj->initialise = InitialiseScaledSpike;
 	obj->control = ControlScaledSpike;
 	obj->draw_routine = DrawScaledSpike;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[JOBY_SPIKES];
+	obj = GetObjectInfo(currentLevel,JOBY_SPIKES);
 	obj->initialise = InitialiseJobySpike;
 	obj->control = ControlJobySpike;
 	obj->draw_routine = DrawScaledSpike;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[SLICER_DICER];
+	obj = GetObjectInfo(currentLevel,SLICER_DICER);
 	obj->initialise = InitialiseSlicerDicer;
 	obj->control = ControlSlicerDicer;
 	obj->collision = GenericDeadlyBoundingBoxCollision;
 	obj->save_flags = 1;
 
-	obj = &objects[SARCOPHAGUS_CUT];
+	obj = GetObjectInfo(currentLevel,SARCOPHAGUS_CUT);
 	obj->save_mesh = 1;
 
-	obj = &objects[HORUS_STATUE];
+	obj = GetObjectInfo(currentLevel,HORUS_STATUE);
 	obj->collision = ObjectCollision;
 	obj->save_mesh = 1;
 
 	for(int i = RAISING_BLOCK1; i <= RAISING_BLOCK2; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialiseRaisingBlock;
 		obj->control = ControlRaisingBlock;
 		obj->collision = 0;
@@ -464,7 +464,7 @@ void ObjectObjects() {
 	}
 
 	for(int i = SMOKE_EMITTER_WHITE; i <= STEAM_EMITTER; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialiseSmokeEmitter;
 		obj->control = ControlSmokeEmitter;
 		obj->draw_routine = 0;
@@ -473,74 +473,74 @@ void ObjectObjects() {
 	}
 
 	for(int i = RED_LIGHT; i <= BLUE_LIGHT; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->control = ControlColouredLights;
 		obj->draw_routine = 0;
 		obj->using_drawanimating_item = 0;
 		obj->save_flags = 1;
 	}
 
-	obj = &objects[LIGHTNING_CONDUCTOR];
+	obj = GetObjectInfo(currentLevel,LIGHTNING_CONDUCTOR);
 	obj->initialise = InitialiseLightningConductor;
 	obj->control = ControlLightningConductor;
 	obj->draw_routine = 0;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[BUBBLES];
+	obj = GetObjectInfo(currentLevel,BUBBLES);
 	obj->control = ControlEnemyMissile;
 	obj->draw_routine = (void (*)(ITEM_INFO*))1;
 	obj->nmeshes = 0;
 	obj->loaded = 1;
 
-	obj = &objects[WATERFALLMIST];
+	obj = GetObjectInfo(currentLevel,WATERFALLMIST);
 	obj->control = WaterFall;
 	obj->draw_routine = 0;
 	obj->using_drawanimating_item = 0;
 
-	obj = &objects[AMBER_LIGHT];
+	obj = GetObjectInfo(currentLevel,AMBER_LIGHT);
 	obj->control = ControlPulseLight;
 	obj->draw_routine = 0;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[WHITE_LIGHT];
+	obj = GetObjectInfo(currentLevel,WHITE_LIGHT);
 	obj->control = ControlElectricalLight;
 	obj->draw_routine = 0;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[BLINKING_LIGHT];
+	obj = GetObjectInfo(currentLevel,BLINKING_LIGHT);
 	obj->control = ControlBlinker;
 	obj->save_flags = 1;
 
-	obj = &objects[LENS_FLARE];
+	obj = GetObjectInfo(currentLevel,LENS_FLARE);
 	obj->draw_routine = DrawLensFlares;
 	obj->using_drawanimating_item = 0;
 
 	for(int i = WATERFALL1; i <= WATERFALL3; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->control = ControlWaterfall;
 		obj->save_flags = 1;
 	}
 
-	obj = &objects[CLOCKWORK_BEETLE];
+	obj = GetObjectInfo(currentLevel,CLOCKWORK_BEETLE);
 	obj->initialise = 0;
 	obj->control = ControlClockworkBeetle;
 
-	obj = &objects[GOD_HEAD];
+	obj = GetObjectInfo(currentLevel,GOD_HEAD);
 	obj->control = ControlGodHead;
 	obj->draw_routine = DrawGodHead;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[EARTHQUAKE];
+	obj = GetObjectInfo(currentLevel,EARTHQUAKE);
 	obj->control = EarthQuake;
 	obj->draw_routine = 0;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[BODY_PART];
+	obj = GetObjectInfo(currentLevel,BODY_PART);
 	obj->control = ControlBodyPart;
 	obj->draw_routine = (void (*)(ITEM_INFO*))1;
 	obj->nmeshes = 0;
@@ -550,56 +550,56 @@ void ObjectObjects() {
 void TrapObjects() {
 	OBJECT_INFO* obj;
 
-	obj = &objects[ROLLINGBALL];
+	obj = GetObjectInfo(currentLevel,ROLLINGBALL);
 	obj->control = ControlRollingBall;
 	obj->collision = RollingBallCollision;
 	obj->save_position = 1;
 	obj->save_flags = 1;
 
-	obj = &objects[CHAIN];
+	obj = GetObjectInfo(currentLevel,CHAIN);
 	obj->control = ControlChain;
 	obj->collision = GenericSphereBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[PLOUGH];
+	obj = GetObjectInfo(currentLevel,PLOUGH);
 	obj->control = ControlPlough;
 	obj->collision = GenericSphereBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[STARGATE];
+	obj = GetObjectInfo(currentLevel,STARGATE);
 	obj->control = ControlStargate;
 	obj->collision = StargateCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[HAMMER];
+	obj = GetObjectInfo(currentLevel,HAMMER);
 	obj->control = ControlHammer;
 	obj->collision = GenericSphereBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[BURNING_FLOOR];
+	obj = GetObjectInfo(currentLevel,BURNING_FLOOR);
 	obj->initialise = InitialiseBurningFloor;
 	obj->control = ControlBurningFloor;
 	//	obj->collision = empty func here;
 	obj->save_position = 1;
 	obj->save_flags = 1;
 
-	obj = &objects[COG];
+	obj = GetObjectInfo(currentLevel,COG);
 	obj->control = ControlAnimatingSlots;
 	obj->collision = CogCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[SPIKEBALL];
+	obj = GetObjectInfo(currentLevel,SPIKEBALL);
 	obj->control = ControlSpikeball;
 	obj->collision = GenericSphereBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[TWOBLOCK_PLATFORM];
+	obj = GetObjectInfo(currentLevel,TWOBLOCK_PLATFORM);
 	obj->initialise = InitialiseTwoBlockPlatform;
 	obj->control = ControlTwoBlockPlatform;
 	obj->floor = TwoBlockPlatformFloor;
@@ -607,57 +607,57 @@ void TrapObjects() {
 	obj->save_position = 1;
 	obj->save_flags = 1;
 
-	obj = &objects[FLOOR_4BLADE];
+	obj = GetObjectInfo(currentLevel,FLOOR_4BLADE);
 	obj->control = Control4xFloorRoofBlade;
 	obj->collision = GenericSphereBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[ROOF_4BLADE];
+	obj = GetObjectInfo(currentLevel,ROOF_4BLADE);
 	obj->control = Control4xFloorRoofBlade;
 	obj->collision = GenericSphereBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[BIRD_BLADE];
+	obj = GetObjectInfo(currentLevel,BIRD_BLADE);
 	obj->control = ControlBirdBlade;
 	obj->collision = GenericSphereBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[CATWALK_BLADE];
+	obj = GetObjectInfo(currentLevel,CATWALK_BLADE);
 	obj->control = ControlCatwalkBlade;
 	obj->collision = GenericDeadlyBoundingBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[MOVING_BLADE];
+	obj = GetObjectInfo(currentLevel,MOVING_BLADE);
 	obj->control = ControlMovingBlade;
 	obj->collision = GenericDeadlyBoundingBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[PLINTH_BLADE];
+	obj = GetObjectInfo(currentLevel,PLINTH_BLADE);
 	obj->control = ControlPlinthBlade;
 	obj->collision = GenericDeadlyBoundingBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[SETH_BLADE];
+	obj = GetObjectInfo(currentLevel,SETH_BLADE);
 	obj->initialise = InitialiseSethBlade;
 	obj->control = ControlSethBlade;
 	obj->collision = GenericSphereBoxCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[KILL_ALL_TRIGGERS];
+	obj = GetObjectInfo(currentLevel,KILL_ALL_TRIGGERS);
 	obj->control = KillAllCurrentItems;
 	obj->draw_routine = 0;
 	obj->hit_points = 0;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[DEATH_SLIDE];
+	obj = GetObjectInfo(currentLevel,DEATH_SLIDE);
 	obj->initialise = InitialiseDeathSlide;
 	obj->control = ControlDeathSlide;
 	obj->collision = DeathSlideCollision;
@@ -666,7 +666,7 @@ void TrapObjects() {
 	obj->save_anim = 1;
 
 	for(int i = FALLING_BLOCK; i <= FALLING_BLOCK2; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialiseFallingBlock2;
 		obj->control = FallingBlock;
 		obj->collision = FallingBlockCollision;
@@ -677,20 +677,20 @@ void TrapObjects() {
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[FALLING_CEILING];
+	obj = GetObjectInfo(currentLevel,FALLING_CEILING);
 	obj->control = FallingCeiling;
 	obj->collision = TrapCollision;
 	obj->save_position = 1;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[SMASHABLE_BIKE_WALL];
+	obj = GetObjectInfo(currentLevel,SMASHABLE_BIKE_WALL);
 	obj->initialise = InitialiseFallingBlock2;
 	obj->control = ControlSmashableBikeWall;
 	obj->collision = ObjectCollision;
 	obj->save_flags = 1;
 
-	obj = &objects[SMASHABLE_BIKE_FLOOR];
+	obj = GetObjectInfo(currentLevel,SMASHABLE_BIKE_FLOOR);
 	obj->initialise = InitialiseFallingBlock2;
 	obj->control = ControlFallingBlock2;
 	obj->collision = ObjectCollision;
@@ -701,7 +701,7 @@ void TrapObjects() {
 	obj->save_anim = 1;
 
 	for(int i = PUSHABLE_OBJECT1; i <= PUSHABLE_OBJECT5; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = InitialiseMovingBlock;
 		obj->control = MovableBlock;
 		obj->collision = MovableBlockCollision;
@@ -709,38 +709,38 @@ void TrapObjects() {
 		obj->save_flags = 1;
 	}
 
-	obj = &objects[SAS_DRAG_BLOKE];
+	obj = GetObjectInfo(currentLevel,SAS_DRAG_BLOKE);
 	obj->control = ControlAnimatingSlots;
 	obj->collision = DragSASCollision;
 	obj->save_position = 1;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[DARTS];
+	obj = GetObjectInfo(currentLevel,DARTS);
 	obj->control = DartsControl;
 	obj->collision = ObjectCollision;
 	obj->draw_routine = S_DrawDarts;
 	obj->using_drawanimating_item = 0;
 	obj->shadow_size = 128;
 
-	obj = &objects[DART_EMITTER];
+	obj = GetObjectInfo(currentLevel,DART_EMITTER);
 	obj->control = DartEmitterControl;
 	obj->draw_routine = 0;
 	obj->save_flags = 1;
 	obj->using_drawanimating_item = 0;
 
-	obj = &objects[HOMING_DART_EMITTER];
+	obj = GetObjectInfo(currentLevel,HOMING_DART_EMITTER);
 	obj->control = DartEmitterControl;
 	obj->draw_routine = 0;
 	obj->save_flags = 1;
 	obj->using_drawanimating_item = 0;
 
-	obj = &objects[FLAME];
+	obj = GetObjectInfo(currentLevel,FLAME);
 	obj->control = FlameControl;
 	obj->draw_routine = 0;
 	obj->using_drawanimating_item = 0;
 
-	obj = &objects[FLAME_EMITTER];
+	obj = GetObjectInfo(currentLevel,FLAME_EMITTER);
 	obj->initialise = InitialiseFlameEmitter;
 	obj->control = FlameEmitterControl;
 	obj->collision = FireCollision;
@@ -748,7 +748,7 @@ void TrapObjects() {
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[FLAME_EMITTER2];
+	obj = GetObjectInfo(currentLevel,FLAME_EMITTER2);
 	obj->initialise = InitialiseFlameEmitter2;
 	obj->control = FlameEmitter2Control;
 	obj->collision = FireCollision;
@@ -756,7 +756,7 @@ void TrapObjects() {
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[FLAME_EMITTER3];
+	obj = GetObjectInfo(currentLevel,FLAME_EMITTER3);
 	obj->initialise = InitialiseFlameEmitter3;
 	obj->control = FlameEmitter3Control;
 	obj->draw_routine = 0;
@@ -764,7 +764,7 @@ void TrapObjects() {
 	obj->save_flags = 1;
 
 	init_all_ropes();
-	obj = &objects[ROPE];
+	obj = GetObjectInfo(currentLevel,ROPE);
 	obj->initialise = InitialiseRope;
 	obj->control = RopeControl;
 	obj->collision = RopeCollision;
@@ -772,29 +772,29 @@ void TrapObjects() {
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[POLEROPE];
+	obj = GetObjectInfo(currentLevel,POLEROPE);
 	obj->collision = PoleCollision;
 	obj->save_flags = 1;
 
-	obj = &objects[MINE];
+	obj = GetObjectInfo(currentLevel,MINE);
 	obj->initialise = InitialiseMineHelicopter;
 	obj->control = ControlMineHelicopter;
 	obj->collision = MineCollision;
 	obj->HitEffect = 3;
 
-	obj = &objects[SPRINKLER];
+	obj = GetObjectInfo(currentLevel,SPRINKLER);
 	obj->control = ControlSprinkler;
 	obj->collision = FireCollision;
 	obj->save_flags = 1;
 
-	obj = &objects[TRIGGER_TRIGGERER];
+	obj = GetObjectInfo(currentLevel,TRIGGER_TRIGGERER);
 	obj->initialise = ControlTriggerTriggerer;
 	obj->control = ControlTriggerTriggerer;
 	obj->draw_routine = 0;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
-	obj = &objects[PLANET_EFFECT];
+	obj = GetObjectInfo(currentLevel,PLANET_EFFECT);
 	obj->initialise = InitialisePlanetEffect;
 	obj->control = ControlPlanetEffect;
 	obj->draw_routine = DrawPlanetEffect;
@@ -806,7 +806,7 @@ void TrapObjects() {
 void BaddyObjects() {
 	OBJECT_INFO* obj;
 
-	obj = &objects[LARA];
+	obj = GetObjectInfo(currentLevel,LARA);
 	obj->initialise = InitialiseLaraLoad;
 	obj->draw_routine = 0;
 	obj->shadow_size = 160;
@@ -817,7 +817,7 @@ void BaddyObjects() {
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[MOTORBIKE];
+	obj = GetObjectInfo(currentLevel,MOTORBIKE);
 	obj->initialise = InitialiseBike;
 	obj->control = BikeControl;
 	obj->collision = BikeCollision;
@@ -830,7 +830,7 @@ void BaddyObjects() {
 	bones[obj->bone_index + 12] |= 4;
 	bones[obj->bone_index + 28] |= 4;
 
-	obj = &objects[JEEP];
+	obj = GetObjectInfo(currentLevel,JEEP);
 	obj->initialise = InitialiseJeep;
 	obj->control = JeepControl;
 	obj->collision = JeepCollision;
@@ -844,7 +844,7 @@ void BaddyObjects() {
 	bones[obj->bone_index + 44] |= 4;
 	bones[obj->bone_index + 48] |= 4;
 
-	obj = &objects[SKELETON];
+	obj = GetObjectInfo(currentLevel,SKELETON);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseSkeleton;
@@ -866,7 +866,7 @@ void BaddyObjects() {
 		obj->undead = 1;
 	}
 
-	obj = &objects[VON_CROY];
+	obj = GetObjectInfo(currentLevel,VON_CROY);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseVoncroy;
@@ -894,20 +894,20 @@ void BaddyObjects() {
 		bones[obj->bone_index + 24] |= 8;
 		bones[obj->bone_index + 80] |= 4;
 		bones[obj->bone_index + 80] |= 8;
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP1].mesh_index + 14];
-		meshes[obj->mesh_index + 31] = meshes[objects[MESHSWAP1].mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[objects[MESHSWAP1].mesh_index + 36];
+		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 14];
+		meshes[obj->mesh_index + 31] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 30];
+		meshes[obj->mesh_index + 37] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 36];
 	}
 
-	obj = &objects[VON_CROY_MIP];
+	obj = GetObjectInfo(currentLevel,VON_CROY_MIP);
 
 	if(obj->loaded) {
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP1].mesh_index + 14];
-		meshes[obj->mesh_index + 31] = meshes[objects[MESHSWAP1].mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[objects[MESHSWAP1].mesh_index + 36];
+		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 14];
+		meshes[obj->mesh_index + 31] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 30];
+		meshes[obj->mesh_index + 37] = meshes[GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 36];
 	}
 
-	obj = &objects[GUIDE];
+	obj = GetObjectInfo(currentLevel,GUIDE);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseGuide;
@@ -930,20 +930,20 @@ void BaddyObjects() {
 		bones[obj->bone_index + 24] |= 8;
 		bones[obj->bone_index + 80] |= 4;
 		bones[obj->bone_index + 80] |= 8;
-		meshes[obj->mesh_index + 31] = meshes[objects[MESHSWAP2].mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[objects[MESHSWAP2].mesh_index + 36];
-		meshes[obj->mesh_index + 43] = meshes[objects[MESHSWAP2].mesh_index + 42];
+		meshes[obj->mesh_index + 31] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 30];
+		meshes[obj->mesh_index + 37] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 36];
+		meshes[obj->mesh_index + 43] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 42];
 	}
 
-	obj = &objects[GUIDE_MIP];
+	obj = GetObjectInfo(currentLevel,GUIDE_MIP);
 
 	if(obj->loaded) {
-		meshes[obj->mesh_index + 31] = meshes[objects[MESHSWAP2].mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[objects[MESHSWAP2].mesh_index + 36];
-		meshes[obj->mesh_index + 43] = meshes[objects[MESHSWAP2].mesh_index + 42];
+		meshes[obj->mesh_index + 31] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 30];
+		meshes[obj->mesh_index + 37] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 36];
+		meshes[obj->mesh_index + 43] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 42];
 	}
 
-	obj = &objects[RAGHEAD];
+	obj = GetObjectInfo(currentLevel,RAGHEAD);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseRaghead;
@@ -966,27 +966,27 @@ void BaddyObjects() {
 		bones[obj->bone_index + 28] |= 8;
 		bones[obj->bone_index + 88] |= 4;
 		bones[obj->bone_index + 88] |= 8;
-		meshes[obj->mesh_index + 9] = meshes[objects[MESHSWAP3].mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP3].mesh_index + 14];
+		meshes[obj->mesh_index + 9] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 8];
+		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 14];
 
 		for(int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[objects[MESHSWAP3].mesh_index + 2 * i + 22];
+			meshes[obj->mesh_index + 2 * i + 23] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 2 * i + 22];
 
-		if(objects[SUPER_RAGHEAD].loaded)
-			obj->anim_index = objects[SUPER_RAGHEAD].anim_index;
+		if(GetObjectInfo(currentLevel,SUPER_RAGHEAD)->loaded)
+			obj->anim_index = GetObjectInfo(currentLevel,SUPER_RAGHEAD)->anim_index;
 	}
 
-	obj = &objects[RAGHEAD_MIP];
+	obj = GetObjectInfo(currentLevel,RAGHEAD_MIP);
 
 	if(obj->loaded) {
-		meshes[obj->mesh_index + 9] = meshes[objects[MESHSWAP3].mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP3].mesh_index + 14];
+		meshes[obj->mesh_index + 9] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 8];
+		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 14];
 
 		for(int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[objects[MESHSWAP3].mesh_index + 2 * i + 22];
+			meshes[obj->mesh_index + 2 * i + 23] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 2 * i + 22];
 	}
 
-	obj = &objects[SUPER_RAGHEAD];
+	obj = GetObjectInfo(currentLevel,SUPER_RAGHEAD);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseRaghead;
@@ -1009,24 +1009,24 @@ void BaddyObjects() {
 		bones[obj->bone_index + 28] |= 8;
 		bones[obj->bone_index + 88] |= 4;
 		bones[obj->bone_index + 88] |= 8;
-		meshes[obj->mesh_index + 9] = meshes[objects[MESHSWAP2].mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP2].mesh_index + 14];
+		meshes[obj->mesh_index + 9] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 8];
+		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 14];
 
 		for(int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[objects[MESHSWAP2].mesh_index + 2 * i + 22];
+			meshes[obj->mesh_index + 2 * i + 23] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 2 * i + 22];
 	}
 
-	obj = &objects[SUPER_RAGHEAD_MIP];
+	obj = GetObjectInfo(currentLevel,SUPER_RAGHEAD_MIP);
 
 	if(obj->loaded) {
-		meshes[obj->mesh_index + 9] = meshes[objects[MESHSWAP2].mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP2].mesh_index + 14];
+		meshes[obj->mesh_index + 9] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 8];
+		meshes[obj->mesh_index + 15] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 14];
 
 		for(int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[objects[MESHSWAP3].mesh_index + 2 * i + 22];
+			meshes[obj->mesh_index + 2 * i + 23] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 2 * i + 22];
 	}
 
-	obj = &objects[SCORPION];
+	obj = GetObjectInfo(currentLevel,SCORPION);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseScorpion;
@@ -1045,7 +1045,7 @@ void BaddyObjects() {
 		obj->save_position = 1;
 	}
 
-	obj = &objects[SMALL_SCORPION];
+	obj = GetObjectInfo(currentLevel,SMALL_SCORPION);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseSmlscorp;
@@ -1063,7 +1063,7 @@ void BaddyObjects() {
 		obj->save_position = 1;
 	}
 
-	obj = &objects[MUMMY];
+	obj = GetObjectInfo(currentLevel,MUMMY);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseMummy;
@@ -1086,7 +1086,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 72] |= 8;
 	}
 
-	obj = &objects[KNIGHTS_TEMPLAR];
+	obj = GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseTemplar;
@@ -1109,7 +1109,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 56] |= 8;
 	}
 
-	obj = &objects[SPHINX];
+	obj = GetObjectInfo(currentLevel,SPHINX);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseSphinx;
@@ -1129,7 +1129,7 @@ void BaddyObjects() {
 		obj->undead = 1;
 	}
 
-	obj = &objects[SETHA];
+	obj = GetObjectInfo(currentLevel,SETHA);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseSeth;
@@ -1148,7 +1148,7 @@ void BaddyObjects() {
 		obj->save_position = 1;
 	}
 
-	obj = &objects[LARA_DOUBLE];
+	obj = GetObjectInfo(currentLevel,LARA_DOUBLE);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseLaraDouble;
@@ -1166,7 +1166,7 @@ void BaddyObjects() {
 		obj->save_position = 1;
 	}
 
-	obj = &objects[HORSEMAN];
+	obj = GetObjectInfo(currentLevel,HORSEMAN);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseHorseman;
@@ -1187,7 +1187,7 @@ void BaddyObjects() {
 		obj->save_position = 1;
 	}
 
-	obj = &objects[HAMMERHEAD];
+	obj = GetObjectInfo(currentLevel,HAMMERHEAD);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseHammerhead;
@@ -1211,7 +1211,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 36] |= 8;
 	}
 
-	obj = &objects[CROCODILE];
+	obj = GetObjectInfo(currentLevel,CROCODILE);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseCroc;
@@ -1235,7 +1235,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 40] |= 8;
 	}
 
-	obj = &objects[DEMIGOD1];
+	obj = GetObjectInfo(currentLevel,DEMIGOD1);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseDemigod;
@@ -1259,7 +1259,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 80] |= 8;
 	}
 
-	obj = &objects[DEMIGOD2];
+	obj = GetObjectInfo(currentLevel,DEMIGOD2);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseDemigod;
@@ -1281,7 +1281,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 80] |= 8;
 	}
 
-	obj = &objects[DEMIGOD3];
+	obj = GetObjectInfo(currentLevel,DEMIGOD3);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseDemigod;
@@ -1303,7 +1303,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 80] |= 8;
 	}
 
-	obj = &objects[MUTANT];
+	obj = GetObjectInfo(currentLevel,MUTANT);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseCrocgod;
@@ -1326,7 +1326,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[TROOPS];
+	obj = GetObjectInfo(currentLevel,TROOPS);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseTroop;
@@ -1350,7 +1350,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[SAS];
+	obj = GetObjectInfo(currentLevel,SAS);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseSas;
@@ -1374,7 +1374,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[HARPY];
+	obj = GetObjectInfo(currentLevel,HARPY);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseHarpy;
@@ -1393,7 +1393,7 @@ void BaddyObjects() {
 		obj->save_position = 1;
 	}
 
-	obj = &objects[WILD_BOAR];
+	obj = GetObjectInfo(currentLevel,WILD_BOAR);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseWildboar;
@@ -1415,7 +1415,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 52] |= 16;
 	}
 
-	obj = &objects[FUCKED_UP_DOG];
+	obj = GetObjectInfo(currentLevel,FUCKED_UP_DOG);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseDog;
@@ -1437,7 +1437,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 8] |= 8;
 	}
 
-	obj = &objects[AHMET];
+	obj = GetObjectInfo(currentLevel,AHMET);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseAhmet;
@@ -1458,7 +1458,7 @@ void BaddyObjects() {
 	}
 
 	for(int i = 0; i < 3; i++) {
-		obj = &objects[BABOON_NORMAL + 2 * i];
+		obj = GetObjectInfo(currentLevel,BABOON_NORMAL + 2 * i);
 
 		if(obj->loaded) {
 			obj->initialise = InitialiseBaboon;
@@ -1476,11 +1476,11 @@ void BaddyObjects() {
 			obj->save_position = 1;
 
 			if(i)
-				obj->anim_index = objects[BABOON_NORMAL].anim_index;
+				obj->anim_index = GetObjectInfo(currentLevel,BABOON_NORMAL)->anim_index;
 		}
 	}
 
-	obj = &objects[ENEMY_JEEP];
+	obj = GetObjectInfo(currentLevel,ENEMY_JEEP);
 
 	if(obj->loaded) {
 		if(gfLevelFlags & GF_TRAIN) {
@@ -1513,7 +1513,7 @@ void BaddyObjects() {
 		}
 	}
 
-	obj = &objects[BAT];
+	obj = GetObjectInfo(currentLevel,BAT);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseBat;
@@ -1531,7 +1531,7 @@ void BaddyObjects() {
 		obj->save_position = 1;
 	}
 
-	obj = &objects[BIG_BEETLE];
+	obj = GetObjectInfo(currentLevel,BIG_BEETLE);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseScarab;
@@ -1550,7 +1550,7 @@ void BaddyObjects() {
 		obj->save_position = 1;
 	}
 
-	obj = &objects[SENTRY_GUN];
+	obj = GetObjectInfo(currentLevel,SENTRY_GUN);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseAutogun;
@@ -1574,7 +1574,7 @@ void BaddyObjects() {
 		bones[obj->bone_index + 12] |= 16;
 	}
 
-	obj = &objects[HORSE];
+	obj = GetObjectInfo(currentLevel,HORSE);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseHorse;
@@ -1584,7 +1584,7 @@ void BaddyObjects() {
 	}
 
 	for(int i = 0; i < 2; i++) {
-		obj = &objects[SAS_DYING + 2 * i];
+		obj = GetObjectInfo(currentLevel,SAS_DYING + 2 * i);
 
 		if(obj->loaded) {
 			obj->initialise = InitialiseInjuredSas;
@@ -1596,7 +1596,7 @@ void BaddyObjects() {
 		}
 	}
 
-	obj = &objects[JEAN_YVES];
+	obj = GetObjectInfo(currentLevel,JEAN_YVES);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseJeanYves;
@@ -1609,7 +1609,7 @@ void BaddyObjects() {
 	}
 
 	for(int i = 0; i < 3; i++) {
-		obj = &objects[GAME_PIECE1 + i];
+		obj = GetObjectInfo(currentLevel,GAME_PIECE1 + i);
 
 		if(obj->loaded) {
 			obj->initialise = InitialiseSenet;
@@ -1621,7 +1621,7 @@ void BaddyObjects() {
 		}
 	}
 
-	obj = &objects[ENEMY_PIECE];
+	obj = GetObjectInfo(currentLevel,ENEMY_PIECE);
 
 	if(obj->loaded) {
 		obj->collision = ObjectCollision;
@@ -1629,7 +1629,7 @@ void BaddyObjects() {
 		obj->save_position = 1;
 	}
 
-	obj = &objects[WHEEL_OF_FORTUNE];
+	obj = GetObjectInfo(currentLevel,WHEEL_OF_FORTUNE);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseGameStix;
@@ -1645,7 +1645,7 @@ void BaddyObjects() {
 	}
 
 	for(int i = 0; i < 4; i++) {
-		obj = &objects[WRAITH1 + i];
+		obj = GetObjectInfo(currentLevel,WRAITH1 + i);
 
 		if(obj->loaded) {
 			obj->initialise = InitialiseWraith;
@@ -1658,7 +1658,7 @@ void BaddyObjects() {
 		}
 	}
 
-	obj = &objects[LITTLE_BEETLE];
+	obj = GetObjectInfo(currentLevel,LITTLE_BEETLE);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseScarabGenerator;
@@ -1667,7 +1667,7 @@ void BaddyObjects() {
 		obj->using_drawanimating_item = 0;
 	}
 
-	obj = &objects[FISH];
+	obj = GetObjectInfo(currentLevel,FISH);
 
 	if(obj->loaded) {
 		obj->initialise = InitialiseLocustEmitter;
@@ -1863,7 +1863,7 @@ void InitialiseObjects() {
 	OBJECT_INFO* obj;
 
 	for(int i = 0; i < NUMBER_OBJECTS; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->initialise = 0;
 		obj->collision = 0;
 		obj->control = 0;
@@ -1910,7 +1910,7 @@ void InitialiseObjects() {
 	SequenceResults[2][1][0] = 5;
 
 	for(int i = 0; i < gfNumMips; i++) {
-		obj = &objects[((gfMips[i] & 0xF) << 1) + ANIMATING1];
+		obj = GetObjectInfo(currentLevel,((gfMips[i] & 0xF) << 1) + ANIMATING1);
 		obj->object_mip = (gfMips[i] & 0xF0) << 6;
 	}
 }
@@ -1923,7 +1923,7 @@ void GetAIPickups() {
 	for(int i = 0; i < level_items; i++) {
 		item = &items[i];
 
-		if(objects[item->object_number].intelligent) {
+		if(GetObjectInfo(currentLevel,item->object_number)->intelligent) {
 			item->ai_bits = 0;
 
 			for(aiObjNum = 0; aiObjNum < nAIObjects; aiObjNum++) {
@@ -1948,13 +1948,13 @@ void GetCarriedItems() {
 		baddy = &items[i];
 		baddy->carried_item = NO_ITEM;
 
-		if(objects[baddy->object_number].intelligent && baddy->object_number != SCORPION) {
+		if(GetObjectInfo(currentLevel,baddy->object_number)->intelligent && baddy->object_number != SCORPION) {
 			item_num = room[baddy->room_number].item_number;
 
 			while(item_num != NO_ITEM) {
 				pickup = &items[item_num];
 
-				if(baddy->pos.x_pos == pickup->pos.x_pos && abs(baddy->pos.y_pos - pickup->pos.y_pos) < 256 && baddy->pos.z_pos == pickup->pos.z_pos && objects[pickup->object_number].collision == PickUpCollision) {
+				if(baddy->pos.x_pos == pickup->pos.x_pos && abs(baddy->pos.y_pos - pickup->pos.y_pos) < 256 && baddy->pos.z_pos == pickup->pos.z_pos && GetObjectInfo(currentLevel,pickup->object_number)->collision == PickUpCollision) {
 					pickup->carried_item = baddy->carried_item;
 					baddy->carried_item = item_num;
 					RemoveDrawnItem(item_num);
@@ -1972,7 +1972,7 @@ void InitTarget() {
 	short* meshp;
 	short nVtx;
 
-	meshpp = &meshes[objects[TARGET_GRAPHICS].mesh_index];
+	meshpp = &meshes[GetObjectInfo(currentLevel,TARGET_GRAPHICS)->mesh_index];
 	meshp = *meshpp;
 	targetMeshP = (MESH_DATA*)meshp;
 	nVtx = meshp[4] & 0xFF;

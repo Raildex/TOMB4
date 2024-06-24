@@ -33,6 +33,7 @@
 #include "objectinfo.h"
 #include <cstdlib>
 #include <windows.h>
+#include "levelinfo.h"
 
 static short MovingBlockBounds[12] = { 0, 0, -256, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 
@@ -646,7 +647,7 @@ void DrawPlanetEffect(ITEM_INFO* item) {
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 	CalculateObjectLighting(item, frm[0]);
 
-	obj = &objects[item->object_number];
+	obj = GetObjectInfo(currentLevel,item->object_number);
 	meshpp = &meshes[obj->mesh_index];
 	bone = &bones[obj->bone_index];
 	phd_TranslateRel(frm[0][6], frm[0][7], frm[0][8]);

@@ -27,6 +27,7 @@
 #include "objectinfo.h"
 #include "larawaterstatus.h"
 #include "doordata.h"
+#include "levelinfo.h"
 
 static PHD_VECTOR FullBlockSwitchPos = { 0, 256, 0 };
 static PHD_VECTOR SwitchPos = { 0, 0, 0 };
@@ -396,13 +397,13 @@ void TurnSwitchControl(short item_number) {
 	l = lara_item;
 
 	if(item->item_flags[0] == 2) {
-		if(item->anim_number == objects[TURN_SWITCH].anim_index + 2) {
+		if(item->anim_number == GetObjectInfo(currentLevel,TURN_SWITCH)->anim_index + 2) {
 			item->pos.y_rot += 0x4000;
 
 			if(input & IN_ACTION) {
 				l->anim_number = ANIM_TURNSWITCHCB;
 				l->frame_number = anims[ANIM_TURNSWITCHCB].frame_base;
-				item->anim_number = objects[item->object_number].anim_index + 1;
+				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 1;
 				item->frame_number = anims[item->anim_number].frame_base;
 			}
 		}
@@ -413,13 +414,13 @@ void TurnSwitchControl(short item_number) {
 		if(l->frame_number >= anims[ANIM_TURNSWITCHCB].frame_base && l->frame_number <= anims[ANIM_TURNSWITCHCB].frame_base + 43 || l->frame_number >= anims[ANIM_TURNSWITCHCB].frame_base + 58 && l->frame_number <= anims[ANIM_TURNSWITCHCB].frame_base + 115)
 			SoundEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
 	} else {
-		if(item->anim_number == objects[TURN_SWITCH].anim_index + 6) {
+		if(item->anim_number == GetObjectInfo(currentLevel,TURN_SWITCH)->anim_index + 6) {
 			item->pos.y_rot -= 0x4000;
 
 			if(input & IN_ACTION) {
 				l->anim_number = ANIM_TURNSWITCHAB;
 				l->frame_number = anims[ANIM_TURNSWITCHAB].frame_base;
-				item->anim_number = objects[item->object_number].anim_index + 5;
+				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 5;
 				item->frame_number = anims[item->anim_number].frame_base;
 			}
 		}
@@ -438,7 +439,7 @@ void TurnSwitchControl(short item_number) {
 		l->frame_number = anims[ANIM_BREATH].frame_base;
 		l->current_anim_state = AS_STOP;
 		item->status = ITEM_INACTIVE;
-		item->anim_number = objects[item->object_number].anim_index;
+		item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
 		item->frame_number = anims[item->anim_number].frame_base;
 		RemoveActiveItem(item_number);
 		lara.gun_status = LG_NO_ARMS;
@@ -462,7 +463,7 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			if(MoveLaraPosition(&TurnSwitchPosA, item, l)) {
 				l->anim_number = ANIM_TURNSWITCHA;
 				l->frame_number = anims[ANIM_TURNSWITCHA].frame_base;
-				item->anim_number = objects[item->object_number].anim_index + 4;
+				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 4;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->item_flags[0] = 1;
 				flag = -1;
@@ -525,9 +526,9 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 			if(!TriggerActive(item)) {
 				if(flag >= 0)
-					item->anim_number = objects[item->object_number].anim_index + 4;
+					item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 4;
 				else
-					item->anim_number = objects[item->object_number].anim_index;
+					item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
 
 				item->frame_number = anims[item->anim_number].frame_base;
 			}
@@ -698,7 +699,7 @@ void FullBlockSwitchControl(short item_number) {
 
 	item = &items[item_number];
 
-	if(item->anim_number != objects[item->object_number].anim_index + 2 || CurrentSequence >= 3 || item->item_flags[0]) {
+	if(item->anim_number != GetObjectInfo(currentLevel,item->object_number)->anim_index + 2 || CurrentSequence >= 3 || item->item_flags[0]) {
 		if(CurrentSequence >= 4) {
 			item->item_flags[0] = 0;
 			item->goal_anim_state = 1;

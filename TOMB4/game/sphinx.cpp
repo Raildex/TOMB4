@@ -20,6 +20,7 @@
 #include "types.h"
 #include "biteinfo.h"
 #include <cstdlib>
+#include "levelinfo.h"
 
 static BITE_INFO sphinx_bite = { 0, 0, 0, 6 };
 
@@ -28,7 +29,7 @@ void InitialiseSphinx(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[SPHINX].anim_index + 1;
+	item->anim_number = GetObjectInfo(currentLevel,SPHINX)->anim_index + 1;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
@@ -137,7 +138,7 @@ void SphinxControl(short item_number) {
 			sphinx->flags = 1;
 		}
 
-		if(x < 50 && z < 50 && item->anim_number == objects[SPHINX].anim_index) {
+		if(x < 50 && z < 50 && item->anim_number == GetObjectInfo(currentLevel,SPHINX)->anim_index) {
 			item->goal_anim_state = 7;
 			item->required_anim_state = 6;
 			sphinx->maximum_turn = 0;

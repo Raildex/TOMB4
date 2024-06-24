@@ -340,7 +340,7 @@ void CreateFogPos(FOGBULB_STRUCT* FogBulb) {
 			bounds[4] = rad;
 			bounds[5] = -rad;
 
-			if(S_GetObjectBounds(bounds))
+			if(S_GetObjectInfoBounds(bounds))
 				NumFogBulbsInRange++;
 			else
 				FogBulb->inRange = 0;

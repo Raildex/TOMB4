@@ -25,6 +25,7 @@
 #include "objectinfo.h"
 #include "laragunstatus.h"
 #include <cstdlib>
+#include "levelinfo.h"
 
 long SenetTargetX;
 long SenetTargetZ;
@@ -479,10 +480,10 @@ void DrawGodHead(ITEM_INFO* item) {
 	phd_RotX(item->pos.x_rot);
 	phd_RotZ(item->pos.z_rot);
 	phd_RotY(item->pos.y_rot);
-	rate = S_GetObjectBounds(frm[0]);
+	rate = S_GetObjectInfoBounds(frm[0]);
 
 	if(rate) {
-		meshpp = &meshes[objects[item->object_number].mesh_index];
+		meshpp = &meshes[GetObjectInfo(currentLevel,item->object_number)->mesh_index];
 		scalar.x = 0x4000;
 		scalar.y = 0x4000;
 		scalar.z = item->item_flags[1] << 2;

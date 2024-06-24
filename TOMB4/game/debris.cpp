@@ -128,7 +128,7 @@ void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels,
 	dptr->XYZOffsets3[2] = Offsets[8];
 
 	if(DebrisFlags & 1) {
-		dptr->YRot = unsigned char(GetRandomControl() << 1);
+		dptr->YRot = (unsigned char)(GetRandomControl() << 1);
 		dptr->XRot = dptr->YRot;
 	} else {
 		dptr->YRot = 0;

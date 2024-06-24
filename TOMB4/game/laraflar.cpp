@@ -27,6 +27,7 @@
 #include "roominfo.h"
 #include "gfleveloptions.h"
 #include "laramesh.h"
+#include "levelinfo.h"
 
 void DrawFlareInAir(ITEM_INFO* item) {
 	short* bounds;
@@ -36,7 +37,7 @@ void DrawFlareInAir(ITEM_INFO* item) {
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos - bounds[3], item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	phd_PutPolygons_train(meshes[objects[FLARE_ITEM].mesh_index], 0);
+	phd_PutPolygons_train(meshes[GetObjectInfo(currentLevel,FLARE_ITEM)->mesh_index], 0);
 	phd_PopMatrix();
 
 	if(gfLevelFlags & GF_MIRROR) {
@@ -44,18 +45,18 @@ void DrawFlareInAir(ITEM_INFO* item) {
 			phd_PushMatrix();
 			phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, 2 * gfMirrorZPlane - item->pos.z_pos);
 			phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-			phd_PutPolygons_train(meshes[objects[FLARE_ITEM].mesh_index], 0);
+			phd_PutPolygons_train(meshes[GetObjectInfo(currentLevel,FLARE_ITEM)->mesh_index], 0);
 			phd_PopMatrix();
 		}
 	}
 }
 
 void draw_flare_meshes() {
-	lara.mesh_ptrs[LM_LHAND] = meshes[objects[FLARE_ANIM].mesh_index + LM_LHAND * 2];
+	lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,FLARE_ANIM)->mesh_index + LM_LHAND * 2];
 }
 
 void undraw_flare_meshes() {
-	lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + LM_LHAND * 2];
+	lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2];
 }
 
 long DoFlareLight(PHD_VECTOR* pos, long flare_age) {
@@ -211,7 +212,7 @@ void CreateFlare(short object, long thrown) {
 void set_flare_arm(long frame) {
 	short anim_base;
 
-	anim_base = objects[FLARE_ANIM].anim_index;
+	anim_base = GetObjectInfo(currentLevel,FLARE_ANIM)->anim_index;
 
 	if(frame >= 1) {
 		if(frame < 33)

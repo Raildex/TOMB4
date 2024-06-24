@@ -21,6 +21,7 @@
 #include "types.h"
 #include "objectinfo.h"
 #include <d3dtypes.h>
+#include "levelinfo.h"
 
 #define PRINT_HEIGHT_CORRECTION 128 // The maximum difference between the footprint and the floor
 
@@ -125,7 +126,7 @@ void S_DrawFootPrints() {
 				v[j].specular = 0xFF000000;
 			}
 
-			sprite = &spriteinfo[objects[DEFAULT_SPRITES].mesh_index + 10];
+			sprite = &spriteinfo[GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 10];
 			tex.drawtype = 5;
 			tex.flag = 0;
 			tex.tpage = sprite->tpage;

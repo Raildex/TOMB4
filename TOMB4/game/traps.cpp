@@ -40,6 +40,7 @@
 #include "floorinfo.h"
 #include "heighttypes.h"
 #include <cstdlib>
+#include "levelinfo.h"
 
 short SPxzoffs[8] = { 0, 0, 0x200, 0, 0, 0, -0x200, 0 };
 short SPyoffs[8] = { -0x400, 0, -0x200, 0, 0, 0, -0x200, 0 };
@@ -338,10 +339,10 @@ void DrawScaledSpike(ITEM_INFO* item) {
 		phd_RotX(item->pos.x_rot);
 		phd_RotZ(item->pos.z_rot);
 		phd_RotY(item->pos.y_rot);
-		clip = S_GetObjectBounds(frm[0]);
+		clip = S_GetObjectInfoBounds(frm[0]);
 
 		if(clip) {
-			meshpp = &meshes[objects[item->object_number].mesh_index];
+			meshpp = &meshes[GetObjectInfo(currentLevel,item->object_number)->mesh_index];
 
 			if(item->object_number == EXPANDING_PLATFORM) {
 				scale.x = 16384;
@@ -862,7 +863,7 @@ void ControlHammer(short item_number) {
 			else
 				item->item_flags[2] = 0;
 		} else {
-			item->anim_number = objects[HAMMER].anim_index + 1;
+			item->anim_number = GetObjectInfo(currentLevel,HAMMER)->anim_index + 1;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 2;
 			item->goal_anim_state = 2;
@@ -2197,30 +2198,30 @@ void ControlObelisk(short item_number) {
 		AnimateItem(item);
 		stop = 0;
 
-		if(item->anim_number == objects[item->object_number].anim_index + 2) // done going counter-clockwise
+		if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index + 2) // done going counter-clockwise
 		{
 			item->pos.y_rot -= 0x4000;
 
 			if(input & IN_ACTION) {
-				item->anim_number = objects[item->object_number].anim_index + 1;
+				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 1;
 				item->frame_number = anims[item->anim_number].frame_base;
 			} else
 				stop = 1;
 		}
 
-		if(item->anim_number == objects[item->object_number].anim_index + 6) // done going clockwise
+		if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index + 6) // done going clockwise
 		{
 			item->pos.y_rot += 0x4000;
 
 			if(input & IN_ACTION) {
-				item->anim_number = objects[item->object_number].anim_index + 5;
+				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 5;
 				item->frame_number = anims[item->anim_number].frame_base;
 			} else
 				stop = 1;
 		}
 
 		if(stop) {
-			item->anim_number = objects[item->object_number].anim_index + 3;
+			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 3;
 			item->frame_number = anims[item->anim_number].frame_base;
 		}
 

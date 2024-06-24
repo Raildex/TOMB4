@@ -27,6 +27,7 @@
 #include "types.h"
 #include <cmath>
 #include <windows.h>
+#include "levelinfo.h"
 
 short* GLaraShadowframe;
 float lara_matrices[180];
@@ -122,7 +123,7 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 	phd_bottom = phd_winymax;
 	phd_right = phd_winxmax;
 	phd_PushMatrix();
-	obj = &objects[item->object_number];
+	obj = GetObjectInfo(currentLevel,item->object_number);
 
 	if(lara.vehicle == NO_ITEM)
 		S_PrintShadow(obj->shadow_size, GLaraShadowframe, item);
@@ -194,7 +195,7 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 	bLaraUnderWater = LaraNodeUnderwater[8] != 0 ? 8 : -1;
 	DrawHair();
 	phd_PushMatrix();
-	obj = &objects[LARA_SKIN_JOINTS];
+	obj = GetObjectInfo(currentLevel,LARA_SKIN_JOINTS);
 	meshpp = &meshes[obj->mesh_index];
 	meshpp += 2;
 
@@ -243,7 +244,7 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 	bLaraUnderWater = (LaraNodeUnderwater[0] != 0) - 1;
 
 	if(!(gfLevelFlags & GF_YOUNGLARA)) {
-		obj = &objects[lara.holster];
+		obj = GetObjectInfo(currentLevel,lara.holster);
 		meshpp = &meshes[obj->mesh_index];
 		meshpp += 8;
 		mMXPtr[M00] = lara_matrices[1 * 12 + M00];
@@ -289,12 +290,12 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 			mMXPtr[M21] = lara_matrices[84 + M21];
 			mMXPtr[M22] = lara_matrices[84 + M22];
 			mMXPtr[M23] = lara_matrices[84 + M23];
-			obj = &objects[lara.back_gun];
+			obj = GetObjectInfo(currentLevel,lara.back_gun);
 			bone = &bones[obj->bone_index];
 			meshpp = &meshes[obj->mesh_index];
 			meshpp += 28;
 			phd_TranslateRel(bone[53], bone[54], bone[55]);
-			rot = objects[lara.back_gun].frame_base + 9;
+			rot = GetObjectInfo(currentLevel,lara.back_gun)->frame_base + 9;
 			gar_RotYXZsuperpack(&rot, 14);
 			phd_PutPolygons(*meshpp, -1);
 			phd_PopMatrix();
@@ -1019,7 +1020,7 @@ void CalcLaraMatrices(long flag) {
 	long rate, frac;
 	short spaz;
 
-	bone = &bones[objects[lara_item->object_number].bone_index];
+	bone = &bones[GetObjectInfo(currentLevel,lara_item->object_number)->bone_index];
 	frac = GetFrames(lara_item, frmptr, &rate);
 
 	if(lara.hit_direction < 0) {

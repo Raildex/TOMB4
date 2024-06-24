@@ -22,7 +22,7 @@
 #include "phdvector.h"
 #include "inputbuttons.h"
 #include "types.h"
-
+#include "levelinfo.h"
 static short DeathSlideBounds[12] = { -256, 256, -100, 100, 256, 512, 0, 0, -4550, 4550, 0, 0 };
 static PHD_VECTOR DeathSlidePosition = { 0, 0, 371 };
 
@@ -137,7 +137,7 @@ void ControlDeathSlide(short item_number) {
 		item->status = ITEM_INACTIVE;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
-		item->anim_number = objects[item->object_number].anim_index;
+		item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
 		item->frame_number = anims[item->anim_number].frame_base;
 		RemoveActiveItem(item_number);
 	}

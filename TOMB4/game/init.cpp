@@ -32,6 +32,7 @@
 #include "roomflags.h"
 #include <cstdlib>
 #include <windows.h>
+#include "levelinfo.h"
 
 void InitialiseMapper(short item_number) {
 	items[item_number].mesh_bits = 0xFFFFFFFD; // hide laser
@@ -342,7 +343,7 @@ void InitialiseSethBlade(short item_number) {
 	ITEM_INFO* item;
 
 	item = &items[item_number];
-	item->anim_number = objects[SETH_BLADE].anim_index + 1;
+	item->anim_number = GetObjectInfo(currentLevel,SETH_BLADE)->anim_index + 1;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 2;
 	item->goal_anim_state = 2;
@@ -355,7 +356,7 @@ void InitialiseObelisk(short item_number) {
 	short* ifl;
 
 	item = &items[item_number];
-	item->anim_number = objects[item->object_number].anim_index + 3;
+	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 3;
 	item->frame_number = anims[item->anim_number].frame_base;
 	AddActiveItem(item_number);
 	item->status = ITEM_ACTIVE;

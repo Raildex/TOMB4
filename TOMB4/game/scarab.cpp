@@ -21,6 +21,8 @@
 #include "aibits.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
+
 static BITE_INFO beetle_bite = { 0, 0, 0, 12 };
 
 SCARAB_STRUCT Scarabs[128];
@@ -32,7 +34,7 @@ void InitialiseScarab(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[BIG_BEETLE].anim_index + 3;
+	item->anim_number = GetObjectInfo(currentLevel,BIG_BEETLE)->anim_index + 3;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
@@ -64,7 +66,7 @@ void ScarabControl(short item_number) {
 				item->pos.x_rot = 0;
 				item->pos.y_pos = item->floor;
 			} else {
-				item->anim_number = objects[BIG_BEETLE].anim_index + 5;
+				item->anim_number = GetObjectInfo(currentLevel,BIG_BEETLE)->anim_index + 5;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->gravity_status = 1;
 				item->current_anim_state = 6;
@@ -312,7 +314,7 @@ void DrawScarabs() {
 	SCARAB_STRUCT* fx;
 	short** meshpp;
 
-	meshpp = &meshes[objects[LITTLE_BEETLE].mesh_index + (wibble >> 2 & 2)];
+	meshpp = &meshes[GetObjectInfo(currentLevel,LITTLE_BEETLE)->mesh_index + (wibble >> 2 & 2)];
 
 	for(int i = 0; i < 128; i++) {
 		fx = &Scarabs[i];

@@ -38,6 +38,8 @@
 #include "roomflags.h"
 #include "roominfo.h"
 #include <cstdlib>
+#include "levelinfo.h"
+
 static short FireBounds[12] = { 0, 0, 0, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 static ITEM_INFO* TorchItem = 0;
 
@@ -158,11 +160,11 @@ void DoFlameTorch() {
 		if(lara.request_gun_type != lara.gun_type) {
 			lara.left_arm.lock = 2; // drop it
 			lara.left_arm.frame_number = 31;
-			lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index + 2;
+			lara.left_arm.anim_number = GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index + 2;
 		} else if(input & IN_DRAW && !lara_item->gravity_status && !lara_item->fallspeed && lara_item->current_anim_state != AS_COMPRESS && lara_item->current_anim_state != AS_UPJUMP && lara_item->current_anim_state != AS_FORWARDJUMP && lara_item->current_anim_state != AS_BACKJUMP && lara_item->current_anim_state != AS_RIGHTJUMP && lara_item->current_anim_state != AS_LEFTJUMP || lara.water_status == LW_UNDERWATER) {
 			lara.left_arm.lock = 1; // throw it
 			lara.left_arm.frame_number = 1;
-			lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index + 1;
+			lara.left_arm.anim_number = GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index + 1;
 
 			if(lara.water_status == LW_UNDERWATER)
 				lara.LitTorch = 0;
@@ -175,7 +177,7 @@ void DoFlameTorch() {
 		if(lara.left_arm.frame_number < 12 && lara_item->gravity_status) {
 			lara.left_arm.lock = 0; // keep holding it
 			lara.left_arm.frame_number = 0;
-			lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index;
+			lara.left_arm.anim_number = GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index;
 		} else {
 			lara.left_arm.frame_number++;
 
@@ -187,7 +189,7 @@ void DoFlameTorch() {
 				lara.request_gun_type = WEAPON_NONE;
 				lara.gun_status = LG_NO_ARMS;
 			} else if(lara.left_arm.frame_number == 12) {
-				lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + LM_LHAND * 2];
+				lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2];
 				CreateFlare(BURNING_TORCH_ITEM, 1);
 			}
 		}
@@ -206,7 +208,7 @@ void DoFlameTorch() {
 			lara.gun_type = WEAPON_NONE;
 			lara.gun_status = LG_NO_ARMS;
 		} else if(lara.left_arm.frame_number == 36) {
-			lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + LM_LHAND * 2];
+			lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2];
 			CreateFlare(BURNING_TORCH_ITEM, 0);
 		}
 
@@ -219,7 +221,7 @@ void DoFlameTorch() {
 			lara.flare_control_left = 1;
 			lara.left_arm.lock = 0;
 			lara.left_arm.frame_number = 0;
-			lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index;
+			lara.left_arm.anim_number = GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index;
 		}
 
 		break;
@@ -251,12 +253,12 @@ void GetFlameTorch() {
 	lara.request_gun_type = WEAPON_TORCH;
 	lara.gun_type = WEAPON_TORCH;
 	lara.flare_control_left = 1;
-	lara.left_arm.anim_number = objects[TORCH_ANIM].anim_index;
+	lara.left_arm.anim_number = GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index;
 	lara.gun_status = LG_READY;
 	lara.left_arm.lock = 0;
 	lara.left_arm.frame_number = 0;
-	lara.left_arm.frame_base = anims[objects[TORCH_ANIM].anim_index].frame_ptr;
-	lara.mesh_ptrs[LM_LHAND] = meshes[objects[TORCH_ANIM].mesh_index + LM_LHAND * 2];
+	lara.left_arm.frame_base = anims[GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index].frame_ptr;
+	lara.mesh_ptrs[LM_LHAND] = meshes[GetObjectInfo(currentLevel,TORCH_ANIM)->mesh_index + LM_LHAND * 2];
 }
 
 void FlameTorchControl(short item_number) {
@@ -303,7 +305,7 @@ void FlameTorchControl(short item_number) {
 		mycoll.enable_baddie_push = 1;
 
 		if(itemlist[0]) {
-			if(!objects[itemlist[0]->object_number].intelligent)
+			if(!GetObjectInfo(currentLevel,itemlist[0]->object_number)->intelligent)
 				ObjectCollision(itemlist[0] - items, item, &mycoll);
 		} else {
 			sinfo = &static_objects[meshlist[0]->static_number];

@@ -38,6 +38,7 @@
 #include "boxnode.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
 
 BOX_INFO* boxes;
 unsigned short* overlap;
@@ -54,7 +55,7 @@ void CreatureDie(short item_number, long explode) {
 	item->collidable = 0;
 
 	if(explode) {
-		if(objects[item->object_number].HitEffect == 1)
+		if(GetObjectInfo(currentLevel,item->object_number)->HitEffect == 1)
 			ExplodingDeath2(item_number, -1, 258);
 		else
 			ExplodingDeath2(item_number, -1, 256);
@@ -131,7 +132,7 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info) {
 	if(!creature)
 		return;
 
-	obj = &objects[item->object_number];
+	obj = GetObjectInfo(currentLevel,item->object_number);
 
 	if(item->poisoned) {
 		if(!obj->undead && !(wibble & 0x3F) && item->hit_points > 1)
@@ -786,7 +787,7 @@ long CreatureCreature(short item_number) {
 	x = item->pos.x_pos;
 	z = item->pos.z_pos;
 	yrot = item->pos.y_rot;
-	rad = objects[item->object_number].radius;
+	rad = GetObjectInfo(currentLevel,item->object_number)->radius;
 
 	for(item_num = room[item->room_number].item_number; item_num != NO_ITEM; item_num = item->next_item) {
 		item = &items[item_num];
@@ -796,7 +797,7 @@ long CreatureCreature(short item_number) {
 			dz = abs(item->pos.z_pos - z);
 			dist = dx > dz ? dx + (dz >> 1) : dz + (dx >> 1);
 
-			if(dist < rad + objects[item->object_number].radius)
+			if(dist < rad + GetObjectInfo(currentLevel,item->object_number)->radius)
 				return short(phd_atan(item->pos.z_pos - z, item->pos.x_pos - x) - yrot);
 		}
 	}
@@ -904,7 +905,7 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 	z = item->pos.z_pos;
 	wx = x & 0x3FF;
 	wz = z & 0x3FF;
-	rad = objects[item->object_number].radius;
+	rad = GetObjectInfo(currentLevel,item->object_number)->radius;
 	xShift = 0;
 	zShift = 0;
 
@@ -1012,7 +1013,7 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 				dy = 0;
 				item->pos.y_pos = height;
 			}
-		} else if(objects[item->object_number].water_creature) {
+		} else if(GetObjectInfo(currentLevel,item->object_number)->water_creature) {
 			height = GetCeiling(floor, item->pos.x_pos, y, item->pos.z_pos);
 
 			if(item->pos.y_pos + bounds[2] + dy < height) {
@@ -1323,7 +1324,7 @@ long CreatureVault(short item_number, short angle, long vault, long shift) {
 }
 
 void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara_anim) {
-	item->anim_number = objects[item->object_number].anim_index + kill_anim;
+	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + kill_anim;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = kill_state;
 	lara_item->anim_number = lara_anim;
@@ -1431,7 +1432,7 @@ short AIGuard(CREATURE_INFO* creature) {
 	return 0;
 }
 
-void FindAITargetObject(CREATURE_INFO* creature, short obj_num) {
+void FindAITarGetObjectInfo(CREATURE_INFO* creature, short obj_num) {
 	ITEM_INFO* item;
 	ITEM_INFO* enemy;
 	AIOBJECT* aiObj;
@@ -1512,10 +1513,10 @@ void GetAITarget(CREATURE_INFO* creature) {
 				item->ai_bits |= MODIFY;
 		} else if(!creature->patrol2) {
 			if(enemy_object != AI_PATROL1)
-				FindAITargetObject(creature, AI_PATROL1);
+				FindAITarGetObjectInfo(creature, AI_PATROL1);
 		} else if(creature->patrol2) {
 			if(enemy_object != AI_PATROL2)
-				FindAITargetObject(creature, AI_PATROL2);
+				FindAITarGetObjectInfo(creature, AI_PATROL2);
 		} else if(abs(enemy->pos.x_pos - item->pos.x_pos) < 640 && abs(enemy->pos.y_pos - item->pos.y_pos) < 640 && abs(enemy->pos.z_pos - item->pos.z_pos) < 640) {
 			GetHeight(GetFloor(enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, &enemy->room_number), enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos);
 			TestTriggers(trigger_index, 1, 0);
@@ -1523,7 +1524,7 @@ void GetAITarget(CREATURE_INFO* creature) {
 		}
 	} else if(ai_bits & AMBUSH) {
 		if(enemy_object != AI_AMBUSH)
-			FindAITargetObject(creature, AI_AMBUSH);
+			FindAITarGetObjectInfo(creature, AI_AMBUSH);
 		else if(abs(enemy->pos.x_pos - item->pos.x_pos) < 640 && abs(enemy->pos.y_pos - item->pos.y_pos) < 640 && abs(enemy->pos.z_pos - item->pos.z_pos) < 640) {
 			GetHeight(GetFloor(enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, &enemy->room_number), enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos);
 			TestTriggers(trigger_index, 1, 0);
@@ -1544,7 +1545,7 @@ void GetAITarget(CREATURE_INFO* creature) {
 		} else if(item->hit_status)
 			item->ai_bits &= ~FOLLOW;
 		else if(enemy_object != AI_FOLLOW)
-			FindAITargetObject(creature, AI_FOLLOW);
+			FindAITarGetObjectInfo(creature, AI_FOLLOW);
 		else if(abs(enemy->pos.x_pos - item->pos.x_pos) < 640 && abs(enemy->pos.y_pos - item->pos.y_pos) < 640 && abs(enemy->pos.z_pos - item->pos.z_pos) < 640) {
 			creature->reached_goal = 1;
 			item->ai_bits &= ~FOLLOW;

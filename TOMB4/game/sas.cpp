@@ -29,6 +29,8 @@
 #include "inputbuttons.h"
 #include "aibits.h"
 #include <cstdlib>
+#include "levelinfo.h"
+
 static short DragSASBounds[12] = { -256, 256, -100, 100, -512, -460, -1820, 1820, -5460, 5460, 0, 0 };
 static PHD_VECTOR DragSASPos = { 0, 0, -460 };
 static BITE_INFO sas_fire = { 0, 300, 64, 7 };
@@ -39,11 +41,11 @@ void InitialiseInjuredSas(short item_number) {
 	item = &items[item_number];
 
 	if(item->trigger_flags) {
-		item->anim_number = objects[SAS_DYING].anim_index;
+		item->anim_number = GetObjectInfo(currentLevel,SAS_DYING)->anim_index;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 	} else {
-		item->anim_number = objects[SAS_DYING].anim_index + 3;
+		item->anim_number = GetObjectInfo(currentLevel,SAS_DYING)->anim_index + 3;
 		item->current_anim_state = 4;
 		item->goal_anim_state = 4;
 	}
@@ -175,7 +177,7 @@ void InitialiseSas(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[SAS].anim_index + 12;
+	item->anim_number = GetObjectInfo(currentLevel,SAS)->anim_index + 12;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
@@ -211,7 +213,7 @@ void SasControl(short item_number) {
 
 	if(item->hit_points <= 0) {
 		if(item->current_anim_state != 7) {
-			item->anim_number = objects[item->object_number].anim_index + 19;
+			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 19;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 7;
 		}
@@ -257,7 +259,7 @@ void SasControl(short item_number) {
 			sas->flags = 0;
 			sas->maximum_turn = 0;
 
-			if(item->anim_number == objects[item->object_number].anim_index + 17) {
+			if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index + 17) {
 				if(abs(info.angle) < 1820)
 					item->pos.y_rot += info.angle;
 				else if(info.angle < 0)
@@ -491,7 +493,7 @@ void SasControl(short item_number) {
 
 		if(lara.blindTimer > 100 && item->current_anim_state != 17) {
 			sas->maximum_turn = 0;
-			item->anim_number = objects[SAS].anim_index + 28;
+			item->anim_number = GetObjectInfo(currentLevel,SAS)->anim_index + 28;
 			item->frame_number = anims[item->anim_number].frame_base + (GetRandomControl() & 7);
 			item->current_anim_state = 17;
 		}

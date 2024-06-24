@@ -32,6 +32,7 @@
 #include "phd3dpos.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
 
 LOCUST_STRUCT Locusts[64];
 
@@ -45,12 +46,12 @@ void InitialiseCroc(short item_number) {
 	InitialiseCreature(item_number);
 
 	if(room[item->room_number].flags & ROOM_UNDERWATER) {
-		item->anim_number = objects[CROCODILE].anim_index + 12;
+		item->anim_number = GetObjectInfo(currentLevel,CROCODILE)->anim_index + 12;
 		item->frame_number = anims[item->anim_number].frame_base;
 		item->current_anim_state = 8;
 		item->goal_anim_state = 8;
 	} else {
-		item->anim_number = objects[CROCODILE].anim_index;
+		item->anim_number = GetObjectInfo(currentLevel,CROCODILE)->anim_index;
 		item->frame_number = anims[item->anim_number].frame_base;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
@@ -99,13 +100,13 @@ void CrocControl(short item_number) {
 
 		if(item->current_anim_state != 7 && item->current_anim_state != 10) {
 			if(room[item->room_number].flags & ROOM_UNDERWATER) {
-				item->anim_number = objects[CROCODILE].anim_index + 16;
+				item->anim_number = GetObjectInfo(currentLevel,CROCODILE)->anim_index + 16;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 10;
 				item->goal_anim_state = 10;
 				item->hit_points = -16384;
 			} else {
-				item->anim_number = objects[CROCODILE].anim_index + 11;
+				item->anim_number = GetObjectInfo(currentLevel,CROCODILE)->anim_index + 11;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 7;
 				item->goal_anim_state = 7;
@@ -277,7 +278,7 @@ void CrocControl(short item_number) {
 			} else if(item->current_anim_state == 3) {
 				item->required_anim_state = 8;
 				item->goal_anim_state = 8;
-			} else if(item->anim_number != objects[CROCODILE].anim_index + 17) {
+			} else if(item->anim_number != GetObjectInfo(currentLevel,CROCODILE)->anim_index + 17) {
 				croc->LOT.step = 20480;
 				croc->LOT.drop = -20480;
 				croc->LOT.fly = 16;
@@ -400,7 +401,7 @@ void DrawLocusts() {
 		fx = &Locusts[i];
 
 		if(fx->On) {
-			meshpp = &meshes[objects[AHMET_MIP].mesh_index + 2 * (-GlobalCounter & 3)];
+			meshpp = &meshes[GetObjectInfo(currentLevel,AHMET_MIP)->mesh_index + 2 * (-GlobalCounter & 3)];
 			phd_PushMatrix();
 			phd_TranslateAbs(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
@@ -546,7 +547,7 @@ void TriggerCrocgodMissile(PHD_3DPOS* pos, short room_number, short num) {
 		fx->flag1 = 6;
 		fx->object_number = BUBBLES;
 		fx->speed = (GetRandomControl() & 0x1F) + 96;
-		fx->frame_number = objects[BUBBLES].mesh_index + 10;
+		fx->frame_number = GetObjectInfo(currentLevel,BUBBLES)->mesh_index + 10;
 	}
 }
 
@@ -605,7 +606,7 @@ void InitialiseCrocgod(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[MUTANT].anim_index;
+	item->anim_number = GetObjectInfo(currentLevel,MUTANT)->anim_index;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;

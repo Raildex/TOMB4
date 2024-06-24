@@ -42,6 +42,7 @@
 #include "roominfo.h"
 #include "meshinfo.h"
 #include "itemflags.h"
+#include "levelinfo.h"
 
 void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item) {
 	if(baddie->flags & 0x8000)
@@ -55,7 +56,7 @@ void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item) {
 	} else if(!item->item_flags[2]) {
 		baddie->hit_status = 1;
 
-		if((!objects[baddie->object_number].undead || baddie->object_number == SKELETON || baddie->object_number == MUMMY) && baddie->object_number != AHMET) {
+		if((!GetObjectInfo(currentLevel,baddie->object_number)->undead || baddie->object_number == SKELETON || baddie->object_number == MUMMY) && baddie->object_number != AHMET) {
 			HitTarget(baddie, 0, 30, 1);
 
 			if(baddie != lara_item) {
@@ -153,12 +154,12 @@ void FireCrossbow(PHD_3DPOS* pos) {
 
 void draw_shotgun_meshes(long weapon_type) {
 	lara.back_gun = 0;
-	lara.mesh_ptrs[LM_RHAND] = meshes[objects[WeaponObjectMesh(weapon_type)].mesh_index + 2 * LM_RHAND];
+	lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,WeaponObjectMesh(weapon_type))->mesh_index + 2 * LM_RHAND];
 }
 
 void undraw_shotgun_meshes(long weapon_type) {
 	lara.back_gun = (short)WeaponObject(weapon_type);
-	lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA].mesh_index + 2 * LM_RHAND];
+	lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + 2 * LM_RHAND];
 }
 
 void ready_shotgun(long weapon_type) {
@@ -170,7 +171,7 @@ void ready_shotgun(long weapon_type) {
 	lara.left_arm.z_rot = 0;
 	lara.left_arm.frame_number = 0;
 	lara.left_arm.lock = 0;
-	lara.left_arm.frame_base = objects[WeaponObject(weapon_type)].frame_base;
+	lara.left_arm.frame_base = GetObjectInfo(currentLevel,WeaponObject(weapon_type))->frame_base;
 
 	lara.right_arm.x_rot = 0;
 	lara.right_arm.y_rot = 0;
@@ -492,7 +493,7 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 		return;
 
 	if(!MustHitLastNode) {
-		num1 = objects[target->object_number].nmeshes;
+		num1 = GetObjectInfo(currentLevel,target->object_number)->nmeshes;
 		cs = num1 - 1;
 	} else {
 		num1 = GetSpheres(target, Slist, 1);
@@ -544,7 +545,7 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 	}
 
 	if(target->object_number == SKELETON) {
-		if(cs != -1 && objects[target->object_number].explodable_meshbits & 1 << cs) {
+		if(cs != -1 && GetObjectInfo(currentLevel,target->object_number)->explodable_meshbits & 1 << cs) {
 			ExplodeItemNode(target, cs, 0, 64);
 			target->mesh_bits &= ~(1 << cs);
 		}
@@ -565,7 +566,7 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 			}
 
 			if(target->object_number == SWITCH_TYPE7)
-				ExplodeItemNode(target, objects[SWITCH_TYPE7].nmeshes - 1, 0, 64);
+				ExplodeItemNode(target, GetObjectInfo(currentLevel,SWITCH_TYPE7)->nmeshes - 1, 0, 64);
 
 			AddActiveItem(target - items);
 			target->flags |= IFL_CODEBITS | IFL_SWITCH_ONESHOT;
@@ -629,17 +630,17 @@ void draw_shotgun(long weapon_type) {
 		item->object_number = (short)WeaponObject(weapon_type);
 
 		if(weapon_type == WEAPON_GRENADE)
-			item->anim_number = objects[GRENADE_GUN_ANIM].anim_index;
+			item->anim_number = GetObjectInfo(currentLevel,GRENADE_GUN_ANIM)->anim_index;
 		else
-			item->anim_number = objects[item->object_number].anim_index + 1;
+			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 1;
 
 		item->frame_number = anims[item->anim_number].frame_base;
 		item->status = ITEM_ACTIVE;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 		item->room_number = 255;
-		lara.left_arm.frame_base = objects[item->object_number].frame_base;
-		lara.right_arm.frame_base = objects[item->object_number].frame_base;
+		lara.left_arm.frame_base = GetObjectInfo(currentLevel,item->object_number)->frame_base;
+		lara.right_arm.frame_base = GetObjectInfo(currentLevel,item->object_number)->frame_base;
 	} else
 		item = &items[lara.weapon_item];
 
@@ -784,14 +785,14 @@ void ControlCrossbow(short item_number) {
 						KillItem(target - items);
 					} else if(target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8)
 						CrossbowHitSwitchType78(item, target, 0);
-					else if(objects[target->object_number].intelligent)
+					else if(GetObjectInfo(currentLevel,target->object_number)->intelligent)
 						DoGrenadeDamageOnBaddie(target, item);
 				} else if(target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8 || target->object_number == SKELETON)
 					CrossbowHitSwitchType78(item, target, 1);
-				else if(objects[target->object_number].intelligent) {
+				else if(GetObjectInfo(currentLevel,target->object_number)->intelligent) {
 					HitTarget(target, (GAME_VECTOR*)&item->pos, weapons[WEAPON_CROSSBOW].damage, 0);
 
-					if(item->item_flags[0] == 2 && !objects[target->object_number].undead)
+					if(item->item_flags[0] == 2 && !GetObjectInfo(currentLevel,target->object_number)->undead)
 						target->poisoned = 1;
 				}
 
@@ -1072,12 +1073,12 @@ void ControlGrenade(short item_number) {
 						}
 
 						if(target->object_number == SWITCH_TYPE7)
-							ExplodeItemNode(target, objects[SWITCH_TYPE7].nmeshes - 1, 0, 64);
+							ExplodeItemNode(target, GetObjectInfo(currentLevel,SWITCH_TYPE7)->nmeshes - 1, 0, 64);
 
 						AddActiveItem(target - items);
 						target->status = ITEM_ACTIVE;
 						target->flags |= IFL_SWITCH_ONESHOT | IFL_CODEBITS;
-					} else if(objects[target->object_number].intelligent || target->object_number == LARA)
+					} else if(GetObjectInfo(currentLevel,target->object_number)->intelligent || target->object_number == LARA)
 						DoGrenadeDamageOnBaddie(target, item);
 
 					j++;

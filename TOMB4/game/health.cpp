@@ -26,7 +26,7 @@
 #include "weapontypes.h"
 #include "gfleveloptions.h"
 #include <cstdio>
-
+#include "levelinfo.h"
 DISPLAYPU pickups[8];
 long PickupX;
 short CurrentPickup;
@@ -74,9 +74,9 @@ void DrawGameInfo(long timed) {
 					if(lara.target->dynamic_light)
 						S_DrawEnemyBar(100 * lara.target->hit_points / 100);
 					else
-						S_DrawEnemyBar(100 * lara.target->hit_points / objects[lara.target->object_number].hit_points);
+						S_DrawEnemyBar(100 * lara.target->hit_points / GetObjectInfo(currentLevel,lara.target->object_number)->hit_points);
 				} else
-					S_DrawEnemyBar(100 * lara.target->hit_points / objects[lara.target->object_number].hit_points);
+					S_DrawEnemyBar(100 * lara.target->hit_points / GetObjectInfo(currentLevel,lara.target->object_number)->hit_points);
 			}
 		}
 

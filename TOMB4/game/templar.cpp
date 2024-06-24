@@ -23,6 +23,7 @@
 #include "meshinfo.h"
 #include "floorinfo.h"
 #include <cstdlib>
+#include "levelinfo.h"
 static BITE_INFO templar_hit{ 0, 0, 0, 11 };
 
 void InitialiseTemplar(short item_number) {
@@ -30,7 +31,7 @@ void InitialiseTemplar(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[KNIGHTS_TEMPLAR].anim_index + 2;
+	item->anim_number = GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->anim_index + 2;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
@@ -51,7 +52,7 @@ void TemplarControl(short item_number) {
 		return;
 
 	item = &items[item_number];
-	anim = item->anim_number - objects[KNIGHTS_TEMPLAR].anim_index;
+	anim = item->anim_number - GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->anim_index;
 
 	if((!anim || anim == 1 || anim == 11 || anim == 12) && (GetRandomControl() & 1) != 0) {
 		pos.x = 0;
@@ -66,8 +67,8 @@ void TemplarControl(short item_number) {
 	torso_x = 0;
 	torso_y = 0;
 
-	if(item->hit_points < objects[KNIGHTS_TEMPLAR].hit_points)
-		item->hit_points = objects[KNIGHTS_TEMPLAR].hit_points;
+	if(item->hit_points < GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->hit_points)
+		item->hit_points = GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->hit_points;
 
 	if(item->ai_bits)
 		GetAITarget(knight);

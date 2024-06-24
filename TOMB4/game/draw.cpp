@@ -45,6 +45,7 @@
 #include "laraarm.h"
 #include "biteinfo.h"
 #include "types.h"
+#include "levelinfo.h"
 
 static BITE_INFO EnemyBites[2] = {
 	{ 0, -40, 272, 7 },
@@ -375,7 +376,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 	long frac, rate, clip, bit, rnd;
 
 	frac = GetFrames(item, frm, &rate);
-	obj = &objects[item->object_number];
+	obj = GetObjectInfo(currentLevel,item->object_number);
 	bite = &EnemyBites[obj->bite_offset];
 
 	if(obj->shadow_size)
@@ -397,7 +398,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 		phd_bottom = phd_winheight;
 	}
 
-	clip = S_GetObjectBounds(frm[0]);
+	clip = S_GetObjectInfoBounds(frm[0]);
 
 	if(clip) {
 		CalculateObjectLighting(item, frm[0]);
@@ -464,7 +465,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 					phd_RotYXZ_I(0, -0x3FFC, short((rnd << 14) + (rnd >> 2) - 4096));
 					mInterpolateMatrix();
 					// empty func call here
-					phd_PutPolygons(meshes[objects[GUN_FLASH].mesh_index], clip);
+					phd_PutPolygons(meshes[GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index], clip);
 					phd_PopMatrix_I();
 					item->fired_weapon--;
 				}
@@ -518,7 +519,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 					phd_RotX(-16380);
 					phd_TranslateRel(bite->x, bite->y, bite->z);
 					// empty func call here
-					phd_PutPolygons(meshes[objects[GUN_FLASH].mesh_index], clip);
+					phd_PutPolygons(meshes[GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index], clip);
 					phd_PopMatrix();
 					item->fired_weapon--;
 				}
@@ -546,15 +547,15 @@ static void DoMirrorStuff() {
 	if(BinocularRange) {
 		if(LaserSight) {
 			if(lara.gun_type == WEAPON_REVOLVER) {
-				lara.left_arm.anim_number = objects[SIXSHOOTER_ANIM].anim_index + 3;
-				lara.right_arm.anim_number = objects[SIXSHOOTER_ANIM].anim_index + 3;
+				lara.left_arm.anim_number = GetObjectInfo(currentLevel,SIXSHOOTER_ANIM)->anim_index + 3;
+				lara.right_arm.anim_number = GetObjectInfo(currentLevel,SIXSHOOTER_ANIM)->anim_index + 3;
 				lara.left_arm.frame_number = anims[lara.left_arm.anim_number].frame_base;
 				lara.right_arm.frame_number = anims[lara.right_arm.anim_number].frame_base;
 			}
 
 			if(lara.gun_type == WEAPON_CROSSBOW) {
-				lara.left_arm.anim_number = objects[CROSSBOW_ANIM].anim_index + 2;
-				lara.right_arm.anim_number = objects[CROSSBOW_ANIM].anim_index + 2;
+				lara.left_arm.anim_number = GetObjectInfo(currentLevel,CROSSBOW_ANIM)->anim_index + 2;
+				lara.right_arm.anim_number = GetObjectInfo(currentLevel,CROSSBOW_ANIM)->anim_index + 2;
 				lara.left_arm.frame_number = 0;
 				lara.right_arm.frame_number = 0;
 			}
@@ -564,7 +565,7 @@ static void DoMirrorStuff() {
 		} else {
 			lara_item->anim_number = ANIM_BINOCS;
 			lara_item->frame_number = anims[ANIM_BINOCS].frame_base;
-			lara.mesh_ptrs[LM_RHAND] = meshes[objects[MESHSWAP2].mesh_index + 2 * LM_RHAND];
+			lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 2 * LM_RHAND];
 		}
 	}
 
@@ -577,7 +578,7 @@ static void DoMirrorStuff() {
 		if(!LaserSight) {
 			lara_item->anim_number = old_anim;
 			lara_item->frame_number = old_frame;
-			lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA_SKIN].mesh_index + 2 * LM_RHAND];
+			lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + 2 * LM_RHAND];
 		}
 	}
 }
@@ -623,7 +624,7 @@ void DrawRooms(short CurrentRoom) {
 
 	if(outside) // inlined SkyDrawPhase? did it exist?
 	{
-		if(!objects[HORIZON].loaded)
+		if(!GetObjectInfo(currentLevel,HORIZON)->loaded)
 			outside = -1;
 		else {
 			if(BinocularRange)
@@ -671,7 +672,7 @@ void DrawRooms(short CurrentRoom) {
 			phd_PopMatrix();
 
 			if(gfLevelFlags & GF_HORIZON) {
-				phd_PutPolygonSkyMesh(meshes[objects[HORIZON].mesh_index], -1);
+				phd_PutPolygonSkyMesh(meshes[GetObjectInfo(currentLevel,HORIZON)->mesh_index], -1);
 				OutputSky();
 			}
 
@@ -682,7 +683,7 @@ void DrawRooms(short CurrentRoom) {
 		}
 	}
 
-	if(objects[LARA].loaded) {
+	if(GetObjectInfo(currentLevel,LARA)->loaded) {
 		if(!(lara_item->flags & IFL_INVISIBLE)) {
 			nPolyType = 4;
 
@@ -833,7 +834,7 @@ void RenderIt(short CurrentRoom) {
 	CreateFXBulbs();
 
 	if(outside) {
-		if(!objects[HORIZON].loaded)
+		if(!GetObjectInfo(currentLevel,HORIZON)->loaded)
 			outside = -1;
 		else {
 			if(BinocularRange)
@@ -862,7 +863,7 @@ void RenderIt(short CurrentRoom) {
 			phd_PopMatrix();
 
 			if(gfLevelFlags & GF_HORIZON) {
-				phd_PutPolygonSkyMesh(meshes[objects[HORIZON].mesh_index], -1);
+				phd_PutPolygonSkyMesh(meshes[GetObjectInfo(currentLevel,HORIZON)->mesh_index], -1);
 				OutputSky();
 			}
 
@@ -1106,7 +1107,7 @@ void DrawEffect(short fx_num) {
 	short* meshp;
 
 	fx = &effects[fx_num];
-	obj = &objects[fx->object_number];
+	obj = GetObjectInfo(currentLevel,fx->object_number);
 
 	if(obj->draw_routine && obj->loaded) {
 		phd_PushMatrix();
@@ -1165,7 +1166,7 @@ void PrintObjects(short room_number) {
 			phd_TranslateAbs(mesh->x, mesh->y, mesh->z);
 			phd_RotY(mesh->y_rot);
 			sinfo = &static_objects[mesh->static_number];
-			clip = S_GetObjectBounds(&sinfo->x_minp);
+			clip = S_GetObjectInfoBounds(&sinfo->x_minp);
 
 			if(clip) {
 				S_CalculateStaticMeshLight(mesh->x, mesh->y, mesh->z, mesh->shade, r);
@@ -1185,7 +1186,7 @@ void PrintObjects(short room_number) {
 	for(item_number = r->item_number; item_number != NO_ITEM; item_number = item->next_item) {
 		ClipRoomNum = room_number;
 		item = &items[item_number];
-		obj = &objects[item->object_number];
+		obj = GetObjectInfo(currentLevel,item->object_number);
 
 		if(item->status != ITEM_INVISIBLE) {
 			if(item->after_death)

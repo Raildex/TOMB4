@@ -42,6 +42,7 @@
 #include "floorinfo.h"
 #include "objectvector.h"
 #include <windows.h>
+#include "levelinfo.h"
 
 SAVEGAME_INFO savegame;
 
@@ -94,16 +95,16 @@ void SaveLaraData() {
 	for(int i = 0; i < 15; i++)
 		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] - (long)mesh_base);
 
-	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
-	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
+	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base - (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
+	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base - (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.GeneralPtr = (void*)((long)lara.GeneralPtr - (long)malloc_buffer);
 	memcpy(&savegame.Lara, &lara, sizeof(savegame.Lara));
 
 	for(int i = 0; i < 15; i++)
 		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)mesh_base);
 
-	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
-	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
+	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
+	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.GeneralPtr = (void*)((long)lara.GeneralPtr + (long)malloc_buffer);
 
 	if(lara.weapon_item != NO_ITEM) {
@@ -152,8 +153,8 @@ void RestoreLaraData(long FullSave) {
 	memcpy(&lara, &savegame.Lara, sizeof(lara));
 	lara.target = 0;
 	lara.spaz_effect = 0;
-	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
-	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
+	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
+	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.GeneralPtr = (void*)((long)lara.GeneralPtr + (long)malloc_buffer);
 
 	if(lara.burn) {
@@ -421,7 +422,7 @@ void SaveLevelData(long FullSave) {
 
 	for(int i = 0; i < level_items; i++) {
 		item = &items[i];
-		obj = &objects[item->object_number];
+		obj = GetObjectInfo(currentLevel,item->object_number);
 		packed = 0;
 
 		if(item->flags & IFL_CLEARBODY || (item->after_death && (item->object_number < GAME_PIECE1 || item->object_number > ENEMY_PIECE))) {
@@ -602,7 +603,7 @@ void SaveLevelData(long FullSave) {
 		}
 	}
 
-	if(objects[WHEEL_OF_FORTUNE].loaded) {
+	if(GetObjectInfo(currentLevel,WHEEL_OF_FORTUNE)->loaded) {
 		WriteSG(senet_item, sizeof(short) * 6);
 		WriteSG(senet_piece, sizeof(char) * 6);
 		WriteSG(senet_board, sizeof(char) * 17);
@@ -649,7 +650,7 @@ void SaveLevelData(long FullSave) {
 			item++;
 		}
 
-		if(objects[LITTLE_BEETLE].loaded) {
+		if(GetObjectInfo(currentLevel,LITTLE_BEETLE)->loaded) {
 			byte = 0;
 
 			for(int j = 0; j < 128; j++) {
@@ -823,7 +824,7 @@ void RestoreLevelData(long FullSave) {
 
 	for(int i = 0; i < level_items; i++) {
 		item = &items[i];
-		obj = &objects[item->object_number];
+		obj = GetObjectInfo(currentLevel,item->object_number);
 		ReadSG(&packed, sizeof(unsigned short));
 
 		if(packed & 0x2000) {
@@ -971,7 +972,7 @@ void RestoreLevelData(long FullSave) {
 			if(obj->collision == PuzzleHoleCollision) {
 				if(item->status == ITEM_DEACTIVATED || item->status == ITEM_ACTIVE) {
 					item->object_number += 12;
-					item->anim_number = objects[item->object_number].anim_index + anim;
+					item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + anim;
 				}
 			}
 
@@ -986,7 +987,7 @@ void RestoreLevelData(long FullSave) {
 		}
 	}
 
-	if(objects[WHEEL_OF_FORTUNE].loaded) {
+	if(GetObjectInfo(currentLevel,WHEEL_OF_FORTUNE)->loaded) {
 		ReadSG(senet_item, sizeof(short) * 6);
 		ReadSG(senet_piece, sizeof(char) * 6);
 		ReadSG(senet_board, sizeof(char) * 17);
@@ -1028,7 +1029,7 @@ void RestoreLevelData(long FullSave) {
 			}
 		}
 
-		if(objects[LITTLE_BEETLE].loaded) {
+		if(GetObjectInfo(currentLevel,LITTLE_BEETLE)->loaded) {
 			ReadSG(&byte, sizeof(char));
 
 			for(int i = 0; i < byte; i++) {

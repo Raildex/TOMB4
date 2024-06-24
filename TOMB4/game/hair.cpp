@@ -25,6 +25,7 @@
 #include "roominfo.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
 HAIR_STRUCT hairs[2][7];
 static long hair_wind = 0;
 static long hair_dwind_angle = 0;
@@ -37,7 +38,7 @@ void InitialiseHair() {
 	long* bone;
 
 	for(int i = 0; i < 2; i++) {
-		obj = &objects[HAIR];
+		obj = GetObjectInfo(currentLevel,HAIR);
 		bone = &bones[obj->bone_index];
 		bone += 4;
 		hptr = &hairs[i][0];
@@ -74,7 +75,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 	long frac, rate, water, height, size, dist, x, y, z, dx, dy, dz;
 	short room_num, spaz;
 
-	obj = &objects[LARA];
+	obj = GetObjectInfo(currentLevel,LARA);
 
 	if(!cutscenething) {
 		if(lara.hit_direction < 0) {
@@ -295,7 +296,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 	}
 
 	phd_PopMatrix();
-	obj = &objects[HAIR];
+	obj = GetObjectInfo(currentLevel,HAIR);
 	bone = &bones[obj->bone_index];
 	hair = &hairs[pigtail][0];
 
@@ -470,7 +471,7 @@ void DrawHair() {
 
 	for(int i = 0; i < 2; i++) {
 		ii = i * 6;
-		meshpp = &meshes[objects[HAIR].mesh_index];
+		meshpp = &meshes[GetObjectInfo(currentLevel,HAIR)->mesh_index];
 		meshpp += 2;
 
 		hair = &hairs[i][1];
@@ -492,7 +493,7 @@ void DrawHair() {
 			phd_PopMatrix();
 		}
 
-		meshpp = &meshes[objects[HAIR].mesh_index];
+		meshpp = &meshes[GetObjectInfo(currentLevel,HAIR)->mesh_index];
 
 		for(int j = 0; j < 6; j += 2, meshpp += 4) {
 			SkinVerticesToScratch(28 + ii + j);

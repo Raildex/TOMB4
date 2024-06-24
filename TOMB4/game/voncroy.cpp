@@ -35,6 +35,7 @@
 #include "biteinfo.h"
 #include <cstring>
 #include <cstdlib>
+#include "levelinfo.h"
 
 static BITE_INFO voncroy_hit = { 0, 35, 130, 18 };
 
@@ -216,12 +217,12 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 		input = 0;
 
 		if(item->item_flags[3] == 14) {
-			item->anim_number = objects[VON_CROY].anim_index + 43;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 43;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 27;
 			item->goal_anim_state = 30;
 		} else {
-			item->anim_number = objects[VON_CROY].anim_index + 4;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 4;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 1;
 			item->goal_anim_state = 1;
@@ -342,7 +343,7 @@ void InitialiseVoncroy(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[VON_CROY].anim_index + 11;
+	item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 11;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 6;
 	item->goal_anim_state = 6;
@@ -358,7 +359,7 @@ void VoncroyRaceControl(short item_number) {
 	AI_INFO info;
 	long Xoffset, Zoffset, x, y, z, nearheight, midheight, farheight, dx, dz, distance, ahead, iAngle, h, c;
 	short tilt, angle, torso_x, torso_y, head, room_number, jump_ahead, long_jump_ahead, ifl3;
-	static short* meshpp = meshes[objects[VON_CROY].mesh_index + 42];
+	static short* meshpp = meshes[GetObjectInfo(currentLevel,VON_CROY)->mesh_index + 42];
 	static long talk = 0;
 
 	if(!CreatureActive(item_number))
@@ -404,7 +405,7 @@ void VoncroyRaceControl(short item_number) {
 	GetAITarget(VonCroy);
 	oEnemy = VonCroy->enemy;
 
-	if(item->anim_number == objects[VON_CROY].anim_index + 36 || item->anim_number == objects[VON_CROY].anim_index + 52) {
+	if(item->anim_number == GetObjectInfo(currentLevel,VON_CROY)->anim_index + 36 || item->anim_number == GetObjectInfo(currentLevel,VON_CROY)->anim_index + 52) {
 		item->pos.x_pos += Xoffset;
 		item->pos.z_pos += Zoffset;
 		room_number = item->room_number;
@@ -445,18 +446,18 @@ void VoncroyRaceControl(short item_number) {
 		talk++;
 
 		if((talk > 0 && talk < 565) || (talk > 705 && talk < 927))
-			meshes[objects[VON_CROY].mesh_index + 42] = meshes[objects[ACTOR1_SPEECH_HEAD1 + (GetRandomControl() & 1)].mesh_index + 42];
+			meshes[GetObjectInfo(currentLevel,VON_CROY)->mesh_index + 42] = meshes[GetObjectInfo(currentLevel,ACTOR1_SPEECH_HEAD1 + (GetRandomControl() & 1))->mesh_index + 42];
 		else
-			meshes[objects[VON_CROY].mesh_index + 42] = meshpp;
+			meshes[GetObjectInfo(currentLevel,VON_CROY)->mesh_index + 42] = meshpp;
 
 		if(talk > 580 && talk < 693)
-			lara.mesh_ptrs[LM_HEAD] = meshes[objects[(GetRandomControl() & 3) + LARA_SPEECH_HEAD1].mesh_index + 2 * LM_HEAD];
+			lara.mesh_ptrs[LM_HEAD] = meshes[GetObjectInfo(currentLevel,(GetRandomControl() & 3) + LARA_SPEECH_HEAD1)->mesh_index + 2 * LM_HEAD];
 		else
-			lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA_SKIN].mesh_index + 2 * LM_HEAD];
+			lara.mesh_ptrs[LM_HEAD] = meshes[GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + 2 * LM_HEAD];
 	} else {
 		talk = 0;
-		lara.mesh_ptrs[LM_HEAD] = meshes[objects[LARA_SKIN].mesh_index + 2 * LM_HEAD];
-		meshes[objects[VON_CROY].mesh_index + 42] = meshpp;
+		lara.mesh_ptrs[LM_HEAD] = meshes[GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + 2 * LM_HEAD];
+		meshes[GetObjectInfo(currentLevel,VON_CROY)->mesh_index + 42] = meshpp;
 	}
 
 	switch(item->current_anim_state) {
@@ -478,7 +479,7 @@ void VoncroyRaceControl(short item_number) {
 		}
 
 		if(VonCroy->reached_goal) {
-			if(oEnemy && oEnemy->flags && (distance < 0x900000 || !objects[BAT].loaded) || lara.location > item->item_flags[3]) {
+			if(oEnemy && oEnemy->flags && (distance < 0x900000 || !GetObjectInfo(currentLevel,BAT)->loaded) || lara.location > item->item_flags[3]) {
 				if(item->item_flags[2] != 6)
 					item->item_flags[2] = 0;
 
@@ -490,7 +491,7 @@ void VoncroyRaceControl(short item_number) {
 
 				case 2:
 					item->current_anim_state = 29;
-					item->anim_number = objects[VON_CROY].anim_index + 37;
+					item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 37;
 					item->frame_number = anims[item->anim_number].frame_base;
 					item->pos = oEnemy->pos;
 					ifl3 = 1;
@@ -498,7 +499,7 @@ void VoncroyRaceControl(short item_number) {
 
 				case 4:
 					item->current_anim_state = 26;
-					item->anim_number = objects[VON_CROY].anim_index + 36;
+					item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 36;
 					item->frame_number = anims[item->anim_number].frame_base;
 					VonCroy->LOT.is_jumping = 1;
 					item->pos = oEnemy->pos;
@@ -567,7 +568,7 @@ void VoncroyRaceControl(short item_number) {
 				ifl3 = 1;
 		} else if(jump_ahead || long_jump_ahead) {
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 22;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 22;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 15;
 
@@ -705,18 +706,18 @@ void VoncroyRaceControl(short item_number) {
 
 	case 15:
 
-		if(item->anim_number == objects[VON_CROY].anim_index + 23)
+		if(item->anim_number == GetObjectInfo(currentLevel,VON_CROY)->anim_index + 23)
 			item->goal_anim_state = 3;
 
 		break;
 
 	case 16:
 
-		if(item->anim_number == objects[VON_CROY].anim_index + 25 || item->frame_number > anims[item->anim_number].frame_base + 7)
+		if(item->anim_number == GetObjectInfo(currentLevel,VON_CROY)->anim_index + 25 || item->frame_number > anims[item->anim_number].frame_base + 7)
 			VonCroy->LOT.is_jumping = 1;
 		else if(jump_ahead)
 			item->goal_anim_state = 15;
-		else if(!objects[BAT].loaded)
+		else if(!GetObjectInfo(currentLevel,BAT)->loaded)
 			item->goal_anim_state = 3;
 
 		if(item->item_flags[2] == 6)
@@ -778,7 +779,7 @@ void VoncroyRaceControl(short item_number) {
 
 	case 33:
 
-		if(item->anim_number == objects[VON_CROY].anim_index + 52 && item->frame_number == anims[item->anim_number].frame_base)
+		if(item->anim_number == GetObjectInfo(currentLevel,VON_CROY)->anim_index + 52 && item->frame_number == anims[item->anim_number].frame_base)
 			ifl3 = 1;
 
 		item->goal_anim_state = 2;
@@ -823,42 +824,42 @@ void VoncroyRaceControl(short item_number) {
 		switch(CreatureVault(item_number, angle, 2, 260)) {
 		case -4:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 35;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 35;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 25;
 			break;
 
 		case -3:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 41;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 41;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 24;
 			break;
 
 		case -2:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 42;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 42;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 23;
 			break;
 
 		case 2:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 29;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 29;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 19;
 			break;
 
 		case 3:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 28;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 28;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 18;
 			break;
 
 		case 4:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 27;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 27;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 17;
 			break;
@@ -952,7 +953,7 @@ void VoncroyControl(short item_number) {
 	if(target)
 		VonCroy->enemy = target;
 
-	if(item->anim_number == objects[VON_CROY].anim_index + 36 || item->anim_number == objects[VON_CROY].anim_index + 52) {
+	if(item->anim_number == GetObjectInfo(currentLevel,VON_CROY)->anim_index + 36 || item->anim_number == GetObjectInfo(currentLevel,VON_CROY)->anim_index + 52) {
 		item->pos.x_pos += Xoffset;
 		item->pos.z_pos += Zoffset;
 		room_number = item->room_number;
@@ -1012,7 +1013,7 @@ void VoncroyControl(short item_number) {
 
 	if((lara.locationPad == 9 || lara.locationPad == 10) && item->item_flags[3] == 11)
 		lara.locationPad = 11;
-	else if(lara.locationPad == 10 && item->item_flags[3] == 12 && (item->item_flags[0] || lara_item->anim_number == objects[LARA].anim_index + 90 && lara_item->frame_number == anims[lara_item->anim_number].frame_end)) {
+	else if(lara.locationPad == 10 && item->item_flags[3] == 12 && (item->item_flags[0] || lara_item->anim_number == GetObjectInfo(currentLevel,LARA)->anim_index + 90 && lara_item->frame_number == anims[lara_item->anim_number].frame_end)) {
 		lara.locationPad = (char)item->item_flags[3];
 		item->item_flags[0] = 1;
 	} else if(lara.locationPad == 43 && (item->item_flags[3] == 43 || item->item_flags[3] == 53)) {
@@ -1132,7 +1133,7 @@ void VoncroyControl(short item_number) {
 						break;
 
 					case 2:
-						item->anim_number = objects[VON_CROY].anim_index + 37;
+						item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 37;
 						item->frame_number = anims[item->anim_number].frame_base;
 						item->current_anim_state = 29;
 						item->pos = enemy->pos;
@@ -1140,7 +1141,7 @@ void VoncroyControl(short item_number) {
 						break;
 
 					case 4:
-						item->anim_number = objects[VON_CROY].anim_index + 36;
+						item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 36;
 						item->frame_number = anims[item->anim_number].frame_base;
 						item->current_anim_state = 26;
 						VonCroy->LOT.is_jumping = 1;
@@ -1158,7 +1159,7 @@ void VoncroyControl(short item_number) {
 
 					case 12:
 						VonCroy->maximum_turn = 0;
-						item->anim_number = objects[VON_CROY].anim_index + 22;
+						item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 22;
 						item->frame_number = anims[item->anim_number].frame_base;
 						item->current_anim_state = 15;
 
@@ -1333,7 +1334,7 @@ void VoncroyControl(short item_number) {
 
 			if(item->item_flags[3] == 6) {
 				VonCroy->maximum_turn = 0;
-				item->anim_number = objects[VON_CROY].anim_index + 22;
+				item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 22;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 15;
 				item->goal_anim_state = 16;
@@ -1347,7 +1348,7 @@ void VoncroyControl(short item_number) {
 
 	case 16:
 
-		if(item->anim_number == objects[VON_CROY].anim_index + 25 || item->frame_number > anims[item->anim_number].frame_base + 5)
+		if(item->anim_number == GetObjectInfo(currentLevel,VON_CROY)->anim_index + 25 || item->frame_number > anims[item->anim_number].frame_base + 5)
 			VonCroy->LOT.is_jumping = 1;
 		else if(jump_ahead)
 			item->goal_anim_state = 15;
@@ -1460,7 +1461,7 @@ void VoncroyControl(short item_number) {
 		VonCroy->maximum_turn = 0;
 		CreatureYRot(&item->pos, VonCroyAI.angle, 1092);
 
-		if(item->anim_number == objects[VON_CROY].anim_index + 47) {
+		if(item->anim_number == GetObjectInfo(currentLevel,VON_CROY)->anim_index + 47) {
 			if(item->frame_number == anims[item->anim_number].frame_base)
 				ifl3 = 1;
 		} else if(!(GetRandomControl() & 0x1F)) {
@@ -1472,7 +1473,7 @@ void VoncroyControl(short item_number) {
 
 	case 33:
 
-		if(item->anim_number == objects[VON_CROY].anim_index + 52 && item->frame_number == anims[item->anim_number].frame_base)
+		if(item->anim_number == GetObjectInfo(currentLevel,VON_CROY)->anim_index + 52 && item->frame_number == anims[item->anim_number].frame_base)
 			ifl3 = 1;
 
 		item->goal_anim_state = 2;
@@ -1516,42 +1517,42 @@ void VoncroyControl(short item_number) {
 		switch(CreatureVault(item_number, angle, 2, 260)) {
 		case -4:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 35;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 35;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 25;
 			break;
 
 		case -3:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 41;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 41;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 24;
 			break;
 
 		case -2:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 42;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 42;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 23;
 			break;
 
 		case 2:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 29;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 29;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 19;
 			break;
 
 		case 3:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 28;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 28;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 18;
 			break;
 
 		case 4:
 			VonCroy->maximum_turn = 0;
-			item->anim_number = objects[VON_CROY].anim_index + 27;
+			item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 27;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 17;
 			break;

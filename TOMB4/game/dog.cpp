@@ -18,6 +18,7 @@
 #include "itemstatus.h"
 #include "larainfo.h"
 #include "types.h"
+#include "levelinfo.h"
 static BITE_INFO dog_bite = { 0, 0, 100, 3 };
 static char DeathAnims[4] = { 20, 21, 22, 21 };
 
@@ -29,10 +30,10 @@ void InitialiseDog(short item_number) {
 	item->current_anim_state = 1;
 
 	if(item->trigger_flags) {
-		item->anim_number = objects[item->object_number].anim_index + 1;
+		item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 1;
 		item->status -= ITEM_INVISIBLE;
 	} else
-		item->anim_number = objects[item->object_number].anim_index + 8;
+		item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 8;
 
 	item->frame_number = anims[item->anim_number].frame_base;
 }
@@ -55,10 +56,10 @@ void DogControl(short item_number) {
 	dog = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0) {
-		if(item->anim_number == objects[item->object_number].anim_index + 1)
-			item->hit_points = objects[item->object_number].hit_points;
+		if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index + 1)
+			item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;
 		else if(item->current_anim_state != 11) {
-			item->anim_number = objects[item->object_number].anim_index + DeathAnims[GetRandomControl() & 3];
+			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + DeathAnims[GetRandomControl() & 3];
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 11;
 		}

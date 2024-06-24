@@ -42,6 +42,7 @@
 #include "combinelist.h"
 #include <dinput.h>
 #include <cstdio>
+#include "levelinfo.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4838)
@@ -609,9 +610,9 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 	unsigned long bit;
 	long poppush, alpha, compass;
 
-	anim = &anims[objects[item->object_number].anim_index];
+	anim = &anims[GetObjectInfo(currentLevel,item->object_number)->anim_index];
 	frmptr = anim->frame_ptr;
-	object = &objects[item->object_number];
+	object = GetObjectInfo(currentLevel,item->object_number);
 	phd_PushMatrix();
 	phd_RotYXZ(item->yrot, item->xrot, item->zrot);
 
@@ -1533,36 +1534,36 @@ void do_examine_mode() {
 void dels_give_lara_items_cheat() {
 	long piss;
 
-	if(objects[CROWBAR_ITEM].loaded)
+	if(GetObjectInfo(currentLevel,CROWBAR_ITEM)->loaded)
 		lara.crowbar = 1;
 
-	if(objects[CLOCKWORK_BEETLE].loaded)
+	if(GetObjectInfo(currentLevel,CLOCKWORK_BEETLE)->loaded)
 		lara.mechanical_scarab = 1;
 
 	for(piss = 0; piss < 12; piss++) {
-		if(objects[PUZZLE_ITEM1 + piss].loaded)
+		if(GetObjectInfo(currentLevel,PUZZLE_ITEM1 + piss)->loaded)
 			lara.puzzleitems[piss] = 1;
 	}
 
 	for(piss = 0; piss < 12; piss++) {
-		if(objects[KEY_ITEM1 + piss].loaded)
+		if(GetObjectInfo(currentLevel,KEY_ITEM1 + piss)->loaded)
 			lara.keyitems |= 1 << piss;
 	}
 
 	for(piss = 0; piss < 4; piss++) {
-		if(objects[PICKUP_ITEM1 + piss].loaded)
+		if(GetObjectInfo(currentLevel,PICKUP_ITEM1 + piss)->loaded)
 			lara.pickupitems |= 1 << piss;
 	}
 
 	for(piss = 0; piss < 6; piss++) {
-		if(objects[QUEST_ITEM1 + piss].loaded)
+		if(GetObjectInfo(currentLevel,QUEST_ITEM1 + piss)->loaded)
 			lara.questitems |= 1 << piss;
 	}
 
-	if(objects[WATERSKIN1_EMPTY].loaded)
+	if(GetObjectInfo(currentLevel,WATERSKIN1_EMPTY)->loaded)
 		lara.small_water_skin = 1;
 
-	if(objects[WATERSKIN2_EMPTY].loaded)
+	if(GetObjectInfo(currentLevel,WATERSKIN2_EMPTY)->loaded)
 		lara.big_water_skin = 1;
 
 	lara.pickupitemscombo = 0;

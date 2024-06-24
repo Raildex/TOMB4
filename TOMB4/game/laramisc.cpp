@@ -36,6 +36,7 @@
 #include "inputbuttons.h"
 #include "savegameinfo.h"
 #include <dinput.h>
+#include "levelinfo.h"
 
 COLL_INFO mycoll;
 
@@ -61,7 +62,7 @@ void LaraCheatyBits() {
 		lara.num_shotgun_ammo2 = -1;
 		savegame.HaveBikeBooster = 1;
 
-		if(objects[LASERSIGHT_ITEM].loaded)
+		if(GetObjectInfo(currentLevel,LASERSIGHT_ITEM)->loaded)
 			lara.lasersight = 1;
 
 		if(!(gfLevelFlags & GF_YOUNGLARA)) {
@@ -161,8 +162,8 @@ void InitialiseLaraAnims(ITEM_INFO* item) {
 
 void LaraInitialiseMeshes() {
 	for(int i = 0; i < 15; i++) {
-		meshes[objects[LARA].mesh_index + i * 2] = meshes[objects[LARA_SKIN].mesh_index + i * 2];
-		lara.mesh_ptrs[i] = meshes[objects[LARA].mesh_index + i * 2];
+		meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + i * 2] = meshes[GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + i * 2];
+		lara.mesh_ptrs[i] = meshes[GetObjectInfo(currentLevel,LARA)->mesh_index + i * 2];
 	}
 
 	if(lara.gun_type == WEAPON_GRENADE)

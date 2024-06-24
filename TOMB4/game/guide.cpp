@@ -28,6 +28,8 @@
 #include "itemflags.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
+
 static BITE_INFO guide_hit = { 0, 20, 200, 18 };
 static BITE_INFO guide_lighter = { 30, 80, 50, 15 };
 
@@ -36,12 +38,12 @@ void InitialiseGuide(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[GUIDE].anim_index + 4;
+	item->anim_number = GetObjectInfo(currentLevel,GUIDE)->anim_index + 4;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 
-	if(!objects[WRAITH1].loaded)
+	if(!GetObjectInfo(currentLevel,WRAITH1)->loaded)
 		item->meshswap_meshbits = 0x40000;
 	else {
 		item->meshswap_meshbits = 0;
@@ -85,7 +87,7 @@ void GuideControl(short item_number) {
 		TriggerFireFlame(pos.x, pos.y - 40, pos.z, -1, 7);
 		TriggerDynamic(pos.x, pos.y, pos.z, 15, r, g, b);
 
-		if(item->anim_number == objects[GUIDE].anim_index + 61) {
+		if(item->anim_number == GetObjectInfo(currentLevel,GUIDE)->anim_index + 61) {
 			if(item->frame_number > anims[item->anim_number].frame_base + 32 && item->frame_number < anims[item->anim_number].frame_base + 42) {
 				x = (rnd & 0x3F) + pos.x - 32;
 				y = ((rnd >> 3) & 0x3F) + pos.y - 128;
@@ -122,7 +124,7 @@ void GuideControl(short item_number) {
 	target = 0;
 	bestdist = 0x7FFFFFFF;
 
-	if(!objects[WRAITH1].loaded && (item->current_anim_state < 4 || item->current_anim_state == 31)) {
+	if(!GetObjectInfo(currentLevel,WRAITH1)->loaded && (item->current_anim_state < 4 || item->current_anim_state == 31)) {
 		for(int i = 0; i < 5; i++) {
 			if(baddie_slots[i].item_num != NO_ITEM && baddie_slots[i].item_num != item_number) {
 				candidate = &items[baddie_slots[i].item_num];
@@ -177,7 +179,7 @@ void GuideControl(short item_number) {
 			head = info.angle >> 1;
 		}
 
-		if(objects[WRAITH1].loaded) {
+		if(GetObjectInfo(currentLevel,WRAITH1)->loaded) {
 			if(item->item_flags[3] == 5 || item->item_flags[3] == 6) {
 				if(item->item_flags[3] == 5)
 					item->goal_anim_state = 2;
@@ -267,7 +269,7 @@ void GuideControl(short item_number) {
 		else if(info.ahead)
 			head = info.angle;
 
-		if(objects[WRAITH1].loaded && item->item_flags[3] == 5) {
+		if(GetObjectInfo(currentLevel,WRAITH1)->loaded && item->item_flags[3] == 5) {
 			item->item_flags[3] = 6;
 			item->goal_anim_state = 1;
 		} else if(item->item_flags[1] == 1) {
@@ -437,7 +439,7 @@ void GuideControl(short item_number) {
 
 		if(item->required_anim_state == 43)
 			item->goal_anim_state = 43;
-		else if(item->anim_number != objects[GUIDE].anim_index + 57 && item->frame_number == anims[item->anim_number].frame_end - 20) {
+		else if(item->anim_number != GetObjectInfo(currentLevel,GUIDE)->anim_index + 57 && item->frame_number == anims[item->anim_number].frame_end - 20) {
 			item->goal_anim_state = 1;
 			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			guide->reached_goal = 0;

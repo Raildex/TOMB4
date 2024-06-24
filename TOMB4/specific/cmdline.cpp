@@ -11,6 +11,7 @@
 #include "languages.h"
 #include "winapp.h"
 #include "dxdirectsoundinfo.h"
+#include <winuser.h>
 
 wchar_t ASCIIToANSITable[7][2] = {
 	{ L'�', L'�' },
@@ -253,7 +254,7 @@ char* MapASCIIToANSI(char* s, char* d) {
 	return p;
 }
 
-BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam) {
+BOOL __stdcall DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	static HFONT hfont = 0;
 	char d[256];
 
@@ -421,7 +422,7 @@ bool DXSetupDialog() {
 	long ret;
 
 	ShowCursor(1);
-	ret = DialogBox(App.hInstance, MAKEINTRESOURCE(109), 0, DXSetupDlgProc);
+	ret = DialogBoxA(App.hInstance, MAKEINTRESOURCE(109), 0, (DLGPROC)DXSetupDlgProc);
 	ShowCursor(0);
 
 	if(ret == -1) {

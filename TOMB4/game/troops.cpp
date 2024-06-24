@@ -19,6 +19,7 @@
 #include "biteinfo.h"
 #include "larainfo.h"
 #include <cstdlib>
+#include "levelinfo.h"
 
 static BITE_INFO troop_gun = { 0, 300, 64, 7 };
 
@@ -29,11 +30,11 @@ void InitialiseTroop(short item_number) {
 	InitialiseCreature(item_number);
 
 	if(item->trigger_flags == 1) {
-		item->anim_number = objects[TROOPS].anim_index + 27;
+		item->anim_number = GetObjectInfo(currentLevel,TROOPS)->anim_index + 27;
 		item->current_anim_state = 16;
 		item->goal_anim_state = 16;
 	} else {
-		item->anim_number = objects[TROOPS].anim_index + 12;
+		item->anim_number = GetObjectInfo(currentLevel,TROOPS)->anim_index + 12;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 	}
@@ -76,8 +77,8 @@ void TroopControl(short item_number) {
 			enemy = troop->enemy;
 
 			if(enemy && enemy->object_number == SCORPION && item->item_flags[0] < 80) {
-				if(enemy->anim_number == objects[SCORPION].anim_index + 6) {
-					item->anim_number = objects[item->object_number].anim_index + 23;
+				if(enemy->anim_number == GetObjectInfo(currentLevel,SCORPION)->anim_index + 6) {
+					item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 23;
 
 					if(item->current_anim_state == 16)
 						item->frame_number = anims[item->anim_number].frame_base + 37;
@@ -91,7 +92,7 @@ void TroopControl(short item_number) {
 				} else
 					item->item_flags[0]++;
 			} else {
-				item->anim_number = objects[item->object_number].anim_index + 19;
+				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 19;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 7;
 			}
@@ -154,7 +155,7 @@ void TroopControl(short item_number) {
 			troop->flags = 0;
 			troop->maximum_turn = 0;
 
-			if(item->anim_number == objects[item->object_number].anim_index + 17) {
+			if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index + 17) {
 				if(abs(info.angle) < 1820)
 					item->pos.y_rot += info.angle;
 				else if(info.angle < 0)
@@ -324,7 +325,7 @@ void TroopControl(short item_number) {
 		if(lara.blindTimer > 100) {
 			if(item->current_anim_state != 17 && item->current_anim_state != 16) {
 				troop->maximum_turn = 0;
-				item->anim_number = objects[TROOPS].anim_index + 28;
+				item->anim_number = GetObjectInfo(currentLevel,TROOPS)->anim_index + 28;
 				item->frame_number = anims[item->anim_number].frame_base + (GetRandomControl() & 7);
 				item->current_anim_state = 17;
 			}

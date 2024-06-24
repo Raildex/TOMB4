@@ -39,6 +39,7 @@
 #include "lightningstruct.h"
 #include "nodeoffsetinfo.h"
 #include "fvector.h"
+#include "levelinfo.h"
 
 NODEOFFSET_INFO NodeOffsets[16] = {
 	{ -16, 40, 160, -14, 0 },
@@ -150,7 +151,7 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 	short fx_number;
 
 	item = &items[item_number];
-	obj = &objects[item->object_number];
+	obj = GetObjectInfo(currentLevel,item->object_number);
 	frame = GetBestFrame(item);
 	phd_PushUnitMatrix();
 	phd_SetTrans(0, 0, 0);
@@ -288,7 +289,7 @@ void DrawGunshells() {
 		p = &Gunshells[i];
 
 		if(p->counter) {
-			obj = &objects[p->object_number];
+			obj = GetObjectInfo(currentLevel,p->object_number);
 			phd_PushMatrix();
 			phd_TranslateAbs(p->pos.x_pos, p->pos.y_pos, p->pos.z_pos);
 			phd_RotYXZ(p->pos.y_rot, p->pos.x_rot, p->pos.z_rot);
@@ -630,11 +631,11 @@ void UpdateFireSparks() {
 			sptr->RotAng = (sptr->RotAng + sptr->RotAdd) & 0xFFF;
 
 		if(sptr->R < 24 && sptr->G < 24 && sptr->B < 24)
-			sptr->Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 2);
+			sptr->Def = unsigned char(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 2);
 		else if(sptr->R < 80 && sptr->G < 80 && sptr->B < 80)
-			sptr->Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 1);
+			sptr->Def = unsigned char(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 1);
 		else
-			sptr->Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
+			sptr->Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
 
 		fade = ((sptr->sLife - sptr->Life) << 16) / sptr->sLife;
 		sptr->Yvel += sptr->Gravity;
@@ -723,7 +724,7 @@ void S_DrawFires() {
 		phd_PushMatrix();
 		phd_TranslateAbs(fire->x, fire->y, fire->z);
 
-		if(S_GetObjectBounds(bounds)) {
+		if(S_GetObjectInfoBounds(bounds)) {
 			if(fire->on == 1)
 				S_DrawFireSparks((unsigned char)fire->size, 255);
 			else
@@ -803,11 +804,11 @@ void UpdateSmokeSparks() {
 			sptr->Shade = sptr->dShade;
 
 		if(sptr->Shade < 24)
-			sptr->Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 2);
+			sptr->Def = unsigned char(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 2);
 		else if(sptr->Shade < 80)
-			sptr->Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 1);
+			sptr->Def = unsigned char(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 1);
 		else
-			sptr->Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
+			sptr->Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
 
 		if(sptr->Flags & 0x10)
 			sptr->RotAng = (sptr->RotAng + sptr->RotAdd) & 0xFFF;
@@ -895,14 +896,14 @@ void DrawWeaponMissile(ITEM_INFO* item) {
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	phd_PutPolygons_train(meshes[objects[item->object_number].mesh_index], 0);
+	phd_PutPolygons_train(meshes[GetObjectInfo(currentLevel,item->object_number)->mesh_index], 0);
 	phd_PopMatrix();
 
 	if(gfLevelFlags & GF_MIRROR && item->room_number == gfMirrorRoom) {
 		phd_PushMatrix();
 		phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, 2 * gfMirrorZPlane - item->pos.z_pos);
 		phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-		phd_PutPolygons_train(meshes[objects[item->object_number].mesh_index], 0);
+		phd_PutPolygons_train(meshes[GetObjectInfo(currentLevel,item->object_number)->mesh_index], 0);
 		phd_PopMatrix();
 	}
 }
@@ -1243,7 +1244,7 @@ void DrawGunflashes() {
 		mMXPtr[M23] = flash->mx[M23];
 		phd_RotZ(short(GetRandomDraw() << 1));
 		GlobalAmbient = 0xFF2F2F00;
-		phd_PutPolygons(meshes[objects[GUN_FLASH].mesh_index], -1);
+		phd_PutPolygons(meshes[GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index], -1);
 		flash->on = 0;
 	}
 
@@ -1632,7 +1633,7 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 		sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
 
 	sptr->Scalar = 1;
-	sptr->Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 14);
+	sptr->Def = unsigned char(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 14);
 	sptr->MaxYvel = 0;
 	sptr->Gravity = (GetRandomControl() & 0x3F) + 64;
 	sptr->Size = (GetRandomControl() & 0x1F) + 32;
@@ -1801,7 +1802,7 @@ void TriggerLightningGlow(long x, long y, long z, long rgb) {
 	sptr->Flags = 10;
 	sptr->Scalar = 3;
 	sptr->MaxYvel = 0;
-	sptr->Def = objects[DEFAULT_SPRITES].mesh_index + 11;
+	sptr->Def = GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11;
 	sptr->Gravity = 0;
 	sptr->Size = (rgb >> 24) + (GetRandomControl() & 3);
 	sptr->dSize = sptr->Size;

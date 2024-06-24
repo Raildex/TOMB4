@@ -42,6 +42,9 @@
 #include "types.h"
 #include "ropestruct.h"
 #include <cstdlib>
+#include "levelinfo.h"
+
+
 void (*lara_control_routines[118])(ITEM_INFO* item, COLL_INFO* coll) = {
 	lara_as_walk,
 	lara_as_run,
@@ -2452,9 +2455,9 @@ void lara_as_controlled(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(item->anim_number == ANIM_MINEDETECT) {
 		if(item->frame_number == anims[ANIM_MINEDETECT].frame_base + 16)
-			lara.mesh_ptrs[LM_RHAND] = meshes[objects[MESHSWAP3].mesh_index + 2 * LM_RHAND];
+			lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 2 * LM_RHAND];
 		else if(item->frame_number == anims[ANIM_MINEDETECT].frame_base + 118)
-			lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA_SKIN].mesh_index + 2 * LM_RHAND];
+			lara.mesh_ptrs[LM_RHAND] = meshes[GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + 2 * LM_RHAND];
 	}
 
 	if(item->frame_number == anims[item->anim_number].frame_end - 1) {

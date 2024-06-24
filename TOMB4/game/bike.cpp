@@ -45,6 +45,7 @@
 #include "laramesh.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
 
 static ITEM_INFO* GlobalBikeItem;
 static long bikefspeed = 0;
@@ -159,12 +160,12 @@ void DrawBikeBeam(ITEM_INFO* item) {
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	bounds = S_GetObjectBounds(frm[0]);
+	bounds = S_GetObjectInfoBounds(frm[0]);
 
 	if(bounds) {
 		CalculateObjectLighting(item, frm[0]);
 		bounds = 1;
-		obj = &objects[item->object_number];
+		obj = GetObjectInfo(currentLevel,item->object_number);
 		meshpp = &meshes[obj->mesh_index];
 		meshpp += 2;
 		bone = &bones[obj->bone_index];
@@ -293,7 +294,7 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 		sptr->Flags = 522;
 
 	sptr->Scalar = 1;
-	sptr->Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
+	sptr->Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
 	sptr->Gravity = -4 - (GetRandomControl() & 3);
 	sptr->MaxYvel = -8 - (GetRandomControl() & 7);
 	sptr->dSize = unsigned char((GetRandomControl() & 7) + (velocity >> 7) + 32);
@@ -375,9 +376,9 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 
 	if(item->pos.y_pos != item->floor && state != 8 && state != 17 && state != 20 && !killed) {
 		if(bike->velocity < 0)
-			lara_item->anim_number = objects[VEHICLE_EXTRA].anim_index + 6;
+			lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 6;
 		else
-			lara_item->anim_number = objects[VEHICLE_EXTRA].anim_index + 22;
+			lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 22;
 
 		lara_item->goal_anim_state = 8;
 		lara_item->current_anim_state = 8;
@@ -387,25 +388,25 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 		case 13:
 			lara_item->goal_anim_state = 12;
 			lara_item->current_anim_state = 12;
-			lara_item->anim_number = objects[VEHICLE_EXTRA].anim_index + 12;
+			lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 12;
 			break;
 
 		case 14:
 			lara_item->goal_anim_state = 11;
 			lara_item->current_anim_state = 11;
-			lara_item->anim_number = objects[VEHICLE_EXTRA].anim_index + 11;
+			lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 11;
 			break;
 
 		case 11:
 			lara_item->goal_anim_state = 13;
 			lara_item->current_anim_state = 13;
-			lara_item->anim_number = objects[VEHICLE_EXTRA].anim_index + 14;
+			lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 14;
 			break;
 
 		default:
 			lara_item->goal_anim_state = 14;
 			lara_item->current_anim_state = 14;
-			lara_item->anim_number = objects[VEHICLE_EXTRA].anim_index + 13;
+			lara_item->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 13;
 			break;
 		}
 
@@ -539,10 +540,10 @@ void BikeStart(ITEM_INFO* item, ITEM_INFO* l) {
 	lara.hit_direction = -1;
 	l->goal_anim_state = 15;
 	l->current_anim_state = 15;
-	l->anim_number = objects[VEHICLE_EXTRA].anim_index + 18;
+	l->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 18;
 	l->frame_number = anims[l->anim_number].frame_base;
 	l->gravity_status = 0;
-	item->anim_number = l->anim_number + objects[MOTORBIKE].anim_index - objects[VEHICLE_EXTRA].anim_index;
+	item->anim_number = l->anim_number + GetObjectInfo(currentLevel,MOTORBIKE)->anim_index - GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index;
 	item->frame_number = l->frame_number + anims[item->anim_number].frame_base - anims[l->anim_number].frame_base;
 	item->flags |= IFL_TRIGGERED;
 	item->hit_points = 1;
@@ -700,11 +701,11 @@ void BikeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		if(angle <= -8190 || angle >= 24570) {
 			if(GLOBAL_inventoryitemchosen == PUZZLE_ITEM1) {
-				l->anim_number = objects[VEHICLE_EXTRA].anim_index + 28;
+				l->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 28;
 				GLOBAL_inventoryitemchosen = NO_ITEM;
 				savegame.HaveBikeBooster = 1;
 			} else
-				l->anim_number = objects[VEHICLE_EXTRA].anim_index + 9;
+				l->anim_number = GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index + 9;
 
 			l->goal_anim_state = 9;
 			l->current_anim_state = 9;
@@ -756,7 +757,7 @@ long BikeBaddieCollision(ITEM_INFO* bike) {
 			item = &items[item_number];
 
 			if(item->collidable && item->status != ITEM_INVISIBLE && item != lara_item && item != bike) {
-				obj = &objects[item->object_number];
+				obj = GetObjectInfo(currentLevel,item->object_number);
 
 				if(obj->collision && obj->intelligent) {
 					dx = bike->pos.x_pos - item->pos.x_pos;
@@ -1352,7 +1353,7 @@ void BikeControl(short item_number) {
 		lara_item->pos.z_rot = item->pos.z_rot;
 		AnimateBike(item, hitWall, killed);
 		AnimateItem(lara_item);
-		item->anim_number = objects[MOTORBIKE].anim_index + lara_item->anim_number - objects[VEHICLE_EXTRA].anim_index;
+		item->anim_number = GetObjectInfo(currentLevel,MOTORBIKE)->anim_index + lara_item->anim_number - GetObjectInfo(currentLevel,VEHICLE_EXTRA)->anim_index;
 		item->frame_number = lara_item->frame_number + anims[item->anim_number].frame_base - anims[lara_item->anim_number].frame_base;
 		camera.target_elevation = -5460;
 

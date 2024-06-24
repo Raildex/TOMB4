@@ -46,6 +46,8 @@
 #include "timing.h"
 #include "displaypu.h"
 #include <cmath>
+#include <wingdi.h>
+#include "levelinfo.h"
 
 _D3DTLVERTEX SkinVerts[40][12];
 short SkinClip[40][12];
@@ -109,6 +111,10 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 				val = point->vec.x * n.x + point->vec.y * n.y + point->vec.z * n.z;
 
 				if(val > 0) {
+					#if defined(HALF_LAMBERT)
+					val = val * 0.5 + 0.5;
+					val *= val;
+					#endif
 					val *= point->rad;
 					fR += val * point->r;
 					fG += val * point->g;
@@ -121,6 +127,10 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 				val = point->vec.x * n.x + point->vec.y * n.y + point->vec.z * n.z;
 
 				if(val > 0) {
+					#if defined(HALF_LAMBERT)
+					val = val * 0.5 + 0.5;
+					val *= val;
+					#endif
 					val *= point->rad;
 					fR += val * point->r;
 					fG += val * point->g;
@@ -133,6 +143,10 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 				val = sun->vec.x * n.x + sun->vec.y * n.y + sun->vec.z * n.z;
 
 				if(val > 0) {
+					#if defined(HALF_LAMBERT)
+					val = val * 0.5 + 0.5;
+					val *= val;
+					#endif
 					if(!InventoryActive)
 						val *= 0.75F;
 					else
@@ -741,10 +755,10 @@ void phd_PutPolygons(short* objptr, long clip) {
 	if(!objptr)
 		return;
 
-	if(objptr == meshes[objects[LARA_DOUBLE].mesh_index] || objptr == meshes[objects[LARA_DOUBLE].mesh_index + 2])
-		envmap_sprite = &spriteinfo[objects[SKY_GRAPHICS].mesh_index];
+	if(objptr == meshes[GetObjectInfo(currentLevel,LARA_DOUBLE)->mesh_index] || objptr == meshes[GetObjectInfo(currentLevel,LARA_DOUBLE)->mesh_index + 2])
+		envmap_sprite = &spriteinfo[GetObjectInfo(currentLevel,SKY_GRAPHICS)->mesh_index];
 	else
-		envmap_sprite = &spriteinfo[objects[DEFAULT_SPRITES].mesh_index + 11];
+		envmap_sprite = &spriteinfo[GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11];
 
 	ResetLighting();
 
@@ -1093,7 +1107,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	bWaterEffect = 0;
 	SetD3DViewMatrix();
 	mesh = (MESH_DATA*)objptr;
-	envmap_sprite = &spriteinfo[objects[DEFAULT_SPRITES].mesh_index + 11];
+	envmap_sprite = &spriteinfo[GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11];
 
 	ResetLighting();
 	ambientR = CLRR(color);
@@ -1346,7 +1360,7 @@ void S_DrawPickup(short object_number) {
 	DrawThreeDeeObject2D(x, y, convert_obj_to_invobj(object_number), 128, 0, (GnFrameCounter & 0x7F) << 9, 0, 0, 1);
 }
 
-long S_GetObjectBounds(short* bounds) {
+long S_GetObjectInfoBounds(short* bounds) {
 	FVECTOR vtx[8];
 	float xMin, xMax, yMin, yMax, zMin, zMax, numZ, xv, yv, zv;
 
@@ -1459,7 +1473,7 @@ HRESULT DDCopyBitmap(IDirectDrawSurface4* surf, HBITMAP hbm, long x, long y, lon
 		OutputDebugString("createcompatible dc failed\n");
 
 	SelectObject(hdc, hbm);
-	GetObject(hbm, sizeof(BITMAP), &bitmap);
+	GetObjectA(hbm, sizeof(BITMAP), &bitmap);
 
 	if(!dx)
 		dx = bitmap.bmWidth;

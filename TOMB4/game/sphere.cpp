@@ -9,6 +9,7 @@
 #include "objectinfo.h"
 #include "types.h"
 #include <cstring>
+#include "levelinfo.h"
 
 SPHERE Slist[34];
 char GotLaraSpheres;
@@ -48,7 +49,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 	phd_TranslateRel(frame[6], frame[7], frame[8]);
 	rot = frame + 9;
 	gar_RotYXZsuperpack(&rot, 0);
-	obj = &objects[item->object_number];
+	obj = GetObjectInfo(currentLevel,item->object_number);
 	meshpp = &meshes[obj->mesh_index];
 	meshp = *meshpp;
 	meshpp += 2;
@@ -190,7 +191,7 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 	mMx = mMXPtr;
 	mIMx = mIMptr;
 	iMx = phd_mxptr;
-	obj = &objects[item->object_number];
+	obj = GetObjectInfo(currentLevel,item->object_number);
 	frac = GetFrames(item, frm, &rate);
 
 	phd_PushUnitMatrix();

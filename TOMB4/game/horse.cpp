@@ -24,6 +24,7 @@
 #include "itemflags.h"
 #include "biteinfo.h"
 #include <cstdlib>
+#include "levelinfo.h"
 
 static BITE_INFO horseman_axe = { 0, 0, 0, 6 };
 static BITE_INFO horseman_lfoot = { 0, 0, 0, 14 };
@@ -37,7 +38,7 @@ void InitialiseHorseman(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[HORSEMAN].anim_index + 8;
+	item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 8;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->goal_anim_state = 9;
 	item->current_anim_state = 9;
@@ -101,7 +102,7 @@ void HorsemanControl(short item_number) {
 
 			if(!item->item_flags[1]) {
 				if(item->current_anim_state != 16) {
-					item->anim_number = objects[HORSEMAN].anim_index + 21;
+					item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 21;
 					item->frame_number = anims[item->anim_number].frame_base;
 					item->current_anim_state = 16;
 
@@ -113,7 +114,7 @@ void HorsemanControl(short item_number) {
 				item->ai_bits = 0;
 				item->item_flags[1] = 0;
 				horseman->enemy = 0;
-				item->anim_number = objects[HORSEMAN].anim_index + 3;
+				item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 3;
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 8;
 				item2->goal_anim_state = 1;
@@ -268,7 +269,7 @@ void HorsemanControl(short item_number) {
 				horseman->maximum_turn = 0;
 
 				if(item->frame_number == anims[item->anim_number].frame_base) {
-					item2->anim_number = objects[HORSE].anim_index + 1;
+					item2->anim_number = GetObjectInfo(currentLevel,HORSE)->anim_index + 1;
 					item2->frame_number = anims[item->anim_number].frame_base;
 					item2->current_anim_state = 4;
 				}
@@ -338,7 +339,7 @@ void HorsemanControl(short item_number) {
 					item->pos = item2->pos;
 					horseman->reached_goal = 0;
 					horseman->enemy = 0;
-					item->anim_number = objects[HORSEMAN].anim_index + 14;
+					item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 14;
 					item->frame_number = anims[item->anim_number].frame_base;
 					item->current_anim_state = 5;
 					horseman->maximum_turn = 0;
@@ -418,8 +419,8 @@ void HorsemanControl(short item_number) {
 					horseman->flags = 1;
 				}
 
-				if(item->anim_number == objects[HORSEMAN].anim_index + 29 && item->frame_number == anims[item->anim_number].frame_base) {
-					item2->anim_number = objects[HORSE].anim_index + 10;
+				if(item->anim_number == GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 29 && item->frame_number == anims[item->anim_number].frame_base) {
+					item2->anim_number = GetObjectInfo(currentLevel,HORSE)->anim_index + 10;
 					item2->frame_number = anims[item2->anim_number].frame_base;
 				}
 
@@ -455,9 +456,9 @@ void HorsemanControl(short item_number) {
 		}
 
 		if(item->item_flags[1])
-			objects[HORSEMAN].radius = 409;
+			GetObjectInfo(currentLevel,HORSEMAN)->radius = 409;
 		else
-			objects[HORSEMAN].radius = 170;
+			GetObjectInfo(currentLevel,HORSEMAN)->radius = 170;
 
 		CreatureAnimation(item_number, angle, 0);
 	}
@@ -540,7 +541,7 @@ void InitialiseHorse(short item_number) {
 	ITEM_INFO* item;
 
 	item = &items[item_number];
-	item->anim_number = objects[HORSE].anim_index + 2;
+	item->anim_number = GetObjectInfo(currentLevel,HORSE)->anim_index + 2;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->goal_anim_state = 1;
 	item->current_anim_state = 1;

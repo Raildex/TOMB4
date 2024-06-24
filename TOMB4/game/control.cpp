@@ -78,6 +78,8 @@
 #include "animcommands.h"
 #include "sfxtypes.h"
 #include <dinput.h>
+#include "levelinfo.h"
+
 ITEM_INFO* items;
 ANIM_STRUCT* anims;
 ROOM_INFO* room;
@@ -360,8 +362,8 @@ long ControlPhase(long nframes, long demo_mode) {
 			nex = item->next_active;
 
 			if(item->after_death < 128) {
-				if(objects[item->object_number].control)
-					objects[item->object_number].control(item_num);
+				if(GetObjectInfo(currentLevel,item->object_number)->control)
+					GetObjectInfo(currentLevel,item->object_number)->control(item_num);
 			} else
 				KillItem(item_num);
 
@@ -377,8 +379,8 @@ long ControlPhase(long nframes, long demo_mode) {
 			fx = &effects[fx_num];
 			nex = fx->next_active;
 
-			if(objects[fx->object_number].control)
-				objects[fx->object_number].control(fx_num);
+			if(GetObjectInfo(currentLevel,fx->object_number)->control)
+				GetObjectInfo(currentLevel,fx->object_number)->control(fx_num);
 
 			fx_num = nex;
 		}
@@ -544,7 +546,7 @@ void RemoveRoomFlipItems(ROOM_INFO* r) {
 	for(short item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item) {
 		item = &items[item_num];
 
-		if(item->flags & IFL_INVISIBLE && objects[item->object_number].intelligent) {
+		if(item->flags & IFL_INVISIBLE && GetObjectInfo(currentLevel,item->object_number)->intelligent) {
 			if(item->hit_points <= 0 && item->hit_points != -16384)
 				KillItem(item_num);
 		}
@@ -602,7 +604,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 
 	if((*data & 0x1F) == CLIMB_TYPE) {
 		if(!heavy) {
-			quad = unsigned short(lara_item->pos.y_rot + 8192) >> 14;
+			quad = (unsigned short)(lara_item->pos.y_rot + 8192) >> 14;
 
 			if((1 << (quad + 8)) & *data)
 				lara.climb_status = 1;
@@ -785,7 +787,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 				item->flags |= IFL_INVISIBLE;
 
 			if(!item->active) {
-				if(objects[item->object_number].intelligent) {
+				if(GetObjectInfo(currentLevel,item->object_number)->intelligent) {
 					if(item->status == ITEM_INACTIVE) {
 						item->touch_bits = 0;
 						item->status = ITEM_ACTIVE;
@@ -1361,8 +1363,8 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 
 				item = &items[trigger & 0x3FF];
 
-				if(objects[item->object_number].floor && !(item->flags & 0x8000))
-					objects[item->object_number].floor(item, x, y, z, &height);
+				if(GetObjectInfo(currentLevel,item->object_number)->floor && !(item->flags & 0x8000))
+					GetObjectInfo(currentLevel,item->object_number)->floor(item, x, y, z, &height);
 
 			} while(!(trigger & 0x8000));
 
@@ -1626,8 +1628,8 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 					} else {
 						item = &items[trigger & 0x3FF];
 
-						if(objects[item->object_number].ceiling && !(item->flags & 0x8000))
-							objects[item->object_number].ceiling(item, x, y, z, &height);
+						if(GetObjectInfo(currentLevel,item->object_number)->ceiling && !(item->flags & 0x8000))
+							GetObjectInfo(currentLevel,item->object_number)->ceiling(item, x, y, z, &height);
 					}
 
 				} while(!(trigger & 0x8000));
@@ -2168,7 +2170,7 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits) {
 		SoundEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
 
 	GetSpheres(item, Slist, 3);
-	object = &objects[item->object_number];
+	object = GetObjectInfo(currentLevel,item->object_number);
 	meshpp = &meshes[object->mesh_index + Node * 2];
 	ShatterItem.Bit = 1 << Node;
 	ShatterItem.meshp = *meshpp;
@@ -2348,30 +2350,30 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 					shotitem = &items[item_no];
 
 					if(shotitem->object_number != SWITCH_TYPE7 && shotitem->object_number != SWITCH_TYPE8) {
-						if(objects[shotitem->object_number].explodable_meshbits & ShatterItem.Bit && LaserSight) {
+						if(GetObjectInfo(currentLevel,shotitem->object_number)->explodable_meshbits & ShatterItem.Bit && LaserSight) {
 							ShatterObject(&ShatterItem, 0, 128, target.room_number, 0);
 							shotitem->mesh_bits &= ~ShatterItem.Bit;
 							TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 						} else if(DrawTarget && lara.gun_type == WEAPON_REVOLVER) {
-							if(objects[shotitem->object_number].intelligent)
+							if(GetObjectInfo(currentLevel,shotitem->object_number)->intelligent)
 								HitTarget(shotitem, &target, weapons[lara.gun_type].damage, 0);
 						} else {
-							if(objects[shotitem->object_number].HitEffect == 1)
+							if(GetObjectInfo(currentLevel,shotitem->object_number)->HitEffect == 1)
 								DoBloodSplat(target.x, target.y, target.z, (GetRandomControl() & 3) + 3, shotitem->pos.y_rot, shotitem->room_number);
-							else if(objects[shotitem->object_number].HitEffect == 2)
+							else if(GetObjectInfo(currentLevel,shotitem->object_number)->HitEffect == 2)
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, -5);
-							else if(objects[shotitem->object_number].HitEffect == 3)
+							else if(GetObjectInfo(currentLevel,shotitem->object_number)->HitEffect == 3)
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 
 							shotitem->hit_status = 1;
 
-							if(!objects[shotitem->object_number].undead)
+							if(!GetObjectInfo(currentLevel,shotitem->object_number)->undead)
 								shotitem->hit_points -= weapons[lara.gun_type].damage;
 						}
 					} else {
-						if(ShatterItem.Bit == 1 << (objects[shotitem->object_number].nmeshes - 1) && !(shotitem->flags & IFL_SWITCH_ONESHOT)) {
+						if(ShatterItem.Bit == 1 << (GetObjectInfo(currentLevel,shotitem->object_number)->nmeshes - 1) && !(shotitem->flags & IFL_SWITCH_ONESHOT)) {
 							if(shotitem->object_number == SWITCH_TYPE7)
-								ExplodeItemNode(shotitem, objects[shotitem->object_number].nmeshes - 1, 0, 64);
+								ExplodeItemNode(shotitem, GetObjectInfo(currentLevel,shotitem->object_number)->nmeshes - 1, 0, 64);
 
 							if(shotitem->flags & IFL_CODEBITS && (shotitem->flags & IFL_CODEBITS) != IFL_CODEBITS) {
 								room_number = shotitem->room_number;
@@ -2462,7 +2464,7 @@ void AnimateItem(ITEM_INFO* item) {
 
 				case ACMD_KILL:
 
-					if(objects[item->object_number].intelligent)
+					if(GetObjectInfo(currentLevel,item->object_number)->intelligent)
 						item->after_death = 1;
 
 					item->status = ITEM_DEACTIVATED;
@@ -2508,7 +2510,7 @@ void AnimateItem(ITEM_INFO* item) {
 					num = cmd[1] & 0x3FFF;
 					type = cmd[1] & 0xC000;
 
-					if(objects[item->object_number].water_creature) {
+					if(GetObjectInfo(currentLevel,item->object_number)->water_creature) {
 						if(room[item->room_number].flags & ROOM_UNDERWATER)
 							SoundEffect(num, &item->pos, SFX_WATER);
 						else
@@ -2753,7 +2755,7 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 		ClosestNode = -1;
 	else {
 		item = &items[item_number];
-		obj = &objects[item->object_number];
+		obj = GetObjectInfo(currentLevel,item->object_number);
 		meshpp = &meshes[obj->mesh_index];
 
 		GetSpheres(item, Slist, 1);

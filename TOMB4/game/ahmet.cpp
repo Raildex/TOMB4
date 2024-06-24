@@ -33,6 +33,8 @@
 #include "larainfo.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
+
 short ScalesBounds[12] = { -1408, -640, 0, 0, -512, 512, -1820, 1820, -5460, 5460, -1820, 1820 };
 static BITE_INFO ahmet_bite = { 0, 0, 0, 11 };
 static BITE_INFO ahmet_left_claw = { 0, 0, 0, 16 };
@@ -130,11 +132,11 @@ long ReTriggerAhmet(short item_number) {
 		if(item->room_number != IsRoomOutsideNo)
 			ItemNewRoom(item_number, IsRoomOutsideNo);
 
-		item->anim_number = objects[AHMET].anim_index;
+		item->anim_number = GetObjectInfo(currentLevel,AHMET)->anim_index;
 		item->frame_number = anims[item->anim_number].frame_base;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
-		item->hit_points = objects[AHMET].hit_points;
+		item->hit_points = GetObjectInfo(currentLevel,AHMET)->hit_points;
 		AddActiveItem(item_number);
 		item->flags &= ~IFL_INVISIBLE;
 		item->after_death = 0;
@@ -160,7 +162,7 @@ void ScalesControl(short item_number) {
 
 	if(item->frame_number == anims[item->anim_number].frame_end) {
 		if(item->current_anim_state == 1 || item->item_flags[1]) {
-			if(item->anim_number == objects[item->object_number].anim_index) {
+			if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index) {
 				RemoveActiveItem(item_number);
 				item->status = ITEM_INACTIVE;
 				item->item_flags[1] = 0;
@@ -214,7 +216,7 @@ void InitialiseAhmet(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[AHMET].anim_index;
+	item->anim_number = GetObjectInfo(currentLevel,AHMET)->anim_index;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
@@ -254,7 +256,7 @@ void AhmetControl(short item_number) {
 				return;
 			}
 		} else {
-			item->anim_number = objects[item->object_number].anim_index + 10;
+			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 10;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 7;
 			lara.spaz_effect_count = item_number;
@@ -373,10 +375,10 @@ void AhmetControl(short item_number) {
 		case 5:
 			ahmet->maximum_turn = 0;
 
-			if(item->anim_number == objects[AHMET].anim_index + 3) {
+			if(item->anim_number == GetObjectInfo(currentLevel,AHMET)->anim_index + 3) {
 				if(abs(info.angle) < 910)
 					item->pos.y_rot += info.angle;
-			} else if(!ahmet->flags && item->anim_number == objects[AHMET].anim_index + 4 && frame > base + 11 && item->touch_bits & 0xC00) {
+			} else if(!ahmet->flags && item->anim_number == GetObjectInfo(currentLevel,AHMET)->anim_index + 4 && frame > base + 11 && item->touch_bits & 0xC00) {
 				lara_item->hit_status = 1;
 				lara_item->hit_points -= 120;
 				CreatureEffectT(item, &ahmet_bite, 20, -1, DoBloodSplat);
@@ -389,7 +391,7 @@ void AhmetControl(short item_number) {
 			ahmet->maximum_turn = 0;
 
 
-			if(item->anim_number == objects[AHMET].anim_index + 7) {
+			if(item->anim_number == GetObjectInfo(currentLevel,AHMET)->anim_index + 7) {
 				if(abs(info.angle) < 910)
 					item->pos.y_rot += info.angle;
 				else if(info.angle < 0)

@@ -16,7 +16,7 @@
 #include "objectinfo.h"
 #include "roominfo.h"
 #include "fxinfo.h"
-
+#include "levelinfo.h"
 short next_fx_active;
 short next_item_active;
 
@@ -110,7 +110,7 @@ void InitialiseItem(short item_num) {
 	FLOOR_INFO* floor;
 
 	item = &items[item_num];
-	item->anim_number = objects[item->object_number].anim_index;
+	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = anims[item->anim_number].current_anim_state;
 	item->goal_anim_state = anims[item->anim_number].current_anim_state;
@@ -131,7 +131,7 @@ void InitialiseItem(short item_num) {
 	item->item_flags[1] = 0;
 	item->item_flags[2] = 0;
 	item->item_flags[3] = 0;
-	item->hit_points = objects[item->object_number].hit_points;
+	item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;
 	item->poisoned = 0;
 	item->collidable = 1;
 	item->timer = 0;
@@ -153,7 +153,7 @@ void InitialiseItem(short item_num) {
 	if(item->flags & IFL_INVISIBLE) {
 		item->status = ITEM_INVISIBLE;
 		item->flags -= IFL_INVISIBLE;
-	} else if(objects[item->object_number].intelligent)
+	} else if(GetObjectInfo(currentLevel,item->object_number)->intelligent)
 		item->status = ITEM_INVISIBLE;
 
 	if((item->flags & IFL_CODEBITS) == IFL_CODEBITS) {
@@ -170,8 +170,8 @@ void InitialiseItem(short item_num) {
 	item->floor = floor->floor << 8;
 	item->box_number = floor->box;
 
-	if(objects[item->object_number].initialise)
-		objects[item->object_number].initialise(item_num);
+	if(GetObjectInfo(currentLevel,item->object_number)->initialise)
+		GetObjectInfo(currentLevel,item->object_number)->initialise(item_num);
 
 	item->il.fcnt = -1;
 	item->il.room_number = -1;
@@ -228,7 +228,7 @@ void AddActiveItem(short item_num) {
 	item = &items[item_num];
 	item->flags |= IFL_TRIGGERED;
 
-	if(objects[item->object_number].control) {
+	if(GetObjectInfo(currentLevel,item->object_number)->control) {
 		if(!item->active) {
 			item->active = 1;
 			item->next_active = next_item_active;

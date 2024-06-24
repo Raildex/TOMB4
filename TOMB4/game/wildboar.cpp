@@ -15,6 +15,7 @@
 #include "biteinfo.h"
 #include "types.h"
 #include <cstdlib>
+#include "levelinfo.h"
 
 static BITE_INFO wildboar_bite = { 0, 0, 0, 14 };
 
@@ -23,7 +24,7 @@ void InitialiseWildboar(short item_number) {
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[WILD_BOAR].anim_index + 6;
+	item->anim_number = GetObjectInfo(currentLevel,WILD_BOAR)->anim_index + 6;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
@@ -53,7 +54,7 @@ void WildboarControl(short item_number) {
 		item->hit_points = 0;
 
 		if(item->current_anim_state != 5) {
-			item->anim_number = objects[WILD_BOAR].anim_index + 5;
+			item->anim_number = GetObjectInfo(currentLevel,WILD_BOAR)->anim_index + 5;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 5;
 		}

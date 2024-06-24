@@ -58,6 +58,7 @@
 #include "larainfo.h"
 #include "languages.h"
 #include <process.h>
+#include "levelinfo.h"
 
 TEXTURESTRUCT* textinfo;
 SPRITESTRUCT* spriteinfo;
@@ -90,6 +91,7 @@ unsigned int __stdcall LoadLevel(void* name) {
 
 	Log(2, "LoadLevel");
 	FreeLevel();
+	currentLevel = CreateLevel();
 	memset(malloc_ptr, 0, MALLOC_SIZE);
 	memset(&lara, 0, sizeof(LARA_INFO));
 
@@ -168,7 +170,7 @@ unsigned int __stdcall LoadLevel(void* name) {
 		S_LoadBar();
 
 		for(int i = 0; i < 3; i++) {
-			obj = &objects[WATERFALL1 + i];
+			obj = GetObjectInfo(currentLevel,WATERFALL1 + i);
 
 			if(obj->loaded) {
 				tex = &textinfo[mesh_vtxbuf[obj->mesh_index]->gt4[4] & 0x7FFF];
@@ -211,6 +213,8 @@ long S_LoadLevelFile(long num) {
 }
 
 void FreeLevel() {
+	if(currentLevel)
+		DestroyLevel(currentLevel);
 	MESH_DATA** vbuf;
 	MESH_DATA* mesh;
 	ROOM_INFO* r;
@@ -410,7 +414,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 		Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
 		nTex = nTextures;
 		nTextures++;
-		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 3, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
+		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 8, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
 		DXAttempt(tSurf->QueryInterface(TEXGUID, (LPVOID*)&pTex));
 		Textures[nTex].tex = pTex;
 		Textures[nTex].surface = tSurf;
@@ -433,7 +437,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 		Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
 		nTex = nTextures;
 		nTextures++;
-		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 2, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
+		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 8, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
 		DXAttempt(tSurf->QueryInterface(TEXGUID, (LPVOID*)&pTex));
 		Textures[nTex].tex = pTex;
 		Textures[nTex].surface = tSurf;
@@ -456,12 +460,12 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 
 		for(int i = 0; i < BTPages; i++) {
 			if(i < (BTPages >> 1))
-				tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 4, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
+				tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 8, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
 			else {
 				if(!App.BumpMapping)
 					break;
 
-				tSurf = CreateTexturePage(App.BumpMapSize, App.BumpMapSize, 4, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
+				tSurf = CreateTexturePage(App.BumpMapSize, App.BumpMapSize, 8, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
 			}
 
 			Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
@@ -573,7 +577,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 	Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
 	nTex = nTextures;
 	nTextures++;
-	tSurf = CreateTexturePage(256, 256, 4, (long*)TextureData, 0, 0);
+	tSurf = CreateTexturePage(256, 256, 8, (long*)TextureData, 0, 0);
 	DXAttempt(tSurf->QueryInterface(TEXGUID, (LPVOID*)&pTex));
 	Textures[nTex].tex = pTex;
 	Textures[nTex].surface = tSurf;
@@ -725,7 +729,6 @@ bool LoadObjects(char** FileData) {
 	static long num_meshes, num_anims;
 
 	Log(2, "LoadObjects");
-	memset(objects, 0, sizeof(objects));
 	memset(static_objects, 0, sizeof(STATIC_INFO) * NUMBER_STATIC_OBJECTS);
 
 	size = *(long*)*FileData;
@@ -790,7 +793,7 @@ bool LoadObjects(char** FileData) {
 	for(int i = 0; i < num; i++) {
 		slot = *(long*)*FileData;
 		*FileData += sizeof(long);
-		obj = &objects[slot];
+		obj = GetObjectInfo(currentLevel,slot);
 
 		obj->nmeshes = *(short*)*FileData;
 		*FileData += sizeof(short);
@@ -813,7 +816,7 @@ bool LoadObjects(char** FileData) {
 	CreateSkinningData();
 
 	for(int i = 0; i < NUMBER_OBJECTS; i++) {
-		obj = &objects[i];
+		obj = GetObjectInfo(currentLevel,i);
 		obj->mesh_index *= 2;
 	}
 
@@ -909,7 +912,7 @@ bool LoadSprites(char** FileData) {
 			stat->mesh_number = *(short*)*FileData;
 			*FileData += sizeof(short);
 		} else {
-			obj = &objects[slot];
+			obj = GetObjectInfo(currentLevel,slot);
 			obj->nmeshes = *(short*)*FileData;
 			*FileData += sizeof(short);
 			obj->mesh_index = *(short*)*FileData;

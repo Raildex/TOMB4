@@ -30,6 +30,7 @@
 #include "larawaterstatus.h"
 #include "inputbuttons.h"
 #include "phdvector.h"
+#include "levelinfo.h"
 
 unsigned char NumRPickups;
 unsigned char RPickups[16];
@@ -84,7 +85,7 @@ void SarcophagusCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			pickup = &items[pickup_num];
 
 			if(item != pickup && item->pos.x_pos == pickup->pos.x_pos && item->pos.z_pos == pickup->pos.z_pos) {
-				if(objects[pickup->object_number].collision == PickUpCollision) {
+				if(GetObjectInfo(currentLevel,pickup->object_number)->collision == PickUpCollision) {
 					AddDisplayPickup(pickup->object_number);
 					pickup->item_flags[3] = 1;
 					pickup->status = ITEM_INVISIBLE;
@@ -152,7 +153,7 @@ void PuzzleDoneCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 
 void PuzzleDone(ITEM_INFO* item, short item_number) {
 	item->object_number += 12;
-	item->anim_number = objects[item->object_number].anim_index;
+	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = anims[item->anim_number].current_anim_state;
 	item->goal_anim_state = item->current_anim_state;
@@ -200,7 +201,7 @@ short* FindPlinth(ITEM_INFO* item) {
 	while(1) {
 		plinth = &items[item_num];
 
-		if(item != plinth && objects[plinth->object_number].collision != PickUpCollision && item->pos.x_pos == plinth->pos.x_pos && item->pos.y_pos <= plinth->pos.y_pos && item->pos.z_pos == plinth->pos.z_pos)
+		if(item != plinth && GetObjectInfo(currentLevel,plinth->object_number)->collision != PickUpCollision && item->pos.x_pos == plinth->pos.x_pos && item->pos.y_pos <= plinth->pos.y_pos && item->pos.z_pos == plinth->pos.z_pos)
 			break;
 
 		item_num = plinth->next_item;
