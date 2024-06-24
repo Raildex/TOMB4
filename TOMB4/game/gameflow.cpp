@@ -190,7 +190,7 @@ void DoGameflow()
 
 		case CMD_LEVEL:
 			gfLevelFlags = gf[1] | (gf[2] << 8);
-
+			gfLevelFlags &= ~ GF_YOUNGLARA;
 			if (!(gfLevelFlags & GF_NOLEVEL))
 				DoLevel(gf[3], gf[4]);
 			else
@@ -507,20 +507,22 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 	ScreenFadeBack = 0;
 	dScreenFade = 255;
 	ScreenFade = 255;
-
+#if defined(CUTS_ENABLED) // no cutscenes
 	if (!gfCutNumber || CheckCutPlayed(gfCutNumber))
+	#endif
 	{
 		cutseq_num = 0;
 		gfCutNumber = 0;
 		SetScreenFadeIn(16);
 	}
+	#if defined(CUTS_ENABLED)
 	else
 	{
 		cutseq_num = gfCutNumber;
 		gfCutNumber = 0;
 		ScreenFadedOut = 1;
 	}
-
+#endif
 	InitialiseCamera();
 	bUseSpotCam = 0;
 	gfGameMode = 0;
@@ -541,8 +543,9 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 		}
 
 		nFrames = DrawPhaseGame();
+#if 0
 		handle_cutseq_triggering(Name);
-
+#endif
 		if (DEL_playingamefmv)
 		{
 			DEL_playingamefmv = 0;
