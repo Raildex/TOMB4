@@ -25,5 +25,6 @@ struct DEBRIS_STRUCT {
 	long color3;
 	long ambient;
 	long flags;
+	unsigned char nBounces;
 };
 #endif// TOMB4_GAME_DEBRISSTRUCT_H

@@ -40,8 +40,8 @@ void UpdateDebris() {
 		if(dptr->On) {
 			dptr->Yvel += dptr->Gravity;
 
-			if (dptr->Yvel > 4096)
-				dptr->Yvel = 4096;
+			if (dptr->Yvel > 8192)
+				dptr->Yvel = 8192;
 
 			dptr->Speed -= dptr->Speed >> 4;
 			dptr->x += dptr->Speed * phd_sin(dptr->Dir) >> W2V_SHIFT;
@@ -51,8 +51,14 @@ void UpdateDebris() {
 			height = GetHeight(floor, dptr->x, dptr->y, dptr->z);
 			ceiling = GetCeiling(floor, dptr->x, dptr->y, dptr->z);
 
-			if (dptr->y >= height || dptr->y < ceiling)
-				dptr->On = 0;
+			if (dptr->y >= height || dptr->y < ceiling) {
+				if(dptr->nBounces >= 3) {
+					dptr->On = 0;
+				} else {
+					dptr->Yvel = -(dptr->Yvel>> 2)<<1;
+					dptr->nBounces++;
+				}
+			}
 			else {
 				dptr->XRot += dptr->Yvel >> 6;
 
@@ -77,6 +83,7 @@ void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels,
 
 	dptr = &debris[GetFreeDebris()];
 	dptr->On = 1;
+	dptr->nBounces = 0;
 	dptr->x = pos->x;
 	dptr->y = pos->y;
 	dptr->z = pos->z;
