@@ -2289,7 +2289,7 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 				ItemPos.z_pos = mesh->z;
 				ItemPos.y_rot = mesh->y_rot;
 
-				if(DoRayBox(start, target, &static_objects[mesh->static_number].x_minc, &ItemPos, Coord, -1 - mesh->static_number)) {
+				if(DoRayBox(start, target, GetStaticObjectBounds(currentLevel,mesh->static_number), &ItemPos, Coord, -1 - mesh->static_number)) {
 					*StaticMesh = mesh;
 					target->room_number = los_rooms[i];
 				}

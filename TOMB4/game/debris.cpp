@@ -18,6 +18,7 @@
 #include "staticinfo.h"
 #include "types.h"
 #include <d3d.h>
+#include "levelinfo.h"
 DEBRIS_STRUCT debris[256];
 long next_debris;
 short DebrisFlags;
@@ -223,7 +224,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 		RotY = shatter_item->YRot;
 		rgb = 0;
 	} else {
-		meshp = meshes[static_objects[StaticMesh->static_number].mesh_number];
+		meshp = meshes[GetStaticObject(currentLevel,StaticMesh->static_number)->mesh_number];
 		TPos.x = StaticMesh->x;
 		TPos.y = StaticMesh->y;
 		TPos.z = StaticMesh->z;

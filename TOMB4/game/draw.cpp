@@ -52,8 +52,6 @@ static BITE_INFO EnemyBites[2] = {
 	{ 0, -20, 180, 11 }
 };
 
-STATIC_INFO static_objects[NUMBER_STATIC_OBJECTS];
-
 long IM_rate;
 long IM_frac;
 
@@ -1165,7 +1163,7 @@ void PrintObjects(short room_number) {
 			phd_PushMatrix();
 			phd_TranslateAbs(mesh->x, mesh->y, mesh->z);
 			phd_RotY(mesh->y_rot);
-			sinfo = &static_objects[mesh->static_number];
+			sinfo = GetStaticObject(currentLevel,mesh->static_number);
 			clip = S_GetObjectInfoBounds(&sinfo->x_minp);
 
 			if(clip) {

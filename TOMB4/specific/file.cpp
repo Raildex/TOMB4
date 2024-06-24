@@ -728,9 +728,6 @@ bool LoadObjects(char** FileData) {
 	long size, num, slot;
 	static long num_meshes, num_anims;
 
-	Log(2, "LoadObjects");
-	memset(static_objects, 0, sizeof(STATIC_INFO) * NUMBER_STATIC_OBJECTS);
-
 	size = *(long*)*FileData;
 	*FileData += sizeof(long);
 	mesh_base = (short*)game_malloc(size * sizeof(short));
@@ -838,7 +835,7 @@ bool LoadObjects(char** FileData) {
 	for(int i = 0; i < num; i++) {
 		slot = *(long*)*FileData;
 		*FileData += sizeof(long);
-		stat = &static_objects[slot];
+		stat = GetStaticObject(currentLevel,slot);
 
 		stat->mesh_number = *(short*)*FileData;
 		*FileData += sizeof(short);
@@ -854,7 +851,7 @@ bool LoadObjects(char** FileData) {
 	}
 
 	for(int i = 0; i < NUMBER_STATIC_OBJECTS; i++) {
-		stat = &static_objects[i];
+		stat = GetStaticObject(currentLevel,i);
 		stat->mesh_number *= 2;
 	}
 
@@ -906,7 +903,7 @@ bool LoadSprites(char** FileData) {
 
 		if(slot >= NUMBER_OBJECTS) {
 			slot -= NUMBER_OBJECTS;
-			stat = &static_objects[slot];
+			stat = GetStaticObject(currentLevel,slot);
 			stat->mesh_number = *(short*)*FileData;
 			*FileData += sizeof(short);
 			stat->mesh_number = *(short*)*FileData;
@@ -1113,7 +1110,7 @@ bool LoadItems(char** FileData) {
 			floor = &(r->floor[x * r->x_size + z]);
 
 			if(!(boxes[floor->box].overlap_index & 0x4000) && (gfCurrentLevel != 4 || i != 19 && i != 23 && i != 16)) {
-				stat = &static_objects[r->mesh[j].static_number];
+				stat = GetStaticObject(currentLevel,r->mesh[j].static_number);
 				y = floor->floor << 8;
 
 				if(y <= (r->mesh[j].y - stat->y_maxc + 512) && y < r->mesh[j].y - stat->y_minc) {

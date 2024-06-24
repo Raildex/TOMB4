@@ -308,7 +308,7 @@ void FlameTorchControl(short item_number) {
 			if(!GetObjectInfo(currentLevel,itemlist[0]->object_number)->intelligent)
 				ObjectCollision(itemlist[0] - items, item, &mycoll);
 		} else {
-			sinfo = &static_objects[meshlist[0]->static_number];
+			sinfo = GetStaticObject(currentLevel,meshlist[0]->static_number);
 			pos.x_pos = meshlist[0]->x;
 			pos.y_pos = meshlist[0]->y;
 			pos.z_pos = meshlist[0]->z;

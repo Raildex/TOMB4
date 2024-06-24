@@ -38,7 +38,6 @@ void UpdateSkyLightning();
 void mRotBoundingBoxNoPersp(short* bounds, short* rotatedBounds);
 void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds);
 
-extern STATIC_INFO static_objects[];
 
 extern long IM_rate;
 extern long IM_frac;

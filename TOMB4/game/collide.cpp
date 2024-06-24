@@ -90,7 +90,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 
 			for(j = r->num_meshes; j > 0; j--, mesh++) {
 				if(mesh->Flags & 1) {
-					bounds = &static_objects[mesh->static_number].x_minc;
+					bounds = GetStaticObjectBounds(currentLevel,mesh->static_number);
 
 					if(item->pos.y_pos + rad + 128 >= mesh->y + bounds[2] && item->pos.y_pos - rad - 128 <= mesh->y + bounds[3]) {
 						sy = phd_sin(mesh->y_rot);
@@ -453,7 +453,7 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 		mesh = r->mesh;
 
 		for(j = r->num_meshes; j > 0; j--, mesh++) {
-			sinfo = &static_objects[mesh->static_number];
+			sinfo = GetStaticObject(currentLevel,mesh->static_number);
 
 			if(!(mesh->Flags & 1))
 				continue;
@@ -582,7 +582,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 				dz = l->pos.z_pos - mesh->z;
 
 				if(dx > -3072 && dx < 3072 && dy > -3072 && dy < 3072 && dz > -3072 && dz < 3072) {
-					bounds = &static_objects[mesh->static_number].x_minc;
+					bounds = GetStaticObjectBounds(currentLevel,mesh->static_number);
 					pos.x_pos = mesh->x;
 					pos.y_pos = mesh->y;
 					pos.z_pos = mesh->z;

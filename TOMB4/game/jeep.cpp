@@ -1039,7 +1039,7 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 		mesh = r->mesh;
 
 		for(j = r->num_meshes; j > 0; j--, mesh++) {
-			sinfo = &static_objects[mesh->static_number];
+			sinfo = GetStaticObject(currentLevel,mesh->static_number);
 
 			if(mesh->Flags & 1) {
 				if(mesh->static_number >= SHATTER0 && mesh->static_number <= SHATTER9) {

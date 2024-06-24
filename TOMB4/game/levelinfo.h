@@ -14,6 +14,7 @@ void DestroyLevel(LEVEL_INFO* lvl);
 
 OBJECT_INFO* GetObjectInfo(LEVEL_INFO* lvl, long type);
 STATIC_INFO* GetStaticObject(LEVEL_INFO* lvl, long type);
+short* GetStaticObjectBounds(LEVEL_INFO*, long type);
 ANIM_STRUCT* GetAnim(LEVEL_INFO* lvl, long anim);
 ITEM_INFO* GetItem(LEVEL_INFO* lvl, long item);
 FX_INFO* GetEffect(LEVEL_INFO* lvl, long fx);

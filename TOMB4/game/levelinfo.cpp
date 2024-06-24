@@ -34,3 +34,7 @@ OBJECT_INFO* GetObjectInfo(LEVEL_INFO* lvl, long type) {
 STATIC_INFO* GetStaticObject(LEVEL_INFO* lvl, long type) {
 	return lvl->statics + type;
 }
+
+short* GetStaticObjectBounds(LEVEL_INFO* lvl,long type) {
+	return &((lvl->statics + type)->x_minc);
+}
