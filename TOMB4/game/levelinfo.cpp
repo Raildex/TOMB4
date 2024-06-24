@@ -97,8 +97,8 @@ bool LoadObjects(char** FileData,LEVEL_INFO* lvl) {
 
 	size = *(long*)*FileData;
 	*FileData += sizeof(long);
-	bones = (long*)calloc(size,sizeof(long));
-	memcpy(bones, *FileData, sizeof(long) * size);
+	lvl->bones = (long*)calloc(size,sizeof(long));
+	memcpy(lvl->bones, *FileData, sizeof(long) * size);
 	*FileData += sizeof(long) * size;
 
 	size = *(long*)*FileData;
@@ -515,4 +515,8 @@ short* GetAnimFrameBase(LEVEL_INFO* lvl) {
 
 short* GetAnimCommand(LEVEL_INFO* lvl, long index) {
 	return lvl->commands + index;
+}
+
+long* GetBone(LEVEL_INFO* lvl, long index) {
+	return lvl->bones + index;
 }

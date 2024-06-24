@@ -408,7 +408,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 
 		bit = 1;
 		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
-		bone = &bones[obj->bone_index];
+		bone = GetBone(currentLevel,obj->bone_index);
 
 		if(frac) {
 			InitInterpolate(frac, rate);

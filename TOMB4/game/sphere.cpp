@@ -53,7 +53,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 	meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
 	meshp = *meshpp;
 	meshpp += 2;
-	bone = &bones[obj->bone_index];
+	bone = GetBone(currentLevel,obj->bone_index);
 
 	phd_PushMatrix();
 
@@ -203,7 +203,7 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 	if(!extra_rotation)
 		extra_rotation = no_rotation;
 
-	bone = &bones[obj->bone_index];
+	bone = GetBone(currentLevel,obj->bone_index);
 
 	if(frac) {
 		InitInterpolate2(frac, rate);

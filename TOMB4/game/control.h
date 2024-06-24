@@ -46,7 +46,6 @@ long GetMaximumFloor(FLOOR_INFO* floor, long x, long z);
 long GetMinimumCeiling(FLOOR_INFO* floor, long x, long z);
 
 extern ITEM_INFO* items;
-extern long* bones;
 extern long level_items;
 
 extern short* OutsideRoomOffsets;

@@ -84,7 +84,7 @@ void CreateSkinningData() {
 		SkinXYZPtr->z = 0;
 		obj = GetObjectInfo(currentLevel,LARA_SKIN);
 		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
-		bone = &bones[obj->bone_index];
+		bone = GetBone(currentLevel,obj->bone_index);
 		aboveMeshNum = SkinJoints[i][0];
 		belowMeshNum = SkinJoints[i][1];
 		aboveMesh = (MESH_DATA*)*meshpp;
@@ -125,7 +125,7 @@ void CreateSkinningData() {
 		SkinXYZPtr->y = 0;
 		SkinXYZPtr->z = 0;
 		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
-		bone = &bones[obj->bone_index];
+		bone = GetBone(currentLevel,obj->bone_index);
 
 		if(belowMeshNum) {
 			meshpp++;
@@ -162,7 +162,7 @@ void CreateSkinningData() {
 		SkinXYZPtr->z = 0;
 		obj = GetObjectInfo(currentLevel,LARA_SKIN_JOINTS);
 		meshpp = GetMeshPointer(currentLevel,obj->mesh_index + 1);
-		bone = &bones[obj->bone_index];
+		bone = GetBone(currentLevel,obj->bone_index);
 		jointMeshNum = i + 1;
 
 		for(int j = 1; j < obj->nmeshes; j++, bone += 4, meshpp++) {

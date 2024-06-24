@@ -650,7 +650,7 @@ void DrawPlanetEffect(ITEM_INFO* item) {
 
 	obj = GetObjectInfo(currentLevel,item->object_number);
 	meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
-	bone = &bones[obj->bone_index];
+	bone = GetBone(currentLevel,obj->bone_index);
 	phd_TranslateRel(frm[0][6], frm[0][7], frm[0][8]);
 	rot = frm[0] + 9;
 	gar_RotYXZsuperpack(&rot, 0);

@@ -494,7 +494,7 @@ void frigup_lara() {
 	lara_item->pos.x_pos = GLOBAL_cutme->orgx;
 	lara_item->pos.y_pos = GLOBAL_cutme->orgy;
 	lara_item->pos.z_pos = GLOBAL_cutme->orgz;
-	bone = &bones[GetObjectInfo(currentLevel,lara_item->object_number)->bone_index];
+	bone = GetBone(currentLevel,GetObjectInfo(currentLevel,lara_item->object_number)->bone_index);
 	updateAnimFrame(actor_pnodes[0], 16, temp_rotation_buffer);
 	Rich_CalcLaraMatrices_Normal(temp_rotation_buffer, bone, 0);
 	phd_PushUnitMatrix();
@@ -551,7 +551,7 @@ void DrawCutSeqActors() {
 			updateAnimFrame(actor_pnodes[i], GLOBAL_cutme->actor_data[i].nodes + 1, temp_rotation_buffer);
 			phd_TranslateAbs(GLOBAL_cutme->orgx, GLOBAL_cutme->orgy, GLOBAL_cutme->orgz);
 			obj = GetObjectInfo(currentLevel,GLOBAL_cutme->actor_data[i].objslot);
-			bone = &bones[obj->bone_index];
+			bone = GetBone(currentLevel,obj->bone_index);
 			mesh = GetMeshPointer(currentLevel,obj->mesh_index);
 			CalcActorLighting(&duff_item[i - 1], obj, temp_rotation_buffer);
 			phd_TranslateRel(temp_rotation_buffer[6], temp_rotation_buffer[7], temp_rotation_buffer[8]);

@@ -632,7 +632,7 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 
 	bit = 1;
 	meshpp = GetMeshPointer(currentLevel,object->mesh_index);
-	bone = &bones[object->bone_index];
+	bone = GetBone(currentLevel,object->bone_index);
 
 	if(!shagflag)
 		phd_TranslateRel(frmptr[6], frmptr[7], frmptr[8]);

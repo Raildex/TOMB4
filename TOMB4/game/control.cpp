@@ -81,7 +81,6 @@
 #include "levelinfo.h"
 
 ITEM_INFO* items;
-long* bones;
 long level_items;
 
 short* OutsideRoomOffsets;

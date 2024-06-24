@@ -168,7 +168,7 @@ void DrawBikeBeam(ITEM_INFO* item) {
 		obj = GetObjectInfo(currentLevel,item->object_number);
 		meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
 		meshpp += 2;
-		bone = &bones[obj->bone_index];
+		bone = GetBone(currentLevel,obj->bone_index);
 
 		if(frac) {
 			InitInterpolate(frac, rate);

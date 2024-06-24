@@ -291,7 +291,7 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 			mMXPtr[M22] = lara_matrices[84 + M22];
 			mMXPtr[M23] = lara_matrices[84 + M23];
 			obj = GetObjectInfo(currentLevel,lara.back_gun);
-			bone = &bones[obj->bone_index];
+			bone = GetBone(currentLevel,obj->bone_index);
 			meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
 			meshpp += 28;
 			phd_TranslateRel(bone[53], bone[54], bone[55]);
@@ -1020,7 +1020,7 @@ void CalcLaraMatrices(long flag) {
 	long rate, frac;
 	short spaz;
 
-	bone = &bones[GetObjectInfo(currentLevel,lara_item->object_number)->bone_index];
+	bone = GetBone(currentLevel,GetObjectInfo(currentLevel,lara_item->object_number)->bone_index);
 	frac = GetFrames(lara_item, frmptr, &rate);
 
 	if(lara.hit_direction < 0) {

@@ -165,7 +165,7 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 	else
 		extra_rotation = (short*)item->data;
 
-	bone = &bones[obj->bone_index];
+	bone = GetBone(currentLevel,obj->bone_index);
 	bit = 1;
 
 	if(mesh_bits & 1 && item->mesh_bits & 1) {

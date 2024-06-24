@@ -39,7 +39,7 @@ void InitialiseHair() {
 
 	for(int i = 0; i < 2; i++) {
 		obj = GetObjectInfo(currentLevel,HAIR);
-		bone = &bones[obj->bone_index];
+		bone = GetBone(currentLevel,obj->bone_index);
 		bone += 4;
 		hptr = &hairs[i][0];
 		hptr->pos.y_rot = 0;
@@ -111,7 +111,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		InitInterpolate(frac, rate);
 		rot[0] = frm[0] + 9;
 		rot[1] = frm[1] + 9;
-		bone = &bones[obj->bone_index];
+		bone = GetBone(currentLevel,obj->bone_index);
 		phd_TranslateRel_ID(frm[0][6], frm[0][7], frm[0][8], frm[1][6], frm[1][7], frm[1][8]);
 		gar_RotYXZsuperpack_I(&rot[0], &rot[1], 0);
 
@@ -206,7 +206,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		pos.z = (long)mMXPtr[M23];
 	} else {
 		rot[0] = frm[0] + 9;
-		bone = &bones[obj->bone_index];
+		bone = GetBone(currentLevel,obj->bone_index);
 		phd_TranslateRel(frm[0][6], frm[0][7], frm[0][8]);
 		gar_RotYXZsuperpack(&rot[0], 0);
 
@@ -297,7 +297,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 
 	phd_PopMatrix();
 	obj = GetObjectInfo(currentLevel,HAIR);
-	bone = &bones[obj->bone_index];
+	bone = GetBone(currentLevel,obj->bone_index);
 	hair = &hairs[pigtail][0];
 
 	if(first_hair[pigtail]) {

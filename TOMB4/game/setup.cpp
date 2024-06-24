@@ -826,9 +826,9 @@ void BaddyObjects() {
 	obj->save_position = 1;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
-	bones[obj->bone_index + 4] |= 4;
-	bones[obj->bone_index + 12] |= 4;
-	bones[obj->bone_index + 28] |= 4;
+	*GetBone(currentLevel,obj->bone_index + 4) |= 4;
+	*GetBone(currentLevel,obj->bone_index + 12) |= 4;
+	*GetBone(currentLevel,obj->bone_index + 28) |= 4;
 
 	obj = GetObjectInfo(currentLevel,JEEP);
 	obj->initialise = InitialiseJeep;
@@ -839,10 +839,10 @@ void BaddyObjects() {
 	obj->save_position = 1;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
-	bones[obj->bone_index + 32] |= 4;
-	bones[obj->bone_index + 36] |= 4;
-	bones[obj->bone_index + 44] |= 4;
-	bones[obj->bone_index + 48] |= 4;
+	*GetBone(currentLevel,obj->bone_index + 32) |= 4;
+	*GetBone(currentLevel,obj->bone_index + 36) |= 4;
+	*GetBone(currentLevel,obj->bone_index + 44) |= 4;
+	*GetBone(currentLevel,obj->bone_index + 48) |= 4;
 
 	obj = GetObjectInfo(currentLevel,SKELETON);
 
@@ -890,10 +890,10 @@ void BaddyObjects() {
 		obj->save_position = 1;
 		obj->HitEffect = 0;
 		obj->undead = 1;
-		bones[obj->bone_index + 24] |= 4;
-		bones[obj->bone_index + 24] |= 8;
-		bones[obj->bone_index + 80] |= 4;
-		bones[obj->bone_index + 80] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 24) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 24) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 80) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 80) |= 8;
 		*GetMeshPointer(currentLevel,obj->mesh_index + 15) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 14);
 		*GetMeshPointer(currentLevel,obj->mesh_index + 31) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 30);
 		*GetMeshPointer(currentLevel,obj->mesh_index + 37) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + 36);
@@ -926,10 +926,10 @@ void BaddyObjects() {
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
 		obj->undead = 1;
-		bones[obj->bone_index + 24] |= 4;
-		bones[obj->bone_index + 24] |= 8;
-		bones[obj->bone_index + 80] |= 4;
-		bones[obj->bone_index + 80] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 24) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 24) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 80) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 80) |= 8;
 		*GetMeshPointer(currentLevel,obj->mesh_index + 31) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 30);
 		*GetMeshPointer(currentLevel,obj->mesh_index + 37) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 36);
 		*GetMeshPointer(currentLevel,obj->mesh_index + 43) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 42);
@@ -962,10 +962,10 @@ void BaddyObjects() {
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
 		obj->HitEffect = 1;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
-		bones[obj->bone_index + 88] |= 4;
-		bones[obj->bone_index + 88] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 88) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 88) |= 8;
 		*GetMeshPointer(currentLevel,obj->mesh_index + 9) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 8);
 		*GetMeshPointer(currentLevel,obj->mesh_index + 15) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + 14);
 
@@ -1005,10 +1005,10 @@ void BaddyObjects() {
 		obj->save_mesh = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
-		bones[obj->bone_index + 88] |= 4;
-		bones[obj->bone_index + 88] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 88) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 88) |= 8;
 		*GetMeshPointer(currentLevel,obj->mesh_index + 9) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 8);
 		*GetMeshPointer(currentLevel,obj->mesh_index + 15) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 14);
 
@@ -1081,9 +1081,9 @@ void BaddyObjects() {
 		obj->save_position = 1;
 		obj->HitEffect = 2;
 		obj->undead = 1;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
-		bones[obj->bone_index + 72] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 72) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR);
@@ -1104,9 +1104,9 @@ void BaddyObjects() {
 		obj->save_position = 1;
 		obj->HitEffect = 2;
 		obj->undead = 1;
-		bones[obj->bone_index + 24] |= 4;
-		bones[obj->bone_index + 24] |= 8;
-		bones[obj->bone_index + 56] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 24) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 24) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 56) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,SPHINX);
@@ -1205,10 +1205,10 @@ void BaddyObjects() {
 		obj->water_creature = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 4] |= 8;
-		bones[obj->bone_index + 8] |= 8;
-		bones[obj->bone_index + 36] |= 8;
+		*GetBone(currentLevel,obj->bone_index) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 4) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 8) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 36) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,CROCODILE);
@@ -1229,10 +1229,10 @@ void BaddyObjects() {
 		obj->water_creature = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 28] |= 8;
-		bones[obj->bone_index + 36] |= 8;
-		bones[obj->bone_index + 40] |= 8;
+		*GetBone(currentLevel,obj->bone_index) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 36) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 40) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,DEMIGOD1);
@@ -1253,10 +1253,10 @@ void BaddyObjects() {
 		obj->HitEffect = 3;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index + 32] |= 4;
-		bones[obj->bone_index + 32] |= 8;
-		bones[obj->bone_index + 32] |= 16;
-		bones[obj->bone_index + 80] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 32) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 32) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 32) |= 16;
+		*GetBone(currentLevel,obj->bone_index + 80) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,DEMIGOD2);
@@ -1275,10 +1275,10 @@ void BaddyObjects() {
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index + 32] |= 4;
-		bones[obj->bone_index + 32] |= 8;
-		bones[obj->bone_index + 32] |= 16;
-		bones[obj->bone_index + 80] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 32) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 32) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 32) |= 16;
+		*GetBone(currentLevel,obj->bone_index + 80) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,DEMIGOD3);
@@ -1297,10 +1297,10 @@ void BaddyObjects() {
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index + 32] |= 4;
-		bones[obj->bone_index + 32] |= 8;
-		bones[obj->bone_index + 32] |= 16;
-		bones[obj->bone_index + 80] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 32) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 32) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 32) |= 16;
+		*GetBone(currentLevel,obj->bone_index + 80) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,MUTANT);
@@ -1320,10 +1320,10 @@ void BaddyObjects() {
 		obj->save_position = 1;
 		obj->HitEffect = 3;
 		obj->undead = 1;
-		bones[obj->bone_index + 24] |= 4;
-		bones[obj->bone_index + 24] |= 8;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 24) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 24) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,TROOPS);
@@ -1344,10 +1344,10 @@ void BaddyObjects() {
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index] |= 4;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
+		*GetBone(currentLevel,obj->bone_index) |= 4;
+		*GetBone(currentLevel,obj->bone_index) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,SAS);
@@ -1368,10 +1368,10 @@ void BaddyObjects() {
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index] |= 4;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
+		*GetBone(currentLevel,obj->bone_index) |= 4;
+		*GetBone(currentLevel,obj->bone_index) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 28) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,HARPY);
@@ -1409,10 +1409,10 @@ void BaddyObjects() {
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index + 48] |= 8;
-		bones[obj->bone_index + 48] |= 16;
-		bones[obj->bone_index + 52] |= 8;
-		bones[obj->bone_index + 52] |= 16;
+		*GetBone(currentLevel,obj->bone_index + 48) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 48) |= 16;
+		*GetBone(currentLevel,obj->bone_index + 52) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 52) |= 16;
 	}
 
 	obj = GetObjectInfo(currentLevel,FUCKED_UP_DOG);
@@ -1432,9 +1432,9 @@ void BaddyObjects() {
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 8] |= 4;
-		bones[obj->bone_index + 8] |= 8;
+		*GetBone(currentLevel,obj->bone_index) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 8) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 8) |= 8;
 	}
 
 	obj = GetObjectInfo(currentLevel,AHMET);
@@ -1454,7 +1454,7 @@ void BaddyObjects() {
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		bones[obj->bone_index + 36] |= 8;
+		*GetBone(currentLevel,obj->bone_index + 36) |= 8;
 	}
 
 	for(int i = 0; i < 3; i++) {
@@ -1506,10 +1506,10 @@ void BaddyObjects() {
 			obj->save_position = 1;
 			obj->HitEffect = 2;
 			obj->undead = 1;
-			bones[obj->bone_index + 32] |= 4;
-			bones[obj->bone_index + 36] |= 4;
-			bones[obj->bone_index + 44] |= 4;
-			bones[obj->bone_index + 48] |= 4;
+			*GetBone(currentLevel,obj->bone_index + 32) |= 4;
+			*GetBone(currentLevel,obj->bone_index + 36) |= 4;
+			*GetBone(currentLevel,obj->bone_index + 44) |= 4;
+			*GetBone(currentLevel,obj->bone_index + 48) |= 4;
 		}
 	}
 
@@ -1568,10 +1568,10 @@ void BaddyObjects() {
 		obj->save_position = 1;
 		obj->HitEffect = 3;
 		obj->undead = 1;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 4] |= 4;
-		bones[obj->bone_index + 8] |= 16;
-		bones[obj->bone_index + 12] |= 16;
+		*GetBone(currentLevel,obj->bone_index) |= 8;
+		*GetBone(currentLevel,obj->bone_index + 4) |= 4;
+		*GetBone(currentLevel,obj->bone_index + 8) |= 16;
+		*GetBone(currentLevel,obj->bone_index + 12) |= 16;
 	}
 
 	obj = GetObjectInfo(currentLevel,HORSE);
@@ -1638,10 +1638,10 @@ void BaddyObjects() {
 		obj->hit_points = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
-		bones[obj->bone_index] |= 16;
-		bones[obj->bone_index + 4] |= 16;
-		bones[obj->bone_index + 8] |= 16;
-		bones[obj->bone_index + 12] |= 16;
+		*GetBone(currentLevel,obj->bone_index) |= 16;
+		*GetBone(currentLevel,obj->bone_index + 4) |= 16;
+		*GetBone(currentLevel,obj->bone_index + 8) |= 16;
+		*GetBone(currentLevel,obj->bone_index + 12) |= 16;
 	}
 
 	for(int i = 0; i < 4; i++) {

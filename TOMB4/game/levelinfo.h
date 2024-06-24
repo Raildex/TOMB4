@@ -29,6 +29,7 @@ ROOM_INFO* GetRoom(LEVEL_INFO* lvl, long room);
 long GetNumRooms(LEVEL_INFO* lvl);
 short* GetFloorData(LEVEL_INFO* lvl, long index);
 bool LoadRooms(char** FileData, LEVEL_INFO* lvl);
+long* GetBone(LEVEL_INFO* lvl, long index);
 CHANGE_STRUCT* GetAnimChange(LEVEL_INFO* lvl, long index);
 RANGE_STRUCT* GetAnimRange(LEVEL_INFO* lvl,long index);
 short* GetAnimCommand(LEVEL_INFO* lvl, long index);
