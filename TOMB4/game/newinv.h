@@ -67,32 +67,29 @@ extern long GLOBAL_inventoryitemchosen;
 extern long GLOBAL_lastinvitem;
 extern long InventoryActive;
 
-enum ring_types
-{
+enum ring_types {
 	RING_INVENTORY,
 	RING_AMMO
 };
 
-enum option_types
-{
-	OPT_UNUSED =		0x1,
-	OPT_EQUIP =			0x2,
-	OPT_USE =			0x4,
-	OPT_COMBINE =		0x8,
-	OPT_SEPARATE =		0x10,
-	OPT_EXAMINE =		0x20,
-	OPT_SHOTGUN =		0x40,
-	OPT_CROSSBOW =		0x80,
-	OPT_GRENADE =		0x100,
-	OPT_UZI =			0x200,
-	OPT_PISTOLS =		0x400,
-	OPT_REVOLVER =		0x800,
-	OPT_LOAD =			0x1000,
-	OPT_SAVE =			0x2000
+enum option_types {
+	OPT_UNUSED = 0x1,
+	OPT_EQUIP = 0x2,
+	OPT_USE = 0x4,
+	OPT_COMBINE = 0x8,
+	OPT_SEPARATE = 0x10,
+	OPT_EXAMINE = 0x20,
+	OPT_SHOTGUN = 0x40,
+	OPT_CROSSBOW = 0x80,
+	OPT_GRENADE = 0x100,
+	OPT_UZI = 0x200,
+	OPT_PISTOLS = 0x400,
+	OPT_REVOLVER = 0x800,
+	OPT_LOAD = 0x1000,
+	OPT_SAVE = 0x2000
 };
 
-enum invobj_types
-{
+enum invobj_types {
 	INV_UZI_ITEM = 0,
 	INV_PISTOLS_ITEM,
 	INV_SHOTGUN_ITEM,

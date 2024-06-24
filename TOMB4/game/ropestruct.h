@@ -1,8 +1,7 @@
-#ifndef ROPE_STRUCT_INCLUDED
-#define ROPE_STRUCT_INCLUDED
+#ifndef TOMB4_GAME_ROPESTRUCT_H
+#define TOMB4_GAME_ROPESTRUCT_H
 #include "phdvector.h"
-struct ROPE_STRUCT
-{
+struct ROPE_STRUCT {
 	PHD_VECTOR Segment[24];
 	PHD_VECTOR Velocity[24];
 	PHD_VECTOR NormalisedSegment[24];
@@ -12,4 +11,4 @@ struct ROPE_STRUCT
 	long SegmentLength;
 	long Active;
 };
-#endif
+#endif // TOMB4_GAME_ROPESTRUCT_H

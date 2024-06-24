@@ -1,7 +1,6 @@
 #ifndef TARGET_TYPE_INCLUDED
 #define TARGET_TYPE_INCLUDED
-enum target_type
-{
+enum target_type {
 	NO_TARGET,
 	PRIME_TARGET,
 	SECONDARY_TARGET

@@ -1,7 +1,6 @@
 #ifndef HEIGHT_TYPES_INCLUDED
 #define HEIGHT_TYPES_INCLUDED
-enum height_types
-{
+enum height_types {
 	WALL,
 	SMALL_SLOPE,
 	BIG_SLOPE,

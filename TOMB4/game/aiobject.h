@@ -1,8 +1,7 @@
-#ifndef AIOBJECT_INCLUDED
-#define AIOBJECT_INCLUDED
-#pragma pack(push,1)
-struct AIOBJECT
-{
+#ifndef TOMB4_GAME_AIOBJECT_H
+#define TOMB4_GAME_AIOBJECT_H
+#pragma pack(push, 1)
+struct AIOBJECT {
 	short object_number;
 	short room_number;
 	long x;
@@ -14,4 +13,4 @@ struct AIOBJECT
 	short box_number;
 };
 #pragma pack(pop)
-#endif
+#endif // TOMB4_GAME_AIOBJECT_H

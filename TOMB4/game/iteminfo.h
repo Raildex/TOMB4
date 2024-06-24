@@ -1,10 +1,9 @@
-#ifndef ITEM_INFO_INCLUDED
-#define ITEM_INFO_INCLUDED
+#ifndef TOMB4_GAME_ITEMINFO_H
+#define TOMB4_GAME_ITEMINFO_H
 #include "itemlight.h"
 #include "phd3dpos.h"
-#pragma pack(push,1)
-struct ITEM_INFO
-{
+#pragma pack(push, 1)
+struct ITEM_INFO {
 	long floor;
 	unsigned long touch_bits;
 	unsigned long mesh_bits;
@@ -47,4 +46,4 @@ struct ITEM_INFO
 	short TOSSPAD;
 };
 #pragma pack(pop)
-#endif
+#endif // TOMB4_GAME_ITEMINFO_H

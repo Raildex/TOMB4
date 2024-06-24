@@ -12,64 +12,54 @@ static HKEY phkResult;
 static DWORD dwDisposition;
 static bool REG_Setup;
 
-bool REG_OpenKey(LPCSTR lpSubKey)
-{
+bool REG_OpenKey(LPCSTR lpSubKey) {
 	return RegCreateKeyEx(HKEY_CURRENT_USER, lpSubKey, 0, (CHAR*)"", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, 0, &phkResult, &dwDisposition) == ERROR_SUCCESS;
 }
 
-bool OpenRegistry(LPCSTR SubKeyName)
-{
+bool OpenRegistry(LPCSTR SubKeyName) {
 	char buffer[256];
 
-	if (!SubKeyName)
+	if(!SubKeyName)
 		return REG_OpenKey("Software\\Core Design\\Tomb Raider IV");
 
 	sprintf(buffer, "%s\\%s", "Software\\Core Design\\Tomb Raider IV", SubKeyName);
 	return REG_OpenKey(buffer);
 }
 
-void REG_CloseKey()
-{
+void REG_CloseKey() {
 	RegCloseKey(phkResult);
 }
 
-void CloseRegistry()
-{
+void CloseRegistry() {
 	REG_CloseKey();
 }
 
-void REG_WriteLong(char* SubKeyName, unsigned long value)
-{
-	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*) & value, sizeof(unsigned long));
+void REG_WriteLong(char* SubKeyName, unsigned long value) {
+	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*)&value, sizeof(unsigned long));
 }
 
-void REG_WriteBool(char* SubKeyName, bool value)
-{
+void REG_WriteBool(char* SubKeyName, bool value) {
 	unsigned long Lvalue;
 
 	Lvalue = (unsigned long)value;
-	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*) & Lvalue, sizeof(unsigned long));
+	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*)&Lvalue, sizeof(unsigned long));
 }
 
-void REG_WriteString(char* SubKeyName, char* string, long length)
-{
+void REG_WriteString(char* SubKeyName, char* string, long length) {
 	long checkLength;
 
-	if (string)
-	{
-		if (length < 0)
+	if(string) {
+		if(length < 0)
 			checkLength = strlen(string);
 		else
 			checkLength = length;
 
 		RegSetValueEx(phkResult, SubKeyName, 0, REG_SZ, (CONST BYTE*)string, checkLength + 1);
-	}
-	else
+	} else
 		RegDeleteValue(phkResult, SubKeyName);
 }
 
-void REG_WriteFloat(char* SubKeyName, float value)
-{
+void REG_WriteFloat(char* SubKeyName, float value) {
 	long length;
 	char buf[64];
 
@@ -77,14 +67,13 @@ void REG_WriteFloat(char* SubKeyName, float value)
 	REG_WriteString(SubKeyName, buf, length);
 }
 
-bool REG_ReadLong(char* SubKeyName, unsigned long& value, unsigned long defaultValue)
-{
+bool REG_ReadLong(char* SubKeyName, unsigned long& value, unsigned long defaultValue) {
 	unsigned long type;
 	unsigned long cbData;
 
 	cbData = 4;
 
-	if (RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)&value, &cbData) == ERROR_SUCCESS && type == REG_DWORD && cbData == 4)
+	if(RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)&value, &cbData) == ERROR_SUCCESS && type == REG_DWORD && cbData == 4)
 		return 1;
 
 	REG_WriteLong(SubKeyName, defaultValue);
@@ -92,16 +81,14 @@ bool REG_ReadLong(char* SubKeyName, unsigned long& value, unsigned long defaultV
 	return 0;
 }
 
-bool REG_ReadBool(char* SubKeyName, bool& value, bool defaultValue)
-{
+bool REG_ReadBool(char* SubKeyName, bool& value, bool defaultValue) {
 	unsigned long type;
 	unsigned long cbData;
 	unsigned long data;
 
 	cbData = 4;
 
-	if (RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)&data, &cbData) == ERROR_SUCCESS && type == REG_DWORD && cbData == 4)
-	{
+	if(RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)&data, &cbData) == ERROR_SUCCESS && type == REG_DWORD && cbData == 4) {
 		value = (bool)data;
 		return 1;
 	}
@@ -111,42 +98,36 @@ bool REG_ReadBool(char* SubKeyName, bool& value, bool defaultValue)
 	return 0;
 }
 
-bool REG_ReadString(char* SubKeyName, char* value, long length, char* defaultValue)
-{
+bool REG_ReadString(char* SubKeyName, char* value, long length, char* defaultValue) {
 	unsigned long type;
 	unsigned long cbData;
 	long len;
 
 	cbData = length;
 
-	if (RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)value, (LPDWORD)&cbData) == ERROR_SUCCESS && type == REG_SZ)
+	if(RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)value, (LPDWORD)&cbData) == ERROR_SUCCESS && type == REG_SZ)
 		return 1;
 
-	if (defaultValue)
-	{
+	if(defaultValue) {
 		REG_WriteString(SubKeyName, defaultValue, -1);
 		len = strlen(defaultValue) + 1;
 
-		if (len > length)
-		{
+		if(len > length) {
 			len = length - 1;
 			value[len] = 0;
 		}
 
 		memcpy(value, defaultValue, len);
-	}
-	else
+	} else
 		RegDeleteValue(phkResult, SubKeyName);
 
 	return 0;
 }
 
-bool REG_ReadFloat(char* SubKeyName, float& value, float defaultValue)
-{
+bool REG_ReadFloat(char* SubKeyName, float& value, float defaultValue) {
 	char buf[64];
 
-	if (REG_ReadString(SubKeyName, buf, sizeof(buf), 0))
-	{
+	if(REG_ReadString(SubKeyName, buf, sizeof(buf), 0)) {
 		value = (float)atof(buf);
 		return 1;
 	}
@@ -156,18 +137,16 @@ bool REG_ReadFloat(char* SubKeyName, float& value, float defaultValue)
 	return 0;
 }
 
-bool LoadSettings()
-{
+bool LoadSettings() {
 	unsigned long key;
 	bool val;
 
-	if (!OpenRegistry("System"))
+	if(!OpenRegistry("System"))
 		return 0;
 
 	REG_ReadBool((char*)"Setup", REG_Setup, 0);
 
-	if (REG_Setup)
-	{
+	if(REG_Setup) {
 		App.TextureSize = 256;
 		App.BumpMapSize = 256;
 		App.StartFlags = DXF_FPUSETUP;
@@ -185,22 +164,22 @@ bool LoadSettings()
 
 		REG_ReadBool((char*)"TextLow", val, 0);
 
-		if (val)
+		if(val)
 			App.TextureSize = 128;
 
 		REG_ReadBool((char*)"BumpLow", val, 0);
 
-		if (val)
+		if(val)
 			App.BumpMapSize = 128;
 
 		REG_ReadBool((char*)"HardWare", val, 0);
 
-		if (val)
+		if(val)
 			App.StartFlags |= DXF_ZBUFFER | DXF_HWR;
 
 		REG_ReadBool((char*)"Window", val, 0);
 
-		if (val)
+		if(val)
 			App.StartFlags |= DXF_WINDOWED;
 		else
 			App.StartFlags |= DXF_FULLSCREEN;
@@ -277,8 +256,7 @@ bool LoadSettings()
 	return REG_Setup;
 }
 
-void SaveSettings()
-{
+void SaveSettings() {
 	OpenRegistry("Game");
 	REG_WriteLong((char*)"Key0", layout[1][0]);
 	REG_WriteLong((char*)"Key1", layout[1][1]);
@@ -313,8 +291,7 @@ void SaveSettings()
 	CloseRegistry();
 }
 
-bool SaveSetup(HWND hDlg)
-{
+bool SaveSetup(HWND hDlg) {
 	OpenRegistry("System");
 
 	REG_WriteLong((char*)"DD", SendMessage(GetDlgItem(hDlg, 1000), CB_GETCURSEL, 0, 0));
@@ -338,7 +315,6 @@ bool SaveSetup(HWND hDlg)
 	return 1;
 }
 
-bool REG_KeyWasCreated()
-{
+bool REG_KeyWasCreated() {
 	return dwDisposition == REG_CREATED_NEW_KEY;
 }

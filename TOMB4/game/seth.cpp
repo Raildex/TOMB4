@@ -32,22 +32,21 @@
 static BITE_INFO left_hand = { 0, 220, 50, 17 };
 static BITE_INFO right_hand = { 0, 220, 50, 13 };
 
-void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv)
-{
+void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
 	dx = lara_item->pos.x_pos - effects[fx_number].pos.x_pos;
 	dz = lara_item->pos.z_pos - effects[fx_number].pos.z_pos;
 
-	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
 	sptr = &spark[GetFreeSpark()];
 	sptr->On = 1;
 	sptr->sR = 0;
 	sptr->sG = (GetRandomControl() & 0x7F) + 32;
-	sptr->sB = sptr->dG + 64;	//uhm
+	sptr->sB = sptr->dG + 64; // uhm
 	sptr->dR = 0;
 	sptr->dB = (GetRandomControl() & 0x7F) + 32;
 	sptr->dG = sptr->dB + 64;
@@ -66,7 +65,7 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv)
 	sptr->Flags = 602;
 	sptr->RotAng = GetRandomControl() & 0xFFF;
 
-	if (GetRandomControl() & 1)
+	if(GetRandomControl() & 1)
 		sptr->RotAdd = -32 - (GetRandomControl() & 0x1F);
 	else
 		sptr->RotAdd = (GetRandomControl() & 0x1F) + 32;
@@ -75,7 +74,7 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv)
 	sptr->MaxYvel = 0;
 	sptr->FxObj = (unsigned char)fx_number;
 
-	if (effects[fx_number].flag1 == 1)
+	if(effects[fx_number].flag1 == 1)
 		sptr->Scalar = 3;
 	else
 		sptr->Scalar = 2;
@@ -85,15 +84,13 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv)
 	sptr->dSize = sptr->Size >> 5;
 }
 
-void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type)
-{
+void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type) {
 	FX_INFO* fx;
 	short fx_number;
 
 	fx_number = CreateEffect(room_number);
 
-	if (fx_number != NO_ITEM)
-	{
+	if(fx_number != NO_ITEM) {
 		fx = &effects[fx_number];
 		fx->pos.x_pos = pos->x_pos;
 		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
@@ -110,15 +107,14 @@ void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type)
 	}
 }
 
-void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv)
-{
+void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
 	dx = lara_item->pos.x_pos - x;
 	dz = lara_item->pos.x_pos - z;
 
-	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
 	sptr = &spark[GetFreeSpark()];
@@ -150,15 +146,14 @@ void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv)
 	sptr->Flags = 0;
 }
 
-void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size)
-{
+void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size) {
 	SPARKS* sptr;
 	long dx, dz;
 
 	dx = lara_item->pos.x_pos - items[item_number].pos.x_pos;
 	dz = lara_item->pos.z_pos - items[item_number].pos.z_pos;
 
-	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
 	sptr = &spark[GetFreeSpark()];
@@ -184,7 +179,7 @@ void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size)
 	sptr->Flags = 4762;
 	sptr->RotAng = GetRandomControl() & 0xFFF;
 
-	if (GetRandomControl() & 1)
+	if(GetRandomControl() & 1)
 		sptr->RotAdd = -32 - (GetRandomControl() & 0x1F);
 	else
 		sptr->RotAdd = (GetRandomControl() & 0x1F) + 32;
@@ -199,8 +194,7 @@ void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size)
 	sptr->dSize = sptr->Size >> 4;
 }
 
-void DoSethEffects(short item_number)
-{
+void DoSethEffects(short item_number) {
 	ITEM_INFO* item;
 	PHD_VECTOR r, l;
 	PHD_VECTOR vec;
@@ -221,15 +215,12 @@ void DoSethEffects(short item_number)
 	l.z = NodeOffsets[2].z;
 	GetJointAbsPosition(item, &l, NodeOffsets[2].mesh_num);
 
-	switch (item->current_anim_state)
-	{
+	switch(item->current_anim_state) {
 	case 11:
 	case 15:
 
-		if (item->item_flags[0] < 78 && (GetRandomControl() & 0x1F) < item->item_flags[0])
-		{
-			for (int i = 0; i < 2; i++)
-			{
+		if(item->item_flags[0] < 78 && (GetRandomControl() & 0x1F) < item->item_flags[0]) {
+			for(int i = 0; i < 2; i++) {
 				vec.x = (GetRandomControl() & 0x7FF) + r.x - 1024;
 				vec.y = (GetRandomControl() & 0x7FF) + r.y - 1024;
 				zv = (GetRandomControl() & 0x7FF);
@@ -252,19 +243,16 @@ void DoSethEffects(short item_number)
 
 		size = item->item_flags[0] * 2;
 
-		if (size > 128)
+		if(size > 128)
 			size = 128;
 
-		if ((wibble & 0xF) == 8)
-		{
-			if (item->item_flags[0] < 127)
+		if((wibble & 0xF) == 8) {
+			if(item->item_flags[0] < 127)
 				TriggerSethFlame(item_number, 2, size);
-		}
-		else if (!(wibble & 0xF) && item->item_flags[0] < 103)
+		} else if(!(wibble & 0xF) && item->item_flags[0] < 103)
 			TriggerSethFlame(item_number, 3, size);
 
-		if (item->item_flags[0] >= 96 && item->item_flags[0] <= 99)
-		{
+		if(item->item_flags[0] >= 96 && item->item_flags[0] <= 99) {
 			vec.x = NodeOffsets[3].x;
 			vec.y = NodeOffsets[3].y << 1;
 			vec.z = NodeOffsets[3].z;
@@ -278,8 +266,7 @@ void DoSethEffects(short item_number)
 			TriggerSethMissile(&pos, item->room_number, 0);
 		}
 
-		if (item->item_flags[0] >= 122 && item->item_flags[0] <= 125)
-		{
+		if(item->item_flags[0] >= 122 && item->item_flags[0] <= 125) {
 			vec.x = NodeOffsets[2].x;
 			vec.y = NodeOffsets[2].y << 1;
 			vec.z = NodeOffsets[2].z;
@@ -299,19 +286,16 @@ void DoSethEffects(short item_number)
 
 		size = item->item_flags[0] * 4;
 
-		if (size > 160)
+		if(size > 160)
 			size = 160;
 
-		if ((wibble & 0xF) == 8)
-		{
-			if (item->item_flags[0] < 132)
+		if((wibble & 0xF) == 8) {
+			if(item->item_flags[0] < 132)
 				TriggerSethFlame(item_number, 2, size);
-		}
-		else if (!(wibble & 0xF) && item->item_flags[0] < 132)
+		} else if(!(wibble & 0xF) && item->item_flags[0] < 132)
 			TriggerSethFlame(item_number, 3, size);
 
-		if ((item->item_flags[0] >= 60 && item->item_flags[0] <= 74 || item->item_flags[0] >= 112 && item->item_flags[0] <= 124) && wibble & 4)
-		{
+		if((item->item_flags[0] >= 60 && item->item_flags[0] <= 74 || item->item_flags[0] >= 112 && item->item_flags[0] <= 124) && wibble & 4) {
 			vec.x = NodeOffsets[3].x;
 			vec.y = NodeOffsets[3].y << 1;
 			vec.z = NodeOffsets[3].z;
@@ -341,10 +325,8 @@ void DoSethEffects(short item_number)
 
 	case 13:
 
-		if (item->item_flags[0] > 40 && item->item_flags[0] < 100 && (GetRandomControl() & 7) < item->item_flags[0] - 40)
-		{
-			for (int i = 0; i < 2; i++)
-			{
+		if(item->item_flags[0] > 40 && item->item_flags[0] < 100 && (GetRandomControl() & 7) < item->item_flags[0] - 40) {
+			for(int i = 0; i < 2; i++) {
 				vec.x = (GetRandomControl() & 0x7FF) + r.x - 1024;
 				vec.y = (GetRandomControl() & 0x7FF) + r.y - 1024;
 				zv = (GetRandomControl() & 0x7FF);
@@ -367,19 +349,16 @@ void DoSethEffects(short item_number)
 
 		size = item->item_flags[0] * 2;
 
-		if (size > 128)
+		if(size > 128)
 			size = 128;
 
-		if ((wibble & 0xF) == 8)
-		{
-			if (item->item_flags[0] < 103)
+		if((wibble & 0xF) == 8) {
+			if(item->item_flags[0] < 103)
 				TriggerSethFlame(item_number, 2, size);
-		}
-		else if (!(wibble & 0xF) && item->item_flags[0] < 103)
+		} else if(!(wibble & 0xF) && item->item_flags[0] < 103)
 			TriggerSethFlame(item_number, 3, size);
 
-		if (item->item_flags[0] == 102)
-		{
+		if(item->item_flags[0] == 102) {
 			vec.x = NodeOffsets[3].x;
 			vec.y = NodeOffsets[3].y << 1;
 			vec.z = NodeOffsets[3].z;
@@ -397,8 +376,7 @@ void DoSethEffects(short item_number)
 	}
 }
 
-void InitialiseSeth(short item_number)
-{
+void InitialiseSeth(short item_number) {
 	ITEM_INFO* item;
 
 	item = &items[item_number];
@@ -409,8 +387,7 @@ void InitialiseSeth(short item_number)
 	item->goal_anim_state = 12;
 }
 
-void SethControl(short item_number)
-{
+void SethControl(short item_number) {
 	ITEM_INFO* item;
 	CREATURE_INFO* seth;
 	FLOOR_INFO* floor;
@@ -418,7 +395,7 @@ void SethControl(short item_number)
 	long x, y, z, Xoffset, Zoffset, c, h, nearheight, midheight, farheight, can_jump;
 	short angle, room_number, hp;
 
-	if (!CreatureActive(item_number))
+	if(!CreatureActive(item_number))
 		return;
 
 	item = &items[item_number];
@@ -461,11 +438,10 @@ void SethControl(short item_number)
 	h = GetHeight(floor, x, y, z);
 	CreatureAIInfo(item, &info);
 
-	if (item->hit_points <= 0)
+	if(item->hit_points <= 0)
 		item->hit_points = 0;
-	else
-	{
-		if (item->ai_bits)
+	else {
+		if(item->ai_bits)
 			GetAITarget(seth);
 		else
 			seth->enemy = lara_item;
@@ -475,59 +451,45 @@ void SethControl(short item_number)
 		CreatureMood(item, &info, 1);
 		angle = CreatureTurn(item, seth->maximum_turn);
 
-		switch (item->current_anim_state)
-		{
+		switch(item->current_anim_state) {
 		case 1:
 			seth->LOT.is_jumping = 0;
 			seth->flags = 0;
 
-			if (item->required_anim_state)
+			if(item->required_anim_state)
 				item->goal_anim_state = item->required_anim_state;
-			else if (info.distance < 0x100000 && info.bite)
+			else if(info.distance < 0x100000 && info.bite)
 				item->goal_anim_state = 8;
-			else if (lara_item->pos.y_pos < item->pos.y_pos - 1024)
-			{
-				if (seth->reached_goal)
+			else if(lara_item->pos.y_pos < item->pos.y_pos - 1024) {
+				if(seth->reached_goal)
 					item->goal_anim_state = 14;
-				else
-				{
+				else {
 					item->ai_bits = AMBUSH;
-					seth->hurt_by_lara = 1;	
+					seth->hurt_by_lara = 1;
 					item->goal_anim_state = 2;
 				}
-			}
-			else if (info.distance < 0x640000 && info.ahead && GetRandomControl() & 1 && Targetable(item, &info))
-			{
+			} else if(info.distance < 0x640000 && info.ahead && GetRandomControl() & 1 && Targetable(item, &info)) {
 				item->item_flags[0] = 0;
 				item->goal_anim_state = 11;
-			}
-			else if (c != NO_HEIGHT && c < y - 1792 && h != NO_HEIGHT && h > y - 1024 && GetRandomControl() & 1)
-			{
+			} else if(c != NO_HEIGHT && c < y - 1792 && h != NO_HEIGHT && h > y - 1024 && GetRandomControl() & 1) {
 				item->pos.y_pos -= 1536;
 
-				if (Targetable(item, &info))
-				{
+				if(Targetable(item, &info)) {
 					item->item_flags[0] = 0;
 					item->goal_anim_state = 12;
-				}
-				else
+				} else
 					item->goal_anim_state = 2;
 
 				item->pos.y_pos += 1536;
-			}
-			else if (info.distance < 0x900000 && info.angle < 0x1800 && info.angle > -0x1800 && info.bite)
-			{
-				if (Targetable(item, &info))
+			} else if(info.distance < 0x900000 && info.angle < 0x1800 && info.angle > -0x1800 && info.bite) {
+				if(Targetable(item, &info))
 					item->goal_anim_state = 4;
 				else
 					item->goal_anim_state = 2;
-			}
-			else if (info.distance < 0x1000000 && info.angle < 0x2000 && info.angle > -0x2000 && h != NO_HEIGHT && h >= y - 256 && Targetable(item, &info))
-			{
+			} else if(info.distance < 0x1000000 && info.angle < 0x2000 && info.angle > -0x2000 && h != NO_HEIGHT && h >= y - 256 && Targetable(item, &info)) {
 				item->item_flags[0] = 0;
 				item->goal_anim_state = 13;
-			}
-			else if (can_jump)
+			} else if(can_jump)
 				item->goal_anim_state = 5;
 			else
 				item->goal_anim_state = 2;
@@ -537,9 +499,9 @@ void SethControl(short item_number)
 		case 2:
 			seth->maximum_turn = 1274;
 
-			if (info.ahead && info.distance < 0x1000000 || can_jump || seth->reached_goal)
-				item->goal_anim_state = 1; 
-			else if (info.distance > 0x900000)
+			if(info.ahead && info.distance < 0x1000000 || can_jump || seth->reached_goal)
+				item->goal_anim_state = 1;
+			else if(info.distance > 0x900000)
 				item->goal_anim_state = 3;
 
 			break;
@@ -547,36 +509,31 @@ void SethControl(short item_number)
 		case 3:
 			seth->maximum_turn = 2002;
 
-			if (info.ahead && info.distance < 0x1000000 || can_jump || seth->reached_goal)
+			if(info.ahead && info.distance < 0x1000000 || can_jump || seth->reached_goal)
 				item->goal_anim_state = 1;
-			else if (info.distance < 0x900000)
+			else if(info.distance < 0x900000)
 				item->goal_anim_state = 2;
 
 			break;
 
 		case 4:
 
-			if (can_jump)
-			{
-				if (item->anim_number == objects[45].anim_index + 15 && item->frame_number == anims[item->anim_number].frame_base)
-				{
+			if(can_jump) {
+				if(item->anim_number == objects[45].anim_index + 15 && item->frame_number == anims[item->anim_number].frame_base) {
 					seth->LOT.is_jumping = 1;
 					seth->maximum_turn = 0;
 				}
 			}
 
-			if (!seth->flags && item->touch_bits && item->anim_number == objects[SETHA].anim_index + 16)
-			{
-				if (item->touch_bits & 0xE000)
-				{
+			if(!seth->flags && item->touch_bits && item->anim_number == objects[SETHA].anim_index + 16) {
+				if(item->touch_bits & 0xE000) {
 					lara_item->hit_points -= 200;
 					lara_item->hit_status = 1;
 					seth->flags = 1;
 					CreatureEffectT(item, &right_hand, 25, -1, DoBloodSplat);
 				}
 
-				if (item->touch_bits & 0xE0000)
-				{
+				if(item->touch_bits & 0xE0000) {
 					lara_item->hit_points -= 200;
 					lara_item->hit_status = 1;
 					seth->flags = 1;
@@ -593,7 +550,7 @@ void SethControl(short item_number)
 
 		case 7:
 
-			if (item->anim_number == objects[SETHA].anim_index + 17 && item->frame_number == anims[item->anim_number].frame_end && GetRandomControl() & 1)
+			if(item->anim_number == objects[SETHA].anim_index + 17 && item->frame_number == anims[item->anim_number].frame_end && GetRandomControl() & 1)
 				item->required_anim_state = 10;
 
 			break;
@@ -602,17 +559,15 @@ void SethControl(short item_number)
 			hp = lara_item->hit_points;
 			seth->maximum_turn = 0;
 
-			if (abs(info.angle) < 546)
+			if(abs(info.angle) < 546)
 				item->pos.y_rot += info.angle;
-			else if (info.angle < 0)
+			else if(info.angle < 0)
 				item->pos.y_rot -= 546;
 			else
 				item->pos.y_rot += 546;
 
-			if (!seth->flags && item->touch_bits)
-			{
-				if (item->frame_number > anims[item->anim_number].frame_base + 15 && item->frame_number < anims[item->anim_number].frame_base + 26)
-				{
+			if(!seth->flags && item->touch_bits) {
+				if(item->frame_number > anims[item->anim_number].frame_base + 15 && item->frame_number < anims[item->anim_number].frame_base + 26) {
 					lara_item->hit_points -= 250;
 					lara_item->hit_status = 1;
 					seth->flags = 1;
@@ -620,7 +575,7 @@ void SethControl(short item_number)
 				}
 			}
 
-			if (hp && lara_item->hit_points <= 0)	//this hit killed her
+			if(hp && lara_item->hit_points <= 0) // this hit killed her
 			{
 				CreatureKill(item, 14, 9, ANIM_SETHDEATH);
 				seth->maximum_turn = 0;
@@ -631,15 +586,15 @@ void SethControl(short item_number)
 
 		case 15:
 			seth->target.y = lara_item->pos.y_pos;
-			
+
 		case 11:
 		case 12:
 		case 13:
 			seth->maximum_turn = 0;
 
-			if (abs(info.angle) < 546)
+			if(abs(info.angle) < 546)
 				item->pos.y_rot += info.angle;
-			else if (info.angle < 0)
+			else if(info.angle < 0)
 				item->pos.y_rot -= 546;
 			else
 				item->pos.y_rot += 546;
@@ -649,31 +604,27 @@ void SethControl(short item_number)
 
 		case 14:
 
-			if (item->anim_number != objects[45].anim_index + 26)
-			{
+			if(item->anim_number != objects[45].anim_index + 26) {
 				seth->LOT.fly = 16;
 				item->gravity_status = 0;
 				seth->maximum_turn = 0;
 				seth->target.y = lara_item->pos.y_pos;
 
-				if (abs(info.angle) < 546)
+				if(abs(info.angle) < 546)
 					item->pos.y_rot += info.angle;
-				else if (info.angle < 0)
+				else if(info.angle < 0)
 					item->pos.y_rot -= 546;
 				else
 					item->pos.y_rot += 546;
 			}
 
-			if (lara_item->pos.y_pos > item->floor - 512)
-			{
+			if(lara_item->pos.y_pos > item->floor - 512) {
 				seth->LOT.fly = 0;
 				item->gravity_status = 1;
 
-				if (item->pos.y_pos >= item->floor)
+				if(item->pos.y_pos >= item->floor)
 					item->goal_anim_state = 1;
-			}
-			else if (Targetable(item, &info))
-			{
+			} else if(Targetable(item, &info)) {
 				item->item_flags[0] = 0;
 				item->goal_anim_state = 15;
 			}
@@ -682,25 +633,18 @@ void SethControl(short item_number)
 		}
 	}
 
-	if (item->hit_status && (lara.gun_type == WEAPON_SHOTGUN || lara.gun_type == WEAPON_REVOLVER)
-		&& info.distance < 0x400000 && !seth->LOT.is_jumping)
-	{
-		if (item->current_anim_state != 12)
-		{
-			if (item->current_anim_state > 13)
-			{
+	if(item->hit_status && (lara.gun_type == WEAPON_SHOTGUN || lara.gun_type == WEAPON_REVOLVER)
+	   && info.distance < 0x400000 && !seth->LOT.is_jumping) {
+		if(item->current_anim_state != 12) {
+			if(item->current_anim_state > 13) {
 				item->anim_number = objects[SETHA].anim_index + 25;
 				item->current_anim_state = 16;
 				item->goal_anim_state = 16;
-			}
-			else if (abs(h - y) < 512)
-			{
+			} else if(abs(h - y) < 512) {
 				item->anim_number = objects[SETHA].anim_index + 17;
 				item->current_anim_state = 7;
 				item->goal_anim_state = 7;
-			}
-			else
-			{
+			} else {
 				item->anim_number = objects[SETHA].anim_index + 11;
 				item->current_anim_state = 6;
 				item->goal_anim_state = 6;

@@ -4,8 +4,7 @@
 #include "lotinfo.h"
 #include "phdvector.h"
 #include "iteminfo.h"
-struct CREATURE_INFO
-{
+struct CREATURE_INFO {
 	short joint_rotation[4];
 	short maximum_turn;
 	short flags;

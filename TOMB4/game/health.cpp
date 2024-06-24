@@ -36,15 +36,13 @@ long health_bar_timer = 0;
 static long FullPickupX;
 static short PickupVel;
 
-long FlashIt()
-{
+long FlashIt() {
 	static long flash_state = 0;
 	static long flash_count = 0;
 
-	if (flash_count)
+	if(flash_count)
 		flash_count--;
-	else
-	{
+	else {
 		flash_state ^= 1;
 		flash_count = 5;
 	}
@@ -52,58 +50,48 @@ long FlashIt()
 	return flash_state;
 }
 
-void DrawGameInfo(long timed)
-{
+void DrawGameInfo(long timed) {
 	long flash_state, seconds, length, btm;
 	short ammo;
 	char buf[80];
 
-	if (!GLOBAL_playing_cutseq && !bDisableLaraControl && gfGameMode != 1)
-	{
+	if(!GLOBAL_playing_cutseq && !bDisableLaraControl && gfGameMode != 1) {
 		flash_state = FlashIt();
 		DrawHealthBar(flash_state);
 		DrawAirBar(flash_state);
 		DrawPickups();
 
-		if (DashTimer < 120)
+		if(DashTimer < 120)
 			S_DrawDashBar(100 * DashTimer / 120);
 
-		if (lara.target)
-		{
-			if (/*tomb4.enemy_bars &&*/ lara.target->hit_points > 0)
-			{
-				if (lara.target->object_number == LARA_DOUBLE)
+		if(lara.target) {
+			if(/*tomb4.enemy_bars &&*/ lara.target->hit_points > 0) {
+				if(lara.target->object_number == LARA_DOUBLE)
 					S_DrawEnemyBar(lara_item->hit_points / 10);
-				else if (lara.target->object_number == SKELETON)
+				else if(lara.target->object_number == SKELETON)
 					S_DrawEnemyBar(100);
-				else if (lara.target->object_number == HORSEMAN)
-				{
-					if (lara.target->dynamic_light)
+				else if(lara.target->object_number == HORSEMAN) {
+					if(lara.target->dynamic_light)
 						S_DrawEnemyBar(100 * lara.target->hit_points / 100);
 					else
 						S_DrawEnemyBar(100 * lara.target->hit_points / objects[lara.target->object_number].hit_points);
-				}
-				else
+				} else
 					S_DrawEnemyBar(100 * lara.target->hit_points / objects[lara.target->object_number].hit_points);
 			}
 		}
 
-		if (gfLevelFlags & GF_TIMER && savegame.Level.Timer && savegame.Level.Timer < 108000)
-		{
+		if(gfLevelFlags & GF_TIMER && savegame.Level.Timer && savegame.Level.Timer < 108000) {
 			seconds = savegame.Level.Timer / 30;
 			sprintf(buf, "%.2d:%.2d:%.2d", seconds / 60, seconds % 60, (334 * (savegame.Level.Timer % 30)) / 100);
 			PrintString(phd_winwidth >> 1, font_height, 0, buf, 0x8000);
 		}
 
-		if (/*tomb4.ammo_counter*/true)
-		{
-			if (lara.gun_status == LG_READY)
-			{
+		if(/*tomb4.ammo_counter*/ true) {
+			if(lara.gun_status == LG_READY) {
 				ammo = *get_current_ammo_pointer(lara.gun_type);
 
-				if (ammo != -1)
-				{
-					if (lara.gun_type == WEAPON_SHOTGUN)
+				if(ammo != -1) {
+					if(lara.gun_type == WEAPON_SHOTGUN)
 						ammo /= 6;
 
 					sprintf(buf, "%i", ammo);
@@ -113,80 +101,70 @@ void DrawGameInfo(long timed)
 			}
 		}
 
-		if (ammo_change_timer)
-		{
+		if(ammo_change_timer) {
 			ammo_change_timer--;
 			PrintString(phd_winwidth >> 1, font_height, 5, ammo_change_buf, 0x8000);
 
-			if (ammo_change_timer <= 0)
+			if(ammo_change_timer <= 0)
 				ammo_change_timer = 0;
 		}
 	}
 }
 
-void DrawHealthBar(long flash_state)
-{
+void DrawHealthBar(long flash_state) {
 	static long old_hitpoints;
 	long hitpoints;
 
 	hitpoints = lara_item->hit_points;
 
-	if (hitpoints < 0)
+	if(hitpoints < 0)
 		hitpoints = 0;
-	else if (hitpoints > 1000)
+	else if(hitpoints > 1000)
 		hitpoints = 1000;
 
-	if (old_hitpoints != hitpoints)
-	{
+	if(old_hitpoints != hitpoints) {
 		old_hitpoints = hitpoints;
 		health_bar_timer = 40;
 	}
 
-	if (health_bar_timer < 0)
+	if(health_bar_timer < 0)
 		health_bar_timer = 0;
 
-	if (hitpoints <= 250)
-	{
-		if (flash_state)
+	if(hitpoints <= 250) {
+		if(flash_state)
 			S_DrawHealthBar(hitpoints / 10);
 		else
 			S_DrawHealthBar(0);
-	}
-	else if (health_bar_timer > 0 || lara.gun_status == LG_READY && lara.gun_type != 8 || lara.poisoned >= 256)
+	} else if(health_bar_timer > 0 || lara.gun_status == LG_READY && lara.gun_type != 8 || lara.poisoned >= 256)
 		S_DrawHealthBar(hitpoints / 10);
 
-	if (PoisonFlag)
+	if(PoisonFlag)
 		PoisonFlag--;
 }
 
-void DrawAirBar(long flash_state)
-{
+void DrawAirBar(long flash_state) {
 	long air;
 
-	if (lara.vehicle == NO_ITEM && (lara.water_status == LW_UNDERWATER || lara.water_status == LW_SURFACE))
-	{
+	if(lara.vehicle == NO_ITEM && (lara.water_status == LW_UNDERWATER || lara.water_status == LW_SURFACE)) {
 		air = lara.air;
 
-		if (air < 0)
+		if(air < 0)
 			air = 0;
-		else if (air > 1800)
+		else if(air > 1800)
 			air = 1800;
 
-		if (air <= 450)
-		{
-			if (flash_state)
+		if(air <= 450) {
+			if(flash_state)
 				S_DrawAirBar(100 * air / 1800);
 			else
 				S_DrawAirBar(0);
-		}
-		else
+		} else
 			S_DrawAirBar(100 * air / 1800);
 	}
 }
 
-void InitialisePickUpDisplay()
-{
-	for (int i = 0; i < 8; i++)
+void InitialisePickUpDisplay() {
+	for(int i = 0; i < 8; i++)
 		pickups[i].life = -1;
 
 	PickupX = GetFixedScale(128);
@@ -195,61 +173,48 @@ void InitialisePickUpDisplay()
 	CurrentPickup = 0;
 }
 
-void DrawPickups()
-{
+void DrawPickups() {
 	DISPLAYPU* pu;
 	long lp;
 
 	pu = &pickups[CurrentPickup];
 
-	if (pu->life > 0)
-	{
-		if (PickupX > 0)
+	if(pu->life > 0) {
+		if(PickupX > 0)
 			PickupX += -PickupX >> 3;
 		else
 			pu->life--;
-	}
-	else if (!pu->life)
-	{
-		if (PickupX < FullPickupX)
-		{
-			if (PickupVel < FullPickupX >> 3)
+	} else if(!pu->life) {
+		if(PickupX < FullPickupX) {
+			if(PickupVel < FullPickupX >> 3)
 				PickupVel++;
 
 			PickupX += PickupVel;
-		}
-		else
-		{
+		} else {
 			pu->life = -1;
 			PickupVel = 0;
 		}
-	}
-	else
-	{
-		for (lp = 0; lp < 8; lp++)
-		{
-			if (pickups[CurrentPickup].life > 0)
+	} else {
+		for(lp = 0; lp < 8; lp++) {
+			if(pickups[CurrentPickup].life > 0)
 				break;
 
 			CurrentPickup++;
 			CurrentPickup &= 7;
 		}
 
-		if (lp == 8)
+		if(lp == 8)
 			CurrentPickup = 0;
 	}
 }
 
-void AddDisplayPickup(short object_number)
-{
+void AddDisplayPickup(short object_number) {
 	DISPLAYPU* pu;
 
-	for (int i = 0; i < 8; i++)
-	{
+	for(int i = 0; i < 8; i++) {
 		pu = &pickups[i];
 
-		if (pu->life < 0)
-		{
+		if(pu->life < 0) {
 			pu->life = 45;
 			pu->object_number = object_number;
 			break;

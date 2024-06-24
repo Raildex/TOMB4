@@ -1,7 +1,6 @@
-#ifndef CAMERA_TYPE_INCLUDED
-#define CAMERA_TYPE_INCLUDED
-enum camera_type
-{
+#ifndef TOMB4_GAME_CAMERATYPE_H
+#define TOMB4_GAME_CAMERATYPE_H
+enum camera_type {
 	CHASE_CAMERA,
 	FIXED_CAMERA,
 	LOOK_CAMERA,
@@ -9,4 +8,4 @@ enum camera_type
 	CINEMATIC_CAMERA,
 	HEAVY_CAMERA,
 };
-#endif
+#endif // TOMB4_GAME_CAMERATYPE_H

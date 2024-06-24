@@ -30,8 +30,7 @@ static char footsounds[14] = { 0, 5, 3, 2, 1, 9, 9, 4, 6, 5, 3, 9, 4, 6 };
 FOOTPRINT FootPrint[32];
 long FootPrintNum;
 
-void AddFootPrint(ITEM_INFO* item)
-{
+void AddFootPrint(ITEM_INFO* item) {
 	FOOTPRINT* print;
 	FLOOR_INFO* floor;
 	PHD_VECTOR pos;
@@ -41,7 +40,7 @@ void AddFootPrint(ITEM_INFO* item)
 	pos.y = 0;
 	pos.z = 0;
 
-	if (FXType == SFX_LANDONLY)
+	if(FXType == SFX_LANDONLY)
 		GetLaraJointPos(&pos, LM_LFOOT);
 	else
 		GetLaraJointPos(&pos, LM_RFOOT);
@@ -49,11 +48,10 @@ void AddFootPrint(ITEM_INFO* item)
 	room_num = item->room_number;
 	floor = GetFloor(pos.x, pos.y, pos.z, &room_num);
 
-	if (floor->fx != 6 && floor->fx != 5 && floor->fx != 11)
+	if(floor->fx != 6 && floor->fx != 5 && floor->fx != 11)
 		SoundEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, &lara_item->pos, SFX_DEFAULT);
 
-	if (floor->fx < 3 && !OnObject)
-	{
+	if(floor->fx < 3 && !OnObject) {
 		print = &FootPrint[FootPrintNum];
 		print->x = pos.x;
 		print->y = GetHeight(floor, pos.x, pos.y, pos.z);
@@ -64,8 +62,7 @@ void AddFootPrint(ITEM_INFO* item)
 	}
 }
 
-void S_DrawFootPrints()
-{
+void S_DrawFootPrints() {
 	FOOTPRINT* print;
 	SPRITESTRUCT* sprite;
 	_D3DTLVERTEX* v;
@@ -74,19 +71,17 @@ void S_DrawFootPrints()
 	float u1, v1, u2, v2;
 	long x, z, x1, y1, z1, x2, y2, z2, x3, y3, z3, col;
 	short room_number;
-	
+
 	v = MyVertexBuffer;
 
-	for (int i = 0; i < 32; i++)
-	{
+	for(int i = 0; i < 32; i++) {
 		print = &FootPrint[i];
 
-		if (print->Active)
-		{
+		if(print->Active) {
 
 			print->Active--;
 
-			if (print->Active < 29)
+			if(print->Active < 29)
 				col = print->Active << 2;
 			else
 				col = 112;
@@ -102,14 +97,13 @@ void S_DrawFootPrints()
 			phd_TranslateRel(print->x, print->y, print->z);
 			phd_RotY(print->YRot);
 
-			for (int j = 0; j < 3; j++)
-			{
+			for(int j = 0; j < 3; j++) {
 				x = long(pos[j].x * mMXPtr[M00] + pos[j].z * mMXPtr[M02] + mMXPtr[M03]);
 				z = long(pos[j].x * mMXPtr[M20] + pos[j].z * mMXPtr[M22] + mMXPtr[M23]);
 				room_number = lara_item->room_number;
 				pos[j].y = GetHeight(GetFloor(x, print->y, z, &room_number), x, print->y, z) - print->y;
 
-				if (abs(pos[j].y) > PRINT_HEIGHT_CORRECTION)
+				if(abs(pos[j].y) > PRINT_HEIGHT_CORRECTION)
 					pos[j].y = 0;
 			}
 
@@ -126,8 +120,7 @@ void S_DrawFootPrints()
 			phd_PopMatrix();
 			setXYZ3(v, x1, y1, z1, x2, y2, z2, x3, y3, z3, clipflags);
 
-			for (int j = 0; j < 3; j++)
-			{
+			for(int j = 0; j < 3; j++) {
 				v[j].color = RGBA(col, col, col, 0xFF);
 				v[j].specular = 0xFF000000;
 			}
@@ -141,11 +134,11 @@ void S_DrawFootPrints()
 			v1 = sprite->y1;
 			v2 = sprite->y2;
 			tex.u1 = u1;
-			tex.v1 = v1;	//top left
+			tex.v1 = v1; // top left
 			tex.u2 = u2;
-			tex.v2 = v1;	//top right
+			tex.v2 = v1; // top right
 			tex.u3 = u1;
-			tex.v3 = v2;	//bottom left
+			tex.v3 = v2; // bottom left
 			AddTriSorted(v, 0, 1, 2, &tex, 1);
 		}
 	}

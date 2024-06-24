@@ -1,7 +1,6 @@
-#ifndef STATS_INCLUDED
-#define STATS_INCLUDED
-struct STATS
-{
+#ifndef TOMB4_GAME_STATS_H
+#define TOMB4_GAME_STATS_H
+struct STATS {
 	unsigned long Timer;
 	unsigned long Distance;
 	unsigned long AmmoUsed;
@@ -10,4 +9,4 @@ struct STATS
 	unsigned char Secrets;
 	unsigned char HealthUsed;
 };
-#endif
+#endif // TOMB4_GAME_STATS_H

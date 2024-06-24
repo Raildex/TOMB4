@@ -8,8 +8,7 @@
 #include "winmain.h"
 #include <MSAcm.h>
 
-const char* TrackFileNames[112] =
-{
+const char* TrackFileNames[112] = {
 	"044_attack_part_i.wav",
 	"008_voncroy9a.wav",
 	"100_attack_part_ii.wav",
@@ -127,8 +126,7 @@ const char* TrackFileNames[112] =
 #pragma warning(push)
 #pragma warning(disable : 4838)
 #pragma warning(disable : 4309)
-static char source_wav_format[50] =
-{
+static char source_wav_format[50] = {
 	2, 0, 2, 0, 68, 172, 0, 0, 71, 173, 0, 0, 0, 8, 4, 0, 32, 0, 244, 7, 7, 0, 0, 1, 0, 0, 0,
 	2, 0, 255, 0, 0, 0, 0, 192, 0, 64, 0, 240, 0, 0, 0, 204, 1, 48, 255, 136, 1, 24, 255
 };
@@ -164,21 +162,16 @@ static long audio_counter = 0;
 static volatile bool reading_audio_file = 0;
 static volatile bool continue_reading_audio_file = 0;
 
-void OpenStreamFile(char* name)
-{
-	__try
-	{
+void OpenStreamFile(char* name) {
+	__try {
 		EnterCriticalSection(&audio_cs);
-	}
-	__finally
-	{
+	} __finally {
 		LeaveCriticalSection(&audio_cs);
 	}
 
 	audio_stream_fp = FileOpen(name);
 
-	if (!audio_stream_fp)
-	{
+	if(!audio_stream_fp) {
 		Log(1, "%s - Not Found", name);
 		return;
 	}
@@ -187,61 +180,53 @@ void OpenStreamFile(char* name)
 	audio_fp_write_ptr = wav_file_buffer;
 	memset(wav_file_buffer, 0, 0x37000);
 
-	if (fread(wav_file_buffer, 1, 0x37000, audio_stream_fp) < 0x37000 && auido_play_mode == 1)
-	{
+	if(fread(wav_file_buffer, 1, 0x37000, audio_stream_fp) < 0x37000 && auido_play_mode == 1) {
 		fseek(audio_stream_fp, 90, SEEK_SET);
 		Log(0, "FileReset In OpenStreamFile");
 	}
 }
 
-void GetADPCMData()
-{
-	if (!audio_stream_fp)
+void GetADPCMData() {
+	if(!audio_stream_fp)
 		return;
 
 	memset(audio_fp_write_ptr, 0, 0x5800);
 
-	if (fread(audio_fp_write_ptr, 1, 0x5800, audio_stream_fp) < 0x5800 && auido_play_mode == 1)
-	{
+	if(fread(audio_fp_write_ptr, 1, 0x5800, audio_stream_fp) < 0x5800 && auido_play_mode == 1) {
 		Log(0, "FileReset In GetADPCMData");
 		fseek(audio_stream_fp, 90, SEEK_SET);
 	}
 
 	audio_fp_write_ptr += 0x5800;
 
-	if ((long)audio_fp_write_ptr >= long(wav_file_buffer + 0x37000))
+	if((long)audio_fp_write_ptr >= long(wav_file_buffer + 0x37000))
 		audio_fp_write_ptr = wav_file_buffer;
 }
 
-void ACMSetVolume()
-{
+void ACMSetVolume() {
 	long volume;
 
-	if (!MusicVolume)
+	if(!MusicVolume)
 		volume = -10000;
 	else
 		volume = -4000 * (100 - MusicVolume) / 100;
 
-	if (DSBuffer)
+	if(DSBuffer)
 		DSBuffer->SetVolume(volume);
 }
 
-void ACMEmulateCDPlay(long track, long mode)
-{
+void ACMEmulateCDPlay(long track, long mode) {
 	char name[256];
 
-	__try
-	{
+	__try {
 		EnterCriticalSection(&audio_cs);
-	}
-	__finally
-	{
+	} __finally {
 		LeaveCriticalSection(&audio_cs);
 	}
 
 	wsprintf(name, "audio\\%s", TrackFileNames[track]);
 
-	if (mode)
+	if(mode)
 		Log(8, "Playing %s %s %d", name, "Looped", track);
 	else
 		Log(8, "Playing %s %s %d", name, "", track);
@@ -252,7 +237,7 @@ void ACMEmulateCDPlay(long track, long mode)
 	auido_play_mode = mode;
 	OpenStreamFile(name);
 
-	if (!audio_stream_fp)
+	if(!audio_stream_fp)
 		return;
 
 	memcpy(ADPCMBuffer, audio_fp_write_ptr, 0x5800);
@@ -269,23 +254,21 @@ void ACMEmulateCDPlay(long track, long mode)
 	DSBuffer->Play(0, 0, DSBPLAY_LOOPING);
 }
 
-BOOL __stdcall ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwSupport)
-{
+BOOL __stdcall ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwSupport) {
 	ACMDRIVERDETAILS driver;
 
 	memset(&driver, 0, sizeof(driver));
 	driver.cbStruct = sizeof(ACMDRIVERDETAILS);
 	acmDriverDetails(hadid, &driver, 0);
 
-	if (strcmp(driver.szShortName, "MS-ADPCM"))
+	if(strcmp(driver.szShortName, "MS-ADPCM"))
 		return 1;
 
 	hACMDriverID = hadid;
 	return 0;
 }
 long ACMHandleNotifications();
-long ACMSetupNotifications()
-{
+long ACMSetupNotifications() {
 	DSBPOSITIONNOTIFY posNotif[5];
 	unsigned long ThreadId;
 	long result;
@@ -296,8 +279,7 @@ long ACMSetupNotifications()
 	posNotif[0].hEventNotify = NotifyEventHandles[0];
 	Log(8, "Set notifies for position %lu", posNotif[0].dwOffset);
 
-	for (int i = 1; i < 4; i++)
-	{
+	for(int i = 1; i < 4; i++) {
 		posNotif[i].dwOffset = NotifySize + posNotif[i - 1].dwOffset;
 		posNotif[i].hEventNotify = NotifyEventHandles[0];
 		Log(8, "Set notifies for positions %lu", posNotif[i].dwOffset);
@@ -308,46 +290,38 @@ long ACMSetupNotifications()
 	posNotif[4].hEventNotify = NotifyEventHandles[1];
 	NotificationThreadHandle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)ACMHandleNotifications, 0, 0, &ThreadId);
 
-	if (!NotificationThreadHandle)
+	if(!NotificationThreadHandle)
 		Log(1, "Create Notification Thread failed");
 
 	result = DSNotify->SetNotificationPositions(5, posNotif);
 
-	if (result != DS_OK)
-	{
+	if(result != DS_OK) {
 		CloseHandle(NotifyEventHandles[0]);
 		CloseHandle(NotifyEventHandles[1]);
 		NotifyEventHandles[1] = 0;
 		NotifyEventHandles[0] = 0;
-	}
-	else
+	} else
 		Log(8, "Setup Notifications OK");
 
 	return result;
 }
 
-void FillADPCMBuffer(char* p, long track)
-{
+void FillADPCMBuffer(char* p, long track) {
 	reading_audio_file = 1;
 
-	__try
-	{
+	__try {
 		EnterCriticalSection(&audio_cs);
-	}
-	__finally
-	{
+	} __finally {
 		LeaveCriticalSection(&audio_cs);
 	}
 
-	if (!audio_stream_fp)
-	{
+	if(!audio_stream_fp) {
 		reading_audio_file = 0;
 		continue_reading_audio_file = 0;
 		return;
 	}
 
-	if (track != XATrack || track == -1)
-	{
+	if(track != XATrack || track == -1) {
 		Log(0, "Not Current Track %d", track);
 		reading_audio_file = 0;
 		continue_reading_audio_file = 0;
@@ -356,8 +330,7 @@ void FillADPCMBuffer(char* p, long track)
 
 	memset(p, 0, 0x5800);
 
-	if (!audio_stream_fp)
-	{
+	if(!audio_stream_fp) {
 		reading_audio_file = 0;
 		continue_reading_audio_file = 0;
 		return;
@@ -365,28 +338,23 @@ void FillADPCMBuffer(char* p, long track)
 
 	fread(p, 1, 0x5800, audio_stream_fp);
 
-	if (audio_stream_fp && feof(audio_stream_fp))
-	{
-		if (auido_play_mode == 1)
+	if(audio_stream_fp && feof(audio_stream_fp)) {
+		if(auido_play_mode == 1)
 			fseek(audio_stream_fp, 90, SEEK_SET);
-		else
-		{
+		else {
 			audio_counter++;
 
-			if (audio_counter > 8)
-			{
+			if(audio_counter > 8) {
 				audio_counter = 0;
 
-				if (auido_play_mode == 2)
-				{
+				if(auido_play_mode == 2) {
 					reading_audio_file = 0;
 					continue_reading_audio_file = 0;
 					S_CDStop();
 					return;
 				}
 
-				if (CurrentAtmosphere && !IsAtmospherePlaying)
-				{
+				if(CurrentAtmosphere && !IsAtmospherePlaying) {
 					reading_audio_file = 0;
 					continue_reading_audio_file = 0;
 					S_CDStop();
@@ -401,29 +369,25 @@ void FillADPCMBuffer(char* p, long track)
 	continue_reading_audio_file = 1;
 }
 
-long ACMHandleNotifications()
-{
+long ACMHandleNotifications() {
 	char* write;
 	unsigned long wait, bytes;
 
-	while ((wait = WaitForMultipleObjects(2, NotifyEventHandles, 0, INFINITE)) != WAIT_FAILED)
-	{
+	while((wait = WaitForMultipleObjects(2, NotifyEventHandles, 0, INFINITE)) != WAIT_FAILED) {
 		EnterCriticalSection(&audio_cs);
 
-		if (!wait && DSBuffer)
-		{
+		if(!wait && DSBuffer) {
 			memcpy(ADPCMBuffer, audio_fp_write_ptr, 0x5800);
 
-			if (XATrack == -1)
+			if(XATrack == -1)
 				memset(ADPCMBuffer, 0, 0x5800);
 			else
 				FillADPCMBuffer((char*)audio_fp_write_ptr, XATrack);
 
-			if (continue_reading_audio_file)
-			{
+			if(continue_reading_audio_file) {
 				audio_fp_write_ptr += 0x5800;
 
-				if ((long)audio_fp_write_ptr >= long(wav_file_buffer + 0x37000))
+				if((long)audio_fp_write_ptr >= long(wav_file_buffer + 0x37000))
 					audio_fp_write_ptr = wav_file_buffer;
 
 				DSBuffer->Lock(NextWriteOffset, NotifySize, (LPVOID*)&write, &bytes, 0, 0, 0);
@@ -431,7 +395,7 @@ long ACMHandleNotifications()
 				DSBuffer->Unlock(&write, bytes, 0, 0);
 				NextWriteOffset += bytes;
 
-				if (NextWriteOffset >= audio_buffer_size)
+				if(NextWriteOffset >= audio_buffer_size)
 					NextWriteOffset -= audio_buffer_size;
 
 				CurrentNotify = (CurrentNotify + 1) & 3;
@@ -440,15 +404,14 @@ long ACMHandleNotifications()
 
 		LeaveCriticalSection(&audio_cs);
 
-		if (!DSBuffer)
+		if(!DSBuffer)
 			break;
 	}
 
 	return DS_OK;
 }
 
-bool ACMInit()
-{
+bool ACMInit() {
 	DSBUFFERDESC desc;
 	static WAVEFORMATEX wav_format;
 	static unsigned long StreamSize;
@@ -460,14 +423,12 @@ bool ACMInit()
 	Log(8, "ACM Version %u.%.02u", ((version >> 16) & 0xFFFF) >> 8, (version >> 16) & 0xFF);
 	acmDriverEnum(ACMEnumCallBack, 0, 0);
 
-	if (!hACMDriverID)
-	{
+	if(!hACMDriverID) {
 		Log(1, "*** Unable To Locate MS-ADPCM Driver ***");
 		return 0;
 	}
 
-	if (acmDriverOpen(&hACMDriver, hACMDriverID, 0))
-	{
+	if(acmDriverOpen(&hACMDriver, hACMDriverID, 0)) {
 		Log(1, "*** Failed To Open Driver MS-ADPCM Driver ***");
 		return 0;
 	}
@@ -495,8 +456,7 @@ bool ACMInit()
 	DXAttempt(DSBuffer->Lock(0, audio_buffer_size, (LPVOID*)&pAudioWrite, &AudioBytes, 0, 0, 0));
 	memset(pAudioWrite, 0, audio_buffer_size);
 
-	for (int i = 0; i < 4; i++)
-	{
+	for(int i = 0; i < 4; i++) {
 		memset(&StreamHeaders[i], 0, sizeof(ACMSTREAMHEADER));
 		StreamHeaders[i].cbStruct = sizeof(ACMSTREAMHEADER);
 		StreamHeaders[i].pbSrc = ADPCMBuffer;
@@ -511,9 +471,8 @@ bool ACMInit()
 	return 1;
 }
 
-void ACMClose()
-{
-	if (!acm_ready)
+void ACMClose() {
+	if(!acm_ready)
 		return;
 
 	EnterCriticalSection(&audio_cs);
@@ -527,35 +486,26 @@ void ACMClose()
 	acmStreamClose(hACMStream, 0);
 	acmDriverClose(hACMDriver, 0);
 
-	if (DSNotify)
-	{
+	if(DSNotify) {
 		Log(4, "Released %s @ %x - RefCnt = %d", "Notification", DSNotify, DSNotify->Release());
 		DSNotify = 0;
-	}
-	else
+	} else
 		Log(1, "%s Attempt To Release NULL Ptr", "Notification");
 
-	if (DSBuffer)
-	{
+	if(DSBuffer) {
 		Log(4, "Released %s @ %x - RefCnt = %d", "Stream Buffer", DSBuffer, DSBuffer->Release());
 		DSBuffer = 0;
-	}
-	else
+	} else
 		Log(1, "%s Attempt To Release NULL Ptr", "Stream Buffer");
 
 	LeaveCriticalSection(&audio_cs);
 }
 
-void S_CDPlay(long track, long mode)
-{
-	if (acm_ready)
-	{
-		__try
-		{
+void S_CDPlay(long track, long mode) {
+	if(acm_ready) {
+		__try {
 			EnterCriticalSection(&audio_cs);
-		}
-		__finally
-		{
+		} __finally {
 			LeaveCriticalSection(&audio_cs);
 		}
 
@@ -566,23 +516,18 @@ void S_CDPlay(long track, long mode)
 	}
 }
 
-void S_CDStop()
-{
-	if (acm_ready && audio_stream_fp)
-	{
-		__try
-		{
+void S_CDStop() {
+	if(acm_ready && audio_stream_fp) {
+		__try {
 			EnterCriticalSection(&audio_cs);
-		}
-		__finally
-		{
+		} __finally {
 			LeaveCriticalSection(&audio_cs);
 		}
 
 		memset(wav_file_buffer, 0, 0x37000);
 		DSBuffer->Stop();
 		DSBuffer->SetCurrentPosition(0);
-		while (reading_audio_file) {};
+		while(reading_audio_file) { };
 		fclose(audio_stream_fp);
 		audio_stream_fp = 0;
 		audio_counter = 0;
@@ -591,8 +536,7 @@ void S_CDStop()
 	}
 }
 
-void S_StartSyncedAudio(long track)
-{
+void S_StartSyncedAudio(long track) {
 	S_CDStop();
 	S_CDPlay(track, 2);
 }

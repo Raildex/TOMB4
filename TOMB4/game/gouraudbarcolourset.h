@@ -1,7 +1,6 @@
 #ifndef GOURAUDBARCOLOURSET_INCLUDED
 #define GOURAUDBARCOLOURSET_INCLUDED
-struct GouraudBarColourSet
-{
+struct GouraudBarColourSet {
 	unsigned char abLeftRed[5];
 	unsigned char abLeftGreen[5];
 	unsigned char abLeftBlue[5];

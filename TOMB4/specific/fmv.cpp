@@ -23,36 +23,35 @@
 #include "inputbuttons.h"
 #include <cstdio>
 
-static void (__stdcall* BinkCopyToBuffer)(BINK_STRUCT*, LPVOID, LONG, long, long, long, long);
+static void(__stdcall* BinkCopyToBuffer)(BINK_STRUCT*, LPVOID, LONG, long, long, long, long);
 static void(__stdcall* BinkOpenDirectSound)(unsigned long);
-static void (__stdcall* BinkSetSoundSystem)(LPVOID, LPDIRECTSOUND);
-static LPVOID (__stdcall* BinkOpen)(char*, unsigned long);
-static long (__stdcall* BinkDDSurfaceType)(IDirectDrawSurface4*);
-static long (__stdcall* BinkDoFrame)(BINK_STRUCT*);
-static void (__stdcall* BinkNextFrame)(BINK_STRUCT*);
-static long (__stdcall* BinkWait)(BINK_STRUCT*);
-static void (__stdcall* BinkClose)(BINK_STRUCT*);
+static void(__stdcall* BinkSetSoundSystem)(LPVOID, LPDIRECTSOUND);
+static LPVOID(__stdcall* BinkOpen)(char*, unsigned long);
+static long(__stdcall* BinkDDSurfaceType)(IDirectDrawSurface4*);
+static long(__stdcall* BinkDoFrame)(BINK_STRUCT*);
+static void(__stdcall* BinkNextFrame)(BINK_STRUCT*);
+static long(__stdcall* BinkWait)(BINK_STRUCT*);
+static void(__stdcall* BinkClose)(BINK_STRUCT*);
 static HMODULE hBinkW32;
 
 static BINK_STRUCT* Bink;
 static IDirectDrawSurface4* BinkSurface;
 static long BinkSurfaceType;
 
-#define GET_DLL_PROC(dll, proc, n) \
-{ \
-	*(FARPROC *)&(proc) = GetProcAddress((dll), n); \
-	if(!proc) throw #proc; \
-}
+#define GET_DLL_PROC(dll, proc, n)                     \
+	{                                                  \
+		*(FARPROC*)&(proc) = GetProcAddress((dll), n); \
+		if(!proc)                                      \
+			throw #proc;                               \
+	}
 
-bool LoadBinkStuff()
-{
+bool LoadBinkStuff() {
 	hBinkW32 = LoadLibrary("binkw32.dll");
 
-	if (!hBinkW32)
+	if(!hBinkW32)
 		return 0;
 
-	try
-	{	
+	try {
 		GET_DLL_PROC(hBinkW32, BinkCopyToBuffer, "_BinkCopyToBuffer@28");
 		GET_DLL_PROC(hBinkW32, BinkOpenDirectSound, "_BinkOpenDirectSound@4");
 		GET_DLL_PROC(hBinkW32, BinkSetSoundSystem, "_BinkSetSoundSystem@8");
@@ -62,9 +61,7 @@ bool LoadBinkStuff()
 		GET_DLL_PROC(hBinkW32, BinkNextFrame, "_BinkNextFrame@4");
 		GET_DLL_PROC(hBinkW32, BinkWait, "_BinkWait@4");
 		GET_DLL_PROC(hBinkW32, BinkClose, "_BinkClose@4");
-	}
-	catch (LPCTSTR)
-	{
+	} catch(LPCTSTR) {
 		FreeLibrary(hBinkW32);
 		hBinkW32 = 0;
 		return 0;
@@ -73,17 +70,14 @@ bool LoadBinkStuff()
 	return 1;
 }
 
-void FreeBinkStuff()
-{
-	if (hBinkW32)
-	{
+void FreeBinkStuff() {
+	if(hBinkW32) {
 		FreeLibrary(hBinkW32);
 		hBinkW32 = 0;
 	}
 }
 
-void ShowBinkFrame()
-{
+void ShowBinkFrame() {
 	DDSURFACEDESC2 surf;
 
 	memset(&surf, 0, sizeof(surf));
@@ -92,28 +86,27 @@ void ShowBinkFrame()
 	BinkCopyToBuffer(Bink, surf.lpSurface, surf.lPitch, Bink->num, 0, 0, BinkSurfaceType);
 	DXAttempt(BinkSurface->Unlock(0));
 
-	if (App.dx.Flags & DXF_WINDOWED)
+	if(App.dx.Flags & DXF_WINDOWED)
 		DXShowFrame();
 }
 
-long PlayFmvNow(long num)
-{
+long PlayFmvNow(long num) {
 	DXDISPLAYMODE* modes;
 	DXDISPLAYMODE* current;
 	long dm, rm, ndms;
 	char name[80];
 	char path[80];
 
-	if (MainThread.ended)
+	if(MainThread.ended)
 		return 0;
 
-	if ((1 << num) & FmvSceneTriggered)
+	if((1 << num) & FmvSceneTriggered)
 		return 1;
 
 	FmvSceneTriggered |= 1 << num;
 	S_CDStop();
 
-	if (fmvs_disabled)
+	if(fmvs_disabled)
 		return 0;
 
 	sprintf(name, "fmv\\fmv%02d.bik", num);
@@ -125,14 +118,11 @@ long PlayFmvNow(long num)
 	dm = App.DXInfo.nDisplayMode;
 	current = &modes[dm];
 
-	if (current->bpp != 32 || current->w != 640 || current->h != 480)
-	{
+	if(current->bpp != 32 || current->w != 640 || current->h != 480) {
 		ndms = G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].nDisplayModes;
 
-		for (int i = 0; i < ndms; i++, modes++)
-		{
-			if (modes->bpp == 32 && modes->w == 640 && modes->h == 480)
-			{
+		for(int i = 0; i < ndms; i++, modes++) {
+			if(modes->bpp == 32 && modes->w == 640 && modes->h == 480) {
 				App.DXInfo.nDisplayMode = i;
 				break;
 			}
@@ -143,31 +133,30 @@ long PlayFmvNow(long num)
 		ClearSurfaces();
 		rm = 1;
 	}
-	
+
 	Bink = 0;
 	BinkSetSoundSystem(BinkOpenDirectSound, App.dx.lpDS);
 	Bink = (BINK_STRUCT*)BinkOpen(path, 0);
 
-	if (App.dx.Flags & DXF_WINDOWED)
+	if(App.dx.Flags & DXF_WINDOWED)
 		BinkSurface = App.dx.lpBackBuffer;
 	else
 		BinkSurface = App.dx.lpPrimaryBuffer;
 
 	BinkSurfaceType = BinkDDSurfaceType(BinkSurface);
 
-	if (Bink)
-	{
+	if(Bink) {
 		BinkDoFrame(Bink);
 		S_UpdateInput();
 
-		for (int i = 0; i != Bink->num2; i++)
-		{
-			if (input & IN_OPTION || MainThread.ended)
+		for(int i = 0; i != Bink->num2; i++) {
+			if(input & IN_OPTION || MainThread.ended)
 				break;
 
 			BinkNextFrame(Bink);
 
-			while (BinkWait(Bink));
+			while(BinkWait(Bink))
+				;
 
 			ShowBinkFrame();
 			BinkDoFrame(Bink);
@@ -179,8 +168,7 @@ long PlayFmvNow(long num)
 		Bink = 0;
 	}
 
-	if (rm)
-	{
+	if(rm) {
 		App.DXInfo.nDisplayMode = dm;
 		DXChangeVideoMode();
 		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);

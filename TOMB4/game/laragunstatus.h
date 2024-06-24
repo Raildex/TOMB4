@@ -1,7 +1,6 @@
-#ifndef LARA_GUN_STATUS_INCLUDED
-#define LARA_GUN_STATUS_INCLUDED
-enum lara_gun_status
-{
+#ifndef TOMB4_GAME_LARAGUNSTATUS_H
+#define TOMB4_GAME_LARAGUNSTATUS_H
+enum lara_gun_status {
 	LG_NO_ARMS,
 	LG_HANDS_BUSY,
 	LG_DRAW_GUNS,
@@ -9,4 +8,4 @@ enum lara_gun_status
 	LG_READY,
 	LG_FLARE,
 };
-#endif
+#endif // TOMB4_GAME_LARAGUNSTATUS_H

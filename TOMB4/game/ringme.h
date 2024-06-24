@@ -1,12 +1,11 @@
-#ifndef RINGME_INCLUDED
-#define RINGME_INCLUDED
+#ifndef TOMB4_GAME_RINGME_H
+#define TOMB4_GAME_RINGME_H
 #include "objlist.h"
-struct RINGME
-{
+struct RINGME {
 	OBJLIST current_object_list[119];
 	long ringactive;
 	long objlistmovement;
 	long curobjinlist;
 	long numobjectsinlist;
 };
-#endif
+#endif // TOMB4_GAME_RINGME_H

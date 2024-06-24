@@ -1,7 +1,6 @@
-#ifndef COLOR_BIT_MASKS_INCLUDED
-#define COLOR_BIT_MASKS_INCLUDED
-struct COLOR_BIT_MASKS
-{
+#ifndef TOMB4_GAME_COLORBITMASKS_H
+#define TOMB4_GAME_COLORBITMASKS_H
+struct COLOR_BIT_MASKS {
 	unsigned long dwRBitMask;
 	unsigned long dwGBitMask;
 	unsigned long dwBBitMask;
@@ -15,4 +14,4 @@ struct COLOR_BIT_MASKS
 	unsigned long dwBBitOffset;
 	unsigned long dwRGBAlphaBitOffset;
 };
-#endif
+#endif // TOMB4_GAME_COLORBITMASKS_H

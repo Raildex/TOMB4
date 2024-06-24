@@ -1,7 +1,6 @@
-#ifndef INVOBJ_INCLUDED
-#define INVOBJ_INCLUDED
-struct INVOBJ
-{
+#ifndef TOMB4_GAME_INVOBJ_H
+#define TOMB4_GAME_INVOBJ_H
+struct INVOBJ {
 	short object_number;
 	short yoff;
 	short scale1;
@@ -12,4 +11,4 @@ struct INVOBJ
 	short objname;
 	unsigned long meshbits;
 };
-#endif
+#endif // TOMB4_GAME_INVOBJ_H

@@ -1,7 +1,6 @@
-#ifndef JEEPINFO_INCLUDED
-#define JEEPINFO_INCLUDED
-struct JEEPINFO
-{
+#ifndef TOMB4_GAME_JEEPINFO_H
+#define TOMB4_GAME_JEEPINFO_H
+struct JEEPINFO {
 	short right_front_wheelrot;
 	short left_front_wheelrot;
 	short left_back_wheelrot;
@@ -19,4 +18,4 @@ struct JEEPINFO
 	short unused2;
 	short gear;
 };
-#endif
+#endif // TOMB4_GAME_JEEPINFO_H

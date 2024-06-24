@@ -4,8 +4,7 @@
 
 static __int64 counter, frequency;
 
-long Sync()
-{
+long Sync() {
 	__int64 PerformanceCount, f;
 	long n;
 
@@ -16,18 +15,16 @@ long Sync()
 	return n;
 }
 
-void TIME_Reset()
-{
+void TIME_Reset() {
 	QueryPerformanceCounter((LARGE_INTEGER*)&counter);
 }
 
-bool TIME_Init()
-{
+bool TIME_Init() {
 	__int64 pfq;
 
 	Log(2, "TIME_Init");
 
-	if (!QueryPerformanceFrequency((LARGE_INTEGER*)&pfq))
+	if(!QueryPerformanceFrequency((LARGE_INTEGER*)&pfq))
 		return 0;
 
 	frequency = pfq / 60;

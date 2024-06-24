@@ -1,8 +1,7 @@
-#ifndef PHDTEXTURESTRUCT_INCLUDED
-#define PHDTEXTURESTRUCT_INCLUDED
-#pragma pack(push,1)
-struct PHDTEXTURESTRUCT
-{
+#ifndef TOMB4_GAME_PHDTEXTURESTRUCT_H
+#define TOMB4_GAME_PHDTEXTURESTRUCT_H
+#pragma pack(push, 1)
+struct PHDTEXTURESTRUCT {
 	unsigned short drawtype;
 	unsigned short tpage;
 	unsigned short flag;
@@ -20,4 +19,4 @@ struct PHDTEXTURESTRUCT
 	unsigned long height;
 };
 #pragma pack(pop)
-#endif
+#endif // TOMB4_GAME_PHDTEXTURESTRUCT_H

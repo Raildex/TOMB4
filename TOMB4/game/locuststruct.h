@@ -1,7 +1,6 @@
 #ifndef LOCUST_STRUCT_INCLUDED
 #define LOCUST_STRUCT_INCLUDED
-struct LOCUST_STRUCT
-{
+struct LOCUST_STRUCT {
 	PHD_3DPOS pos;
 	short room_number;
 	short speed;

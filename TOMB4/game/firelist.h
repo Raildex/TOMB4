@@ -1,7 +1,6 @@
-#ifndef FIRE_LIST_INCLUDED
-#define FIRE_LIST_INCLUDED
-struct FIRE_LIST
-{
+#ifndef TOMB4_GAME_FIRELIST_H
+#define TOMB4_GAME_FIRELIST_H
+struct FIRE_LIST {
 	long x;
 	long y;
 	long z;
@@ -9,4 +8,4 @@ struct FIRE_LIST
 	char size;
 	short room_number;
 };
-#endif
+#endif // TOMB4_GAME_FIRELIST_H

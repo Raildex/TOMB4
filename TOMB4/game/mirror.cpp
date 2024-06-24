@@ -12,8 +12,7 @@
 #include "hairstruct.h"
 #include "larainfo.h"
 
-void Draw_Mirror_Lara()
-{
+void Draw_Mirror_Lara() {
 	HAIR_STRUCT* hair;
 	GUNSHELL_STRUCT* gunshell;
 	long zplane;
@@ -21,18 +20,16 @@ void Draw_Mirror_Lara()
 	zplane = gfMirrorZPlane << 1;
 	hair = &hairs[0][0];
 
-	for (int i = 0; i < 6; i++)
-	{
+	for(int i = 0; i < 6; i++) {
 		hair->pos.z_pos = zplane - hair->pos.z_pos;
 		hair->pos.y_rot = 0x8000 - hair->pos.y_rot;
 		hair++;
 	}
 
-	for (int i = 0; i < 24; i++)
-	{
+	for(int i = 0; i < 24; i++) {
 		gunshell = &Gunshells[i];
 
-		if (gunshell->counter)
+		if(gunshell->counter)
 			gunshell->pos.z_pos = zplane - gunshell->pos.z_pos;
 	}
 
@@ -51,8 +48,7 @@ void Draw_Mirror_Lara()
 	lara_item->pos.z_rot += 0x8000;
 	phd_PushMatrix();
 
-	if (lara.right_arm.flash_gun)
-	{
+	if(lara.right_arm.flash_gun) {
 		mMXPtr[M00] = lara_matrices[11 * indices_count + M00];
 		mMXPtr[M01] = lara_matrices[11 * indices_count + M01];
 		mMXPtr[M02] = lara_matrices[11 * indices_count + M02];
@@ -68,8 +64,7 @@ void Draw_Mirror_Lara()
 		SetGunFlash(lara.gun_type);
 	}
 
-	if (lara.left_arm.flash_gun)
-	{
+	if(lara.left_arm.flash_gun) {
 		mMXPtr[M00] = lara_matrices[14 * indices_count + M00];
 		mMXPtr[M01] = lara_matrices[14 * indices_count + M01];
 		mMXPtr[M02] = lara_matrices[14 * indices_count + M02];
@@ -87,18 +82,16 @@ void Draw_Mirror_Lara()
 
 	phd_PopMatrix();
 
-	for (int i = 0; i < 24; i++)
-	{
+	for(int i = 0; i < 24; i++) {
 		gunshell = &Gunshells[i];
 
-		if (gunshell->counter)
+		if(gunshell->counter)
 			gunshell->pos.z_pos = zplane - gunshell->pos.z_pos;
 	}
 
 	hair = &hairs[0][0];
 
-	for (int i = 0; i < 6; i++)
-	{
+	for(int i = 0; i < 6; i++) {
 		hair->pos.z_pos = zplane - hair->pos.z_pos;
 		hair->pos.y_rot = 0x8000 - hair->pos.y_rot;
 		hair++;

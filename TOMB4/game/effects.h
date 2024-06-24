@@ -48,4 +48,4 @@ extern OBJECT_VECTOR* sound_effects;
 extern long GlobalFogOff;
 extern long number_sound_effects;
 extern long FogTableColor[28];
-extern void(*effect_routines[])(ITEM_INFO* item);
+extern void (*effect_routines[])(ITEM_INFO* item);

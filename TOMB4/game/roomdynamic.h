@@ -1,7 +1,6 @@
-#ifndef ROOM_DYNAMIC_INCLUDED
-#define ROOM_DYNAMIC_INCLUDED
-struct ROOM_DYNAMIC
-{
+#ifndef TOMB4_GAME_ROOMDYNAMIC_H
+#define TOMB4_GAME_ROOMDYNAMIC_H
+struct ROOM_DYNAMIC {
 	float x;
 	float y;
 	float z;
@@ -12,4 +11,4 @@ struct ROOM_DYNAMIC
 	float sqr_falloff;
 	float inv_falloff;
 };
-#endif
+#endif // TOMB4_GAME_ROOMDYNAMIC_H

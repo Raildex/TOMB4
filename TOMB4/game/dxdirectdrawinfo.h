@@ -1,12 +1,11 @@
-#ifndef DXDIRECTDRAWINFO_INCLUDED
-#define DXDIRECTDRAWINFO_INCLUDED
+#ifndef TOMB4_GAME_DXDIRECTDRAWINFO_H
+#define TOMB4_GAME_DXDIRECTDRAWINFO_H
 #include <guiddef.h>
 #include <ddraw.h>
 
 struct DXDISPLAYMODE;
 struct DXD3DDEVICE;
-struct DXDIRECTDRAWINFO
-{
+struct DXDIRECTDRAWINFO {
 	char Name[30];
 	char About[80];
 	LPGUID lpGuid;
@@ -18,4 +17,4 @@ struct DXDIRECTDRAWINFO
 	long nD3DDevices;
 	DXD3DDEVICE* D3DDevices;
 };
-#endif
+#endif // TOMB4_GAME_DXDIRECTDRAWINFO_H

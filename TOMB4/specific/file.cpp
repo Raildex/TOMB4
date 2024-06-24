@@ -81,8 +81,7 @@ short nAIObjects;
 static char* CompressedData;
 static long num_items;
 
-unsigned int __stdcall LoadLevel(void* name)
-{
+unsigned int __stdcall LoadLevel(void* name) {
 	OBJECT_INFO* obj;
 	TEXTURESTRUCT* tex;
 	char* pData;
@@ -110,8 +109,7 @@ unsigned int __stdcall LoadLevel(void* name)
 	FILE* level_fp = 0;
 	level_fp = FileOpen((const char*)name);
 
-	if (level_fp)
-	{
+	if(level_fp) {
 		fread(&version, 1, 4, level_fp);
 		fread(&RTPages, 1, 2, level_fp);
 		fread(&OTPages, 1, 2, level_fp);
@@ -163,18 +161,16 @@ unsigned int __stdcall LoadLevel(void* name)
 		LoadCinematic(&FileData);
 		S_LoadBar();
 
-		if (acm_ready && !App.SoundDisabled)
+		if(acm_ready && !App.SoundDisabled)
 			LoadSamples(level_fp, &FileData);
 
 		free(pData);
 		S_LoadBar();
 
-		for (int i = 0; i < 3; i++)
-		{
+		for(int i = 0; i < 3; i++) {
 			obj = &objects[WATERFALL1 + i];
 
-			if (obj->loaded)
-			{
+			if(obj->loaded) {
 				tex = &textinfo[mesh_vtxbuf[obj->mesh_index]->gt4[4] & 0x7FFF];
 				AnimatingWaterfalls[i] = tex;
 				AnimatingWaterfallsV[i] = (long)tex->v1;
@@ -200,8 +196,7 @@ unsigned int __stdcall LoadLevel(void* name)
 	return 1;
 }
 
-long S_LoadLevelFile(long num)
-{
+long S_LoadLevelFile(long num) {
 	char name[80];
 
 	Log(2, "S_LoadLevelFile");
@@ -210,42 +205,36 @@ long S_LoadLevelFile(long num)
 	LevelLoadingThread.active = 1;
 	LevelLoadingThread.ended = 0;
 	LevelLoadingThread.handle = _beginthreadex(0, 0, &LoadLevel, name, 0, (unsigned int*)&LevelLoadingThread.address);
-	while (LevelLoadingThread.active);
+	while(LevelLoadingThread.active)
+		;
 	return 1;
 }
 
-void FreeLevel()
-{
+void FreeLevel() {
 	MESH_DATA** vbuf;
 	MESH_DATA* mesh;
 	ROOM_INFO* r;
 
 	Log(2, "FreeLevel");
 
-	for (int i = 0; i < num_level_meshes; i++)
-	{
+	for(int i = 0; i < num_level_meshes; i++) {
 		vbuf = &mesh_vtxbuf[i];
 		mesh = *vbuf;
 
-		if (mesh->SourceVB)
-		{
+		if(mesh->SourceVB) {
 			Log(4, "Released %s @ %x - RefCnt = %d", "Mesh VB", mesh->SourceVB, mesh->SourceVB->Release());
 			mesh->SourceVB = 0;
 		}
 	}
-	
-	if (room)
-	{
-		for (int i = 0; i < number_rooms; i++)
-		{
+
+	if(room) {
+		for(int i = 0; i < number_rooms; i++) {
 			r = &room[i];
 
-			if (r->SourceVB)
-			{
+			if(r->SourceVB) {
 				Log(4, "Released %s @ %x - RefCnt = %d", "Source VB", r->SourceVB, r->SourceVB->Release());
 				r->SourceVB = 0;
-			}
-			else
+			} else
 				Log(1, "%s Attempt To Release NULL Ptr", "Source VB");
 		}
 	}
@@ -260,8 +249,7 @@ void FreeLevel()
 	malloc_free = malloc_size;
 }
 
-bool FindCDDrive()
-{
+bool FindCDDrive() {
 	HANDLE file;
 	unsigned long drives, type;
 	char path[14];
@@ -273,20 +261,16 @@ bool FindCDDrive()
 	cd_drive = 'A';
 	lstrcpy(root, "A:\\");
 
-	while (drives)
-	{
-		if (drives & 1)
-		{
+	while(drives) {
+		if(drives & 1) {
 			root[0] = cd_drive;
 			type = GetDriveType(root);
 
-			if (type == DRIVE_CDROM)
-			{
+			if(type == DRIVE_CDROM) {
 				path[0] = cd_drive;
 				file = CreateFile(path, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
-				if (file != INVALID_HANDLE_VALUE)
-				{
+				if(file != INVALID_HANDLE_VALUE) {
 					CloseHandle(file);
 					return 1;
 				}
@@ -300,8 +284,7 @@ bool FindCDDrive()
 	return 0;
 }
 
-FILE* FileOpen(const char* name)
-{
+FILE* FileOpen(const char* name) {
 	FILE* file;
 	char path_name[80];
 
@@ -310,20 +293,18 @@ FILE* FileOpen(const char* name)
 	Log(5, "FileOpen - %s", path_name);
 	file = fopen(path_name, "rb");
 
-	if (!file)
+	if(!file)
 		Log(1, "Unable To Open %s", path_name);
 
 	return file;
 }
 
-void FileClose(FILE* file)
-{
+void FileClose(FILE* file) {
 	Log(2, "FileClose");
 	fclose(file);
 }
 
-long FileSize(FILE* file)
-{
+long FileSize(FILE* file) {
 	long size;
 
 	fseek(file, 0, SEEK_END);
@@ -332,8 +313,7 @@ long FileSize(FILE* file)
 	return size;
 }
 
-long LoadFile(const char* name, char** dest)
-{
+long LoadFile(const char* name, char** dest) {
 	FILE* file;
 	long size, count;
 
@@ -341,19 +321,18 @@ long LoadFile(const char* name, char** dest)
 	Log(5, "File - %s", name);
 	file = FileOpen(name);
 
-	if (!file)
+	if(!file)
 		return 0;
 
 	size = FileSize(file);
 
-	if (!*dest)
+	if(!*dest)
 		*dest = (char*)malloc(size);
 
 	count = fread(*dest, 1, size, file);
 	Log(5, "Read - %d FileSize - %d", count, size);
 
-	if (count != size)
-	{
+	if(count != size) {
 		Log(1, "Error Reading File");
 		FileClose(file);
 		free(*dest);
@@ -364,8 +343,7 @@ long LoadFile(const char* name, char** dest)
 	return size;
 }
 
-bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char** FileData)
-{
+bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char** FileData) {
 	DXTEXTUREINFO* dxtex;
 	IDirectDrawSurface4* tSurf;
 	IDirect3DTexture2* pTex;
@@ -383,16 +361,14 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 	skip = 4;
 	dxtex = &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].TextureInfos[G_dxinfo->nTexture];
 
-	if (dxtex->rbpp == 8 && dxtex->gbpp == 8 && dxtex->bbpp == 8 && dxtex->abpp == 8)
+	if(dxtex->rbpp == 8 && dxtex->gbpp == 8 && dxtex->bbpp == 8 && dxtex->abpp == 8)
 		format = 1;
-	else if (dxtex->rbpp == 5 && dxtex->gbpp == 5 && dxtex->bbpp == 5 && dxtex->abpp == 1)
-	{
+	else if(dxtex->rbpp == 5 && dxtex->gbpp == 5 && dxtex->bbpp == 5 && dxtex->abpp == 1) {
 		format = 2;
 		skip = 2;
 	}
 
-	if (format <= 1)
-	{
+	if(format <= 1) {
 		fread(&size, 1, 4, level_fp);
 		fread(&compressedSize, 1, 4, level_fp);
 
@@ -406,9 +382,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 		fread(&compressedSize, 1, 4, level_fp);
 		fseek(level_fp, compressedSize, SEEK_CUR);
 		free(CompressedData);
-	}
-	else
-	{
+	} else {
 		fread(&size, 1, 4, level_fp);
 		fread(&compressedSize, 1, 4, level_fp);
 		fseek(level_fp, compressedSize, SEEK_CUR);
@@ -432,8 +406,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 	*FileData += size;
 	S_LoadBar();
 
-	for (int i = 0; i < RTPages; i++)
-	{
+	for(int i = 0; i < RTPages; i++) {
 		Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
 		nTex = nTextures;
 		nTextures++;
@@ -456,8 +429,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 	*FileData += size;
 	S_LoadBar();
 
-	for (int i = 0; i < OTPages; i++)
-	{
+	for(int i = 0; i < OTPages; i++) {
 		Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
 		nTex = nTextures;
 		nTextures++;
@@ -476,20 +448,17 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 
 	Log(5, "BTPages %d", BTPages);
 
-	if (BTPages)
-	{
+	if(BTPages) {
 		size = BTPages * skip * 0x10000;
 		TextureData = (unsigned char*)malloc(size);
 		memcpy(TextureData, *FileData, size);
 		*FileData += size;
 
-		for (int i = 0; i < BTPages; i++)
-		{
-			if (i < (BTPages >> 1))
+		for(int i = 0; i < BTPages; i++) {
+			if(i < (BTPages >> 1))
 				tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 4, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
-			else
-			{
-				if (!App.BumpMapping)
+			else {
+				if(!App.BumpMapping)
 					break;
 
 				tSurf = CreateTexturePage(App.BumpMapSize, App.BumpMapSize, 4, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
@@ -502,13 +471,10 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 			Textures[nTex].tex = pTex;
 			Textures[nTex].surface = tSurf;
 
-			if (i < (BTPages >> 1))
-			{
+			if(i < (BTPages >> 1)) {
 				Textures[nTex].width = App.TextureSize;
 				Textures[nTex].height = App.TextureSize;
-			}
-			else
-			{
+			} else {
 				Textures[nTex].width = App.BumpMapSize;
 				Textures[nTex].height = App.BumpMapSize;
 			}
@@ -533,16 +499,16 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 	pData = *FileData;
 	TextureData = (unsigned char*)malloc(0x40000);
 
-	if (!gfCurrentLevel)	//main menu logo
+	if(!gfCurrentLevel) // main menu logo
 	{
 		pComp = 0;
 		CompressedData = 0;
 
-		if (Gameflow->Language == US)
+		if(Gameflow->Language == US)
 			size = LoadFile("data\\uslogo.pak", &CompressedData);
-		else if (Gameflow->Language == GERMAN)
+		else if(Gameflow->Language == GERMAN)
 			size = LoadFile("data\\grlogo.pak", &CompressedData);
-		else if (Gameflow->Language == FRENCH)
+		else if(Gameflow->Language == FRENCH)
 			size = LoadFile("data\\frlogo.pak", &CompressedData);
 		else
 			size = LoadFile("data\\uklogo.pak", &CompressedData);
@@ -551,21 +517,18 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 		Decompress(pComp, CompressedData + 4, size - 4, *(long*)CompressedData);
 		free(CompressedData);
 
-		for (int i = 0; i < 2; i++)
-		{
+		for(int i = 0; i < 2; i++) {
 			s = pComp + (i * 768);
 			d = (long*)TextureData;
 
-			for (int y = 0; y < 256; y++)
-			{
-				for (int x = 0; x < 256; x++)
-				{
+			for(int y = 0; y < 256; y++) {
+				for(int x = 0; x < 256; x++) {
 					r = *(s + (x * 3) + (y * 1536));
 					g = *(s + (x * 3) + (y * 1536) + 1);
 					b = *(s + (x * 3) + (y * 1536) + 2);
 					a = -1;
 
-					if (!r && !b && !g)
+					if(!r && !b && !g)
 						a = 0;
 
 					c = RGBA(r, g, b, a);
@@ -588,7 +551,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 		free(pComp);
 	}
 
-	//font
+	// font
 	memcpy(TextureData, *FileData, 0x40000);
 	*FileData += 0x40000;
 
@@ -603,7 +566,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 	Textures[nTex].height = 256;
 	Textures[nTex].bump = 0;
 
-	//sky
+	// sky
 	memcpy(TextureData, *FileData, 0x40000);
 	*FileData += 0x40000;
 
@@ -623,8 +586,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 	return 1;
 }
 
-bool LoadRooms(char** FileData)
-{
+bool LoadRooms(char** FileData) {
 	ROOM_INFO* r;
 	long size, nDoors;
 
@@ -636,19 +598,17 @@ bool LoadRooms(char** FileData)
 	*FileData += sizeof(short);
 	Log(7, "Number Of Rooms %d", number_rooms);
 
-	if (number_rooms < 0 || number_rooms > 1024)
-	{
+	if(number_rooms < 0 || number_rooms > 1024) {
 		Log(1, "Incorrect Number Of Rooms");
 		return 0;
 	}
 
 	room = (ROOM_INFO*)game_malloc(number_rooms * sizeof(ROOM_INFO));
 
-	if (!room)
+	if(!room)
 		return 0;
 
-	for (int i = 0; i < number_rooms; i++)
-	{
+	for(int i = 0; i < number_rooms; i++) {
 		r = &room[i];
 
 		r->x = *(long*)*FileData;
@@ -674,14 +634,12 @@ bool LoadRooms(char** FileData)
 		nDoors = *(short*)*FileData;
 		*FileData += sizeof(short);
 
-		if (nDoors)
-		{
+		if(nDoors) {
 			r->door = (short*)game_malloc((16 * nDoors + 1) * sizeof(short));
 			r->door[0] = (short)nDoors;
 			memcpy(r->door + 1, *FileData, 16 * nDoors * sizeof(short));
 			*FileData += 16 * nDoors * sizeof(short);
-		}
-		else
+		} else
 			r->door = 0;
 
 		r->x_size = *(short*)*FileData;
@@ -701,30 +659,26 @@ bool LoadRooms(char** FileData)
 		r->num_lights = *(short*)*FileData;
 		*FileData += sizeof(short);
 
-		if (r->num_lights)
-		{
+		if(r->num_lights) {
 			size = sizeof(LIGHTINFO) * r->num_lights;
 			r->light = (LIGHTINFO*)game_malloc(size);
 			memcpy(r->light, *FileData, size);
 			*FileData += size;
-		}
-		else
+		} else
 			r->light = 0;
 
 		r->num_meshes = *(short*)*FileData;
 		*FileData += sizeof(short);
 
-		if (r->num_meshes)
-		{
+		if(r->num_meshes) {
 			size = sizeof(MESH_INFO) * r->num_meshes;
 			r->mesh = (MESH_INFO*)game_malloc(size);
 			memcpy(r->mesh, *FileData, size);
 			*FileData += size;
 
-			for (int j = 0; j < r->num_meshes; j++)
+			for(int j = 0; j < r->num_meshes; j++)
 				r->mesh[j].Flags = 1;
-		}
-		else
+		} else
 			r->mesh = 0;
 
 		r->flipped_room = *(short*)*FileData;
@@ -762,8 +716,7 @@ bool LoadRooms(char** FileData)
 	return 1;
 }
 
-bool LoadObjects(char** FileData)
-{
+bool LoadObjects(char** FileData) {
 	OBJECT_INFO* obj;
 	STATIC_INFO* stat;
 	short** mesh;
@@ -787,7 +740,7 @@ bool LoadObjects(char** FileData)
 	memcpy(meshes, *FileData, size * sizeof(short*));
 	*FileData += size * sizeof(short*);
 
-	for (int i=0;i<size;i++)
+	for(int i = 0; i < size; i++)
 		meshes[i] = mesh_base + (long)meshes[i] / 2;
 
 	num_meshes = size;
@@ -828,14 +781,13 @@ bool LoadObjects(char** FileData)
 	memcpy(frames, *FileData, sizeof(short) * size);
 	*FileData += sizeof(short) * size;
 
-	for (int i = 0; i < num_anims; i++)
+	for(int i = 0; i < num_anims; i++)
 		anims[i].frame_ptr = (short*)((long)anims[i].frame_ptr + (long)frames);
 
 	num = *(long*)*FileData;
 	*FileData += sizeof(long);
 
-	for (int i = 0; i < num; i++)
-	{
+	for(int i = 0; i < num; i++) {
 		slot = *(long*)*FileData;
 		*FileData += sizeof(long);
 		obj = &objects[slot];
@@ -860,8 +812,7 @@ bool LoadObjects(char** FileData)
 
 	CreateSkinningData();
 
-	for (int i = 0; i < NUMBER_OBJECTS; i++)
-	{
+	for(int i = 0; i < NUMBER_OBJECTS; i++) {
 		obj = &objects[i];
 		obj->mesh_index *= 2;
 	}
@@ -870,8 +821,7 @@ bool LoadObjects(char** FileData)
 	mesh_size = &meshes[num_meshes];
 	memcpy(mesh_size, mesh, num_meshes * 4);
 
-	for (int i = 0; i < num_meshes; i++)
-	{
+	for(int i = 0; i < num_meshes; i++) {
 		*mesh++ = *mesh_size;
 		*mesh++ = *mesh_size;
 		mesh_size++;
@@ -879,11 +829,10 @@ bool LoadObjects(char** FileData)
 
 	InitialiseObjects();
 
-	num = *(long*)*FileData;	//statics
+	num = *(long*)*FileData; // statics
 	*FileData += sizeof(long);
 
-	for (int i = 0; i < num; i++)
-	{
+	for(int i = 0; i < num; i++) {
 		slot = *(long*)*FileData;
 		*FileData += sizeof(long);
 		stat = &static_objects[slot];
@@ -901,8 +850,7 @@ bool LoadObjects(char** FileData)
 		*FileData += sizeof(short);
 	}
 
-	for (int i = 0; i < NUMBER_STATIC_OBJECTS; i++)
-	{
+	for(int i = 0; i < NUMBER_STATIC_OBJECTS; i++) {
 		stat = &static_objects[i];
 		stat->mesh_number *= 2;
 	}
@@ -911,8 +859,7 @@ bool LoadObjects(char** FileData)
 	return 1;
 }
 
-bool LoadSprites(char** FileData)
-{
+bool LoadSprites(char** FileData) {
 	STATIC_INFO* stat;
 	OBJECT_INFO* obj;
 	SPRITESTRUCT* sptr;
@@ -925,8 +872,7 @@ bool LoadSprites(char** FileData)
 	*FileData += sizeof(long);
 	spriteinfo = (SPRITESTRUCT*)game_malloc(sizeof(SPRITESTRUCT) * num_sprites);
 
-	for (int i = 0; i < num_sprites; i++)
-	{
+	for(int i = 0; i < num_sprites; i++) {
 		sptr = &spriteinfo[i];
 		memcpy(&sprite, *FileData, sizeof(PHDSPRITESTRUCT));
 		*FileData += sizeof(PHDSPRITESTRUCT);
@@ -948,25 +894,21 @@ bool LoadSprites(char** FileData)
 	num_slots = *(long*)*FileData;
 	*FileData += sizeof(long);
 
-	if (num_slots <= 0)
+	if(num_slots <= 0)
 		return 1;
 
-	for (int i = 0; i < num_slots; i++)
-	{
+	for(int i = 0; i < num_slots; i++) {
 		slot = *(long*)*FileData;
 		*FileData += sizeof(long);
 
-		if (slot >= NUMBER_OBJECTS)
-		{
+		if(slot >= NUMBER_OBJECTS) {
 			slot -= NUMBER_OBJECTS;
 			stat = &static_objects[slot];
 			stat->mesh_number = *(short*)*FileData;
 			*FileData += sizeof(short);
 			stat->mesh_number = *(short*)*FileData;
 			*FileData += sizeof(short);
-		}
-		else
-		{
+		} else {
 			obj = &objects[slot];
 			obj->nmeshes = *(short*)*FileData;
 			*FileData += sizeof(short);
@@ -979,24 +921,21 @@ bool LoadSprites(char** FileData)
 	return 1;
 }
 
-bool LoadCameras(char** FileData)
-{
+bool LoadCameras(char** FileData) {
 	Log(2, "LoadCameras");
 	number_cameras = *(long*)*FileData;
 	*FileData += sizeof(long);
 
-	if (number_cameras)
-	{
+	if(number_cameras) {
 		camera.fixed = (OBJECT_VECTOR*)game_malloc(number_cameras * sizeof(OBJECT_VECTOR));
 		memcpy(camera.fixed, *FileData, number_cameras * sizeof(OBJECT_VECTOR));
 		*FileData += number_cameras * sizeof(OBJECT_VECTOR);
 	}
 
 	number_spotcams = *(short*)*FileData;
-	*FileData += sizeof(long);				//<<---- look at me
+	*FileData += sizeof(long); //<<---- look at me
 
-	if (number_spotcams)
-	{
+	if(number_spotcams) {
 		memcpy(SpotCam, *FileData, number_spotcams * sizeof(SPOTCAM));
 		*FileData += number_spotcams * sizeof(SPOTCAM);
 	}
@@ -1004,15 +943,13 @@ bool LoadCameras(char** FileData)
 	return 1;
 }
 
-bool LoadSoundEffects(char** FileData)
-{
+bool LoadSoundEffects(char** FileData) {
 	Log(2, "LoadSoundEffects");
 	number_sound_effects = *(long*)*FileData;
 	*FileData += sizeof(long);
 	Log(8, "Number of SFX %d", number_sound_effects);
 
-	if (number_sound_effects)
-	{
+	if(number_sound_effects) {
 		sound_effects = (OBJECT_VECTOR*)game_malloc(number_sound_effects * sizeof(OBJECT_VECTOR));
 		memcpy(sound_effects, *FileData, number_sound_effects * sizeof(OBJECT_VECTOR));
 		*FileData += number_sound_effects * sizeof(OBJECT_VECTOR);
@@ -1021,8 +958,7 @@ bool LoadSoundEffects(char** FileData)
 	return 1;
 }
 
-bool LoadBoxes(char** FileData)
-{
+bool LoadBoxes(char** FileData) {
 	BOX_INFO* box;
 	long size;
 
@@ -1040,10 +976,8 @@ bool LoadBoxes(char** FileData)
 	memcpy(overlap, *FileData, sizeof(unsigned short) * size);
 	*FileData += sizeof(unsigned short) * size;
 
-	for (int i = 0; i < 2; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 4; j++) {
 			ground_zone[j][i] = (short*)game_malloc(sizeof(short) * num_boxes);
 			memcpy(ground_zone[j][i], *FileData, sizeof(short) * num_boxes);
 			*FileData += sizeof(short) * num_boxes;
@@ -1054,21 +988,19 @@ bool LoadBoxes(char** FileData)
 		*FileData += sizeof(short) * num_boxes;
 	}
 
-	for (int i = 0; i < num_boxes; i++)
-	{
+	for(int i = 0; i < num_boxes; i++) {
 		box = &boxes[i];
 
-		if (box->overlap_index & 0x8000)
+		if(box->overlap_index & 0x8000)
 			box->overlap_index |= 0x4000;
-		else if (gfLevelFlags & GF_TRAIN && box->height > -256)
+		else if(gfLevelFlags & GF_TRAIN && box->height > -256)
 			box->overlap_index |= 0xC000;
 	}
 
 	return 1;
 }
 
-bool LoadAnimatedTextures(char** FileData)
-{
+bool LoadAnimatedTextures(char** FileData) {
 	long num_anim_ranges;
 
 	num_anim_ranges = *(long*)*FileData;
@@ -1081,8 +1013,7 @@ bool LoadAnimatedTextures(char** FileData)
 	return 1;
 }
 
-bool LoadTextureInfos(char** FileData)
-{
+bool LoadTextureInfos(char** FileData) {
 	TEXTURESTRUCT* t;
 	PHDTEXTURESTRUCT tex;
 	long val;
@@ -1095,10 +1026,9 @@ bool LoadTextureInfos(char** FileData)
 	Log(5, "Texture Infos : %d", val);
 	textinfo = (TEXTURESTRUCT*)game_malloc(val * sizeof(TEXTURESTRUCT));
 
-	for (int i = 0; i < val; i++)
-	{
+	for(int i = 0; i < val; i++) {
 		t = &textinfo[i];
-		memcpy(&tex,*FileData, sizeof(PHDTEXTURESTRUCT));
+		memcpy(&tex, *FileData, sizeof(PHDTEXTURESTRUCT));
 		*FileData += sizeof(PHDTEXTURESTRUCT);
 		t->drawtype = tex.drawtype;
 		t->tpage = tex.tpage & 0x7FFF;
@@ -1118,8 +1048,7 @@ bool LoadTextureInfos(char** FileData)
 	return 1;
 }
 
-bool LoadItems(char** FileData)
-{
+bool LoadItems(char** FileData) {
 	ITEM_INFO* item;
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
@@ -1130,15 +1059,14 @@ bool LoadItems(char** FileData)
 	num_items = *(long*)*FileData;
 	*FileData += 4;
 
-	if (!num_items)
+	if(!num_items)
 		return 1;
 
 	items = (ITEM_INFO*)game_malloc(256 * sizeof(ITEM_INFO));
 	level_items = num_items;
 	InitialiseItemArray(256);
 
-	for (int i = 0; i < num_items; i++)
-	{
+	for(int i = 0; i < num_items; i++) {
 		item = &items[i];
 
 		item->object_number = *(short*)*FileData;
@@ -1169,30 +1097,24 @@ bool LoadItems(char** FileData)
 		*FileData += sizeof(short);
 	}
 
-	for (int i = 0; i < num_items; i++)
+	for(int i = 0; i < num_items; i++)
 		InitialiseItem(i);
 
-	for (int i = 0; i < number_rooms; i++)
-	{
+	for(int i = 0; i < number_rooms; i++) {
 		r = &room[i];
 
-		for (int j = 0; j < r->num_meshes; j++)
-		{
+		for(int j = 0; j < r->num_meshes; j++) {
 			x = (r->mesh[j].x - r->x) >> 10;
 			z = (r->mesh[j].z - r->z) >> 10;
 
 			floor = &(r->floor[x * r->x_size + z]);
 
-			if (!(boxes[floor->box].overlap_index & 0x4000) && (gfCurrentLevel != 4 || i != 19 && i != 23 && i != 16))
-			{
+			if(!(boxes[floor->box].overlap_index & 0x4000) && (gfCurrentLevel != 4 || i != 19 && i != 23 && i != 16)) {
 				stat = &static_objects[r->mesh[j].static_number];
 				y = floor->floor << 8;
 
-				if (y <= (r->mesh[j].y - stat->y_maxc + 512) && y < r->mesh[j].y - stat->y_minc)
-				{
-					if (!stat->x_maxc || !stat->x_minc || !stat->z_maxc || !stat->z_minc ||
-						(stat->x_maxc ^ stat->x_minc) & 0x8000 && (stat->z_maxc ^ stat->z_minc) & 0x8000)
-					{
+				if(y <= (r->mesh[j].y - stat->y_maxc + 512) && y < r->mesh[j].y - stat->y_minc) {
+					if(!stat->x_maxc || !stat->x_minc || !stat->z_maxc || !stat->z_minc || (stat->x_maxc ^ stat->x_minc) & 0x8000 && (stat->z_maxc ^ stat->z_minc) & 0x8000) {
 						x = (r->mesh[j].x - r->x) >> 10;
 						z = (r->mesh[j].z - r->z) >> 10;
 						r->floor[x * r->x_size + z].stopper = 1;
@@ -1205,21 +1127,18 @@ bool LoadItems(char** FileData)
 	return 1;
 }
 
-bool LoadCinematic(char** FileData)
-{
+bool LoadCinematic(char** FileData) {
 	*FileData += sizeof(short);
 	return 1;
 }
 
-bool LoadAIInfo(char** FileData)
-{
+bool LoadAIInfo(char** FileData) {
 	long num_ai;
 
 	num_ai = *(long*)*FileData;
 	*FileData += sizeof(long);
 
-	if (num_ai)
-	{
+	if(num_ai) {
 		nAIObjects = (short)num_ai;
 		AIObjects = (AIOBJECT*)game_malloc(sizeof(AIOBJECT) * num_ai);
 		memcpy(AIObjects, *FileData, sizeof(AIOBJECT) * num_ai);
@@ -1229,8 +1148,7 @@ bool LoadAIInfo(char** FileData)
 	return 1;
 }
 
-bool LoadSamples(FILE* level_fp, char** FileData)
-{
+bool LoadSamples(FILE* level_fp, char** FileData) {
 	long num_samples, uncomp_size, comp_size;
 	static long num_sample_infos;
 
@@ -1242,8 +1160,7 @@ bool LoadSamples(FILE* level_fp, char** FileData)
 	*FileData += sizeof(long);
 	Log(8, "Number Of Sample Infos %d", num_sample_infos);
 
-	if (!num_sample_infos)
-	{
+	if(!num_sample_infos) {
 		Log(1, "No Sample Infos");
 		return 0;
 	}
@@ -1254,8 +1171,7 @@ bool LoadSamples(FILE* level_fp, char** FileData)
 	num_samples = *(long*)*FileData;
 	*FileData += sizeof(long);
 
-	if (!num_samples)
-	{
+	if(!num_samples) {
 		Log(1, "No Samples");
 		return 0;
 	}
@@ -1264,20 +1180,17 @@ bool LoadSamples(FILE* level_fp, char** FileData)
 	fread(&num_samples, 1, 4, level_fp);
 	InitSampleDecompress();
 
-	if (num_samples <= 0)
-	{
+	if(num_samples <= 0) {
 		FreeSampleDecompress();
 		return 1;
 	}
 
-	for (int i = 0; i < num_samples; i++)
-	{
+	for(int i = 0; i < num_samples; i++) {
 		fread(&uncomp_size, 1, 4, level_fp);
 		fread(&comp_size, 1, 4, level_fp);
 		fread(samples_buffer, comp_size, 1, level_fp);
 
-		if (!DXCreateSampleADPCM(samples_buffer, comp_size, uncomp_size, i))
-		{
+		if(!DXCreateSampleADPCM(samples_buffer, comp_size, uncomp_size, i)) {
 			FreeSampleDecompress();
 			return 0;
 		}
@@ -1287,17 +1200,14 @@ bool LoadSamples(FILE* level_fp, char** FileData)
 	return 1;
 }
 
-void S_GetUVRotateTextures()
-{
+void S_GetUVRotateTextures() {
 	TEXTURESTRUCT* tex;
 	short* pRange;
 
 	pRange = aranges + 1;
 
-	for (int i = 0; i < nAnimUVRanges; i++, pRange++)
-	{
-		for (int j = (int)*(pRange++); j >= 0; j--, pRange++)
-		{
+	for(int i = 0; i < nAnimUVRanges; i++, pRange++) {
+		for(int j = (int)*(pRange++); j >= 0; j--, pRange++) {
 			tex = &textinfo[*pRange];
 			AnimatingTexturesV[i][j][0] = tex->v1;
 		}
@@ -1306,16 +1216,14 @@ void S_GetUVRotateTextures()
 	}
 }
 
-void AdjustUV(long num)
-{
+void AdjustUV(long num) {
 	TEXTURESTRUCT* tex;
 	float u, v;
 	unsigned short type;
 
 	Log(2, "AdjustUV");
 
-	for (int i = 0; i < num; i++)
-	{
+	for(int i = 0; i < num; i++) {
 		tex = &textinfo[i];
 		Textures[tex->tpage].tpage++;
 		tex->tpage++;
@@ -1323,10 +1231,8 @@ void AdjustUV(long num)
 		v = 1.0F / float(Textures[tex->tpage].height << 1);
 		type = tex->flag & 7;
 
-		if (tex->flag & 0x8000)
-		{
-			switch (type)
-			{
+		if(tex->flag & 0x8000) {
+			switch(type) {
 			case 0:
 				tex->u1 += u;
 				tex->v1 += v;
@@ -1403,11 +1309,8 @@ void AdjustUV(long num)
 				Log(1, "TextureInfo Type %d Not Found", type);
 				break;
 			}
-		}
-		else
-		{
-			switch (type)
-			{
+		} else {
+			switch(type) {
 			case 0:
 				tex->u1 += u;
 				tex->v1 += v;
@@ -1438,8 +1341,7 @@ void AdjustUV(long num)
 	}
 }
 
-bool Decompress(char* pDest, char* pCompressed, long compressedSize, long size)
-{
+bool Decompress(char* pDest, char* pCompressed, long compressedSize, long size) {
 	z_stream stream;
 
 	Log(2, "Decompress");
@@ -1451,8 +1353,7 @@ bool Decompress(char* pDest, char* pCompressed, long compressedSize, long size)
 	inflateInit(&stream);
 	inflate(&stream, Z_FINISH);
 
-	if (stream.total_out != size)
-	{
+	if(stream.total_out != size) {
 		Log(1, "Error Decompressing Data");
 		return 0;
 	}

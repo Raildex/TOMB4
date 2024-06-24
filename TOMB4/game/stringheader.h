@@ -1,7 +1,6 @@
-#ifndef STRINGHEADER_INCLUDED
-#define STRINGHEADER_INCLUDED
-struct STRINGHEADER
-{
+#ifndef TOMB4_GAME_STRINGHEADER_H
+#define TOMB4_GAME_STRINGHEADER_H
+struct STRINGHEADER {
 	unsigned short nStrings;
 	unsigned short nPSXStrings;
 	unsigned short nPCStrings;
@@ -9,4 +8,4 @@ struct STRINGHEADER
 	unsigned short PSXStringWadLen;
 	unsigned short PCStringWadLen;
 };
-#endif
+#endif // TOMB4_GAME_STRINGHEADER_H

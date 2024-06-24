@@ -1,7 +1,6 @@
 #ifndef NEW_CUTSCENE_INCLUDED
 #define NEW_CUTSCENE_INCLUDED
-struct NEW_CUTSCENE
-{
+struct NEW_CUTSCENE {
 	short numactors;
 	short numframes;
 	long orgx;

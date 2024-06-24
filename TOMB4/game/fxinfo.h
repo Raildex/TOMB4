@@ -1,8 +1,7 @@
 #ifndef FX_INFO_INCLUDED
 #define FX_INFO_INCLUDED
 #include "phd3dpos.h"
-struct FX_INFO
-{
+struct FX_INFO {
 	PHD_3DPOS pos;
 	short room_number;
 	short object_number;

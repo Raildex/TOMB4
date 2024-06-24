@@ -1,8 +1,7 @@
-#ifndef PHDSPRITESTRUCT_INCLUDED
-#define PHDSPRITESTRUCT_INCLUDED
-#pragma pack(push,1)
-struct PHDSPRITESTRUCT
-{
+#ifndef TOMB4_GAME_PHDSPRITESTRUCT_H
+#define TOMB4_GAME_PHDSPRITESTRUCT_H
+#pragma pack(push, 1)
+struct PHDSPRITESTRUCT {
 	unsigned short tpage;
 	unsigned short offset;
 	unsigned short width;
@@ -13,4 +12,4 @@ struct PHDSPRITESTRUCT
 	short y2;
 };
 #pragma pack(pop)
-#endif
+#endif // TOMB4_GAME_PHDSPRITESTRUCT_H

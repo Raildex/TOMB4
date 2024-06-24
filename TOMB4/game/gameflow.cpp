@@ -36,8 +36,7 @@
 #include "stringheader.h"
 #include <dinput.h>
 
-short CreditGroups[18] =
-{
+short CreditGroups[18] = {
 	0,
 	TXT_PC_Programmer,
 	TXT_PSX_Programmers,
@@ -58,8 +57,7 @@ short CreditGroups[18] =
 	0
 };
 
-const char* CreditsTable[]
-{
+const char* CreditsTable[]{
 	"%01",
 	"Richard Flower", "0",
 
@@ -161,8 +159,7 @@ static unsigned char gfResidentCut[4];
 static char fmv_to_play[2] = { 0, 0 };
 static char num_fmvs = 0;
 
-void DoGameflow()
-{
+void DoGameflow() {
 	unsigned char* gf;
 	unsigned char n;
 
@@ -176,10 +173,8 @@ void DoGameflow()
 	gfCurrentLevel = Gameflow->TitleEnabled ? 0 : 1;
 	gf = &gfScriptWad[gfScriptOffset[gfCurrentLevel]];
 
-	while (1)
-	{
-		switch (n = *gf++)
-		{
+	while(1) {
+		switch(n = *gf++) {
 		case CMD_FMV:
 #ifndef TIMES_LEVEL
 			fmv_to_play[num_fmvs] = gf[0];
@@ -190,11 +185,10 @@ void DoGameflow()
 
 		case CMD_LEVEL:
 			gfLevelFlags = gf[1] | (gf[2] << 8);
-			gfLevelFlags &= ~ GF_YOUNGLARA;
-			if (!(gfLevelFlags & GF_NOLEVEL))
+			gfLevelFlags &= ~GF_YOUNGLARA;
+			if(!(gfLevelFlags & GF_NOLEVEL))
 				DoLevel(gf[3], gf[4]);
-			else
-			{
+			else {
 				gfStatus = 999;
 				gfCurrentLevel++;
 			}
@@ -214,8 +208,7 @@ void DoGameflow()
 			gfFog.r = 0;
 			gfFog.a = 0;
 
-			switch (gfStatus)
-			{
+			switch(gfStatus) {
 			case 1:
 				gfInitialiseGame = 1;
 				gfCurrentLevel = Gameflow->TitleEnabled ? 0 : 1;
@@ -228,19 +221,16 @@ void DoGameflow()
 
 			case 3:
 
-				if (gfLevelFlags & GF_RESETHUB && gfLevelComplete == gfResetHubDest || skipped_level)
-				{
+				if(gfLevelFlags & GF_RESETHUB && gfLevelComplete == gfResetHubDest || skipped_level) {
 					sgInitialiseHub(0);
 					skipped_level = 0;
-				}
-				else
+				} else
 					sgSaveLevel();
 
-				if (Gameflow->DemoDisc || Gameflow->nLevels == 2)
+				if(Gameflow->DemoDisc || Gameflow->nLevels == 2)
 					gfCurrentLevel = 0;
-				else
-				{
-					if (gfLevelComplete > Gameflow->nLevels)
+				else {
+					if(gfLevelComplete > Gameflow->nLevels)
 						gfCurrentLevel = 0;
 					else
 						gfCurrentLevel = gfLevelComplete;
@@ -266,8 +256,7 @@ void DoGameflow()
 			gfNumMips = 0;
 			gfMirrorRoom = -1;
 
-			switch (gfStatus)
-			{
+			switch(gfStatus) {
 			case 2:
 				gfGameMode = 4;
 				gfCurrentLevel = savegame.CurrentLevel & 0x7F;
@@ -357,7 +346,7 @@ void DoGameflow()
 			gfLegend = gf[0];
 			gf++;
 
-			if (gfGameMode != 4)
+			if(gfGameMode != 4)
 				gfLegendTime = 150;
 
 			break;
@@ -411,19 +400,19 @@ void DoGameflow()
 			break;
 
 		default:
-			if (n >= CMD_KEY1 && n <= CMD_KEY12)
+			if(n >= CMD_KEY1 && n <= CMD_KEY12)
 				n -= 82;
-			else if (n >= CMD_PUZZLE1 && n <= CMD_PUZZLE12)
+			else if(n >= CMD_PUZZLE1 && n <= CMD_PUZZLE12)
 				n -= 122;
-			else if (n >= CMD_PICKUP1 && n <= CMD_PICKUP4)
+			else if(n >= CMD_PICKUP1 && n <= CMD_PICKUP4)
 				n -= 78;
-			else if (n >= CMD_EXAMINE1 && n <= CMD_EXAMINE3)
+			else if(n >= CMD_EXAMINE1 && n <= CMD_EXAMINE3)
 				n -= 59;
-			else if (n >= CMD_KEYCOMBO1_1 && n <= CMD_KEYCOMBO8_2)
+			else if(n >= CMD_KEYCOMBO1_1 && n <= CMD_KEYCOMBO8_2)
 				n -= 101;
-			else if (n >= CMD_PUZZLECOMBO1_1 && n <= CMD_PUZZLECOMBO8_2)
+			else if(n >= CMD_PUZZLECOMBO1_1 && n <= CMD_PUZZLECOMBO8_2)
 				n += 111;
-			else if (n >= CMD_PICKUPCOMBO1_1 && n <= CMD_PICKUPCOMBO4_2)
+			else if(n >= CMD_PICKUPCOMBO1_1 && n <= CMD_PICKUPCOMBO4_2)
 				n -= 113;
 
 			inventry_objects_list[n].objname = gf[0] | (gf[1] << 8);
@@ -439,15 +428,13 @@ void DoGameflow()
 	}
 }
 
-void DoLevel(unsigned char Name, unsigned char Audio)
-{
+void DoLevel(unsigned char Name, unsigned char Audio) {
 	long gamestatus;
 
 	gamestatus = 0;
 	SetFade(255, 0);
 
-	if (gfGameMode != 4)
-	{
+	if(gfGameMode != 4) {
 		savegame.Level.Timer = 0;
 		savegame.Level.Distance = 0;
 		savegame.Level.AmmoUsed = 0;
@@ -464,12 +451,11 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 	ClearFXFogBulbs();
 	InitSpotCamSequences();
 	InitialisePickUpDisplay();
-	//empty func call here
+	// empty func call here
 	SOUND_Stop();
 	bDisableLaraControl = 0;
 
-	if (gfGameMode == 4)
-	{
+	if(gfGameMode == 4) {
 		sgRestoreGame();
 		gfRequiredStartPos = 0;
 		gfInitialiseGame = 0;
@@ -477,23 +463,19 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 		gfFog.g = savegame.fog_colour.g;
 		gfFog.b = savegame.fog_colour.b;
 
-		if (IsVolumetric())
+		if(IsVolumetric())
 			SetFogColor(gfFog.r, gfFog.g, gfFog.b);
-	}
-	else
-	{
-		if (gfInitialiseGame)
-		{
+	} else {
+		if(gfInitialiseGame) {
 			GameTimer = 0;
 			gfRequiredStartPos = 0;
 			gfInitialiseGame = 0;
 			CutSceneTriggered = 0;
 			FmvSceneTriggered = 0;
-		}
-		else
+		} else
 			sgRestoreLevel();
 
-		if (gfLevelFlags & GF_REMOVEAMULET)
+		if(gfLevelFlags & GF_REMOVEAMULET)
 			lara.questitems &= ~1;
 
 		savegame.Level.Timer = 0;
@@ -508,16 +490,15 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 	dScreenFade = 255;
 	ScreenFade = 255;
 #if defined(CUTS_ENABLED) // no cutscenes
-	if (!gfCutNumber || CheckCutPlayed(gfCutNumber))
-	#endif
+	if(!gfCutNumber || CheckCutPlayed(gfCutNumber))
+#endif
 	{
 		cutseq_num = 0;
 		gfCutNumber = 0;
 		SetScreenFadeIn(16);
 	}
-	#if defined(CUTS_ENABLED)
-	else
-	{
+#if defined(CUTS_ENABLED)
+	else {
 		cutseq_num = gfCutNumber;
 		gfCutNumber = 0;
 		ScreenFadedOut = 1;
@@ -532,12 +513,10 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 	gfStatus = ControlPhase(2, 0);
 	dbinput = 0;
 
-	while (!gfStatus)
-	{
+	while(!gfStatus) {
 		S_InitialisePolyList();
 
-		if (gfLegendTime && !DestFadeScreenHeight && !FadeScreenHeight && !cutseq_num)
-		{
+		if(gfLegendTime && !DestFadeScreenHeight && !FadeScreenHeight && !cutseq_num) {
 			PrintString(phd_winwidth >> 1, phd_winymax - font_height, 2, SCRIPT_TEXT(gfLegend), FF_CENTER);
 			gfLegendTime--;
 		}
@@ -546,8 +525,7 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 #if 0
 		handle_cutseq_triggering(Name);
 #endif
-		if (DEL_playingamefmv)
-		{
+		if(DEL_playingamefmv) {
 			DEL_playingamefmv = 0;
 #ifndef TIMES_LEVEL
 			S_CDStop();
@@ -556,31 +534,26 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 #endif
 		}
 
-		if (gfLevelComplete)
-		{
+		if(gfLevelComplete) {
 			gfStatus = 3;
 			break;
 		}
 
 		gfStatus = ControlPhase(nFrames, 0);
 
-		if (gfStatus && !gamestatus)
-		{
-			if (lara_item->hit_points < 0)
-			{
+		if(gfStatus && !gamestatus) {
+			if(lara_item->hit_points < 0) {
 				gamestatus = gfStatus;
 				SetFade(0, 255);
 				gfStatus = 0;
-			}
-			else
+			} else
 				break;
 		}
 
-		if (gamestatus)
-		{
+		if(gamestatus) {
 			gfStatus = 0;
 
-			if (DoFade == 2)
+			if(DoFade == 2)
 				gfStatus = gamestatus;
 		}
 	}
@@ -589,20 +562,17 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 	S_CDStop();
 
 #ifndef TIMES_LEVEL
-	if (gfStatus == 3)
-	{
-		if (fmv_to_play[0] & 0x80)
-		{
-			if ((fmv_to_play[0] & 0x7F) == 9 && gfLevelComplete != 10)
+	if(gfStatus == 3) {
+		if(fmv_to_play[0] & 0x80) {
+			if((fmv_to_play[0] & 0x7F) == 9 && gfLevelComplete != 10)
 				fmv_to_play[0] = 0;
 
-			if ((fmv_to_play[0] & 0x7F) == 8 && gfLevelComplete != 22)
+			if((fmv_to_play[0] & 0x7F) == 8 && gfLevelComplete != 22)
 				fmv_to_play[0] = 0;
 		}
 
-		if (!fmv_to_play[0] || PlayFmvNow(fmv_to_play[0] & 0x7F) != 2)
-		{
-			if (fmv_to_play[1])
+		if(!fmv_to_play[0] || PlayFmvNow(fmv_to_play[0] & 0x7F) != 2) {
+			if(fmv_to_play[1])
 				PlayFmvNow(fmv_to_play[1] & 0x7F);
 		}
 	}
@@ -616,10 +586,8 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 	lara.examine3 = 0;
 	RenderLoadPic(0);
 
-	if (gfStatus == 3)
-	{
-		if (gfLevelComplete == 39)
-		{
+	if(gfStatus == 3) {
+		if(gfLevelComplete == 39) {
 			input = 0;
 			reset_flag = 0;
 			gfStatus = 1;
@@ -627,7 +595,7 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 			return;
 		}
 
-		if (gfLevelComplete == 25 && skipped_level)
+		if(gfLevelComplete == 25 && skipped_level)
 			lara.vehicle = -1;
 	}
 
@@ -635,8 +603,7 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 	reset_flag = 0;
 }
 
-long TitleOptions()
-{
+long TitleOptions() {
 	static __int64 selection = 1;
 	static __int64 selection_bak = 0;
 	__int64 flag, sel;
@@ -644,14 +611,12 @@ long TitleOptions()
 	long ret, n, load, y;
 	static long load_or_new;
 	static long goto_level;
-	static long menu = 0;	//0 main menu, 1 level select, 2 the reload menu, 3 the options menu
+	static long menu = 0; // 0 main menu, 1 level select, 2 the reload menu, 3 the options menu
 
 	ret = 0;
 
-	if (load_or_new)
-	{
-		if (DoFade == 2)
-		{
+	if(load_or_new) {
+		if(DoFade == 2) {
 			ret = load_or_new;
 			gfLevelComplete = (unsigned char)goto_level;
 			goto_level = 0;
@@ -663,48 +628,40 @@ long TitleOptions()
 		dbinput = 0;
 	}
 
-	if (bDoCredits)
-	{
-		if (DoCredits())
+	if(bDoCredits) {
+		if(DoCredits())
 			return 0;
 
 		bDoCredits = 0;
 	}
 
-	switch (menu)
-	{
+	switch(menu) {
 	case 1:
 		PrintString(phd_centerx, font_height + phd_winymin, 6, SCRIPT_TEXT(TXT_Select_Level), FF_CENTER);
 
-		if (Gameflow->nLevels < 10)
-		{
+		if(Gameflow->nLevels < 10) {
 			nFirst = 1;
 			nLevels = Gameflow->nLevels - 1;
-		}
-		else
-		{
+		} else {
 			sel = selection;
 			n = 0;
 			nLevels = 10;
 
-			while (sel)
-			{
+			while(sel) {
 				sel >>= 1;
 				n++;
 			}
 
 			nFirst = n - 9;
 
-			if (nFirst < 1)
+			if(nFirst < 1)
 				nFirst = 1;
-			else if (nFirst > 1)
-			{
+			else if(nFirst > 1) {
 				PrintString(32, 3 * font_height + phd_winymin, 6, "\x18", 0);
 				PrintString(phd_winxmax - 48, 3 * font_height + phd_winymin, 6, "\x18", 0);
 			}
 
-			if (n != Gameflow->nLevels - 1)
-			{
+			if(n != Gameflow->nLevels - 1) {
 				PrintString(32, 12 * font_height + phd_winymin, 6, "\x1a", 0);
 				PrintString(phd_winxmax - 48, 12 * font_height + phd_winymin, 6, "\x1a", 0);
 			}
@@ -712,8 +669,7 @@ long TitleOptions()
 
 		y = 2 * font_height;
 
-		for (lp = nFirst; lp < nLevels + nFirst; lp++)
-		{
+		for(lp = nFirst; lp < nLevels + nFirst; lp++) {
 			y += font_height;
 			PrintString(phd_centerx, y, selection & (1i64 << (lp - 1)) ? 1 : 2, SCRIPT_TEXT(gfLevelNames[lp]), FF_CENTER);
 		}
@@ -723,12 +679,10 @@ long TitleOptions()
 
 	case 2:
 
-		if (Gameflow->LoadSaveEnabled)
-		{
+		if(Gameflow->LoadSaveEnabled) {
 			load = DoLoadSave(IN_LOAD);
 
-			if (load >= 0)
-			{
+			if(load >= 0) {
 				S_LoadGame(load);
 				ret = 2;
 			}
@@ -754,52 +708,41 @@ long TitleOptions()
 		break;
 	}
 
-	if (menu < 2)
-	{
-		if (dbinput & IN_FORWARD)
-		{
-			if (selection > 1)
+	if(menu < 2) {
+		if(dbinput & IN_FORWARD) {
+			if(selection > 1)
 				selection >>= 1;
 
 			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 		}
 
-		if (dbinput & IN_BACK)
-		{
-			if (selection < flag)
+		if(dbinput & IN_BACK) {
+			if(selection < flag)
 				selection <<= 1;
 
 			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 		}
 	}
 
-	if (dbinput & IN_DESELECT && menu > 0)
-	{
+	if(dbinput & IN_DESELECT && menu > 0) {
 		menu = 0;
 		selection = selection_bak;
 		S_SoundStopAllSamples();
 		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 	}
 
-	if (dbinput & IN_SELECT && !keymap[DIK_LALT] && menu < 2)
-	{
+	if(dbinput & IN_SELECT && !keymap[DIK_LALT] && menu < 2) {
 		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
-		if (!menu)
-		{
-			if (selection > 0 && selection <= 8)
-			{
-				switch (selection)
-				{
+		if(!menu) {
+			if(selection > 0 && selection <= 8) {
+				switch(selection) {
 				case 1:
 
-					if (Gameflow->PlayAnyLevel)
-					{
+					if(Gameflow->PlayAnyLevel) {
 						selection_bak = selection;
 						menu = 1;
-					}
-					else
-					{
+					} else {
 						gfLevelComplete = 1;
 						ret = 3;
 					}
@@ -828,14 +771,11 @@ long TitleOptions()
 					break;
 				}
 			}
-		}
-		else if (menu == 1)
-		{
+		} else if(menu == 1) {
 			gfLevelComplete = 0;
 			sel = selection;
 
-			while (sel)
-			{
+			while(sel) {
 				sel >>= 1;
 				gfLevelComplete++;
 			}
@@ -844,11 +784,10 @@ long TitleOptions()
 		}
 	}
 
-	if (MainThread.ended)
+	if(MainThread.ended)
 		return 4;
 
-	if (ret)
-	{
+	if(ret) {
 		load_or_new = ret;
 		goto_level = gfLevelComplete;
 		gfLevelComplete = 0;
@@ -859,8 +798,7 @@ long TitleOptions()
 	return ret;
 }
 
-void DoTitle(unsigned char Name, unsigned char Audio)
-{
+void DoTitle(unsigned char Name, unsigned char Audio) {
 	SetFade(255, 0);
 	num_fmvs = 0;
 	fmv_to_play[1] = 0;
@@ -890,24 +828,21 @@ void DoTitle(unsigned char Name, unsigned char Audio)
 	SetFogColor(gfFog.r, gfFog.g, gfFog.b);
 	ClearFXFogBulbs();
 	InitialisePickUpDisplay();
-	//empty func call here
+	// empty func call here
 	SOUND_Stop();
 	S_CDPlay(Audio, 1);
 	IsAtmospherePlaying = 0;
 	S_SetReverbType(1);
 	InitialiseCamera();
 
-	if (bDoCredits)
-	{
+	if(bDoCredits) {
 		cutseq_num = 28;
 		SetFadeClip(32, 1);
 		ScreenFadedOut = 1;
 		ScreenFade = 255;
 		dScreenFade = 255;
 		S_CDPlay(98, 1);
-	}
-	else
-	{
+	} else {
 		InitialiseSpotCam(1);
 		ScreenFadedOut = 0;
 		ScreenFade = 0;
@@ -924,12 +859,11 @@ void DoTitle(unsigned char Name, unsigned char Audio)
 	nFrames = 2;
 	gfStatus = ControlPhase(2, 0);
 
-	while (!gfStatus)
-	{
+	while(!gfStatus) {
 		S_InitialisePolyList();
-		gfStatus = TitleOptions();	//originally inlined
+		gfStatus = TitleOptions(); // originally inlined
 
-		if (gfStatus)
+		if(gfStatus)
 			break;
 
 		handle_cutseq_triggering(Name);
@@ -943,18 +877,17 @@ void DoTitle(unsigned char Name, unsigned char Audio)
 	bDisableLaraControl = 0;
 
 #ifndef TIMES_LEVEL
-	if (gfLevelComplete == 1 && gfStatus != 2)
+	if(gfLevelComplete == 1 && gfStatus != 2)
 		PlayFmvNow(12);
 #endif
 
-	if (gfStatus != 4)
+	if(gfStatus != 4)
 		RenderLoadPic(0);
 
 	input = 0;
 }
 
-void LoadGameflow()
-{
+void LoadGameflow() {
 	STRINGHEADER sh;
 	unsigned char* n;
 	char* s;
@@ -969,7 +902,7 @@ void LoadGameflow()
 	Gameflow = (GAMEFLOW*)s;
 	s += sizeof(GAMEFLOW);
 
-	gfExtensions = s;	//"[PCExtensions]"
+	gfExtensions = s; //"[PCExtensions]"
 	s += 40;
 
 	gfFilenameOffset = (unsigned short*)s;
@@ -984,11 +917,10 @@ void LoadGameflow()
 	gfScriptWad = (unsigned char*)s;
 	s += Gameflow->ScriptLen;
 
-	for (l = 0;; l++)
-	{
+	for(l = 0;; l++) {
 		d = 0;
 
-		if (LoadFile(s, &d))
+		if(LoadFile(s, &d))
 			break;
 
 		s += strlen(s) + 1;
@@ -1001,29 +933,23 @@ void LoadGameflow()
 	memcpy(&sh, gfStringOffset, sizeof(STRINGHEADER));
 	memcpy(gfStringOffset, gfStringOffset + (sizeof(STRINGHEADER) / sizeof(unsigned short)), TXT_NUM_STRINGS * sizeof(unsigned short));
 	gfStringWad = (char*)(gfStringOffset + TXT_NUM_STRINGS);
-	memcpy(gfStringOffset + TXT_NUM_STRINGS,
-		gfStringOffset + TXT_NUM_STRINGS + (sizeof(STRINGHEADER) / sizeof(unsigned short)),
-		sh.StringWadLen + sh.PCStringWadLen + sh.PSXStringWadLen);
+	memcpy(gfStringOffset + TXT_NUM_STRINGS, gfStringOffset + TXT_NUM_STRINGS + (sizeof(STRINGHEADER) / sizeof(unsigned short)), sh.StringWadLen + sh.PCStringWadLen + sh.PSXStringWadLen);
 
-	for (int i = 0; i < TXT_NUM_STRINGS - 1; i++)
-	{
+	for(int i = 0; i < TXT_NUM_STRINGS - 1; i++) {
 		s = &gfStringWad[gfStringOffset[i]];
 		d = &gfStringWad[gfStringOffset[i + 1]];
 		l = d - s - 1;
 
-		for (int j = 0; j < l; j++)
+		for(int j = 0; j < l; j++)
 			s[j] ^= 0xA5;
 	}
 
-	for (int i = 0; i < Gameflow->nLevels; i++)
-	{
+	for(int i = 0; i < Gameflow->nLevels; i++) {
 		end = 0;
 		n = &gfScriptWad[gfScriptOffset[i]];
 
-		while (!end)
-		{
-			switch (*n++)
-			{
+		while(!end) {
+			switch(*n++) {
 			case CMD_FMV:
 			case CMD_PLAYCUT:
 			case CMD_CUT1:
@@ -1076,8 +1002,7 @@ void LoadGameflow()
 	}
 }
 
-long DoCredits()
-{
+long DoCredits() {
 	const char* s;
 	static unsigned long StartPos = 0;
 	static long init = 0;
@@ -1085,23 +1010,20 @@ long DoCredits()
 
 	num_drawn = 0;
 
-	if (!init)
-	{
+	if(!init) {
 		StartPos = font_height + phd_winheight;
 		init = 1;
 	}
 
 	y = StartPos;
 
-	for (int i = 0; i < sizeof(CreditsTable) / 4; i++)
-	{
+	for(int i = 0; i < sizeof(CreditsTable) / 4; i++) {
 		s = CreditsTable[i];
 
-		if (y < font_height + phd_winheight + 1 && y > -font_height)
-		{
-			if (*s == '%')
+		if(y < font_height + phd_winheight + 1 && y > -font_height) {
+			if(*s == '%')
 				PrintString(phd_winwidth >> 1, y, 6, SCRIPT_TEXT(CreditGroups[atoi(s + 1)]), FF_CENTER);
-			else if (*s != '0')
+			else if(*s != '0')
 				PrintString(phd_winwidth >> 1, y, 2 + (i == 72 ? 4 : 0), s, FF_CENTER);
 
 			num_drawn++;
@@ -1112,7 +1034,7 @@ long DoCredits()
 
 	StartPos--;
 
-	if (!num_drawn)
+	if(!num_drawn)
 		init = 0;
 
 	return num_drawn;

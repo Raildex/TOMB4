@@ -1,7 +1,6 @@
 #ifndef BUBBLE_STRUCT_INCLUDED
 #define BUBBLE_STRUCT_INCLUDED
-struct BUBBLE_STRUCT
-{
+struct BUBBLE_STRUCT {
 	PHD_VECTOR pos;
 	short room_number;
 	short speed;

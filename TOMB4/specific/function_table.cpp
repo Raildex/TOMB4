@@ -13,14 +13,15 @@ void (*AddQuadZBuffer)(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, 
 void (*AddTriZBuffer)(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided);
 void (*AddLineSorted)(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, short drawtype);
 bool (*IsVisible)(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2);
-HRESULT(*_BeginScene)();
-HRESULT(*_EndScene)();
+HRESULT(*_BeginScene)
+();
+HRESULT(*_EndScene)
+();
 
 _D3DTLVERTEX MyVertexBuffer[0xFFFF];
 long CurrentFog;
 
-void SetFogColor(long r, long g, long b)
-{
+void SetFogColor(long r, long g, long b) {
 	r &= 0xFF;
 	g &= 0xFF;
 	b &= 0xFF;
@@ -28,9 +29,8 @@ void SetFogColor(long r, long g, long b)
 	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_FOGCOLOR, CurrentFog);
 }
 
-void HWInitialise()
-{
-	Log(2, "HWIntialise");	//nice typo
+void HWInitialise() {
+	Log(2, "HWIntialise"); // nice typo
 	App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	App.dx.lpD3DDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	App.dx.lpD3DDevice->SetTextureStageState(2, D3DTSS_COLOROP, D3DTOP_DISABLE);
@@ -41,13 +41,10 @@ void HWInitialise()
 	App.dx.lpD3DDevice->SetTextureStageState(7, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, D3DTSS_TCI_PASSTHRU);
 
-	if (App.Filtering)
-	{
+	if(App.Filtering) {
 		App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_MAGFILTER, D3DTFG_LINEAR);
 		App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_MINFILTER, D3DTFN_LINEAR);
-	}
-	else
-	{
+	} else {
 		App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_MAGFILTER, D3DTFG_POINT);
 		App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_MINFILTER, D3DTFN_POINT);
 	}
@@ -88,58 +85,48 @@ void HWInitialise()
 	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_FOGENABLE, 1);
 }
 
-bool _NVisible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2)
-{
+bool _NVisible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2) {
 	return (v0->sy - v1->sy) * (v2->sx - v1->sx) - (v2->sy - v1->sy) * (v0->sx - v1->sx) < 0;
 }
 
-bool _Visible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2)
-{
+bool _Visible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2) {
 	return (v0->sy - v1->sy) * (v2->sx - v1->sx) - (v2->sy - v1->sy) * (v0->sx - v1->sx) > 0;
 }
 
-void SetCullCW()
-{
+void SetCullCW() {
 	IsVisible = _Visible;
 }
 
-void SetCullCCW()
-{
+void SetCullCCW() {
 	IsVisible = _NVisible;
 }
 
-HRESULT HWBeginScene()
-{
-	if (App.dx.InScene)
+HRESULT HWBeginScene() {
+	if(App.dx.InScene)
 		Log(1, "Already In Scene");
 
 	App.dx.InScene = 1;
 	App.dx.DoneBlit = 0;
-	while (App.dx.WaitAtBeginScene) {};
+	while(App.dx.WaitAtBeginScene) { };
 	return App.dx.lpD3DDevice->BeginScene();
 }
 
-HRESULT HWEndScene()
-{
+HRESULT HWEndScene() {
 	App.dx.InScene = 0;
 	return App.dx.lpD3DDevice->EndScene();
 }
 
-void InitialiseFunctionTable()
-{
+void InitialiseFunctionTable() {
 	_BeginScene = HWBeginScene;
 	_EndScene = HWEndScene;
 	IsVisible = _NVisible;
 
-	if (App.dx.lpZBuffer)
-	{
+	if(App.dx.lpZBuffer) {
 		AddQuadZBuffer = AddQuadClippedZBuffer;
 		AddTriZBuffer = AddTriClippedZBuffer;
 		AddQuadSorted = AddQuadClippedSorted;
 		AddTriSorted = AddTriClippedSorted;
-	}
-	else
-	{
+	} else {
 		AddQuadZBuffer = AddQuadSubdivide;
 		AddTriZBuffer = AddTriSubdivide;
 		AddQuadSorted = AddQuadSubdivide;

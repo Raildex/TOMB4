@@ -1,8 +1,7 @@
-#ifndef MENUTHANG_INCLUDED
-#define MENUTHANG_INCLUDED
-struct MENUTHANG
-{
+#ifndef TOMB4_GAME_MENUTHANG_H
+#define TOMB4_GAME_MENUTHANG_H
+struct MENUTHANG {
 	long type;
 	char* text;
 };
-#endif
+#endif // TOMB4_GAME_MENUTHANG_H

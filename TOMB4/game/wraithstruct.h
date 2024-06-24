@@ -1,7 +1,6 @@
-#ifndef WRAITH_STRUCT_INCLUDED
-#define WRAITH_STRUCT_INCLUDED
-struct WRAITH_STRUCT
-{
+#ifndef TOMB4_GAME_WRAITHSTRUCT_H
+#define TOMB4_GAME_WRAITHSTRUCT_H
+struct WRAITH_STRUCT {
 	PHD_VECTOR pos;
 	short xv;
 	short yv;
@@ -11,4 +10,4 @@ struct WRAITH_STRUCT
 	unsigned char b;
 	unsigned char pad[3];
 };
-#endif
+#endif // TOMB4_GAME_WRAITHSTRUCT_H

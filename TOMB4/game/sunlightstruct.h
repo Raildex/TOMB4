@@ -1,11 +1,10 @@
-#ifndef SUNLIGHT_STRUCT_INCLUDED
-#define SUNLIGHT_STRUCT_INCLUDED
+#ifndef TOMB4_GAME_SUNLIGHTSTRUCT_H
+#define TOMB4_GAME_SUNLIGHTSTRUCT_H
 #include "fvector.h"
-struct SUNLIGHT_STRUCT
-{
+struct SUNLIGHT_STRUCT {
 	FVECTOR vec;
 	float r;
 	float g;
 	float b;
 };
-#endif
+#endif // TOMB4_GAME_SUNLIGHTSTRUCT_H

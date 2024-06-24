@@ -1,7 +1,6 @@
 #ifndef SP_DYNAMIC_INCLUDED
 #define SP_DYNAMIC_INCLUDED
-struct SP_DYNAMIC
-{
+struct SP_DYNAMIC {
 	unsigned char On;
 	unsigned char Falloff;
 	unsigned char R;

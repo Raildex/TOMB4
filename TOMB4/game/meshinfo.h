@@ -1,8 +1,7 @@
 #ifndef MESH_INFO_INCLUDED
 #define MESH_INFO_INCLUDED
-#pragma pack(push,1)
-struct MESH_INFO
-{
+#pragma pack(push, 1)
+struct MESH_INFO {
 	long x;
 	long y;
 	long z;

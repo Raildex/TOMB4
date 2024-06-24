@@ -1,7 +1,6 @@
-#ifndef DX_FLAGS_INCLUDED
-#define DX_FLAGS_INCLUDED
-enum DX_FLAGS
-{
+#ifndef TOMB4_GAME_DXFLAGS_H
+#define TOMB4_GAME_DXFLAGS_H
+enum DX_FLAGS {
 	DXF_NONE = 0x0,
 	DXF_FULLSCREEN = 0x1,
 	DXF_WINDOWED = 0x2,
@@ -10,4 +9,4 @@ enum DX_FLAGS
 	DXF_NOFREE = 0x40,
 	DXF_HWR = 0x80
 };
-#endif
+#endif // TOMB4_GAME_DXFLAGS_H

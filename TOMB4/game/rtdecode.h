@@ -1,7 +1,6 @@
-#ifndef RTDECODE_INCLUDED
-#define RTDECODE_INCLUDED
-struct RTDECODE
-{
+#ifndef TOMB4_GAME_RTDECODE_H
+#define TOMB4_GAME_RTDECODE_H
+struct RTDECODE {
 	unsigned long length;
 	unsigned long off;
 	unsigned short counter;
@@ -10,4 +9,4 @@ struct RTDECODE
 	unsigned char packmethod;
 	unsigned short padfuck;
 };
-#endif
+#endif // TOMB4_GAME_RTDECODE_H

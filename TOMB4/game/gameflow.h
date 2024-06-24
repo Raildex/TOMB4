@@ -45,8 +45,7 @@ extern char DEL_playingamefmv;
 extern char skipped_level;
 extern char Chris_Menu;
 extern char title_controls_locked_out;
-struct GAMEFLOW
-{
+struct GAMEFLOW {
 	unsigned long CheatEnabled : 1;
 	unsigned long LoadSaveEnabled : 1;
 	unsigned long TitleEnabled : 1;
@@ -62,8 +61,7 @@ struct GAMEFLOW
 	unsigned short FileNameLen;
 	unsigned short ScriptLen;
 };
-enum gf_commands
-{
+enum gf_commands {
 	CMD_FMV = 0x80,
 	CMD_LEVEL,
 	CMD_TITLE,
@@ -156,7 +154,7 @@ enum gf_commands
 	CMD_PICKUPCOMBO4_2,
 };
 
-enum gf_strings	//auto generated from the script compiler
+enum gf_strings // auto generated from the script compiler
 {
 	TXT_Cambodia_1984,
 	TXT_Egypt_present_day,

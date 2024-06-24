@@ -1,7 +1,6 @@
-#ifndef DRIP_STRUCT_INCLUDED
-#define DRIP_STRUCT_INCLUDED
-struct DRIP_STRUCT
-{
+#ifndef TOMB4_GAME_DRIPSTRUCT_H
+#define TOMB4_GAME_DRIPSTRUCT_H
+struct DRIP_STRUCT {
 	long x;
 	long y;
 	long z;
@@ -16,4 +15,4 @@ struct DRIP_STRUCT
 	unsigned char Outside;
 	unsigned char Pad;
 };
-#endif
+#endif // TOMB4_GAME_DRIPSTRUCT_H

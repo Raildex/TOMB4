@@ -1,7 +1,6 @@
-#ifndef WEAPON_INFO_INCLUDED
-#define WEAPON_INFO_INCLUDED
-struct WEAPON_INFO
-{
+#ifndef TOMB4_GAME_WEAPONINFO_H
+#define TOMB4_GAME_WEAPONINFO_H
+struct WEAPON_INFO {
 	short lock_angles[4];
 	short left_angles[4];
 	short right_angles[4];
@@ -15,4 +14,4 @@ struct WEAPON_INFO
 	char draw_frame;
 	short sample_num;
 };
-#endif
+#endif // TOMB4_GAME_WEAPONINFO_H

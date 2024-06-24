@@ -48,31 +48,27 @@ SAVEGAME_INFO savegame;
 static char* SGpoint = 0;
 static long SGcount = 0;
 
-long CheckSumValid(char* buffer)
-{
+long CheckSumValid(char* buffer) {
 	char checksum;
 
 	checksum = 0;
 
-	for (int i = 0; i < sizeof(SAVEGAME_INFO); i++)
+	for(int i = 0; i < sizeof(SAVEGAME_INFO); i++)
 		checksum += *buffer++;
 
 	return !checksum;
 }
 
-void sgInitialiseHub(long dont_save_lara)
-{
-	for (int i = 0; i < 10; i++)
-	{
+void sgInitialiseHub(long dont_save_lara) {
+	for(int i = 0; i < 10; i++) {
 		savegame.HubLevels[i] = 0;
 		savegame.HubOffsets[i] = 0;
 		savegame.HubSizes[i] = 0;
 	}
 
-	if (dont_save_lara)
+	if(dont_save_lara)
 		savegame.HubSavedLara = 0;
-	else
-	{
+	else {
 		SaveLaraData();
 		savegame.HubSavedLara = 1;
 	}
@@ -92,11 +88,10 @@ void sgInitialiseHub(long dont_save_lara)
 	savegame.Lara.vehicle = NO_ITEM;
 }
 
-void SaveLaraData()
-{
+void SaveLaraData() {
 	ITEM_INFO* item;
 
-	for (int i = 0; i < 15; i++)
+	for(int i = 0; i < 15; i++)
 		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] - (long)mesh_base);
 
 	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base - (long)objects[PISTOLS_ANIM].frame_base);
@@ -104,15 +99,14 @@ void SaveLaraData()
 	lara.GeneralPtr = (void*)((long)lara.GeneralPtr - (long)malloc_buffer);
 	memcpy(&savegame.Lara, &lara, sizeof(savegame.Lara));
 
-	for (int i = 0; i < 15; i++)
+	for(int i = 0; i < 15; i++)
 		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)mesh_base);
 
 	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
 	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
 	lara.GeneralPtr = (void*)((long)lara.GeneralPtr + (long)malloc_buffer);
 
-	if (lara.weapon_item != NO_ITEM)
-	{
+	if(lara.weapon_item != NO_ITEM) {
 		item = &items[lara.weapon_item];
 		savegame.WeaponObject = item->object_number;
 		savegame.WeaponAnim = item->anim_number;
@@ -124,39 +118,35 @@ void SaveLaraData()
 	savegame.cutscene_triggered = CutSceneTriggered;
 }
 
-void WriteSG(void* pointer, long size)
-{
+void WriteSG(void* pointer, long size) {
 	char* data;
 
 	SGcount += size;
 
-	for (data = (char*)pointer; size > 0; size--)
+	for(data = (char*)pointer; size > 0; size--)
 		*SGpoint++ = *data++;
 }
 
-void ReadSG(void* pointer, long size)
-{
+void ReadSG(void* pointer, long size) {
 	char* data;
 
 	SGcount += size;
 
-	for (data = (char*)pointer; size > 0; size--)
+	for(data = (char*)pointer; size > 0; size--)
 		*data++ = *SGpoint++;
 }
 
-void SaveHubData(long index)
-{
+void SaveHubData(long index) {
 	savegame.HubSizes[index] = unsigned short(SGcount - savegame.HubOffsets[index]);
 
-	if (index < 10)
+	if(index < 10)
 		savegame.HubSizes[index - 9] = savegame.HubSizes[index] + savegame.HubOffsets[index];
 }
 
-void RestoreLaraData(long FullSave)
-{
+void RestoreLaraData(long FullSave) {
 	ITEM_INFO* item;
 
-	if (!FullSave)
+	if(!FullSave)
 		savegame.Lara.item_number = lara.item_number;
 
 	memcpy(&lara, &savegame.Lara, sizeof(lara));
@@ -166,14 +156,12 @@ void RestoreLaraData(long FullSave)
 	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)objects[PISTOLS_ANIM].frame_base);
 	lara.GeneralPtr = (void*)((long)lara.GeneralPtr + (long)malloc_buffer);
 
-	if (lara.burn)
-	{
+	if(lara.burn) {
 		lara.burn = 0;
 		LaraBurn();
 	}
 
-	if (lara.weapon_item != NO_ITEM)
-	{
+	if(lara.weapon_item != NO_ITEM) {
 		lara.weapon_item = CreateItem();
 		item = &items[lara.weapon_item];
 		item->object_number = savegame.WeaponObject;
@@ -185,75 +173,66 @@ void RestoreLaraData(long FullSave)
 		item->room_number = 255;
 	}
 
-	if (savegame.HubSavedLara)
-	{
+	if(savegame.HubSavedLara) {
 		LaraInitialiseMeshes();
 		savegame.HubSavedLara &= ~1;
 		lara.last_gun_type = WEAPON_PISTOLS;
 		lara.gun_type = WEAPON_PISTOLS;
 		lara.request_gun_type = WEAPON_PISTOLS;
 
-		if (lara.weapon_item != NO_ITEM)
-		{
+		if(lara.weapon_item != NO_ITEM) {
 			KillItem(lara.weapon_item);
 			lara.weapon_item = NO_ITEM;
 		}
-	}
-	else
-	{
-		for (int i = 0; i < 15; i++)
+	} else {
+		for(int i = 0; i < 15; i++)
 			lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)mesh_base);
 	}
 
 	CutSceneTriggered = savegame.cutscene_triggered;
 }
 
-void sgRestoreLevel()
-{
+void sgRestoreLevel() {
 	AIOBJECT* lsp;
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 
-	if (OpenSaveGame(gfCurrentLevel, 0) >= 0)
+	if(OpenSaveGame(gfCurrentLevel, 0) >= 0)
 		RestoreLevelData(0);
 
 	RestoreLaraData(0);
 
-	if (gfRequiredStartPos)
-	{
+	if(gfRequiredStartPos) {
 		lsp = &AIObjects[gfRequiredStartPos - 1];
 		lara_item->pos.x_pos = lsp->x;
 		lara_item->pos.y_pos = lsp->y;
 		lara_item->pos.z_pos = lsp->z;
 		lara_item->pos.y_rot = lsp->y_rot;
 
-		if (lara_item->room_number != lsp->room_number)
+		if(lara_item->room_number != lsp->room_number)
 			ItemNewRoom(lara.item_number, lsp->room_number);
 	}
 
 	InitialiseLaraAnims(lara_item);
 
-	if (savegame.Lara.vehicle != NO_ITEM)
-	{
-		for (int i = 0; i < level_items; i++)
-		{
+	if(savegame.Lara.vehicle != NO_ITEM) {
+		for(int i = 0; i < level_items; i++) {
 			item = &items[i];
 
-			if (item->object_number == MOTORBIKE || item->object_number == JEEP)
-			{
+			if(item->object_number == MOTORBIKE || item->object_number == JEEP) {
 				item->pos.x_pos = lara_item->pos.x_pos;
 				item->pos.y_pos = lara_item->pos.y_pos;
 				item->pos.z_pos = lara_item->pos.z_pos;
 				item->pos.y_rot = lara_item->pos.y_rot;
 
-				if (item->room_number != lara_item->room_number)
+				if(item->room_number != lara_item->room_number)
 					ItemNewRoom(i, lara_item->room_number);
 
 				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number);
 				item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 				lara.vehicle = i;
 
-				if (item->object_number == MOTORBIKE)
+				if(item->object_number == MOTORBIKE)
 					BikeStart(item, lara_item);
 				else
 					JeepStart(item, lara_item);
@@ -264,8 +243,7 @@ void sgRestoreLevel()
 	}
 }
 
-void CreateCheckSum()
-{
+void CreateCheckSum() {
 	char* ptr;
 	char checksum;
 
@@ -273,14 +251,13 @@ void CreateCheckSum()
 	ptr = (char*)&savegame;
 	checksum = 0;
 
-	for (int i = 0; i < sizeof(SAVEGAME_INFO); i++)
+	for(int i = 0; i < sizeof(SAVEGAME_INFO); i++)
 		checksum += *ptr++;
 
 	savegame.Checksum = -checksum;
 }
 
-void sgSaveLevel()
-{
+void sgSaveLevel() {
 	long level_index;
 
 	level_index = OpenSaveGame(gfCurrentLevel, 1);
@@ -289,8 +266,7 @@ void sgSaveLevel()
 	SaveHubData(level_index);
 }
 
-void sgSaveGame()
-{
+void sgSaveGame() {
 	long level_index;
 
 	level_index = OpenSaveGame(gfCurrentLevel, 1);
@@ -302,8 +278,7 @@ void sgSaveGame()
 	CreateCheckSum();
 }
 
-void sgRestoreGame()
-{
+void sgRestoreGame() {
 	OpenSaveGame(savegame.CurrentLevel & 0x7F, 0);
 	GameTimer = savegame.Game.Timer;
 	gfCurrentLevel = savegame.CurrentLevel & 0x7F;
@@ -311,30 +286,26 @@ void sgRestoreGame()
 	RestoreLaraData(1);
 }
 
-long OpenSaveGame(unsigned char current_level, long saving)
-{
+long OpenSaveGame(unsigned char current_level, long saving) {
 	unsigned short* curOffset;
 	unsigned short* nexOffset;
 	long index, i, j;
 
 	index = 0;
 
-	while (index < 10 && savegame.HubLevels[index] != current_level)
+	while(index < 10 && savegame.HubLevels[index] != current_level)
 		index++;
 
-	if (saving == 1)
-	{
+	if(saving == 1) {
 		j = index + 1;
 		i = index;
 
-		if (index < 10)
-		{
-			while (j < 10)
-			{
+		if(index < 10) {
+			while(j < 10) {
 				curOffset = &savegame.HubOffsets[i];
 				nexOffset = &savegame.HubOffsets[j];
 
-				if (!savegame.HubLevels[j])
+				if(!savegame.HubLevels[j])
 					break;
 
 				memcpy(&savegame.buffer[curOffset[0]], &savegame.buffer[nexOffset[0]], nexOffset[10]);
@@ -348,9 +319,8 @@ long OpenSaveGame(unsigned char current_level, long saving)
 			savegame.HubLevels[i] = 0;
 		}
 
-		for (index = 0; index < 10; index++)
-		{
-			if (!savegame.HubLevels[index])
+		for(index = 0; index < 10; index++) {
+			if(!savegame.HubLevels[index])
 				break;
 		}
 
@@ -360,8 +330,7 @@ long OpenSaveGame(unsigned char current_level, long saving)
 		return index;
 	}
 
-	if (index < 10)
-	{
+	if(index < 10) {
 		SGcount = savegame.HubOffsets[index];
 		SGpoint = &savegame.buffer[SGcount];
 		return index;
@@ -370,8 +339,7 @@ long OpenSaveGame(unsigned char current_level, long saving)
 	return -1;
 }
 
-void SaveLevelData(long FullSave)
-{
+void SaveLevelData(long FullSave) {
 	ITEM_INFO* item;
 	ROOM_INFO* r;
 	OBJECT_INFO* obj;
@@ -388,16 +356,14 @@ void SaveLevelData(long FullSave)
 	WriteSG(&GLOBAL_lastinvitem, sizeof(long));
 	word = 0;
 
-	for (int i = 0; i < 10; i++)
-	{
-		if (flip_stats[i])
+	for(int i = 0; i < 10; i++) {
+		if(flip_stats[i])
 			word |= (1 << i);
 	}
 
 	WriteSG(&word, sizeof(short));
 
-	for (int i = 0; i < 10; i++)
-	{
+	for(int i = 0; i < 10; i++) {
 		word = short(flipmap[i] >> 8);
 		WriteSG(&word, sizeof(short));
 	}
@@ -410,21 +376,17 @@ void SaveLevelData(long FullSave)
 	word = 0;
 	k = 0;
 
-	for (int i = 0; i < number_rooms; i++)
-	{
+	for(int i = 0; i < number_rooms; i++) {
 		r = &room[i];
 
-		for (int j = 0; j < r->num_meshes; j++)
-		{
+		for(int j = 0; j < r->num_meshes; j++) {
 			mesh = &r->mesh[j];
 
-			if (mesh->static_number >= SHATTER0)
-			{
+			if(mesh->static_number >= SHATTER0) {
 				word |= ((mesh->Flags & 1) << k);
 				k++;
 
-				if (k == 16)
-				{
+				if(k == 16) {
 					WriteSG(&word, sizeof(short));
 					k = 0;
 					word = 0;
@@ -433,93 +395,87 @@ void SaveLevelData(long FullSave)
 		}
 	}
 
-	if (k)
+	if(k)
 		WriteSG(&word, sizeof(short));
 
 	byte = 0;
 
-	for (int i = 0; i < 8; i++)
+	for(int i = 0; i < 8; i++)
 		byte |= LibraryTab[i] << i;
 
 	WriteSG(&byte, sizeof(unsigned char));
 	WriteSG(&CurrentSequence, sizeof(unsigned char));
 	byte = 0;
 
-	for (int i = 0; i < 6; i++)
+	for(int i = 0; i < 6; i++)
 		byte |= SequenceUsed[i] << i;
 
 	WriteSG(&byte, sizeof(unsigned char));
 	WriteSG(Sequences, 3);
 
-	for (int i = 0; i < number_cameras; i++)
+	for(int i = 0; i < number_cameras; i++)
 		WriteSG(&camera.fixed[i].flags, sizeof(short));
 
-	for (int i = 0; i < number_spotcams; i++)
+	for(int i = 0; i < number_spotcams; i++)
 		WriteSG(&SpotCam[i].flags, sizeof(short));
 
-	for (int i = 0; i < level_items; i++)
-	{
+	for(int i = 0; i < level_items; i++) {
 		item = &items[i];
 		obj = &objects[item->object_number];
 		packed = 0;
 
-		if (item->flags & IFL_CLEARBODY || (item->after_death && (item->object_number < GAME_PIECE1 || item->object_number > ENEMY_PIECE)))
-		{
+		if(item->flags & IFL_CLEARBODY || (item->after_death && (item->object_number < GAME_PIECE1 || item->object_number > ENEMY_PIECE))) {
 			packed = 0x2000;
 			WriteSG(&packed, sizeof(unsigned short));
-		}
-		else
-		{
-			if (item->flags & (IFL_CODEBITS | IFL_INVISIBLE | IFL_TRIGGERED) || item->object_number == LARA && FullSave)
-			{
+		} else {
+			if(item->flags & (IFL_CODEBITS | IFL_INVISIBLE | IFL_TRIGGERED) || item->object_number == LARA && FullSave) {
 				packed = 0x8000;
 
-				if (item->pos.x_rot)
+				if(item->pos.x_rot)
 					packed |= 1;
 
-				if (item->pos.z_rot)
+				if(item->pos.z_rot)
 					packed |= 2;
 
-				if (item->pos.x_pos & 1)
+				if(item->pos.x_pos & 1)
 					packed |= 4;
 
-				if (item->pos.y_pos & 1)
+				if(item->pos.y_pos & 1)
 					packed |= 8;
 
-				if (item->pos.z_pos & 1)
+				if(item->pos.z_pos & 1)
 					packed |= 0x10;
 
-				if (item->speed)
+				if(item->speed)
 					packed |= 0x20;
 
-				if (item->fallspeed)
+				if(item->fallspeed)
 					packed |= 0x40;
 
-				if (item->item_flags[0])
+				if(item->item_flags[0])
 					packed |= 0x80;
 
-				if (item->item_flags[1])
+				if(item->item_flags[1])
 					packed |= 0x100;
 
-				if (item->item_flags[2])
+				if(item->item_flags[2])
 					packed |= 0x200;
 
-				if (item->item_flags[3])
+				if(item->item_flags[3])
 					packed |= 0x400;
 
-				if (item->timer)
+				if(item->timer)
 					packed |= 0x800;
 
-				if (item->trigger_flags)
+				if(item->trigger_flags)
 					packed |= 0x1000;
 
-				if (obj->save_hitpoints && item->hit_points != obj->hit_points)
+				if(obj->save_hitpoints && item->hit_points != obj->hit_points)
 					packed |= 0x4000;
 
 				WriteSG(&packed, sizeof(unsigned short));
 
-				if (obj->save_position)
-				{
+				if(obj->save_position) {
 					pos = short(item->pos.x_pos >> 1);
 					WriteSG(&pos, sizeof(short));
 
@@ -534,21 +490,20 @@ void SaveLevelData(long FullSave)
 
 					WriteSG(&item->pos.y_rot, sizeof(short));
 
-					if (packed & 1)
+					if(packed & 1)
 						WriteSG(&item->pos.x_rot, sizeof(short));
 
-					if (packed & 2)
+					if(packed & 2)
 						WriteSG(&item->pos.z_rot, sizeof(short));
 
-					if (packed & 0x20)
+					if(packed & 0x20)
 						WriteSG(&item->speed, sizeof(short));
 
-					if (packed & 0x40)
+					if(packed & 0x40)
 						WriteSG(&item->fallspeed, sizeof(short));
 				}
 
-				if (obj->save_anim)
-				{
+				if(obj->save_anim) {
 					byte = (unsigned char)item->current_anim_state;
 					WriteSG(&byte, sizeof(unsigned char));
 
@@ -558,22 +513,19 @@ void SaveLevelData(long FullSave)
 					byte = (unsigned char)item->required_anim_state;
 					WriteSG(&byte, sizeof(unsigned char));
 
-					if (item->object_number != LARA)
-					{
+					if(item->object_number != LARA) {
 						byte = item->anim_number - obj->anim_index;
 						WriteSG(&byte, sizeof(unsigned char));
-					}
-					else
+					} else
 						WriteSG(&item->anim_number, sizeof(short));
 
 					WriteSG(&item->frame_number, sizeof(short));
 				}
 
-				if (packed & 0x4000)
+				if(packed & 0x4000)
 					WriteSG(&item->hit_points, sizeof(short));
 
-				if (obj->save_flags)
-				{
+				if(obj->save_flags) {
 					flags = item->flags;
 					flags |= item->active << 16;
 					flags |= item->status << 17;
@@ -586,34 +538,33 @@ void SaveLevelData(long FullSave)
 					flags |= item->ai_bits << 25;
 					flags |= item->really_active << 30;
 
-					if (obj->intelligent && item->data)
+					if(obj->intelligent && item->data)
 						flags |= 0x80000000;
 
 					WriteSG(&flags, sizeof(unsigned long));
 
-					if (packed & 0x80)
+					if(packed & 0x80)
 						WriteSG(&item->item_flags[0], sizeof(short));
 
-					if (packed & 0x100)
+					if(packed & 0x100)
 						WriteSG(&item->item_flags[1], sizeof(short));
 
-					if (packed & 0x200)
+					if(packed & 0x200)
 						WriteSG(&item->item_flags[2], sizeof(short));
 
-					if (packed & 0x400)
+					if(packed & 0x400)
 						WriteSG(&item->item_flags[3], sizeof(short));
 
-					if (packed & 0x800)
+					if(packed & 0x800)
 						WriteSG(&item->timer, sizeof(short));
 
-					if (packed & 0x1000)
+					if(packed & 0x1000)
 						WriteSG(&item->trigger_flags, sizeof(short));
 
-					if (obj->intelligent)
+					if(obj->intelligent)
 						WriteSG(&item->carried_item, sizeof(short));
 
-					if (flags & 0x80000000)
-					{
+					if(flags & 0x80000000) {
 						creature = (CREATURE_INFO*)item->data;
 
 						creature->enemy = (ITEM_INFO*)((long)creature->enemy - (long)malloc_buffer);
@@ -636,25 +587,22 @@ void SaveLevelData(long FullSave)
 					}
 				}
 
-				if (obj->save_mesh)
-				{
+				if(obj->save_mesh) {
 					WriteSG(&item->mesh_bits, sizeof(unsigned long));
 					WriteSG(&item->meshswap_meshbits, sizeof(unsigned long));
 				}
 
-				if (item->object_number == MOTORBIKE)
+				if(item->object_number == MOTORBIKE)
 					WriteSG(item->data, sizeof(BIKEINFO));
 
-				if (item->object_number == JEEP)
+				if(item->object_number == JEEP)
 					WriteSG(item->data, sizeof(JEEPINFO));
-			}
-			else
+			} else
 				WriteSG(&packed, sizeof(unsigned short));
 		}
 	}
 
-	if (objects[WHEEL_OF_FORTUNE].loaded)
-	{
+	if(objects[WHEEL_OF_FORTUNE].loaded) {
 		WriteSG(senet_item, sizeof(short) * 6);
 		WriteSG(senet_piece, sizeof(char) * 6);
 		WriteSG(senet_board, sizeof(char) * 17);
@@ -664,14 +612,12 @@ void SaveLevelData(long FullSave)
 		WriteSG(&piece_moving, sizeof(char));
 	}
 
-	if (FullSave)
-	{
+	if(FullSave) {
 		byte = 0;
 		item = &items[level_items];
 
-		for (int i = level_items; i < 256; i++)
-		{
-			if (item->active && (item->object_number == FLARE_ITEM || item->object_number == BURNING_TORCH_ITEM))
+		for(int i = level_items; i < 256; i++) {
+			if(item->active && (item->object_number == FLARE_ITEM || item->object_number == BURNING_TORCH_ITEM))
 				byte++;
 
 			item++;
@@ -680,13 +626,11 @@ void SaveLevelData(long FullSave)
 		WriteSG(&byte, sizeof(unsigned char));
 		item = &items[level_items];
 
-		for (int i = level_items; i < 256; i++)
-		{
-			if (item->active && (item->object_number == FLARE_ITEM || item->object_number == BURNING_TORCH_ITEM))
-			{
-				if (item->object_number == FLARE_ITEM)
+		for(int i = level_items; i < 256; i++) {
+			if(item->active && (item->object_number == FLARE_ITEM || item->object_number == BURNING_TORCH_ITEM)) {
+				if(item->object_number == FLARE_ITEM)
 					byte = 0;
-				else if (item->object_number == BURNING_TORCH_ITEM)
+				else if(item->object_number == BURNING_TORCH_ITEM)
 					byte = 1;
 
 				WriteSG(&byte, sizeof(char));
@@ -695,46 +639,40 @@ void SaveLevelData(long FullSave)
 				WriteSG(&item->speed, sizeof(short));
 				WriteSG(&item->fallspeed, sizeof(short));
 
-				if (item->object_number == FLARE_ITEM)
-				{
+				if(item->object_number == FLARE_ITEM) {
 					flare_age = (long)item->data;
 					WriteSG(&flare_age, sizeof(long));
-				}
-				else
+				} else
 					WriteSG(&item->item_flags[3], sizeof(short));
 			}
 
 			item++;
 		}
 
-		if (objects[LITTLE_BEETLE].loaded)
-		{
+		if(objects[LITTLE_BEETLE].loaded) {
 			byte = 0;
 
-			for (int j = 0; j < 128; j++)
-			{
-				if (Scarabs[j].On)
+			for(int j = 0; j < 128; j++) {
+				if(Scarabs[j].On)
 					byte++;
 			}
 
 			WriteSG(&byte, sizeof(unsigned char));
 
-			for (int j = 0; j < 128; j++)
-			{
-				if (Scarabs[j].On)
-				{
+			for(int j = 0; j < 128; j++) {
+				if(Scarabs[j].On) {
 					word = Scarabs[j].room_number << 8;
 
-					if (Scarabs[j].pos.x_pos & 1)
+					if(Scarabs[j].pos.x_pos & 1)
 						word |= 1;
 
-					if (Scarabs[j].pos.y_pos & 1)
+					if(Scarabs[j].pos.y_pos & 1)
 						word |= 2;
 
-					if (Scarabs[j].pos.z_pos & 1)
+					if(Scarabs[j].pos.z_pos & 1)
 						word |= 4;
 
-					if (Scarabs[j].pos.x_rot)
+					if(Scarabs[j].pos.x_rot)
 						word |= 8;
 
 					WriteSG(&word, sizeof(short));
@@ -750,7 +688,7 @@ void SaveLevelData(long FullSave)
 
 					WriteSG(&Scarabs[j].pos.y_rot, sizeof(short));
 
-					if (word & 8)
+					if(word & 8)
 						WriteSG(&Scarabs[j].pos.x_rot, sizeof(short));
 				}
 			}
@@ -759,10 +697,8 @@ void SaveLevelData(long FullSave)
 		byte = 0;
 		item = &items[level_items];
 
-		for (int i = level_items; i < 256; i++)
-		{
-			if (item->active && item->object_number == CLOCKWORK_BEETLE)
-			{
+		for(int i = level_items; i < 256; i++) {
+			if(item->active && item->object_number == CLOCKWORK_BEETLE) {
 				byte = 1;
 				break;
 			}
@@ -772,31 +708,26 @@ void SaveLevelData(long FullSave)
 
 		WriteSG(&byte, sizeof(unsigned char));
 
-		if (byte)
-		{
+		if(byte) {
 			WriteSG(&item->pos, sizeof(PHD_3DPOS));
 			WriteSG(item->item_flags, sizeof(short) * 4);
 		}
 
-		if(false /*gfCurrentLevel == 1)*/)
-		{
+		if(false /*gfCurrentLevel == 1)*/) {
 			flags = 0;
 
-			for (int i = 0; i < 64; i++)
-			{
-				if (VonCroyCutFlags[i])
+			for(int i = 0; i < 64; i++) {
+				if(VonCroyCutFlags[i])
 					flags |= 1 << (i & 0xF);
 
-				if ((i & 0xF) == 0xF)
-				{
+				if((i & 0xF) == 0xF) {
 					WriteSG(&flags, 2);
 					flags = 0;
 				}
 			}
 		}
 
-		if (lara.RopePtr != -1)
-		{
+		if(lara.RopePtr != -1) {
 			WriteSG(&RopeList[lara.RopePtr], sizeof(ROPE_STRUCT));
 			CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope - (char*)RopeList);
 
@@ -806,8 +737,7 @@ void SaveLevelData(long FullSave)
 	}
 }
 
-void RestoreLevelData(long FullSave)
-{
+void RestoreLevelData(long FullSave) {
 	ROOM_INFO* r;
 	ITEM_INFO* item;
 	CREATURE_INFO* creature;
@@ -825,9 +755,8 @@ void RestoreLevelData(long FullSave)
 	ReadSG(&GLOBAL_lastinvitem, sizeof(long));
 	ReadSG(&sword, sizeof(short));
 
-	for (int i = 0; i < 10; i++)
-	{
-		if (sword & (1 << i))
+	for(int i = 0; i < 10; i++) {
+		if(sword & (1 << i))
 			FlipMap(i);
 
 		ReadSG(&uword, sizeof(unsigned short));
@@ -841,26 +770,21 @@ void RestoreLevelData(long FullSave)
 	ReadSG(&CurrentAtmosphere, sizeof(unsigned char));
 	k = 16;
 
-	for (int i = 0; i < number_rooms; i++)
-	{
+	for(int i = 0; i < number_rooms; i++) {
 		r = &room[i];
 
-		for (int j = 0; j < r->num_meshes; j++)
-		{
+		for(int j = 0; j < r->num_meshes; j++) {
 			mesh = &r->mesh[j];
 
-			if (mesh->static_number >= SHATTER0)
-			{
-				if (k == 16)
-				{
+			if(mesh->static_number >= SHATTER0) {
+				if(k == 16) {
 					ReadSG(&uword, sizeof(unsigned short));
 					k = 0;
 				}
 
 				mesh->Flags ^= (uword ^ mesh->Flags) & 1;
 
-				if (!mesh->Flags)
-				{
+				if(!mesh->Flags) {
 					room_number = i;
 					floor = GetFloor(mesh->x, mesh->y, mesh->z, &room_number);
 					GetHeight(floor, mesh->x, mesh->y, mesh->z);
@@ -876,8 +800,7 @@ void RestoreLevelData(long FullSave)
 
 	ReadSG(&byte, sizeof(char));
 
-	for (int i = 0; i < 8; i++)
-	{
+	for(int i = 0; i < 8; i++) {
 		LibraryTab[i] = byte & 1;
 		byte >>= 1;
 	}
@@ -885,36 +808,30 @@ void RestoreLevelData(long FullSave)
 	ReadSG(&CurrentSequence, sizeof(unsigned char));
 	ReadSG(&byte, sizeof(char));
 
-	for (int i = 0; i < 6; i++)
-	{
+	for(int i = 0; i < 6; i++) {
 		SequenceUsed[i] = byte & 1;
 		byte >>= 1;
 	}
 
 	ReadSG(Sequences, 3);
 
-	for (int i = 0; i < number_cameras; i++)
+	for(int i = 0; i < number_cameras; i++)
 		ReadSG(&camera.fixed[i].flags, sizeof(short));
 
-	for (int i = 0; i < number_spotcams; i++)
+	for(int i = 0; i < number_spotcams; i++)
 		ReadSG(&SpotCam[i].flags, sizeof(short));
 
-	for (int i = 0; i < level_items; i++)
-	{
+	for(int i = 0; i < level_items; i++) {
 		item = &items[i];
 		obj = &objects[item->object_number];
 		ReadSG(&packed, sizeof(unsigned short));
 
-		if (packed & 0x2000)
-		{
+		if(packed & 0x2000) {
 			KillItem(i);
 			item->status = ITEM_DEACTIVATED;
 			item->flags |= IFL_INVISIBLE;
-		}
-		else if (packed & 0x8000)
-		{
-			if (obj->save_position)
-			{
+		} else if(packed & 0x8000) {
+			if(obj->save_position) {
 				uroom_number = 0;
 
 				ReadSG(&word, sizeof(unsigned short));
@@ -929,30 +846,28 @@ void RestoreLevelData(long FullSave)
 				ReadSG(&uroom_number, sizeof(unsigned char));
 				ReadSG(&item->pos.y_rot, sizeof(short));
 
-				if (packed & 1)
+				if(packed & 1)
 					ReadSG(&item->pos.x_rot, sizeof(short));
 
-				if (packed & 2)
+				if(packed & 2)
 					ReadSG(&item->pos.z_rot, sizeof(short));
 
-				if (packed & 0x20)
+				if(packed & 0x20)
 					ReadSG(&item->speed, sizeof(short));
 
-				if (packed & 0x40)
+				if(packed & 0x40)
 					ReadSG(&item->fallspeed, sizeof(short));
 
-				if (item->room_number != uroom_number)
+				if(item->room_number != uroom_number)
 					ItemNewRoom(i, uroom_number);
 
-				if (obj->shadow_size)
-				{
+				if(obj->shadow_size) {
 					floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, (short*)&uroom_number);
 					item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 				}
 			}
 
-			if (obj->save_anim)
-			{
+			if(obj->save_anim) {
 				current = 0;
 				goal = 0;
 				req = 0;
@@ -963,47 +878,44 @@ void RestoreLevelData(long FullSave)
 				item->goal_anim_state = goal;
 				item->required_anim_state = req;
 
-				if (item->object_number != LARA)
-				{
+				if(item->object_number != LARA) {
 					ReadSG(&anim, sizeof(char));
 					item->anim_number = obj->anim_index + anim;
-				}
-				else
+				} else
 					ReadSG(&item->anim_number, sizeof(short));
 
 				ReadSG(&item->frame_number, sizeof(short));
 			}
 
-			if (packed & 0x4000)
+			if(packed & 0x4000)
 				ReadSG(&item->hit_points, sizeof(short));
 
-			if (obj->save_flags)
-			{
+			if(obj->save_flags) {
 				ReadSG(&flags, sizeof(unsigned long));
 				item->flags = (short)flags;
 
-				if (packed & 0x80)
+				if(packed & 0x80)
 					ReadSG(&item->item_flags[0], sizeof(short));
 
-				if (packed & 0x100)
+				if(packed & 0x100)
 					ReadSG(&item->item_flags[1], sizeof(short));
 
-				if (packed & 0x200)
+				if(packed & 0x200)
 					ReadSG(&item->item_flags[2], sizeof(short));
 
-				if (packed & 0x400)
+				if(packed & 0x400)
 					ReadSG(&item->item_flags[3], sizeof(short));
 
-				if (packed & 0x800)
+				if(packed & 0x800)
 					ReadSG(&item->timer, sizeof(short));
 
-				if (packed & 0x1000)
+				if(packed & 0x1000)
 					ReadSG(&item->trigger_flags, sizeof(short));
 
-				if (obj->intelligent)
+				if(obj->intelligent)
 					ReadSG(&item->carried_item, sizeof(short));
 
-				if (flags & 0x10000 && !item->active)
+				if(flags & 0x10000 && !item->active)
 					AddActiveItem(i);
 
 				item->active = (flags >> 16) & 1;
@@ -1017,17 +929,15 @@ void RestoreLevelData(long FullSave)
 				item->ai_bits = (flags >> 25) & 31;
 				item->really_active = (flags >> 30) & 1;
 
-				if (flags & 0x80000000)
-				{
+				if(flags & 0x80000000) {
 					EnableBaddieAI(i, 1);
 					creature = (CREATURE_INFO*)item->data;
 
-					if (creature)
-					{
+					if(creature) {
 						ReadSG(creature, 22);
 						creature->enemy = (ITEM_INFO*)((long)creature->enemy + (long)malloc_buffer);
 
-						if (creature->enemy < 0)
+						if(creature->enemy < 0)
 							creature->enemy = 0;
 
 						ReadSG(&creature->ai_target.object_number, sizeof(short));
@@ -1042,47 +952,41 @@ void RestoreLevelData(long FullSave)
 						creature->LOT.is_amphibious = (lflags & 4) == 4;
 						creature->LOT.is_jumping = (lflags & 8) == 8;
 						creature->LOT.is_monkeying = (lflags & 16) == 16;
-					}
-					else
+					} else
 						SGpoint += 51;
 				}
 			}
 
-			if (obj->save_mesh)
-			{
+			if(obj->save_mesh) {
 				ReadSG(&item->mesh_bits, sizeof(unsigned long));
 				ReadSG(&item->meshswap_meshbits, sizeof(unsigned long));
 			}
 
-			if (item->object_number == MOTORBIKE)
+			if(item->object_number == MOTORBIKE)
 				ReadSG(item->data, sizeof(BIKEINFO));
 
-			if (item->object_number == JEEP)
+			if(item->object_number == JEEP)
 				ReadSG(item->data, sizeof(JEEPINFO));
 
-			if (obj->collision == PuzzleHoleCollision)
-			{
-				if (item->status == ITEM_DEACTIVATED || item->status == ITEM_ACTIVE)
-				{
+			if(obj->collision == PuzzleHoleCollision) {
+				if(item->status == ITEM_DEACTIVATED || item->status == ITEM_ACTIVE) {
 					item->object_number += 12;
 					item->anim_number = objects[item->object_number].anim_index + anim;
 				}
 			}
 
-			if (item->object_number >= SMASH_OBJECT1 && item->object_number <= SMASH_OBJECT8 && item->flags & IFL_INVISIBLE)
+			if(item->object_number >= SMASH_OBJECT1 && item->object_number <= SMASH_OBJECT8 && item->flags & IFL_INVISIBLE)
 				item->mesh_bits = 0x100;
 
-			if (item->object_number == RAISING_BLOCK1 && item->item_flags[1] ||
-				item->object_number == EXPANDING_PLATFORM && item->item_flags[2])
+			if(item->object_number == RAISING_BLOCK1 && item->item_flags[1] || item->object_number == EXPANDING_PLATFORM && item->item_flags[2])
 				AlterFloorHeight(item, -1024);
 
-			if (item->object_number == RAISING_BLOCK2 && item->item_flags[1])
+			if(item->object_number == RAISING_BLOCK2 && item->item_flags[1])
 				AlterFloorHeight(item, -2048);
 		}
 	}
 
-	if (objects[WHEEL_OF_FORTUNE].loaded)
-	{
+	if(objects[WHEEL_OF_FORTUNE].loaded) {
 		ReadSG(senet_item, sizeof(short) * 6);
 		ReadSG(senet_piece, sizeof(char) * 6);
 		ReadSG(senet_board, sizeof(char) * 17);
@@ -1092,17 +996,15 @@ void RestoreLevelData(long FullSave)
 		ReadSG(&piece_moving, sizeof(char));
 	}
 
-	if (FullSave)
-	{
+	if(FullSave) {
 		ReadSG(&numberof, sizeof(unsigned char));
 
-		for (int i = 0; i < numberof; i++)
-		{
+		for(int i = 0; i < numberof; i++) {
 			item_number = CreateItem();
 			item = &items[item_number];
 			ReadSG(&byte, sizeof(char));
 
-			if (!byte)
+			if(!byte)
 				item->object_number = FLARE_ITEM;
 			else
 				item->object_number = BURNING_TORCH_ITEM;
@@ -1114,8 +1016,7 @@ void RestoreLevelData(long FullSave)
 			InitialiseItem(item_number);
 			AddActiveItem(item_number);
 
-			switch (item->object_number)
-			{
+			switch(item->object_number) {
 			case BURNING_TORCH_ITEM:
 				ReadSG(&item->item_flags[3], 2);
 				break;
@@ -1127,12 +1028,10 @@ void RestoreLevelData(long FullSave)
 			}
 		}
 
-		if (objects[LITTLE_BEETLE].loaded)
-		{
+		if(objects[LITTLE_BEETLE].loaded) {
 			ReadSG(&byte, sizeof(char));
-			
-			for (int i = 0; i < byte; i++)
-			{
+
+			for(int i = 0; i < byte; i++) {
 				ReadSG(&sword, sizeof(short));
 
 				ReadSG(&uword, sizeof(unsigned short));
@@ -1149,7 +1048,7 @@ void RestoreLevelData(long FullSave)
 
 				ReadSG(&Scarabs[i].pos.y_rot, sizeof(short));
 
-				if (sword & 8)
+				if(sword & 8)
 					ReadSG(&Scarabs[i].pos.x_rot, sizeof(short));
 
 				Scarabs[i].On = 1;
@@ -1159,27 +1058,23 @@ void RestoreLevelData(long FullSave)
 
 		ReadSG(&byte, sizeof(char));
 
-		if (byte)
-		{
+		if(byte) {
 			item = TriggerClockworkBeetle(1);
 			ReadSG(&item->pos, sizeof(PHD_3DPOS));
 			ReadSG(item->item_flags, sizeof(short) * 4);
 		}
 
-		if(false /*gfCurrentLevel == 1)*/)
-		{
-			for (int i = 0; i < 64; i++)
-			{
-				if (!(i & 0xF))
+		if(false /*gfCurrentLevel == 1)*/) {
+			for(int i = 0; i < 64; i++) {
+				if(!(i & 0xF))
 					ReadSG(&uword, sizeof(unsigned short));
 
-				if (uword & 1 << (i & 0xF))
+				if(uword & 1 << (i & 0xF))
 					VonCroyCutFlags[i] = 1;
 			}
 		}
 
-		if (lara.RopePtr != -1)
-		{
+		if(lara.RopePtr != -1) {
 			ReadSG(&RopeList[lara.RopePtr], sizeof(ROPE_STRUCT));
 			ReadSG(&CurrentPendulum, sizeof(PENDULUM));
 			CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (long)RopeList);

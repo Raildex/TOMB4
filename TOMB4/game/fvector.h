@@ -1,9 +1,8 @@
-#ifndef FVECTOR_INCLUDED
-#define FVECTOR_INCLUDED
-struct FVECTOR
-{
+#ifndef TOMB4_GAME_FVECTOR_H
+#define TOMB4_GAME_FVECTOR_H
+struct FVECTOR {
 	float x;
 	float y;
 	float z;
 };
-#endif
+#endif // TOMB4_GAME_FVECTOR_H

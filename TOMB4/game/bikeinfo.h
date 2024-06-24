@@ -1,7 +1,6 @@
-#ifndef BIKEINFO_INCLUDED
-#define BIKEINFO_INCLUDED
-struct BIKEINFO
-{
+#ifndef TOMB4_GAME_BIKEINFO_H
+#define TOMB4_GAME_BIKEINFO_H
+struct BIKEINFO {
 	short right_front_wheelrot;
 	short right_back_wheelrot;
 	long left_wheelrot;
@@ -16,4 +15,4 @@ struct BIKEINFO
 	short flags;
 	short light_intensity;
 };
-#endif
+#endif // TOMB4_GAME_BIKEINFO_H

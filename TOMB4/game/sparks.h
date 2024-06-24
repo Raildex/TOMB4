@@ -1,7 +1,6 @@
-#ifndef SPARKS_INCLUDED
-#define SPARKS_INCLUDED
-struct SPARKS
-{
+#ifndef TOMB4_GAME_SPARKS_H
+#define TOMB4_GAME_SPARKS_H
+struct SPARKS {
 	long x;
 	long y;
 	long z;
@@ -40,4 +39,4 @@ struct SPARKS
 	unsigned char RoomNumber;
 	unsigned char NodeNumber;
 };
-#endif
+#endif // TOMB4_GAME_SPARKS_H

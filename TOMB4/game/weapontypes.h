@@ -1,7 +1,6 @@
 #ifndef WEAPON_TYPES_INCLUDED
 #define WEAPON_TYPES_INCLUDED
-enum weapon_types
-{
+enum weapon_types {
 	WEAPON_NONE,
 	WEAPON_PISTOLS,
 	WEAPON_REVOLVER,

@@ -1,11 +1,10 @@
-#ifndef NODEOFFSET_INFO_INCLUDED
-#define NODEOFFSET_INFO_INCLUDED
-struct NODEOFFSET_INFO
-{
+#ifndef TOMB4_GAME_NODEOFFSETINFO_H
+#define TOMB4_GAME_NODEOFFSETINFO_H
+struct NODEOFFSET_INFO {
 	short x;
 	short y;
 	short z;
 	char mesh_num;
 	unsigned char GotIt;
 };
-#endif
+#endif // TOMB4_GAME_NODEOFFSETINFO_H

@@ -1,10 +1,9 @@
-#ifndef BITE_INFO_INCLUDED
-#define BITE_INFO_INCLUDED
-struct BITE_INFO
-{
+#ifndef TOMB4_GAME_BITEINFO_H
+#define TOMB4_GAME_BITEINFO_H
+struct BITE_INFO {
 	long x;
 	long y;
 	long z;
 	long mesh_num;
 };
-#endif
+#endif // TOMB4_GAME_BITEINFO_H

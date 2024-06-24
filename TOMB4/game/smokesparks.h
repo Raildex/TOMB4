@@ -1,7 +1,6 @@
-#ifndef SMOKE_SPARKS_INCLUDED
-#define SMOKE_SPARKS_INCLUDED
-struct SMOKE_SPARKS
-{
+#ifndef TOMB4_GAME_SMOKESPARKS_H
+#define TOMB4_GAME_SMOKESPARKS_H
+struct SMOKE_SPARKS {
 	long x;
 	long y;
 	long z;
@@ -32,4 +31,4 @@ struct SMOKE_SPARKS
 	unsigned char NodeNumber;
 	unsigned char mirror;
 };
-#endif
+#endif // TOMB4_GAME_SMOKESPARKS_H

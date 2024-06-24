@@ -30,9 +30,8 @@ void CreatureTilt(ITEM_INFO* item, short angle);
 void CreatureJoint(ITEM_INFO* item, short joint, short required);
 void CreatureFloat(short item_number);
 void CreatureUnderwater(ITEM_INFO* item, long depth);
-short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short(*generate)(long x, long y, long z, short speed, short yrot, short room_number));
-short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle,
-	short(*generate)(long x, long y, long z, short damage, short angle, short room_number));
+short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short (*generate)(long x, long y, long z, short speed, short yrot, short room_number));
+short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle, short (*generate)(long x, long y, long z, short damage, short angle, short room_number));
 long CreatureVault(short item_number, short angle, long vault, long shift);
 void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara_anim);
 void AlertAllGuards(short item_number);

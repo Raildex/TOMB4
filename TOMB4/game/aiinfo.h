@@ -1,7 +1,6 @@
-#ifndef AI_INFO_INCLUDED
-#define AI_INFO_INCLUDED
-struct AI_INFO
-{
+#ifndef TOMB4_GAME_AIINFO_H
+#define TOMB4_GAME_AIINFO_H
+struct AI_INFO {
 	short zone_number;
 	short enemy_zone;
 	long distance;
@@ -11,4 +10,4 @@ struct AI_INFO
 	short x_angle;
 	short enemy_facing;
 };
-#endif
+#endif // TOMB4_GAME_AIINFO_H

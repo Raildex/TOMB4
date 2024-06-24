@@ -26,8 +26,7 @@
 static short DeathSlideBounds[12] = { -256, 256, -100, 100, 256, 512, 0, 0, -4550, 4550, 0, 0 };
 static PHD_VECTOR DeathSlidePosition = { 0, 0, 371 };
 
-void InitialiseDeathSlide(short item_number)
-{
+void InitialiseDeathSlide(short item_number) {
 	ITEM_INFO* item;
 	GAME_VECTOR* old;
 
@@ -40,25 +39,23 @@ void InitialiseDeathSlide(short item_number)
 	old->room_number = item->room_number;
 }
 
-void DeathSlideCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
-{
+void DeathSlideCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	if (input & IN_ACTION && !l->gravity_status && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP)
-	{
+	if(input & IN_ACTION && !l->gravity_status && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP) {
 		item = &items[item_number];
 
-		if (item->status == ITEM_INACTIVE)
-		{
-			if (TestLaraPosition(DeathSlideBounds, item, l))
-			{
+		if(item->status == ITEM_INACTIVE) {
+			if(TestLaraPosition(DeathSlideBounds, item, l)) {
 				AlignLaraPosition(&DeathSlidePosition, item, l);
 				lara.gun_status = LG_HANDS_BUSY;
 				l->goal_anim_state = AS_DEATHSLIDE;
 
-				do AnimateLara(l); while (l->current_anim_state != AS_NULL);
+				do
+					AnimateLara(l);
+				while(l->current_anim_state != AS_NULL);
 
-				if (!item->active)
+				if(!item->active)
 					AddActiveItem(item_number);
 
 				item->status = ITEM_ACTIVE;
@@ -68,8 +65,7 @@ void DeathSlideCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-void ControlDeathSlide(short item_number)
-{
+void ControlDeathSlide(short item_number) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	GAME_VECTOR* old;
@@ -78,20 +74,18 @@ void ControlDeathSlide(short item_number)
 
 	item = &items[item_number];
 
-	if (item->status != ITEM_ACTIVE)
+	if(item->status != ITEM_ACTIVE)
 		return;
 
-	if (item->flags & IFL_INVISIBLE)
-	{
-		if (item->current_anim_state == 1)
-		{
+	if(item->flags & IFL_INVISIBLE) {
+		if(item->current_anim_state == 1) {
 			AnimateItem(item);
 			return;
 		}
 
 		AnimateItem(item);
 
-		if (item->fallspeed < 100)
+		if(item->fallspeed < 100)
 			item->fallspeed += 5;
 
 		item->pos.x_pos += item->fallspeed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
@@ -100,11 +94,10 @@ void ControlDeathSlide(short item_number)
 		room_number = item->room_number;
 		GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-		if (room_number != item->room_number)
+		if(room_number != item->room_number)
 			ItemNewRoom(item_number, room_number);
 
-		if (lara_item->current_anim_state == AS_DEATHSLIDE)
-		{
+		if(lara_item->current_anim_state == AS_DEATHSLIDE) {
 			lara_item->pos.x_pos = item->pos.x_pos;
 			lara_item->pos.y_pos = item->pos.y_pos;
 			lara_item->pos.z_pos = item->pos.z_pos;
@@ -117,10 +110,8 @@ void ControlDeathSlide(short item_number)
 		h = GetHeight(floor, x, y, z);
 		c = GetCeiling(floor, x, y, z);
 
-		if (h <= y + 256 || c >= y - 256)
-		{
-			if (lara_item->current_anim_state == AS_DEATHSLIDE)
-			{
+		if(h <= y + 256 || c >= y - 256) {
+			if(lara_item->current_anim_state == AS_DEATHSLIDE) {
 				lara_item->goal_anim_state = 3;
 				AnimateLara(lara_item);
 				lara_item->gravity_status = 1;
@@ -132,18 +123,15 @@ void ControlDeathSlide(short item_number)
 			RemoveActiveItem(item_number);
 			item->status = ITEM_INACTIVE;
 			item->flags -= IFL_INVISIBLE;
-		}
-		else
+		} else
 			SoundEffect(SFX_TRAIN_DOOR_CLOSE, &item->pos, SFX_DEFAULT);
-	}
-	else
-	{
+	} else {
 		old = (GAME_VECTOR*)item->data;
 		item->pos.x_pos = old->x;
 		item->pos.y_pos = old->y;
 		item->pos.z_pos = old->z;
 
-		if (old->room_number != item->room_number)
+		if(old->room_number != item->room_number)
 			ItemNewRoom(item_number, old->room_number);
 
 		item->status = ITEM_INACTIVE;

@@ -1,10 +1,9 @@
-#ifndef FONT_FLAGS_INCLUDED
-#define FONT_FLAGS_INCLUDED
-enum font_flags
-{
-	FF_SMALL =		0x1000,
-	FF_BLINK =		0x2000,
-	FF_RJUSTIFY =	0x4000,
-	FF_CENTER =		0x8000
+#ifndef TOMB4_GAME_FONTFLAGS_H
+#define TOMB4_GAME_FONTFLAGS_H
+enum font_flags {
+	FF_SMALL = 0x1000,
+	FF_BLINK = 0x2000,
+	FF_RJUSTIFY = 0x4000,
+	FF_CENTER = 0x8000
 };
-#endif
+#endif // TOMB4_GAME_FONTFLAGS_H

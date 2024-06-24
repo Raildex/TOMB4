@@ -1,7 +1,6 @@
 #ifndef BLOOD_STRUCT_INCLUDED
 #define BLOOD_STRUCT_INCLUDED
-struct BLOOD_STRUCT
-{
+struct BLOOD_STRUCT {
 	long x;
 	long y;
 	long z;

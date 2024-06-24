@@ -1,8 +1,7 @@
-#ifndef PCLIGHT_INCLUDED
-#define PCLIGHT_INCLUDED
+#ifndef TOMB4_GAME_PCLIGHT_H
+#define TOMB4_GAME_PCLIGHT_H
 #include "phdvector.h"
-struct PCLIGHT
-{
+struct PCLIGHT {
 	float x;
 	float y;
 	float z;
@@ -36,4 +35,4 @@ struct PCLIGHT
 	PHD_VECTOR rlp;
 	long Range;
 };
-#endif
+#endif // TOMB4_GAME_PCLIGHT_H

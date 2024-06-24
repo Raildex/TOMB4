@@ -1,10 +1,9 @@
-#ifndef LOT_INFO_INCLUDED
-#define LOT_INFO_INCLUDED
+#ifndef TOMB4_GAME_LOTINFO_H
+#define TOMB4_GAME_LOTINFO_H
 #include "zonetype.h"
 #include "phdvector.h"
 struct BOX_NODE;
-struct LOT_INFO
-{
+struct LOT_INFO {
 	BOX_NODE* node;
 	short head;
 	short tail;
@@ -24,4 +23,4 @@ struct LOT_INFO
 	PHD_VECTOR target;
 	zone_type zone;
 };
-#endif
+#endif // TOMB4_GAME_LOTINFO_H

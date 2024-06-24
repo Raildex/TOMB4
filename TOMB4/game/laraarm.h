@@ -1,8 +1,7 @@
 #ifndef LARA_ARM_INCLUDED
 #define LARA_ARM_INCLUDED
-#pragma pack(push,1)
-struct LARA_ARM
-{
+#pragma pack(push, 1)
+struct LARA_ARM {
 	short* frame_base;
 	short frame_number;
 	short anim_number;

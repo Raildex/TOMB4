@@ -1,13 +1,12 @@
-#ifndef DXPTR_INCLUDED
-#define DXPTR_INCLUDED
+#ifndef TOMB4_GAME_DXPTR_H
+#define TOMB4_GAME_DXPTR_H
 #include <windows.h>
 #include <xaudio2.h>
 #include <ddraw.h>
 #include <d3d.h>
 #include <dinput.h>
 #include <dsound.h>
-struct DXPTR
-{
+struct DXPTR {
 	IDirectDraw4* lpDD;
 	IDirect3D3* lpD3D;
 	IDirect3DDevice3* lpD3DDevice;
@@ -32,4 +31,4 @@ struct DXPTR
 	volatile long WaitAtBeginScene;
 	volatile long DoneBlit;
 };
-#endif
+#endif // TOMB4_GAME_DXPTR_H

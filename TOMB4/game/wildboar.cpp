@@ -18,8 +18,7 @@
 
 static BITE_INFO wildboar_bite = { 0, 0, 0, 14 };
 
-void InitialiseWildboar(short item_number)
-{
+void InitialiseWildboar(short item_number) {
 	ITEM_INFO* item;
 
 	item = &items[item_number];
@@ -30,8 +29,7 @@ void InitialiseWildboar(short item_number)
 	item->goal_anim_state = 1;
 }
 
-void WildboarControl(short item_number)
-{
+void WildboarControl(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* target;
 	CREATURE_INFO* boar;
@@ -40,7 +38,7 @@ void WildboarControl(short item_number)
 	long dx, dz, ldist, dist, max_dist;
 	short angle, neckX, neckY, headX, headY;
 
-	if (!CreatureActive(item_number))
+	if(!CreatureActive(item_number))
 		return;
 
 	angle = 0;
@@ -51,46 +49,37 @@ void WildboarControl(short item_number)
 	item = &items[item_number];
 	boar = (CREATURE_INFO*)item->data;
 
-	if (item->hit_points <= 0)
-	{
+	if(item->hit_points <= 0) {
 		item->hit_points = 0;
 
-		if (item->current_anim_state != 5)
-		{
+		if(item->current_anim_state != 5) {
 			item->anim_number = objects[WILD_BOAR].anim_index + 5;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 5;
 		}
-	}
-	else
-	{
+	} else {
 		dx = lara_item->pos.x_pos - item->pos.x_pos;
 		dz = lara_item->pos.z_pos - item->pos.z_pos;
 		ldist = SQUARE(dx) + SQUARE(dz);
 
-		if (item->ai_bits)
+		if(item->ai_bits)
 			GetAITarget(boar);
-		else
-		{
+		else {
 			boar->enemy = lara_item;
 			max_dist = 0x7FFFFFFF;
 
-			for (int i = 0; i < 5; i++)
-			{
+			for(int i = 0; i < 5; i++) {
 				baddie = &baddie_slots[i];
 
-				if (baddie->item_num != NO_ITEM && baddie->item_num != item_number)
-				{
+				if(baddie->item_num != NO_ITEM && baddie->item_num != item_number) {
 					target = &items[baddie->item_num];
 
-					if (target->object_number != WILD_BOAR)
-					{
+					if(target->object_number != WILD_BOAR) {
 						dx = target->pos.x_pos - item->pos.x_pos;
 						dz = target->pos.z_pos - item->pos.z_pos;
 						dist = SQUARE(dx) + SQUARE(dz);
 
-						if (dist < max_dist && dist < ldist)
-						{
+						if(dist < max_dist && dist < ldist) {
 							boar->enemy = target;
 							max_dist = dist;
 						}
@@ -104,7 +93,7 @@ void WildboarControl(short item_number)
 		CreatureAIInfo(item, &info);
 		GetCreatureMood(item, &info, 1);
 
-		if (item->flags)
+		if(item->flags)
 			boar->mood = ESCAPE_MOOD;
 
 		CreatureMood(item, &info, 1);
@@ -112,49 +101,40 @@ void WildboarControl(short item_number)
 		dx = abs(item->item_flags[2] - item->pos.x_pos);
 		dz = abs(item->item_flags[3] - item->pos.z_pos);
 
-		if (info.ahead)
-		{
+		if(info.ahead) {
 			neckY = info.angle >> 1;
 			headY = info.angle >> 1;
 		}
 
-		switch (item->current_anim_state)
-		{
+		switch(item->current_anim_state) {
 		case 1:
 			boar->maximum_turn = 0;
 
-			if (info.ahead && info.distance || item->flags)
+			if(info.ahead && info.distance || item->flags)
 				item->goal_anim_state = 2;
-			else if ((GetRandomControl() & 0x7F) != 0)
-			{
+			else if((GetRandomControl() & 0x7F) != 0) {
 				neckY = AIGuard(boar) >> 1;
 				headY = neckY;
-			}
-			else
+			} else
 				item->goal_anim_state = 3;
 
 			break;
 
 		case 2:
 
-			if (info.distance >= 0x400000)
-			{
+			if(info.distance >= 0x400000) {
 				boar->maximum_turn = 1092;
 				item->flags = 0;
-			}
-			else
-			{
+			} else {
 				boar->maximum_turn = 546;
 				neckX = (short)-info.distance;
 				headX = (short)-info.distance;
 			}
 
-			if (!item->flags && (dx < 50 && dz < 50 || info.distance < 0x10000 && info.bite))
-			{
+			if(!item->flags && (dx < 50 && dz < 50 || info.distance < 0x10000 && info.bite)) {
 				item->goal_anim_state = 4;
 
-				if (boar->enemy == lara_item)
-				{
+				if(boar->enemy == lara_item) {
 					lara_item->hit_points -= 30;
 					lara_item->hit_status = 1;
 				}
@@ -168,9 +148,9 @@ void WildboarControl(short item_number)
 		case 3:
 			boar->maximum_turn = 0;
 
-			if (info.ahead && info.distance)
+			if(info.ahead && info.distance)
 				item->goal_anim_state = 1;
-			else if (!(GetRandomControl() & 0x7F))
+			else if(!(GetRandomControl() & 0x7F))
 				item->goal_anim_state = 1;
 
 			break;

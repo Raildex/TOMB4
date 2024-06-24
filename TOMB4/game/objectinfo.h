@@ -2,8 +2,7 @@
 #define OBJECT_INFO_INCLUDED
 struct ITEM_INFO;
 struct COLL_INFO;
-struct OBJECT_INFO
-{
+struct OBJECT_INFO {
 	short nmeshes;
 	short mesh_index;
 	long bone_index;

@@ -1,7 +1,6 @@
-#ifndef PCLIGHT_INFO_INCLUDED
-#define PCLIGHT_INFO_INCLUDED
-struct PCLIGHT_INFO
-{
+#ifndef TOMB4_GAME_PCLIGHTINFO_H
+#define TOMB4_GAME_PCLIGHTINFO_H
+struct PCLIGHT_INFO {
 	float x;
 	float y;
 	float z;
@@ -26,4 +25,4 @@ struct PCLIGHT_INFO
 	unsigned char Type;
 	unsigned char Pad;
 };
-#endif
+#endif // TOMB4_GAME_PCLIGHTINFO_H

@@ -1,7 +1,6 @@
 #ifndef TRIGOBJ_TYPES_INCLUDED
 #define TRIGOBJ_TYPES_INCLUDED
-enum trigobj_types
-{
+enum trigobj_types {
 	TO_OBJECT,
 	TO_CAMERA,
 	TO_SINK,

@@ -1,8 +1,7 @@
-#ifndef PACKNODE_INCLUDED
-#define PACKNODE_INCLUDED
+#ifndef TOMB4_GAME_PACKNODE_H
+#define TOMB4_GAME_PACKNODE_H
 #include "rtdecode.h"
-struct PACKNODE
-{
+struct PACKNODE {
 	short xrot_run;
 	short yrot_run;
 	short zrot_run;
@@ -19,4 +18,4 @@ struct PACKNODE
 	char* ypacked;
 	char* zpacked;
 };
-#endif
+#endif // TOMB4_GAME_PACKNODE_H

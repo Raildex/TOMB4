@@ -1,8 +1,7 @@
 #ifndef ITEM_LIGHT_INCLUDED
 #define ITEM_LIGHT_INCLUDED
 #include "pclight.h"
-struct ITEM_LIGHT
-{
+struct ITEM_LIGHT {
 	long r;
 	long g;
 	long b;
@@ -11,8 +10,8 @@ struct ITEM_LIGHT
 	long gs;
 	long bs;
 	long fcnt;
-	PCLIGHT	CurrentLights[21];
-	PCLIGHT	PrevLights[21];
+	PCLIGHT CurrentLights[21];
+	PCLIGHT PrevLights[21];
 	long nCurrentLights;
 	long nPrevLights;
 	long room_number;

@@ -13,8 +13,7 @@ _D3DMATRIX D3DInvCameraMatrix;
 static _D3DMATRIX D3DMWorld;
 static _D3DMATRIX D3DMProjection;
 
-_D3DMATRIX* D3DIdentityMatrix(_D3DMATRIX* mx)
-{
+_D3DMATRIX* D3DIdentityMatrix(_D3DMATRIX* mx) {
 	mx->_11 = 1;
 	mx->_12 = 0;
 	mx->_13 = 0;
@@ -37,8 +36,7 @@ _D3DMATRIX* D3DIdentityMatrix(_D3DMATRIX* mx)
 	return mx;
 }
 
-void Set_D3DMATRIX(_D3DMATRIX* mx, float* imx)
-{
+void Set_D3DMATRIX(_D3DMATRIX* mx, float* imx) {
 	D3DIdentityMatrix(mx);
 	mx->_11 = imx[M00];
 	mx->_12 = imx[M10];
@@ -54,14 +52,12 @@ void Set_D3DMATRIX(_D3DMATRIX* mx, float* imx)
 	mx->_43 = imx[M23];
 }
 
-void SetD3DViewMatrix()
-{
+void SetD3DViewMatrix() {
 	Set_D3DMATRIX(&D3DMView, mMXPtr);
 	DXAttempt(App.dx.lpD3DDevice->SetTransform(D3DTRANSFORMSTATE_VIEW, &D3DMView));
 }
 
-void D3DTransform(_D3DVECTOR* vec, _D3DMATRIX* mx)
-{
+void D3DTransform(_D3DVECTOR* vec, _D3DMATRIX* mx) {
 	float x, y, z;
 
 	x = mx->_11 * vec->x + mx->_21 * vec->y + mx->_31 * vec->z;
@@ -72,12 +68,10 @@ void D3DTransform(_D3DVECTOR* vec, _D3DMATRIX* mx)
 	vec->z = z;
 }
 
-_D3DVECTOR* D3DNormalise(_D3DVECTOR* vec)
-{
+_D3DVECTOR* D3DNormalise(_D3DVECTOR* vec) {
 	float val;
 
-	if (vec->x != 0 || vec->y != 0 || vec->z != 0)
-	{
+	if(vec->x != 0 || vec->y != 0 || vec->z != 0) {
 		val = 1.0F / sqrt(SQUARE(vec->x) + SQUARE(vec->y) + SQUARE(vec->z));
 		vec->x = val * vec->x;
 		vec->y = val * vec->y;
@@ -87,8 +81,7 @@ _D3DVECTOR* D3DNormalise(_D3DVECTOR* vec)
 	return vec;
 }
 
-void S_Init_D3DMATRIX()
-{
+void S_Init_D3DMATRIX() {
 	D3DIdentityMatrix(&D3DMWorld);
 	D3DIdentityMatrix(&D3DMProjection);
 	D3DMProjection._22 = -1;
@@ -96,8 +89,7 @@ void S_Init_D3DMATRIX()
 	DXAttempt(App.dx.lpD3DDevice->SetTransform(D3DTRANSFORMSTATE_PROJECTION, &D3DMProjection));
 }
 
-_D3DMATRIX* D3DMultMatrix(_D3DMATRIX* d, _D3DMATRIX* a, _D3DMATRIX* b)
-{
+_D3DMATRIX* D3DMultMatrix(_D3DMATRIX* d, _D3DMATRIX* a, _D3DMATRIX* b) {
 	d->_11 = a->_11 * b->_11;
 	d->_11 += a->_12 * b->_21;
 	d->_11 += a->_13 * b->_31;

@@ -29,29 +29,26 @@ static unsigned char water_abs[4] = { 4, 8, 12, 16 };
 static short water_shimmer[4] = { 31, 63, 95, 127 };
 static short water_choppy[4] = { 16, 53, 90, 127 };
 
-void GameClose()
-{
+void GameClose() {
 	Log(2, "GameClose");
 	ACMClose();
 	FreeLevel();
 
-	if (DestVB)
-	{
+	if(DestVB) {
 		Log(4, "Released %s @ %x - RefCnt = %d", "Dest VB", DestVB, DestVB->Release());
 		DestVB = 0;
-	}
-	else
+	} else
 		Log(1, "%s Attempt To Release NULL Ptr", "Dest VB");
 
 	free(clipflags);
 
-	if (wav_file_buffer)
+	if(wav_file_buffer)
 		free(wav_file_buffer);
 
-	if (ADPCMBuffer)
+	if(ADPCMBuffer)
 		free(ADPCMBuffer);
 
-	if (logF)
+	if(logF)
 		fclose(logF);
 
 	free(malloc_buffer);
@@ -59,12 +56,10 @@ void GameClose()
 	free(gfLanguageFile);
 }
 
-unsigned int __stdcall GameMain(void* ptr)
-{
+unsigned int __stdcall GameMain(void* ptr) {
 	Log(2, "GameMain");
 
-	if (GameInitialise())
-	{
+	if(GameInitialise()) {
 		InitialiseFunctionTable();
 		HWInitialise();
 		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
@@ -74,7 +69,7 @@ unsigned int __stdcall GameMain(void* ptr)
 		S_CDStop();
 		ClearSurfaces();
 
-		if (!App.SoundDisabled)
+		if(!App.SoundDisabled)
 			SOUND_Init();
 
 		DoGameflow();
@@ -88,34 +83,30 @@ unsigned int __stdcall GameMain(void* ptr)
 	return 1;
 }
 
-unsigned short GetRandom(WATERTAB* wt, long lp)
-{
+unsigned short GetRandom(WATERTAB* wt, long lp) {
 	long loop;
 	unsigned short ret;
 
-	do
-	{
+	do {
 		ret = rand() & 0xFC;
 
-		for (loop = 0; loop < lp; loop++)
-			if (wt[loop].random == ret)
+		for(loop = 0; loop < lp; loop++)
+			if(wt[loop].random == ret)
 				break;
 
-	} while (loop != lp);
+	} while(loop != lp);
 
 	return ret;
 }
 
-void init_water_table()
-{
+void init_water_table() {
 	float fSin;
 	long lSin;
 	short sSin, angle;
 
 	srand(121197);
 
-	for (int i = 0; i < 64; i++)
-	{
+	for(int i = 0; i < 64; i++) {
 		sSin = rcossin_tbl[i << 7];
 		WaterTable[0][i].shimmer = (63 * sSin) >> 15;
 		WaterTable[0][i].choppy = (16 * sSin) >> 12;
@@ -142,10 +133,8 @@ void init_water_table()
 		WaterTable[4][i].random = (unsigned char)GetRandom(&WaterTable[4][0], i);
 		WaterTable[4][i].abs = 8;
 
-		for (int j = 0, k = 5; j < 4; j++, k += 4)
-		{
-			for (int m = 0; m < 4; m++)
-			{
+		for(int j = 0, k = 5; j < 4; j++, k += 4) {
+			for(int m = 0; m < 4; m++) {
 				WaterTable[k + m][i].shimmer = -((sSin * water_shimmer[m]) >> 15);
 				WaterTable[k + m][i].choppy = sSin * water_choppy[j] >> 12;
 				WaterTable[k + m][i].random = (unsigned char)GetRandom(&WaterTable[k + m][0], i);
@@ -154,22 +143,19 @@ void init_water_table()
 		}
 	}
 
-	for (int i = 0; i < 32; i++)
-	{
+	for(int i = 0; i < 32; i++) {
 		fSin = sinf(float(i * (M_PI / 16.0F)));
 		vert_wibble_table[i] = fSin + fSin;
 	}
 
-	for (int i = 0; i < 256; i++)
-	{
+	for(int i = 0; i < 256; i++) {
 		angle = 0x10000 * i / 256;
 		lSin = phd_sin(angle);
 		unused_vert_wibble_table[i] = float(lSin >> (W2V_SHIFT - 5));
 	}
 }
 
-bool GameInitialise()
-{
+bool GameInitialise() {
 	D3DVERTEXBUFFERDESC desc;
 
 	desc.dwCaps = 0;
@@ -183,8 +169,7 @@ bool GameInitialise()
 	return 1;
 }
 
-long S_SaveGame(long slot_num)
-{
+long S_SaveGame(long slot_num) {
 	HANDLE file;
 	unsigned long bytes;
 	long days, hours, minutes, seconds;
@@ -194,8 +179,7 @@ long S_SaveGame(long slot_num)
 	wsprintf(buffer, "savegame.%d", slot_num);
 	file = CreateFile(buffer, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
-	if (file != INVALID_HANDLE_VALUE)
-	{
+	if(file != INVALID_HANDLE_VALUE) {
 		memset(buffer, 0, sizeof(buffer));
 		wsprintf(buffer, "%s", SCRIPT_TEXT(gfLevelNames[gfCurrentLevel]));
 		WriteFile(file, buffer, 75, &bytes, 0);
@@ -218,8 +202,7 @@ long S_SaveGame(long slot_num)
 	return 0;
 }
 
-long S_LoadGame(long slot_num)
-{
+long S_LoadGame(long slot_num) {
 	HANDLE file;
 	unsigned long bytes;
 	long value;
@@ -228,8 +211,7 @@ long S_LoadGame(long slot_num)
 	wsprintf(buffer, "savegame.%d", slot_num);
 	file = CreateFile(buffer, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
-	if (file != INVALID_HANDLE_VALUE)
-	{
+	if(file != INVALID_HANDLE_VALUE) {
 		ReadFile(file, buffer, 75, &bytes, 0);
 		ReadFile(file, &value, sizeof(long), &bytes, 0);
 		ReadFile(file, &value, sizeof(long), &bytes, 0);

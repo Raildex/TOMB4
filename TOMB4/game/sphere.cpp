@@ -16,8 +16,7 @@ char GotLaraSpheres;
 static SPHERE LaraSpheres[15];
 static long NumLaraSpheres;
 
-long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
-{
+long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 	OBJECT_INFO* obj;
 	short** meshpp;
 	long* bone;
@@ -27,19 +26,16 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 	short* extra_rot;
 	long x, y, z, poppush;
 
-	if (!item)
+	if(!item)
 		return 0;
 
-	if (WorldSpace & 1)
-	{
+	if(WorldSpace & 1) {
 		x = item->pos.x_pos;
 		y = item->pos.y_pos;
 		z = item->pos.z_pos;
 		phd_PushUnitMatrix();
 		phd_SetTrans(0, 0, 0);
-	}
-	else
-	{
+	} else {
 		z = 0;
 		y = 0;
 		x = 0;
@@ -60,7 +56,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 
 	phd_PushMatrix();
 
-	if (!(WorldSpace & 2))
+	if(!(WorldSpace & 2))
 		phd_TranslateRel(meshp[0], meshp[1], meshp[2]);
 
 	ptr->x = x + (long)mMXPtr[M03];
@@ -72,35 +68,33 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 
 	extra_rot = (short*)item->data;
 
-	for (int i = 0; i < obj->nmeshes - 1; i++)
-	{
+	for(int i = 0; i < obj->nmeshes - 1; i++) {
 		poppush = *bone++;
 
-		if (poppush & 1)
+		if(poppush & 1)
 			phd_PopMatrix();
 
-		if (poppush & 2)
+		if(poppush & 2)
 			phd_PushMatrix();
 
 		phd_TranslateRel(bone[0], bone[1], bone[2]);
 		gar_RotYXZsuperpack(&rot, 0);
 
-		if (poppush & 0x1C && extra_rot)
-		{
-			if (poppush & 8)
+		if(poppush & 0x1C && extra_rot) {
+			if(poppush & 8)
 				phd_RotY(*extra_rot++);
 
-			if (poppush & 4)
+			if(poppush & 4)
 				phd_RotX(*extra_rot++);
 
-			if (poppush & 0x10)
+			if(poppush & 0x10)
 				phd_RotZ(*extra_rot++);
 		}
 
 		meshp = *meshpp;
 		phd_PushMatrix();
 
-		if (!(WorldSpace & 2))
+		if(!(WorldSpace & 2))
 			phd_TranslateRel(meshp[0], meshp[1], meshp[2]);
 
 		ptr->x = x + (long)mMXPtr[M03];
@@ -118,8 +112,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 	return obj->nmeshes;
 }
 
-long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
-{
+long TestCollision(ITEM_INFO* item, ITEM_INFO* l) {
 	SPHERE* itemSpheres;
 	SPHERE* laraSpheres;
 	PHD_VECTOR ip;
@@ -130,45 +123,39 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
 	touch_bits = 0;
 	nItemSpheres = GetSpheres(item, Slist, 1);
 
-	if (l != lara_item)
+	if(l != lara_item)
 		GotLaraSpheres = 0;
 
-	if (GotLaraSpheres)
+	if(GotLaraSpheres)
 		nLaraSpheres = NumLaraSpheres;
-	else
-	{
+	else {
 		nLaraSpheres = GetSpheres(l, LaraSpheres, 1);
 		NumLaraSpheres = nLaraSpheres;
 
-		if (l == lara_item)
+		if(l == lara_item)
 			GotLaraSpheres = 1;
 	}
 
-	for (int i = 0; i < nItemSpheres; i++)
-	{
+	for(int i = 0; i < nItemSpheres; i++) {
 		itemSpheres = &Slist[i];
 		ir = itemSpheres->r;
 
-		if (ir > 0)
-		{
+		if(ir > 0) {
 			ip.x = itemSpheres->x;
 			ip.y = itemSpheres->y;
 			ip.z = itemSpheres->z;
 
-			for (int j = 0; j < nLaraSpheres; j++)
-			{
+			for(int j = 0; j < nLaraSpheres; j++) {
 				laraSpheres = &LaraSpheres[j];
 				lr = laraSpheres->r;
 
-				if (lr > 0)
-				{
+				if(lr > 0) {
 					lp.x = ip.x - laraSpheres->x;
 					lp.y = ip.y - laraSpheres->y;
 					lp.z = ip.z - laraSpheres->z;
 					lr += ir;
 
-					if (SQUARE(lp.x) + SQUARE(lp.y) + SQUARE(lp.z) < SQUARE(lr))
-					{
+					if(SQUARE(lp.x) + SQUARE(lp.y) + SQUARE(lp.z) < SQUARE(lr)) {
 						touch_bits |= 1 << i;
 						break;
 					}
@@ -181,16 +168,14 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
 	return touch_bits;
 }
 
-void InitInterpolate2(long frac, long rate)
-{
+void InitInterpolate2(long frac, long rate) {
 	IM_frac = frac;
 	IM_rate = rate;
 	mIMptr = &mIMstack[384];
 	memcpy(mIMptr, mMXPtr, 48);
 }
 
-void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
-{
+void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 	OBJECT_INFO* obj;
 	float* mMx;
 	float* mIMx;
@@ -214,41 +199,38 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 
 	extra_rotation = (short*)item->data;
 
-	if (!extra_rotation)
+	if(!extra_rotation)
 		extra_rotation = no_rotation;
 
 	bone = &bones[obj->bone_index];
 
-	if (frac)
-	{
+	if(frac) {
 		InitInterpolate2(frac, rate);
 		rot = frm[0] + 9;
 		rot2 = frm[1] + 9;
 		phd_TranslateRel_ID(frm[0][6], frm[0][7], frm[0][8], frm[1][6], frm[1][7], frm[1][8]);
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 
-		for (int i = 0; i < joint; i++)
-		{
+		for(int i = 0; i < joint; i++) {
 			poppush = *bone;
 
-			if (poppush & 1)
+			if(poppush & 1)
 				phd_PopMatrix_I();
 
-			if (poppush & 2)
+			if(poppush & 2)
 				phd_PushMatrix_I();
 
 			phd_TranslateRel_I(bone[1], bone[2], bone[3]);
 			gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 
-			if (poppush & 0x1C)
-			{
-				if (poppush & 8)
+			if(poppush & 0x1C) {
+				if(poppush & 8)
 					phd_RotY_I(*extra_rotation++);
 
-				if (poppush & 4)
+				if(poppush & 4)
 					phd_RotX_I(*extra_rotation++);
 
-				if (poppush & 0x10)
+				if(poppush & 0x10)
 					phd_RotZ_I(*extra_rotation++);
 			}
 
@@ -257,35 +239,31 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 
 		phd_TranslateRel_I(pos->x, pos->y, pos->z);
 		mInterpolateMatrix();
-	}
-	else
-	{
+	} else {
 		phd_TranslateRel(frm[0][6], frm[0][7], frm[0][8]);
 		rot = frm[0] + 9;
 		gar_RotYXZsuperpack(&rot, 0);
 
-		for (int i = 0; i < joint; i++)
-		{
+		for(int i = 0; i < joint; i++) {
 			poppush = *bone;
 
-			if (poppush & 1)
+			if(poppush & 1)
 				phd_PopMatrix();
 
-			if (poppush & 2)
+			if(poppush & 2)
 				phd_PushMatrix();
 
 			phd_TranslateRel(bone[1], bone[2], bone[3]);
 			gar_RotYXZsuperpack(&rot, 0);
 
-			if (poppush & 0x1C)
-			{
-				if (poppush & 8)
+			if(poppush & 0x1C) {
+				if(poppush & 8)
 					phd_RotY(*extra_rotation++);
 
-				if (poppush & 4)
+				if(poppush & 4)
 					phd_RotX(*extra_rotation++);
 
-				if (poppush & 0x10)
+				if(poppush & 0x10)
 					phd_RotZ(*extra_rotation++);
 			}
 

@@ -1,13 +1,12 @@
-#ifndef CAMERA_INFO_INCLUDED
-#define CAMERA_INFO_INCLUDED
+#ifndef TOMB4_GAME_CAMERAINFO_H
+#define TOMB4_GAME_CAMERAINFO_H
 #include "gamevector.h"
 #include "cameratype.h"
 #include "phdvector.h"
 struct ITEM_INFO;
 struct OBJECT_VECTOR;
 
-struct CAMERA_INFO
-{
+struct CAMERA_INFO {
 	GAME_VECTOR pos;
 	GAME_VECTOR target;
 	camera_type type;
@@ -33,4 +32,4 @@ struct CAMERA_INFO
 	long mike_at_lara;
 	PHD_VECTOR mike_pos;
 };
-#endif
+#endif // TOMB4_GAME_CAMERAINFO_H

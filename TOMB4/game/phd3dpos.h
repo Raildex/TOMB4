@@ -1,7 +1,6 @@
-#ifndef PHD_3DPOS_INCLUDED
-#define PHD_3DPOS_INCLUDED
-struct PHD_3DPOS
-{
+#ifndef TOMB4_GAME_PHD3DPOS_H
+#define TOMB4_GAME_PHD3DPOS_H
+struct PHD_3DPOS {
 	long x_pos;
 	long y_pos;
 	long z_pos;
@@ -9,4 +8,4 @@ struct PHD_3DPOS
 	short y_rot;
 	short z_rot;
 };
-#endif
+#endif // TOMB4_GAME_PHD3DPOS_H

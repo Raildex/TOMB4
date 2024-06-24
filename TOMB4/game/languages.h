@@ -1,7 +1,6 @@
 #ifndef LANGUAGES_INCLUDED
 #define LANGUAGES_INCLUDED
-enum languages
-{
+enum languages {
 	ENGLISH,
 	FRENCH,
 	GERMAN,

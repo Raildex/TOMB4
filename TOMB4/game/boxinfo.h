@@ -1,8 +1,7 @@
-#ifndef BOX_INFO_INCLUDED
-#define BOX_INFO_INCLUDED
-#pragma pack(push,1)
-struct BOX_INFO
-{
+#ifndef TOMB4_GAME_BOXINFO_H
+#define TOMB4_GAME_BOXINFO_H
+#pragma pack(push, 1)
+struct BOX_INFO {
 	unsigned char left;
 	unsigned char right;
 	unsigned char top;
@@ -11,4 +10,4 @@ struct BOX_INFO
 	short overlap_index;
 };
 #pragma pack(pop)
-#endif
+#endif // TOMB4_GAME_BOXINFO_H

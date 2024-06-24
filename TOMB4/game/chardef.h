@@ -1,7 +1,6 @@
 #ifndef CHARDEF_INCLUDED
 #define CHARDEF_INCLUDED
-struct CHARDEF
-{
+struct CHARDEF {
 	float u;
 	float v;
 	short w;

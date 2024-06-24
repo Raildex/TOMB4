@@ -75,35 +75,29 @@ extern short phd_winxmin;
 extern short phd_winymax;
 extern short phd_winymin;
 
-__inline short phd_sin(long angle)
-{
+__inline short phd_sin(long angle) {
 	angle >>= 3;
 	return 4 * rcossin_tbl[angle & 0x1FFE];
 }
 
-__inline short phd_cos(long angle)
-{
+__inline short phd_cos(long angle) {
 	angle >>= 3;
 	return 4 * rcossin_tbl[(angle & 0x1FFE) + 1];
 }
 
-__inline float fSin(long angle)
-{
+__inline float fSin(long angle) {
 	return fcossin_tbl[(unsigned short)angle];
 }
 
-__inline float fCos(long angle)
-{
+__inline float fCos(long angle) {
 	return fcossin_tbl[unsigned short(angle + 0x4000)];
 }
 
-__inline void mPopMatrix()
-{
+__inline void mPopMatrix() {
 	mMXPtr -= indices_count;
 }
 
-__inline void phd_PopMatrix()
-{
+__inline void phd_PopMatrix() {
 	phd_mxptr -= indices_count;
 	mPopMatrix();
 }

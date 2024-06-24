@@ -1,8 +1,7 @@
 #ifndef ANIM_STRUCT_INCLUDED
 #define ANIM_STRUCT_INCLUDED
-#pragma pack(push,1)
-struct ANIM_STRUCT
-{
+#pragma pack(push, 1)
+struct ANIM_STRUCT {
 	short* frame_ptr;
 	short interpolation;
 	short current_anim_state;

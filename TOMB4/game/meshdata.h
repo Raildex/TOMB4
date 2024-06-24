@@ -1,9 +1,8 @@
-#ifndef MESH_DATA_INCLUDED
-#define MESH_DATA_INCLUDED
+#ifndef TOMB4_GAME_MESHDATA_H
+#define TOMB4_GAME_MESHDATA_H
 struct IDirect3DVertexBuffer;
 struct _D3DVECTOR;
-struct MESH_DATA
-{
+struct MESH_DATA {
 	short x;
 	short y;
 	short z;
@@ -19,4 +18,4 @@ struct MESH_DATA
 	IDirect3DVertexBuffer* SourceVB;
 	_D3DVECTOR* Normals;
 };
-#endif
+#endif // TOMB4_GAME_MESHDATA_H

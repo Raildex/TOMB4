@@ -1,8 +1,7 @@
-#ifndef COLL_INFO_INCLUDED
-#define COLL_INFO_INCLUDED
+#ifndef TOMB4_GAME_COLLINFO_H
+#define TOMB4_GAME_COLLINFO_H
 #include "phdvector.h"
-struct COLL_INFO
-{
+struct COLL_INFO {
 	long mid_floor;
 	long mid_ceiling;
 	long mid_type;
@@ -45,4 +44,4 @@ struct COLL_INFO
 	unsigned short enable_spaz : 1;
 	unsigned short hit_ceiling : 1;
 };
-#endif
+#endif // TOMB4_GAME_COLLINFO_H

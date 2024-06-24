@@ -6,9 +6,8 @@ struct LIGHTINFO;
 struct MESH_INFO;
 struct PCLIGHT_INFO;
 struct IDirect3DVertexBuffer;
-#pragma pack(push,1)
-struct ROOM_INFO
-{
+#pragma pack(push, 1)
+struct ROOM_INFO {
 	short* data;
 	short* door;
 	FLOOR_INFO* floor;

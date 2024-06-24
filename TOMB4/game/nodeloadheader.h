@@ -1,7 +1,6 @@
-#ifndef NODELOADHEADER_INCLUDED
-#define NODELOADHEADER_INCLUDED
-struct NODELOADHEADER
-{
+#ifndef TOMB4_GAME_NODELOADHEADER_H
+#define TOMB4_GAME_NODELOADHEADER_H
+struct NODELOADHEADER {
 	short xkey;
 	short ykey;
 	short zkey;
@@ -10,4 +9,4 @@ struct NODELOADHEADER
 	short ylength;
 	short zlength;
 };
-#endif
+#endif // TOMB4_GAME_NODELOADHEADER_H

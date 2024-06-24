@@ -5,8 +5,7 @@
 #include <windows.h>
 #include "types.h"
 #include <d3dtypes.h>
-struct WINAPP
-{
+struct WINAPP {
 	HINSTANCE hInstance;
 	HWND hWnd;
 	WNDCLASS WindowClass;

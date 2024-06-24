@@ -1,7 +1,6 @@
-#ifndef OLD_CAMERA_INCLUDED
-#define OLD_CAMERA_INCLUDED
-struct OLD_CAMERA
-{
+#ifndef TOMB4_GAME_OLDCAMERA_H
+#define TOMB4_GAME_OLDCAMERA_H
+struct OLD_CAMERA {
 	short current_anim_state;
 	short goal_anim_state;
 	long target_distance;
@@ -11,4 +10,4 @@ struct OLD_CAMERA
 	PHD_3DPOS pos2;
 	PHD_VECTOR t;
 };
-#endif
+#endif // TOMB4_GAME_OLDCAMERA_H

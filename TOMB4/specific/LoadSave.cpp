@@ -47,14 +47,13 @@ char MonoScreenOn;
 static MONOSCREEN_STRUCT MonoScreen;
 static SAVEFILE_INFO SaveGames[15];
 void ConvertSurfaceToTextures(IDirectDrawSurface4* surface);
-void DoOptions()
-{
+void DoOptions() {
 	JOYINFOEX joy;
 	char** keyboard_buttons;
 	char* txt;
 	static long menu;
-	static unsigned long sel = 1;	//selection
-	static unsigned long sel2;		//selection for when mapping keys
+	static unsigned long sel = 1; // selection
+	static unsigned long sel2; // selection for when mapping keys
 	static long mSliderCol = 0xFF3F3F3F;
 	static long sSliderCol = 0xFF3F3F3F;
 	static long sfx_bak;
@@ -62,27 +61,25 @@ void DoOptions()
 	static long sfx_breath_db = -1;
 	unsigned long nMask;
 	long f, y, i, jread, jx, jy, lp;
-	static char sfx_backup_flag;	//have we backed sfx stuff up?
+	static char sfx_backup_flag; // have we backed sfx stuff up?
 	static bool waiting_for_key = 0;
 
-	if (!(sfx_backup_flag & 1))
-	{
+	if(!(sfx_backup_flag & 1)) {
 		sfx_backup_flag |= 1;
 		sfx_bak = SFXVolume;
 	}
 
-	if (!(sfx_backup_flag & 2))
-	{
+	if(!(sfx_backup_flag & 2)) {
 		sfx_backup_flag |= 2;
 		sfx_quality_bak = SoundQuality;
 	}
 
 	f = font_height - 4;
 
-	if (menu)	//controls menu
+	if(menu) // controls menu
 	{
 
-		if (Gameflow->Language == GERMAN)
+		if(Gameflow->Language == GERMAN)
 			keyboard_buttons = (char**)GermanKeyboard;
 		else
 			keyboard_buttons = (char**)KeyboardButtons;
@@ -111,45 +108,39 @@ void DoOptions()
 		PrintString(phd_centerx >> 2, f + y++ * font_height, sel & (1 << i++) ? 1 : 2, SCRIPT_TEXT(TXT_Step_Left), 0);
 		PrintString(phd_centerx >> 2, f + y++ * font_height, sel & (1 << i++) ? 1 : 2, SCRIPT_TEXT(TXT_Step_Right), 0);
 
-		if (!ControlMethod)
+		if(!ControlMethod)
 			PrintString(phd_centerx + (phd_centerx >> 2), f, sel2 & 1 ? 1 : 6, SCRIPT_TEXT(TXT_Keyboard), 0);
-		else if (ControlMethod == 1)
+		else if(ControlMethod == 1)
 			PrintString(phd_centerx + (phd_centerx >> 2), f, sel2 & 1 ? 1 : 6, SCRIPT_TEXT(TXT_Joystick), 0);
-		else if (ControlMethod == 2)
+		else if(ControlMethod == 2)
 			PrintString(phd_centerx + (phd_centerx >> 2), f, sel2 & 1 ? 1 : 6, SCRIPT_TEXT(TXT_Reset), 0);
 
 		y = 1;
 		i = 1;
 
-		for (lp = 0; lp < 16; lp++)
-		{
+		for(lp = 0; lp < 16; lp++) {
 			txt = (waiting_for_key && sel2 & (1 << i)) ? SCRIPT_TEXT(TXT_Waiting) : keyboard_buttons[layout[1][lp]];
 			PrintString(phd_centerx + (phd_centerx >> 2), f + y++ * font_height, sel2 & (1 << i++) ? 1 : 6, txt, 0);
 		}
 
 		small_font = 0;
 
-		if (ControlMethod < 2 && !waiting_for_key)
-		{
-			if (dbinput & IN_FORWARD)
-			{
+		if(ControlMethod < 2 && !waiting_for_key) {
+			if(dbinput & IN_FORWARD) {
 				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 				sel >>= 1;
 			}
 
-			if (dbinput & IN_BACK)
-			{
+			if(dbinput & IN_BACK) {
 				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 				sel <<= 1;
 			}
 		}
 
-		if (waiting_for_key)
-		{
+		if(waiting_for_key) {
 			i = 0;
 
-			if (keymap[DIK_ESCAPE])
-			{
+			if(keymap[DIK_ESCAPE]) {
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 				sel2 = 0;
 				dbinput = 0;
@@ -157,18 +148,14 @@ void DoOptions()
 				return;
 			}
 
-			for (lp = 0; lp < 255; lp++)
-			{
-				if (keymap[lp] && keyboard_buttons[lp])
-				{
-					if (lp != DIK_RETURN && lp != DIK_LEFT && lp != DIK_RIGHT && lp != DIK_UP && lp != DIK_DOWN)
-					{
+			for(lp = 0; lp < 255; lp++) {
+				if(keymap[lp] && keyboard_buttons[lp]) {
+					if(lp != DIK_RETURN && lp != DIK_LEFT && lp != DIK_RIGHT && lp != DIK_UP && lp != DIK_DOWN) {
 						waiting_for_key = 0;
 
 						sel2 >>= 2;
 
-						while (sel2)
-						{
+						while(sel2) {
 							i++;
 							sel2 >>= 1;
 						}
@@ -179,17 +166,14 @@ void DoOptions()
 				}
 			}
 
-			if (ControlMethod == 1)
-			{
+			if(ControlMethod == 1) {
 				jread = ReadJoystick(jx, jy);
 
-				if (jread)
-				{
+				if(jread) {
 					i = 0;
 					sel2 >>= 2;
 
-					while (sel2)
-					{
+					while(sel2) {
 						i++;
 						sel2 >>= 1;
 					}
@@ -197,8 +181,7 @@ void DoOptions()
 					sel2 = 0;
 					lp = 0;
 
-					while (jread)
-					{
+					while(jread) {
 						jread >>= 1;
 						lp++;
 					}
@@ -212,74 +195,65 @@ void DoOptions()
 			dbinput = 0;
 		}
 
-		if (dbinput & IN_SELECT && sel > 1 && ControlMethod < 2)
-		{
+		if(dbinput & IN_SELECT && sel > 1 && ControlMethod < 2) {
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			sel2 = sel;
 			waiting_for_key = 1;
 			memset(keymap, 0, sizeof(keymap));
 		}
 
-		if (dbinput & IN_SELECT && ControlMethod == 2)
-		{
+		if(dbinput & IN_SELECT && ControlMethod == 2) {
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			ControlMethod = 0;
 			memcpy(layout[1], layout, sizeof(*layout));
 		}
 
-		if (sel & 1)
-		{
-			if (dbinput & IN_LEFT)
-			{
+		if(sel & 1) {
+			if(dbinput & IN_LEFT) {
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 				ControlMethod--;
 			}
 
-			if (dbinput & IN_RIGHT)
-			{
+			if(dbinput & IN_RIGHT) {
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 				ControlMethod++;
 			}
 
-			if (ControlMethod > 2)
+			if(ControlMethod > 2)
 				ControlMethod = 2;
 
-			if (ControlMethod < 0)
+			if(ControlMethod < 0)
 				ControlMethod = 0;
 
-			if (ControlMethod == 1)
-			{
+			if(ControlMethod == 1) {
 				joy.dwSize = sizeof(JOYINFOEX);
 
-				if (joyGetPosEx(0, &joy) == JOYERR_UNPLUGGED)
-				{
-					if (dbinput & IN_LEFT)
+				if(joyGetPosEx(0, &joy) == JOYERR_UNPLUGGED) {
+					if(dbinput & IN_LEFT)
 						ControlMethod = 0;
 
-					if (dbinput & IN_RIGHT)
+					if(dbinput & IN_RIGHT)
 						ControlMethod = 2;
 				}
 			}
 		}
 
-		if (!sel)
+		if(!sel)
 			sel = 1;
 
-		if (sel > (unsigned long)(1 << (nMask - 1)))
+		if(sel > (unsigned long)(1 << (nMask - 1)))
 			sel = 1 << (nMask - 1);
 
-		if (dbinput & IN_DESELECT)
-		{
+		if(dbinput & IN_DESELECT) {
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
-			if (ControlMethod < 2)
+			if(ControlMethod < 2)
 				menu = 0;
 
 			dbinput = 0;
 			sel = 1;
 		}
-	}
-	else	//'main' menu
+	} else //'main' menu
 	{
 		nMask = 6;
 		f = 3 * font_height;
@@ -292,138 +266,121 @@ void DoOptions()
 		DoSlider(400, 3 * font_height - (font_height >> 1) + f + 4, 200, 16, MusicVolume, 0xFF1F1F1F, 0xFF3F3FFF, mSliderCol);
 		DoSlider(400, f + 4 * font_height + 4 - (font_height >> 1), 200, 16, SFXVolume, 0xFF1F1F1F, 0xFF3F3FFF, sSliderCol);
 
-		if (!SoundQuality)
+		if(!SoundQuality)
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 5 * font_height, sel & 8 ? 1 : 6, SCRIPT_TEXT(TXT_Low), 0);
-		else if (SoundQuality == 1)
+		else if(SoundQuality == 1)
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 5 * font_height, sel & 8 ? 1 : 6, SCRIPT_TEXT(TXT_Medium), 0);
-		else if (SoundQuality == 2)
+		else if(SoundQuality == 2)
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 5 * font_height, sel & 8 ? 1 : 6, SCRIPT_TEXT(TXT_High), 0);
 
-		if (App.AutoTarget)
+		if(App.AutoTarget)
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 6 * font_height, sel & 0x10 ? 1 : 6, SCRIPT_TEXT(TXT_Automatic), 0);
 		else
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 6 * font_height, sel & 0x10 ? 1 : 6, SCRIPT_TEXT(TXT_Manual), 0);
 
 		PrintString(phd_centerx, (font_height >> 1) + f + 7 * font_height, sel & 0x20 ? 1 : 2, "tomb4 options", FF_CENTER);
 
-		if (dbinput & IN_FORWARD)
-		{
+		if(dbinput & IN_FORWARD) {
 			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 			sel >>= 1;
 		}
 
-		if (dbinput & IN_BACK)
-		{
+		if(dbinput & IN_BACK) {
 			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 			sel <<= 1;
 		}
 
-		if (dbinput & IN_SELECT && sel & 1)
-		{
+		if(dbinput & IN_SELECT && sel & 1) {
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			menu = 1;
 		}
 
-		if (dbinput & IN_SELECT && sel & 0x20)
-		{
+		if(dbinput & IN_SELECT && sel & 0x20) {
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			sel = 1;
 			menu = 200;
 		}
 
-		if (!sel)
+		if(!sel)
 			sel = 1;
 
-		if (sel > (unsigned long)(1 << (nMask - 1)))
+		if(sel > (unsigned long)(1 << (nMask - 1)))
 			sel = 1 << (nMask - 1);
 
 		mSliderCol = 0xFF3F3F3F;
 		sSliderCol = 0xFF3F3F3F;
 
-		if (sel & 2)
-		{
+		if(sel & 2) {
 			sfx_bak = SFXVolume;
 
-			if (linput & IN_LEFT)
+			if(linput & IN_LEFT)
 				MusicVolume--;
 
-			if (linput & IN_RIGHT)
+			if(linput & IN_RIGHT)
 				MusicVolume++;
 
-			if (MusicVolume > 100)
+			if(MusicVolume > 100)
 				MusicVolume = 100;
-			else if (MusicVolume < 0)
+			else if(MusicVolume < 0)
 				MusicVolume = 0;
 
 			sSliderCol = 0xFF3F3F3F;
 			mSliderCol = 0xFF7F7F7F;
 			ACMSetVolume();
-		}
-		else if (sel & 4)
-		{
-			if (linput & IN_LEFT)
+		} else if(sel & 4) {
+			if(linput & IN_LEFT)
 				SFXVolume--;
 
-			if (linput & IN_RIGHT)
+			if(linput & IN_RIGHT)
 				SFXVolume++;
 
-			if (SFXVolume > 100)
+			if(SFXVolume > 100)
 				SFXVolume = 100;
-			else if (SFXVolume < 0)
+			else if(SFXVolume < 0)
 				SFXVolume = 0;
 
-			if (SFXVolume != sfx_bak)
-			{
-				if (sfx_breath_db == -1 || !DSIsChannelPlaying(0))
-				{
+			if(SFXVolume != sfx_bak) {
+				if(sfx_breath_db == -1 || !DSIsChannelPlaying(0)) {
 					S_SoundStopAllSamples();
 					sfx_bak = SFXVolume;
 					sfx_breath_db = SoundEffect(SFX_LARA_BREATH, 0, SFX_ALWAYS);
 					DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
-				}
-				else if (sfx_breath_db != -1 && DSIsChannelPlaying(0))
+				} else if(sfx_breath_db != -1 && DSIsChannelPlaying(0))
 					DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
 			}
 
 			mSliderCol = 0xFF3F3F3F;
 			sSliderCol = 0xFF7F7F7F;
-		}
-		else if (sel & 8)
-		{
+		} else if(sel & 8) {
 			sfx_bak = SFXVolume;
 
-			if (dbinput & IN_LEFT)
+			if(dbinput & IN_LEFT)
 				SoundQuality--;
 
-			if (dbinput & IN_RIGHT)
+			if(dbinput & IN_RIGHT)
 				SoundQuality++;
 
-			if (SoundQuality > 2)
+			if(SoundQuality > 2)
 				SoundQuality = 2;
-			else if (SoundQuality < 0)
+			else if(SoundQuality < 0)
 				SoundQuality = 0;
 
-			if (SoundQuality != sfx_quality_bak)
-			{
+			if(SoundQuality != sfx_quality_bak) {
 				S_SoundStopAllSamples();
 				DXChangeOutputFormat(sfx_frequencies[SoundQuality], 0);
 				sfx_quality_bak = SoundQuality;
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			}
-		}
-		else if (sel & 16)
-		{
-			if (dbinput & IN_LEFT)
-			{
-				if (App.AutoTarget)
+		} else if(sel & 16) {
+			if(dbinput & IN_LEFT) {
+				if(App.AutoTarget)
 					App.AutoTarget = 0;
 
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			}
 
-			if (dbinput & IN_RIGHT)
-			{
-				if (!App.AutoTarget)
+			if(dbinput & IN_RIGHT) {
+				if(!App.AutoTarget)
 					App.AutoTarget = 1;
 
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
@@ -434,8 +391,7 @@ void DoOptions()
 	}
 }
 
-void DisplayStatsUCunt()
-{
+void DisplayStatsUCunt() {
 	long sec, days, hours, min, y;
 	char buf[40];
 
@@ -474,77 +430,62 @@ void DisplayStatsUCunt()
 	PrintString(phd_centerx + (phd_centerx >> 2), y + 7 * font_height, 6, buf, 0);
 }
 
-long S_DisplayPauseMenu(long reset)
-{
+long S_DisplayPauseMenu(long reset) {
 	static long menu, selection = 1;
 	long y;
 
-	if (!menu)
-	{
-		if (reset)
-		{
+	if(!menu) {
+		if(reset) {
 			selection = reset;
 			menu = 0;
-		}
-		else
-		{
+		} else {
 			y = phd_centery - font_height;
 			PrintString(phd_centerx, y - ((3 * font_height) >> 1), 6, SCRIPT_TEXT(TXT_Paused), FF_CENTER);
 			PrintString(phd_centerx, y, selection & 1 ? 1 : 2, SCRIPT_TEXT(TXT_Statistics), FF_CENTER);
 			PrintString(phd_centerx, y + font_height, selection & 2 ? 1 : 2, SCRIPT_TEXT(TXT_Options), FF_CENTER);
 			PrintString(phd_centerx, y + 2 * font_height, selection & 4 ? 1 : 2, SCRIPT_TEXT(TXT_Exit_to_Title), FF_CENTER);
 
-			if (dbinput & IN_FORWARD)
-			{
-				if (selection > 1)
+			if(dbinput & IN_FORWARD) {
+				if(selection > 1)
 					selection >>= 1;
 
 				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 			}
 
-			if (dbinput & IN_BACK)
-			{
-				if (selection < 4)
+			if(dbinput & IN_BACK) {
+				if(selection < 4)
 					selection <<= 1;
 
 				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 			}
 
-			if (dbinput & IN_DESELECT)
-			{
+			if(dbinput & IN_DESELECT) {
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 				return 1;
 			}
 
-			if (dbinput & IN_SELECT && !keymap[DIK_LALT])
-			{
+			if(dbinput & IN_SELECT && !keymap[DIK_LALT]) {
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
-				if (selection & 1)
+				if(selection & 1)
 					menu = 2;
-				else if (selection & 2)
+				else if(selection & 2)
 					menu = 1;
-				else if (selection & 4)
+				else if(selection & 4)
 					return 8;
 			}
 		}
-	}
-	else if (menu == 1)
-	{
+	} else if(menu == 1) {
 		DoOptions();
 
-		if (dbinput & IN_DESELECT)
-		{
+		if(dbinput & IN_DESELECT) {
 			menu = 0;
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 		}
-	}
-	else if (menu == 2)
-	{
+	} else if(menu == 2) {
 		DisplayStatsUCunt();
 
-		if (dbinput & IN_DESELECT)
-		{
+		if(dbinput & IN_DESELECT) {
 			menu = 0;
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 		}
@@ -553,8 +494,7 @@ long S_DisplayPauseMenu(long reset)
 	return 0;
 }
 
-long DoLoadSave(long LoadSave)
-{
+long DoLoadSave(long LoadSave) {
 	SAVEFILE_INFO* pSave;
 	static long selection;
 	long txt, l;
@@ -562,41 +502,37 @@ long DoLoadSave(long LoadSave)
 	char string[80];
 	char name[41];
 
-	if (LoadSave & IN_SAVE)
+	if(LoadSave & IN_SAVE)
 		txt = TXT_Save_Game;
 	else
 		txt = TXT_Load_Game;
 
 	PrintString(phd_centerx, font_height, 6, SCRIPT_TEXT(txt), FF_CENTER);
 
-	for (int i = 0; i < 15; i++)
-	{
+	for(int i = 0; i < 15; i++) {
 		pSave = &SaveGames[i];
 		color = 2;
 
-		if (i == selection)
+		if(i == selection)
 			color = 1;
 
 		memset(name, ' ', 40);
 		l = strlen(pSave->name);
 
-		if (l > 40)
+		if(l > 40)
 			l = 40;
 
 		strncpy(name, pSave->name, l);
 		name[40] = 0;
 		small_font = 1;
 
-		if (pSave->valid)
-		{
+		if(pSave->valid) {
 			wsprintf(string, "%03d", pSave->num);
 			PrintString(phd_centerx - long((float)phd_winwidth / 640.0F * 310.0), font_height + font_height * (i + 2), color, string, 0);
 			PrintString(phd_centerx - long((float)phd_winwidth / 640.0F * 270.0), font_height + font_height * (i + 2), color, name, 0);
 			wsprintf(string, "%d %s %02d:%02d:%02d", pSave->days, SCRIPT_TEXT(TXT_days), pSave->hours, pSave->minutes, pSave->seconds);
 			PrintString(phd_centerx - long((float)phd_winwidth / 640.0F * -135.0), font_height + font_height * (i + 2), color, string, 0);
-		}
-		else
-		{
+		} else {
 			wsprintf(string, "%s", pSave->name);
 			PrintString(phd_centerx, font_height + font_height * (i + 2), color, string, FF_CENTER);
 		}
@@ -604,26 +540,23 @@ long DoLoadSave(long LoadSave)
 		small_font = 0;
 	}
 
-	if (dbinput & IN_FORWARD)
-	{
+	if(dbinput & IN_FORWARD) {
 		selection--;
 		SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 	}
 
-	if (dbinput & IN_BACK)
-	{
+	if(dbinput & IN_BACK) {
 		selection++;
 		SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 	}
 
-	if (selection < 0)
+	if(selection < 0)
 		selection = 0;
-	else if (selection > 14)
+	else if(selection > 14)
 		selection = 14;
 
-	if (dbinput & IN_SELECT)
-	{
-		if (SaveGames[selection].valid || LoadSave == IN_SAVE)
+	if(dbinput & IN_SELECT) {
+		if(SaveGames[selection].valid || LoadSave == IN_SAVE)
 			return selection;
 
 		SoundEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
@@ -632,25 +565,23 @@ long DoLoadSave(long LoadSave)
 	return -1;
 }
 
-long S_LoadSave(long load_or_save, long mono, long inv_active)
-{
+long S_LoadSave(long load_or_save, long mono, long inv_active) {
 	long fade, ret;
 
 	fade = 0;
 
-	if (!mono)
+	if(!mono)
 		CreateMonoScreen();
 
 	GetSaveLoadFiles();
 
-	if (!inv_active)
+	if(!inv_active)
 		InventoryActive = 1;
 
-	while (1)
-	{
+	while(1) {
 		S_InitialisePolyList();
 
-		if (fade)
+		if(fade)
 			dbinput = 0;
 		else
 			S_UpdateInput();
@@ -662,10 +593,8 @@ long S_LoadSave(long load_or_save, long mono, long inv_active)
 		S_OutputPolyList();
 		S_DumpScreen();
 
-		if (ret >= 0)
-		{
-			if (load_or_save & IN_SAVE)
-			{
+		if(ret >= 0) {
+			if(load_or_save & IN_SAVE) {
 				sgSaveGame();
 				S_SaveGame(ret);
 				GetSaveLoadFiles();
@@ -675,41 +604,38 @@ long S_LoadSave(long load_or_save, long mono, long inv_active)
 			fade = ret + 1;
 			S_LoadGame(ret);
 
-			if (!DeathMenuActive)
+			if(!DeathMenuActive)
 				SetFade(0, 255);
 
 			ret = -1;
 		}
 
-		if (fade && DoFade == 2)
-		{
+		if(fade && DoFade == 2) {
 			ret = fade - 1;
 			break;
 		}
 
-		if (input & IN_OPTION)
-		{
+		if(input & IN_OPTION) {
 			ret = -1;
 			break;
 		}
 
-		if (MainThread.ended)
+		if(MainThread.ended)
 			break;
 	}
 
 	TIME_Init();
 
-	if (!mono)
+	if(!mono)
 		FreeMonoScreen();
 
-	if (!inv_active)
+	if(!inv_active)
 		InventoryActive = 0;
 
 	return ret;
 }
 
-static void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, long c0, long c1, long c2, long c3)
-{
+static void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, long c0, long c1, long c2, long c3) {
 	D3DTLBUMPVERTEX v[4];
 	float u1, v1, u2, v2;
 
@@ -761,53 +687,44 @@ static void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, lon
 	App.dx.lpD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, FVF, v, 4, D3DDP_DONOTCLIP | D3DDP_DONOTUPDATEEXTENTS);
 	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_TEXTUREPERSPECTIVE, 1);
 
-	if (App.Filtering)
-	{
+	if(App.Filtering) {
 		App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_MAGFILTER, D3DTFG_LINEAR);
 		App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_MINFILTER, D3DTFG_LINEAR);
 	}
 }
 
-void S_DisplayMonoScreen()
-{
+void S_DisplayMonoScreen() {
 	unsigned long col = 0xFFFFFF80;
 
 	S_DrawTile(0, 0, phd_winwidth, phd_winheight, MonoScreen.tex, col, col, col, col);
 }
 
-void CreateMonoScreen()
-{
+void CreateMonoScreen() {
 	MonoScreenOn = 1;
 
-	if (App.dx.Flags & DXF_WINDOWED)
+	if(App.dx.Flags & DXF_WINDOWED)
 		ConvertSurfaceToTextures(App.dx.lpBackBuffer);
 	else
 		ConvertSurfaceToTextures(App.dx.lpPrimaryBuffer);
 }
 
-void FreeMonoScreen()
-{
-	if (MonoScreen.surface)
-	{
+void FreeMonoScreen() {
+	if(MonoScreen.surface) {
 		Log(4, "Released %s @ %x - RefCnt = %d", "Mono Screen Surface", MonoScreen.surface, MonoScreen.surface->Release());
 		MonoScreen.surface = 0;
-	}
-	else
+	} else
 		Log(1, "%s Attempt To Release NULL Ptr", "Mono Screen Surface");
 
-	if (MonoScreen.tex)
-	{
+	if(MonoScreen.tex) {
 		Log(4, "Released %s @ %x - RefCnt = %d", "Mono Screen Texture", MonoScreen.tex, MonoScreen.tex->Release());
 		MonoScreen.tex = 0;
-	}
-	else
+	} else
 		Log(1, "%s Attempt To Release NULL Ptr", "Mono Screen Texture");
 
 	MonoScreenOn = 0;
 }
 
-void RGBM_Mono(unsigned char * r, unsigned char * g, unsigned char * b)
-{
+void RGBM_Mono(unsigned char* r, unsigned char* g, unsigned char* b) {
 	unsigned char c;
 
 
@@ -815,33 +732,29 @@ void RGBM_Mono(unsigned char * r, unsigned char * g, unsigned char * b)
 	*r = c;
 	*g = c;
 	*b = c;
-
 }
 
-static void BitMaskGetNumberOfBits(unsigned long bitMask, unsigned long& bitDepth, unsigned long& bitOffset)
-{
+static void BitMaskGetNumberOfBits(unsigned long bitMask, unsigned long& bitDepth, unsigned long& bitOffset) {
 	long i;
 
-	if (!bitMask) 
-	{
+	if(!bitMask) {
 		bitOffset = 0;
 		bitDepth = 0;
 		return;
 	}
 
-	for (i = 0; !(bitMask & 1); i++)
+	for(i = 0; !(bitMask & 1); i++)
 		bitMask >>= 1;
 
 	bitOffset = i;
 
-	for (i = 0; bitMask != 0; i++)
+	for(i = 0; bitMask != 0; i++)
 		bitMask >>= 1;
 
 	bitDepth = i;
 }
 
-static void WinVidGetColorBitMasks(COLOR_BIT_MASKS* bm, LPDDPIXELFORMAT pixelFormat)
-{
+static void WinVidGetColorBitMasks(COLOR_BIT_MASKS* bm, LPDDPIXELFORMAT pixelFormat) {
 	bm->dwRBitMask = pixelFormat->dwRBitMask;
 	bm->dwGBitMask = pixelFormat->dwGBitMask;
 	bm->dwBBitMask = pixelFormat->dwBBitMask;
@@ -853,8 +766,7 @@ static void WinVidGetColorBitMasks(COLOR_BIT_MASKS* bm, LPDDPIXELFORMAT pixelFor
 	BitMaskGetNumberOfBits(bm->dwRGBAlphaBitMask, bm->dwRGBAlphaBitDepth, bm->dwRGBAlphaBitOffset);
 }
 
-static void CustomBlt(_DDSURFACEDESC2* dst, unsigned long dstX, unsigned long dstY, _DDSURFACEDESC2* src, LPRECT srcRect)
-{
+static void CustomBlt(_DDSURFACEDESC2* dst, unsigned long dstX, unsigned long dstY, _DDSURFACEDESC2* src, LPRECT srcRect) {
 	COLOR_BIT_MASKS srcMask, dstMask;
 	unsigned char* srcLine;
 	unsigned char* dstLine;
@@ -873,44 +785,36 @@ static void CustomBlt(_DDSURFACEDESC2* dst, unsigned long dstX, unsigned long ds
 	srcLine = (unsigned char*)src->lpSurface + srcY * src->lPitch + srcX * srcBpp;
 	dstLine = (unsigned char*)dst->lpSurface + dstY * dst->lPitch + dstX * dstBpp;
 
-	for (unsigned long j = 0; j < height; j++) 
-	{
+	for(unsigned long j = 0; j < height; j++) {
 		srcPtr = srcLine;
 		dstPtr = dstLine;
 
-		for (unsigned long i = 0; i < width; i++)
-		{
+		for(unsigned long i = 0; i < width; i++) {
 			color = 0;
 			memcpy(&color, srcPtr, srcBpp);
 			r = (color & srcMask.dwRBitMask) >> srcMask.dwRBitOffset;
 			g = (color & srcMask.dwGBitMask) >> srcMask.dwGBitOffset;
 			b = (color & srcMask.dwBBitMask) >> srcMask.dwBBitOffset;
 
-			if (srcMask.dwRBitDepth < dstMask.dwRBitDepth) 
-			{
+			if(srcMask.dwRBitDepth < dstMask.dwRBitDepth) {
 				high = dstMask.dwRBitDepth - srcMask.dwRBitDepth;
 				low = (srcMask.dwRBitDepth > high) ? srcMask.dwRBitDepth - high : 0;
 				r = (r << high) | (r >> low);
-			}
-			else if (srcMask.dwRBitDepth > dstMask.dwRBitDepth)
+			} else if(srcMask.dwRBitDepth > dstMask.dwRBitDepth)
 				r >>= srcMask.dwRBitDepth - dstMask.dwRBitDepth;
 
-			if (srcMask.dwGBitDepth < dstMask.dwGBitDepth)
-			{
+			if(srcMask.dwGBitDepth < dstMask.dwGBitDepth) {
 				high = dstMask.dwGBitDepth - srcMask.dwGBitDepth;
 				low = (srcMask.dwGBitDepth > high) ? srcMask.dwGBitDepth - high : 0;
 				g = (g << high) | (g >> low);
-			}
-			else if (srcMask.dwGBitDepth > dstMask.dwGBitDepth)
+			} else if(srcMask.dwGBitDepth > dstMask.dwGBitDepth)
 				g >>= srcMask.dwGBitDepth - dstMask.dwGBitDepth;
 
-			if (srcMask.dwBBitDepth < dstMask.dwBBitDepth) 
-			{
+			if(srcMask.dwBBitDepth < dstMask.dwBBitDepth) {
 				high = dstMask.dwBBitDepth - srcMask.dwBBitDepth;
 				low = (srcMask.dwBBitDepth > high) ? srcMask.dwBBitDepth - high : 0;
 				b = (b << high) | (b >> low);
-			}
-			else if (srcMask.dwBBitDepth > dstMask.dwBBitDepth)
+			} else if(srcMask.dwBBitDepth > dstMask.dwBBitDepth)
 				b >>= srcMask.dwBBitDepth - dstMask.dwBBitDepth;
 
 			RGBM_Mono((unsigned char*)&r, (unsigned char*)&g, (unsigned char*)&b);
@@ -928,8 +832,7 @@ static void CustomBlt(_DDSURFACEDESC2* dst, unsigned long dstX, unsigned long ds
 	}
 }
 
-void ConvertSurfaceToTextures(IDirectDrawSurface4* surface)
-{
+void ConvertSurfaceToTextures(IDirectDrawSurface4* surface) {
 	DDSURFACEDESC2 tSurf;
 	DDSURFACEDESC2 uSurf;
 	RECT r;
@@ -958,19 +861,15 @@ void ConvertSurfaceToTextures(IDirectDrawSurface4* surface)
 	surface->Unlock(0);
 }
 
-void CheckKeyConflicts()
-{
+void CheckKeyConflicts() {
 	short key;
 
-	for (int i = 0; i < 18; i++)
-	{
+	for(int i = 0; i < 18; i++) {
 		key = layout[0][i];
 		conflict[i] = 0;
 
-		for (int j = 0; j < 18; j++)
-		{
-			if (key == layout[1][j])
-			{
+		for(int j = 0; j < 18; j++) {
+			if(key == layout[1][j]) {
 				conflict[i] = 1;
 				break;
 			}
@@ -978,8 +877,7 @@ void CheckKeyConflicts()
 	}
 }
 
-long S_PauseMenu()
-{
+long S_PauseMenu() {
 	long fade, ret;
 
 	fade = 0;
@@ -988,11 +886,10 @@ long S_PauseMenu()
 	InventoryActive = 1;
 	S_SetReverbType(1);
 
-	do
-	{
+	do {
 		S_InitialisePolyList();
 
-		if (fade)
+		if(fade)
 			dbinput = 0;
 		else
 			S_UpdateInput();
@@ -1004,23 +901,21 @@ long S_PauseMenu()
 		S_OutputPolyList();
 		S_DumpScreen();
 
-		if (ret == 1)
+		if(ret == 1)
 			break;
 
-		if (ret == 8)
-		{
+		if(ret == 8) {
 			fade = 8;
 			ret = 0;
 			SetFade(0, 255);
 		}
 
-		if (fade && DoFade == 2)
-		{
+		if(fade && DoFade == 2) {
 			ret = fade;
 			break;
 		}
 
-	} while (!MainThread.ended);
+	} while(!MainThread.ended);
 
 	TIME_Init();
 	FreeMonoScreen();
@@ -1028,8 +923,7 @@ long S_PauseMenu()
 	return ret;
 }
 
-long GetSaveLoadFiles()
-{
+long GetSaveLoadFiles() {
 	FILE* file;
 	SAVEFILE_INFO* pSave;
 	SAVEGAME_INFO save_info;
@@ -1038,14 +932,12 @@ long GetSaveLoadFiles()
 
 	SaveCounter = 0;
 
-	for (int i = 0; i < 15; i++)
-	{
+	for(int i = 0; i < 15; i++) {
 		pSave = &SaveGames[i];
 		wsprintf(name, "savegame.%d", i);
 		file = fopen(name, "rb");
 
-		if (!file)
-		{
+		if(!file) {
 			pSave->valid = 0;
 			strcpy(pSave->name, SCRIPT_TEXT(TXT_Empty_Slot));
 			continue;
@@ -1059,14 +951,13 @@ long GetSaveLoadFiles()
 		fread(&pSave->seconds, sizeof(short), 1, file);
 		fread(&save_info, 1, sizeof(SAVEGAME_INFO), file);
 
-		if (!CheckSumValid((char*)&save_info))
-		{
+		if(!CheckSumValid((char*)&save_info)) {
 			pSave->valid = 0;
 			strcpy(pSave->name, SCRIPT_TEXT(TXT_Empty_Slot));
 			continue;
 		}
 
-		if (pSave->num > SaveCounter)
+		if(pSave->num > SaveCounter)
 			SaveCounter = pSave->num;
 
 		pSave->valid = 1;

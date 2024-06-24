@@ -1,10 +1,9 @@
-#ifndef SHATTER_ITEM_INCLUDED
-#define SHATTER_ITEM_INCLUDED
+#ifndef TOMB4_GAME_SHATTERITEM_H
+#define TOMB4_GAME_SHATTERITEM_H
 #include "sphere.h"
 
 struct ITEM_LIGHT;
-struct SHATTER_ITEM
-{
+struct SHATTER_ITEM {
 	SPHERE Sphere;
 	ITEM_LIGHT* il;
 	short* meshp;
@@ -12,4 +11,4 @@ struct SHATTER_ITEM
 	short YRot;
 	short Flags;
 };
-#endif
+#endif // TOMB4_GAME_SHATTERITEM_H

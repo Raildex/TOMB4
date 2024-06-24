@@ -12,15 +12,14 @@
 #include "winapp.h"
 #include "dxdirectsoundinfo.h"
 
-wchar_t ASCIIToANSITable[7][2] =
-{
-	{L'�', L'�'},
-	{L'�', L'�'},
-	{L'�', L'�'},
-	{L'�', L'�'},
-	{L'�', L'�'},
-	{L'�', L'�'},
-	{L'�', L'�'}
+wchar_t ASCIIToANSITable[7][2] = {
+	{ L'�', L'�' },
+	{ L'�', L'�' },
+	{ L'�', L'�' },
+	{ L'�', L'�' },
+	{ L'�', L'�' },
+	{ L'�', L'�' },
+	{ L'�', L'�' }
 };
 
 bool start_setup = 0;
@@ -33,35 +32,31 @@ static bool VolumetricFx = 0;
 static bool BumpMap = 0;
 static bool TextLow = 0;
 
-void CLSetup(char* cmd)
-{
+void CLSetup(char* cmd) {
 	Log(2, "CLSetup");
 
-	if (cmd)
+	if(cmd)
 		start_setup = 0;
 	else
 		start_setup = 1;
 }
 
-void CLNoFMV(char* cmd)
-{
+void CLNoFMV(char* cmd) {
 	Log(2, "CLNoFMV");
 
-	if (cmd)
+	if(cmd)
 		fmvs_disabled = 0;
 	else
 		fmvs_disabled = 1;
 }
 
-void InitDSDevice(HWND dlg, HWND hwnd)
-{
+void InitDSDevice(HWND dlg, HWND hwnd) {
 	SendMessage(hwnd, CB_RESETCONTENT, 0, 0);
 
-	for (int i = 0; i < App.DXInfo.nDSInfo; i++)
+	for(int i = 0; i < App.DXInfo.nDSInfo; i++)
 		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)App.DXInfo.DSInfo[i].About);
 
-	if (!App.DXInfo.nDSInfo)
-	{
+	if(!App.DXInfo.nDSInfo) {
 		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)SCRIPT_TEXT(TXT_No_Sound_Card_Installed));
 		EnableWindow(GetDlgItem(dlg, 1018), 0);
 		SendMessage(GetDlgItem(dlg, 1018), BM_SETCHECK, 1, 0);
@@ -71,8 +66,7 @@ void InitDSDevice(HWND dlg, HWND hwnd)
 	SendMessage(hwnd, CB_SETCURSEL, 0, 0);
 }
 
-void InitTFormats(HWND dlg, HWND hwnd)
-{
+void InitTFormats(HWND dlg, HWND hwnd) {
 	DXD3DDEVICE* device;
 	DXTEXTUREINFO* tex;
 	long bpp, r, g, b, a;
@@ -84,8 +78,7 @@ void InitTFormats(HWND dlg, HWND hwnd)
 	software = SendMessage(GetDlgItem(dlg, 1011), BM_GETCHECK, 0, 0);
 	device = &App.DXInfo.DDInfo[nDDDevice].D3DDevices[nD3DDevice];
 
-	for (int i = 0; i < device->nTextureInfos; i++)
-	{
+	for(int i = 0; i < device->nTextureInfos; i++) {
 		tex = &device->TextureInfos[i];
 		bpp = tex->bpp;
 		r = tex->rbpp;
@@ -96,23 +89,19 @@ void InitTFormats(HWND dlg, HWND hwnd)
 		wsprintf(buffer, "%d %s RGBA %d%d%d%d", bpp, SCRIPT_TEXT(TXT_Bit), r, g, b, a);
 		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)buffer);
 
-		if (software)
-		{
-			if (bpp == 32 && r == 8 && b == 8 && g == 8 && a == 8)
-			{
+		if(software) {
+			if(bpp == 32 && r == 8 && b == 8 && g == 8 && a == 8) {
 				SendMessage(hwnd, CB_SETCURSEL, i, 0);
 				EnableWindow(GetDlgItem(dlg, 1006), 0);
 			}
-		}
-		else if (bpp == 16 && r == 5 && b == 5 && g == 5 && a == 1)
+		} else if(bpp == 16 && r == 5 && b == 5 && g == 5 && a == 1)
 			SendMessage(hwnd, CB_SETCURSEL, i, 0);
 		else
 			SendMessage(hwnd, CB_SETCURSEL, 0, 0);
 	}
 }
 
-void InitResolution(HWND dlg, HWND hwnd, bool resetvms)
-{
+void InitResolution(HWND dlg, HWND hwnd, bool resetvms) {
 	DXD3DDEVICE* device;
 	DXDISPLAYMODE* dm;
 	long bpp, w, h, n;
@@ -126,25 +115,22 @@ void InitResolution(HWND dlg, HWND hwnd, bool resetvms)
 	EnableWindow(GetDlgItem(dlg, 1011), 0);
 	software = SendMessage(GetDlgItem(dlg, 1011), BM_GETCHECK, 0, 0);
 
-	if (resetvms)
-	{
+	if(resetvms) {
 		SendMessage(hwnd, CB_RESETCONTENT, 0, 0);
 		device = &App.DXInfo.DDInfo[nDDDevice].D3DDevices[nD3DDevice];
 
-		for (int i = 0; i < device->nDisplayModes; i++)
-		{
+		for(int i = 0; i < device->nDisplayModes; i++) {
 			dm = &device->DisplayModes[i];
 			w = dm->w;
 			h = dm->h;
 			bpp = dm->bpp;
 
-			if (bpp > 8)
-			{
+			if(bpp > 8) {
 				wsprintf(buffer, "%dx%d %d %s", w, h, bpp, SCRIPT_TEXT(TXT_Bit));
 				SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)buffer);
 				SendMessage(hwnd, CB_SETITEMDATA, n, i);
 
-				if (w == 640 && h == 480)
+				if(w == 640 && h == 480)
 					SendMessage(hwnd, CB_SETCURSEL, n, 0);
 
 				n++;
@@ -152,75 +138,63 @@ void InitResolution(HWND dlg, HWND hwnd, bool resetvms)
 		}
 	}
 
-	if (App.DXInfo.DDInfo[nDDDevice].DDCaps.dwCaps2 & DDCAPS2_CANRENDERWINDOWED)
+	if(App.DXInfo.DDInfo[nDDDevice].DDCaps.dwCaps2 & DDCAPS2_CANRENDERWINDOWED)
 		EnableWindow(GetDlgItem(dlg, 1025), 1);
-	else
-	{
+	else {
 		EnableWindow(GetDlgItem(dlg, 1025), 0);
 		SendMessage(GetDlgItem(dlg, 1025), BM_SETCHECK, 0, 0);
 	}
 
 	SendMessage(GetDlgItem(dlg, 1012), BM_SETCHECK, Filter, 0);
 
-	if (software)
-	{
+	if(software) {
 		EnableWindow(GetDlgItem(dlg, 1029), 0);
 		VolumetricFx = 0;
-	}
-	else
+	} else
 		EnableWindow(GetDlgItem(dlg, 1029), 1);
 
 	SendMessage(GetDlgItem(dlg, 1029), BM_SETCHECK, VolumetricFx, 0);
 
-	if (software)
-	{
+	if(software) {
 		EnableWindow(GetDlgItem(dlg, 1016), 0);
 		BumpMap = 0;
-	}
-	else
+	} else
 		EnableWindow(GetDlgItem(dlg, 1016), 1);
 
 	SendMessage(GetDlgItem(dlg, 1016), BM_SETCHECK, BumpMap, 0);
 
-	if (software)
-	{
+	if(software) {
 		EnableWindow(GetDlgItem(dlg, 1014), 0);
 		TextLow = 0;
-	}
-	else
+	} else
 		EnableWindow(GetDlgItem(dlg, 1014), 1);
 
 	SendMessage(GetDlgItem(dlg, 1014), BM_SETCHECK, TextLow, 0);
 
-	if (TextLow)
-	{
+	if(TextLow) {
 		SendMessage(GetDlgItem(dlg, 1015), BM_SETCHECK, 1, 0);
 		EnableWindow(GetDlgItem(dlg, 1015), 0);
-	}
-	else
-	{
+	} else {
 		EnableWindow(GetDlgItem(dlg, 1015), 1);
 		SendMessage(GetDlgItem(dlg, 1015), BM_SETCHECK, 0, 0);
 	}
 
-	if (!BumpMap)
-	{
+	if(!BumpMap) {
 		SendMessage(GetDlgItem(dlg, 1015), BM_SETCHECK, 0, 0);
 		EnableWindow(GetDlgItem(dlg, 1015), 0);
 	}
 
-	if (resetvms)
+	if(resetvms)
 		InitTFormats(dlg, GetDlgItem(dlg, 1006));
 }
 
-void InitD3DDevice(HWND dlg, HWND hwnd)
-{
+void InitD3DDevice(HWND dlg, HWND hwnd) {
 	DXDIRECTDRAWINFO* ddraw;
 
 	SendMessage(hwnd, CB_RESETCONTENT, 0, 0);
 	ddraw = &App.DXInfo.DDInfo[nDDDevice];
 
-	for (int i = 0; i < ddraw->nD3DDevices; i++)
+	for(int i = 0; i < ddraw->nD3DDevices; i++)
 		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)ddraw->D3DDevices[i].About);
 
 	SendMessage(hwnd, CB_SETCURSEL, 1, 0);
@@ -228,19 +202,15 @@ void InitD3DDevice(HWND dlg, HWND hwnd)
 	InitResolution(dlg, GetDlgItem(dlg, 1004), 1);
 }
 
-void InitDDDevice(HWND dlg, HWND hwnd)
-{
+void InitDDDevice(HWND dlg, HWND hwnd) {
 	DDDEVICEIDENTIFIER* id;
 	char buffer[256];
 
 	SendMessage(hwnd, CB_RESETCONTENT, 0, 0);
 
-	for (int i = 0; i < App.DXInfo.nDDInfo; i++)
-	{
+	for(int i = 0; i < App.DXInfo.nDDInfo; i++) {
 		id = &App.DXInfo.DDInfo[i].DDIdentifier;
-		wsprintf(buffer, "%s - %s (%d.%d.%02d.%04d)", id->szDescription, id->szDriver,
-			(id->liDriverVersion.HighPart >> 16) & 0xFFFF, id->liDriverVersion.HighPart & 0xFFFF,
-			(id->liDriverVersion.LowPart >> 16) & 0xFFFF, id->liDriverVersion.LowPart & 0xFFFF);
+		wsprintf(buffer, "%s - %s (%d.%d.%02d.%04d)", id->szDescription, id->szDriver, (id->liDriverVersion.HighPart >> 16) & 0xFFFF, id->liDriverVersion.HighPart & 0xFFFF, (id->liDriverVersion.LowPart >> 16) & 0xFFFF, id->liDriverVersion.LowPart & 0xFFFF);
 		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)buffer);
 	}
 
@@ -249,8 +219,7 @@ void InitDDDevice(HWND dlg, HWND hwnd)
 	InitD3DDevice(dlg, GetDlgItem(dlg, 1003));
 }
 
-char* MapASCIIToANSI(char* s, char* d)
-{
+char* MapASCIIToANSI(char* s, char* d) {
 	char* p;
 	long l;
 	char c;
@@ -259,25 +228,21 @@ char* MapASCIIToANSI(char* s, char* d)
 	l = strlen(s);
 	p = d;
 
-	for (int i = 0; i < l; i++)
-	{
+	for(int i = 0; i < l; i++) {
 		c = *s++;
 
-		if (c >= 0x80)
-		{
+		if(c >= 0x80) {
 			found = 0;
 
-			for (int i = 0; i < 7; i++)
-			{
-				if (c == ASCIIToANSITable[i][0])
-				{
+			for(int i = 0; i < 7; i++) {
+				if(c == ASCIIToANSITable[i][0]) {
 					c = ASCIIToANSITable[i][1];
 					found = 1;
 					break;
 				}
 			}
 
-			if (!found)
+			if(!found)
 				Log(1, "Reqd : %x", c);
 		}
 
@@ -288,17 +253,14 @@ char* MapASCIIToANSI(char* s, char* d)
 	return p;
 }
 
-BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
+BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	static HFONT hfont = 0;
 	char d[256];
 
-	if (message == WM_INITDIALOG)
-	{
+	if(message == WM_INITDIALOG) {
 		Log(2, "WM_INITDIALOG");
 
-		if (Gameflow->Language == JAPAN)
-		{
+		if(Gameflow->Language == JAPAN) {
 			hfont = (HFONT)GetStockObject(SYSTEM_FONT);
 			SendMessage(GetDlgItem(dlg, 1000), WM_SETFONT, 0, (LPARAM)hfont);
 			SendMessage(GetDlgItem(dlg, 1003), WM_SETFONT, 0, (LPARAM)hfont);
@@ -330,13 +292,11 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 		return 1;
 	}
 
-	if (message == WM_COMMAND)
-	{
-		switch ((unsigned short)wParam)
-		{
+	if(message == WM_COMMAND) {
+		switch((unsigned short)wParam) {
 		case IDOK:
 
-			if (hfont)
+			if(hfont)
 				DeleteObject(hfont);
 
 			SaveSetup(dlg);
@@ -345,7 +305,7 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 		case IDCANCEL:
 
-			if (hfont)
+			if(hfont)
 				DeleteObject(hfont);
 
 			EndDialog(dlg, 0);
@@ -353,8 +313,7 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 		case 1000:
 
-			if (((wParam >> 16) & 0xFFFF) == CBN_SELCHANGE)
-			{
+			if(((wParam >> 16) & 0xFFFF) == CBN_SELCHANGE) {
 				nDDDevice = SendMessage(GetDlgItem(dlg, 1000), CB_GETCURSEL, 0, 0);
 				InitD3DDevice(dlg, GetDlgItem(dlg, 1003));
 			}
@@ -363,8 +322,7 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 		case 1003:
 
-			if (((wParam >> 16) & 0xFFFF) == CBN_SELCHANGE)
-			{
+			if(((wParam >> 16) & 0xFFFF) == CBN_SELCHANGE) {
 				nD3DDevice = SendMessage(GetDlgItem(dlg, 1003), CB_GETCURSEL, 0, 0);
 				InitResolution(dlg, GetDlgItem(dlg, 1004), 1);
 			}
@@ -373,8 +331,7 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 		case 1010:
 
-			if (((wParam >> 16) & 0xFFFF) == BN_CLICKED)
-			{
+			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
 				nD3DDevice = 1;
 				SendMessage(GetDlgItem(dlg, 1003), CB_SETCURSEL, 1, 0);
 				InitResolution(dlg, GetDlgItem(dlg, 1004), 1);
@@ -384,8 +341,7 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 		case 1011:
 
-			if (((wParam >> 16) & 0xFFFF) == BN_CLICKED)
-			{
+			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
 				nD3DDevice = 0;
 				SendMessage(GetDlgItem(dlg, 1003), CB_SETCURSEL, 0, 0);
 				InitResolution(dlg, GetDlgItem(dlg, 1004), 1);
@@ -395,9 +351,8 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 		case 1012:
 
-			if (((wParam >> 16) & 0xFFFF) == BN_CLICKED)
-			{
-				if (SendMessage(GetDlgItem(dlg, 1012), BM_GETCHECK, 0, 0))
+			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
+				if(SendMessage(GetDlgItem(dlg, 1012), BM_GETCHECK, 0, 0))
 					Filter = 1;
 				else
 					Filter = 0;
@@ -409,9 +364,8 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 		case 1014:
 
-			if (((wParam >> 16) & 0xFFFF) == BN_CLICKED)
-			{
-				if (SendMessage(GetDlgItem(dlg, 1014), BM_GETCHECK, 0, 0))
+			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
+				if(SendMessage(GetDlgItem(dlg, 1014), BM_GETCHECK, 0, 0))
 					TextLow = 1;
 				else
 					TextLow = 0;
@@ -423,9 +377,8 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 		case 1016:
 
-			if (((wParam >> 16) & 0xFFFF) == BN_CLICKED)
-			{
-				if (SendMessage(GetDlgItem(dlg, 1016), BM_GETCHECK, 0, 0))
+			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
+				if(SendMessage(GetDlgItem(dlg, 1016), BM_GETCHECK, 0, 0))
 					BumpMap = 1;
 				else
 					BumpMap = 0;
@@ -437,9 +390,8 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 		case 1018:
 
-			if (((wParam >> 16) & 0xFFFF) == BN_CLICKED)
-			{
-				if (SendMessage(GetDlgItem(dlg, (unsigned short)wParam), BM_GETCHECK, 0, 0))
+			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
+				if(SendMessage(GetDlgItem(dlg, (unsigned short)wParam), BM_GETCHECK, 0, 0))
 					EnableWindow(GetDlgItem(dlg, 1005), 0);
 				else
 					EnableWindow(GetDlgItem(dlg, 1005), 1);
@@ -449,9 +401,8 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 		case 1029:
 
-			if (((wParam >> 16) & 0xFFFF) == BN_CLICKED)
-			{
-				if (SendMessage(GetDlgItem(dlg, 1029), BM_GETCHECK, 0, 0))
+			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
+				if(SendMessage(GetDlgItem(dlg, 1029), BM_GETCHECK, 0, 0))
 					VolumetricFx = 1;
 				else
 					VolumetricFx = 0;
@@ -466,21 +417,19 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 	return 0;
 }
 
-bool DXSetupDialog()
-{
+bool DXSetupDialog() {
 	long ret;
 
 	ShowCursor(1);
 	ret = DialogBox(App.hInstance, MAKEINTRESOURCE(109), 0, DXSetupDlgProc);
 	ShowCursor(0);
 
-	if (ret == -1)
-	{
+	if(ret == -1) {
 		MessageBox(0, "Unable To Initialise Dialog", "", 0);
 		return 0;
 	}
 
-	if (!ret)
+	if(!ret)
 		return 0;
 
 	return 1;

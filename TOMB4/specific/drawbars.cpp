@@ -22,8 +22,7 @@
 static float loadbar_pos;
 static long loadbar_maxpos;
 
-static GouraudBarColourSet healthBarColourSet =
-{
+static GouraudBarColourSet healthBarColourSet = {
 	{ 64, 96, 128, 96, 64 },
 	{ 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0 },
@@ -32,8 +31,7 @@ static GouraudBarColourSet healthBarColourSet =
 	{ 0, 0, 0, 0, 0 }
 };
 
-static GouraudBarColourSet poisonBarColourSet =
-{
+static GouraudBarColourSet poisonBarColourSet = {
 	{ 64, 96, 128, 96, 64 },
 	{ 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0 },
@@ -42,8 +40,7 @@ static GouraudBarColourSet poisonBarColourSet =
 	{ 128, 192, 255, 192, 128 }
 };
 
-static GouraudBarColourSet airBarColourSet =
-{
+static GouraudBarColourSet airBarColourSet = {
 	{ 0, 0, 0, 0, 0 },
 	{ 113, 146, 113, 93, 74 },
 	{ 123, 154, 123, 107, 91 },
@@ -52,8 +49,7 @@ static GouraudBarColourSet airBarColourSet =
 	{ 0, 0, 0, 0, 0 }
 };
 
-static GouraudBarColourSet dashBarColourSet =
-{
+static GouraudBarColourSet dashBarColourSet = {
 	{ 144, 192, 240, 192, 144 },
 	{ 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0 },
@@ -62,8 +58,7 @@ static GouraudBarColourSet dashBarColourSet =
 	{ 0, 0, 0, 0, 0 }
 };
 
-static GouraudBarColourSet loadBarColourSet =
-{
+static GouraudBarColourSet loadBarColourSet = {
 	{ 48, 96, 127, 80, 32 },
 	{ 0, 0, 0, 0, 0 },
 	{ 48, 96, 127, 80, 32 },
@@ -72,8 +67,7 @@ static GouraudBarColourSet loadBarColourSet =
 	{ 48, 96, 127, 80, 32 }
 };
 
-static GouraudBarColourSet enemyBarColourSet =
-{
+static GouraudBarColourSet enemyBarColourSet = {
 	{ 128, 192, 255, 192, 128 },
 	{ 64, 96, 128, 96, 64 },
 	{ 0, 0, 0, 0, 0 },
@@ -82,8 +76,7 @@ static GouraudBarColourSet enemyBarColourSet =
 	{ 0, 0, 0, 0, 0 }
 };
 
-static void DrawColoredRect(float x0, float y0, float x1, float y1, float z, unsigned long c0, unsigned long c1, unsigned long c2, unsigned long c3, TEXTURESTRUCT* tex)
-{
+static void DrawColoredRect(float x0, float y0, float x1, float y1, float z, unsigned long c0, unsigned long c1, unsigned long c2, unsigned long c3, TEXTURESTRUCT* tex) {
 	_D3DTLVERTEX* v;
 
 	v = MyVertexBuffer;
@@ -104,8 +97,7 @@ static void DrawColoredRect(float x0, float y0, float x1, float y1, float z, uns
 	v[3].sy = y1;
 	v[3].color = RGBA_SETALPHA(c3, 0xFF);
 
-	for (int i = 0; i < 4; i++)
-	{
+	for(int i = 0; i < 4; i++) {
 		v[i].sz = z;
 		v[i].rhw = f_mpersp / z * f_moneopersp;
 		v[i].specular = 0xFF000000;
@@ -114,8 +106,7 @@ static void DrawColoredRect(float x0, float y0, float x1, float y1, float z, uns
 	AddQuadSorted(v, 0, 1, 2, 3, tex, 0);
 }
 
-static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, GouraudBarColourSet* colour, bool scaled)
-{
+static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, GouraudBarColourSet* colour, bool scaled) {
 	TEXTURESTRUCT tex;
 	float bar, max, h, x0, y0, x1, y1;
 	long p, r, g, b, c0, c1, c2, c3;
@@ -155,8 +146,7 @@ static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, 
 
 	DrawColoredRect(x0, y0, x1, y1, f_mznear, 0, 0, c3, c2, &tex);
 
-	for (int i = 0; i < 4; i++)
-	{
+	for(int i = 0; i < 4; i++) {
 		c0 = RGBONLY(colour->abLeftRed[i], colour->abLeftGreen[i], colour->abLeftBlue[i]);
 		r = (long)((1 - max) * colour->abLeftRed[i] + max * colour->abRightRed[i]);
 		g = (long)((1 - max) * colour->abLeftGreen[i] + max * colour->abRightGreen[i]);
@@ -198,7 +188,7 @@ static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, 
 	x1 = float(x + width);
 	y1 = y + (h * 6);
 
-	if (scaled)
+	if(scaled)
 		p = GetRenderScale(1);
 	else
 		p = GetFixedScale(1);
@@ -208,8 +198,7 @@ static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, 
 	DrawColoredRect(x0 - (3 * p), y0 + p, x1 + (3 * p), y1 - p, f_mznear + 3, 0xFF284141, 0xFF505050, 0xFF284141, 0xFF505050, &tex);
 }
 
-static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long clr1, long clr2, bool scaled)
-{
+static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long clr1, long clr2, bool scaled) {
 	TEXTURESTRUCT tex;
 	float r1, g1, b1, r2, g2, b2, r, g, b, mul;
 	long bar, y2, p, lr, lg, lb, c0, c1, c2, c3;
@@ -222,7 +211,7 @@ static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long c
 	tex.drawtype = 0;
 	tex.tpage = 0;
 
-	if (scaled)
+	if(scaled)
 		p = GetRenderScale(1);
 	else
 		p = GetFixedScale(1);
@@ -261,8 +250,7 @@ static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long c
 	DrawColoredRect(float(x - p), float(y - p), float(x + width + p), float(y2 + height + p), f_mznear + 2, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, &tex);
 }
 
-static void DoBar(long x, long y, long width, long height, long pos, long c1, long c2, bool scaled)
-{
+static void DoBar(long x, long y, long width, long height, long pos, long c1, long c2, bool scaled) {
 	TEXTURESTRUCT tex;
 	long p, xw, y2, bar;
 
@@ -274,7 +262,7 @@ static void DoBar(long x, long y, long width, long height, long pos, long c1, lo
 	tex.drawtype = 0;
 	tex.tpage = 0;
 
-	if (scaled)
+	if(scaled)
 		p = GetRenderScale(1);
 	else
 		p = GetFixedScale(1);
@@ -290,8 +278,7 @@ static void DoBar(long x, long y, long width, long height, long pos, long c1, lo
 	DrawColoredRect(float(x - p), float(y - p), float(xw + p), float(y2 + height + p), f_mznear + 2, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, &tex);
 }
 
-static void S_DrawHealthBar2(long pos)
-{
+static void S_DrawHealthBar2(long pos) {
 	long x, y, w, h;
 
 	w = GetFixedScale(150);
@@ -300,11 +287,9 @@ static void S_DrawHealthBar2(long pos)
 	y = GetFixedScale(100);
 
 	S_DoTR5Bar(x, y, w, h, pos, 0xA00000, lara.poisoned ? 0xA0A000 : 0x00A000, 0);
-
 }
 
-static void S_DrawEnemyBar2(long pos)
-{
+static void S_DrawEnemyBar2(long pos) {
 	long x, y, w, h;
 
 	w = GetFixedScale(150);
@@ -313,18 +298,15 @@ static void S_DrawEnemyBar2(long pos)
 	y = GetFixedScale(117);
 
 	S_DoTR5Bar(x, y, w, h, pos, 0xA00000, 0xA0A000, 0);
-
 }
 
-void S_DrawHealthBar(long pos)
-{
+void S_DrawHealthBar(long pos) {
 	long x, y, w, h;
 
-	if (!gfCurrentLevel)
+	if(!gfCurrentLevel)
 		return;
 
-	if (BinocularRange)
-	{
+	if(BinocularRange) {
 		S_DrawHealthBar2(pos);
 		return;
 	}
@@ -332,13 +314,11 @@ void S_DrawHealthBar(long pos)
 	w = GetRenderScale(150);
 	h = GetRenderScale(6);
 
-	if (true)//original or improved
+	if(true) // original or improved
 	{
 		x = GetRenderScale(8);
 		y = GetRenderScale(8);
-	}
-	else
-	{
+	} else {
 		x = GetRenderScale(36);
 		x = phd_winwidth - w - x;
 		y = GetRenderScale(18);
@@ -346,14 +326,12 @@ void S_DrawHealthBar(long pos)
 
 
 	S_DoTR5Bar(x, y, w, h, pos, 0xA00000, lara.poisoned ? 0xA0A000 : 0x00A000, 1);
-
 }
 
-void S_DrawAirBar(long pos)
-{
+void S_DrawAirBar(long pos) {
 	long x, y, w, h;
 
-	if (!gfCurrentLevel)
+	if(!gfCurrentLevel)
 		return;
 
 	w = GetRenderScale(150);
@@ -365,16 +343,13 @@ void S_DrawAirBar(long pos)
 	}
 
 
-
 	S_DoTR5Bar(x, y, w, h, pos, 0x0000A0, 0x0050A0, 1);
-
 }
 
-void S_DrawDashBar(long pos)
-{
+void S_DrawDashBar(long pos) {
 	long x, y, w, h;
 
-	if (!gfCurrentLevel)
+	if(!gfCurrentLevel)
 		return;
 
 	w = GetRenderScale(150);
@@ -388,15 +363,12 @@ void S_DrawDashBar(long pos)
 
 
 	S_DoTR5Bar(x, y, w, h, pos, 0xA0A000, 0x00A000, 1);
-
 }
 
-void S_DrawEnemyBar(long pos)
-{
+void S_DrawEnemyBar(long pos) {
 	long x, y, w, h;
 
-	if (BinocularRange)
-	{
+	if(BinocularRange) {
 		S_DrawEnemyBar2(pos);
 		return;
 	}
@@ -411,11 +383,9 @@ void S_DrawEnemyBar(long pos)
 	}
 
 	S_DoTR5Bar(x, y, w, h, pos, 0xA00000, 0xA0A000, 1);
-
 }
 
-void DoSlider(long x, long y, long width, long height, long pos, long c1, long c2, long c3)
-{
+void DoSlider(long x, long y, long width, long height, long pos, long c1, long c2, long c3) {
 	TEXTURESTRUCT tex;
 	float sx, sy, w, h;
 	static float V;
@@ -423,7 +393,7 @@ void DoSlider(long x, long y, long width, long height, long pos, long c1, long c
 	nPolyType = 4;
 	V += 0.01F;
 
-	if (V > 0.99F)
+	if(V > 0.99F)
 		V = 0;
 
 	clipflags[0] = 0;
@@ -458,18 +428,15 @@ void DoSlider(long x, long y, long width, long height, long pos, long c1, long c
 	DrawColoredRect(sx, sy, sx + w + 1, sy + (h * 2), f_mznear + 1, c3, c3, c3, c3, &tex);
 }
 
-void S_InitLoadBar(long maxpos)
-{
+void S_InitLoadBar(long maxpos) {
 	loadbar_pos = 0;
 	loadbar_maxpos = maxpos;
 }
 
-void S_LoadBar()
-{
+void S_LoadBar() {
 	long x, y, w, h;
 
-	if (gfCurrentLevel || App.dx.Flags & DXF_HWR)
-	{
+	if(gfCurrentLevel || App.dx.Flags & DXF_HWR) {
 		_BeginScene();
 		InitBuckets();
 		InitialiseSortList();
@@ -486,7 +453,6 @@ void S_LoadBar()
 
 
 			S_DoTR5Bar(x, y, w, h, (long)loadbar_pos, 0xFF7F007F, 0xFF007F7F, 0);
-
 		}
 
 		SortPolyList(SortCount, SortList);

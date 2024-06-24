@@ -1,11 +1,10 @@
-#ifndef WATER_DUST_INCLUDED
-#define WATER_DUST_INCLUDED
-struct WATER_DUST
-{
+#ifndef TOMB4_GAME_WATERDUST_H
+#define TOMB4_GAME_WATERDUST_H
+struct WATER_DUST {
 	PHD_VECTOR pos;
 	char xvel;
 	unsigned char yvel;
 	char zvel;
 	unsigned char life;
 };
-#endif
+#endif // TOMB4_GAME_WATERDUST_H

@@ -1,8 +1,7 @@
-#ifndef SOUNDSLOT_INCLUDED
-#define SOUNDSLOT_INCLUDED
+#ifndef TOMB4_GAME_SOUNDSLOT_H
+#define TOMB4_GAME_SOUNDSLOT_H
 #include "phdvector.h"
-struct SoundSlot
-{
+struct SoundSlot {
 	long OrigVolume;
 	long nVolume;
 	long nPan;
@@ -11,4 +10,4 @@ struct SoundSlot
 	unsigned long distance;
 	PHD_VECTOR pos;
 };
-#endif
+#endif // TOMB4_GAME_SOUNDSLOT_H

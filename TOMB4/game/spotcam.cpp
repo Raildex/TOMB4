@@ -54,8 +54,7 @@ static short spotcam_loopcnt;
 static unsigned char SpotRemap[8];
 static unsigned char CameraCnt[8];
 
-void SetSplineData(long num, long cam)
-{
+void SetSplineData(long num, long cam) {
 	SPOTCAM* spotcam;
 	ITEM_INFO* item;
 
@@ -68,25 +67,20 @@ void SetSplineData(long num, long cam)
 	camera_ytarget[num] = spotcam->ty;
 	camera_ztarget[num] = spotcam->tz;
 
-	if (spotcam->flags & 0x10)
-	{
+	if(spotcam->flags & 0x10) {
 		camera_xtarget[num] = LaraFixedPosition.x;
 		camera_ytarget[num] = LaraFixedPosition.y;
 		camera_ztarget[num] = LaraFixedPosition.z;
-	}
-	else
-	{
+	} else {
 		camera_xtarget[num] = spotcam->tx;
 		camera_ytarget[num] = spotcam->ty;
 		camera_ztarget[num] = spotcam->tz;
 	}
 
-	if (spotcam->flags & 2)
-	{
+	if(spotcam->flags & 2) {
 		item = &items[spotcam->timer];
 
-		if (item)
-		{
+		if(item) {
 			camera_xtarget[num] = item->pos.x_pos;
 			camera_ytarget[num] = item->pos.y_pos;
 			camera_ztarget[num] = item->pos.z_pos;
@@ -98,13 +92,11 @@ void SetSplineData(long num, long cam)
 	camera_fov[num] = spotcam->fov;
 }
 
-void InitialiseSpotCam(short Sequence)
-{
+void InitialiseSpotCam(short Sequence) {
 	SPOTCAM* s;
 	long next_spline_camera, cunt;
 
-	if (bTrackCamInit && Sequence == LastSequence)
-	{
+	if(bTrackCamInit && Sequence == LastSequence) {
 		bTrackCamInit = 0;
 		return;
 	}
@@ -131,7 +123,7 @@ void InitialiseSpotCam(short Sequence)
 	current_sequence = Sequence;
 	current_spline_camera = 0;
 
-	for (int i = 0; i < SpotRemap[Sequence]; i++)
+	for(int i = 0; i < SpotRemap[Sequence]; i++)
 		current_spline_camera += CameraCnt[i];
 
 	current_camera_cnt = CameraCnt[SpotRemap[Sequence]];
@@ -141,42 +133,36 @@ void InitialiseSpotCam(short Sequence)
 	spline_to_camera = 0;
 	s = &SpotCam[current_spline_camera];
 
-	if (s->flags & 0x400 || gfGameMode == 1)
-	{
+	if(s->flags & 0x400 || gfGameMode == 1) {
 		bDisableLaraControl = 1;
 
-		if (gfGameMode != 1)
+		if(gfGameMode != 1)
 			SetFadeClip(16, 1);
 	}
 
-	if (s->flags & 8)
-	{
+	if(s->flags & 8) {
 		spline_from_camera = 0;
 		cunt = 0;
-		SetSplineData(cunt, first_camera);	//INLINED
+		SetSplineData(cunt, first_camera); // INLINED
 		cunt++;
 		next_spline_camera = first_camera;
 
-		for (int i = 0; i < current_camera_cnt; i++)
-		{
-			SetSplineData(cunt, next_spline_camera);	//INLINED
+		for(int i = 0; i < current_camera_cnt; i++) {
+			SetSplineData(cunt, next_spline_camera); // INLINED
 			cunt++;
 			next_spline_camera++;
 		}
 
-		SetSplineData(cunt, last_camera);	//INLINED
-	}
-	else if (s->flags & 1)
-	{
+		SetSplineData(cunt, last_camera); // INLINED
+	} else if(s->flags & 1) {
 		spline_from_camera = 0;
 		cunt = 0;
 		next_spline_camera = current_spline_camera;
-		SetSplineData(cunt, next_spline_camera);	//INLINED
+		SetSplineData(cunt, next_spline_camera); // INLINED
 		cunt++;
 
-		while (cunt < 4)
-		{
-			if (next_spline_camera > last_camera)
+		while(cunt < 4) {
+			if(next_spline_camera > last_camera)
 				next_spline_camera = first_camera;
 
 			SetSplineData(cunt, next_spline_camera);
@@ -186,14 +172,12 @@ void InitialiseSpotCam(short Sequence)
 
 		current_spline_camera++;
 
-		if (current_spline_camera > last_camera)
+		if(current_spline_camera > last_camera)
 			current_spline_camera = first_camera;
 
-		if (s->flags & 0x4000)
+		if(s->flags & 0x4000)
 			bCheckTrigger = 1;
-	}
-	else
-	{
+	} else {
 		spline_from_camera = 1;
 		camera_xtarget[0] = InitialCameraTarget.x;
 		camera_ytarget[0] = InitialCameraTarget.y;
@@ -216,31 +200,27 @@ void InitialiseSpotCam(short Sequence)
 		SetSplineData(2, cunt);
 		cunt++;
 
-		if (cunt > last_camera)
+		if(cunt > last_camera)
 			cunt = first_camera;
 
 		SetSplineData(3, cunt);
 	}
 }
 
-void InitSpotCamSequences()
-{
+void InitSpotCamSequences() {
 	unsigned char s, cc, ce;
 
 	bTrackCamInit = 0;
 
-	if (number_spotcams)
-	{
+	if(number_spotcams) {
 		ce = 0;
 		s = SpotCam[0].sequence;
 		cc = 1;
 
-		for (int i = 1; i < number_spotcams; i++)
-		{
-			if (SpotCam[i].sequence == s)
+		for(int i = 1; i < number_spotcams; i++) {
+			if(SpotCam[i].sequence == s)
 				cc++;
-			else
-			{
+			else {
 				CameraCnt[ce] = cc;
 				SpotRemap[s] = ce;
 				s = SpotCam[i].sequence;
@@ -254,14 +234,13 @@ void InitSpotCamSequences()
 	}
 }
 
-long Spline(long x, long* knots, long nk)
-{
+long Spline(long x, long* knots, long nk) {
 	long* k;
 	long span, c1, c2;
 
 	span = x * (nk - 3) >> 16;
 
-	if (span >= nk - 3)
+	if(span >= nk - 3)
 		span = nk - 4;
 
 	k = &knots[span];
@@ -271,8 +250,7 @@ long Spline(long x, long* knots, long nk)
 	return ((__int64)x * (((__int64)x * (((__int64)x * c1 >> 16) + c2) >> 16) + (k[2] >> 1) + ((-k[0] - 1) >> 1)) >> 16) + k[1];
 }
 
-void CalculateSpotCams()
-{
+void CalculateSpotCams() {
 	SPOTCAM* FirstCam;
 	SPOTCAM* CurrentCam;
 	ITEM_INFO* item;
@@ -283,8 +261,7 @@ void CalculateSpotCams()
 	static long bFirstLook = 0;
 	short spline_cnt;
 
-	if (bDisableLaraControl)
-	{
+	if(bDisableLaraControl) {
 		lara_item->hit_points = (short)LaraHealth;
 		lara.air = (short)LaraAir;
 	}
@@ -292,7 +269,7 @@ void CalculateSpotCams()
 	FirstCam = &SpotCam[first_camera];
 	sp = 0;
 
-	if (FirstCam->flags & 8)
+	if(FirstCam->flags & 8)
 		spline_cnt = current_camera_cnt + 2;
 	else
 		spline_cnt = 4;
@@ -308,123 +285,107 @@ void CalculateSpotCams()
 	cfov = Spline(current_spline_position, camera_fov, spline_cnt);
 	CurrentCam = &SpotCam[current_spline_camera];
 
-	if (CurrentCam->flags & 0x1000 && CameraFade != current_spline_camera)
+	if(CurrentCam->flags & 0x1000 && CameraFade != current_spline_camera)
 		CameraFade = current_spline_camera;
 
-	if (CurrentCam->flags & 0x2000 && CameraFade != current_spline_camera)
+	if(CurrentCam->flags & 0x2000 && CameraFade != current_spline_camera)
 		CameraFade = current_spline_camera;
 
-	if (FirstCam->flags & 8)
-	{
+	if(FirstCam->flags & 8) {
 		cp = 0;
 		cs = 0x2000;
 		lx = lara_item->pos.x_pos;
 		ly = lara_item->pos.y_pos;
 		lz = lara_item->pos.z_pos;
 
-		for (int i = 0; i < 8; i++)
-		{
+		for(int i = 0; i < 8; i++) {
 			tlen = 0x10000;
 
-			for (int j = 0; j < 8; j++)
-			{
+			for(int j = 0; j < 8; j++) {
 				cx = Spline(sp, camera_xposition, spline_cnt) - lx;
 				cy = Spline(sp, camera_yposition, spline_cnt) - ly;
 				cz = Spline(sp, camera_zposition, spline_cnt) - lz;
 				clen = phd_sqrt(SQUARE(cx) + SQUARE(cy) + SQUARE(cz));
 
-				if (clen <= tlen)
-				{
+				if(clen <= tlen) {
 					cp = sp;
 					tlen = clen;
 				}
 
 				sp += cs;
 
-				if (sp > 0x10000)
+				if(sp > 0x10000)
 					break;
 			}
 
 			cs >>= 1;
 			sp = cp - (cs << 1);
 
-			if (sp < 0)
+			if(sp < 0)
 				sp = 0;
 		}
 
 		current_spline_position += (cp - current_spline_position) >> 5;
 
-		if (FirstCam->flags & 1)
-		{
-			if (abs(cp - current_spline_position) > 0x8000)
+		if(FirstCam->flags & 1) {
+			if(abs(cp - current_spline_position) > 0x8000)
 				current_spline_position = cp;
 		}
 
-		if (cp < 0)
+		if(cp < 0)
 			current_spline_position = 0;
-		else if (cp > 0x10000)
+		else if(cp > 0x10000)
 			current_spline_position = 0x10000;
-	}
-	else if (!spotcam_timer)
+	} else if(!spotcam_timer)
 		current_spline_position += cspeed;
 
-	if (keymap[DIK_ESCAPE] && gfCurrentLevel)
+	if(keymap[DIK_ESCAPE] && gfCurrentLevel)
 		current_spline_position = 0x10000;
 
-	if (!(input & IN_LOOK))
+	if(!(input & IN_LOOK))
 		bFirstLook = 0;
 
-	if (FirstCam->flags & 0x200 || !(input & IN_LOOK) || gfGameMode == 1)
-	{
+	if(FirstCam->flags & 0x200 || !(input & IN_LOOK) || gfGameMode == 1) {
 		camera.pos.x = cpx;
 		camera.pos.y = cpy;
 		camera.pos.z = cpz;
 
-		if (FirstCam->flags & 0x28)
-		{
+		if(FirstCam->flags & 0x28) {
 			camera.target.x = lara_item->pos.x_pos;
 			camera.target.y = lara_item->pos.y_pos;
 			camera.target.z = lara_item->pos.z_pos;
-		}
-		else
-		{
+		} else {
 			camera.target.x = ctx;
 			camera.target.y = cty;
 			camera.target.z = ctz;
 		}
 
-		if (CurrentCam->flags & 2)
-		{
+		if(CurrentCam->flags & 2) {
 			item = &items[SpotCam[current_spline_camera].timer];
 
-			if (item)
-			{
+			if(item) {
 				camera.target.x = item->pos.x_pos;
 				camera.target.y = item->pos.y_pos;
 				camera.target.z = item->pos.z_pos;
 			}
 		}
 
-		if (IsRoomOutside(cpx, cpy, cpz) == -2)
-		{
+		if(IsRoomOutside(cpx, cpy, cpz) == -2) {
 			camera.pos.room_number = SpotCam[current_spline_camera].room_number;
 			GetFloor(camera.pos.x, camera.pos.y, camera.pos.z, &camera.pos.room_number);
-		}
-		else
+		} else
 			camera.pos.room_number = IsRoomOutsideNo;
 
 		AlterFOV((short)cfov);
 		phd_LookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.target.x, camera.target.y, camera.target.z, (short)croll);
 
-		if (bCheckTrigger)
-		{
+		if(bCheckTrigger) {
 			ctype = camera.type;
 			camera.type = HEAVY_CAMERA;
 
-			if (gfCurrentLevel)
+			if(gfCurrentLevel)
 				TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 1, 0);
-			else
-			{
+			else {
 				TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 0, 0);
 				TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 1, 0);
 			}
@@ -433,99 +394,82 @@ void CalculateSpotCams()
 			bCheckTrigger = 0;
 		}
 
-		if (FirstCam->flags & 8)
+		if(FirstCam->flags & 8)
 			bTrackCamInit = 1;
-		else if (current_spline_position > 0x10000 - cspeed)
-		{
-			if (CurrentCam->flags & 0x4000)
+		else if(current_spline_position > 0x10000 - cspeed) {
+			if(CurrentCam->flags & 0x4000)
 				bCheckTrigger = 1;
 
-			if (CurrentCam->flags & 0x100)
-			{
-				if (spotcam_timer)
+			if(CurrentCam->flags & 0x100) {
+				if(spotcam_timer)
 					spotcam_timer--;
 				else
 					spotcam_timer = SpotCam[current_spline_camera].timer >> 4;
 			}
 
-			if (!spotcam_timer)
-			{
+			if(!spotcam_timer) {
 				current_spline_position = 0;
 
-				if (current_spline_camera == first_camera)
+				if(current_spline_camera == first_camera)
 					next_spline_camera = last_camera;
 				else
 					next_spline_camera = current_spline_camera - 1;
 
 				cunt = 1;
 
-				if (spline_from_camera)
-				{
+				if(spline_from_camera) {
 					spline_from_camera = 0;
 					next_spline_camera = first_camera - 1;
-				}
-				else
-				{
-					if (CurrentCam->flags & 0x800)
+				} else {
+					if(CurrentCam->flags & 0x800)
 						bDisableLaraControl = 0;
 
-					if (CurrentCam->flags & 0x400)
-					{
+					if(CurrentCam->flags & 0x400) {
 						SetFadeClip(16, 1);
 						bDisableLaraControl = 1;
 					}
 
 					cunt = 0;
 
-					if (CurrentCam->flags & 0x80)
-					{
+					if(CurrentCam->flags & 0x80) {
 						next_spline_camera = first_camera + (SpotCam[current_spline_camera].timer & 0xF);
 						current_spline_camera = (short)next_spline_camera;
-						SetSplineData(cunt, next_spline_camera);	//INLINED
+						SetSplineData(cunt, next_spline_camera); // INLINED
 						cunt = 1;
 					}
 
-					SetSplineData(cunt, next_spline_camera);	//INLINED
+					SetSplineData(cunt, next_spline_camera); // INLINED
 					cunt++;
 				}
 
 				next_spline_camera++;
 
-				while (cunt < 4)
-				{
-					if (FirstCam->flags & 4)
-					{
-						if (next_spline_camera > last_camera)
+				while(cunt < 4) {
+					if(FirstCam->flags & 4) {
+						if(next_spline_camera > last_camera)
 							next_spline_camera = first_camera;
-					}
-					else if (next_spline_camera > last_camera)
+					} else if(next_spline_camera > last_camera)
 						next_spline_camera = last_camera;
 
-					SetSplineData(cunt, next_spline_camera);	//INLINED
+					SetSplineData(cunt, next_spline_camera); // INLINED
 					next_spline_camera++;
 					cunt++;
 				}
 
 				current_spline_camera++;
 
-				if (current_spline_camera > last_camera)
-				{
-					if (FirstCam->flags & 4)
-					{
+				if(current_spline_camera > last_camera) {
+					if(FirstCam->flags & 4) {
 						spotcam_loopcnt++;
 						current_spline_camera = first_camera;
-					}
-					else if (FirstCam->flags & 0x40 || spline_to_camera)
-					{
-						if (bCheckTrigger)
-						{
+					} else if(FirstCam->flags & 0x40 || spline_to_camera) {
+						if(bCheckTrigger) {
 							ctype = camera.type;
 							camera.type = HEAVY_CAMERA;
 
-							if (gfCurrentLevel)
+							if(gfCurrentLevel)
 								TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 1, 0);
-							else
-							{
+							else {
 								TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 0, 0);
 								TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 1, 0);
 							}
@@ -542,8 +486,7 @@ void CalculateSpotCams()
 						camera.type = CHASE_CAMERA;
 						camera.speed = 1;
 
-						if (FirstCam->flags & 0x40)
-						{
+						if(FirstCam->flags & 0x40) {
 							camera.pos.x = InitialCameraPosition.x;
 							camera.pos.y = InitialCameraPosition.y;
 							camera.pos.z = InitialCameraPosition.z;
@@ -554,11 +497,9 @@ void CalculateSpotCams()
 						}
 
 						AlterFOV(LastFov);
-					}
-					else
-					{
+					} else {
 						current_spline_camera--;
-						SetSplineData(0, current_spline_camera - 1);	//both inlined
+						SetSplineData(0, current_spline_camera - 1); // both inlined
 						SetSplineData(1, current_spline_camera);
 						memcpy(&backup, &camera, sizeof(CAMERA_INFO));
 						camera.old_type = FIXED_CAMERA;
@@ -595,19 +536,14 @@ void CalculateSpotCams()
 				}
 			}
 		}
-	}
-	else if (FirstCam->flags & 8)
-	{
-		if (!bFirstLook)
-		{
+	} else if(FirstCam->flags & 8) {
+		if(!bFirstLook) {
 			camera.old_type = FIXED_CAMERA;
 			bFirstLook = 1;
 		}
 
 		CalculateCamera();
-	}
-	else
-	{
+	} else {
 		SetFadeClip(0, 1);
 		bUseSpotCam = 0;
 		bDisableLaraControl = 0;

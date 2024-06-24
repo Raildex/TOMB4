@@ -1,10 +1,9 @@
-#ifndef BOX_NODE_INCLUDED
-#define BOX_NODE_INCLUDED
-struct BOX_NODE
-{
+#ifndef TOMB4_GAME_BOXNODE_H
+#define TOMB4_GAME_BOXNODE_H
+struct BOX_NODE {
 	short exit_box;
 	unsigned short search_number;
 	short next_expansion;
 	short box_number;
 };
-#endif
+#endif // TOMB4_GAME_BOXNODE_H

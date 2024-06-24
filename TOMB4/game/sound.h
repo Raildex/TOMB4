@@ -14,16 +14,14 @@ extern SoundSlot LaSlot[];
 extern short* sample_lut;
 extern long sound_active;
 
-enum sfx_options
-{
-	SFX_DEFAULT =	0,
-	SFX_WATER =		1,
-	SFX_ALWAYS =	2,
-	SFX_SETPITCH =	4
+enum sfx_options {
+	SFX_DEFAULT = 0,
+	SFX_WATER = 1,
+	SFX_ALWAYS = 2,
+	SFX_SETPITCH = 4
 };
 
-enum sound_effect_names
-{
+enum sound_effect_names {
 	SFX_LARA_FEET,
 	SFX_LARA_CLIMB2,
 	SFX_LARA_NO,

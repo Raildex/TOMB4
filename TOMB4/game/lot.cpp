@@ -22,27 +22,24 @@ CREATURE_INFO* baddie_slots;
 
 static long slots_used = 0;
 
-void InitialiseLOTarray(long allocmem)
-{
+void InitialiseLOTarray(long allocmem) {
 	CREATURE_INFO* creature;
 
-	if (allocmem)
+	if(allocmem)
 		baddie_slots = (CREATURE_INFO*)game_malloc(5 * sizeof(CREATURE_INFO));
 
-	for (int i = 0; i < 5; i++)
-	{
+	for(int i = 0; i < 5; i++) {
 		creature = &baddie_slots[i];
 		creature->item_num = NO_ITEM;
 
-		if (allocmem)
+		if(allocmem)
 			creature->LOT.node = (BOX_NODE*)game_malloc(sizeof(BOX_NODE) * num_boxes);
 	}
 
 	slots_used = 0;
 }
 
-void DisableBaddieAI(short item_number)
-{
+void DisableBaddieAI(short item_number) {
 	ITEM_INFO* item;
 	CREATURE_INFO* creature;
 
@@ -50,15 +47,13 @@ void DisableBaddieAI(short item_number)
 	creature = (CREATURE_INFO*)item->data;
 	item->data = 0;
 
-	if (creature)
-	{
+	if(creature) {
 		creature->item_num = NO_ITEM;
 		slots_used--;
 	}
 }
 
-void ClearLOT(LOT_INFO* lot)
-{
+void ClearLOT(LOT_INFO* lot) {
 	BOX_NODE* node;
 
 	lot->tail = 2047;
@@ -68,8 +63,7 @@ void ClearLOT(LOT_INFO* lot)
 	lot->required_box = 2047;
 	node = lot->node;
 
-	for (int i = 0; i < num_boxes; i++)
-	{
+	for(int i = 0; i < num_boxes; i++) {
 		node->next_expansion = 2047;
 		node->exit_box = 2047;
 		node->search_number = 0;
@@ -77,8 +71,7 @@ void ClearLOT(LOT_INFO* lot)
 	}
 }
 
-void CreateZone(ITEM_INFO* item)
-{
+void CreateZone(ITEM_INFO* item) {
 	CREATURE_INFO* creature;
 	ROOM_INFO* r;
 	BOX_NODE* node;
@@ -90,20 +83,16 @@ void CreateZone(ITEM_INFO* item)
 	r = &room[item->room_number];
 	item->box_number = r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)].box;
 
-	if (creature->LOT.fly)
-	{
+	if(creature->LOT.fly) {
 		creature->LOT.zone_count = 0;
 		node = creature->LOT.node;
 
-		for (int i = 0; i < num_boxes; i++)
-		{
+		for(int i = 0; i < num_boxes; i++) {
 			node->box_number = i;
 			node++;
 			creature->LOT.zone_count++;
 		}
-	}
-	else
-	{
+	} else {
 		zone = ground_zone[creature->LOT.zone][0];
 		flip = ground_zone[creature->LOT.zone][1];
 		zone_number = zone[item->box_number];
@@ -111,10 +100,8 @@ void CreateZone(ITEM_INFO* item)
 		creature->LOT.zone_count = 0;
 		node = creature->LOT.node;
 
-		for (int i = 0; i < num_boxes; i++)
-		{
-			if (*zone == zone_number || *flip == flip_number)
-			{
+		for(int i = 0; i < num_boxes; i++) {
+			if(*zone == zone_number || *flip == flip_number) {
 				node->box_number = i;
 				node++;
 				creature->LOT.zone_count++;
@@ -126,8 +113,7 @@ void CreateZone(ITEM_INFO* item)
 	}
 }
 
-void InitialiseSlot(short item_number, long slot)
-{
+void InitialiseSlot(short item_number, long slot) {
 	ITEM_INFO* item;
 	CREATURE_INFO* creature;
 
@@ -161,8 +147,7 @@ void InitialiseSlot(short item_number, long slot)
 	creature->LOT.fly = 0;
 	creature->LOT.zone = BASIC_ZONE;
 
-	switch (item->object_number)
-	{
+	switch(item->object_number) {
 	case ENEMY_JEEP:
 	case VON_CROY:
 	case RAGHEAD:
@@ -226,41 +211,36 @@ void InitialiseSlot(short item_number, long slot)
 
 	ClearLOT(&creature->LOT);
 
-	if (item_number != lara.item_number)
+	if(item_number != lara.item_number)
 		CreateZone(item);
 
 	slots_used++;
 }
 
-long EnableBaddieAI(short item_number, long Always)
-{
+long EnableBaddieAI(short item_number, long Always) {
 	ITEM_INFO* item;
 	CREATURE_INFO* creature;
 	long x, y, z, slot, worstslot, dist, worstdist;
 
 	item = &items[item_number];
 
-	if (item->data)
+	if(item->data)
 		return 1;
 
-	if (slots_used < 5)
-	{
-		for (slot = 0; slot < 5; slot++)
-		{
+	if(slots_used < 5) {
+		for(slot = 0; slot < 5; slot++) {
 			creature = &baddie_slots[slot];
 
-			if (creature->item_num == NO_ITEM)
-			{
+			if(creature->item_num == NO_ITEM) {
 				InitialiseSlot(item_number, slot);
 				return 1;
 			}
 		}
 	}
 
-	if (Always)
+	if(Always)
 		worstdist = 0;
-	else
-	{
+	else {
 		x = (item->pos.x_pos - camera.pos.x) >> 8;
 		y = (item->pos.y_pos - camera.pos.y) >> 8;
 		z = (item->pos.z_pos - camera.pos.z) >> 8;
@@ -269,8 +249,7 @@ long EnableBaddieAI(short item_number, long Always)
 
 	worstslot = -1;
 
-	for (slot = 0; slot < 5; slot++)
-	{
+	for(slot = 0; slot < 5; slot++) {
 		creature = &baddie_slots[slot];
 		item = &items[creature->item_num];
 		x = (item->pos.x_pos - camera.pos.x) >> 8;
@@ -278,15 +257,13 @@ long EnableBaddieAI(short item_number, long Always)
 		z = (item->pos.z_pos - camera.pos.z) >> 8;
 		dist = SQUARE(x) + SQUARE(y) + SQUARE(z);
 
-		if (dist > worstdist)
-		{
+		if(dist > worstdist) {
 			worstslot = slot;
 			worstdist = dist;
 		}
 	}
 
-	if (worstslot >= 0)
-	{
+	if(worstslot >= 0) {
 		items[baddie_slots[worstslot].item_num].status = ITEM_INVISIBLE;
 		DisableBaddieAI(baddie_slots[worstslot].item_num);
 		InitialiseSlot(item_number, worstslot);

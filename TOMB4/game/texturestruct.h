@@ -1,8 +1,7 @@
-#ifndef TEXTURESTRUCT_INCLUDED
-#define TEXTURESTRUCT_INCLUDED
-#pragma pack(push,1)
-struct TEXTURESTRUCT
-{
+#ifndef TOMB4_GAME_TEXTURESTRUCT_H
+#define TOMB4_GAME_TEXTURESTRUCT_H
+#pragma pack(push, 1)
+struct TEXTURESTRUCT {
 	unsigned short drawtype;
 	unsigned short tpage;
 	unsigned short flag;
@@ -16,4 +15,4 @@ struct TEXTURESTRUCT
 	float v4;
 };
 #pragma pack(pop)
-#endif
+#endif // TOMB4_GAME_TEXTURESTRUCT_H

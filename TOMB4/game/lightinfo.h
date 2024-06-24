@@ -1,8 +1,7 @@
-#ifndef LIGHTINFO_INCLUDED
-#define LIGHTINFO_INCLUDED
-#pragma pack(push,1)
-struct LIGHTINFO
-{
+#ifndef TOMB4_GAME_LIGHTINFO_H
+#define TOMB4_GAME_LIGHTINFO_H
+#pragma pack(push, 1)
+struct LIGHTINFO {
 	long x;
 	long y;
 	long z;
@@ -20,4 +19,4 @@ struct LIGHTINFO
 	float nz;
 };
 #pragma pack(pop)
-#endif
+#endif // TOMB4_GAME_LIGHTINFO_H

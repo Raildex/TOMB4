@@ -1,10 +1,9 @@
-#ifndef TEXTURE_INCLUDED
-#define TEXTURE_INCLUDED
+#ifndef TOMB4_GAME_TEXTURE_H
+#define TOMB4_GAME_TEXTURE_H
 struct IDirect3DTexture2;
 struct IDirectDrawSurface4;
-#pragma pack(push,1)
-struct TEXTURE
-{
+#pragma pack(push, 1)
+struct TEXTURE {
 	IDirect3DTexture2* tex;
 	IDirectDrawSurface4* surface;
 	unsigned long xoff;
@@ -16,4 +15,4 @@ struct TEXTURE
 	long bumptpage;
 };
 #pragma pack(pop)
-#endif
+#endif // TOMB4_GAME_TEXTURE_H

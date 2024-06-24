@@ -1,8 +1,7 @@
 #ifndef SAMPLE_INFO_INCLUDED
 #define SAMPLE_INFO_INCLUDED
-#pragma pack(push,1)
-struct SAMPLE_INFO
-{
+#pragma pack(push, 1)
+struct SAMPLE_INFO {
 	short number;
 	unsigned char volume;
 	unsigned char radius;

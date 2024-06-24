@@ -1,7 +1,6 @@
 #ifndef FIRE_SPARKS_INCLUDED
 #define FIRE_SPARKS_INCLUDED
-struct FIRE_SPARKS
-{
+struct FIRE_SPARKS {
 	short x;
 	short y;
 	short z;

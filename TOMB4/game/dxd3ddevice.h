@@ -1,13 +1,12 @@
-#ifndef DXD3DDEVICE_INCLUDED
-#define DXD3DDEVICE_INCLUDED
+#ifndef TOMB4_GAME_DXD3DDEVICE_H
+#define TOMB4_GAME_DXD3DDEVICE_H
 #include <guiddef.h>
 #include <d3dcaps.h>
 
 struct DXZBUFFERINFO;
 struct DXTEXTUREINFO;
 struct DXDISPLAYMODE;
-struct DXD3DDEVICE
-{
+struct DXD3DDEVICE {
 	char Name[30];
 	char About[80];
 	LPGUID lpGuid;
@@ -21,4 +20,4 @@ struct DXD3DDEVICE
 	long nZBufferInfos;
 	DXZBUFFERINFO* ZBufferInfos;
 };
-#endif
+#endif // TOMB4_GAME_DXD3DDEVICE_H

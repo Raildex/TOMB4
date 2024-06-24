@@ -1,8 +1,7 @@
-#ifndef FLOOR_INFO_INCLUDED
-#define FLOOR_INFO_INCLUDED
-#pragma pack(push,1)
-struct  FLOOR_INFO
-{
+#ifndef TOMB4_GAME_FLOORINFO_H
+#define TOMB4_GAME_FLOORINFO_H
+#pragma pack(push, 1)
+struct FLOOR_INFO {
 	unsigned short index;
 	unsigned short fx : 4;
 	unsigned short box : 11;
@@ -13,4 +12,4 @@ struct  FLOOR_INFO
 	char ceiling;
 };
 #pragma pack(pop)
-#endif
+#endif // TOMB4_GAME_FLOORINFO_H

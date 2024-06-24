@@ -1,7 +1,6 @@
-#ifndef DXTEXTUREINFO_INCLUDED
-#define DXTEXTUREINFO_INCLUDED
-struct DXTEXTUREINFO
-{
+#ifndef TOMB4_GAME_DXTEXTUREINFO_H
+#define TOMB4_GAME_DXTEXTUREINFO_H
+struct DXTEXTUREINFO {
 	DDPIXELFORMAT ddpf;
 	unsigned long bpp;
 	long bPalette;
@@ -15,4 +14,4 @@ struct DXTEXTUREINFO
 	unsigned char bshift;
 	unsigned char ashift;
 };
-#endif
+#endif // TOMB4_GAME_DXTEXTUREINFO_H

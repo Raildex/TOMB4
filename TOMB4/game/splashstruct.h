@@ -1,7 +1,6 @@
 #ifndef SPLASH_STRUCT_INCLUDED
 #define SPLASH_STRUCT_INCLUDED
-struct SPLASH_STRUCT
-{
+struct SPLASH_STRUCT {
 	long x;
 	long y;
 	long z;

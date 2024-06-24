@@ -6,15 +6,14 @@
 #include <d3dtypes.h>
 #include <d3d.h>
 
-#define VertClip(result, v1, v2)\
-{\
-	result.rhw = clipper * (v2->rhw - v1->rhw) + v1->rhw;\
-	result.tu = clipper * (v2->tu - v1->tu) + v1->tu;\
-	result.tv = clipper * (v2->tv - v1->tv) + v1->tv;\
-}
+#define VertClip(result, v1, v2)                              \
+	{                                                         \
+		result.rhw = clipper * (v2->rhw - v1->rhw) + v1->rhw; \
+		result.tu = clipper * (v2->tu - v1->tu) + v1->tu;     \
+		result.tv = clipper * (v2->tv - v1->tv) + v1->tv;     \
+	}
 
-long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out)
-{
+long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out) {
 	D3DTLBUMPVERTEX* pIn;
 	D3DTLBUMPVERTEX* pOut;
 	D3DTLBUMPVERTEX* last;
@@ -25,16 +24,14 @@ long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out)
 	last = &in[n - 1];
 	pOut = out;
 
-	for (nPoints = 0; n--; last = pIn++)
-	{
+	for(nPoints = 0; n--; last = pIn++) {
 		inZ = f_mznear - pIn->sz;
 		lastZ = f_mznear - last->sz;
 
-		if (((*(long*)&lastZ) | (*(long*)&inZ)) >= 0)
+		if(((*(long*)&lastZ) | (*(long*)&inZ)) >= 0)
 			continue;
 
-		if (((*(long*)&lastZ) ^ (*(long*)&inZ)) < 0)
-		{
+		if(((*(long*)&lastZ) ^ (*(long*)&inZ)) < 0) {
 			dz = inZ / (last->sz - pIn->sz);
 			pOut->sx = ((last->tx - pIn->tx) * dz + pIn->tx) * f_mperspoznear + f_centerx;
 			pOut->sy = ((last->ty - pIn->ty) * dz + pIn->ty) * f_mperspoznear + f_centery;
@@ -86,8 +83,7 @@ long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out)
 			nPoints++;
 		}
 
-		if ((*(long*)&inZ) < 0)
-		{
+		if((*(long*)&inZ) < 0) {
 			pOut->sx = pIn->sx;
 			pOut->sy = pIn->sy;
 			pOut->rhw = pIn->rhw;
@@ -100,21 +96,20 @@ long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out)
 		}
 	}
 
-	if (nPoints < 3)
+	if(nPoints < 3)
 		nPoints = 0;
 
 	return nPoints;
 }
 
-long visible_zclip(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2)
-{
+long visible_zclip(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2) {
 	return (v2->tu * v0->sz - v2->sz * v0->tu) * v1->tv
 		+ (v2->sz * v0->tv - v2->tv * v0->sz) * v1->tu
-		+ (v2->tv * v0->tu - v2->tu * v0->tv) * v1->sz < 0;
+		+ (v2->tv * v0->tu - v2->tu * v0->tv) * v1->sz
+		< 0;
 }
 
-long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
-{
+long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 	D3DTLBUMPVERTEX* v1;
 	D3DTLBUMPVERTEX* v2;
 	D3DTLBUMPVERTEX output[8];
@@ -136,9 +131,8 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 	sa2 = float(CLRA(v2->specular));
 
 	nPoints = 0;
-	
-	for (int i = 0; i < n; i++)
-	{
+
+	for(int i = 0; i < n; i++) {
 		v1 = v2;
 		cr1 = cr2;
 		cg1 = cg2;
@@ -159,9 +153,8 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 		sb2 = float(CLRB(v2->specular));
 		sa2 = float(CLRA(v2->specular));
 
-		if (false /*v1->sx < f_left*/)
-		{
-			if (v2->sx < f_left)
+		if(false /*v1->sx < f_left*/) {
+			if(v2->sx < f_left)
 				continue;
 
 			clipper = (f_left - v2->sx) / (v1->sx - v2->sx);
@@ -190,10 +183,8 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			output[nPoints].sx = f_left;
 			output[nPoints].sy = clipper * (v1->sy - v2->sy) + v2->sy;
 			nPoints++;
-		}
-		else if (false /*v1->sx > f_right*/)
-		{
-			if (v2->sx > f_right)
+		} else if(false /*v1->sx > f_right*/) {
+			if(v2->sx > f_right)
 				continue;
 
 			clipper = (f_right - v2->sx) / (v1->sx - v2->sx);
@@ -225,8 +216,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 		}
 
 
-		if (false /*v2->sx < f_left*/)
-		{
+		if(false /*v2->sx < f_left*/) {
 			clipper = (f_left - v2->sx) / (v1->sx - v2->sx);
 			VertClip(output[nPoints], v2, v1);
 
@@ -253,9 +243,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			output[nPoints].sx = f_left;
 			output[nPoints].sy = clipper * (v1->sy - v2->sy) + v2->sy;
 			nPoints++;
-		}
-		else if (false /*v2->sx > f_right*/)
-		{
+		} else if(false /*v2->sx > f_right*/) {
 			clipper = (f_right - v2->sx) / (v1->sx - v2->sx);
 			VertClip(output[nPoints], v2, v1);
 
@@ -282,9 +270,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			output[nPoints].sx = f_right;
 			output[nPoints].sy = clipper * (v1->sy - v2->sy) + v2->sy;
 			nPoints++;
-		}
-		else
-		{
+		} else {
 			output[nPoints].sx = v2->sx;
 			output[nPoints].sy = v2->sy;
 			output[nPoints].sz = v2->sz;
@@ -297,7 +283,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 		}
 	}
 
-	if (nPoints < 3)
+	if(nPoints < 3)
 		return 0;
 
 	n = nPoints;
@@ -314,8 +300,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 
 	nPoints = 0;
 
-	for (int i = 0; i < n; i++)
-	{
+	for(int i = 0; i < n; i++) {
 		v1 = v2;
 		cr1 = cr2;
 		cg1 = cg2;
@@ -336,9 +321,8 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 		sb2 = float(CLRB(v2->specular));
 		sa2 = float(CLRA(v2->specular));
 
-		if (false /*v1->sy < f_top*/)
-		{
-			if (v2->sy < f_top)
+		if(false /*v1->sy < f_top*/) {
+			if(v2->sy < f_top)
 				continue;
 
 			clipper = (f_top - v2->sy) / (v1->sy - v2->sy);
@@ -367,10 +351,8 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			in[nPoints].sx = clipper * (v1->sx - v2->sx) + v2->sx;
 			in[nPoints].sy = f_top;
 			nPoints++;
-		}
-		else if (false /*v1->sy > f_bottom*/)
-		{
-			if (v2->sy > f_bottom)
+		} else if(false /*v1->sy > f_bottom*/) {
+			if(v2->sy > f_bottom)
 				continue;
 
 			clipper = (f_bottom - v2->sy) / (v1->sy - v2->sy);
@@ -401,8 +383,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			nPoints++;
 		}
 
-		if (false /*v2->sy < f_top*/)
-		{
+		if(false /*v2->sy < f_top*/) {
 			clipper = (f_top - v2->sy) / (v1->sy - v2->sy);
 			VertClip(in[nPoints], v2, v1);
 
@@ -429,9 +410,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			in[nPoints].sx = clipper * (v1->sx - v2->sx) + v2->sx;
 			in[nPoints].sy = f_top;
 			nPoints++;
-		}
-		else if (false /*v2->sy > f_bottom*/)
-		{
+		} else if(false /*v2->sy > f_bottom*/) {
 			clipper = (f_bottom - v2->sy) / (v1->sy - v2->sy);
 			VertClip(in[nPoints], v2, v1);
 
@@ -458,9 +437,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			in[nPoints].sx = clipper * (v1->sx - v2->sx) + v2->sx;
 			in[nPoints].sy = f_bottom;
 			nPoints++;
-		}
-		else
-		{
+		} else {
 			in[nPoints].sx = v2->sx;
 			in[nPoints].sy = v2->sy;
 			in[nPoints].sz = v2->sz;
@@ -473,7 +450,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 		}
 	}
 
-	if (nPoints < 3)
+	if(nPoints < 3)
 		nPoints = 0;
 
 	return nPoints;

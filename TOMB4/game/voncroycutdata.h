@@ -1,9 +1,8 @@
-#ifndef VONCROYCUTDATA_INCLUDED
-#define VONCROYCUTDATA_INCLUDED
-struct VonCroyCutData
-{
+#ifndef TOMB4_GAME_VONCROYCUTDATA_H
+#define TOMB4_GAME_VONCROYCUTDATA_H
+struct VonCroyCutData {
 	PHD_VECTOR CameraPos;
 	PHD_VECTOR CameraTarget;
 	long f;
 };
-#endif
+#endif // TOMB4_GAME_VONCROYCUTDATA_H

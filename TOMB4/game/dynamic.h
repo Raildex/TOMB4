@@ -1,7 +1,6 @@
 #ifndef DYNAMIC_INCLUDED
 #define DYNAMIC_INCLUDED
-struct DYNAMIC
-{
+struct DYNAMIC {
 	long x;
 	long y;
 	long z;

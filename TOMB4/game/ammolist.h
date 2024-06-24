@@ -1,9 +1,8 @@
-#ifndef AMMOLIST_INCLUDED
-#define AMMOLIST_INCLUDED
-struct AMMOLIST
-{
+#ifndef TOMB4_GAME_AMMOLIST_H
+#define TOMB4_GAME_AMMOLIST_H
+struct AMMOLIST {
 	short invitem;
 	short amount;
 	unsigned short yrot;
 };
-#endif
+#endif // TOMB4_GAME_AMMOLIST_H

@@ -1,7 +1,6 @@
 #ifndef SHOCKWAVE_STRUCT_INCLUDED
 #define SHOCKWAVE_STRUCT_INCLUDED
-struct SHOCKWAVE_STRUCT
-{
+struct SHOCKWAVE_STRUCT {
 	long x;
 	long y;
 	long z;

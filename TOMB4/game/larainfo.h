@@ -6,9 +6,8 @@
 struct CREATURE_INFO;
 struct FX_INFO;
 struct ITEM_INFO;
-#pragma pack(push,1)
-struct LARA_INFO
-{
+#pragma pack(push, 1)
+struct LARA_INFO {
 	short item_number;
 	short gun_status;
 	short gun_type;
@@ -135,4 +134,4 @@ struct LARA_INFO
 	char locationPad;
 };
 #pragma pack(pop)
-#endif// TOMB4_GAME_LARAINFO_H
+#endif // TOMB4_GAME_LARAINFO_H
