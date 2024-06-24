@@ -497,3 +497,22 @@ long GetNumRooms(LEVEL_INFO* lvl) {
 ANIM_STRUCT* GetAnim(LEVEL_INFO* lvl, long anim) {
 	return lvl->anims + anim;
 }
+
+CHANGE_STRUCT* GetAnimChange(LEVEL_INFO* lvl, long index) {
+	return lvl->changes + index;
+}
+RANGE_STRUCT* GetAnimRange(LEVEL_INFO* lvl,long index) {
+	return lvl->ranges + index;
+}
+
+short* GetAnimFrames(LEVEL_INFO* lvl, long offset) {
+	return lvl->frames + offset;
+}
+
+short* GetAnimFrameBase(LEVEL_INFO* lvl) {
+	return lvl->frames;
+}
+
+short* GetAnimCommand(LEVEL_INFO* lvl, long index) {
+	return lvl->commands + index;
+}

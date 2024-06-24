@@ -39,12 +39,8 @@ extern THREAD LevelLoadingThread;
 extern TEXTURESTRUCT* AnimatingWaterfalls[3];
 extern long AnimatingWaterfallsV[3];
 
-extern CHANGE_STRUCT* changes;
-extern RANGE_STRUCT* ranges;
 extern AIOBJECT* AIObjects;
 extern short* aranges;
-extern short* frames;
-extern short* commands;
 extern long nAnimUVRanges;
 extern long number_cameras;
 extern short nAIObjects;

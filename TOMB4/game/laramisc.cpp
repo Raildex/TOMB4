@@ -199,7 +199,7 @@ void AnimateLara(ITEM_INFO* item) {
 
 	if(item->frame_number > anim->frame_end) {
 		if(anim->number_commands > 0) {
-			cmd = &commands[anim->command_index];
+			cmd = GetAnimCommand(currentLevel,anim->command_index);
 
 			for(int i = anim->number_commands; i > 0; i--) {
 				switch(*cmd++) {
@@ -244,7 +244,7 @@ void AnimateLara(ITEM_INFO* item) {
 	}
 
 	if(anim->number_commands > 0) {
-		cmd = &commands[anim->command_index];
+		cmd = GetAnimCommand(currentLevel,anim->command_index);
 
 		for(int i = anim->number_commands; i > 0; i--) {
 			switch(*cmd++) {

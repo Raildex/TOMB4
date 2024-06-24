@@ -1691,11 +1691,11 @@ long GetChange(ITEM_INFO* item, ANIM_STRUCT* anim) {
 	if(item->current_anim_state == item->goal_anim_state || anim->number_changes <= 0)
 		return 0;
 
-	change = &changes[anim->change_index];
+	change = GetAnimChange(currentLevel,anim->change_index);
 
 	for(int i = 0; i < anim->number_changes; i++, change++) {
 		if(change->goal_anim_state == item->goal_anim_state && change->number_ranges > 0) {
-			range = &ranges[change->range_index];
+			range = GetAnimRange(currentLevel,change->range_index);
 
 			for(int j = 0; j < change->number_ranges; j++, range++) {
 				if(item->frame_number >= range->start_frame && item->frame_number <= range->end_frame) {
@@ -2442,7 +2442,7 @@ void AnimateItem(ITEM_INFO* item) {
 
 	if(item->frame_number > anim->frame_end) {
 		if(anim->number_commands > 0) {
-			cmd = &commands[anim->command_index];
+			cmd = GetAnimCommand(currentLevel,anim->command_index);
 
 			for(int i = anim->number_commands; i > 0; i--) {
 				switch(*cmd++) {
@@ -2488,7 +2488,7 @@ void AnimateItem(ITEM_INFO* item) {
 	}
 
 	if(anim->number_commands > 0) {
-		cmd = &commands[anim->command_index];
+		cmd = GetAnimCommand(currentLevel,anim->command_index);
 
 		for(int i = anim->number_commands; i > 0; i--) {
 			switch(*cmd++) {

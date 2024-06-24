@@ -67,12 +67,8 @@ THREAD LevelLoadingThread;
 TEXTURESTRUCT* AnimatingWaterfalls[3];
 long AnimatingWaterfallsV[3];
 
-CHANGE_STRUCT* changes;
-RANGE_STRUCT* ranges;
 AIOBJECT* AIObjects;
 short* aranges;
-short* frames;
-short* commands;
 long nAnimUVRanges;
 long number_cameras;
 short nAIObjects;

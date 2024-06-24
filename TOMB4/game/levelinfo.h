@@ -1,7 +1,9 @@
 #ifndef TOMB4_GAME_LEVELINFO_H
 #define TOMB4_GAME_LEVELINFO_H
 
-#include "roominfo.h"
+struct ROOM_INFO;
+struct CHANGE_STRUCT;
+struct RANGE_STRUCT;
 struct LEVEL_INFO;
 struct OBJECT_INFO;
 struct ANIM_STRUCT;
@@ -27,5 +29,10 @@ ROOM_INFO* GetRoom(LEVEL_INFO* lvl, long room);
 long GetNumRooms(LEVEL_INFO* lvl);
 short* GetFloorData(LEVEL_INFO* lvl, long index);
 bool LoadRooms(char** FileData, LEVEL_INFO* lvl);
+CHANGE_STRUCT* GetAnimChange(LEVEL_INFO* lvl, long index);
+RANGE_STRUCT* GetAnimRange(LEVEL_INFO* lvl,long index);
+short* GetAnimCommand(LEVEL_INFO* lvl, long index);
+short* GetAnimFrameBase(LEVEL_INFO* lvl);
+short* GetAnimFrames(LEVEL_INFO* lvl, long offset);
 extern LEVEL_INFO* currentLevel;
 #endif// TOMB4_GAME_LEVELINFO_H

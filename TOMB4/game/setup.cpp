@@ -1884,7 +1884,7 @@ void InitialiseObjects() {
 		obj->hit_points = -16384;
 		obj->explodable_meshbits = 0;
 		obj->draw_routine_extra = 0;
-		obj->frame_base = (short*)((long)obj->frame_base + (char*)frames);
+		obj->frame_base = (short*)((long)obj->frame_base + (char*)GetAnimFrameBase(currentLevel));
 		obj->object_mip = 0;
 	}
 
