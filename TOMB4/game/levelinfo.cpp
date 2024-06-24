@@ -7,6 +7,7 @@
 #include "dxshell.h"
 #include "effect2.h"
 #include "function_stubs.h"
+#include "fxinfo.h"
 #include "laraskin.h"
 #include "meshdata.h"
 #include "objectinfo.h"
@@ -37,12 +38,14 @@ struct LEVEL_INFO {
 	short* commands;
 	long* bones;
 	short* frames;
+	FX_INFO* effects;
 };
 
 LEVEL_INFO* CreateLevel() {
-	LEVEL_INFO* lvl = (LEVEL_INFO*)malloc(sizeof(LEVEL_INFO));
+	LEVEL_INFO* lvl = (LEVEL_INFO*)calloc(1,sizeof(LEVEL_INFO));
 	lvl->objects = (OBJECT_INFO*)calloc(NUMBER_OBJECTS,sizeof(OBJECT_INFO));
 	lvl->statics = (STATIC_INFO*)calloc(NUMBER_STATIC_OBJECTS, sizeof(STATIC_INFO));
+	lvl->effects = (FX_INFO*)calloc(128, sizeof(FX_INFO));
 	return lvl;
 }
 
@@ -519,4 +522,8 @@ short* GetAnimCommand(LEVEL_INFO* lvl, long index) {
 
 long* GetBone(LEVEL_INFO* lvl, long index) {
 	return lvl->bones + index;
+}
+
+FX_INFO* GetEffect(LEVEL_INFO* lvl, long fx) {
+	return lvl->effects + fx;
 }

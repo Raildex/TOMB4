@@ -37,8 +37,8 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - effects[fx_number].pos.x_pos;
-	dz = lara_item->pos.z_pos - effects[fx_number].pos.z_pos;
+	dx = lara_item->pos.x_pos - GetEffect(currentLevel,fx_number)->pos.x_pos;
+	dz = lara_item->pos.z_pos - GetEffect(currentLevel,fx_number)->pos.z_pos;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -75,7 +75,7 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv) {
 	sptr->MaxYvel = 0;
 	sptr->FxObj = (unsigned char)fx_number;
 
-	if(effects[fx_number].flag1 == 1)
+	if(GetEffect(currentLevel,fx_number)->flag1 == 1)
 		sptr->Scalar = 3;
 	else
 		sptr->Scalar = 2;
@@ -92,7 +92,7 @@ void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type) {
 	fx_number = CreateEffect(room_number);
 
 	if(fx_number != NO_ITEM) {
-		fx = &effects[fx_number];
+		fx = GetEffect(currentLevel,fx_number);
 		fx->pos.x_pos = pos->x_pos;
 		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
 		fx->pos.z_pos = pos->z_pos;

@@ -273,17 +273,14 @@ void ItemNewRoom(short item_num, short room_num) {
 	GetRoom(currentLevel,room_num)->item_number = item_num;
 }
 
-void InitialiseFXArray(long allocmem) {
+void InitialiseFXArray() {
 	FX_INFO* fx;
-
-	if(allocmem)
-		effects = (FX_INFO*)game_malloc(sizeof(FX_INFO) * 24);
 
 	next_fx_active = NO_ITEM;
 	next_fx_free = 0;
-	fx = effects;
+	fx = GetEffect(currentLevel, 0);
 
-	for(int i = 1; i < 24; i++) {
+	for(int i = 1; i < 128; i++) {
 		fx->next_fx = i;
 		fx++;
 	}
@@ -299,7 +296,7 @@ short CreateEffect(short room_num) {
 	fx_num = next_fx_free;
 
 	if(fx_num != NO_ITEM) {
-		fx = &effects[fx_num];
+		fx = GetEffect(currentLevel,fx_num);
 		next_fx_free = fx->next_fx;
 		r = GetRoom(currentLevel,room_num);
 		fx->room_number = room_num;
@@ -324,14 +321,14 @@ void KillEffect(short fx_num) {
 	}
 
 	DetatchSpark(fx_num, 64);
-	fx = &effects[fx_num];
+	fx = GetEffect(currentLevel,fx_num);
 
 	if(next_fx_active == fx_num)
 		next_fx_active = fx->next_active;
 	else {
-		for(linknum = next_fx_active; linknum != NO_ITEM; linknum = effects[linknum].next_active) {
-			if(effects[linknum].next_active == fx_num) {
-				effects[linknum].next_active = fx->next_active;
+		for(linknum = next_fx_active; linknum != NO_ITEM; linknum = GetEffect(currentLevel,linknum)->next_active) {
+			if(GetEffect(currentLevel,linknum)->next_active == fx_num) {
+				GetEffect(currentLevel,linknum)->next_active = fx->next_active;
 				break;
 			}
 		}
@@ -342,9 +339,9 @@ void KillEffect(short fx_num) {
 	if(linknum == fx_num)
 		GetRoom(currentLevel,fx->room_number)->fx_number = fx->next_fx;
 	else {
-		for(; linknum != NO_ITEM; linknum = effects[linknum].next_fx) {
-			if(effects[linknum].next_fx == fx_num) {
-				effects[linknum].next_fx = fx->next_fx;
+		for(; linknum != NO_ITEM; linknum = GetEffect(currentLevel,linknum)->next_fx) {
+			if(GetEffect(currentLevel,linknum)->next_fx == fx_num) {
+				GetEffect(currentLevel,linknum)->next_fx = fx->next_fx;
 				break;
 			}
 		}
@@ -366,15 +363,15 @@ void EffectNewRoom(short fx_num, short room_num) {
 		return;
 	}
 
-	fx = &effects[fx_num];
+	fx = GetEffect(currentLevel,fx_num);
 	r = GetRoom(currentLevel,fx->room_number);
 
 	if(r->fx_number == fx_num)
 		r->fx_number = fx->next_fx;
 	else {
-		for(linknum = r->fx_number; linknum != NO_ITEM; linknum = effects[linknum].next_fx) {
-			if(effects[linknum].next_fx == fx_num) {
-				effects[linknum].next_fx = fx->next_fx;
+		for(linknum = r->fx_number; linknum != NO_ITEM; linknum = GetEffect(currentLevel,linknum)->next_fx) {
+			if(GetEffect(currentLevel,linknum)->next_fx == fx_num) {
+				GetEffect(currentLevel,linknum)->next_fx = fx->next_fx;
 				break;
 			}
 		}

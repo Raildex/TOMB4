@@ -1370,7 +1370,7 @@ void FlameControl(short fx_number) {
 		return;
 	}
 
-	fx = &effects[fx_number];
+	fx = GetEffect(currentLevel,fx_number);
 
 	for(int i = 14; i > 0; i--) {
 		if(!(wibble & 0xC)) {
@@ -1483,7 +1483,7 @@ void LaraBurn() {
 		fx_number = CreateEffect(lara_item->room_number);
 
 		if(fx_number != NO_ITEM) {
-			effects[fx_number].object_number = FLAME;
+			GetEffect(currentLevel,fx_number)->object_number = FLAME;
 			lara.burn = 1;
 		}
 	}

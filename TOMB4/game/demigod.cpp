@@ -44,7 +44,7 @@ void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type) {
 	fx_number = CreateEffect(room_number);
 
 	if(fx_number != NO_ITEM) {
-		fx = &effects[fx_number];
+		fx = GetEffect(currentLevel,fx_number);
 		fx->pos.x_pos = pos->x_pos;
 		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
 		fx->pos.z_pos = pos->z_pos;
@@ -75,7 +75,7 @@ void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	fx = &effects[fx_number];
+	fx = GetEffect(currentLevel,fx_number);
 	dx = lara_item->pos.x_pos - fx->pos.x_pos;
 	dz = lara_item->pos.z_pos - fx->pos.z_pos;
 

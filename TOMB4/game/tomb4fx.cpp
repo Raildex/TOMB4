@@ -173,7 +173,7 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 			fx_number = CreateEffect(item->room_number);
 
 			if(fx_number != NO_ITEM) {
-				fx = &effects[fx_number];
+				fx = GetEffect(currentLevel,fx_number);
 				fx->pos.x_pos = item->pos.x_pos + (long)mMXPtr[M03];
 				fx->pos.y_pos = item->pos.y_pos + (long)mMXPtr[M13];
 				fx->pos.z_pos = item->pos.z_pos + (long)mMXPtr[M23];
@@ -240,7 +240,7 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 			fx_number = CreateEffect(item->room_number);
 
 			if(fx_number != NO_ITEM) {
-				fx = &effects[fx_number];
+				fx = GetEffect(currentLevel,fx_number);
 				fx->pos.x_pos = item->pos.x_pos + (long)mMXPtr[M03];
 				fx->pos.y_pos = item->pos.y_pos + (long)mMXPtr[M13];
 				fx->pos.z_pos = item->pos.z_pos + (long)mMXPtr[M23];
@@ -1894,7 +1894,7 @@ void S_DrawSparks() {
 			continue;
 
 		if(sptr->Flags & 0x40) {
-			fx = &effects[sptr->FxObj];
+			fx = GetEffect(currentLevel,sptr->FxObj);
 			x = sptr->x + fx->pos.x_pos;
 			y = sptr->y + fx->pos.y_pos;
 			z = sptr->z + fx->pos.z_pos;

@@ -34,7 +34,7 @@ void ControlBodyPart(short fx_number) {
 	long height, ceiling, ox, oy, oz;
 	short room_number;
 
-	fx = &effects[fx_number];
+	fx = GetEffect(currentLevel,fx_number);
 	ox = fx->pos.x_pos;
 	oz = fx->pos.z_pos;
 	oy = fx->pos.y_pos;

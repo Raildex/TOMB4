@@ -446,7 +446,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 
 	S_LoadLevelFile(Name);
 	SetFogColor(gfFog.r, gfFog.g, gfFog.b);
-	InitialiseFXArray(1);
+	InitialiseFXArray();
 	InitialiseLOTarray(1);
 	ClearFXFogBulbs();
 	InitSpotCamSequences();
@@ -823,7 +823,7 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 	GLOBAL_lastinvitem = -1;
 	InitSpotCamSequences();
 	title_controls_locked_out = 0;
-	InitialiseFXArray(1);
+	InitialiseFXArray();
 	InitialiseLOTarray(1);
 	SetFogColor(gfFog.r, gfFog.g, gfFog.b);
 	ClearFXFogBulbs();

@@ -529,7 +529,7 @@ void ControlEnemyMissile(short fx_number) {
 	short room_number, max_speed, max_turn;
 	short angles[2];
 
-	fx = &effects[fx_number];
+	fx = GetEffect(currentLevel,fx_number);
 	phd_GetVectorAngles(lara_item->pos.x_pos - fx->pos.x_pos, lara_item->pos.y_pos - fx->pos.y_pos - 256, lara_item->pos.z_pos - fx->pos.z_pos, angles);
 
 	if(fx->flag1 == 1) {
@@ -956,7 +956,7 @@ void DetatchSpark(long num, long type) {
 
 		if(sptr->On && (sptr->Flags & type) && sptr->FxObj == num) {
 			if(type == 64) {
-				fx = &effects[num];
+				fx = GetEffect(currentLevel,num);
 				sptr->x += fx->pos.x_pos;
 				sptr->y += fx->pos.y_pos;
 				sptr->z += fx->pos.z_pos;

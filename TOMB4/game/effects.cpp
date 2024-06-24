@@ -39,7 +39,6 @@
 #include "laragunstatus.h"
 #include "levelinfo.h"
 
-FX_INFO* effects;
 OBJECT_VECTOR* sound_effects;
 long GlobalFogOff = 0;
 long number_sound_effects;

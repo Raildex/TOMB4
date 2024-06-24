@@ -371,7 +371,7 @@ long ControlPhase(long nframes, long demo_mode) {
 		fx_num = next_fx_active;
 
 		while(fx_num != -1) {
-			fx = &effects[fx_num];
+			fx = GetEffect(currentLevel,fx_num);
 			nex = fx->next_active;
 
 			if(GetObjectInfo(currentLevel,fx->object_number)->control)

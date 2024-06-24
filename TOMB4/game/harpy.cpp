@@ -34,8 +34,8 @@ void TriggerHarpyMissileFlame(short fx_number, long xv, long yv, long zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - effects[fx_number].pos.x_pos;
-	dz = lara_item->pos.z_pos - effects[fx_number].pos.z_pos;
+	dx = lara_item->pos.x_pos - GetEffect(currentLevel,fx_number)->pos.x_pos;
+	dz = lara_item->pos.z_pos - GetEffect(currentLevel,fx_number)->pos.z_pos;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -84,7 +84,7 @@ void TriggerHarpyMissile(PHD_3DPOS* pos, short room_number, short mesh) {
 	fx_num = CreateEffect(room_number);
 
 	if(fx_num != NO_ITEM) {
-		fx = &effects[fx_num];
+		fx = GetEffect(currentLevel,fx_num);
 		fx->pos.x_pos = pos->x_pos;
 		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
 		fx->pos.z_pos = pos->z_pos;

@@ -35,5 +35,7 @@ RANGE_STRUCT* GetAnimRange(LEVEL_INFO* lvl,long index);
 short* GetAnimCommand(LEVEL_INFO* lvl, long index);
 short* GetAnimFrameBase(LEVEL_INFO* lvl);
 short* GetAnimFrames(LEVEL_INFO* lvl, long offset);
+
+FX_INFO* GetEffect(LEVEL_INFO* lvl, long fx);
 extern LEVEL_INFO* currentLevel;
 #endif// TOMB4_GAME_LEVELINFO_H

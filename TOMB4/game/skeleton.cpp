@@ -48,7 +48,7 @@ void TriggerRiseEffect(ITEM_INFO* item) {
 	if(fx_number == NO_ITEM)
 		return;
 
-	fx = &effects[fx_number];
+	fx = GetEffect(currentLevel,fx_number);
 
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);

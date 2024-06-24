@@ -1104,7 +1104,7 @@ void DrawEffect(short fx_num) {
 	OBJECT_INFO* obj;
 	short* meshp;
 
-	fx = &effects[fx_num];
+	fx = GetEffect(currentLevel,fx_num);
 	obj = GetObjectInfo(currentLevel,fx->object_number);
 
 	if(obj->draw_routine && obj->loaded) {
@@ -1209,7 +1209,7 @@ void PrintObjects(short room_number) {
 	nPolyType = 3;
 
 	for(fx_number = r->fx_number; fx_number != NO_ITEM; fx_number = fx->next_fx) {
-		fx = &effects[fx_number];
+		fx = GetEffect(currentLevel,fx_number);
 		DrawEffect(fx_number);
 	}
 
