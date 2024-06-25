@@ -157,7 +157,7 @@ unsigned int __stdcall LoadLevel(void* name) {
 		S_LoadBar();
 
 		if(acm_ready && !App.SoundDisabled)
-			LoadSamples(level_fp, &FileData);
+			LoadSamples(level_fp, &FileData, currentLevel);
 
 		free(pData);
 		S_LoadBar();
@@ -739,57 +739,7 @@ bool LoadAIInfo(char** FileData) {
 	return 1;
 }
 
-bool LoadSamples(FILE* level_fp, char** FileData) {
-	long num_samples, uncomp_size, comp_size;
-	static long num_sample_infos;
 
-	Log(2, "LoadSamples");
-	sample_lut = (short*)game_malloc(MAX_SAMPLES * sizeof(short));
-	memcpy(sample_lut, *FileData, MAX_SAMPLES * sizeof(short));
-	*FileData += MAX_SAMPLES * sizeof(short);
-	num_sample_infos = *(long*)*FileData;
-	*FileData += sizeof(long);
-	Log(8, "Number Of Sample Infos %d", num_sample_infos);
-
-	if(!num_sample_infos) {
-		Log(1, "No Sample Infos");
-		return 0;
-	}
-
-	sample_infos = (SAMPLE_INFO*)game_malloc(sizeof(SAMPLE_INFO) * num_sample_infos);
-	memcpy(sample_infos, *FileData, sizeof(SAMPLE_INFO) * num_sample_infos);
-	*FileData += sizeof(SAMPLE_INFO) * num_sample_infos;
-	num_samples = *(long*)*FileData;
-	*FileData += sizeof(long);
-
-	if(!num_samples) {
-		Log(1, "No Samples");
-		return 0;
-	}
-
-	Log(8, "Number Of Samples %d", num_samples);
-	fread(&num_samples, 1, 4, level_fp);
-	InitSampleDecompress();
-
-	if(num_samples <= 0) {
-		FreeSampleDecompress();
-		return 1;
-	}
-
-	for(int i = 0; i < num_samples; i++) {
-		fread(&uncomp_size, 1, 4, level_fp);
-		fread(&comp_size, 1, 4, level_fp);
-		fread(samples_buffer, comp_size, 1, level_fp);
-
-		if(!DXCreateSampleADPCM(samples_buffer, comp_size, uncomp_size, i)) {
-			FreeSampleDecompress();
-			return 0;
-		}
-	}
-
-	FreeSampleDecompress();
-	return 1;
-}
 
 void S_GetUVRotateTextures() {
 	TEXTURESTRUCT* tex;

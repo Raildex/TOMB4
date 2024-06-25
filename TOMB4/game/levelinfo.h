@@ -12,6 +12,8 @@ struct STATIC_INFO;
 struct MESH_INFO;
 struct ITEM_INFO;
 struct BOX_INFO;
+struct SAMPLE_BUFFER;
+struct SAMPLE_INFO;
 LEVEL_INFO* CreateLevel();
 void LoadLevel(LEVEL_INFO* lvl, char* file);
 void DestroyLevel(LEVEL_INFO* lvl);
@@ -43,5 +45,8 @@ unsigned short* GetOverlap(LEVEL_INFO* lvl,long overlap);
 FX_INFO* GetEffect(LEVEL_INFO* lvl, long fx);
 long GetItemNum(LEVEL_INFO* lvl, ITEM_INFO* i);
 long GetNumBoxes(LEVEL_INFO* lvl);
+SAMPLE_BUFFER* GetSampleBuffer(LEVEL_INFO* lvl, long num);
+SAMPLE_INFO* GetSampleInfo(LEVEL_INFO* lvl, long num);
+short* GetSampleLookup(LEVEL_INFO* lvl, long num);
 extern LEVEL_INFO* currentLevel;
 #endif// TOMB4_GAME_LEVELINFO_H

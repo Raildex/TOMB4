@@ -9,9 +9,11 @@
 #include "dxinfo.h"
 #include "dxdirectsoundinfo.h"
 #include <MSAcm.h>
+#include <cstring>
 #include <xaudio2.h>
 #include <xaudio2fx.h>
-
+#include "samplebuffer.h"
+#include "xaudio2redist.h"
 #pragma warning(push)
 #pragma warning(disable : 4838)
 #pragma warning(disable : 4309)
@@ -21,18 +23,13 @@ static unsigned char source_pcm_format[50] = {
 };
 #pragma warning(pop)
 
-char* samples_buffer;
-
 static LPDIRECTSOUNDBUFFER DSPrimary;
 static IXAudio2MasteringVoice* XAMaster;
 static IUnknown* XAEffect;
 static IXAudio2SourceVoice* XA_Voices[32];
-static XAUDIO2_BUFFER XA_Buffers[256];
 static MMRESULT mmresult;
 static WAVEFORMATEX pcm_format;
-static HACMSTREAM hACMStream;
-static ACMSTREAMHEADER ACMStreamHeader;
-static char* decompressed_samples_buffer;
+
 
 static XAUDIO2FX_REVERB_I3DL2_PARAMETERS reverb_preset[4] = {
 	{ 50.0F, -1000, -500, 0.0F, 2.31F, 0.64F, -711, 0.012F, -800, 0.017F, 100.0F, 100.0F, 5000.0F }, // Small Room
@@ -82,7 +79,7 @@ void DSAdjustPitch(long num, long pitch) {
 	unsigned long frequency;
 
 	if(XA_Voices[num]) {
-		frequency = unsigned long((float)pitch / 65536.0F * 22050.0F);
+		frequency = (unsigned long)((float)pitch / 65536.0F * 22050.0F);
 
 		if(frequency < 100)
 			frequency = 100;
@@ -172,52 +169,41 @@ bool DXDSCreate() {
 	return 1;
 }
 
-bool InitSampleDecompress() {
+bool S_ConvertSamples(unsigned char* data, long comp_size, long uncomp_size, long num, SAMPLE_BUFFER* buffers) {
+	HACMSTREAM hACMStream;
+	ACMSTREAMHEADER ACMStreamHeader;
 	mmresult = acmStreamOpen(&hACMStream, hACMDriver, (LPWAVEFORMATEX)source_pcm_format, &pcm_format, 0, 0, 0, 0);
-
 	if(mmresult != DS_OK)
 		Log(1, "Stream Open %d", mmresult);
 
-	decompressed_samples_buffer = (char*)malloc(0x40000);
-	samples_buffer = (char*)malloc(0x4005A);
+	char* decompressed_samples_buffer = (char*)calloc(0xF0000,1);
+	char* samples_buffer = (char*)calloc(0xF005A,1);
+	memcpy(samples_buffer, data, comp_size);
 	memset(&ACMStreamHeader, 0, sizeof(ACMStreamHeader));
 	ACMStreamHeader.pbSrc = (unsigned char*)(samples_buffer + 90);
 	ACMStreamHeader.cbStruct = 84;
-	ACMStreamHeader.cbSrcLength = 0x40000;
-	ACMStreamHeader.cbDstLength = 0x40000;
+	ACMStreamHeader.cbSrcLength = 0xF0000;
+	ACMStreamHeader.cbDstLength = 0xF0000;
 	ACMStreamHeader.pbDst = (unsigned char*)decompressed_samples_buffer;
 	mmresult = acmStreamPrepareHeader(hACMStream, &ACMStreamHeader, 0);
 
-	if(mmresult != DS_OK)
+	if(mmresult != DS_OK) {
 		Log(1, "Prepare Stream %d", mmresult);
-
-	return 1;
-}
-
-bool FreeSampleDecompress() {
-	ACMStreamHeader.cbSrcLength = 0x40000;
-	mmresult = acmStreamUnprepareHeader(hACMStream, &ACMStreamHeader, 0);
-
-	if(mmresult != DS_OK)
-		Log(1, "UnPrepare Stream %d", mmresult);
-
-	mmresult = acmStreamClose(hACMStream, 0);
-
-	if(mmresult != DS_OK)
-		Log(1, "Stream Close %d", mmresult);
-
-	free(decompressed_samples_buffer);
-	free(samples_buffer);
-	return 1;
-}
-
-bool DXCreateSampleADPCM(char* data, long comp_size, long uncomp_size, long num) {
+		acmStreamClose(hACMStream, 0);
+		free(decompressed_samples_buffer);
+		free(samples_buffer);
+		return 0;
+	}
 	LPWAVEFORMATEX format;
 
 	Log(8, "DXCreateSampleADPCM");
 
-	if(!App.dx.lpDS)
+	if(!App.dx.lpDS) {
+		acmStreamClose(hACMStream,0);
+		free(decompressed_samples_buffer);
+		free(samples_buffer);
 		return 0;
+	}
 
 	format = (LPWAVEFORMATEX)(data + 20);
 
@@ -230,9 +216,23 @@ bool DXCreateSampleADPCM(char* data, long comp_size, long uncomp_size, long num)
 	if(mmresult != DS_OK)
 		Log(1, "Stream Convert %d", mmresult);
 
-	XA_Buffers[num].pAudioData = (BYTE*)malloc(uncomp_size - 32);
-	memcpy((void*)XA_Buffers[num].pAudioData, decompressed_samples_buffer, uncomp_size - 32);
-	XA_Buffers[num].AudioBytes = uncomp_size - 32;
+	buffers[num].data = (BYTE*)calloc(uncomp_size,1);
+	memcpy((void*)buffers[num].data, decompressed_samples_buffer, uncomp_size - 32);
+	buffers[num].dataSize = uncomp_size - 32;
+	ACMStreamHeader.cbSrcLength = 0xF0000;
+	mmresult = acmStreamUnprepareHeader(hACMStream, &ACMStreamHeader, 0);
+
+	if(mmresult != DS_OK) {
+		Log(1, "UnPrepare Stream %d", mmresult);
+	}
+
+	mmresult = acmStreamClose(hACMStream, 0);
+	if(mmresult != DS_OK) {
+		Log(1, "Stream Close %d", mmresult);
+	}
+
+	free(decompressed_samples_buffer);
+	free(samples_buffer);
 	return 1;
 }
 
@@ -265,7 +265,7 @@ long DSGetFreeChannel() {
 	return -1;
 }
 
-long DXStartSample(long num, long volume, long pitch, long pan, unsigned long flags) {
+long S_StartSample(SAMPLE_BUFFER* data, long volume, long pitch, long pan, unsigned long flags) {
 	IXAudio2SourceVoice* voice;
 	XAUDIO2_BUFFER* buffer;
 	long channel;
@@ -279,7 +279,11 @@ long DXStartSample(long num, long volume, long pitch, long pan, unsigned long fl
 	DSChangeVolume(channel, volume);
 	DSAdjustPitch(channel, pitch);
 	DSAdjustPan(channel, pan);
-	buffer = &XA_Buffers[num];
+	XAUDIO2_BUFFER buf;
+	memset(&buf,0,sizeof(buf));
+	buf.AudioBytes = data->dataSize;
+	buf.pAudioData = data->data;
+	buffer = &buf;
 	buffer->LoopCount = flags;
 	DXAttempt(voice->SubmitSourceBuffer(buffer, 0));
 	DXAttempt(voice->Start(0, XAUDIO2_COMMIT_NOW));
@@ -316,23 +320,16 @@ void S_SoundStopSample(long num) {
 	DXStopSample(num);
 }
 
-long S_SoundPlaySample(long num, unsigned short volume, long pitch, short pan) {
-	return DXStartSample(num, CalcVolume(volume), pitch, pan, 0);
+long S_SoundPlaySample(SAMPLE_BUFFER* buffer, unsigned short volume, long pitch, short pan) {
+	return S_StartSample(buffer, CalcVolume(volume), pitch, pan, 0);
 }
 
-long S_SoundPlaySampleLooped(long num, unsigned short volume, long pitch, short pan) {
-	return DXStartSample(num, CalcVolume(volume), pitch, pan, XAUDIO2_LOOP_INFINITE);
+long S_SoundPlaySampleLooped(SAMPLE_BUFFER* buffer, unsigned short volume, long pitch, short pan) {
+	return S_StartSample(buffer, CalcVolume(volume), pitch, pan, XAUDIO2_LOOP_INFINITE);
 }
 
 void DXFreeSounds() {
 	S_SoundStopAllSamples();
-
-	for(int i = 0; i < 256; i++) {
-		if(XA_Buffers[i].pAudioData) {
-			free((void*)XA_Buffers[i].pAudioData);
-			XA_Buffers[i].pAudioData = 0;
-		}
-	}
 }
 
 long S_SoundSampleIsPlaying(long num) {

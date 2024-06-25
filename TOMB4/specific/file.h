@@ -28,7 +28,7 @@ bool LoadBoxes(char **data,LEVEL_INFO* lvl);
 bool LoadItems(char** data, LEVEL_INFO* lvl);
 bool LoadCinematic(char** data);
 bool LoadAIInfo(char** data);
-bool LoadSamples(FILE* file, char** data);
+bool LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl);
 void S_GetUVRotateTextures();
 void AdjustUV(long num);
 bool Decompress(char* pDest, char* pCompressed, long compressedSize, long size);

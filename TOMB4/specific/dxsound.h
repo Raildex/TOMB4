@@ -1,24 +1,22 @@
 #pragma once
 
-
+struct SAMPLE_BUFFER;
 bool DXChangeOutputFormat(long nSamplesPerSec, bool force);
 void DSChangeVolume(long num, long volume);
 void DSAdjustPitch(long num, long pitch);
 void DSAdjustPan(long num, long pan);
 bool DXSetOutputFormat();
 bool DXDSCreate();
-bool InitSampleDecompress();
-bool FreeSampleDecompress();
-bool DXCreateSampleADPCM(char* data, long comp_size, long uncomp_size, long num);
+bool S_ConvertSamples(unsigned char* data, long comp_size, long uncomp_size, long num,SAMPLE_BUFFER* buffers);
 void DXStopSample(long num);
 bool DSIsChannelPlaying(long num);
 long DSGetFreeChannel();
-long DXStartSample(long num, long volume, long pitch, long pan, unsigned long flags);
+long S_StartSample(SAMPLE_BUFFER* buffer, long volume, long pitch, long pan, unsigned long flags);
 long CalcVolume(long volume);
 void S_SoundStopAllSamples();
 void S_SoundStopSample(long num);
-long S_SoundPlaySample(long num, unsigned short volume, long pitch, short pan);
-long S_SoundPlaySampleLooped(long num, unsigned short volume, long pitch, short pan);
+long S_SoundPlaySample(SAMPLE_BUFFER* buffer, unsigned short volume, long pitch, short pan);
+long S_SoundPlaySampleLooped(SAMPLE_BUFFER* buffer, unsigned short volume, long pitch, short pan);
 void DXFreeSounds();
 long S_SoundSampleIsPlaying(long num);
 void S_SoundSetPanAndVolume(long num, short pan, unsigned short volume);

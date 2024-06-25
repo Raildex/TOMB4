@@ -19,6 +19,8 @@
 #include "polyinsert.h"
 #include "rangestruct.h"
 #include "roominfo.h"
+#include "samplebuffer.h"
+#include "sampleinfo.h"
 #include "setup.h"
 #include "staticinfo.h"
 #include <cstdlib>
@@ -28,6 +30,8 @@
 #include "types.h"
 #include "winmain.h"
 #include "boxinfo.h"
+#include "dxsound.h"
+
 LEVEL_INFO* currentLevel;
 struct LEVEL_INFO {
 	OBJECT_INFO* objects;
@@ -52,6 +56,11 @@ struct LEVEL_INFO {
 	unsigned short* overlaps;
 	short* ground_zone[5][2];
 	long num_boxes;
+	long num_samples;
+	SAMPLE_BUFFER* sample_buffers;
+	short* sample_lut;
+	long num_sample_infos;
+	SAMPLE_INFO* sample_infos;
 };
 
 LEVEL_INFO* CreateLevel() {
@@ -693,4 +702,68 @@ BOX_INFO* GetBox(LEVEL_INFO* lvl, long box) {
 
 unsigned short* GetOverlap(LEVEL_INFO* lvl, long overlap) {
 	return lvl->overlaps + overlap;
+}
+
+bool LoadSamples(FILE* level_fp, char** FileData,LEVEL_INFO* lvl) {
+	long num_samples, uncomp_size, comp_size;
+	static long num_sample_infos;
+
+	Log(2, "LoadSamples");
+	lvl->sample_lut = (short*)calloc(MAX_SAMPLES, sizeof(short));
+	memcpy(lvl->sample_lut, *FileData, MAX_SAMPLES * sizeof(short));
+	*FileData += MAX_SAMPLES * sizeof(short);
+	num_sample_infos = *(long*)*FileData;
+	*FileData += sizeof(long);
+	Log(8, "Number Of Sample Infos %d", num_sample_infos);
+
+	if(!num_sample_infos) {
+		Log(1, "No Sample Infos");
+		return 0;
+	}
+
+	lvl->sample_infos = (SAMPLE_INFO*)calloc(lvl->num_sample_infos,sizeof(SAMPLE_INFO));
+	memcpy(lvl->sample_infos, *FileData, sizeof(SAMPLE_INFO) * num_sample_infos);
+	*FileData += sizeof(SAMPLE_INFO) * num_sample_infos;
+	num_samples = *(long*)*FileData;
+	*FileData += sizeof(long);
+
+	if(!num_samples) {
+		Log(1, "No Samples");
+		return 0;
+	}
+
+	Log(8, "Number Of Samples %d", num_samples);
+	lvl->sample_buffers = (SAMPLE_BUFFER*)calloc(num_samples,	sizeof(SAMPLE_BUFFER));
+	
+	fread(&num_samples, 1, 4, level_fp);
+
+	if(num_samples <= 0) {
+		return 1;
+	}
+
+	for(int i = 0; i < num_samples; i++) {
+		unsigned char* decompression_buffer = (unsigned char*)calloc(0xF1000,sizeof(unsigned char));
+		fread(&uncomp_size, 1, 4, level_fp);
+		fread(&comp_size, 1, 4, level_fp);
+		fread(decompression_buffer, comp_size, 1, level_fp);
+
+		if(!S_ConvertSamples(decompression_buffer, comp_size, uncomp_size, i,lvl->sample_buffers)) {
+			free(decompression_buffer);
+			return 0;
+		}
+		free(decompression_buffer);
+	}
+	return 1;
+}
+
+SAMPLE_BUFFER* GetSampleBuffer(LEVEL_INFO* lvl, long num) {
+	return lvl->sample_buffers+num;
+}
+
+SAMPLE_INFO* GetSampleInfo(LEVEL_INFO* lvl, long num) {
+	return lvl->sample_infos + num;
+}
+
+short* GetSampleLookup(LEVEL_INFO* lvl, long num) {
+	return lvl->sample_lut + num;
 }

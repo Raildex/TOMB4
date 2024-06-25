@@ -518,7 +518,7 @@ void SoundEffects() {
 		if(slot->nSampleInfo < 0)
 			continue;
 
-		if((sample_infos[slot->nSampleInfo].flags & 3) != 3) {
+		if((GetSampleInfo(currentLevel,slot->nSampleInfo)->flags & 3) != 3) {
 			if(!S_SoundSampleIsPlaying(i))
 				slot->nSampleInfo = -1;
 			else {
