@@ -380,7 +380,7 @@ void HorsemanControl(short item_number) {
 
 			case 15:
 
-				if(lara.target != item || info.bite && info.distance < 0x718E4)
+				if(lara.target_item != item_number || info.bite && info.distance < 0x718E4)
 					item->goal_anim_state = 9;
 
 				break;

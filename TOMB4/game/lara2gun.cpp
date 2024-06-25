@@ -4,6 +4,7 @@
 #include "larafire.h"
 #include "sound.h"
 #include "delstuff.h"
+#include "targettype.h"
 #include "tomb4fx.h"
 #include "../specific/function_stubs.h"
 #include "effect2.h"
@@ -18,6 +19,7 @@
 #include "objectinfo.h"
 #include "animstruct.h"
 #include "laramesh.h"
+#include "types.h"
 #include "weapontypes.h"
 #include "pistoldef.h"
 #include "inputbuttons.h"
@@ -89,7 +91,7 @@ void ready_pistols(long weapon_type) {
 	lara.right_arm.z_rot = 0;
 	lara.right_arm.frame_number = 0;
 	lara.left_arm.frame_number = 0;
-	lara.target = 0;
+	lara.target_item = NO_ITEM;
 	lara.right_arm.lock = 0;
 	lara.left_arm.lock = 0;
 	lara.right_arm.frame_base = GetObjectInfo(currentLevel,WeaponObject(weapon_type))->frame_base;
@@ -184,7 +186,7 @@ void undraw_pistols(long weapon_type) {
 		lara.gun_status = LG_NO_ARMS;
 		lara.left_arm.frame_number = 0;
 		lara.right_arm.frame_number = 0;
-		lara.target = 0;
+		lara.target_item = NO_ITEM;
 		lara.right_arm.lock = 0;
 		lara.left_arm.lock = 0;
 	}
@@ -264,7 +266,7 @@ void AnimatePistols(long weapon_type) {
 	winfo = &weapons[weapon_type];
 	anir = lara.right_arm.frame_number;
 
-	if(lara.right_arm.lock || input & IN_ACTION && !lara.target) {
+	if(lara.right_arm.lock || input & IN_ACTION && lara.target_item == NO_ITEM) {
 		if(lara.right_arm.frame_number >= 0 && lara.right_arm.frame_number < p->Draw1Anim2)
 			anir++;
 		else if(lara.right_arm.frame_number == p->Draw1Anim2) {
@@ -273,7 +275,7 @@ void AnimatePistols(long weapon_type) {
 					angles[0] = lara.right_arm.y_rot + lara_item->pos.y_rot;
 					angles[1] = lara.right_arm.x_rot;
 
-					if(FireWeapon(weapon_type, lara.target, lara_item, angles)) {
+					if(FireWeapon(weapon_type, &items[lara.target_item], lara_item, angles)) {
 						SmokeCountR = 28;
 						SmokeWeapon = weapon_type;
 						TriggerGunShell(1, GUNSHELL, weapon_type);
@@ -320,7 +322,7 @@ void AnimatePistols(long weapon_type) {
 	set_arm_info(&lara.right_arm, anir);
 	anil = lara.left_arm.frame_number;
 
-	if(lara.left_arm.lock || input & IN_ACTION && !lara.target) {
+	if(lara.left_arm.lock || input & IN_ACTION && lara.target_item == NO_ITEM) {
 		if(lara.left_arm.frame_number >= 0 && lara.left_arm.frame_number < p->Draw1Anim2)
 			anil++;
 		else if(lara.left_arm.frame_number == p->Draw1Anim2) {
@@ -328,7 +330,7 @@ void AnimatePistols(long weapon_type) {
 				angles[0] = lara.left_arm.y_rot + lara_item->pos.y_rot;
 				angles[1] = lara.left_arm.x_rot;
 
-				if(FireWeapon(weapon_type, lara.target, lara_item, angles)) {
+				if(FireWeapon(weapon_type, &items[lara.target_item], lara_item, angles)) {
 					if(weapon_type == WEAPON_REVOLVER) {
 						SmokeCountR = 28;
 						SmokeWeapon = WEAPON_REVOLVER;

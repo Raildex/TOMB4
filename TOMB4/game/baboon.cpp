@@ -134,7 +134,7 @@ void BaboonControl(short item_number) {
 				} else if(item->ai_bits & PATROL1)
 					item->goal_anim_state = 2;
 				else if(baboon->mood == ESCAPE_MOOD) {
-					if(lara.target != item && info.ahead)
+					if(lara.target_item != item_number && info.ahead)
 						item->goal_anim_state = 3;
 					else
 						item->goal_anim_state = 4;
@@ -199,7 +199,7 @@ void BaboonControl(short item_number) {
 				if(item->ai_bits & GUARD)
 					item->goal_anim_state = 3;
 				else if(baboon->mood == ESCAPE_MOOD) {
-					if(lara.target != item && info.ahead)
+					if(lara.target_item != item_number && info.ahead)
 						item->goal_anim_state = 3;
 				} else if(item->ai_bits & FOLLOW && (baboon->reached_goal || distance > 4194304))
 					item->goal_anim_state = 3;

@@ -304,7 +304,7 @@ void AhmetControl(short item_number) {
 				item->goal_anim_state = 2;
 				head = 0;
 			} else if(ahmet->mood == BORED_MOOD || ahmet->mood == ESCAPE_MOOD) {
-				if(lara.target != item && info.ahead)
+				if(lara.target_item != item_number && info.ahead)
 					item->goal_anim_state = 1;
 				else
 					item->goal_anim_state = 3;
@@ -340,7 +340,7 @@ void AhmetControl(short item_number) {
 		case 3:
 			ahmet->maximum_turn = 1456;
 
-			if(item->ai_bits & GUARD || ahmet->mood == BORED_MOOD || ahmet->mood == ESCAPE_MOOD && lara.target != item && info.ahead || info.bite && info.distance < 0x190000)
+			if(item->ai_bits & GUARD || ahmet->mood == BORED_MOOD || ahmet->mood == ESCAPE_MOOD && lara.target_item != item_number && info.ahead || info.bite && info.distance < 0x190000)
 				item->goal_anim_state = 1;
 			else if(info.distance < 0x640000 && info.ahead && (info.enemy_facing < -0x4000 || info.enemy_facing > 0x4000))
 				item->goal_anim_state = 2;

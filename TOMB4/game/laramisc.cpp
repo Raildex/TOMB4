@@ -175,7 +175,7 @@ void LaraInitialiseMeshes() {
 	lara.gun_status = LG_NO_ARMS;
 	lara.left_arm.frame_number = 0;
 	lara.right_arm.frame_number = 0;
-	lara.target = 0;
+	lara.target_item = NO_ITEM;
 	lara.right_arm.lock = 0;
 	lara.left_arm.lock = 0;
 }

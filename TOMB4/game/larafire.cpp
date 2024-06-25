@@ -181,8 +181,8 @@ static short HoldStates[] = {
 static PHD_3DPOS bum_view;
 static GAME_VECTOR bum_vdest;
 static GAME_VECTOR bum_vsrc;
-static ITEM_INFO* TargetList[8];
-static ITEM_INFO* LastTargets[8];
+static short TargetList[8] = {NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM};
+static short LastTargets[8] = {NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM};
 
 static long CheckForHoldingState(long state) {
 	short* holds;
@@ -208,7 +208,7 @@ void InitialiseNewWeapon() {
 	lara.right_arm.z_rot = 0;
 	lara.right_arm.y_rot = 0;
 	lara.right_arm.x_rot = 0;
-	lara.target = 0;
+	lara.target_item = NO_ITEM;
 	lara.right_arm.lock = 0;
 	lara.left_arm.lock = 0;
 	lara.right_arm.flash_gun = 0;
@@ -272,7 +272,7 @@ void LaraTargetInfo(WEAPON_INFO* winfo) {
 	GAME_VECTOR src, target;
 	short ang[2];
 
-	if(!lara.target) {
+	if(lara.target_item == NO_ITEM) {
 		lara.right_arm.lock = 0;
 		lara.left_arm.lock = 0;
 		lara.target_angles[1] = 0;
@@ -287,7 +287,7 @@ void LaraTargetInfo(WEAPON_INFO* winfo) {
 	src.x = lara_item->pos.x_pos;
 	src.z = lara_item->pos.z_pos;
 	src.room_number = lara_item->room_number;
-	find_target_point(lara.target, &target);
+	find_target_point(&items[lara.target_item], &target);
 	phd_GetVectorAngles(target.x - src.x, target.y - src.y, target.z - src.z, ang);
 	ang[0] -= lara_item->pos.y_rot;
 	ang[1] -= lara_item->pos.x_rot;
@@ -477,7 +477,7 @@ void AimWeapon(WEAPON_INFO* winfo, LARA_ARM* arm) {
 
 void LaraGetNewTarget(WEAPON_INFO* winfo) {
 	ITEM_INFO* item;
-	ITEM_INFO* bestitem;
+	short bestitem;
 	CREATURE_INFO* creature;
 	GAME_VECTOR src, target;
 	long x, y, z, slot, dist, maxdist, maxdist2, bestdist;
@@ -485,11 +485,11 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 	short bestyrot, targets, match;
 
 	if(BinocularRange) {
-		lara.target = 0;
+		lara.target_item = NO_ITEM;
 		return;
 	}
 
-	bestitem = 0;
+	bestitem = NO_ITEM;
 	src.x = lara_item->pos.x_pos;
 	src.y = lara_item->pos.y_pos - 650;
 	src.z = lara_item->pos.z_pos;
@@ -522,13 +522,13 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 							ang[1] -= (lara.torso_x_rot + lara_item->pos.x_rot);
 
 							if(ang[0] >= winfo->lock_angles[0] && ang[0] <= winfo->lock_angles[1] && ang[1] >= winfo->lock_angles[2] && ang[1] <= winfo->lock_angles[3]) {
-								TargetList[targets] = item;
+								TargetList[targets] = creature->item_num;
 								targets++;
 
 								if(abs(ang[0]) < bestyrot + 2730 && dist < bestdist) {
 									bestdist = dist;
 									bestyrot = abs(ang[0]);
-									bestitem = item;
+									bestitem = creature->item_num;
 								}
 							}
 						}
@@ -538,30 +538,30 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 		}
 	}
 
-	TargetList[targets] = 0;
+	TargetList[targets] = NO_ITEM;
 
 	if(TargetList[0]) {
 		for(slot = 0; slot < 8; slot++) {
-			if(!TargetList[slot])
-				lara.target = 0;
+			if(TargetList[slot] == NO_ITEM)
+				lara.target_item = NO_ITEM;
 
-			if(TargetList[slot] == lara.target)
+			if(TargetList[slot] == lara.target_item)
 				break;
 		}
 
 		if(savegame.AutoTarget || input & IN_TARGET) {
-			if(!lara.target) {
-				lara.target = bestitem;
+			if(lara.target_item == NO_ITEM) {
+				lara.target_item = bestitem;
 				LastTargets[0] = 0;
 			} else if(input & IN_TARGET) {
-				lara.target = 0;
+				lara.target_item = NO_ITEM;
 
 				for(match = 0; match < 8; match++) {
-					if(!TargetList[match])
+					if(TargetList[match] == NO_ITEM)
 						break;
 
 					for(slot = 0; slot < 8; slot++) {
-						if(!LastTargets[slot]) {
+						if(LastTargets[slot] == NO_ITEM) {
 							slot = 8;
 							break;
 						}
@@ -571,25 +571,25 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 					}
 
 					if(slot == 8) {
-						lara.target = TargetList[match];
+						lara.target_item = TargetList[match];
 						break;
 					}
 				}
 
-				if(!lara.target) {
-					lara.target = bestitem;
+				if(lara.target_item == NO_ITEM) {
+					lara.target_item = bestitem;
 					LastTargets[0] = 0;
 				}
 			}
 		}
 	} else
-		lara.target = 0;
+		lara.target_item = NO_ITEM;
 
-	if(lara.target != LastTargets[0]) {
+	if(lara.target_item != LastTargets[0]) {
 		for(slot = 7; slot > 0; slot--)
 			LastTargets[slot] = LastTargets[slot - 1];
 
-		LastTargets[0] = lara.target;
+		LastTargets[0] = lara.target_item;
 	}
 
 	LaraTargetInfo(winfo);

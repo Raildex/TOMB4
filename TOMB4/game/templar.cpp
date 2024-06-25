@@ -96,7 +96,7 @@ void TemplarControl(short item_number) {
 		knight->maximum_turn = 364;
 
 		if(info.distance > 0x718E4) {
-			if(lara.target == item)
+			if(lara.target_item == item_number)
 				item->goal_anim_state = 6;
 			else
 				item->goal_anim_state = 2;
@@ -112,7 +112,7 @@ void TemplarControl(short item_number) {
 	case 2:
 		knight->maximum_turn = 1274;
 
-		if(lara.target == item || info.distance <= 0x718E4)
+		if(lara.target_item == item_number || info.distance <= 0x718E4)
 			item->goal_anim_state = 1;
 
 		break;
@@ -178,7 +178,7 @@ void TemplarControl(short item_number) {
 				item->goal_anim_state = 7;
 			else
 				item->goal_anim_state = 8;
-		} else if(info.distance > 465124 && lara.target == item)
+		} else if(info.distance > 465124 && lara.target_item == item_number)
 			item->goal_anim_state = 6;
 		else
 			item->goal_anim_state = 1;

@@ -54,7 +54,7 @@ struct LARA_INFO {
 	long water_surface_dist;
 	PHD_VECTOR last_pos;
 	short* mesh_ptrs[15];
-	ITEM_INFO* target;
+	short target_item;
 	short target_angles[2];
 	short turn_rate;
 	short move_angle;

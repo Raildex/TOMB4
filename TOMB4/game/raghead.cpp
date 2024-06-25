@@ -312,7 +312,7 @@ void RagheadControl(short item_number) {
 
 		raghead->enemy = enemy;
 
-		if(item == lara.target && larainfo.distance > 0x3AE && larainfo.angle > -0x2800 && larainfo.angle < 0x2800) {
+		if(item_number == lara.target_item && larainfo.distance > 0x3AE && larainfo.angle > -0x2800 && larainfo.angle < 0x2800) {
 			room_number = item->room_number;
 			x = item->pos.x_pos + (942 * phd_sin(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
 			z = item->pos.z_pos + (942 * phd_cos(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
@@ -367,7 +367,7 @@ void RagheadControl(short item_number) {
 			if(item->ai_bits & GUARD) {
 				head = AIGuard(raghead);
 				item->goal_anim_state = 0;
-			} else if(item->meshswap_meshbits == 0x880 && item == lara.target && larainfo.ahead && larainfo.distance > 0x718E4)
+			} else if(item->meshswap_meshbits == 0x880 && item_number == lara.target_item && larainfo.ahead && larainfo.distance > 0x718E4)
 				item->goal_anim_state = 4;
 			else if(Targetable(item, &info) && item->item_flags[2] > 0) {
 				if(item->meshswap_meshbits == 0x7FC010)
@@ -494,7 +494,7 @@ void RagheadControl(short item_number) {
 			raghead->maximum_turn = 0;
 			CreatureYRot(&item->pos, info.angle, 2002);
 
-			if(larainfo.distance < 0x718E4 || item != lara.target)
+			if(larainfo.distance < 0x718E4 || item_number != lara.target_item)
 				item->goal_anim_state = 9;
 
 			break;

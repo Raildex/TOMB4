@@ -151,7 +151,7 @@ void RestoreLaraData(long FullSave) {
 		savegame.Lara.item_number = lara.item_number;
 
 	memcpy(&lara, &savegame.Lara, sizeof(lara));
-	lara.target = 0;
+	lara.target_item = NO_ITEM;
 	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.GeneralPtr = ((long)lara.GeneralPtr + (long)malloc_buffer);

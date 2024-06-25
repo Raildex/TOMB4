@@ -2325,7 +2325,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 		target.z = v.z - ((v.z - src->z) >> 5);
 
 		if(item_no >= 0 && DrawTarget)
-			lara.target = &items[item_no];
+			lara.target_item = item_no;
 
 		if(firing) {
 			if(lara.gun_type != WEAPON_CROSSBOW) {

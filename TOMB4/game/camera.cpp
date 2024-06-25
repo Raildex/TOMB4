@@ -604,7 +604,7 @@ void CombatCamera(ITEM_INFO* item) {
 	camera.target.x = item->pos.x_pos;
 	camera.target.z = item->pos.z_pos;
 
-	if(lara.target) {
+	if(lara.target_item != NO_ITEM) {
 		camera.target_angle = lara.target_angles[0] + item->pos.y_rot;
 		camera.target_elevation = lara.target_angles[1] + item->pos.x_rot;
 	} else {

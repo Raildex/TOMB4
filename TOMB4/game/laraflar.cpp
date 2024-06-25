@@ -239,7 +239,7 @@ void ready_flare() {
 	lara.right_arm.z_rot = 0;
 	lara.right_arm.lock = 0;
 	lara.left_arm.lock = 0;
-	lara.target = 0;
+	lara.target_item = NO_ITEM;
 }
 
 void draw_flare() {
@@ -302,7 +302,7 @@ void undraw_flare() {
 				lara.gun_type = lara.last_gun_type;
 				lara.gun_status = LG_NO_ARMS;
 				InitialiseNewWeapon();
-				lara.target = 0;
+				lara.target_item = NO_ITEM;
 				lara.right_arm.lock = 0;
 				lara.left_arm.lock = 0;
 				lara_item->anim_number = ANIM_STOP;
@@ -345,7 +345,7 @@ void undraw_flare() {
 			lara.gun_status = LG_NO_ARMS;
 			;
 			InitialiseNewWeapon();
-			lara.target = 0;
+			lara.target_item = NO_ITEM;
 			lara.left_arm.lock = 0;
 			lara.right_arm.lock = 0;
 			lara.flare_control_left = 0;

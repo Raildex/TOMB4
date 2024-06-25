@@ -164,7 +164,7 @@ void undraw_shotgun_meshes(long weapon_type) {
 
 void ready_shotgun(long weapon_type) {
 	lara.gun_status = LG_READY;
-	lara.target = 0;
+	lara.target_item = NO_ITEM;
 
 	lara.left_arm.x_rot = 0;
 	lara.left_arm.y_rot = 0;
@@ -207,7 +207,7 @@ void FireShotgun() {
 		dangles[0] = short(angles[0] + scatter * (GetRandomControl() - 0x4000) / 0x10000);
 		dangles[1] = short(angles[1] + scatter * (GetRandomControl() - 0x4000) / 0x10000);
 
-		if(FireWeapon(WEAPON_SHOTGUN, lara.target, lara_item, dangles))
+		if(FireWeapon(WEAPON_SHOTGUN, &items[lara.target_item], lara_item, dangles))
 			fired = 1;
 	}
 
@@ -358,7 +358,7 @@ void AnimateShotgun(long weapon_type) {
 
 		else if(lara.water_status == LW_UNDERWATER)
 			item->goal_anim_state = 6;
-		else if(input & IN_ACTION && !lara.target || lara.left_arm.lock)
+		else if(input & IN_ACTION && lara.target_item == NO_ITEM || lara.left_arm.lock)
 			item->goal_anim_state = 2;
 		else
 			item->goal_anim_state = 4;
@@ -372,7 +372,7 @@ void AnimateShotgun(long weapon_type) {
 
 			if(lara.water_status != 1 && !harpoon_fired) {
 				if(input & IN_ACTION) {
-					if(!lara.target || lara.left_arm.lock) {
+					if(lara.target_item == NO_ITEM || lara.left_arm.lock) {
 						if(weapon_type == WEAPON_GRENADE)
 							FireGrenade();
 						else if(weapon_type == WEAPON_CROSSBOW)
@@ -410,7 +410,7 @@ void AnimateShotgun(long weapon_type) {
 			harpoon_fired = 0;
 		} else if(lara.water_status != LW_UNDERWATER)
 			item->goal_anim_state = 0;
-		else if(input & IN_ACTION && !lara.target || lara.left_arm.lock)
+		else if(input & IN_ACTION && lara.target_item == NO_ITEM || lara.left_arm.lock)
 			item->goal_anim_state = 8;
 		else
 			item->goal_anim_state = 7;
@@ -675,7 +675,7 @@ void undraw_shotgun(long weapon_type) {
 
 	if(item->status == ITEM_DEACTIVATED) {
 		lara.gun_status = LG_NO_ARMS;
-		lara.target = 0;
+		lara.target_item = NO_ITEM;
 		lara.right_arm.lock = 0;
 		lara.left_arm.lock = 0;
 		KillItem(lara.weapon_item);

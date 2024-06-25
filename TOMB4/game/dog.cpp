@@ -135,7 +135,7 @@ void DogControl(short item_number) {
 			dog->maximum_turn = 1092;
 
 			if(dog->mood == ESCAPE_MOOD) {
-				if(lara.target != item && info.ahead)
+				if(lara.target_item != item_number && info.ahead)
 					item->goal_anim_state = 9;
 			} else if(dog->mood == BORED_MOOD)
 				item->goal_anim_state = 9;
@@ -207,7 +207,7 @@ void DogControl(short item_number) {
 				else
 					item->goal_anim_state = 1;
 			} else if(dog->mood == ESCAPE_MOOD) {
-				if(lara.target != item && info.ahead && !item->hit_status)
+				if(lara.target_item != item_number && info.ahead && !item->hit_status)
 					item->goal_anim_state = 1;
 				else {
 					item->required_anim_state = 3;

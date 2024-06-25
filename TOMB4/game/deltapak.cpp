@@ -188,7 +188,7 @@ void handle_cutseq_triggering(long name) {
 					lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,0)->mesh_index + 2 * LM_RHAND);
 					lara.left_arm.frame_number = 0;
 					lara.right_arm.frame_number = 0;
-					lara.target = 0;
+					lara.target_item = NO_ITEM;
 					lara.right_arm.lock = 0;
 					lara.left_arm.lock = 0;
 					lara_item->goal_anim_state = AS_STOP;

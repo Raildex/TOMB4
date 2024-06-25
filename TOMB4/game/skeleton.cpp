@@ -228,7 +228,7 @@ void SkeletonControl(short item_number) {
 
 	skelly->enemy = enemy;
 
-	if(item == lara.target && larainfo.distance > 870 && larainfo.angle > -0x2800 && larainfo.angle < 0x2800) {
+	if(item_number == lara.target_item && larainfo.distance > 870 && larainfo.angle > -0x2800 && larainfo.angle < 0x2800) {
 		room_number = item->room_number;
 		x = item->pos.x_pos + (870 * phd_sin(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
 		z = item->pos.z_pos + (870 * phd_cos(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
@@ -309,7 +309,7 @@ void SkeletonControl(short item_number) {
 				item->current_anim_state = 20;
 				item->goal_anim_state = 20;
 			} else if(skelly->mood == ESCAPE_MOOD) {
-				if(lara.target == item || !info.ahead || item->hit_status || !(item->mesh_bits & 0x200))
+				if(lara.target_item == item_number || !info.ahead || item->hit_status || !(item->mesh_bits & 0x200))
 					item->goal_anim_state = 15;
 				else
 					item->goal_anim_state = 2;
@@ -318,7 +318,7 @@ void SkeletonControl(short item_number) {
 					item->goal_anim_state = item->required_anim_state;
 				else if(!(GetRandomControl() & 0x3F))
 					item->goal_anim_state = 15;
-			} else if(lara.target == item && larainfo.ahead && larainfo.distance < 0x400000 && GetRandomControl() & 1 && (lara.gun_type == WEAPON_SHOTGUN || !(GetRandomControl() & 0xF)) && item->mesh_bits == -1)
+			} else if(lara.target_item == item_number && larainfo.ahead && larainfo.distance < 0x400000 && GetRandomControl() & 1 && (lara.gun_type == WEAPON_SHOTGUN || !(GetRandomControl() & 0xF)) && item->mesh_bits == -1)
 				item->goal_anim_state = 7;
 			else if(info.bite && info.distance < 0x718E4) {
 				if(!(GetRandomControl() & 3) || lara_item->hit_points <= 0)
@@ -354,7 +354,7 @@ void SkeletonControl(short item_number) {
 				item->goal_anim_state = 17;
 			else
 				ExplodeItemNode(item, 11, 1, -24);
-		} else if(lara.target != item || item->mesh_bits != -1 || lara.gun_type != WEAPON_SHOTGUN || !(GetRandomControl() & 0x7F))
+		} else if(lara.target_item != item_number || item->mesh_bits != -1 || lara.gun_type != WEAPON_SHOTGUN || !(GetRandomControl() & 0x7F))
 			item->goal_anim_state = 2;
 
 		break;
@@ -522,7 +522,7 @@ void SkeletonControl(short item_number) {
 				}
 			}
 		} else if(skelly->mood == ESCAPE_MOOD) {
-			if(lara.target != item && info.ahead && item->mesh_bits & 0x200)
+			if(lara.target_item != item_number && info.ahead && item->mesh_bits & 0x200)
 				item->goal_anim_state = 2;
 		} else if(item->ai_bits & FOLLOW && (skelly->reached_goal || larainfo.distance > 0x400000))
 			item->goal_anim_state = 2;

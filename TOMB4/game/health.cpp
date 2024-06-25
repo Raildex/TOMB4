@@ -64,19 +64,19 @@ void DrawGameInfo(long timed) {
 		if(DashTimer < 120)
 			S_DrawDashBar(100 * DashTimer / 120);
 
-		if(lara.target) {
-			if(/*tomb4.enemy_bars &&*/ lara.target->hit_points > 0) {
-				if(lara.target->object_number == LARA_DOUBLE)
+		if(lara.target_item != NO_ITEM) {
+			if(/*tomb4.enemy_bars &&*/ items[lara.target_item].hit_points > 0) {
+				if(items[lara.target_item].object_number == LARA_DOUBLE)
 					S_DrawEnemyBar(lara_item->hit_points / 10);
-				else if(lara.target->object_number == SKELETON)
+				else if(items[lara.target_item].object_number == SKELETON)
 					S_DrawEnemyBar(100);
-				else if(lara.target->object_number == HORSEMAN) {
-					if(lara.target->dynamic_light)
-						S_DrawEnemyBar(100 * lara.target->hit_points / 100);
+				else if(items[lara.target_item].object_number == HORSEMAN) {
+					if(items[lara.target_item].dynamic_light)
+						S_DrawEnemyBar(100 * items[lara.target_item].hit_points / 100);
 					else
-						S_DrawEnemyBar(100 * lara.target->hit_points / GetObjectInfo(currentLevel,lara.target->object_number)->hit_points);
+						S_DrawEnemyBar(100 * items[lara.target_item].hit_points / GetObjectInfo(currentLevel,items[lara.target_item].object_number)->hit_points);
 				} else
-					S_DrawEnemyBar(100 * lara.target->hit_points / GetObjectInfo(currentLevel,lara.target->object_number)->hit_points);
+					S_DrawEnemyBar(100 * items[lara.target_item].hit_points / GetObjectInfo(currentLevel,items[lara.target_item].object_number)->hit_points);
 			}
 		}
 
