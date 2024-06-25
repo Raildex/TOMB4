@@ -97,7 +97,7 @@ void SaveLaraData() {
 
 	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base - (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base - (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
-	lara.GeneralPtr = (void*)((long)lara.GeneralPtr - (long)malloc_buffer);
+	lara.GeneralPtr = ((long)lara.GeneralPtr - (long)malloc_buffer);
 	memcpy(&savegame.Lara, &lara, sizeof(savegame.Lara));
 
 	for(int i = 0; i < 15; i++)
@@ -105,7 +105,7 @@ void SaveLaraData() {
 
 	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
-	lara.GeneralPtr = (void*)((long)lara.GeneralPtr + (long)malloc_buffer);
+	lara.GeneralPtr = ((long)lara.GeneralPtr + (long)malloc_buffer);
 
 	if(lara.weapon_item != NO_ITEM) {
 		item = &items[lara.weapon_item];
@@ -154,7 +154,7 @@ void RestoreLaraData(long FullSave) {
 	lara.target = 0;
 	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
-	lara.GeneralPtr = (void*)((long)lara.GeneralPtr + (long)malloc_buffer);
+	lara.GeneralPtr = ((long)lara.GeneralPtr + (long)malloc_buffer);
 
 	if(lara.burn) {
 		lara.burn = 0;

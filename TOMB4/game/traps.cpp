@@ -2009,7 +2009,7 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	if(input & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
 		   && lara.gun_status == LG_NO_ARMS
-	   || lara.IsMoving && lara.GeneralPtr == (void*)item_number) {
+	   || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(TestLaraPosition(FloorTrapDoorBounds, item, l)) {
 			if(MoveLaraPosition(&FloorTrapDoorPos, item, l)) {
 				l->anim_number = ANIM_LIFTTRAP;
@@ -2035,7 +2035,7 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				ForcedFixedCamera.y = y;
 				ForcedFixedCamera.room_number = item->room_number;
 			} else
-				lara.GeneralPtr = (void*)item_number;
+				lara.GeneralPtr = item_number;
 		}
 	} else if(item->current_anim_state == 1)
 		UseForcedFixedCamera = 0;
