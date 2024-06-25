@@ -34,7 +34,6 @@ struct LARA_INFO {
 	short flare_frame;
 	short poisoned;
 	short dpoisoned;
-	unsigned char electric;
 	unsigned char wet[15];
 	unsigned short flare_control_left : 1;
 	unsigned short Unused1 : 1;
@@ -54,7 +53,6 @@ struct LARA_INFO {
 	unsigned short Fired : 1;
 	long water_surface_dist;
 	PHD_VECTOR last_pos;
-	long mesh_effects;
 	short* mesh_ptrs[15];
 	ITEM_INFO* target;
 	short target_angles[2];
@@ -73,8 +71,6 @@ struct LARA_INFO {
 	long CornerZ;
 	char RopeSegment;
 	char RopeDirection;
-	short RopeArcFront;
-	short RopeArcBack;
 	short RopeLastX;
 	short RopeMaxXForward;
 	short RopeMaxXBackward;

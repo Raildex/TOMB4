@@ -4438,7 +4438,6 @@ void UpdateRopeSwing(ITEM_INFO* item) {
 
 	if(lara.RopeDirection) {
 		if(item->pos.x_rot > 0 && item->pos.x_rot - lara.RopeLastX < -100) {
-			lara.RopeArcFront = lara.RopeLastX;
 			lara.RopeDirection = 0;
 			lara.RopeMaxXBackward = 0;
 			temp = (15 * lara.RopeMaxXForward / 18000 + GetAnim(currentLevel,ANIM_SWINGFWD)->frame_base + 47) << 8;
@@ -4457,7 +4456,6 @@ void UpdateRopeSwing(ITEM_INFO* item) {
 		} else if(lara.RopeFrameRate < 512)
 			lara.RopeFrameRate += (LegsSwinging ? 31 : 7) * lara.RopeMaxXBackward / 9000 + 1;
 	} else if(item->pos.x_rot < 0 && item->pos.x_rot - lara.RopeLastX > 100) {
-		lara.RopeArcBack = lara.RopeLastX;
 		lara.RopeDirection = 1;
 		lara.RopeMaxXForward = 0;
 		temp = (GetAnim(currentLevel,ANIM_SWINGFWD)->frame_base - 15 * lara.RopeMaxXBackward / 18000 + 17) << 8;

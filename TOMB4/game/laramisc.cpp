@@ -134,7 +134,6 @@ void LaraCheat(ITEM_INFO* item, COLL_INFO* coll) {
 		lara.head_x_rot = 0;
 		lara.gun_status = 0;
 		LaraInitialiseMeshes();
-		lara.mesh_effects = 0;
 	}
 }
 
