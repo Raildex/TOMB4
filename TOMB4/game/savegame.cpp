@@ -152,7 +152,6 @@ void RestoreLaraData(long FullSave) {
 
 	memcpy(&lara, &savegame.Lara, sizeof(lara));
 	lara.target = 0;
-	lara.spaz_effect = 0;
 	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
 	lara.GeneralPtr = (void*)((long)lara.GeneralPtr + (long)malloc_buffer);

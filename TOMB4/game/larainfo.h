@@ -54,7 +54,6 @@ struct LARA_INFO {
 	unsigned short Fired : 1;
 	long water_surface_dist;
 	PHD_VECTOR last_pos;
-	FX_INFO* spaz_effect;
 	long mesh_effects;
 	short* mesh_ptrs[15];
 	ITEM_INFO* target;
@@ -70,7 +69,6 @@ struct LARA_INFO {
 	LARA_ARM left_arm;
 	LARA_ARM right_arm;
 	unsigned short holster;
-	CREATURE_INFO* creature;
 	long CornerX;
 	long CornerZ;
 	char RopeSegment;
