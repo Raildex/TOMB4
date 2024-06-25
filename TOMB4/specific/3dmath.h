@@ -1,6 +1,6 @@
 #pragma once
-#include "matrixindices.h"
-#include "math_tbls.h"
+#include "game/matrixindices.h"
+#include "global/math_tbls.h"
 struct PHD_VECTOR;
 struct PHD_3DPOS;
 void phd_PushMatrix();

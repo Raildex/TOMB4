@@ -1,5 +1,5 @@
 #pragma once
-#include "targettype.h"
+#include "game/targettype.h"
 
 struct ITEM_INFO;
 struct AI_INFO;

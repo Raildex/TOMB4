@@ -1,6 +1,6 @@
 #pragma once
-#include "file.h"
-#include "thread.h"
+#include "specific/file.h"
+#include "specific/thread.h"
 #include <cstdio>
 struct TEXTURESTRUCT;
 struct SPRITESTRUCT;

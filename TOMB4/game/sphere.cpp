@@ -1,15 +1,15 @@
 
-#include "sphere.h"
-#include "../specific/3dmath.h"
-#include "draw.h"
-#include "lara.h"
-#include "objects.h"
-#include "control.h"
-#include "iteminfo.h"
-#include "objectinfo.h"
-#include "types.h"
+#include "game/sphere.h"
+#include "specific/3dmath.h"
+#include "game/draw.h"
+#include "game/lara.h"
+#include "game/objects.h"
+#include "game/control.h"
+#include "game/iteminfo.h"
+#include "game/objectinfo.h"
+#include "global/types.h"
 #include <cstring>
-#include "levelinfo.h"
+#include "game/levelinfo.h"
 
 SPHERE Slist[34];
 char GotLaraSpheres;

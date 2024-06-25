@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_LARAINFO_H
 #define TOMB4_GAME_LARAINFO_H
-#include "laraarm.h"
-#include "phdvector.h"
+#include "game/laraarm.h"
+#include "game/phdvector.h"
 
 struct CREATURE_INFO;
 struct FX_INFO;

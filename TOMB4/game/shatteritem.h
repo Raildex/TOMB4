@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_SHATTERITEM_H
 #define TOMB4_GAME_SHATTERITEM_H
-#include "sphere.h"
+#include "game/sphere.h"
 
 struct ITEM_LIGHT;
 struct SHATTER_ITEM {

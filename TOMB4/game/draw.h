@@ -1,6 +1,6 @@
 #pragma once
 
-#include "matrixindices.h"
+#include "game/matrixindices.h"
 
 struct ITEM_INFO;
 struct ROOM_INFO;

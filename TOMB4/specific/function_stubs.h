@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdio>
-#include "phdvector.h"
+#include "game/phdvector.h"
 
 long GetRandomControl();
 void SeedRandomControl(long seed);

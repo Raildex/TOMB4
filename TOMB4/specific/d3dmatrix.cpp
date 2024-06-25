@@ -1,8 +1,8 @@
 
-#include "d3dmatrix.h"
-#include "dxshell.h"
-#include "3dmath.h"
-#include "winmain.h"
+#include "specific/d3dmatrix.h"
+#include "specific/dxshell.h"
+#include "specific/3dmath.h"
+#include "specific/winmain.h"
 #include <d3dtypes.h>
 #include <cmath>
 

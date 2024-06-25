@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_SOUNDSLOT_H
 #define TOMB4_GAME_SOUNDSLOT_H
-#include "phdvector.h"
+#include "game/phdvector.h"
 struct SoundSlot {
 	long OrigVolume;
 	long nVolume;

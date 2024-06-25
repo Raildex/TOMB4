@@ -1,8 +1,8 @@
 #pragma once
-#include "camerainfo.h"
-#include "cameratype.h"
-#include "phdvector.h"
-#include "shatteritem.h"
+#include "game/camerainfo.h"
+#include "game/cameratype.h"
+#include "game/phdvector.h"
+#include "game/shatteritem.h"
 
 struct GAME_VECTOR;
 struct PHD_VECTOR;

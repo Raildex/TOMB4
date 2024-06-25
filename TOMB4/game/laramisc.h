@@ -1,5 +1,5 @@
 #pragma once
-#include "collinfo.h"
+#include "game/collinfo.h"
 
 struct ITEM_INFO;
 

@@ -1,18 +1,18 @@
 
-#include "missile.h"
-#include "debris.h"
-#include "control.h"
-#include "items.h"
-#include "sound.h"
-#include "../specific/function_stubs.h"
-#include "effects.h"
-#include "../specific/3dmath.h"
-#include "camera.h"
-#include "shatteritem.h"
-#include "fxinfo.h"
-#include "types.h"
+#include "game/missile.h"
+#include "game/debris.h"
+#include "game/control.h"
+#include "game/items.h"
+#include "game/sound.h"
+#include "specific/function_stubs.h"
+#include "game/effects.h"
+#include "specific/3dmath.h"
+#include "game/camera.h"
+#include "game/shatteritem.h"
+#include "game/fxinfo.h"
+#include "global/types.h"
 #include <cstdlib>
-#include "levelinfo.h"
+#include "game/levelinfo.h"
 long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num) {
 	short** meshpp;
 

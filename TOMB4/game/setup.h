@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "levelinfo.h"
+#include "game/levelinfo.h"
 void ObjectObjects();
 void TrapObjects();
 void BaddyObjects();

@@ -1,8 +1,8 @@
 #ifndef TOMB4_GAME_SAVEGAMEINFO_H
 #define TOMB4_GAME_SAVEGAMEINFO_H
-#include "stats.h"
-#include "cvector.h"
-#include "larainfo.h"
+#include "game/stats.h"
+#include "game/cvector.h"
+#include "game/larainfo.h"
 #pragma pack(push, 1)
 struct SAVEGAME_INFO {
 	LARA_INFO Lara;

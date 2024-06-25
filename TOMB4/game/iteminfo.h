@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_ITEMINFO_H
 #define TOMB4_GAME_ITEMINFO_H
-#include "itemlight.h"
-#include "phd3dpos.h"
+#include "game/itemlight.h"
+#include "game/phd3dpos.h"
 #pragma pack(push, 1)
 struct ITEM_INFO {
 	long floor;

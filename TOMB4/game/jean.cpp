@@ -1,14 +1,14 @@
 
-#include "jean.h"
-#include "objects.h"
-#include "../specific/function_stubs.h"
-#include "control.h"
-#include "lara.h"
-#include "iteminfo.h"
-#include "animstruct.h"
-#include "objectinfo.h"
-#include "larainfo.h"
-#include "levelinfo.h"
+#include "game/jean.h"
+#include "game/objects.h"
+#include "specific/function_stubs.h"
+#include "game/control.h"
+#include "game/lara.h"
+#include "game/iteminfo.h"
+#include "game/animstruct.h"
+#include "game/objectinfo.h"
+#include "game/larainfo.h"
+#include "game/levelinfo.h"
 void InitialiseJeanYves(short item_number) {
 	ITEM_INFO* item;
 

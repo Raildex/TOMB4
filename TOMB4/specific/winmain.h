@@ -1,4 +1,4 @@
-#include "winapp.h"
+#include "specific/winapp.h"
 
 bool WinRunCheck(LPSTR WindowName, LPSTR ClassName, HANDLE* mutex);
 void WinProcessCommandLine(LPSTR cmd);

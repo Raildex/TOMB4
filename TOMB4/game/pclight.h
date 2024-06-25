@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_PCLIGHT_H
 #define TOMB4_GAME_PCLIGHT_H
-#include "phdvector.h"
+#include "game/phdvector.h"
 struct PCLIGHT {
 	float x;
 	float y;

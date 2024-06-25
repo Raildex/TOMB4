@@ -1,15 +1,15 @@
 
-#include "laraskin.h"
-#include "objects.h"
-#include "delstuff.h"
-#include "gameflow.h"
-#include "control.h"
-#include "objectinfo.h"
-#include "meshdata.h"
-#include "gfleveloptions.h"
+#include "game/laraskin.h"
+#include "game/objects.h"
+#include "game/delstuff.h"
+#include "game/gameflow.h"
+#include "game/control.h"
+#include "game/objectinfo.h"
+#include "game/meshdata.h"
+#include "game/gfleveloptions.h"
 #include <cstdlib>
 #include <cstring>
-#include "levelinfo.h"
+#include "game/levelinfo.h"
 
 static unsigned char SkinJoints[14][4] = {
 	{ 0, 1, 1, 3 },

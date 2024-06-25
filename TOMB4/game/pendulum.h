@@ -1,6 +1,6 @@
 #ifndef PENDULUM_INCLUDED
 #define PENDULUM_INCLUDED
-#include "phdvector.h"
+#include "game/phdvector.h"
 
 struct ROPE_STRUCT;
 struct PENDULUM {

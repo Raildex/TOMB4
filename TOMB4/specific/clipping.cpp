@@ -1,8 +1,8 @@
 
-#include "clipping.h"
-#include "3dmath.h"
-#include "d3dtlbumpvertex.h"
-#include "types.h"
+#include "specific/clipping.h"
+#include "specific/3dmath.h"
+#include "specific/d3dtlbumpvertex.h"
+#include "global/types.h"
 #include <d3dtypes.h>
 #include <d3d.h>
 

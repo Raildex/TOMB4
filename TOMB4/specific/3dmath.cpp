@@ -1,15 +1,15 @@
 
-#include "3dmath.h"
-#include "d3dmatrix.h"
-#include "../game/spotcam.h"
-#include "../game/control.h"
-#include "function_stubs.h"
-#include "../game/lara.h"
-#include "phdvector.h"
-#include "larainfo.h"
-#include "phd3dpos.h"
-#include "spotcam.h"
-#include "types.h"
+#include "specific/3dmath.h"
+#include "specific/d3dmatrix.h"
+#include "game/spotcam.h"
+#include "game/control.h"
+#include "specific/function_stubs.h"
+#include "game/lara.h"
+#include "game/phdvector.h"
+#include "game/larainfo.h"
+#include "game/phd3dpos.h"
+#include "game/spotcam.h"
+#include "global/types.h"
 #include <d3dtypes.h>
 #include <cmath>
 float one = 33554432.0F;

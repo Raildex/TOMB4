@@ -1,10 +1,10 @@
 
-#include "function_table.h"
-#include "function_stubs.h"
-#include "dxshell.h"
-#include "polyinsert.h"
-#include "3dmath.h"
-#include "winmain.h"
+#include "specific/function_table.h"
+#include "specific/function_stubs.h"
+#include "specific/dxshell.h"
+#include "specific/polyinsert.h"
+#include "specific/3dmath.h"
+#include "specific/winmain.h"
 #include <d3dtypes.h>
 
 void (*AddQuadSorted)(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided);

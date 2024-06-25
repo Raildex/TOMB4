@@ -1,5 +1,5 @@
 #pragma once
-#include "scarabstruct.h"
+#include "game/scarabstruct.h"
 
 
 void InitialiseScarab(short item_number);

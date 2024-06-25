@@ -1,6 +1,6 @@
 #ifndef ITEM_LIGHT_INCLUDED
 #define ITEM_LIGHT_INCLUDED
-#include "pclight.h"
+#include "game/pclight.h"
 struct ITEM_LIGHT {
 	long r;
 	long g;

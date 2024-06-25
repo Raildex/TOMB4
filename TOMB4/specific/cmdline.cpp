@@ -1,16 +1,16 @@
 
-#include "cmdline.h"
-#include "function_stubs.h"
-#include "../game/gameflow.h"
-#include "registry.h"
-#include "winmain.h"
-#include "dxd3ddevice.h"
-#include "dxtextureinfo.h"
-#include "dxdisplaymode.h"
-#include "dxdirectdrawinfo.h"
-#include "languages.h"
-#include "winapp.h"
-#include "dxdirectsoundinfo.h"
+#include "specific/cmdline.h"
+#include "specific/function_stubs.h"
+#include "game/gameflow.h"
+#include "specific/registry.h"
+#include "specific/winmain.h"
+#include "specific/dxd3ddevice.h"
+#include "specific/dxtextureinfo.h"
+#include "specific/dxdisplaymode.h"
+#include "specific/dxdirectdrawinfo.h"
+#include "game/languages.h"
+#include "specific/winapp.h"
+#include "specific/dxdirectsoundinfo.h"
 #include <winuser.h>
 
 wchar_t ASCIIToANSITable[7][2] = {

@@ -1,10 +1,10 @@
 
-#include "registry.h"
-#include "LoadSave.h"
-#include "cmdline.h"
-#include "input.h"
-#include "winmain.h"
-#include "dxflags.h"
+#include "specific/registry.h"
+#include "specific/loadsave.h"
+#include "specific/cmdline.h"
+#include "specific/input.h"
+#include "specific/winmain.h"
+#include "specific/dxflags.h"
 #include <cstdio>
 #include <cstdio>
 

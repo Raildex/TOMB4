@@ -1,16 +1,16 @@
 
-#include "texture.h"
-#include "dxshell.h"
-#include "function_stubs.h"
-#include "winmain.h"
+#include "specific/texture.h"
+#include "specific/dxshell.h"
+#include "specific/function_stubs.h"
+#include "specific/winmain.h"
 #include <cassert>
 #include <ddraw.h>
-#include "../game/texture.h"
-#include "dxinfo.h"
-#include "dxdirectdrawinfo.h"
-#include "dxd3ddevice.h"
-#include "dxflags.h"
-#include "dxtextureinfo.h"
+#include "specific/texture.h"
+#include "specific/dxinfo.h"
+#include "specific/dxdirectdrawinfo.h"
+#include "specific/dxd3ddevice.h"
+#include "specific/dxflags.h"
+#include "specific/dxtextureinfo.h"
 
 TEXTURE* Textures;
 long nTextures;

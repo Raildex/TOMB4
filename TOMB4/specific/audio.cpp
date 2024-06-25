@@ -1,11 +1,11 @@
 
-#include "audio.h"
-#include "file.h"
-#include "function_stubs.h"
-#include "dxshell.h"
-#include "../game/control.h"
-#include "LoadSave.h"
-#include "winmain.h"
+#include "specific/audio.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
+#include "specific/dxshell.h"
+#include "game/control.h"
+#include "specific/loadsave.h"
+#include "specific/winmain.h"
 #include <MSAcm.h>
 
 const char* TrackFileNames[112] = {

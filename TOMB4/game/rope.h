@@ -1,5 +1,5 @@
 #pragma once
-#include "pendulum.h"
+#include "game/pendulum.h"
 
 struct PHD_VECTOR;
 struct ROPE_STRUCT;

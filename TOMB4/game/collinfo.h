@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_COLLINFO_H
 #define TOMB4_GAME_COLLINFO_H
-#include "phdvector.h"
+#include "game/phdvector.h"
 struct COLL_INFO {
 	long mid_floor;
 	long mid_ceiling;

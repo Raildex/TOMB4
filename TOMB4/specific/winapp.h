@@ -1,9 +1,9 @@
 #ifndef WINAPP_INCLUDED
 #define WINAPP_INCLUDED
-#include "dxinfo.h"
-#include "dxptr.h"
+#include "specific/dxinfo.h"
+#include "specific/dxptr.h"
 #include <windows.h>
-#include "types.h"
+#include "global/types.h"
 #include <d3dtypes.h>
 struct WINAPP {
 	HINSTANCE hInstance;

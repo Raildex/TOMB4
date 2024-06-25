@@ -1,9 +1,9 @@
 #ifndef CREATURE_INFO_INCLUDED
 #define CREATURE_INFO_INCLUDED
-#include "moodtype.h"
-#include "lotinfo.h"
-#include "phdvector.h"
-#include "iteminfo.h"
+#include "game/moodtype.h"
+#include "game/lotinfo.h"
+#include "game/phdvector.h"
+#include "game/iteminfo.h"
 struct CREATURE_INFO {
 	short joint_rotation[4];
 	short maximum_turn;

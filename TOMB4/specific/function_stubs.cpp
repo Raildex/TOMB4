@@ -3,9 +3,9 @@
 #include <cstdlib>
 #include <cstdarg>
 #include <cstring>
-#include "function_stubs.h"
-#include "phdvector.h"
-#include "types.h"
+#include "specific/function_stubs.h"
+#include "game/phdvector.h"
+#include "global/types.h"
 
 FILE* logF = 0;
 

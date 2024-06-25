@@ -1,6 +1,6 @@
 #ifndef GUNSHELL_STRUCT_INCLUDED
 #define GUNSHELL_STRUCT_INCLUDED
-#include "phd3dpos.h"
+#include "game/phd3dpos.h"
 struct GUNSHELL_STRUCT {
 	PHD_3DPOS pos;
 	short fallspeed;

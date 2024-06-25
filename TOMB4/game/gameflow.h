@@ -1,7 +1,7 @@
 #pragma once
 
-#include "cvector.h"
-#include "phdvector.h"
+#include "game/cvector.h"
+#include "game/phdvector.h"
 struct GAMEFLOW;
 void DoGameflow();
 void DoLevel(unsigned char Name, unsigned char Audio);

@@ -1,5 +1,5 @@
 #pragma once
-#include "invobj.h"
+#include "game/invobj.h"
 struct INVDRAWITEM;
 long LoadGame();
 long SaveGame();

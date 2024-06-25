@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_LOTINFO_H
 #define TOMB4_GAME_LOTINFO_H
-#include "zonetype.h"
-#include "phdvector.h"
+#include "game/zonetype.h"
+#include "game/phdvector.h"
 struct BOX_NODE;
 struct LOT_INFO {
 	BOX_NODE* node;

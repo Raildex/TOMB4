@@ -1,6 +1,6 @@
 #pragma once
-#include "watertab.h"
-#include "thread.h"
+#include "game/watertab.h"
+#include "specific/thread.h"
 
 
 void GameClose();

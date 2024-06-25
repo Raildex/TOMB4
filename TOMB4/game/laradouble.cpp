@@ -1,11 +1,11 @@
 
-#include "laradouble.h"
-#include "box.h"
-#include "levelinfo.h"
-#include "sound.h"
-#include "control.h"
-#include "lara.h"
-#include "iteminfo.h"
+#include "game/laradouble.h"
+#include "game/box.h"
+#include "game/levelinfo.h"
+#include "game/sound.h"
+#include "game/control.h"
+#include "game/lara.h"
+#include "game/iteminfo.h"
 
 void InitialiseLaraDouble(short item_number) {
 	InitialiseCreature(item_number);

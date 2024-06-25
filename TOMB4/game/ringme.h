@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_RINGME_H
 #define TOMB4_GAME_RINGME_H
-#include "objlist.h"
+#include "game/objlist.h"
 struct RINGME {
 	OBJLIST current_object_list[119];
 	long ringactive;

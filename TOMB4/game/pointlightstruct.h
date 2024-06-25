@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_POINTLIGHTSTRUCT_H
 #define TOMB4_GAME_POINTLIGHTSTRUCT_H
-#include "fvector.h"
+#include "game/fvector.h"
 struct POINTLIGHT_STRUCT {
 	FVECTOR vec;
 	float r;

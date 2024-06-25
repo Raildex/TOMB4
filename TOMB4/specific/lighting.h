@@ -1,6 +1,6 @@
 #pragma once
-#include "pointlightstruct.h"
-#include "sunlightstruct.h"
+#include "game/pointlightstruct.h"
+#include "game/sunlightstruct.h"
 
 struct ITEM_INFO;
 struct FVECTOR;

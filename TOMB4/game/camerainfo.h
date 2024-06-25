@@ -1,8 +1,8 @@
 #ifndef TOMB4_GAME_CAMERAINFO_H
 #define TOMB4_GAME_CAMERAINFO_H
-#include "gamevector.h"
-#include "cameratype.h"
-#include "phdvector.h"
+#include "game/gamevector.h"
+#include "game/cameratype.h"
+#include "game/phdvector.h"
 struct ITEM_INFO;
 struct OBJECT_VECTOR;
 

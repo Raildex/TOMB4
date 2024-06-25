@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_ROPESTRUCT_H
 #define TOMB4_GAME_ROPESTRUCT_H
-#include "phdvector.h"
+#include "game/phdvector.h"
 struct ROPE_STRUCT {
 	PHD_VECTOR Segment[24];
 	PHD_VECTOR Velocity[24];

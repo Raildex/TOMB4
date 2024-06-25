@@ -1,19 +1,19 @@
 
-#include "dxsound.h"
-#include "dxshell.h"
-#include "function_stubs.h"
-#include "audio.h"
-#include "../game/sound.h"
-#include "LoadSave.h"
-#include "winmain.h"
-#include "dxinfo.h"
-#include "dxdirectsoundinfo.h"
+#include "specific/dxsound.h"
+#include "specific/dxshell.h"
+#include "specific/function_stubs.h"
+#include "specific/audio.h"
+#include "game/sound.h"
+#include "specific/loadsave.h"
+#include "specific/winmain.h"
+#include "specific/dxinfo.h"
+#include "specific/dxdirectsoundinfo.h"
 #include <MSAcm.h>
 #include <cstring>
 #include <xaudio2.h>
 #include <xaudio2fx.h>
-#include "samplebuffer.h"
-#include "xaudio2redist.h"
+#include "game/samplebuffer.h"
+#include <xaudio2redist.h>
 #pragma warning(push)
 #pragma warning(disable : 4838)
 #pragma warning(disable : 4309)
