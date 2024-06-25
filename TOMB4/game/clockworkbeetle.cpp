@@ -30,7 +30,7 @@ ITEM_INFO* TriggerClockworkBeetle(long flag) {
 
 		if(item_number != NO_ITEM) {
 			lara.mechanical_scarab &= ~1;
-			item = &items[item_number];
+			item = GetItem(currentLevel, item_number);
 			item->shade = -0x3DF0;
 			item->object_number = CLOCKWORK_BEETLE;
 			item->room_number = lara_item->room_number;
@@ -52,7 +52,7 @@ ITEM_INFO* TriggerClockworkBeetle(long flag) {
 
 			if(item->item_flags[0]) {
 				for(item_number = GetRoom(currentLevel,item->room_number)->item_number; item_number != NO_ITEM; item_number = item2->next_item) {
-					item2 = &items[item_number];
+					item2 = GetItem(currentLevel, item_number);
 
 					if(item2->object_number == MAPPER) {
 						dx = item->pos.x_pos - item2->pos.x_pos;
@@ -90,7 +90,7 @@ void ControlClockworkBeetle(short item_number) {
 	short frame, base, room_number, rotY, angle;
 
 	bounce = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(lara_item->anim_number == ANIM_USEBEETLE) {
 		frame = lara_item->frame_number;
@@ -199,7 +199,7 @@ void ControlClockworkBeetle(short item_number) {
 					item->item_flags[2] = 5;
 
 					for(int i = GetRoom(currentLevel,item->room_number)->item_number; i != NO_ITEM; i = item2->next_item) {
-						item2 = &items[i];
+						item2 = GetItem(currentLevel, i);
 
 						if(item2->object_number == MAPPER) {
 							dx = item->pos.x_pos - item2->pos.x_pos;

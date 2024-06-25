@@ -22,7 +22,7 @@ static BITE_INFO wildboar_bite = { 0, 0, 0, 14 };
 void InitialiseWildboar(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,WILD_BOAR)->anim_index + 6;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -47,7 +47,7 @@ void WildboarControl(short item_number) {
 	neckY = 0;
 	headX = 0;
 	headY = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	boar = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0) {
@@ -73,7 +73,7 @@ void WildboarControl(short item_number) {
 				baddie = &baddie_slots[i];
 
 				if(baddie->item_num != NO_ITEM && baddie->item_num != item_number) {
-					target = &items[baddie->item_num];
+					target = GetItem(currentLevel,baddie->item_num);
 
 					if(target->object_number != WILD_BOAR) {
 						dx = target->pos.x_pos - item->pos.x_pos;

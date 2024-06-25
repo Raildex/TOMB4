@@ -27,7 +27,7 @@ static BITE_INFO sphinx_bite = { 0, 0, 0, 6 };
 void InitialiseSphinx(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,SPHINX)->anim_index + 1;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -48,7 +48,7 @@ void SphinxControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	sphinx = (CREATURE_INFO*)item->data;
 	s = 614 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	c = 614 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;

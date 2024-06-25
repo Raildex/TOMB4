@@ -25,7 +25,7 @@ void InitialiseWraith(short item_number) {
 	ITEM_INFO* item;
 	WRAITH_STRUCT* data;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	data = (WRAITH_STRUCT*)game_malloc(8 * sizeof(WRAITH_STRUCT));
 	item->data = data;
 	item->item_flags[0] = 0;
@@ -169,11 +169,11 @@ void WraithControl(short item_number) {
 	long x, y, z, dx, dy, dz, dist, oob, h, c;
 	short rotY, rotX, speed, room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	SoundEffect(SFX_WRAITH_WHISPERS, &item->pos, SFX_DEFAULT);
 
 	if(item->hit_points)
-		target = &items[item->hit_points];
+		target = GetItem(currentLevel,item->hit_points);
 	else
 		target = lara_item;
 
@@ -253,7 +253,7 @@ void WraithControl(short item_number) {
 		ItemNewRoom(item_number, IsRoomOutsideNo);
 
 		for(int i = GetRoom(currentLevel,item->room_number)->item_number; i != NO_ITEM; i = item2->next_item) {
-			item2 = &items[i];
+			item2 = GetItem(currentLevel,i);
 
 			if(item2->active) {
 				if(item->object_number == WRAITH1 && item2->object_number == WRAITH2 || // wraith 1 and 2 wanna fite

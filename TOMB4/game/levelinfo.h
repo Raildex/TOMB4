@@ -11,14 +11,17 @@ struct FX_INFO;
 struct STATIC_INFO;
 struct MESH_INFO;
 struct ITEM_INFO;
+struct BOX_INFO;
 LEVEL_INFO* CreateLevel();
 void LoadLevel(LEVEL_INFO* lvl, char* file);
 void DestroyLevel(LEVEL_INFO* lvl);
 
+BOX_INFO* GetBox(LEVEL_INFO* lvl, long box);
 OBJECT_INFO* GetObjectInfo(LEVEL_INFO* lvl, long type);
 STATIC_INFO* GetStaticObject(LEVEL_INFO* lvl, long type);
 short* GetStaticObjectBounds(LEVEL_INFO*, long type);
 ANIM_STRUCT* GetAnim(LEVEL_INFO* lvl, long anim);
+long GetNumLevelItems(LEVEL_INFO* lvl);
 ITEM_INFO* GetItem(LEVEL_INFO* lvl, long item);
 FX_INFO* GetEffect(LEVEL_INFO* lvl, long fx);
 MESH_INFO* GetStaticMesh(LEVEL_INFO* lvl, long mesh);
@@ -35,7 +38,10 @@ RANGE_STRUCT* GetAnimRange(LEVEL_INFO* lvl,long index);
 short* GetAnimCommand(LEVEL_INFO* lvl, long index);
 short* GetAnimFrameBase(LEVEL_INFO* lvl);
 short* GetAnimFrames(LEVEL_INFO* lvl, long offset);
-
+short* GetZone(LEVEL_INFO* lvl,long zone,long flip);
+unsigned short* GetOverlap(LEVEL_INFO* lvl,long overlap);
 FX_INFO* GetEffect(LEVEL_INFO* lvl, long fx);
+long GetItemNum(LEVEL_INFO* lvl, ITEM_INFO* i);
+long GetNumBoxes(LEVEL_INFO* lvl);
 extern LEVEL_INFO* currentLevel;
 #endif// TOMB4_GAME_LEVELINFO_H

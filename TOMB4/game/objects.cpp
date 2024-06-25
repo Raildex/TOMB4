@@ -54,7 +54,7 @@ void ControlMapper(short item_number) {
 	long rg, h;
 	short room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -113,7 +113,7 @@ void ControlLightningConductor(short item_number) {
 	PHD_VECTOR pos2;
 	short r, g, b, room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -172,9 +172,9 @@ void ControlLightningConductor(short item_number) {
 		TriggerLightningGlow(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, RGBA(r, g, b, 64));
 
 		if(item->trigger_flags == 2 && !item->item_flags[0]) {
-			ExplodeItemNode(&items[item->item_flags[2] & 0xFF], 0, 0, -128);
+			ExplodeItemNode(GetItem(currentLevel,item->item_flags[2] & 0xFF), 0, 0, -128);
 			KillItem(item->item_flags[2] & 0xFF);
-			ExplodeItemNode(&items[item->item_flags[2] >> 8], 0, 0, -128);
+			ExplodeItemNode(GetItem(currentLevel, item->item_flags[2] >> 8), 0, 0, -128);
 			KillItem(item->item_flags[2] >> 8);
 			KillItem(item_number);
 		} else {
@@ -262,7 +262,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	short* bounds;
 	short room_number, y_rot;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status && lara.gun_status == LG_NO_ARMS && !item->trigger_flags && !item->item_flags[0]) {
 		if(!item->item_flags[1]) {
@@ -375,7 +375,7 @@ void ControlBurningRope(short item_number) {
 	long passes;
 	short nmeshes;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -456,7 +456,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	PHD_VECTOR pos;
 	long nSpheres, dx, dy, dz;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(item->trigger_flags || !lara.LitTorch)
 		return;
@@ -501,7 +501,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void ControlWaterfall(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(TriggerActive(item)) {
 		item->status = ITEM_ACTIVE;
@@ -549,7 +549,7 @@ void ControlTriggerTriggerer(short item_number) {
 	ITEM_INFO* item;
 	short* data;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	data = trigger_index;
 
@@ -588,7 +588,7 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	short roty;
 
-	item = &items[item_num];
+	item = GetItem(currentLevel,item_num);
 
 	if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == item_num) {
 		roty = item->pos.y_rot;
@@ -643,7 +643,7 @@ void ControlAnimatingSlots(short item_number) {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(TriggerActive(item)) {
 		item->status = ITEM_ACTIVE;
@@ -667,7 +667,7 @@ void SmashObjectControl(short item_number) {
 	ITEM_INFO* item;
 	long speed;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(item->flags & IFL_INVISIBLE)
 		return;
@@ -690,10 +690,10 @@ void SmashObject(short item_number) {
 	BOX_INFO* box;
 	long sector;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	r = GetRoom(currentLevel,item->room_number);
 	sector = ((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10);
-	box = &boxes[r->floor[sector].box];
+	box = GetBox(currentLevel,r->floor[sector].box);
 
 	if(box->overlap_index & 0x8000)
 		box->overlap_index &= ~0x4000;
@@ -716,7 +716,7 @@ void EarthQuake(short item_number) {
 	long pitch;
 	short earth_item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -767,7 +767,7 @@ void EarthQuake(short item_number) {
 
 		if(GetRandomControl() < 1024) {
 			for(earth_item = GetRoom(currentLevel,item->room_number)->item_number; earth_item != NO_ITEM; earth_item = item->next_item) {
-				item = &items[earth_item];
+				item = GetItem(currentLevel,earth_item);
 
 				if(item->object_number == FLAME_EMITTER && item->status != ITEM_ACTIVE && item->status != ITEM_DEACTIVATED) {
 					AddActiveItem(earth_item);

@@ -287,7 +287,7 @@ void LaraTargetInfo(WEAPON_INFO* winfo) {
 	src.x = lara_item->pos.x_pos;
 	src.z = lara_item->pos.z_pos;
 	src.room_number = lara_item->room_number;
-	find_target_point(&items[lara.target_item], &target);
+	find_target_point(GetItem(currentLevel, lara.target_item), &target);
 	phd_GetVectorAngles(target.x - src.x, target.y - src.y, target.z - src.z, ang);
 	ang[0] -= lara_item->pos.y_rot;
 	ang[1] -= lara_item->pos.x_rot;
@@ -503,7 +503,7 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 
 	for(slot = 0; slot < 5; slot++, creature++) {
 		if(creature->item_num != NO_ITEM) {
-			item = &items[creature->item_num];
+			item = GetItem(currentLevel, creature->item_num);
 
 			if(item->hit_points > 0) {
 				x = item->pos.x_pos - src.x;
@@ -693,7 +693,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 	long ceiling, height, oldtype, oldonobj, oldheight, bs, yang, xs;
 	short room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);

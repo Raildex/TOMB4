@@ -61,7 +61,7 @@ void ControlSmokeEmitter(short item_number) {
 	PHD_3DPOS pos;
 	long size, dx, dz, normal;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	normal = 0;
 
 	if(!TriggerActive(item))
@@ -469,12 +469,12 @@ void TriggerDynamic(long x, long y, long z, long falloff, long r, long g, long b
 	dl->x = x;
 	dl->y = y;
 	dl->z = z;
-	dl->falloff = unsigned short(falloff << 8);
+	dl->falloff = (unsigned short)(falloff << 8);
 
 	if(falloff < 8) {
-		dl->r = unsigned char((r * falloff) >> 3);
-		dl->g = unsigned char((g * falloff) >> 3);
-		dl->b = unsigned char((b * falloff) >> 3);
+		dl->r = (unsigned char)((r * falloff) >> 3);
+		dl->g = (unsigned char)((g * falloff) >> 3);
+		dl->b = (unsigned char)((b * falloff) >> 3);
 	} else {
 		dl->r = (unsigned char)r;
 		dl->g = (unsigned char)g;
@@ -497,12 +497,12 @@ void TriggerDynamic_MIRROR(long x, long y, long z, long falloff, long r, long g,
 		dl->x = x;
 		dl->y = y;
 		dl->z = z;
-		dl->falloff = unsigned short(falloff << 8);
+		dl->falloff = (unsigned short)(falloff << 8);
 
 		if(falloff < 8) {
-			dl->r = unsigned char((r * falloff) >> 3);
-			dl->g = unsigned char((g * falloff) >> 3);
-			dl->b = unsigned char((b * falloff) >> 3);
+			dl->r = (unsigned char)((r * falloff) >> 3);
+			dl->g = (unsigned char)((g * falloff) >> 3);
+			dl->b = (unsigned char)((b * falloff) >> 3);
 		} else {
 			dl->r = (unsigned char)r;
 			dl->g = (unsigned char)g;
@@ -857,13 +857,13 @@ void TriggerDartSmoke(long x, long y, long z, long xv, long zv, long hit) {
 	if(hit) {
 		sptr->MaxYvel = 0;
 		sptr->Gravity = 0;
-		sptr->Size = unsigned char(rand >> 3);
+		sptr->Size = (unsigned char)(rand >> 3);
 		sptr->sSize = sptr->Size;
-		sptr->dSize = unsigned char(rand >> 1);
+		sptr->dSize = (unsigned char)(rand >> 1);
 	} else {
 		sptr->MaxYvel = -4 - (GetRandomControl() & 3);
 		sptr->Gravity = -4 - (GetRandomControl() & 3);
-		sptr->Size = unsigned char(rand >> 4);
+		sptr->Size = (unsigned char)(rand >> 4);
 		sptr->sSize = sptr->Size;
 		sptr->dSize = (unsigned char)rand;
 	}
@@ -938,7 +938,7 @@ void ControlColouredLights(short item_number) {
 		{ 224, 224, 255 } // unused
 	};
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
 		objnum = item->object_number - RED_LIGHT;
@@ -962,7 +962,7 @@ void DetatchSpark(long num, long type) {
 				sptr->z += fx->pos.z_pos;
 				sptr->Flags &= ~64;
 			} else if(type == 128) {
-				item = &items[num];
+				item = GetItem(currentLevel, num);
 				sptr->x += item->pos.x_pos;
 				sptr->y += item->pos.y_pos;
 				sptr->z += item->pos.z_pos;
@@ -1048,14 +1048,14 @@ void UpdateSparks() {
 
 		if(sptr->sLife - sptr->Life < sptr->ColFadeSpeed) {
 			fade = ((sptr->sLife - sptr->Life) << 16) / sptr->ColFadeSpeed;
-			sptr->R = unsigned char(sptr->sR + ((fade * (sptr->dR - sptr->sR)) >> 16));
-			sptr->G = unsigned char(sptr->sG + ((fade * (sptr->dG - sptr->sG)) >> 16));
-			sptr->B = unsigned char(sptr->sB + ((fade * (sptr->dB - sptr->sB)) >> 16));
+			sptr->R = (unsigned char)(sptr->sR + ((fade * (sptr->dR - sptr->sR)) >> 16));
+			sptr->G = (unsigned char)(sptr->sG + ((fade * (sptr->dG - sptr->sG)) >> 16));
+			sptr->B = (unsigned char)(sptr->sB + ((fade * (sptr->dB - sptr->sB)) >> 16));
 		} else if(sptr->Life < sptr->FadeToBlack) {
 			fade = ((sptr->Life - sptr->FadeToBlack) << 16) / sptr->FadeToBlack + 0x10000;
-			sptr->R = unsigned char((sptr->dR * fade) >> 16);
-			sptr->G = unsigned char((sptr->dG * fade) >> 16);
-			sptr->B = unsigned char((sptr->dB * fade) >> 16);
+			sptr->R = (unsigned char)((sptr->dR * fade) >> 16);
+			sptr->G = (unsigned char)((sptr->dG * fade) >> 16);
+			sptr->B = (unsigned char)((sptr->dB * fade) >> 16);
 
 			if(sptr->R < 8 && sptr->G < 8 && sptr->B < 8) {
 				sptr->On = 0;
@@ -1117,7 +1117,7 @@ void UpdateSparks() {
 			sptr->z += SmokeWindZ >> 1;
 		}
 
-		sptr->Size = unsigned char(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
+		sptr->Size = (unsigned char)(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
 
 		if(sptr->Flags & 1 && !lara.burn || sptr->Flags & 0x400) {
 			rad = sptr->Size << sptr->Scalar >> 1;
@@ -1358,7 +1358,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 			sptr->sLife = sptr->Life;
 		}
 
-		sptr->extras = unsigned char(extras | ((extras_table[extras] + (GetRandomControl() & 7) + 28) << 3));
+		sptr->extras = (unsigned char)(extras | ((extras_table[extras] + (GetRandomControl() & 7) + 28) << 3));
 		sptr->Dynamic = (char)dynamic;
 
 		if(dynamic == -2) {
@@ -1627,7 +1627,7 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly) {
 	sptr->ColFadeSpeed = 8;
 	sptr->FadeToBlack = 8;
 	sptr->TransType = 2;
-	sptr->Life = unsigned char((dy >> 9) + (GetRandomControl() & 7) + 16);
+	sptr->Life = (unsigned char)((dy >> 9) + (GetRandomControl() & 7) + 16);
 	sptr->sLife = sptr->Life;
 	sptr->x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
 	sptr->y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 16;
@@ -1641,7 +1641,7 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly) {
 		sptr->Flags = 538;
 
 	sptr->Scalar = 2;
-	sptr->dSize = unsigned char((GetRandomControl() & 0xF) + (dy >> 6) + 16);
+	sptr->dSize = (unsigned char)((GetRandomControl() & 0xF) + (dy >> 6) + 16);
 	sptr->sSize = sptr->dSize >> 1;
 	sptr->Size = sptr->dSize >> 1;
 
@@ -1679,9 +1679,9 @@ void TriggerRocketSmoke(long x, long y, long z, long col) {
 	sptr->sR = 0;
 	sptr->sG = 0;
 	sptr->sB = 0;
-	sptr->dR = unsigned char(col + 64);
-	sptr->dG = unsigned char(col + 64);
-	sptr->dB = unsigned char(col + 64);
+	sptr->dR = (unsigned char)(col + 64);
+	sptr->dG = (unsigned char)(col + 64);
+	sptr->dB = (unsigned char)(col + 64);
 	sptr->FadeToBlack = 12;
 	sptr->ColFadeSpeed = (GetRandomControl() & 3) + 4;
 	sptr->TransType = 2;

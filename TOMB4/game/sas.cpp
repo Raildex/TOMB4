@@ -38,7 +38,7 @@ static BITE_INFO sas_fire = { 0, 300, 64, 7 };
 void InitialiseInjuredSas(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(item->trigger_flags) {
 		item->anim_number = GetObjectInfo(currentLevel,SAS_DYING)->anim_index;
@@ -56,7 +56,7 @@ void InitialiseInjuredSas(short item_number) {
 void InjuredSasControl(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(item->current_anim_state == 1) {
 		if(!(GetRandomControl() & 0x7F))
@@ -73,7 +73,7 @@ void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	long x, z;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS && !l->gravity_status && !(item->flags & IFL_CODEBITS) || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(TestLaraPosition(DragSASBounds, item, l)) {
@@ -122,7 +122,7 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 	if(item_number == NO_ITEM)
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	item->shade = -0x3DF0;
 	item->object_number = GRENADE;
 	item->room_number = sas->room_number;
@@ -175,7 +175,7 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 void InitialiseSas(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,SAS)->anim_index + 12;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -194,7 +194,7 @@ void SasControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	sas = (CREATURE_INFO*)item->data;
 	angle = 0;
 	tilt = 0;

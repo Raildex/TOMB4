@@ -452,9 +452,9 @@ long RopeNodeCollision(ROPE_STRUCT* rope, long x, long y, long z, long rad) {
 void RopeControl(short item_num) {
 	ROPE_STRUCT* currope;
 
-	currope = &RopeList[items[item_num].trigger_flags];
+	currope = &RopeList[GetItem(currentLevel,item_num)->trigger_flags];
 
-	if(TriggerActive(&items[item_num])) {
+	if(TriggerActive(GetItem(currentLevel,item_num))) {
 		currope->Active = 1;
 		CalculateRope(currope);
 	} else
@@ -467,7 +467,7 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	short* bounds;
 	long x, y, z, rad;
 
-	rope = &RopeList[items[item_number].trigger_flags];
+	rope = &RopeList[GetItem(currentLevel,item_number)->trigger_flags];
 
 	if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) && l->gravity_status && l->fallspeed > 0 && rope->Active) {
 		bounds = GetBoundsAccurate(l);
@@ -492,7 +492,7 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			l->gravity_status = 0;
 			l->fallspeed = 0;
 			lara.gun_status = LG_HANDS_BUSY;
-			lara.RopePtr = items[item_number].trigger_flags;
+			lara.RopePtr = GetItem(currentLevel,item_number)->trigger_flags;
 			lara.RopeSegment = i;
 			lara.RopeY = l->pos.y_rot;
 			AlignLaraToRope(l);

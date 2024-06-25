@@ -23,6 +23,8 @@
 #include "inputbuttons.h"
 #include "types.h"
 #include "levelinfo.h"
+#include <cstdlib>
+
 static short DeathSlideBounds[12] = { -256, 256, -100, 100, 256, 512, 0, 0, -4550, 4550, 0, 0 };
 static PHD_VECTOR DeathSlidePosition = { 0, 0, 371 };
 
@@ -30,8 +32,8 @@ void InitialiseDeathSlide(short item_number) {
 	ITEM_INFO* item;
 	GAME_VECTOR* old;
 
-	item = &items[item_number];
-	old = (GAME_VECTOR*)game_malloc(sizeof(GAME_VECTOR));
+	item = GetItem(currentLevel, item_number);
+	old = (GAME_VECTOR*)malloc(sizeof(GAME_VECTOR));
 	item->data = old;
 	old->x = item->pos.x_pos;
 	old->y = item->pos.y_pos;
@@ -43,7 +45,7 @@ void DeathSlideCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
 	if(input & IN_ACTION && !l->gravity_status && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP) {
-		item = &items[item_number];
+		item = GetItem(currentLevel, item_number);
 
 		if(item->status == ITEM_INACTIVE) {
 			if(TestLaraPosition(DeathSlideBounds, item, l)) {
@@ -72,7 +74,7 @@ void ControlDeathSlide(short item_number) {
 	long x, y, z, h, c;
 	short room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->status != ITEM_ACTIVE)
 		return;

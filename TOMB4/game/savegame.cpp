@@ -108,7 +108,7 @@ void SaveLaraData() {
 	lara.GeneralPtr = ((long)lara.GeneralPtr + (long)malloc_buffer);
 
 	if(lara.weapon_item != NO_ITEM) {
-		item = &items[lara.weapon_item];
+		item = GetItem(currentLevel,lara.weapon_item);
 		savegame.WeaponObject = item->object_number;
 		savegame.WeaponAnim = item->anim_number;
 		savegame.WeaponFrame = item->frame_number;
@@ -163,7 +163,7 @@ void RestoreLaraData(long FullSave) {
 
 	if(lara.weapon_item != NO_ITEM) {
 		lara.weapon_item = CreateItem();
-		item = &items[lara.weapon_item];
+		item = GetItem(currentLevel,lara.weapon_item);
 		item->object_number = savegame.WeaponObject;
 		item->anim_number = savegame.WeaponAnim;
 		item->frame_number = savegame.WeaponFrame;
@@ -216,8 +216,8 @@ void sgRestoreLevel() {
 	InitialiseLaraAnims(lara_item);
 
 	if(savegame.Lara.vehicle != NO_ITEM) {
-		for(int i = 0; i < level_items; i++) {
-			item = &items[i];
+		for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+			item = GetItem(currentLevel,i);
 
 			if(item->object_number == MOTORBIKE || item->object_number == JEEP) {
 				item->pos.x_pos = lara_item->pos.x_pos;
@@ -419,8 +419,8 @@ void SaveLevelData(long FullSave) {
 	for(int i = 0; i < number_spotcams; i++)
 		WriteSG(&SpotCam[i].flags, sizeof(short));
 
-	for(int i = 0; i < level_items; i++) {
-		item = &items[i];
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+		item = GetItem(currentLevel,i);
 		obj = GetObjectInfo(currentLevel,item->object_number);
 		packed = 0;
 
@@ -614,9 +614,9 @@ void SaveLevelData(long FullSave) {
 
 	if(FullSave) {
 		byte = 0;
-		item = &items[level_items];
+		item = GetItem(currentLevel,GetNumLevelItems(currentLevel));
 
-		for(int i = level_items; i < 256; i++) {
+		for(int i = GetNumLevelItems(currentLevel); i < 256; i++) {
 			if(item->active && (item->object_number == FLARE_ITEM || item->object_number == BURNING_TORCH_ITEM))
 				byte++;
 
@@ -624,9 +624,9 @@ void SaveLevelData(long FullSave) {
 		}
 
 		WriteSG(&byte, sizeof(unsigned char));
-		item = &items[level_items];
+		item = GetItem(currentLevel,GetNumLevelItems(currentLevel));
 
-		for(int i = level_items; i < 256; i++) {
+		for(int i = GetNumLevelItems(currentLevel); i < 256; i++) {
 			if(item->active && (item->object_number == FLARE_ITEM || item->object_number == BURNING_TORCH_ITEM)) {
 				if(item->object_number == FLARE_ITEM)
 					byte = 0;
@@ -695,9 +695,9 @@ void SaveLevelData(long FullSave) {
 		}
 
 		byte = 0;
-		item = &items[level_items];
+		item = GetItem(currentLevel,GetNumLevelItems(currentLevel));
 
-		for(int i = level_items; i < 256; i++) {
+		for(int i = GetNumLevelItems(currentLevel); i < 256; i++) {
 			if(item->active && item->object_number == CLOCKWORK_BEETLE) {
 				byte = 1;
 				break;
@@ -821,8 +821,8 @@ void RestoreLevelData(long FullSave) {
 	for(int i = 0; i < number_spotcams; i++)
 		ReadSG(&SpotCam[i].flags, sizeof(short));
 
-	for(int i = 0; i < level_items; i++) {
-		item = &items[i];
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+		item = GetItem(currentLevel,i);
 		obj = GetObjectInfo(currentLevel,item->object_number);
 		ReadSG(&packed, sizeof(unsigned short));
 
@@ -1001,7 +1001,7 @@ void RestoreLevelData(long FullSave) {
 
 		for(int i = 0; i < numberof; i++) {
 			item_number = CreateItem();
-			item = &items[item_number];
+			item = GetItem(currentLevel,item_number);
 			ReadSG(&byte, sizeof(char));
 
 			if(!byte)

@@ -124,7 +124,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 		item_number = GetRoom(currentLevel,rooms[i])->item_number;
 
 		while(item_number != NO_ITEM) {
-			item2 = &items[item_number];
+			item2 = GetItem(currentLevel, item_number);
 			next_item = item2->next_item;
 
 			if(item2 == item) // don't get the item we're checking for
@@ -218,7 +218,7 @@ void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INF
 	ITEM_INFO* item;
 	long dx, dy, dz;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->status != ITEM_INVISIBLE && item->item_flags[3] && TestBoundsCollide(item, l, coll->radius)) {
 		dx = lara_item->pos.x_pos;
@@ -249,7 +249,7 @@ void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	long TouchBits, DeadlyBits, dx, dy, dz;
 	short y_rot;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->status != ITEM_INVISIBLE && TestBoundsCollide(item, l, coll->radius)) {
 		TouchBits = TestCollision(item, l);
@@ -310,7 +310,7 @@ void CreatureCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	short* bounds;
 	long x, z, rx, rz, c, s;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l)) {
 		if(lara.water_status != LW_UNDERWATER && lara.water_status != LW_SURFACE) {
@@ -552,7 +552,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 		item_number = r->item_number;
 
 		while(item_number != NO_ITEM) {
-			item = &items[item_number];
+			item = GetItem(currentLevel, item_number);
 			nex = item->next_item;
 
 			if(item->collidable && item->status != ITEM_INVISIBLE) {
@@ -602,7 +602,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 void ObjectCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l) && coll->enable_baddie_push)
 		ItemPushLara(item, l, coll, 0, 1);
@@ -611,7 +611,7 @@ void ObjectCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void ObjectCollisionNoBigPush(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l) && coll->enable_baddie_push)
 		ItemPushLara(item, l, coll, 0, 0);
@@ -620,7 +620,7 @@ void ObjectCollisionNoBigPush(short item_number, ITEM_INFO* l, COLL_INFO* coll) 
 void TrapCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->status == ITEM_ACTIVE) {
 		if(!TestBoundsCollide(item, l, coll->radius))
@@ -1016,7 +1016,7 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	short* bounds;
 	long touchedBits, hurtfulBits, x, y, z;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->status == ITEM_INVISIBLE)
 		return;
@@ -1088,7 +1088,7 @@ void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	long x, y, z;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->status == ITEM_INVISIBLE)
 		return;

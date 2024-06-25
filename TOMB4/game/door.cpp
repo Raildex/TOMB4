@@ -54,7 +54,7 @@ void ShutThatDoor(DOORPOS_DATA* d) {
 		d->floor->sky_room = -1;
 
 		if(d->block != 2047) {
-			boxes[d->block].overlap_index |= 0x4000;
+			GetBox(currentLevel,d->block)->overlap_index |= 0x4000;
 
 			for(short slot = 0; slot < 5; slot++) {
 				cinfo = &baddie_slots[slot];
@@ -71,7 +71,7 @@ void OpenThatDoor(DOORPOS_DATA* d) {
 		*d->floor = d->data;
 
 		if(d->block != 2047) {
-			boxes[d->block].overlap_index &= ~0x4000;
+			GetBox(currentLevel,d->block)->overlap_index &= ~0x4000;
 
 			for(short slot = 0; slot < 5; slot++) {
 				cinfo = &baddie_slots[slot];
@@ -86,7 +86,7 @@ void DoorControl(short item_number) {
 	DOOR_DATA* door;
 	short* bounds;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	door = (DOOR_DATA*)item->data;
 
 	if(item->trigger_flags == 1) {
@@ -155,7 +155,7 @@ void DoorControl(short item_number) {
 void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_num];
+	item = GetItem(currentLevel, item_num);
 
 	if(item->trigger_flags == 2 && item->status != ITEM_ACTIVE && ((input & IN_ACTION || GLOBAL_inventoryitemchosen == CROWBAR_ITEM) && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_num)) {
 		item->pos.y_rot ^= 0x8000;
@@ -225,7 +225,7 @@ void PushPullKickDoorControl(short item_number) {
 	ITEM_INFO* item;
 	DOOR_DATA* door;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	door = (DOOR_DATA*)item->data;
 
 	if(!door->Opened) {
@@ -243,7 +243,7 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	long pull, goin;
 
-	item = &items[item_num];
+	item = GetItem(currentLevel, item_num);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && item->status != ITEM_ACTIVE && !l->gravity_status && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_num) {
 		pull = 0;
@@ -306,7 +306,7 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 void DoubleDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_num];
+	item = GetItem(currentLevel, item_num);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && item->status != ITEM_ACTIVE && !l->gravity_status && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_num) {
 		item->pos.y_rot ^= 0x8000;
@@ -338,7 +338,7 @@ void DoubleDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 void UnderwaterDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_num];
+	item = GetItem(currentLevel, item_num);
 
 	if(input & IN_ACTION 
 	&& item->status != ITEM_ACTIVE 
@@ -377,7 +377,7 @@ void SequenceDoorControl(short item_number) {
 	ITEM_INFO* item;
 	DOOR_DATA* door;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	door = (DOOR_DATA*)item->data;
 
 	if(item->item_flags[0]) {

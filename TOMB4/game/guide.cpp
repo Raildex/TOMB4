@@ -36,7 +36,7 @@ static BITE_INFO guide_lighter = { 30, 80, 50, 15 };
 void InitialiseGuide(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,GUIDE)->anim_index + 4;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -65,7 +65,7 @@ void GuideControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	guide = (CREATURE_INFO*)item->data;
 	got_torch = 0; // JUST grabbed the torch
 	tilt = 0;
@@ -127,7 +127,7 @@ void GuideControl(short item_number) {
 	if(!GetObjectInfo(currentLevel,WRAITH1)->loaded && (item->current_anim_state < 4 || item->current_anim_state == 31)) {
 		for(int i = 0; i < 5; i++) {
 			if(baddie_slots[i].item_num != NO_ITEM && baddie_slots[i].item_num != item_number) {
-				candidate = &items[baddie_slots[i].item_num];
+				candidate = GetItem(currentLevel, baddie_slots[i].item_num);
 
 				if(candidate->object_number != GUIDE && abs(candidate->pos.y_pos - item->pos.y_pos) <= 512) {
 					x = candidate->pos.x_pos - item->pos.x_pos;
@@ -465,7 +465,7 @@ void GuideControl(short item_number) {
 			item->meshswap_meshbits &= ~0x40000;
 
 			for(candidate_num = GetRoom(currentLevel,item->room_number)->item_number; candidate_num != NO_ITEM; candidate_num = candidate->next_item) {
-				candidate = &items[candidate_num];
+				candidate = GetItem(currentLevel, candidate_num);
 
 				if(candidate->object_number >= ANIMATING1 && candidate->object_number <= ANIMATING15 && !((item->pos.z_pos ^ candidate->pos.z_pos) & ~0x3FF) && !((item->pos.x_pos ^ candidate->pos.x_pos) & ~0x3FF)) {
 					candidate->mesh_bits = 0xFFFFFFFD;

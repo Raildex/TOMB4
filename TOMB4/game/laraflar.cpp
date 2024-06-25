@@ -148,7 +148,7 @@ void CreateFlare(short object, long thrown) {
 
 	if(flare_item != NO_ITEM) {
 		collided = 0;
-		flare = &items[flare_item];
+		flare = GetItem(currentLevel, flare_item);
 		flare->object_number = object;
 		flare->room_number = lara_item->room_number;
 
@@ -369,7 +369,7 @@ void FlareControl(short item_number) {
 	ITEM_INFO* flare;
 	long x, y, z, xv, yv, zv, flare_age;
 
-	flare = &items[item_number];
+	flare = GetItem(currentLevel, item_number);
 
 	if(flare->fallspeed) {
 		flare->pos.x_rot += 546;

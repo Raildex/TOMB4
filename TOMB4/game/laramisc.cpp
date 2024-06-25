@@ -139,7 +139,7 @@ void LaraCheat(ITEM_INFO* item, COLL_INFO* coll) {
 
 void InitialiseLaraLoad(short item_number) {
 	lara.item_number = item_number;
-	lara_item = &items[item_number];
+	lara_item = GetItem(currentLevel,item_number);
 }
 
 void InitialiseLaraAnims(ITEM_INFO* item) {

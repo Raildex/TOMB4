@@ -29,16 +29,13 @@
 #include "gfleveloptions.h"
 #include "levelinfo.h"
 static PISTOL_DEF PistolTable[4] = {
-	{ LARA, 0, 0, 0, 0 },
-	{ PISTOLS_ANIM, 4, 5, 13, 24 },
-	{ SIXSHOOTER_ANIM, 7, 8, 15, 29 },
-	{ UZI_ANIM, 4, 5, 13, 24 }
+	{ LARA, 0, 0, 0, 0 }, { PISTOLS_ANIM, 4, 5, 13, 24 }, { SIXSHOOTER_ANIM, 7, 8, 15, 29 }, { UZI_ANIM, 4, 5, 13, 24 }
 };
 
 void undraw_pistol_mesh_left(long weapon_type) {
 	if(weapon_type != WEAPON_REVOLVER) {
 		WeaponObject(weapon_type);
-		lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2);
+		lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_LHAND * 2);
 
 		if(weapon_type == WEAPON_PISTOLS)
 			lara.holster = LARA_HOLSTERS_PISTOLS;
@@ -49,7 +46,7 @@ void undraw_pistol_mesh_left(long weapon_type) {
 
 void undraw_pistol_mesh_right(long weapon_type) {
 	WeaponObject(weapon_type);
-	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_RHAND * 2);
+	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_RHAND * 2);
 
 	if(weapon_type == WEAPON_PISTOLS)
 		lara.holster = LARA_HOLSTERS_PISTOLS;
@@ -64,7 +61,7 @@ static void set_arm_info(LARA_ARM* arm, long frame) {
 	long anim_base;
 
 	p = &PistolTable[lara.gun_type];
-	anim_base = GetObjectInfo(currentLevel,p->ObjectNum)->anim_index;
+	anim_base = GetObjectInfo(currentLevel, p->ObjectNum)->anim_index;
 
 	if(frame >= p->Draw1Anim) {
 		if(frame >= p->Draw2Anim) {
@@ -78,7 +75,7 @@ static void set_arm_info(LARA_ARM* arm, long frame) {
 
 	arm->anim_number = (short)anim_base;
 	arm->frame_number = (short)frame;
-	arm->frame_base = GetAnim(currentLevel,anim_base)->frame_ptr;
+	arm->frame_base = GetAnim(currentLevel, anim_base)->frame_ptr;
 }
 
 void ready_pistols(long weapon_type) {
@@ -94,19 +91,19 @@ void ready_pistols(long weapon_type) {
 	lara.target_item = NO_ITEM;
 	lara.right_arm.lock = 0;
 	lara.left_arm.lock = 0;
-	lara.right_arm.frame_base = GetObjectInfo(currentLevel,WeaponObject(weapon_type))->frame_base;
+	lara.right_arm.frame_base = GetObjectInfo(currentLevel, WeaponObject(weapon_type))->frame_base;
 	lara.left_arm.frame_base = lara.right_arm.frame_base;
 }
 
 void draw_pistol_meshes(long weapon_type) {
 	long mesh_index;
 
-	mesh_index = GetObjectInfo(currentLevel,WeaponObjectMesh(weapon_type))->mesh_index;
+	mesh_index = GetObjectInfo(currentLevel, WeaponObjectMesh(weapon_type))->mesh_index;
 	lara.holster = LARA_HOLSTERS;
-	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,mesh_index + LM_RHAND * 2);
+	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, mesh_index + LM_RHAND * 2);
 
 	if(weapon_type != WEAPON_REVOLVER)
-		lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,mesh_index + LM_LHAND * 2);
+		lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, mesh_index + LM_LHAND * 2);
 }
 
 void draw_pistols(long weapon_type) {
@@ -265,7 +262,6 @@ void AnimatePistols(long weapon_type) {
 	p = &PistolTable[lara.gun_type];
 	winfo = &weapons[weapon_type];
 	anir = lara.right_arm.frame_number;
-
 	if(lara.right_arm.lock || input & IN_ACTION && lara.target_item == NO_ITEM) {
 		if(lara.right_arm.frame_number >= 0 && lara.right_arm.frame_number < p->Draw1Anim2)
 			anir++;
@@ -275,7 +271,7 @@ void AnimatePistols(long weapon_type) {
 					angles[0] = lara.right_arm.y_rot + lara_item->pos.y_rot;
 					angles[1] = lara.right_arm.x_rot;
 
-					if(FireWeapon(weapon_type, &items[lara.target_item], lara_item, angles)) {
+					if(FireWeapon(weapon_type, GetItem(currentLevel, lara.target_item), lara_item, angles)) {
 						SmokeCountR = 28;
 						SmokeWeapon = weapon_type;
 						TriggerGunShell(1, GUNSHELL, weapon_type);
@@ -330,7 +326,7 @@ void AnimatePistols(long weapon_type) {
 				angles[0] = lara.left_arm.y_rot + lara_item->pos.y_rot;
 				angles[1] = lara.left_arm.x_rot;
 
-				if(FireWeapon(weapon_type, &items[lara.target_item], lara_item, angles)) {
+				if(FireWeapon(weapon_type, GetItem(currentLevel, lara.target_item), lara_item, angles)) {
 					if(weapon_type == WEAPON_REVOLVER) {
 						SmokeCountR = 28;
 						SmokeWeapon = WEAPON_REVOLVER;

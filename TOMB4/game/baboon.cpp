@@ -31,7 +31,7 @@ static BITE_INFO baboon_hit = { 10, 10, 11, 4 };
 void InitialiseBaboon(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,BABOON_NORMAL)->anim_index + 2;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -56,7 +56,7 @@ void BaboonControl(short item_number) {
 		tilt = 0;
 		angle = 0;
 		head = 0;
-		item = &items[item_number];
+		item = GetItem(currentLevel, item_number);
 		baboon = (CREATURE_INFO*)item->data;
 
 		if(!item->item_flags[2])
@@ -219,7 +219,7 @@ void BaboonControl(short item_number) {
 				if(item2) {
 					if(item2->object_number == KEY_ITEM4 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 12) {
 						if(item2->room_number != 255 && item2->status != ITEM_INVISIBLE && !(item2->flags & IFL_CLEARBODY)) {
-							item->carried_item = item2 - items;
+							item->carried_item = GetItemNum(currentLevel, item2);
 							RemoveDrawnItem(item->carried_item);
 							item2->room_number = 255;
 							item2->carried_item = -1;
@@ -236,7 +236,7 @@ void BaboonControl(short item_number) {
 						baboon->enemy = 0;
 					} else if(item2->object_number == AI_AMBUSH && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 12) {
 						item->ai_bits = 0;
-						item2 = &items[item->carried_item];
+						item2 = GetItem(currentLevel, item->carried_item);
 						item2->pos.x_pos = item->pos.x_pos;
 						item2->pos.y_pos = item->pos.y_pos;
 						item2->pos.z_pos = item->pos.z_pos;
@@ -356,7 +356,7 @@ void FindCrowbarSwitch(ITEM_INFO* item, short switch_index) {
 	short item_num;
 
 	for(item_num = GetRoom(currentLevel,item->room_number)->item_number; item_num != NO_ITEM; item_num = item2->next_item) {
-		item2 = &items[item_num];
+		item2 = GetItem(currentLevel, item_num);
 
 		if(item2->object_number == COG)
 			item2->item_flags[0] = switch_index;
@@ -368,7 +368,7 @@ void FindCrowbarSwitch(ITEM_INFO* item, short switch_index) {
 void ReTriggerBaboon(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	ExplodeBaboon(item);
 	item->pos.x_pos = (item->item_flags[0] & 0xFF) << 10 | 0x200;
 	item->pos.y_pos = item->item_flags[1] << 8;

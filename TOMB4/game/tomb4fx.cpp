@@ -150,7 +150,7 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 	long bit, poppush;
 	short fx_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	obj = GetObjectInfo(currentLevel,item->object_number);
 	frame = GetBestFrame(item);
 	phd_PushUnitMatrix();
@@ -1906,7 +1906,7 @@ void S_DrawSparks() {
 				sptr->Flags &= ~0x40;
 			}
 		} else if(sptr->Flags & 0x80) {
-			item = &items[sptr->FxObj];
+			item = GetItem(currentLevel,sptr->FxObj);
 
 			if(sptr->Flags & 0x1000) {
 				if(NodeOffsets[sptr->NodeNumber].GotIt) {

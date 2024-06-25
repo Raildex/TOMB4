@@ -32,7 +32,7 @@ static long next_scarab = 0;
 void InitialiseScarab(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,BIG_BEETLE)->anim_index + 3;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -50,7 +50,7 @@ void ScarabControl(short item_number) {
 		return;
 
 	angle = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	beetle = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0) {
@@ -204,7 +204,7 @@ void TriggerScarab(short item_number) {
 	ITEM_INFO* item;
 	short fx_num;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(item->trigger_flags && (!item->item_flags[2] || !(GetRandomControl() & 0xF))) {
 		item->trigger_flags--;
@@ -333,7 +333,7 @@ void InitialiseScarabGenerator(short item_number) {
 	ITEM_INFO* item;
 	short flag;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	flag = item->trigger_flags / 1000;
 	item->pos.x_rot = 0x2000;
 	item->item_flags[0] = flag & 1;

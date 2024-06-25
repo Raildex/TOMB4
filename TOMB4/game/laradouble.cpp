@@ -1,6 +1,7 @@
 
 #include "laradouble.h"
 #include "box.h"
+#include "levelinfo.h"
 #include "sound.h"
 #include "control.h"
 #include "lara.h"
@@ -13,7 +14,7 @@ void InitialiseLaraDouble(short item_number) {
 void LaraDoubleControl(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	SoundEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_DEFAULT);
 
 	if(!CreatureActive(item_number))

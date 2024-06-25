@@ -80,9 +80,6 @@
 #include <dinput.h>
 #include "levelinfo.h"
 
-ITEM_INFO* items;
-long level_items;
-
 short* OutsideRoomOffsets;
 char* OutsideRoomTable;
 short IsRoomOutsideNo;
@@ -353,7 +350,7 @@ long ControlPhase(long nframes, long demo_mode) {
 		item_num = next_item_active;
 
 		while(item_num != -1) {
-			item = &items[item_num];
+			item = GetItem(currentLevel, item_num);
 			nex = item->next_active;
 
 			if(item->after_death < 128) {
@@ -510,8 +507,8 @@ void FlipMap(long FlipNumber) {
 		r = GetRoom(currentLevel,i);
 
 		if(r->flipped_room >= 0 && r->FlipNumber == FlipNumber) {
-			for(int j = r->item_number; j != NO_ITEM; j = items[j].next_item)
-				items[j].il.room_number = 255;
+			for(int j = r->item_number; j != NO_ITEM; j = GetItem(currentLevel, j)->next_item)
+				GetItem(currentLevel, j)->il.room_number = 255;
 
 			RemoveRoomFlipItems(r);
 			flipped = GetRoom(currentLevel,r->flipped_room);
@@ -539,7 +536,7 @@ void RemoveRoomFlipItems(ROOM_INFO* r) {
 	ITEM_INFO* item;
 
 	for(short item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item) {
-		item = &items[item_num];
+		item = GetItem(currentLevel, item_num);
 
 		if(item->flags & IFL_INVISIBLE && GetObjectInfo(currentLevel,item->object_number)->intelligent) {
 			if(item->hit_points <= 0 && item->hit_points != -16384)
@@ -552,9 +549,9 @@ void AddRoomFlipItems(ROOM_INFO* r) {
 	ITEM_INFO* item;
 
 	for(short item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item) {
-		item = &items[item_num];
+		item = GetItem(currentLevel, item_num);
 
-		if(items[item_num].object_number == RAISING_BLOCK1 && item->item_flags[1])
+		if(GetItem(currentLevel, item_num)->object_number == RAISING_BLOCK1 && item->item_flags[1])
 			AlterFloorHeight(item, -1024);
 
 		if(item->object_number == RAISING_BLOCK2 && item->item_flags[1])
@@ -682,12 +679,12 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 			value = *data++ & 0x3FF;
 
 			if(flags & IFL_INVISIBLE)
-				items[value].item_flags[0] = 1;
+				GetItem(currentLevel,value)->item_flags[0] = 1;
 
 			if(!SwitchTrigger(value, timer))
 				return;
 
-			switch_off = items[value].current_anim_state == 1;
+			switch_off = GetItem(currentLevel,value)->current_anim_state == 1;
 			break;
 
 		case KEY:
@@ -738,7 +735,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 
 		switch((trigger & 0x3FFF) >> 10) {
 		case TO_OBJECT:
-			item = &items[value];
+			item = GetItem(currentLevel,value);
 
 			if(key >= 2 || ((type == ANTIPAD || type == ANTITRIGGER || type == HEAVYANTITRIGGER) && item->flags & IFL_ANTITRIGGER_ONESHOT) || (type == SWITCH && item->flags & IFL_SWITCH_ONESHOT) || (type != SWITCH && type != ANTIPAD && type != ANTITRIGGER && type != HEAVYANTITRIGGER && item->flags & IFL_INVISIBLE) || ((type != ANTIPAD && type != ANTITRIGGER && type != HEAVYANTITRIGGER) && (item->object_number == DART_EMITTER && item->active)))
 				break;
@@ -880,7 +877,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 			break;
 
 		case TO_TARGET:
-			camera_item = &items[value];
+			camera_item = GetItem(currentLevel,value);
 			break;
 
 		case TO_FINISH:
@@ -1356,7 +1353,7 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 					continue;
 				}
 
-				item = &items[trigger & 0x3FF];
+				item = GetItem(currentLevel,trigger & 0x3FF);
 
 				if(GetObjectInfo(currentLevel,item->object_number)->floor && !(item->flags & 0x8000))
 					GetObjectInfo(currentLevel,item->object_number)->floor(item, x, y, z, &height);
@@ -1621,7 +1618,7 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 						if((trigger & 0x3C00) == (TO_CAMERA << 10) || (trigger & 0x3C00) == (TO_FLYBY << 10))
 							trigger = *data++;
 					} else {
-						item = &items[trigger & 0x3FF];
+						item = GetItem(currentLevel,trigger & 0x3FF);
 
 						if(GetObjectInfo(currentLevel,item->object_number)->ceiling && !(item->flags & 0x8000))
 							GetObjectInfo(currentLevel,item->object_number)->ceiling(item, x, y, z, &height);
@@ -1665,11 +1662,11 @@ void AlterFloorHeight(ITEM_INFO* item, long height) {
 			floor->floor = -127;
 	}
 
-	if(boxes[floor->box].overlap_index & 0x8000) {
+	if(GetBox(currentLevel,floor->box)->overlap_index & 0x8000) {
 		if(height >= 0)
-			boxes[floor->box].overlap_index &= ~0x4000;
+			GetBox(currentLevel,floor->box)->overlap_index &= ~0x4000;
 		else
-			boxes[floor->box].overlap_index |= 0x4000;
+			GetBox(currentLevel,floor->box)->overlap_index |= 0x4000;
 	}
 }
 
@@ -1778,7 +1775,7 @@ void RefreshCamera(short type, short* data) {
 			target_ok = 0;
 		} else if(((trigger >> 10) & 0xF) == TO_TARGET) {
 			if(camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA || camera.number == NO_ITEM || camera.fixed[camera.number].flags & 1)
-				camera.item = &items[value];
+				camera.item = GetItem(currentLevel,value);
 		}
 
 	} while(!(trigger & 0x8000));
@@ -2261,7 +2258,7 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 		r = GetRoom(currentLevel,los_rooms[i]);
 
 		for(item_number = r->item_number; item_number != NO_ITEM; item_number = item->next_item) {
-			item = &items[item_number];
+			item = GetItem(currentLevel,item_number);
 
 			if(item->status != ITEM_DEACTIVATED && item->status != ITEM_INVISIBLE && item->object_number != LARA) {
 				bounds = GetBoundsAccurate(item);
@@ -2342,7 +2339,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 					TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 					TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 				} else {
-					shotitem = &items[item_no];
+					shotitem = GetItem(currentLevel,item_no);
 
 					if(shotitem->object_number != SWITCH_TYPE7 && shotitem->object_number != SWITCH_TYPE8) {
 						if(GetObjectInfo(currentLevel,shotitem->object_number)->explodable_meshbits & ShatterItem.Bit && LaserSight) {
@@ -2379,8 +2376,8 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 
 								for(int i = NumTrigs - 1; i >= 0; i--) {
 									AddActiveItem(TriggerItems[i]);
-									items[TriggerItems[i]].status = ITEM_ACTIVE;
-									items[TriggerItems[i]].flags |= IFL_CODEBITS;
+									GetItem(currentLevel,TriggerItems[i])->status = ITEM_ACTIVE;
+									GetItem(currentLevel,TriggerItems[i])->flags |= IFL_CODEBITS;
 								}
 							}
 
@@ -2749,7 +2746,7 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	if(item_number < 0)
 		ClosestNode = -1;
 	else {
-		item = &items[item_number];
+		item = GetItem(currentLevel,item_number);
 		obj = GetObjectInfo(currentLevel,item->object_number);
 		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
 

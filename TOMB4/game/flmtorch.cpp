@@ -82,14 +82,14 @@ void TriggerTorchFlame(short item_number, long node) {
 	sptr->Size = (GetRandomControl() & 0x1F) + 80;
 	sptr->sSize = sptr->Size;
 	sptr->dSize = sptr->Size >> 3;
-	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &items[item_number].pos, SFX_DEFAULT);
+	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &GetItem(currentLevel, item_number)->pos, SFX_DEFAULT);
 }
 
 void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	short rot;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(lara.gun_type == WEAPON_TORCH && lara.gun_status == LG_READY && !lara.left_arm.lock && (item->status & 1) != lara.LitTorch && item->timer != -1 && input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status) {
 		rot = item->pos.y_rot;
@@ -240,7 +240,7 @@ void DoFlameTorch() {
 		TriggerDynamic(pos.x, pos.y, pos.z, 12 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
 
 		if(!(wibble & 7))
-			TriggerTorchFlame(lara_item - items, 0);
+			TriggerTorchFlame(GetItemNum(currentLevel,lara_item), 0);
 
 		TorchItem = lara_item;
 	}
@@ -269,7 +269,7 @@ void FlameTorchControl(short item_number) {
 	PHD_3DPOS pos;
 	long x, y, z, xv, yv, zv;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->fallspeed)
 		item->pos.z_rot += 910;
@@ -306,7 +306,7 @@ void FlameTorchControl(short item_number) {
 
 		if(itemlist[0]) {
 			if(!GetObjectInfo(currentLevel,itemlist[0]->object_number)->intelligent)
-				ObjectCollision(itemlist[0] - items, item, &mycoll);
+				ObjectCollision(GetItemNum(currentLevel,itemlist[0]), item, &mycoll);
 		} else {
 			sinfo = GetStaticObject(currentLevel,meshlist[0]->static_number);
 			pos.x_pos = meshlist[0]->x;

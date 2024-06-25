@@ -12,7 +12,7 @@
 void InitialiseJeanYves(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->goal_anim_state = 1;
 	item->current_anim_state = 1;
 	item->anim_number = GetObjectInfo(currentLevel,JEAN_YVES)->anim_index;
@@ -23,7 +23,7 @@ void JeanYvesControl(short item_number) {
 	ITEM_INFO* item;
 	short random;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags < lara.highest_location) {
 		if(lara.highest_location > 3)

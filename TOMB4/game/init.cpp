@@ -35,20 +35,20 @@
 #include "levelinfo.h"
 
 void InitialiseMapper(short item_number) {
-	items[item_number].mesh_bits = 0xFFFFFFFD; // hide laser
+	GetItem(currentLevel, item_number)->mesh_bits = 0xFFFFFFFD; // hide laser
 }
 
 void InitialiseLightningConductor(short item_number) {
 	ITEM_INFO* item;
 	long pack;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags == 2) {
 		pack = 0;
 
-		for(int i = 0; i < level_items; i++) {
-			if(items[i].object_number == ANIMATING8) {
+		for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+			if(GetItem(currentLevel, i)->object_number == ANIMATING8) {
 				item->item_flags[2] |= i << (pack != 0 ? 8 : 0);
 				pack++;
 			}
@@ -64,7 +64,7 @@ void InitialiseDoor(short item_number) {
 	long dx, dy;
 	short two_room, box_number, room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	door = (DOOR_DATA*)game_malloc(sizeof(DOOR_DATA));
 	item->data = door;
 	door->Opened = 0;
@@ -91,7 +91,7 @@ void InitialiseDoor(short item_number) {
 		box_number = b->floor[(((item->pos.z_pos - b->z) >> 10) + dx) + (((item->pos.x_pos - b->x) >> 10) + dy) * b->x_size].box;
 	}
 
-	door->d1.block = (boxes[box_number].overlap_index & 0x8000) ? box_number : 2047;
+	door->d1.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : 2047;
 	memcpy(&door->d1.data, door->d1.floor, sizeof(FLOOR_INFO));
 
 	if(r->flipped_room == -1)
@@ -108,7 +108,7 @@ void InitialiseDoor(short item_number) {
 			box_number = b->floor[(((item->pos.z_pos - b->z) >> 10) + dx) + (((item->pos.x_pos - b->x) >> 10) + dy) * b->x_size].box;
 		}
 
-		door->d1flip.block = (boxes[box_number].overlap_index & 0x8000) ? box_number : 2047;
+		door->d1flip.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : 2047;
 		memcpy(&door->d1flip.data, door->d1flip.floor, sizeof(FLOOR_INFO));
 	}
 
@@ -131,7 +131,7 @@ void InitialiseDoor(short item_number) {
 			box_number = b->floor[((item->pos.z_pos - b->z) >> 10) + ((item->pos.x_pos - b->x) >> 10) * b->x_size].box;
 		}
 
-		door->d2.block = (boxes[box_number].overlap_index & 0x8000) ? box_number : 2047;
+		door->d2.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : 2047;
 		memcpy(&door->d2.data, door->d2.floor, sizeof(FLOOR_INFO));
 
 		if(r->flipped_room == -1)
@@ -148,7 +148,7 @@ void InitialiseDoor(short item_number) {
 				box_number = b->floor[((item->pos.z_pos - b->z) >> 10) + ((item->pos.x_pos - b->x) >> 10) * b->x_size].box;
 			}
 
-			door->d2flip.block = (boxes[box_number].overlap_index & 0x8000) ? box_number : 2047;
+			door->d2flip.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : 2047;
 			memcpy(&door->d2flip.data, door->d2flip.floor, sizeof(FLOOR_INFO));
 		}
 
@@ -161,17 +161,17 @@ void InitialiseDoor(short item_number) {
 }
 
 void InitialiseTrapDoor(short item_number) {
-	CloseTrapDoor(&items[item_number]);
+	CloseTrapDoor(GetItem(currentLevel, item_number));
 }
 
 void InitialiseFallingBlock2(short item_number) {
-	items[item_number].mesh_bits = 1;
+	GetItem(currentLevel, item_number)->mesh_bits = 1;
 }
 
 void InitialiseFlameEmitter(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags < 0) {
 		item->item_flags[0] = (GetRandomControl() & 0x3F) + 90;
@@ -193,7 +193,7 @@ void InitialiseFlameEmitter(short item_number) {
 void InitialiseFlameEmitter2(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->pos.y_pos -= 64;
 
 	if(item->trigger_flags != 123) {
@@ -225,13 +225,13 @@ void InitialiseFlameEmitter3(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags < 3)
 		return;
 
-	for(int i = 0; i < level_items; i++) {
-		item2 = &items[i];
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+		item2 = GetItem(currentLevel, i);
 
 		if(item2->object_number == ANIMATING3) {
 			if(item2->trigger_flags == item->trigger_flags)
@@ -248,7 +248,7 @@ void InitialiseJobySpike(short item_number) {
 	long h, c;
 	short room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->pos.y_rot = short(GetRandomControl() << 10);
 	item->item_flags[2] = GetRandomControl() & 1;
 	room_number = item->room_number;
@@ -261,7 +261,7 @@ void InitialiseJobySpike(short item_number) {
 void InitialiseTwoBlockPlatform(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->item_flags[0] = (short)item->pos.y_pos;
 	item->item_flags[1] = 1;
 }
@@ -269,7 +269,7 @@ void InitialiseTwoBlockPlatform(short item_number) {
 void InitialiseSlicerDicer(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->pos.x_pos += 512 * phd_sin(item->pos.y_rot + 0x4000) >> W2V_SHIFT;
 	item->pos.z_pos += 512 * phd_cos(item->pos.y_rot + 0x4000) >> W2V_SHIFT;
 	item->item_flags[3] = 50;
@@ -282,7 +282,7 @@ void InitialiseScaledSpike(short item_number) {
 	ITEM_INFO* item;
 	short xzrots[8];
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	xzrots[0] = -0x8000;
 	xzrots[1] = -0x6000;
 	xzrots[2] = -0x4000;
@@ -312,10 +312,10 @@ void InitialiseRaisingBlock(short item_number) {
 	FLOOR_INFO* floor;
 	short room_num;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	room_num = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_num);
-	boxes[floor->box].overlap_index &= 0xBFFF;
+	GetBox(currentLevel,floor->box)->overlap_index &= 0xBFFF;
 
 	if(item->object_number == EXPANDING_PLATFORM) {
 		if(!item->pos.y_rot)
@@ -336,13 +336,13 @@ void InitialiseRaisingBlock(short item_number) {
 }
 
 void InitialiseBurningFloor(short item_number) {
-	items[item_number].required_anim_state = 127;
+	GetItem(currentLevel, item_number)->required_anim_state = 127;
 }
 
 void InitialiseSethBlade(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->anim_number = GetObjectInfo(currentLevel,SETH_BLADE)->anim_index + 1;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 2;
@@ -355,7 +355,7 @@ void InitialiseObelisk(short item_number) {
 	ITEM_INFO* item2;
 	short* ifl;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 3;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	AddActiveItem(item_number);
@@ -364,8 +364,8 @@ void InitialiseObelisk(short item_number) {
 	if(item->trigger_flags == 2) {
 		ifl = item->item_flags;
 
-		for(int i = 0; i < level_items; i++) {
-			item2 = &items[i];
+		for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+			item2 = GetItem(currentLevel, i);
 
 			if(item2->object_number == OBELISK && i != item_number)
 				*ifl++ = i;
@@ -379,7 +379,7 @@ void InitialiseObelisk(short item_number) {
 void InitialiseMineHelicopter(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!item->trigger_flags)
 		item->mesh_bits = 0;
@@ -390,20 +390,20 @@ void InitialiseSmashObject(short item_number) {
 	ROOM_INFO* rinfo;
 	FLOOR_INFO* floor;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->flags = 0;
 	item->mesh_bits = 1;
 	rinfo = GetRoom(currentLevel,item->room_number);
 	floor = &rinfo->floor[((item->pos.z_pos - rinfo->z) >> 10) + ((item->pos.x_pos - rinfo->x) >> 10) * rinfo->x_size];
 
-	if(boxes[floor->box].overlap_index & 0x8000)
-		boxes[floor->box].overlap_index |= 0x4000;
+	if(GetBox(currentLevel,floor->box)->overlap_index & 0x8000)
+		GetBox(currentLevel,floor->box)->overlap_index |= 0x4000;
 }
 
 void InitialiseStatuePlinth(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!item->trigger_flags)
 		item->mesh_bits = 1;
@@ -412,7 +412,7 @@ void InitialiseStatuePlinth(short item_number) {
 void InitialiseSmokeEmitter(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->object_number != STEAM_EMITTER)
 		return;
@@ -437,7 +437,7 @@ void InitialiseSmokeEmitter(short item_number) {
 void InitialisePulley(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->item_flags[3] = item->trigger_flags;
 	item->trigger_flags = abs(item->trigger_flags);
 
@@ -452,7 +452,7 @@ void InitialisePickUp(short item_number) {
 	short* bounds;
 	short ocb;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	ocb = item->trigger_flags & 0x3F;
 	bounds = GetBoundsAccurate(item);
 
@@ -497,7 +497,7 @@ void InitialiseRope(short item_number) {
 	FLOOR_INFO* floor;
 	short room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	room_number = item->room_number;
 	RopePos.x = item->pos.x_pos;
 	RopePos.y = item->pos.y_pos;

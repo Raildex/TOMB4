@@ -151,8 +151,8 @@ void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - items[item_number].pos.x_pos;
-	dz = lara_item->pos.z_pos - items[item_number].pos.z_pos;
+	dx = lara_item->pos.x_pos - GetItem(currentLevel,item_number)->pos.x_pos;
+	dz = lara_item->pos.z_pos - GetItem(currentLevel,item_number)->pos.z_pos;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -203,7 +203,7 @@ void DoSethEffects(short item_number) {
 	short xv, yv, zv, size;
 	short angles[2];
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	item->item_flags[0]++;
 
 	r.x = NodeOffsets[3].x;
@@ -380,7 +380,7 @@ void DoSethEffects(short item_number) {
 void InitialiseSeth(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,SETHA)->anim_index + 4;
 	item->frame_number = item->anim_number;
@@ -399,7 +399,7 @@ void SethControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	seth = (CREATURE_INFO*)item->data;
 
 	angle = 0;

@@ -40,7 +40,7 @@ static BITE_INFO s_pincer{ 0, 0, 0, 23 };
 void InitialiseScorpion(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 
 	if(item->trigger_flags == 1) {
@@ -69,7 +69,7 @@ void ScorpionControl(short item_number) {
 		return;
 
 	angle = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	scorpion = (CREATURE_INFO*)item->data;
 	s = (682 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
 	c = (682 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
@@ -128,7 +128,7 @@ void ScorpionControl(short item_number) {
 				scorpion->maximum_turn = 0;
 
 				for(target_num = GetRoom(currentLevel,item->room_number)->item_number; target_num != NO_ITEM; target_num = enemy->next_item) {
-					enemy = &items[target_num];
+					enemy = GetItem(currentLevel,target_num);
 
 					if(enemy->object_number == TROOPS && enemy->trigger_flags == 1) {
 						DisableBaddieAI(target_num);
@@ -170,7 +170,7 @@ void ScorpionControl(short item_number) {
 					target_num = baddie_slots[i].item_num;
 
 					if(target_num != NO_ITEM && target_num != item_number) {
-						enemy = &items[target_num];
+						enemy = GetItem(currentLevel,target_num);
 
 						if(enemy->object_number != LARA && enemy->object_number != SCORPION && (enemy != lara_item || scorpion->hurt_by_lara)) {
 							s = enemy->pos.x_pos - item->pos.x_pos;
@@ -313,7 +313,7 @@ void ScorpionControl(short item_number) {
 void InitialiseSmlscorp(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,SMALL_SCORPION)->anim_index + 2;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -332,7 +332,7 @@ void SmlscorpControl(short item_number) {
 		return;
 
 	angle = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	scorpion = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0) {

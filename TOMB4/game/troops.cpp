@@ -26,7 +26,7 @@ static BITE_INFO troop_gun = { 0, 300, 64, 7 };
 void InitialiseTroop(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 
 	if(item->trigger_flags == 1) {
@@ -55,7 +55,7 @@ void TroopControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	troop = (CREATURE_INFO*)item->data;
 	angle = 0;
 	tilt = 0;
@@ -108,7 +108,7 @@ void TroopControl(short item_number) {
 				baddie = &baddie_slots[i];
 
 				if(baddie->item_num != NO_ITEM && baddie->item_num != item_number) {
-					enemy = &items[baddie->item_num];
+					enemy = GetItem(currentLevel,baddie->item_num);
 
 					if(enemy->object_number != LARA && enemy->object_number != TROOPS && (enemy != lara_item || troop->hurt_by_lara)) {
 						dx = enemy->pos.x_pos - item->pos.x_pos;

@@ -8,6 +8,10 @@
 #include "effect2.h"
 #include "function_stubs.h"
 #include "fxinfo.h"
+#include "gameflow.h"
+#include "gfleveloptions.h"
+#include "iteminfo.h"
+#include "items.h"
 #include "laraskin.h"
 #include "meshdata.h"
 #include "objectinfo.h"
@@ -23,6 +27,7 @@
 #include "meshinfo.h"
 #include "types.h"
 #include "winmain.h"
+#include "boxinfo.h"
 LEVEL_INFO* currentLevel;
 struct LEVEL_INFO {
 	OBJECT_INFO* objects;
@@ -39,6 +44,14 @@ struct LEVEL_INFO {
 	long* bones;
 	short* frames;
 	FX_INFO* effects;
+	long effectsCapacity;
+	ITEM_INFO* items;
+	long level_items; // how many items were stored in the level file
+	long itemsCapacity; // how many ITEM_INFOs are within items
+	BOX_INFO* boxes;
+	unsigned short* overlaps;
+	short* ground_zone[5][2];
+	long num_boxes;
 };
 
 LEVEL_INFO* CreateLevel() {
@@ -46,6 +59,9 @@ LEVEL_INFO* CreateLevel() {
 	lvl->objects = (OBJECT_INFO*)calloc(NUMBER_OBJECTS,sizeof(OBJECT_INFO));
 	lvl->statics = (STATIC_INFO*)calloc(NUMBER_STATIC_OBJECTS, sizeof(STATIC_INFO));
 	lvl->effects = (FX_INFO*)calloc(128, sizeof(FX_INFO));
+	lvl->effectsCapacity = 128;
+	lvl->items = (ITEM_INFO*)calloc(1024, sizeof(ITEM_INFO));
+	lvl->itemsCapacity = 1024;
 	return lvl;
 }
 
@@ -526,4 +542,155 @@ long* GetBone(LEVEL_INFO* lvl, long index) {
 
 FX_INFO* GetEffect(LEVEL_INFO* lvl, long fx) {
 	return lvl->effects + fx;
+}
+
+bool LoadItems(char** FileData, LEVEL_INFO* lvl) {
+	ITEM_INFO* item;
+	ROOM_INFO* r;
+	FLOOR_INFO* floor;
+	STATIC_INFO* stat;
+	
+	long num_items, x, y, z;
+
+	Log(2, "LoadItems");
+	num_items = *(long*)*FileData;
+	*FileData += 4;
+
+	if(!num_items)
+		return 1;
+
+	lvl->level_items = num_items;
+	InitialiseItemArray(lvl->itemsCapacity,lvl->level_items);
+
+	for(int i = 0; i < num_items; i++) {
+		item = GetItem(lvl,i);
+
+		item->object_number = *(short*)*FileData;
+		*FileData += sizeof(short);
+
+		item->room_number = *(short*)*FileData;
+		*FileData += sizeof(short);
+
+		item->pos.x_pos = *(long*)*FileData;
+		*FileData += sizeof(long);
+
+		item->pos.y_pos = *(long*)*FileData;
+		*FileData += sizeof(long);
+
+		item->pos.z_pos = *(long*)*FileData;
+		*FileData += sizeof(long);
+
+		item->pos.y_rot = *(short*)*FileData;
+		*FileData += sizeof(short);
+
+		item->shade = *(short*)*FileData;
+		*FileData += sizeof(short);
+
+		item->trigger_flags = *(short*)*FileData;
+		*FileData += sizeof(short);
+
+		item->flags = *(short*)*FileData;
+		*FileData += sizeof(short);
+	}
+
+	for(int i = 0; i < num_items; i++)
+		InitialiseItem(i);
+
+	for(int i = 0; i < GetNumRooms(currentLevel); i++) {
+		r = GetRoom(currentLevel,i);
+
+		for(int j = 0; j < r->num_meshes; j++) {
+			x = (r->mesh[j].x - r->x) >> 10;
+			z = (r->mesh[j].z - r->z) >> 10;
+
+			floor = &(r->floor[x * r->x_size + z]);
+
+			if(!(lvl->boxes[floor->box].overlap_index & 0x4000)) {
+				stat = GetStaticObject(currentLevel,r->mesh[j].static_number);
+				y = floor->floor << 8;
+
+				if(y <= (r->mesh[j].y - stat->y_maxc + 512) && y < r->mesh[j].y - stat->y_minc) {
+					if(!stat->x_maxc || !stat->x_minc || !stat->z_maxc || !stat->z_minc || (stat->x_maxc ^ stat->x_minc) & 0x8000 && (stat->z_maxc ^ stat->z_minc) & 0x8000) {
+						x = (r->mesh[j].x - r->x) >> 10;
+						z = (r->mesh[j].z - r->z) >> 10;
+						r->floor[x * r->x_size + z].stopper = 1;
+					}
+				}
+			}
+		}
+	}
+
+	return 1;
+}
+
+short* GetZone(LEVEL_INFO* lvl, long zone, long flip) {
+	return lvl->ground_zone[zone][flip];
+}
+
+long GetItemNum(LEVEL_INFO *lvl, ITEM_INFO *i) {
+	return i - lvl->items;
+}
+
+long GetNumBoxes(LEVEL_INFO *lvl) {
+	return lvl->num_boxes;
+}
+
+bool LoadBoxes(char** FileData,LEVEL_INFO* lvl) {
+	BOX_INFO* box;
+	long size;
+
+	Log(2, "LoadBoxes");
+	lvl->num_boxes = *(long*)*FileData;
+	*FileData += sizeof(long);
+
+	lvl->boxes = (BOX_INFO*)calloc(lvl->num_boxes,sizeof(BOX_INFO));
+	memcpy(lvl->boxes, *FileData, sizeof(BOX_INFO) * lvl->num_boxes);
+	*FileData += sizeof(BOX_INFO) * lvl->num_boxes;
+
+	size = *(long*)*FileData;
+	*FileData += sizeof(long);
+	lvl->overlaps = (unsigned short*)calloc(size,sizeof(unsigned short));
+	memcpy(lvl->overlaps, *FileData, sizeof(unsigned short) * size);
+	*FileData += sizeof(unsigned short) * size;
+
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 4; j++) {
+			lvl->ground_zone[j][i] = (short*)calloc(lvl->num_boxes,sizeof(short));
+			memcpy(lvl->ground_zone[j][i], *FileData, sizeof(short) * lvl->num_boxes);
+			*FileData += sizeof(short) * lvl->num_boxes;
+		}
+
+		lvl->ground_zone[4][i] = (short*)calloc(lvl->num_boxes,sizeof(short));
+		memcpy(lvl->ground_zone[4][i], *FileData, sizeof(short) * lvl->num_boxes);
+		*FileData += sizeof(short) * lvl->num_boxes;
+	}
+
+	for(int i = 0; i < lvl->num_boxes; i++) {
+		box = &lvl->boxes[i];
+
+		if(box->overlap_index & 0x8000)
+			box->overlap_index |= 0x4000;
+		else if(gfLevelFlags & GF_TRAIN && box->height > -256)
+			box->overlap_index |= 0xC000;
+	}
+
+	return 1;
+}
+
+ITEM_INFO* GetItem(LEVEL_INFO* lvl, long item) {
+	if(item == NO_ITEM)
+		return NULL;
+	return lvl->items + item;
+}
+
+long GetNumLevelItems(LEVEL_INFO *lvl) {
+	return lvl->level_items;
+}
+
+BOX_INFO* GetBox(LEVEL_INFO* lvl, long box) {
+	return lvl->boxes + box;
+}
+
+unsigned short* GetOverlap(LEVEL_INFO* lvl, long overlap) {
+	return lvl->overlaps + overlap;
 }

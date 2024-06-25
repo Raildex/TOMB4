@@ -1322,8 +1322,8 @@ void deal_with_pistols() {
 void cutseq_kill_item(long num) {
 	ITEM_INFO* item;
 
-	for(int i = 0; i < level_items; i++) {
-		item = &items[i];
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+		item = GetItem(currentLevel, i);
 
 		if(item->object_number == num) {
 			old_status_flags[numnailed] = item->status;
@@ -1336,8 +1336,8 @@ void cutseq_kill_item(long num) {
 ITEM_INFO* cutseq_restore_item(long num) {
 	ITEM_INFO* item;
 
-	for(int i = 0; i < level_items; i++) {
-		item = &items[i];
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+		item = GetItem(currentLevel, i);
 
 		if(item->object_number == num) {
 			item->status = old_status_flags[numnailed];
@@ -1475,8 +1475,8 @@ void DelsHandyTeleportLara(long x, long y, long z, long yrot) {
 void nail_intelligent_object(short num) {
 	ITEM_INFO* item;
 
-	for(int i = 0; i < level_items; i++) {
-		item = &items[i];
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+		item = GetItem(currentLevel, i);
 
 		if(item->object_number == num) {
 			item->status = ITEM_INVISIBLE;
@@ -1546,7 +1546,7 @@ void trigger_item_in_room(long room_number, long object_number) {
 	short item_number;
 
 	for(item_number = GetRoom(currentLevel,room_number)->item_number; item_number != NO_ITEM; item_number = item->next_item) {
-		item = &items[item_number];
+		item = GetItem(currentLevel, item_number);
 
 		if(item->object_number == object_number) {
 			AddActiveItem(item_number);
@@ -1564,7 +1564,7 @@ void untrigger_item_in_room(long room_number, long object_number) {
 	short item_number;
 
 	for(item_number = GetRoom(currentLevel,room_number)->item_number; item_number != NO_ITEM; item_number = item->next_item) {
-		item = &items[item_number];
+		item = GetItem(currentLevel, item_number);
 
 		if(item->object_number == object_number) {
 			RemoveActiveItem(item_number);
@@ -1577,8 +1577,8 @@ void untrigger_item_in_room(long room_number, long object_number) {
 ITEM_INFO* find_a_fucking_item(long object_number) {
 	ITEM_INFO* item;
 
-	for(int i = 0; i < level_items; i++) {
-		item = &items[i];
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+		item = GetItem(currentLevel, i);
 
 		if(item->object_number == object_number)
 			return item;
@@ -1621,8 +1621,8 @@ void special3_control() {
 void special1_init() {
 	ITEM_INFO* item;
 
-	for(int i = 0; i < level_items; i++) {
-		item = &items[i];
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+		item = GetItem(currentLevel, i);
 
 		if(item->object_number == ANIMATING6) {
 			item->anim_number = GetObjectInfo(currentLevel,ANIMATING6)->anim_index;

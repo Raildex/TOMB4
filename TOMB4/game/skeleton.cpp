@@ -104,7 +104,7 @@ void TriggerRiseEffect(ITEM_INFO* item) {
 void InitialiseSkeleton(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 
 	if(!item->trigger_flags) {
@@ -147,7 +147,7 @@ void SkeletonControl(short item_number) {
 		return;
 
 	angle = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	skelly = (CREATURE_INFO*)item->data;
 
 	Xoffset = 870 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;

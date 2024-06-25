@@ -29,7 +29,7 @@ static BITE_INFO templar_hit{ 0, 0, 0, 11 };
 void InitialiseTemplar(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->anim_index + 2;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -51,7 +51,7 @@ void TemplarControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	anim = item->anim_number - GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->anim_index;
 
 	if((!anim || anim == 1 || anim == 11 || anim == 12) && (GetRandomControl() & 1) != 0) {

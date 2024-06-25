@@ -42,7 +42,7 @@ static long next_locust = 0;
 void InitialiseCroc(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 
 	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
@@ -69,7 +69,7 @@ void CrocControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	croc = (CREATURE_INFO*)item->data;
 	angle = 0;
 	rot = 0;
@@ -366,7 +366,7 @@ void TriggerLocust(ITEM_INFO* item) {
 void InitialiseLocustEmitter(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!item->pos.y_rot)
 		item->pos.z_pos += 512;
@@ -381,7 +381,7 @@ void InitialiseLocustEmitter(short item_number) {
 void ControlLocustEmitter(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -604,7 +604,7 @@ void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv) {
 void InitialiseCrocgod(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,MUTANT)->anim_index;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -628,7 +628,7 @@ void CrocgodControl(short item_number) {
 	angle = 0;
 	torso = 0;
 	neck = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	crocgod = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0)

@@ -46,59 +46,33 @@ short SPxzoffs[8] = { 0, 0, 0x200, 0, 0, 0, -0x200, 0 };
 short SPyoffs[8] = { -0x400, 0, -0x200, 0, 0, 0, -0x200, 0 };
 short SPDETyoffs[8] = { 0x400, 0x200, 0x200, 0x200, 0, 0x200, 0x200, 0x200 };
 
-static unsigned char Flame3xzoffs[16][2] = {
-	{ 9, 9 },
-	{ 24, 9 },
-	{ 40, 9 },
-	{ 55, 9 },
-	{ 9, 24 },
-	{ 24, 24 },
-	{ 40, 24 },
-	{ 55, 24 },
-	{ 9, 40 },
-	{ 24, 40 },
-	{ 40, 40 },
-	{ 55, 40 },
-	{ 9, 55 },
-	{ 24, 55 },
-	{ 40, 55 },
-	{ 55, 55 }
-};
+static unsigned char Flame3xzoffs[16][2]
+	= { { 9, 9 },	{ 24, 9 },	{ 40, 9 },	{ 55, 9 },	{ 9, 24 },	{ 24, 24 },
+		{ 40, 24 }, { 55, 24 }, { 9, 40 },	{ 24, 40 }, { 40, 40 }, { 55, 40 },
+		{ 9, 55 },	{ 24, 55 }, { 40, 55 }, { 55, 55 } };
 
 short floor_fires[16 * 3] = // 16 points on the burning floor that spawn fires!
 	{
 		// xoff, zoff, size
-		-96, 1216, 2,
-		560, 736, 2,
-		-432, -976, 2,
-		-64, -128, 2,
-		824, 64, 2,
-		456, -352, 1,
-		392, 352, 1,
-		1096, 608, 1,
-		-424, -416, 1,
-		520, 1152, 1,
-		-248, 516, 1,
-		-808, 80, 1,
-		-1192, -384, 0,
-		-904, -864, 0,
-		-136, -912, 0,
-		184, 608, 0
+		-96,   1216, 2, 560,  736,	2, -432, -976, 2, -64,	-128, 2,
+		824,   64,	 2, 456,  -352, 1, 392,	 352,  1, 1096, 608,  1,
+		-424,  -416, 1, 520,  1152, 1, -248, 516,  1, -808, 80,	  1,
+		-1192, -384, 0, -904, -864, 0, -136, -912, 0, 184,	608,  0
 	};
 
-short deadly_floor_fires[4 * 2] = // 4 points on the burning floor that kill Lara if she is too close at explode time
+short deadly_floor_fires[4 * 2] = // 4 points on the burning floor that kill
+								  // Lara if she is too close at explode time
 	{
 		// xoff, zoff
-		-512, -512,
-		0, 0,
-		512, 512,
-		0, 768
+		-512, -512, 0, 0, 512, 512, 0, 768
 	};
 
 static PHD_VECTOR FloorTrapDoorPos = { 0, 0, -655 };
 static PHD_VECTOR CeilingTrapDoorPos = { 0, 1056, -480 };
-static short FloorTrapDoorBounds[12] = { -256, 256, 0, 0, -1024, -256, -1820, 1820, -5460, 5460, -1820, 1820 };
-static short CeilingTrapDoorBounds[12] = { -256, 256, 0, 900, -768, -256, -1820, 1820, -5460, 5460, -1820, 1820 };
+static short FloorTrapDoorBounds[12]
+	= { -256, 256, 0, 0, -1024, -256, -1820, 1820, -5460, 5460, -1820, 1820 };
+static short CeilingTrapDoorBounds[12]
+	= { -256, 256, 0, 900, -768, -256, -1820, 1820, -5460, 5460, -1820, 1820 };
 
 char LibraryTab[8];
 
@@ -107,7 +81,7 @@ void FlameEmitterControl(short item_number) {
 	unsigned long distance;
 	long x, z;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item)) {
 		if(item->trigger_flags >= 0)
@@ -119,8 +93,14 @@ void FlameEmitterControl(short item_number) {
 	if(item->trigger_flags < 0) {
 		if((-item->trigger_flags & 7) == 2 || (-item->trigger_flags & 7) == 7) {
 			SoundEffect(SFX_FLAME_EMITTER, &item->pos, 0);
-			TriggerSuperJetFlame(item, -256 - (3072 * GlobalCounter & 0x1C00), GlobalCounter & 1);
-			TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, (GetRandomControl() & 3) + 20, (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
+			TriggerSuperJetFlame(
+				item, -256 - (3072 * GlobalCounter & 0x1C00),
+				GlobalCounter & 1);
+			TriggerDynamic(
+				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+				(GetRandomControl() & 3) + 20,
+				(GetRandomControl() & 0x3F) + 192,
+				(GetRandomControl() & 0x1F) + 96, 0);
 		} else {
 			if(item->item_flags[0]) {
 				if(item->item_flags[1])
@@ -138,7 +118,8 @@ void FlameEmitterControl(short item_number) {
 
 				if(!item->item_flags[3]) {
 					if(-item->trigger_flags >> 3)
-						item->item_flags[0] = (GetRandomControl() & 0x1F) + 30 * (-item->trigger_flags >> 3);
+						item->item_flags[0] = (GetRandomControl() & 0x1F)
+							+ 30 * (-item->trigger_flags >> 3);
 					else
 						item->item_flags[0] = (GetRandomControl() & 0x3F) + 60;
 				}
@@ -151,26 +132,45 @@ void FlameEmitterControl(short item_number) {
 			}
 
 			if(item->item_flags[2])
-				AddFire(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 0, item->room_number, item->item_flags[2] & 0xFF);
+				AddFire(
+					item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 0,
+					item->room_number, item->item_flags[2] & 0xFF);
 
 			if(item->item_flags[1]) {
 				SoundEffect(SFX_FLAME_EMITTER, &item->pos, 0);
 
 				if(item->item_flags[1] > -8192)
-					TriggerSuperJetFlame(item, item->item_flags[1], GlobalCounter & 1);
+					TriggerSuperJetFlame(
+						item, item->item_flags[1], GlobalCounter & 1);
 				else
-					TriggerSuperJetFlame(item, -256 - (3072 * GlobalCounter & 0x1C00), GlobalCounter & 1);
+					TriggerSuperJetFlame(
+						item, -256 - (3072 * GlobalCounter & 0x1C00),
+						GlobalCounter & 1);
 
-				TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, (-item->item_flags[1] >> 10) - (GetRandomControl() & 1) + 16, (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
+				TriggerDynamic(
+					item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+					(-item->item_flags[1] >> 10) - (GetRandomControl() & 1)
+						+ 16,
+					(GetRandomControl() & 0x3F) + 192,
+					(GetRandomControl() & 0x1F) + 96, 0);
 			} else
-				TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 10 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
+				TriggerDynamic(
+					item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+					10 - (GetRandomControl() & 1),
+					(GetRandomControl() & 0x3F) + 192,
+					(GetRandomControl() & 0x1F) + 96, 0);
 		}
 
 		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, 0);
 	} else {
 		LibraryTab[item->trigger_flags] = 1;
-		AddFire(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, item->room_number, 0);
-		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 16 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
+		AddFire(
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2,
+			item->room_number, 0);
+		TriggerDynamic(
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+			16 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192,
+			(GetRandomControl() & 0x1F) + 96, 0);
 		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
 
 		if(!lara.burn && ItemNearLara(&item->pos, 600)) {
@@ -198,19 +198,23 @@ static long OnTwoBlockPlatform(ITEM_INFO* item, long x, long z) {
 	if(!item->pos.y_rot && (x == tx || x == tx - 1) && (z == tz || z == tz + 1))
 		return 1;
 
-	if(item->pos.y_rot == 0x8000 && (x == tx || x == tx + 1) && (z == tz || z == tz - 1))
+	if(item->pos.y_rot == 0x8000 && (x == tx || x == tx + 1)
+	   && (z == tz || z == tz - 1))
 		return 1;
 
-	if(item->pos.y_rot == 0x4000 && (z == tz || z == tz - 1) && (x == tx || x == tx + 1))
+	if(item->pos.y_rot == 0x4000 && (z == tz || z == tz - 1)
+	   && (x == tx || x == tx + 1))
 		return 1;
 
-	if(item->pos.y_rot == -0x4000 && (z == tz || z == tz - 1) && (x == tx || x == tx - 1))
+	if(item->pos.y_rot == -0x4000 && (z == tz || z == tz - 1)
+	   && (x == tx || x == tx - 1))
 		return 1;
 
 	return 0;
 }
 
-void TwoBlockPlatformFloor(ITEM_INFO* item, long x, long y, long z, long* height) {
+void TwoBlockPlatformFloor(
+	ITEM_INFO* item, long x, long y, long z, long* height) {
 	if(OnTwoBlockPlatform(item, x, z)) {
 		if(y <= item->pos.y_pos + 32 && item->pos.y_pos < *height) {
 			*height = item->pos.y_pos;
@@ -220,7 +224,8 @@ void TwoBlockPlatformFloor(ITEM_INFO* item, long x, long y, long z, long* height
 	}
 }
 
-void TwoBlockPlatformCeiling(ITEM_INFO* item, long x, long y, long z, long* height) {
+void TwoBlockPlatformCeiling(
+	ITEM_INFO* item, long x, long y, long z, long* height) {
 	if(OnTwoBlockPlatform(item, x, z)) {
 		if(y > item->pos.y_pos + 32 && item->pos.y_pos > *height)
 			*height = item->pos.y_pos + 256;
@@ -232,24 +237,31 @@ void ControlTwoBlockPlatform(short item_number) {
 	long height;
 	short room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
 
 	if(item->trigger_flags) {
-		if(item->pos.y_pos > item->item_flags[0] - (long(item->trigger_flags & 0xFFFFFFF0) << 4))
+		if(item->pos.y_pos > item->item_flags[0]
+			   - (long(item->trigger_flags & 0xFFFFFFF0) << 4))
 			item->pos.y_pos -= item->trigger_flags & 0xF;
 
 		room_number = item->room_number;
-		item->floor = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->floor = GetHeight(
+			GetFloor(
+				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+				&room_number),
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 		if(room_number != item->room_number)
 			ItemNewRoom(item_number, room_number);
 	} else {
 		OnObject = 0;
 		height = lara_item->pos.y_pos + 1;
-		TwoBlockPlatformFloor(item, lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, &height);
+		TwoBlockPlatformFloor(
+			item, lara_item->pos.x_pos, lara_item->pos.y_pos,
+			lara_item->pos.z_pos, &height);
 
 		if(!OnObject || lara_item->anim_number == 89)
 			item->item_flags[1] = -1;
@@ -279,7 +291,7 @@ void ControlJobySpike(short item_number) {
 	short* frm[2];
 	long rate, y, h;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
 		SoundEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_DEFAULT);
@@ -287,8 +299,15 @@ void ControlJobySpike(short item_number) {
 		y = lara_item->pos.y_pos + frm[0][2];
 		h = item->pos.y_pos + (3328 * item->item_flags[1] >> 12);
 
-		if(lara_item->hit_points > 0 && h > y && abs(item->pos.x_pos - lara_item->pos.x_pos) < 512 && abs(item->pos.z_pos - lara_item->pos.z_pos) < 512) {
-			DoBloodSplat(lara_item->pos.x_pos + (GetRandomControl() & 0x7F) - 64, GetRandomControl() % (h - y) + y, lara_item->pos.z_pos + (GetRandomControl() & 0x7F) - 64, (GetRandomControl() & 3) + 2, (short)(2 * GetRandomControl()), item->room_number);
+		if(lara_item->hit_points > 0 && h > y
+		   && abs(item->pos.x_pos - lara_item->pos.x_pos) < 512
+		   && abs(item->pos.z_pos - lara_item->pos.z_pos) < 512) {
+			DoBloodSplat(
+				lara_item->pos.x_pos + (GetRandomControl() & 0x7F) - 64,
+				GetRandomControl() % (h - y) + y,
+				lara_item->pos.z_pos + (GetRandomControl() & 0x7F) - 64,
+				(GetRandomControl() & 3) + 2, (short)(2 * GetRandomControl()),
+				item->room_number);
 			lara_item->hit_points -= 8;
 		}
 
@@ -313,7 +332,9 @@ void DrawScaledSpike(ITEM_INFO* item) {
 	long rate, clip, lp;
 
 	if(item->object_number != TEETH_SPIKES || item->item_flags[1]) {
-		if((item->object_number == RAISING_BLOCK1 || item->object_number == RAISING_BLOCK2) && item->trigger_flags && !item->item_flags[0]) {
+		if((item->object_number == RAISING_BLOCK1
+			|| item->object_number == RAISING_BLOCK2)
+		   && item->trigger_flags && !item->item_flags[0]) {
 			for(lp = 1; lp < 8; lp++) {
 				if(!LibraryTab[lp])
 					break;
@@ -322,13 +343,13 @@ void DrawScaledSpike(ITEM_INFO* item) {
 			if(lp == 8) {
 				item->item_flags[0] = 1;
 				item->touch_bits = 0;
-				AddActiveItem(item - items);
+				AddActiveItem(GetItemNum(currentLevel, item));
 				item->flags |= IFL_CODEBITS;
 				item->status = ITEM_ACTIVE;
 			}
 		}
 
-		r = GetRoom(currentLevel,item->room_number);
+		r = GetRoom(currentLevel, item->room_number);
 		phd_left = r->left;
 		phd_right = r->right;
 		phd_top = r->top;
@@ -342,7 +363,9 @@ void DrawScaledSpike(ITEM_INFO* item) {
 		clip = S_GetObjectInfoBounds(frm[0]);
 
 		if(clip) {
-			meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,item->object_number)->mesh_index);
+			meshpp = GetMeshPointer(
+				currentLevel,
+				GetObjectInfo(currentLevel, item->object_number)->mesh_index);
 
 			if(item->object_number == EXPANDING_PLATFORM) {
 				scale.x = 16384;
@@ -378,13 +401,16 @@ void ControlSlicerDicer(short item_number) {
 	long distance;
 	short room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	SoundEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_DEFAULT);
 	SoundEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_DEFAULT);
 	distance = 4608 * phd_cos(item->trigger_flags) >> 14;
-	item->pos.x_pos = 256 * item->item_flags[0] + (phd_sin(item->pos.y_rot) * distance >> 14);
-	item->pos.y_pos = 256 * item->item_flags[1] - (4608 * phd_sin(item->trigger_flags) >> 14);
-	item->pos.z_pos = 256 * item->item_flags[2] + (phd_cos(item->pos.y_rot) * distance >> 14);
+	item->pos.x_pos = 256 * item->item_flags[0]
+		+ (phd_sin(item->pos.y_rot) * distance >> 14);
+	item->pos.y_pos = 256 * item->item_flags[1]
+		- (4608 * phd_sin(item->trigger_flags) >> 14);
+	item->pos.z_pos = 256 * item->item_flags[2]
+		+ (phd_cos(item->pos.y_rot) * distance >> 14);
 	item->trigger_flags += 170;
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
@@ -402,12 +428,14 @@ void ControlSprinkler(short item_number) {
 	SMOKE_SPARKS* smokeptr;
 	long vel, size;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->item_flags[0] < 1200) {
 		item->item_flags[0]++;
 
-		if(!(wibble & 0xF) && (item->item_flags[0] <= 600 || GetRandomControl() % (item->item_flags[0] - 600) < 100)) {
+		if(!(wibble & 0xF)
+		   && (item->item_flags[0] <= 600
+			   || GetRandomControl() % (item->item_flags[0] - 600) < 100)) {
 			drip = &Drips[GetFreeDrip()];
 			drip->x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
 			drip->y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
@@ -506,7 +534,7 @@ void ControlMineHelicopter(short item_number) {
 	long nSpheres;
 	short sentries, fade;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	nSpheres = GetSpheres(item, Slist, 1);
 
 	if(item->item_flags[0] < 150) {
@@ -520,7 +548,9 @@ void ControlMineHelicopter(short item_number) {
 			sphere = &Slist[i];
 
 			if(!i || i > 5)
-				AddFire(sphere->x, sphere->y, sphere->z, 2, item->room_number, fade);
+				AddFire(
+					sphere->x, sphere->y, sphere->z, 2, item->room_number,
+					fade);
 		}
 
 		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
@@ -533,9 +563,15 @@ void ControlMineHelicopter(short item_number) {
 			sphere = &Slist[i];
 
 			if(i >= 7 && i != 9) {
-				TriggerExplosionSparks(sphere->x, sphere->y, sphere->y, 3, -2, 0, -item->room_number);
-				TriggerExplosionSparks(sphere->x, sphere->y, sphere->y, 3, -1, 0, -item->room_number);
-				TriggerShockwave((PHD_VECTOR*)&sphere->x, 0x1300030, (GetRandomControl() & 0x1F) + 112, 0x20806000, 0x800);
+				TriggerExplosionSparks(
+					sphere->x, sphere->y, sphere->y, 3, -2, 0,
+					-item->room_number);
+				TriggerExplosionSparks(
+					sphere->x, sphere->y, sphere->y, 3, -1, 0,
+					-item->room_number);
+				TriggerShockwave(
+					(PHD_VECTOR*)&sphere->x, 0x1300030,
+					(GetRandomControl() & 0x1F) + 112, 0x20806000, 0x800);
 			}
 		}
 
@@ -547,8 +583,9 @@ void ControlMineHelicopter(short item_number) {
 		FlashFadeB = 64;
 		FlashFader = 32;
 
-		for(sentries = GetRoom(currentLevel,item->room_number)->item_number; sentries != NO_ITEM; sentries = sentry->next_item) {
-			sentry = &items[sentries];
+		for(sentries = GetRoom(currentLevel, item->room_number)->item_number;
+			sentries != NO_ITEM; sentries = sentry->next_item) {
+			sentry = GetItem(currentLevel, sentries);
 
 			if(sentry->object_number == SENTRY_GUN)
 				sentry->mesh_bits &= ~0x40;
@@ -562,22 +599,29 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	ITEM_INFO* mines;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags || item->item_flags[3])
 		return;
 
-	if(l->anim_number == ANIM_MINEDETECT && l->frame_number >= GetAnim(currentLevel,ANIM_MINEDETECT)->frame_base + 57) {
-		for(int i = 0; i < level_items; i++) {
-			mines = &items[i];
+	if(l->anim_number == ANIM_MINEDETECT
+	   && l->frame_number
+		   >= GetAnim(currentLevel, ANIM_MINEDETECT)->frame_base + 57) {
+		for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+			mines = GetItem(currentLevel, i);
 
-			if(mines->object_number != MINE || mines->status == ITEM_INVISIBLE || mines->trigger_flags)
+			if(mines->object_number != MINE || mines->status == ITEM_INVISIBLE
+			   || mines->trigger_flags)
 				continue;
 
-			TriggerExplosionSparks(mines->pos.x_pos, mines->pos.y_pos, mines->pos.z_pos, 3, -2, 0, mines->room_number);
+			TriggerExplosionSparks(
+				mines->pos.x_pos, mines->pos.y_pos, mines->pos.z_pos, 3, -2, 0,
+				mines->room_number);
 
 			for(int j = 0; j < 2; j++)
-				TriggerExplosionSparks(mines->pos.x_pos, mines->pos.y_pos, mines->pos.z_pos, 3, -1, 0, mines->room_number);
+				TriggerExplosionSparks(
+					mines->pos.x_pos, mines->pos.y_pos, mines->pos.z_pos, 3, -1,
+					0, mines->room_number);
 
 			mines->mesh_bits = 1;
 			ExplodeItemNode(mines, 0, 0, -32);
@@ -589,40 +633,50 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			mines->status = ITEM_INVISIBLE;
 		}
 	} else if(TestBoundsCollide(item, l, 512)) {
-		TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -2, 0, item->room_number);
+		TriggerExplosionSparks(
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -2, 0,
+			item->room_number);
 
 		for(int i = 0; i < 2; i++)
-			TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -1, 0, item->room_number);
+			TriggerExplosionSparks(
+				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -1, 0,
+				item->room_number);
 
 		item->mesh_bits = 1;
 		ExplodeItemNode(item, 0, 0, 128);
 		KillItem(item_number);
 		l->anim_number = ANIM_MINEDEATH;
-		l->frame_number = GetAnim(currentLevel,ANIM_MINEDEATH)->frame_base;
+		l->frame_number = GetAnim(currentLevel, ANIM_MINEDEATH)->frame_base;
 		l->current_anim_state = AS_DEATH;
 		l->speed = 0;
 		SoundEffect(SFX_MINE_EXP_OVERLAY, &item->pos, SFX_DEFAULT);
 	}
 }
 
-void FallingSquishyBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
+void FallingSquishyBlockCollision(
+	short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l)) {
-		if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base <= 8) {
+		if(item->frame_number
+			   - GetAnim(currentLevel, item->anim_number)->frame_base
+		   <= 8) {
 			item->frame_number += 2;
 			l->hit_points = 0;
 			l->current_anim_state = AS_DEATH;
 			l->goal_anim_state = AS_DEATH;
 			l->anim_number = ANIM_FBLOCK_DEATH;
-			l->frame_number = GetAnim(currentLevel,ANIM_FBLOCK_DEATH)->frame_base + 50;
+			l->frame_number
+				= GetAnim(currentLevel, ANIM_FBLOCK_DEATH)->frame_base + 50;
 			l->fallspeed = 0;
 			l->speed = 0;
 
 			for(int i = 0; i < 12; i++)
-				TriggerBlood(l->pos.x_pos, l->pos.y_pos - 128, l->pos.z_pos, GetRandomControl() << 1, 3);
+				TriggerBlood(
+					l->pos.x_pos, l->pos.y_pos - 128, l->pos.z_pos,
+					GetRandomControl() << 1, 3);
 		} else if(l->hit_points > 0)
 			ItemPushLara(item, l, coll, 0, 1);
 	}
@@ -631,7 +685,7 @@ void FallingSquishyBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* co
 void ControlFallingSquishyBlock(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
 		if(item->item_flags[0] < 60) {
@@ -639,7 +693,9 @@ void ControlFallingSquishyBlock(short item_number) {
 			camera.bounce = (item->item_flags[0] - 92) >> 1;
 			item->item_flags[0]++;
 		} else {
-			if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base == 8)
+			if(item->frame_number
+				   - GetAnim(currentLevel, item->anim_number)->frame_base
+			   == 8)
 				camera.bounce = -96;
 
 			AnimateItem(item);
@@ -652,15 +708,19 @@ void ControlLRSquishyBlock(short item_number) {
 	unsigned short ang;
 	short frame;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
 
-	frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+	frame = item->frame_number
+		- GetAnim(currentLevel, item->anim_number)->frame_base;
 
 	if(item->touch_bits) {
-		ang = (unsigned short)phd_atan(item->pos.z_pos - lara_item->pos.z_pos, item->pos.x_pos - lara_item->pos.x_pos) - item->pos.y_rot;
+		ang = (unsigned short)phd_atan(
+				  item->pos.z_pos - lara_item->pos.z_pos,
+				  item->pos.x_pos - lara_item->pos.x_pos)
+			- item->pos.y_rot;
 
 		if(!frame && ang > 0xA000 && ang < 0xE000) {
 			item->item_flags[0] = 9;
@@ -681,7 +741,7 @@ void ControlSethBlade(short item_number) {
 	ITEM_INFO* item;
 	short frame;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	*(long*)&item->item_flags[0] = 0;
 
 	if(!TriggerActive(item))
@@ -696,7 +756,8 @@ void ControlSethBlade(short item_number) {
 		} else if(!item->item_flags[2] && item->trigger_flags > 0)
 			item->item_flags[2] = item->trigger_flags;
 	} else {
-		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+		frame = item->frame_number
+			- GetAnim(currentLevel, item->anim_number)->frame_base;
 
 		if(frame && frame <= 6)
 			*(long*)&item->item_flags[0] = -1;
@@ -714,57 +775,65 @@ void ControlSethBlade(short item_number) {
 void ControlPlinthBlade(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
-		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end)
+		if(item->frame_number
+		   == GetAnim(currentLevel, item->anim_number)->frame_end)
 			item->item_flags[3] = 0;
 		else
 			item->item_flags[3] = 200;
 
 		AnimateItem(item);
 	} else
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+		item->frame_number
+			= GetAnim(currentLevel, item->anim_number)->frame_base;
 }
 
 void ControlMovingBlade(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
 		item->item_flags[3] = 50;
 		AnimateItem(item);
 	} else
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+		item->frame_number
+			= GetAnim(currentLevel, item->anim_number)->frame_base;
 }
 
 void ControlCatwalkBlade(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
-		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end || 
-		item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base < 38)
+		if(item->frame_number
+			   == GetAnim(currentLevel, item->anim_number)->frame_end
+		   || item->frame_number
+				   - GetAnim(currentLevel, item->anim_number)->frame_base
+			   < 38)
 			item->item_flags[3] = 0;
 		else
 			item->item_flags[3] = 100;
 
 		AnimateItem(item);
 	} else
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+		item->frame_number
+			= GetAnim(currentLevel, item->anim_number)->frame_base;
 }
 
 void ControlBirdBlade(short item_number) {
 	ITEM_INFO* item;
 	short frame;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->item_flags[3] = 100;
 
 	if(TriggerActive(item)) {
-		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+		frame = item->frame_number
+			- GetAnim(currentLevel, item->anim_number)->frame_base;
 
 		if(frame <= 14 || frame >= 31)
 			*(long*)&item->item_flags[0] = 0;
@@ -773,7 +842,8 @@ void ControlBirdBlade(short item_number) {
 
 		AnimateItem(item);
 	} else {
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+		item->frame_number
+			= GetAnim(currentLevel, item->anim_number)->frame_base;
 		*(long*)&item->item_flags[0] = 0;
 	}
 }
@@ -782,10 +852,11 @@ void Control4xFloorRoofBlade(short item_number) {
 	ITEM_INFO* item;
 	short frame;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
-		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+		frame = item->frame_number
+			- GetAnim(currentLevel, item->anim_number)->frame_base;
 
 		if(frame <= 5 || frame >= 58 || frame >= 8 && frame <= 54)
 			*(long*)&item->item_flags[0] = 0;
@@ -800,7 +871,8 @@ void Control4xFloorRoofBlade(short item_number) {
 
 		AnimateItem(item);
 	} else {
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+		item->frame_number
+			= GetAnim(currentLevel, item->anim_number)->frame_base;
 		*(long*)&item->item_flags[0] = 0;
 	}
 }
@@ -809,8 +881,9 @@ void ControlSpikeball(short item_number) {
 	ITEM_INFO* item;
 	short frame;
 
-	item = &items[item_number];
-	frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+	item = GetItem(currentLevel, item_number);
+	frame = item->frame_number
+		- GetAnim(currentLevel, item->anim_number)->frame_base;
 
 	if(TriggerActive(item)) {
 		if((frame <= 14 || frame >= 24) && (frame < 138 || frame > 140)) {
@@ -827,7 +900,8 @@ void ControlSpikeball(short item_number) {
 
 		AnimateItem(item);
 	} else {
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+		item->frame_number
+			= GetAnim(currentLevel, item->anim_number)->frame_base;
 		*(long*)&item->item_flags[0] = 0;
 	}
 }
@@ -838,8 +912,9 @@ void ControlHammer(short item_number) {
 	long hammered; // hammer touched a pushable (Senet lose path)
 	short frame, target_item;
 
-	item = &items[item_number];
-	frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+	item = GetItem(currentLevel, item_number);
+	frame = item->frame_number
+		- GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->item_flags[3] = 150;
 
 	if(!TriggerActive(item)) {
@@ -864,8 +939,10 @@ void ControlHammer(short item_number) {
 			else
 				item->item_flags[2] = 0;
 		} else {
-			item->anim_number = GetObjectInfo(currentLevel,HAMMER)->anim_index + 1;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number
+				= GetObjectInfo(currentLevel, HAMMER)->anim_index + 1;
+			item->frame_number
+				= GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 2;
 			item->goal_anim_state = 2;
 			item->item_flags[2] = 60;
@@ -880,13 +957,20 @@ void ControlHammer(short item_number) {
 
 		if(frame == 8) {
 			if(item->trigger_flags == 2) {
-				for(target_item = GetRoom(currentLevel,item->room_number)->item_number; target_item != NO_ITEM; target_item = item2->next_item) {
-					item2 = &items[target_item];
+				for(target_item
+					= GetRoom(currentLevel, item->room_number)->item_number;
+					target_item != NO_ITEM; target_item = item2->next_item) {
+					item2 = GetItem(currentLevel, target_item);
 
-					if(item2->object_number == OBELISK && item2->pos.y_rot == -0x4000 && items[item2->item_flags[0]].pos.y_rot == 0x4000 && !items[item2->item_flags[1]].pos.y_rot) {
+					if(item2->object_number == OBELISK
+					   && item2->pos.y_rot == -0x4000
+					   && GetItem(currentLevel,item2->item_flags[0])->pos.y_rot == 0x4000
+					   && !GetItem(currentLevel,item2->item_flags[1])->pos.y_rot) {
 						item2->flags |= IFL_CODEBITS;
-						items[item2->item_flags[0]].flags |= IFL_CODEBITS;
-						items[item2->item_flags[1]].flags |= IFL_CODEBITS;
+						GetItem(currentLevel, item2->item_flags[0])->flags
+							|= IFL_CODEBITS;
+						GetItem(currentLevel, item2->item_flags[1])->flags
+							|= IFL_CODEBITS;
 						break;
 					}
 				}
@@ -894,10 +978,15 @@ void ControlHammer(short item_number) {
 				SoundEffect(SFX_DOOR_GEN_THUD, &item->pos, SFX_DEFAULT);
 				SoundEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
 			} else {
-				for(target_item = GetRoom(currentLevel,item->room_number)->item_number; target_item != NO_ITEM; target_item = item2->next_item) {
-					item2 = &items[target_item];
+				for(target_item
+					= GetRoom(currentLevel, item->room_number)->item_number;
+					target_item != NO_ITEM; target_item = item2->next_item) {
+					item2 = GetItem(currentLevel, target_item);
 
-					if(item2->object_number >= PUSHABLE_OBJECT1 && item2->object_number <= PUSHABLE_OBJECT4 && item2->pos.x_pos == item->pos.x_pos && item2->pos.z_pos == item->pos.z_pos) {
+					if(item2->object_number >= PUSHABLE_OBJECT1
+					   && item2->object_number <= PUSHABLE_OBJECT4
+					   && item2->pos.x_pos == item->pos.x_pos
+					   && item2->pos.z_pos == item->pos.z_pos) {
 						ExplodeItemNode(item2, 0, 0, 128);
 						KillItem(target_item);
 						hammered = 1;
@@ -905,11 +994,17 @@ void ControlHammer(short item_number) {
 				}
 
 				if(hammered) {
-					for(target_item = GetRoom(currentLevel,item->room_number)->item_number; target_item != NO_ITEM; target_item = item2->next_item) {
-						item2 = &items[target_item];
+					for(target_item
+						= GetRoom(currentLevel, item->room_number)->item_number;
+						target_item != NO_ITEM;
+						target_item = item2->next_item) {
+						item2 = GetItem(currentLevel, target_item);
 
-						if(item2->object_number == PUZZLE_ITEM4_COMBO1 || item2->object_number == PUZZLE_ITEM4_COMBO2 || item2->object_number == PUZZLE_ITEM5) {
-							if(item2->pos.x_pos == item->pos.x_pos && item2->pos.z_pos == item->pos.z_pos)
+						if(item2->object_number == PUZZLE_ITEM4_COMBO1
+						   || item2->object_number == PUZZLE_ITEM4_COMBO2
+						   || item2->object_number == PUZZLE_ITEM5) {
+							if(item2->pos.x_pos == item->pos.x_pos
+							   && item2->pos.z_pos == item->pos.z_pos)
 								item2->status = ITEM_INACTIVE;
 						}
 					}
@@ -925,7 +1020,7 @@ void ControlHammer(short item_number) {
 void ControlStargate(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->item_flags[3] = 50;
 
 	if(TriggerActive(item)) {
@@ -939,7 +1034,7 @@ void ControlStargate(short item_number) {
 void ControlPlough(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->item_flags[3] = 50;
 
 	if(TriggerActive(item)) {
@@ -952,7 +1047,7 @@ void ControlPlough(short item_number) {
 void ControlChain(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags) {
 		item->item_flags[2] = 1;
@@ -983,16 +1078,17 @@ void ControlBurningFloor(short item_number) {
 	long nSpheres, dx, dy, dz;
 	short torch_num, xoff, zoff, size;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!item->item_flags[3]) {
 		nSpheres = 0;
-		torch_num = GetRoom(currentLevel,item->room_number)->item_number;
+		torch_num = GetRoom(currentLevel, item->room_number)->item_number;
 
 		while(1) {
-			torch = &items[torch_num];
+			torch = GetItem(currentLevel, torch_num);
 
-			if(torch->object_number == BURNING_TORCH_ITEM && !torch->speed && !torch->fallspeed && torch->item_flags[3]) {
+			if(torch->object_number == BURNING_TORCH_ITEM && !torch->speed
+			   && !torch->fallspeed && torch->item_flags[3]) {
 				if(!nSpheres) {
 					nSpheres = GetSpheres(item, Slist, 1);
 
@@ -1002,7 +1098,8 @@ void ControlBurningFloor(short item_number) {
 						dy = sphere->y - torch->pos.y_pos;
 						dz = sphere->z - torch->pos.z_pos;
 
-						if(SQUARE(dx) + SQUARE(dy) + SQUARE(dz) > SQUARE(sphere->r + 32)) {
+						if(SQUARE(dx) + SQUARE(dy) + SQUARE(dz)
+						   > SQUARE(sphere->r + 32)) {
 							item->item_flags[3] = 1;
 							KillItem(torch_num);
 							return;
@@ -1024,7 +1121,10 @@ void ControlBurningFloor(short item_number) {
 		size = floor_fires[(i * 3) + 2];
 
 		if(item->item_flags[size])
-			AddFire(item->pos.x_pos + xoff, item->pos.y_pos - (size << 6) - 64, item->pos.z_pos + zoff, size, item->room_number, item->item_flags[size]);
+			AddFire(
+				item->pos.x_pos + xoff, item->pos.y_pos - (size << 6) - 64,
+				item->pos.z_pos + zoff, size, item->room_number,
+				item->item_flags[size]);
 	}
 
 	if(!lara.burn) {
@@ -1033,7 +1133,10 @@ void ControlBurningFloor(short item_number) {
 			zoff = deadly_floor_fires[(i * 2) + 1];
 			dx = abs(item->pos.x_pos + xoff - lara_item->pos.x_pos);
 			dy = abs(item->pos.y_pos - lara_item->pos.y_pos);
-			dz = abs(item->pos.z_pos + xoff - lara_item->pos.z_pos); // ORIGINAL BUG uses xoff instead of zoff, only affects last test
+			dz = abs(
+				item->pos.z_pos + xoff
+				- lara_item->pos.z_pos); // ORIGINAL BUG uses xoff instead of
+										 // zoff, only affects last test
 
 			if(dx < 200 && dy < 200 && dz < 200) {
 				LaraBurn();
@@ -1084,7 +1187,8 @@ void ControlBurningFloor(short item_number) {
 		if(item->item_flags[2] < 2)
 			item->item_flags[2] = 2;
 
-		if(item->item_flags[0] == 2 && item->item_flags[1] == 2 && item->item_flags[2] == 2) {
+		if(item->item_flags[0] == 2 && item->item_flags[1] == 2
+		   && item->item_flags[2] == 2) {
 			FlipMap(0);
 			ExplodeItemNode(item, 0, 1, -24);
 			ExplodeItemNode(item, 1, 1, -24);
@@ -1099,7 +1203,7 @@ void ControlBurningFloor(short item_number) {
 void ControlRaisingBlock(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
 		if(!item->item_flags[2]) {
@@ -1115,7 +1219,10 @@ void ControlRaisingBlock(short item_number) {
 			SoundEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
 			item->item_flags[1] += 64;
 
-			if(item->trigger_flags && abs(item->pos.x_pos - lara_item->pos.x_pos) < 10240 && abs(item->pos.y_pos - lara_item->pos.y_pos) < 10240 && abs(item->pos.z_pos - lara_item->pos.z_pos) < 10240) {
+			if(item->trigger_flags
+			   && abs(item->pos.x_pos - lara_item->pos.x_pos) < 10240
+			   && abs(item->pos.y_pos - lara_item->pos.y_pos) < 10240
+			   && abs(item->pos.z_pos - lara_item->pos.z_pos) < 10240) {
 				if(item->item_flags[1] == 64 || item->item_flags[1] == 4096)
 					camera.bounce = -32;
 				else
@@ -1125,7 +1232,10 @@ void ControlRaisingBlock(short item_number) {
 	} else if(item->item_flags[1] > 0) {
 		SoundEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
 
-		if(item->trigger_flags && abs(item->pos.x_pos - lara_item->pos.x_pos) < 10240 && abs(item->pos.y_pos - lara_item->pos.y_pos) < 10240 && abs(item->pos.z_pos - lara_item->pos.z_pos) < 10240) {
+		if(item->trigger_flags
+		   && abs(item->pos.x_pos - lara_item->pos.x_pos) < 10240
+		   && abs(item->pos.y_pos - lara_item->pos.y_pos) < 10240
+		   && abs(item->pos.z_pos - lara_item->pos.z_pos) < 10240) {
 			if(item->item_flags[1] == 64 || item->item_flags[1] == 4096)
 				camera.bounce = -32;
 			else
@@ -1151,7 +1261,7 @@ void ControlScaledSpike(short item_number) {
 	long dx, dy, dz, num;
 	short room_number, yt, yb, iyb1, iyb2, hit;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item) || item->item_flags[2]) {
 		if(TriggerActive(item)) {
@@ -1190,7 +1300,9 @@ void ControlScaledSpike(short item_number) {
 			larabounds = GetBestFrame(lara_item);
 			num = 0;
 
-			if((item->item_flags[0] > 1024 || lara_item->gravity_status) && (item->trigger_flags & 7) > 2 && (item->trigger_flags & 7) < 6) {
+			if((item->item_flags[0] > 1024 || lara_item->gravity_status)
+			   && (item->trigger_flags & 7) > 2
+			   && (item->trigger_flags & 7) < 6) {
 				if(lara_item->fallspeed > 6 || item->item_flags[0] > 1024) {
 					lara_item->hit_points = -1;
 					num = 20;
@@ -1203,7 +1315,8 @@ void ControlScaledSpike(short item_number) {
 			yt = short(item->pos.y_pos + larabounds[2]);
 			yb = short(item->pos.y_pos + larabounds[3]);
 
-			if((item->trigger_flags & 0xF) == 8 || !(item->trigger_flags & 0xF)) {
+			if((item->trigger_flags & 0xF) == 8
+			   || !(item->trigger_flags & 0xF)) {
 				iyb1 = -bounds[3];
 				iyb2 = -bounds[2];
 			} else {
@@ -1225,17 +1338,26 @@ void ControlScaledSpike(short item_number) {
 			while(num > 0) {
 				dx = (GetRandomControl() & 0x7F) + lara_item->pos.x_pos - 64;
 				dz = (GetRandomControl() & 0x7F) + lara_item->pos.z_pos - 64;
-				TriggerBlood(dx, yb - GetRandomControl() % dy, dz, GetRandomControl() << 1, 1);
+				TriggerBlood(
+					dx, yb - GetRandomControl() % dy, dz,
+					GetRandomControl() << 1, 1);
 				num--;
 			}
 
 			if(lara_item->hit_points <= 0) {
 				room_number = lara_item->room_number;
-				dy = GetHeight(GetFloor(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, &room_number), lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+				dy = GetHeight(
+					GetFloor(
+						lara_item->pos.x_pos, lara_item->pos.y_pos,
+						lara_item->pos.z_pos, &room_number),
+					lara_item->pos.x_pos, lara_item->pos.y_pos,
+					lara_item->pos.z_pos);
 
-				if(item->pos.y_pos >= lara_item->pos.y_pos && dy - lara_item->pos.y_pos < 50) {
+				if(item->pos.y_pos >= lara_item->pos.y_pos
+				   && dy - lara_item->pos.y_pos < 50) {
 					lara_item->anim_number = ANIM_SPIKED;
-					lara_item->frame_number = GetAnim(currentLevel,ANIM_SPIKED)->frame_base;
+					lara_item->frame_number
+						= GetAnim(currentLevel, ANIM_SPIKED)->frame_base;
 					lara_item->current_anim_state = AS_DEATH;
 					lara_item->goal_anim_state = AS_DEATH;
 					lara_item->gravity_status = 0;
@@ -1266,7 +1388,7 @@ void FlameEmitter3Control(short item_number) {
 	PHD_VECTOR s, d;
 	long x, z, distance, r, g, b;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -1279,29 +1401,41 @@ void FlameEmitter3Control(short item_number) {
 		s.y = item->pos.y_pos;
 		s.z = item->pos.z_pos;
 
-		if(!(GlobalCounter & 3) && (item->trigger_flags == 2 || item->trigger_flags == 4)) {
-			d.x = item->pos.x_pos + (2048 * phd_sin(item->pos.y_rot - 0x8000) >> W2V_SHIFT);
+		if(!(GlobalCounter & 3)
+		   && (item->trigger_flags == 2 || item->trigger_flags == 4)) {
+			d.x = item->pos.x_pos
+				+ (2048 * phd_sin(item->pos.y_rot - 0x8000) >> W2V_SHIFT);
 			d.y = item->pos.y_pos;
-			d.z = item->pos.z_pos + (2048 * phd_cos(item->pos.y_rot - 0x8000) >> W2V_SHIFT);
+			d.z = item->pos.z_pos
+				+ (2048 * phd_cos(item->pos.y_rot - 0x8000) >> W2V_SHIFT);
 
 			if(GetRandomControl() & 3)
-				TriggerLightning(&s, &d, (GetRandomControl() & 0x1F) + 64, RGBA(0, g, b, 24), 0, 32, 3);
+				TriggerLightning(
+					&s, &d, (GetRandomControl() & 0x1F) + 64, RGBA(0, g, b, 24),
+					0, 32, 3);
 			else
-				TriggerLightning(&s, &d, (GetRandomControl() & 0x1F) + 96, RGBA(0, g, b, 32), 1, 32, 3);
+				TriggerLightning(
+					&s, &d, (GetRandomControl() & 0x1F) + 96, RGBA(0, g, b, 32),
+					1, 32, 3);
 		}
 
 		if(item->trigger_flags >= 3 && !(GlobalCounter & 1)) {
 			d.x = 0;
 			d.y = -64;
 			d.z = 20;
-			item2 = &items[item->item_flags[2 + (GlobalCounter >> 2 & 1)]];
+			item2 = GetItem(
+				currentLevel, item->item_flags[2 + (GlobalCounter >> 2 & 1)]);
 			GetJointAbsPosition(item2, &d, 0);
 
 			if(!(GlobalCounter & 3)) {
 				if(GetRandomControl() & 3)
-					TriggerLightning(&s, &d, (GetRandomControl() & 0x1F) + 64, RGBA(0, g, b, 24), 0, 32, 5);
+					TriggerLightning(
+						&s, &d, (GetRandomControl() & 0x1F) + 64,
+						RGBA(0, g, b, 24), 0, 32, 5);
 				else
-					TriggerLightning(&s, &d, (GetRandomControl() & 0x1F) + 96, RGBA(0, g, b, 32), 1, 32, 5);
+					TriggerLightning(
+						&s, &d, (GetRandomControl() & 0x1F) + 96,
+						RGBA(0, g, b, 32), 1, 32, 5);
 			}
 
 			if(item->trigger_flags != 3 || item2->trigger_flags)
@@ -1315,27 +1449,35 @@ void FlameEmitter3Control(short item_number) {
 			d.x = s.x + (GetRandomControl() & 0x1FF) - 256;
 			d.y = s.y + (GetRandomControl() & 0x1FF) - 256;
 			d.z = s.z + (GetRandomControl() & 0x1FF) - 256;
-			TriggerLightning(&s, &d, (GetRandomControl() & 0xF) + 16, RGBA(0, g, b, 24), 3, 32, 3);
+			TriggerLightning(
+				&s, &d, (GetRandomControl() & 0xF) + 16, RGBA(0, g, b, 24), 3,
+				32, 3);
 			TriggerLightningGlow(s.x, s.y, s.z, RGBA(0, g, b, 32));
 		}
 	} else {
 		if(!item->item_flags[0]) {
 			item->item_flags[0] = (GetRandomControl() & 3) + 8;
 			distance = GetRandomControl() & 0x3F;
-			item->item_flags[1] = short(distance == item->item_flags[1] ? (distance + 13) & 0x3F : distance);
+			item->item_flags[1] = short(
+				distance == item->item_flags[1] ? (distance + 13) & 0x3F
+												: distance);
 		} else
 			item->item_flags[0]--;
 
 		if(!(wibble & 4)) {
 			x = 16 * (Flame3xzoffs[item->item_flags[1] & 7][0] - 32);
 			z = 16 * (Flame3xzoffs[item->item_flags[1] & 7][1] - 32);
-			TriggerFireFlame(item->pos.x_pos + x, item->pos.y_pos, item->pos.z_pos + z, -1, 2);
+			TriggerFireFlame(
+				item->pos.x_pos + x, item->pos.y_pos, item->pos.z_pos + z, -1,
+				2);
 		}
 
 		if(wibble & 4) {
 			x = 16 * (Flame3xzoffs[(item->item_flags[1] >> 3) + 8][0] - 32);
 			z = 16 * (Flame3xzoffs[(item->item_flags[1] >> 3) + 8][1] - 32);
-			TriggerFireFlame(item->pos.x_pos + x, item->pos.y_pos, item->pos.z_pos + z, -1, 2);
+			TriggerFireFlame(
+				item->pos.x_pos + x, item->pos.y_pos, item->pos.z_pos + z, -1,
+				2);
 		}
 
 		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
@@ -1370,7 +1512,7 @@ void FlameControl(short fx_number) {
 		return;
 	}
 
-	fx = GetEffect(currentLevel,fx_number);
+	fx = GetEffect(currentLevel, fx_number);
 
 	for(int i = 14; i > 0; i--) {
 		if(!(wibble & 0xC)) {
@@ -1378,7 +1520,9 @@ void FlameControl(short fx_number) {
 			fx->pos.y_pos = 0;
 			fx->pos.z_pos = 0;
 			GetLaraJointPos((PHD_VECTOR*)&fx->pos, i);
-			TriggerFireFlame(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, -1, 255 - lara.BurnGreen);
+			TriggerFireFlame(
+				fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, -1,
+				255 - lara.BurnGreen);
 		}
 	}
 
@@ -1386,17 +1530,22 @@ void FlameControl(short fx_number) {
 		r = GetRandomControl() & 0x3F;
 		g = (GetRandomControl() & 0x3F) + 192;
 		b = (GetRandomControl() & 0x1F) + 96;
-		TriggerDynamic(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, 13, r, g, b);
+		TriggerDynamic(
+			lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos,
+			13, r, g, b);
 	} else {
 		r = (GetRandomControl() & 0x3F) + 192;
 		g = (GetRandomControl() & 0x1F) + 96;
-		TriggerDynamic(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, 13, r, g, 0);
+		TriggerDynamic(
+			lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos,
+			13, r, g, 0);
 	}
 
 	if(lara_item->room_number != fx->room_number)
 		EffectNewRoom(fx_number, lara_item->room_number);
 
-	wh = GetWaterHeight(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->room_number);
+	wh = GetWaterHeight(
+		fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->room_number);
 
 	if(wh != NO_HEIGHT && fx->pos.y_pos > wh) {
 		KillEffect(fx_number);
@@ -1415,7 +1564,7 @@ void FlameEmitter2Control(short item_number) {
 	long r, g;
 	short room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -1432,9 +1581,14 @@ void FlameEmitter2Control(short item_number) {
 
 	if(item->trigger_flags != 2) {
 		if(item->trigger_flags == 123)
-			AddFire(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 1, item->room_number, item->item_flags[3]);
+			AddFire(
+				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 1,
+				item->room_number, item->item_flags[3]);
 		else
-			AddFire(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 1 - item->trigger_flags, item->room_number, item->item_flags[3]);
+			AddFire(
+				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+				1 - item->trigger_flags, item->room_number,
+				item->item_flags[3]);
 	}
 
 	if(!item->trigger_flags || item->trigger_flags == 2) {
@@ -1446,16 +1600,18 @@ void FlameEmitter2Control(short item_number) {
 			g = (g * item->item_flags[3]) >> 8;
 		}
 
-		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 10, r, g, 0);
+		TriggerDynamic(
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 10, r, g, 0);
 	}
 
 	if(item->trigger_flags == 2) {
 		item->pos.x_pos += phd_sin(item->pos.y_rot + 0x8000) >> 11;
 		item->pos.z_pos += phd_cos(item->pos.y_rot + 0x8000) >> 11;
 		room_number = item->room_number;
-		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+		floor = GetFloor(
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-		if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER) {
+		if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
 			FlashFadeR = 255;
 			FlashFadeG = 128;
 			FlashFadeB = 0;
@@ -1467,10 +1623,12 @@ void FlameEmitter2Control(short item_number) {
 		if(item->room_number != room_number)
 			ItemNewRoom(item_number, room_number);
 
-		item->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->pos.y_pos = GetHeight(
+			floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 		if(wibble & 7)
-			TriggerFireFlame(item->pos.x_pos, item->pos.y_pos - 32, item->pos.z_pos, -1, 1);
+			TriggerFireFlame(
+				item->pos.x_pos, item->pos.y_pos - 32, item->pos.z_pos, -1, 1);
 	}
 
 	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
@@ -1483,7 +1641,7 @@ void LaraBurn() {
 		fx_number = CreateEffect(lara_item->room_number);
 
 		if(fx_number != NO_ITEM) {
-			GetEffect(currentLevel,fx_number)->object_number = FLAME;
+			GetEffect(currentLevel, fx_number)->object_number = FLAME;
 			lara.burn = 1;
 		}
 	}
@@ -1497,7 +1655,8 @@ void LavaBurn(ITEM_INFO* item) {
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, 32000, item->pos.z_pos, &room_number);
 
-		if(item->floor == GetHeight(floor, item->pos.x_pos, 32000, item->pos.z_pos)) {
+		if(item->floor
+		   == GetHeight(floor, item->pos.x_pos, 32000, item->pos.z_pos)) {
 			item->hit_status = 1;
 			item->hit_points = -1;
 			LaraBurn();
@@ -1511,9 +1670,11 @@ long TestBoundsCollideTeethSpikes(ITEM_INFO* item) {
 
 	if(item->trigger_flags & 8) {
 		x = item->pos.x_pos & ~0x3FF | 0x200;
-		z = (item->pos.z_pos + SPxzoffs[item->trigger_flags & 7]) & ~0x3FF | 0x200;
+		z = (item->pos.z_pos + SPxzoffs[item->trigger_flags & 7]) & ~0x3FF
+			| 0x200;
 	} else {
-		x = (item->pos.x_pos - SPxzoffs[item->trigger_flags & 7]) & ~0x3FF | 0x200;
+		x = (item->pos.x_pos - SPxzoffs[item->trigger_flags & 7]) & ~0x3FF
+			| 0x200;
 		z = item->pos.z_pos & ~0x3FF | 0x200;
 	}
 
@@ -1525,14 +1686,16 @@ long TestBoundsCollideTeethSpikes(ITEM_INFO* item) {
 	y = item->pos.y_pos + SPDETyoffs[item->trigger_flags & 7];
 	bounds = GetBestFrame(lara_item);
 
-	if(lara_item->pos.y_pos + bounds[2] > y || lara_item->pos.y_pos + bounds[3] < y - 900)
+	if(lara_item->pos.y_pos + bounds[2] > y
+	   || lara_item->pos.y_pos + bounds[3] < y - 900)
 		return 0;
 
 	xMin = lara_item->pos.x_pos + bounds[0];
 	xMax = lara_item->pos.x_pos + bounds[1];
 	zMin = lara_item->pos.z_pos + bounds[4];
 	zMax = lara_item->pos.z_pos + bounds[5];
-	return xMin <= x + rad && xMax >= x - rad && zMin <= z + rad && zMax >= z - rad;
+	return xMin <= x + rad && xMax >= x - rad && zMin <= z + rad
+		&& zMax >= z - rad;
 }
 
 void ControlRollingBall(short item_number) {
@@ -1541,7 +1704,7 @@ void ControlRollingBall(short item_number) {
 	short room_number, velnotadjusted;
 	long h, fx, fz, fh, fhf, bz, bh, bhf, rx, rh, rhf, lx, lh, lhf;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -1551,14 +1714,23 @@ void ControlRollingBall(short item_number) {
 	item->pos.y_pos += item->fallspeed;
 	item->pos.z_pos += item->item_flags[1] >> 5;
 	room_number = item->room_number;
-	h = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) - 512;
+	h = GetHeight(
+			GetFloor(
+				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+				&room_number),
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos)
+		- 512;
 
 	if(item->pos.y_pos > h) {
 		if(abs(item->fallspeed) > 16) {
-			fz = phd_sqrt(SQUARE(camera.pos.x - item->pos.x_pos) + SQUARE(camera.pos.y - item->pos.y_pos) + SQUARE(camera.pos.z - item->pos.z_pos));
+			fz = phd_sqrt(
+				SQUARE(camera.pos.x - item->pos.x_pos)
+				+ SQUARE(camera.pos.y - item->pos.y_pos)
+				+ SQUARE(camera.pos.z - item->pos.z_pos));
 
 			if(fz < 0x4000)
-				camera.bounce = -(((0x4000 - fz) * abs(item->fallspeed)) >> W2V_SHIFT);
+				camera.bounce
+					= -(((0x4000 - fz) * abs(item->fallspeed)) >> W2V_SHIFT);
 
 			SoundEffect(SFX_BOULDER_FALL, &item->pos, SFX_DEFAULT);
 		}
@@ -1581,21 +1753,47 @@ void ControlRollingBall(short item_number) {
 	bz = item->pos.z_pos - 128;
 	rx = item->pos.x_pos + 128;
 	lx = item->pos.x_pos - 128;
-	fh = GetHeight(GetFloor(fx, item->pos.y_pos, fz, &room_number), fx, item->pos.y_pos, fz) - 512;
-	bh = GetHeight(GetFloor(fx, item->pos.y_pos, bz, &room_number), fx, item->pos.y_pos, bz) - 512;
-	rh = GetHeight(GetFloor(rx, item->pos.y_pos, bz + 128, &room_number), rx, item->pos.y_pos, bz + 128) - 512;
-	lh = GetHeight(GetFloor(lx, item->pos.y_pos, bz + 128, &room_number), lx, item->pos.y_pos, bz + 128) - 512;
+	fh = GetHeight(
+			 GetFloor(fx, item->pos.y_pos, fz, &room_number), fx,
+			 item->pos.y_pos, fz)
+		- 512;
+	bh = GetHeight(
+			 GetFloor(fx, item->pos.y_pos, bz, &room_number), fx,
+			 item->pos.y_pos, bz)
+		- 512;
+	rh = GetHeight(
+			 GetFloor(rx, item->pos.y_pos, bz + 128, &room_number), rx,
+			 item->pos.y_pos, bz + 128)
+		- 512;
+	lh = GetHeight(
+			 GetFloor(lx, item->pos.y_pos, bz + 128, &room_number), lx,
+			 item->pos.y_pos, bz + 128)
+		- 512;
 	fx = item->pos.x_pos;
 	fz = item->pos.z_pos + 512;
 	bz = item->pos.z_pos - 512;
 	rx = item->pos.x_pos + 512;
 	lx = item->pos.x_pos - 512;
-	fhf = GetHeight(GetFloor(fx, item->pos.y_pos, fz, &room_number), fx, item->pos.y_pos, fz) - 512;
-	bhf = GetHeight(GetFloor(fx, item->pos.y_pos, bz, &room_number), fx, item->pos.y_pos, bz) - 512;
-	rhf = GetHeight(GetFloor(rx, item->pos.y_pos, bz + 512, &room_number), rx, item->pos.y_pos, bz + 512) - 512;
-	lhf = GetHeight(GetFloor(lx, item->pos.y_pos, bz + 512, &room_number), lx, item->pos.y_pos, bz + 512) - 512;
+	fhf = GetHeight(
+			  GetFloor(fx, item->pos.y_pos, fz, &room_number), fx,
+			  item->pos.y_pos, fz)
+		- 512;
+	bhf = GetHeight(
+			  GetFloor(fx, item->pos.y_pos, bz, &room_number), fx,
+			  item->pos.y_pos, bz)
+		- 512;
+	rhf = GetHeight(
+			  GetFloor(rx, item->pos.y_pos, bz + 512, &room_number), rx,
+			  item->pos.y_pos, bz + 512)
+		- 512;
+	lhf = GetHeight(
+			  GetFloor(lx, item->pos.y_pos, bz + 512, &room_number), lx,
+			  item->pos.y_pos, bz + 512)
+		- 512;
 
-	if(item->pos.y_pos - h > -256 || item->pos.y_pos - fhf >= 512 || item->pos.y_pos - rhf >= 512 || item->pos.y_pos - bhf >= 512 || item->pos.y_pos - lhf >= 512) {
+	if(item->pos.y_pos - h > -256 || item->pos.y_pos - fhf >= 512
+	   || item->pos.y_pos - rhf >= 512 || item->pos.y_pos - bhf >= 512
+	   || item->pos.y_pos - lhf >= 512) {
 		velnotadjusted = 0;
 
 		if(fh - h <= 256) {
@@ -1693,7 +1891,8 @@ void ControlRollingBall(short item_number) {
 	tyrot = item->pos.y_rot;
 
 	if(item->item_flags[1] || item->item_flags[0])
-		destyrot = unsigned short(phd_atan(item->item_flags[0], item->item_flags[0]));
+		destyrot = (unsigned short)(phd_atan(
+			item->item_flags[0], item->item_flags[0]));
 	else
 		destyrot = item->pos.y_rot;
 
@@ -1707,22 +1906,27 @@ void ControlRollingBall(short item_number) {
 			item->pos.y_rot = destyrot;
 	}
 
-	item->pos.x_rot -= (abs(item->item_flags[0]) + abs(item->item_flags[1])) >> 1;
-	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	item->pos.x_rot
+		-= (abs(item->item_flags[0]) + abs(item->item_flags[1])) >> 1;
+	GetHeight(
+		GetFloor(
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number),
+		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	TestTriggers(trigger_index, 1, 0);
 }
 
 void RollingBallCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TestBoundsCollide(item, l, coll->radius) || !TestCollision(item, l))
 		return;
 
 	if(TriggerActive(item) && (item->item_flags[0] || item->fallspeed)) {
 		lara_item->anim_number = ANIM_RBALL_DEATH;
-		lara_item->frame_number = GetAnim(currentLevel,ANIM_RBALL_DEATH)->frame_base;
+		lara_item->frame_number
+			= GetAnim(currentLevel, ANIM_RBALL_DEATH)->frame_base;
 		lara_item->current_anim_state = AS_DEATH;
 		lara_item->goal_anim_state = AS_DEATH;
 		lara_item->gravity_status = 0;
@@ -1736,28 +1940,34 @@ void DartsControl(short item_number) {
 	long x, z, speed;
 	short room_num;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->touch_bits) {
 		lara_item->hit_points -= 25;
 		lara_item->hit_status = 1;
 		lara.poisoned += 160;
-		DoBloodSplat(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, (GetRandomControl() & 3) + 4, lara_item->pos.y_rot, lara_item->room_number);
+		DoBloodSplat(
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+			(GetRandomControl() & 3) + 4, lara_item->pos.y_rot,
+			lara_item->room_number);
 		KillItem(item_number);
 	} else {
 		x = item->pos.x_pos;
 		z = item->pos.z_pos;
 		speed = (item->speed * phd_cos(item->pos.x_rot)) >> W2V_SHIFT;
 		item->pos.x_pos += (speed * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
-		item->pos.y_pos -= (item->speed * phd_sin(item->pos.x_rot)) >> W2V_SHIFT;
+		item->pos.y_pos
+			-= (item->speed * phd_sin(item->pos.x_rot)) >> W2V_SHIFT;
 		item->pos.z_pos += (speed * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
 		room_num = item->room_number;
-		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_num);
+		floor = GetFloor(
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_num);
 
 		if(item->room_number != room_num)
 			ItemNewRoom(item_number, room_num);
 
-		item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->floor = GetHeight(
+			floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 		if(item->pos.y_pos >= item->floor) {
 			for(int i = 0; i < 4; i++)
@@ -1774,7 +1984,7 @@ void DartEmitterControl(short item_number) {
 	long x, z, xLimit, zLimit, xv, zv, rand;
 	short num;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->active) {
 		if(item->timer > 0) {
@@ -1790,7 +2000,7 @@ void DartEmitterControl(short item_number) {
 	if(num != NO_ITEM) {
 		x = 0;
 		z = 0;
-		dart = &items[num];
+		dart = GetItem(currentLevel, num);
 		dart->object_number = DARTS;
 		dart->room_number = item->room_number;
 
@@ -1831,7 +2041,8 @@ void DartEmitterControl(short item_number) {
 			else
 				xv = -(xLimit & rand);
 
-			TriggerDartSmoke(dart->pos.x_pos, dart->pos.y_pos, dart->pos.z_pos, xv, zv, 0);
+			TriggerDartSmoke(
+				dart->pos.x_pos, dart->pos.y_pos, dart->pos.z_pos, xv, zv, 0);
 		}
 
 		AddActiveItem(num);
@@ -1844,7 +2055,7 @@ void FallingCeiling(short item_number) {
 	ITEM_INFO* item;
 	short room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!item->current_anim_state) {
 		item->gravity_status = 1;
@@ -1860,7 +2071,11 @@ void FallingCeiling(short item_number) {
 		RemoveActiveItem(item_number);
 	else {
 		room_number = item->room_number;
-		item->floor = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->floor = GetHeight(
+			GetFloor(
+				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+				&room_number),
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 		if(room_number != item->room_number)
 			ItemNewRoom(item_number, room_number);
@@ -1877,17 +2092,19 @@ void FallingCeiling(short item_number) {
 void ControlSmashableBikeWall(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item) || lara.vehicle == NO_ITEM)
 		return;
 
-	if(TestBoundsCollide(item, &items[lara.vehicle], 1024)) {
+	if(TestBoundsCollide(item, GetItem(currentLevel, lara.vehicle), 1024)) {
 		SoundEffect(SFX_BIKE_HIT_OBJECTS, &item->pos, SFX_DEFAULT);
 		item->mesh_bits = -2;
 		ExplodingDeath2(item_number, -1, 2305);
 		item->mesh_bits = 0;
-		TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
+		TestTriggersAtXYZ(
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+			item->room_number, 1, 0);
 		KillItem(item_number);
 	}
 }
@@ -1895,12 +2112,14 @@ void ControlSmashableBikeWall(short item_number) {
 void ControlFallingBlock2(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
 
-	if(item->pos.y_pos == lara_item->pos.y_pos && OnTwoBlockPlatform(item, lara_item->pos.x_pos, lara_item->pos.z_pos) && lara.vehicle != NO_ITEM) {
+	if(item->pos.y_pos == lara_item->pos.y_pos
+	   && OnTwoBlockPlatform(item, lara_item->pos.x_pos, lara_item->pos.z_pos)
+	   && lara.vehicle != NO_ITEM) {
 		SoundEffect(SFX_BIKE_HIT_OBJECTS, &item->pos, SFX_DEFAULT);
 		item->mesh_bits = -2;
 		ExplodingDeath2(item_number, -1, 417);
@@ -1908,7 +2127,8 @@ void ControlFallingBlock2(short item_number) {
 	}
 }
 
-void FallingBlockCeiling(ITEM_INFO* item, long x, long y, long z, long* height) {
+void FallingBlockCeiling(
+	ITEM_INFO* item, long x, long y, long z, long* height) {
 	long tx, tz;
 
 	tx = x ^ item->pos.x_pos;
@@ -1940,7 +2160,7 @@ void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height) {
 void FallingBlock(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->item_flags[0] <= 1) {
 		item->mesh_bits = -2;
@@ -1957,13 +2177,15 @@ void FallingBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	long x, z, tx, tz;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	x = l->pos.x_pos;
 	z = l->pos.z_pos;
 	tx = item->pos.x_pos;
 	tz = item->pos.z_pos;
 
-	if(!item->item_flags[0] && !item->trigger_flags && item->pos.y_pos == l->pos.y_pos && !((tx ^ x) & ~1023) && !((z ^ tz) & ~1023)) {
+	if(!item->item_flags[0] && !item->trigger_flags
+	   && item->pos.y_pos == l->pos.y_pos && !((tx ^ x) & ~1023)
+	   && !((z ^ tz) & ~1023)) {
 		SoundEffect(SFX_ROCK_FALL_CRUMBLE, &item->pos, SFX_DEFAULT);
 		AddActiveItem(item_number);
 		item->item_flags[0] = 60;
@@ -1972,12 +2194,16 @@ void FallingBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	}
 }
 
-void CeilingTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
+void CeilingTrapDoorCollision(
+	short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_UPJUMP && l->gravity_status && lara.gun_status == LG_NO_ARMS && TestLaraPosition(CeilingTrapDoorBounds, item, l)) {
+	if(input & IN_ACTION && item->status != ITEM_ACTIVE
+	   && l->current_anim_state == AS_UPJUMP && l->gravity_status
+	   && lara.gun_status == LG_NO_ARMS
+	   && TestLaraPosition(CeilingTrapDoorBounds, item, l)) {
 		AlignLaraPosition(&CeilingTrapDoorPos, item, l);
 		lara.head_x_rot = 0;
 		lara.head_y_rot = 0;
@@ -1987,15 +2213,17 @@ void CeilingTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) 
 		l->gravity_status = 0;
 		l->fallspeed = 0;
 		l->anim_number = ANIM_PULLTRAP;
-		l->frame_number = GetAnim(currentLevel,ANIM_PULLTRAP)->frame_base;
+		l->frame_number = GetAnim(currentLevel, ANIM_PULLTRAP)->frame_base;
 		l->current_anim_state = AS_PULLTRAP;
 		AddActiveItem(item_number);
 		item->status = ITEM_ACTIVE;
 		item->goal_anim_state = 1;
 		UseForcedFixedCamera = 1;
-		ForcedFixedCamera.x = item->pos.x_pos - ((1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
+		ForcedFixedCamera.x = item->pos.x_pos
+			- ((1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
 		ForcedFixedCamera.y = item->pos.y_pos + 1024;
-		ForcedFixedCamera.z = item->pos.z_pos - ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
+		ForcedFixedCamera.z = item->pos.z_pos
+			- ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
 		ForcedFixedCamera.room_number = item->room_number;
 	} else if(item->current_anim_state == 1)
 		UseForcedFixedCamera = 0;
@@ -2005,15 +2233,17 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	long y;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
+	if(input & IN_ACTION && item->status != ITEM_ACTIVE
+		   && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
 		   && lara.gun_status == LG_NO_ARMS
 	   || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(TestLaraPosition(FloorTrapDoorBounds, item, l)) {
 			if(MoveLaraPosition(&FloorTrapDoorPos, item, l)) {
 				l->anim_number = ANIM_LIFTTRAP;
-				l->frame_number = GetAnim(currentLevel,ANIM_LIFTTRAP)->frame_base;
+				l->frame_number
+					= GetAnim(currentLevel, ANIM_LIFTTRAP)->frame_base;
 				l->current_anim_state = AS_LIFTTRAP;
 				lara.IsMoving = 0;
 				lara.head_x_rot = 0;
@@ -2025,12 +2255,14 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				item->goal_anim_state = 1;
 				item->status = ITEM_ACTIVE;
 				UseForcedFixedCamera = 1;
-				ForcedFixedCamera.x = item->pos.x_pos - ((2048 * phd_sin(item->pos.y_rot) >> W2V_SHIFT));
-				ForcedFixedCamera.z = item->pos.z_pos - ((2048 * phd_cos(item->pos.y_rot) >> W2V_SHIFT));
+				ForcedFixedCamera.x = item->pos.x_pos
+					- ((2048 * phd_sin(item->pos.y_rot) >> W2V_SHIFT));
+				ForcedFixedCamera.z = item->pos.z_pos
+					- ((2048 * phd_cos(item->pos.y_rot) >> W2V_SHIFT));
 				y = item->pos.y_pos - 2048;
 
-				if(y < GetRoom(currentLevel,item->room_number)->maxceiling)
-					y = GetRoom(currentLevel,item->room_number)->maxceiling;
+				if(y < GetRoom(currentLevel, item->room_number)->maxceiling)
+					y = GetRoom(currentLevel, item->room_number)->maxceiling;
 
 				ForcedFixedCamera.y = y;
 				ForcedFixedCamera.room_number = item->room_number;
@@ -2047,18 +2279,24 @@ void OpenTrapDoor(ITEM_INFO* item) {
 	unsigned short pitsky;
 
 	pitsky = item->item_flags[3];
-	r = GetRoom(currentLevel,item->room_number);
-	floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+	r = GetRoom(currentLevel, item->room_number);
+	floor = &r->floor
+				 [((item->pos.z_pos - r->z) >> 10)
+				  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 
 	if(item->pos.y_pos == r->minfloor) {
 		floor->pit_room = pitsky & 0xFF;
-		r = GetRoom(currentLevel,floor->pit_room);
-		floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+		r = GetRoom(currentLevel, floor->pit_room);
+		floor = &r->floor
+					 [((item->pos.z_pos - r->z) >> 10)
+					  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 		floor->sky_room = pitsky >> 8;
 	} else {
 		floor->sky_room = pitsky >> 8;
-		r = GetRoom(currentLevel,floor->sky_room);
-		floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+		r = GetRoom(currentLevel, floor->sky_room);
+		floor = &r->floor
+					 [((item->pos.z_pos - r->z) >> 10)
+					  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 		floor->pit_room = pitsky & 0xFF;
 	}
 
@@ -2070,14 +2308,18 @@ void CloseTrapDoor(ITEM_INFO* item) {
 	FLOOR_INFO* floor;
 	unsigned short pitsky;
 
-	r = GetRoom(currentLevel,item->room_number);
-	floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+	r = GetRoom(currentLevel, item->room_number);
+	floor = &r->floor
+				 [((item->pos.z_pos - r->z) >> 10)
+				  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 
 	if(item->pos.y_pos == r->minfloor) {
 		pitsky = floor->pit_room;
 		floor->pit_room = 255;
-		r = GetRoom(currentLevel,pitsky);
-		floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+		r = GetRoom(currentLevel, pitsky);
+		floor = &r->floor
+					 [((item->pos.z_pos - r->z) >> 10)
+					  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 		pitsky |= floor->sky_room << 8;
 		floor->sky_room = 255;
 		item->item_flags[2] = 1;
@@ -2085,8 +2327,10 @@ void CloseTrapDoor(ITEM_INFO* item) {
 	} else if(item->pos.y_pos == r->maxceiling) {
 		pitsky = floor->sky_room;
 		floor->sky_room = 255;
-		r = GetRoom(currentLevel,pitsky);
-		floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+		r = GetRoom(currentLevel, pitsky);
+		floor = &r->floor
+					 [((item->pos.z_pos - r->z) >> 10)
+					  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 		pitsky <<= 8;
 		pitsky |= floor->pit_room;
 		floor->pit_room = 255;
@@ -2101,7 +2345,7 @@ void CloseTrapDoor(ITEM_INFO* item) {
 void TrapDoorControl(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
 		if(!item->current_anim_state && item->trigger_flags >= 0)
@@ -2127,7 +2371,7 @@ void ControlObelisk(short item_number) {
 	long stop, rad;
 	short r, g, b;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
 		if(item->item_flags[3] > 346)
@@ -2147,17 +2391,28 @@ void ControlObelisk(short item_number) {
 					rad = (GetRandomControl() & 0xFFF) + 3456;
 				}
 
-				s.x = item->pos.x_pos + ((3456 * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
+				s.x = item->pos.x_pos
+					+ ((3456 * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 				s.y = item->pos.y_pos - 256;
-				s.z = item->pos.z_pos + ((3456 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
+				s.z = item->pos.z_pos
+					+ ((3456 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 
-				d.x = item->pos.x_pos + ((rad * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
+				d.x = item->pos.x_pos
+					+ ((rad * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 				d.y = item->pos.y_pos;
-				d.z = item->pos.z_pos + ((rad * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
+				d.z = item->pos.z_pos
+					+ ((rad * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 
-				if(abs(s.x - lara_item->pos.x_pos) < 20480 && abs(s.y - lara_item->pos.y_pos) < 20480 && abs(s.z - lara_item->pos.z_pos) < 20480 && abs(d.x - lara_item->pos.x_pos) < 20480 && abs(d.y - lara_item->pos.y_pos) < 20480 && abs(d.z - lara_item->pos.z_pos) < 20480) {
+				if(abs(s.x - lara_item->pos.x_pos) < 20480
+				   && abs(s.y - lara_item->pos.y_pos) < 20480
+				   && abs(s.z - lara_item->pos.z_pos) < 20480
+				   && abs(d.x - lara_item->pos.x_pos) < 20480
+				   && abs(d.y - lara_item->pos.y_pos) < 20480
+				   && abs(d.z - lara_item->pos.z_pos) < 20480) {
 					if(!(GlobalCounter & 3))
-						TriggerLightning(&s, &d, (GetRandomControl() & 0x1F) + 32, RGBA(r, g, b, 24), 1, 32, 5);
+						TriggerLightning(
+							&s, &d, (GetRandomControl() & 0x1F) + 32,
+							RGBA(r, g, b, 24), 1, 32, 5);
 
 					TriggerLightningGlow(s.x, s.y, s.z, RGBA(r, g, b, 48));
 				}
@@ -2165,9 +2420,11 @@ void ControlObelisk(short item_number) {
 		}
 
 		if(item->item_flags[3] >= 256 && item->trigger_flags == 2) {
-			s.x = item->pos.x_pos + ((0x2000 * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
+			s.x = item->pos.x_pos
+				+ ((0x2000 * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 			s.y = item->pos.y_pos;
-			s.z = item->pos.z_pos + ((0x2000 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
+			s.z = item->pos.z_pos
+				+ ((0x2000 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 			SoundEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&s, SFX_DEFAULT);
 
 			if(GlobalCounter & 1) {
@@ -2175,13 +2432,20 @@ void ControlObelisk(short item_number) {
 				d.y = (GetRandomControl() & 0x3FF) + s.y - 512;
 				d.z = (GetRandomControl() & 0x3FF) + s.z - 512;
 
-				if(abs(s.x - lara_item->pos.x_pos) < 20480 && abs(s.y - lara_item->pos.y_pos) < 20480 && abs(s.z - lara_item->pos.z_pos) < 20480 && abs(d.x - lara_item->pos.x_pos) < 20480 && abs(d.y - lara_item->pos.y_pos) < 20480 && abs(d.z - lara_item->pos.z_pos) < 20480) {
+				if(abs(s.x - lara_item->pos.x_pos) < 20480
+				   && abs(s.y - lara_item->pos.y_pos) < 20480
+				   && abs(s.z - lara_item->pos.z_pos) < 20480
+				   && abs(d.x - lara_item->pos.x_pos) < 20480
+				   && abs(d.y - lara_item->pos.y_pos) < 20480
+				   && abs(d.z - lara_item->pos.z_pos) < 20480) {
 					if(item->item_flags[2] != NO_ITEM) {
-						pyramid = &items[item->item_flags[2]];
+						pyramid = GetItem(currentLevel, item->item_flags[2]);
 						ExplodeItemNode(pyramid, 0, 0, 128);
 						KillItem(item->item_flags[2]);
-						TriggerExplosionSparks(s.x, s.y, s.z, 3, -2, 0, pyramid->room_number);
-						TriggerExplosionSparks(s.x, s.y, s.z, 3, -1, 0, pyramid->room_number);
+						TriggerExplosionSparks(
+							s.x, s.y, s.z, 3, -2, 0, pyramid->room_number);
+						TriggerExplosionSparks(
+							s.x, s.y, s.z, 3, -1, 0, pyramid->room_number);
 						item->item_flags[2] = NO_ITEM;
 
 						disc = find_a_fucking_item(PUZZLE_ITEM1_COMBO1);
@@ -2190,7 +2454,9 @@ void ControlObelisk(short item_number) {
 						SoundEffect(SFX_EXPLOSION2, &disc->pos, SFX_DEFAULT);
 					}
 
-					TriggerLightning(&s, &d, (GetRandomControl() & 0xF) + 16, RGBA(r, g, b, 24), 3, 24, 3);
+					TriggerLightning(
+						&s, &d, (GetRandomControl() & 0xF) + 16,
+						RGBA(r, g, b, 24), 3, 24, 3);
 					TriggerLightningGlow(s.x, s.y, s.z, RGBA(r, g, b, 64));
 				}
 			}
@@ -2199,39 +2465,58 @@ void ControlObelisk(short item_number) {
 		AnimateItem(item);
 		stop = 0;
 
-		if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index + 2) // done going counter-clockwise
+		if(item->anim_number
+		   == GetObjectInfo(currentLevel, item->object_number)->anim_index
+			   + 2) // done going counter-clockwise
 		{
 			item->pos.y_rot -= 0x4000;
 
 			if(input & IN_ACTION) {
-				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 1;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number
+					= GetObjectInfo(currentLevel, item->object_number)
+						  ->anim_index
+					+ 1;
+				item->frame_number
+					= GetAnim(currentLevel, item->anim_number)->frame_base;
 			} else
 				stop = 1;
 		}
 
-		if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index + 6) // done going clockwise
+		if(item->anim_number
+		   == GetObjectInfo(currentLevel, item->object_number)->anim_index
+			   + 6) // done going clockwise
 		{
 			item->pos.y_rot += 0x4000;
 
 			if(input & IN_ACTION) {
-				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 5;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number
+					= GetObjectInfo(currentLevel, item->object_number)
+						  ->anim_index
+					+ 5;
+				item->frame_number
+					= GetAnim(currentLevel, item->anim_number)->frame_base;
 			} else
 				stop = 1;
 		}
 
 		if(stop) {
-			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 3;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number
+				= GetObjectInfo(currentLevel, item->object_number)->anim_index
+				+ 3;
+			item->frame_number
+				= GetAnim(currentLevel, item->anim_number)->frame_base;
 		}
 
 		if(item->trigger_flags == 2) {
-			for(int i = 0; i < level_items; i++) {
-				pulley = &items[i];
+			for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+				pulley = GetItem(currentLevel, i);
 
 				if(pulley->object_number == PULLEY) {
-					if(item->pos.y_rot == -0x4000 && items[item->item_flags[0]].pos.y_rot == 0x4000 && !items[item->item_flags[1]].pos.y_rot)
+					if(item->pos.y_rot == -0x4000
+					   && GetItem(currentLevel, item->item_flags[0])->pos.y_rot
+						   == 0x4000
+					   && !GetItem(currentLevel, item->item_flags[1])
+							   ->pos.y_rot)
 						pulley->item_flags[1] = 0;
 					else
 						pulley->item_flags[1] = 1;

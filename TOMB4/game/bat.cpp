@@ -22,7 +22,7 @@ static BITE_INFO bat_bite = { 0, 16, 45, 4 };
 void InitialiseBat(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,BAT)->anim_index + 5;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -42,7 +42,7 @@ void BatControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	bat = (CREATURE_INFO*)item->data;
 	angle = 0;
 
@@ -76,7 +76,7 @@ void BatControl(short item_number) {
 				baddie = &baddie_slots[i];
 
 				if(baddie->item_num != NO_ITEM && baddie->item_num != item_number) {
-					item2 = &items[baddie->item_num];
+					item2 = GetItem(currentLevel, baddie->item_num);
 
 					if(item2->object_number == VON_CROY) {
 						dx = item2->pos.x_pos - item->pos.x_pos;

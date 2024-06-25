@@ -125,12 +125,12 @@ void InitialiseTrainJeep(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	item->item_flags[0] = -80;
 
-	for(int i = 0; i < level_items; i++) // find your raghead
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) // find your raghead
 	{
-		item2 = &items[i];
+		item2 = GetItem(currentLevel,i);
 
 		if(item != item2 && item2->trigger_flags == item->trigger_flags) {
 			item->item_flags[1] = i;
@@ -146,8 +146,8 @@ void TrainJeepControl(short item_number) {
 	ITEM_INFO* item2;
 	short room_number;
 
-	item = &items[item_number];
-	item2 = &items[item->item_flags[1]];
+	item = GetItem(currentLevel,item_number);
+	item2 = GetItem(currentLevel,item->item_flags[1]);
 
 	if(item->item_flags[0] == -80) {
 		if(item->item_flags[2] < 0x4000)

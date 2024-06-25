@@ -36,7 +36,7 @@ static BITE_INFO horse_head = { 0, 0, 0, 19 };
 void InitialiseHorseman(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 8;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -60,11 +60,11 @@ void HorsemanControl(short item_number) {
 	room_number = 0;
 
 	if(CreatureActive(item_number)) {
-		item = &items[item_number];
+		item = GetItem(currentLevel, item_number);
 
 		if(item->item_flags[0] == -1) {
-			for(int i = 0; i < level_items; i++) {
-				item2 = &items[i];
+			for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+				item2 = GetItem(currentLevel, i);
 
 				if(item2->object_number == HORSE && item->trigger_flags == item2->trigger_flags) {
 					item->item_flags[0] = i;
@@ -77,7 +77,7 @@ void HorsemanControl(short item_number) {
 		}
 
 		if(item->item_flags[0])
-			item2 = &items[item->item_flags[0]];
+			item2 = GetItem(currentLevel, item->item_flags[0]);
 		else
 			item2 = 0;
 
@@ -107,7 +107,7 @@ void HorsemanControl(short item_number) {
 					item->current_anim_state = 16;
 
 					if(item->item_flags[0])
-						items[item->item_flags[0]].after_death = 1;
+						GetItem(currentLevel,item->item_flags[0])->after_death = 1;
 				}
 			} else {
 				item->hit_points = 100;
@@ -540,7 +540,7 @@ void TriggerHorsemanRicochets(PHD_VECTOR* pos, long yrot, long num) {
 void InitialiseHorse(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->anim_number = GetObjectInfo(currentLevel,HORSE)->anim_index + 2;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->goal_anim_state = 1;

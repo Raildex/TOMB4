@@ -38,7 +38,7 @@ void InitialiseRaghead(short item_number) {
 	ITEM_INFO* item;
 	short obj_num, flag;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 
 	if(GetObjectInfo(currentLevel,SUPER_RAGHEAD)->loaded)
@@ -115,7 +115,7 @@ void RagheadControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	raghead = (CREATURE_INFO*)item->data;
 
 	if(GetObjectInfo(currentLevel,SUPER_RAGHEAD)->loaded)
@@ -175,7 +175,7 @@ void RagheadControl(short item_number) {
 
 	if(item->item_flags[1] != item->room_number && gfCurrentLevel != 5) {
 		for(target_num = GetRoom(currentLevel,item->room_number)->item_number; target_num != NO_ITEM; target_num = target->next_item) {
-			target = &items[target_num];
+			target = GetItem(currentLevel, target_num);
 
 			if(target->object_number == SMALLMEDI_ITEM || target->object_number == UZI_AMMO_ITEM) {
 				if(SameZone(raghead, target) && target->status != ITEM_INVISIBLE) {
@@ -255,7 +255,7 @@ void RagheadControl(short item_number) {
 
 			if(item->trigger_flags > 999) {
 				for(target_num = GetRoom(currentLevel,2)->item_number; target_num != NO_ITEM; target_num = target->next_item) {
-					target = &items[target_num];
+					target = GetItem(currentLevel, target_num);
 
 					if(target->trigger_flags / 1000 == item->trigger_flags / 1000 + 1) {
 						target->touch_bits = 0;
@@ -702,7 +702,7 @@ void RagheadControl(short item_number) {
 				} else
 					item->item_flags[2] += 24;
 
-				KillItem(raghead->enemy - items);
+				KillItem(GetItemNum(currentLevel,raghead->enemy));
 
 				for(int i = 0; i < 5; i++) {
 					if(baddie_slots[i].item_num != -1 && baddie_slots[i].item_num != item_number && baddie_slots[i].enemy == raghead->enemy)

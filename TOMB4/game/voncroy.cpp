@@ -248,7 +248,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 		IsRoomOutside(item->pos.x_pos, item->pos.y_pos - 64, item->pos.z_pos);
 
 		if(IsRoomOutsideNo != item->room_number && IsRoomOutsideNo != -1)
-			ItemNewRoom(item - items, IsRoomOutsideNo);
+			ItemNewRoom(GetItemNum(currentLevel,item), IsRoomOutsideNo);
 
 		lara_item->pos.y_rot = ang + 0x8000;
 
@@ -341,7 +341,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 void InitialiseVoncroy(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,VON_CROY)->anim_index + 11;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -365,7 +365,7 @@ void VoncroyRaceControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	VonCroy = (CREATURE_INFO*)item->data;
 	tilt = 0;
 	angle = 0;
@@ -884,7 +884,7 @@ void VoncroyControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	VonCroy = (CREATURE_INFO*)item->data;
 
 	tilt = 0;
@@ -932,7 +932,7 @@ void VoncroyControl(short item_number) {
 			if(baddie->item_num == NO_ITEM || baddie->item_num == item_number)
 				continue;
 
-			candidate = &items[baddie->item_num];
+			candidate = GetItem(currentLevel,baddie->item_num);
 
 			if(candidate->object_number != VON_CROY) {
 				dx = candidate->pos.x_pos - item->pos.x_pos;

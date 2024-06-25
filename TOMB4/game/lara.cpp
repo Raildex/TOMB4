@@ -405,7 +405,7 @@ void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll) {
 	lara.look = 1;
 
 	if(lara.vehicle != NO_ITEM) {
-		if(items[lara.vehicle].object_number == MOTORBIKE)
+		if(GetItem(currentLevel,lara.vehicle)->object_number == MOTORBIKE)
 			BikeControl(lara.vehicle);
 		else
 			JeepControl(lara.vehicle);

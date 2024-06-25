@@ -74,7 +74,6 @@ long number_cameras;
 short nAIObjects;
 
 static char* CompressedData;
-static long num_items;
 
 unsigned int __stdcall LoadLevel(void* name) {
 	OBJECT_INFO* obj;
@@ -139,7 +138,7 @@ unsigned int __stdcall LoadLevel(void* name) {
 		LoadSoundEffects(&FileData);
 		S_LoadBar();
 
-		LoadBoxes(&FileData);
+		LoadBoxes(&FileData,currentLevel);
 		S_LoadBar();
 
 		LoadAnimatedTextures(&FileData);
@@ -148,7 +147,7 @@ unsigned int __stdcall LoadLevel(void* name) {
 		LoadTextureInfos(&FileData);
 		S_LoadBar();
 
-		LoadItems(&FileData);
+		LoadItems(&FileData,currentLevel);
 		S_LoadBar();
 
 		LoadAIInfo(&FileData);
@@ -671,48 +670,6 @@ bool LoadSoundEffects(char** FileData) {
 	return 1;
 }
 
-bool LoadBoxes(char** FileData) {
-	BOX_INFO* box;
-	long size;
-
-	Log(2, "LoadBoxes");
-	num_boxes = *(long*)*FileData;
-	*FileData += sizeof(long);
-
-	boxes = (BOX_INFO*)game_malloc(sizeof(BOX_INFO) * num_boxes);
-	memcpy(boxes, *FileData, sizeof(BOX_INFO) * num_boxes);
-	*FileData += sizeof(BOX_INFO) * num_boxes;
-
-	size = *(long*)*FileData;
-	*FileData += sizeof(long);
-	overlap = (unsigned short*)game_malloc(sizeof(unsigned short) * size);
-	memcpy(overlap, *FileData, sizeof(unsigned short) * size);
-	*FileData += sizeof(unsigned short) * size;
-
-	for(int i = 0; i < 2; i++) {
-		for(int j = 0; j < 4; j++) {
-			ground_zone[j][i] = (short*)game_malloc(sizeof(short) * num_boxes);
-			memcpy(ground_zone[j][i], *FileData, sizeof(short) * num_boxes);
-			*FileData += sizeof(short) * num_boxes;
-		}
-
-		ground_zone[4][i] = (short*)game_malloc(sizeof(short) * num_boxes);
-		memcpy(ground_zone[4][i], *FileData, sizeof(short) * num_boxes);
-		*FileData += sizeof(short) * num_boxes;
-	}
-
-	for(int i = 0; i < num_boxes; i++) {
-		box = &boxes[i];
-
-		if(box->overlap_index & 0x8000)
-			box->overlap_index |= 0x4000;
-		else if(gfLevelFlags & GF_TRAIN && box->height > -256)
-			box->overlap_index |= 0xC000;
-	}
-
-	return 1;
-}
-
 bool LoadAnimatedTextures(char** FileData) {
 	long num_anim_ranges;
 
@@ -758,85 +715,6 @@ bool LoadTextureInfos(char** FileData) {
 
 	AdjustUV(val);
 	Log(5, "Created %d Texture Pages", nTextures - 1);
-	return 1;
-}
-
-bool LoadItems(char** FileData) {
-	ITEM_INFO* item;
-	ROOM_INFO* r;
-	FLOOR_INFO* floor;
-	STATIC_INFO* stat;
-	long x, y, z;
-
-	Log(2, "LoadItems");
-	num_items = *(long*)*FileData;
-	*FileData += 4;
-
-	if(!num_items)
-		return 1;
-
-	items = (ITEM_INFO*)game_malloc(256 * sizeof(ITEM_INFO));
-	level_items = num_items;
-	InitialiseItemArray(256);
-
-	for(int i = 0; i < num_items; i++) {
-		item = &items[i];
-
-		item->object_number = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		item->room_number = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		item->pos.x_pos = *(long*)*FileData;
-		*FileData += sizeof(long);
-
-		item->pos.y_pos = *(long*)*FileData;
-		*FileData += sizeof(long);
-
-		item->pos.z_pos = *(long*)*FileData;
-		*FileData += sizeof(long);
-
-		item->pos.y_rot = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		item->shade = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		item->trigger_flags = *(short*)*FileData;
-		*FileData += sizeof(short);
-
-		item->flags = *(short*)*FileData;
-		*FileData += sizeof(short);
-	}
-
-	for(int i = 0; i < num_items; i++)
-		InitialiseItem(i);
-
-	for(int i = 0; i < GetNumRooms(currentLevel); i++) {
-		r = GetRoom(currentLevel,i);
-
-		for(int j = 0; j < r->num_meshes; j++) {
-			x = (r->mesh[j].x - r->x) >> 10;
-			z = (r->mesh[j].z - r->z) >> 10;
-
-			floor = &(r->floor[x * r->x_size + z]);
-
-			if(!(boxes[floor->box].overlap_index & 0x4000) && (gfCurrentLevel != 4 || i != 19 && i != 23 && i != 16)) {
-				stat = GetStaticObject(currentLevel,r->mesh[j].static_number);
-				y = floor->floor << 8;
-
-				if(y <= (r->mesh[j].y - stat->y_maxc + 512) && y < r->mesh[j].y - stat->y_minc) {
-					if(!stat->x_maxc || !stat->x_minc || !stat->z_maxc || !stat->z_minc || (stat->x_maxc ^ stat->x_minc) & 0x8000 && (stat->z_maxc ^ stat->z_minc) & 0x8000) {
-						x = (r->mesh[j].x - r->x) >> 10;
-						z = (r->mesh[j].z - r->z) >> 10;
-						r->floor[x * r->x_size + z].stopper = 1;
-					}
-				}
-			}
-		}
-	}
-
 	return 1;
 }
 

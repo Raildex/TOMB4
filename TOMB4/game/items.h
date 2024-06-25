@@ -1,7 +1,7 @@
 #pragma once
 
 
-void InitialiseItemArray(short num);
+void InitialiseItemArray(short num, long count);
 void KillItem(short item_num);
 short CreateItem();
 void InitialiseItem(short item_num);

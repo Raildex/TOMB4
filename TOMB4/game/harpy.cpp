@@ -143,8 +143,8 @@ void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size) 
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - items[item_number].pos.x_pos;
-	dz = lara_item->pos.z_pos - items[item_number].pos.z_pos;
+	dx = lara_item->pos.x_pos - GetItem(currentLevel, item_number)->pos.x_pos;
+	dz = lara_item->pos.z_pos - GetItem(currentLevel, item_number)->pos.z_pos;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -182,7 +182,7 @@ void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size) 
 	sptr->FxObj = (unsigned char)item_number;
 	sptr->NodeNumber = NodeNumber;
 	sptr->Scalar = 2;
-	sptr->Size = unsigned char((GetRandomControl() & 0xF) + size);
+	sptr->Size = (unsigned char)((GetRandomControl() & 0xF) + size);
 	sptr->sSize = sptr->Size;
 	sptr->dSize = sptr->Size >> 4;
 }
@@ -267,7 +267,7 @@ void DoHarpyEffects(ITEM_INFO* item, short item_number) {
 void InitialiseHarpy(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,HARPY)->anim_index + 4;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -287,7 +287,7 @@ void HarpyControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	harpy = (CREATURE_INFO*)item->data;
 	angle = 0;
 	head = 0;
@@ -335,7 +335,7 @@ void HarpyControl(short item_number) {
 			baddie = &baddie_slots[i];
 
 			if(baddie->item_num != NO_ITEM && baddie->item_num != item_number) {
-				enemy = &items[baddie->item_num];
+				enemy = GetItem(currentLevel,baddie->item_num);
 
 				if(enemy->object_number == LARA_DOUBLE) {
 					dx = enemy->pos.x_pos - item->pos.x_pos;

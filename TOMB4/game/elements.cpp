@@ -33,7 +33,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	long y;
 	short mesh, rotY;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!item->trigger_flags)
 		mesh = LARA_WATER_MESH;
@@ -111,7 +111,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void InitialiseElementPuzzle(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!item->trigger_flags)
 		item->mesh_bits = 80;
@@ -130,7 +130,7 @@ void ControlElementPuzzle(short item_number) {
 	short itemNos[8];
 	short fade, itemNum;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -171,7 +171,7 @@ void ControlElementPuzzle(short item_number) {
 		if(item->item_flags[0] == 90) {
 			for(numTriggers = GetSwitchTrigger(item, itemNos, 0); numTriggers > 0; numTriggers--) {
 				itemNum = itemNos[numTriggers - 1];
-				item2 = &items[itemNum];
+				item2 = GetItem(currentLevel, itemNum);
 				AddActiveItem(itemNum);
 				item2->status = ITEM_ACTIVE;
 				item2->flags |= IFL_CODEBITS;
@@ -180,7 +180,7 @@ void ControlElementPuzzle(short item_number) {
 			KillItem(item_number);
 		} else {
 			for(itemNum = GetRoom(currentLevel,item->room_number)->item_number; itemNum != NO_ITEM; itemNum = item2->next_item) {
-				item2 = &items[itemNum];
+				item2 = GetItem(currentLevel, itemNum);
 
 				if(item2->object_number == FLAME_EMITTER2) {
 					if(item->item_flags[0] != 89) {

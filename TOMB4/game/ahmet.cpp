@@ -46,7 +46,7 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	PHD_VECTOR pos;
 	short roty;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(TestBoundsCollide(item, l, 100)) {
 		if((l->anim_number == ANIM_POURWATERSKIN || l->anim_number == ANIM_FILLSCALE) && item->current_anim_state == 1) {
@@ -117,7 +117,7 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 long ReTriggerAhmet(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->current_anim_state == 7 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end) {
 		FlashFadeR = 255;
@@ -158,7 +158,7 @@ void ScalesControl(short item_number) {
 	short itemNos[8];
 	short room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end) {
 		if(item->current_anim_state == 1 || item->item_flags[1]) {
@@ -168,7 +168,7 @@ void ScalesControl(short item_number) {
 				item->item_flags[1] = 0;
 			} else if(ReTriggerAhmet(lara.spaz_effect_count)) {
 				for(numTriggers = GetSwitchTrigger(item, itemNos, 0); numTriggers > 0; numTriggers--) {
-					item2 = &items[itemNos[numTriggers - 1]];
+					item2 = GetItem(currentLevel,itemNos[numTriggers - 1]);
 
 					if(item2->object_number != FLAME_EMITTER2)
 						item2->flags = 1024;
@@ -214,7 +214,7 @@ void ExplodeAhmet(ITEM_INFO* item) {
 void InitialiseAhmet(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,AHMET)->anim_index;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -238,7 +238,7 @@ void AhmetControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags == 1) {
 		item->trigger_flags = 0;

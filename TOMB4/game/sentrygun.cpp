@@ -2,6 +2,7 @@
 #include "sentrygun.h"
 #include "effect2.h"
 #include "../specific/function_stubs.h"
+#include "levelinfo.h"
 #include "sphere.h"
 #include "box.h"
 #include "tomb4fx.h"
@@ -74,8 +75,8 @@ void TriggerAutogunFlamethrower(ITEM_INFO* item) {
 
 		sptr->Scalar = 3;
 		v *= (GetRandomControl() & 7) + 60;
-		sptr->dSize = unsigned char(v >> 8);
-		sptr->Size = unsigned char(v >> 12);
+		sptr->dSize = (unsigned char)(v >> 8);
+		sptr->Size = (unsigned char)(v >> 12);
 		sptr->sSize = sptr->Size;
 	}
 }
@@ -83,7 +84,7 @@ void TriggerAutogunFlamethrower(ITEM_INFO* item) {
 void InitialiseAutogun(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 	item->item_flags[0] = 0;
 	item->item_flags[1] = 768;
@@ -99,7 +100,7 @@ void AutogunControl(short item_number) {
 	short ahead;
 
 	ang = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(!CreatureActive(item_number))
 		return;

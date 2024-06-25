@@ -25,7 +25,7 @@ static char DeathAnims[4] = { 20, 21, 22, 21 };
 void InitialiseDog(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	item->current_anim_state = 1;
 
@@ -52,7 +52,7 @@ void DogControl(short item_number) {
 	head_x = 0;
 	head = 0;
 	torso_y = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	dog = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0) {

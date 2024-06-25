@@ -24,7 +24,7 @@ static BITE_INFO right_hand = { 0, 0, 0, 14 };
 void InitialiseMummy(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	InitialiseCreature(item_number);
 
 	if(item->trigger_flags == 2) {
@@ -51,7 +51,7 @@ void MummyControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	mummy = (CREATURE_INFO*)item->data;
 	angle = 0;
 	head = 0;

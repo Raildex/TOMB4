@@ -19,7 +19,7 @@ void ControlPulseLight(short item_number) {
 	ITEM_INFO* item;
 	long sin, r, g, b;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -63,7 +63,7 @@ void ControlElectricalLight(short item_number) {
 	ITEM_INFO* item;
 	long shade, r, g, b;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item)) {
 		item->item_flags[0] = 0;
@@ -105,7 +105,7 @@ void ControlBlinker(short item_number) {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;

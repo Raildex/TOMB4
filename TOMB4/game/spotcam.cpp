@@ -1,5 +1,6 @@
 
 #include "spotcam.h"
+#include "levelinfo.h"
 #include "tomb4fx.h"
 #include "../specific/3dmath.h"
 #include "control.h"
@@ -78,7 +79,7 @@ void SetSplineData(long num, long cam) {
 	}
 
 	if(spotcam->flags & 2) {
-		item = &items[spotcam->timer];
+		item = GetItem(currentLevel,spotcam->timer);
 
 		if(item) {
 			camera_xtarget[num] = item->pos.x_pos;
@@ -361,7 +362,7 @@ void CalculateSpotCams() {
 		}
 
 		if(CurrentCam->flags & 2) {
-			item = &items[SpotCam[current_spline_camera].timer];
+			item = GetItem(currentLevel,SpotCam[current_spline_camera].timer);
 
 			if(item) {
 				camera.target.x = item->pos.x_pos;

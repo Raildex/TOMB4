@@ -61,7 +61,7 @@ void InitialiseJeep(short item_number) {
 	ITEM_INFO* item;
 	JEEPINFO* jeep;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	jeep = (JEEPINFO*)game_malloc(sizeof(JEEPINFO));
 	item->data = jeep;
 	jeep->velocity = 0;
@@ -86,7 +86,7 @@ static long GetOnJeep(short item_number, COLL_INFO* coll) {
 	long h;
 	short room_number, ang;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(input & IN_ACTION || GLOBAL_inventoryitemchosen == PUZZLE_ITEM1) {
 		if(!(item->flags & IFL_INVISIBLE) && lara.gun_status == LG_NO_ARMS && lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH && !lara_item->gravity_status) {
@@ -281,7 +281,7 @@ static long CanGetOff(short num) {
 	long x, y, z, h, c;
 	short yrot, room_number;
 
-	item = &items[lara.vehicle];
+	item = GetItem(currentLevel, lara.vehicle);
 	yrot = item->pos.y_rot + 0x4000;
 	x = item->pos.x_pos - (512 * phd_sin(yrot) >> W2V_SHIFT);
 	y = item->pos.y_pos;
@@ -311,7 +311,7 @@ void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	if(l->hit_points <= 0 || lara.vehicle != NO_ITEM)
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(GetOnJeep(item_number, coll)) {
 		lara.vehicle = item_number;
@@ -328,7 +328,7 @@ void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		lara.gun_status = LG_HANDS_BUSY;
 
 		for(short item_num = GetRoom(currentLevel,item->room_number)->item_number; item_num != NO_ITEM; item_num = item2->next_item) {
-			item2 = &items[item_num];
+			item2 = GetItem(currentLevel, item_num);
 
 			if(item2->object_number == ENEMY_JEEP) {
 				EnableBaddieAI(item_num, 1);
@@ -961,7 +961,7 @@ void JeepBaddieCollision(ITEM_INFO* item) {
 
 	for(int i = 0; i < room_count; i++) {
 		for(item_number = GetRoom(currentLevel,jroomies[i])->item_number; item_number != NO_ITEM; item_number = collided->next_item) {
-			collided = &items[item_number];
+			collided = GetItem(currentLevel, item_number);
 			obj = GetObjectInfo(currentLevel,collided->object_number);
 
 			if(collided->collidable && collided->status != ITEM_INVISIBLE && collided != lara_item && collided != item) {
@@ -1288,7 +1288,7 @@ long JeepDynamics(ITEM_INFO* item) {
 		speed = (dx * phd_sin(jeep->move_angle) + dz * phd_cos(jeep->move_angle)) >> W2V_SHIFT;
 		speed <<= 8;
 
-		if(&items[lara.vehicle] == item && jeep->velocity == 0x8000 && speed < 0x7FF6) {
+		if(GetItem(currentLevel, lara.vehicle) == item && jeep->velocity == 0x8000 && speed < 0x7FF6) {
 			lara_item->hit_points -= short((0x8000 - speed) >> 7);
 			lara_item->hit_status = 1;
 		}
@@ -1319,7 +1319,7 @@ void JeepControl(short item_number) {
 	driving = -1;
 	killed = 0;
 	pitch = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	jeep = (JEEPINFO*)item->data;
 	hitWall = JeepDynamics(item);
 	room_number = item->room_number;
@@ -1483,7 +1483,7 @@ void JeepFireGrenade(ITEM_INFO* item) {
 	item_number = CreateItem();
 
 	if(item_number != NO_ITEM) {
-		grenade = &items[item_number];
+		grenade = GetItem(currentLevel, item_number);
 		grenade->shade = -0x3DF0;
 		grenade->object_number = GRENADE;
 		grenade->room_number = item->room_number;
@@ -1518,7 +1518,7 @@ void JeepFireGrenade(ITEM_INFO* item) {
 void InitialiseEnemyJeep(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 14;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -1541,7 +1541,7 @@ void EnemyJeepControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	jeep = (CREATURE_INFO*)item->data;
 	Xoffset = 682 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	Zoffset = 682 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;

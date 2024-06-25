@@ -186,7 +186,7 @@ void DoDemigodEffects(short item_number) {
 	short angles[2];
 	short anim, frame;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	anim = item->anim_number - GetObjectInfo(currentLevel,item->object_number)->anim_index;
 
 	if(anim == 8 || anim == 19) {
@@ -238,15 +238,15 @@ void InitialiseDemigod(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = 0;
 	item->goal_anim_state = 0;
 
-	for(int i = 0; i < level_items; i++) {
-		item2 = &items[i];
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
+		item2 = GetItem(currentLevel, i);
 
 		if(item != item2 && item2->object_number == DEMIGOD3 && !item2->item_flags[0])
 			item->item_flags[0] = i;
@@ -265,11 +265,11 @@ void DemigodControl(short item_number) {
 	long dx, dz, h;
 	short objnum, angle, torso_x, torso_y, torso_z, head, iAngle, iAhead, room_number;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	objnum = item->item_flags[0];
 
 	if(objnum) {
-		item2 = &items[objnum];
+		item2 = GetItem(currentLevel, objnum);
 
 		if(item2->status == ITEM_ACTIVE && item2->active) {
 			item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;
@@ -291,7 +291,7 @@ void DemigodControl(short item_number) {
 	if(false /*gfCurrentLevel == 24)*/) // Chambers of Tulun
 	{
 		r = GetRoom(currentLevel,lara_item->room_number);
-		zone = ground_zone[god->LOT.zone][flip_status];
+		zone = GetZone(currentLevel,god->LOT.zone,flip_status);
 		lara_item->box_number = r->floor[((lara_item->pos.z_pos - r->z) >> 10) + r->x_size * ((lara_item->pos.x_pos - r->x) >> 10)].box;
 
 		if(zone[item->box_number] == zone[lara_item->box_number]) {

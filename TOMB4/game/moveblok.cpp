@@ -44,13 +44,14 @@ static void ClearMovableBlockSplitters(long x, long y, long z, short room_number
 	short room_num, height;
 
 	floor = GetFloor(x, y, z, &room_number);
-	boxes[floor->box].overlap_index = ~0x4000;
-	height = boxes[floor->box].height;
+	GetBox(currentLevel, floor->box)->overlap_index = ~0x4000;
+	height = GetBox(currentLevel, floor->box)->height;
 	room_num = room_number;
 	floor = GetFloor(x + 1024, y, z, &room_number);
 
 	if(floor->box != 0x7FF) {
-		if(boxes[floor->box].height == height && boxes[floor->box].overlap_index & 0x8000 && boxes[floor->box].overlap_index & 0x4000)
+		if(GetBox(currentLevel,floor->box)->height == height && GetBox(currentLevel,floor->box)->overlap_index & 0x8000
+		   && GetBox(currentLevel,floor->box)->overlap_index & 0x4000)
 			ClearMovableBlockSplitters(x + 1024, y, z, room_number);
 	}
 
@@ -58,7 +59,8 @@ static void ClearMovableBlockSplitters(long x, long y, long z, short room_number
 	floor = GetFloor(x - 1024, y, z, &room_number);
 
 	if(floor->box != 0x7FF) {
-		if(boxes[floor->box].height == height && boxes[floor->box].overlap_index & 0x8000 && boxes[floor->box].overlap_index & 0x4000)
+		if(GetBox(currentLevel,floor->box)->height == height && GetBox(currentLevel,floor->box)->overlap_index & 0x8000
+		   && GetBox(currentLevel,floor->box)->overlap_index & 0x4000)
 			ClearMovableBlockSplitters(x - 1024, y, z, room_number);
 	}
 
@@ -66,7 +68,8 @@ static void ClearMovableBlockSplitters(long x, long y, long z, short room_number
 	floor = GetFloor(x, y, z + 1024, &room_number);
 
 	if(floor->box != 0x7FF) {
-		if(boxes[floor->box].height == height && boxes[floor->box].overlap_index & 0x8000 && boxes[floor->box].overlap_index & 0x4000)
+		if(GetBox(currentLevel,floor->box)->height == height && GetBox(currentLevel,floor->box)->overlap_index & 0x8000
+		   && GetBox(currentLevel,floor->box)->overlap_index & 0x4000)
 			ClearMovableBlockSplitters(x, y, z + 1024, room_number);
 	}
 
@@ -74,7 +77,8 @@ static void ClearMovableBlockSplitters(long x, long y, long z, short room_number
 	floor = GetFloor(x, y, z - 1024, &room_number);
 
 	if(floor->box != 0x7FF) {
-		if(boxes[floor->box].height == height && boxes[floor->box].overlap_index & 0x8000 && boxes[floor->box].overlap_index & 0x4000)
+		if(GetBox(currentLevel,floor->box)->height == height && GetBox(currentLevel,floor->box)->overlap_index & 0x8000
+		   && GetBox(currentLevel,floor->box)->overlap_index & 0x4000)
 			ClearMovableBlockSplitters(x, y, z - 1024, room_number);
 	}
 }
@@ -82,7 +86,7 @@ static void ClearMovableBlockSplitters(long x, long y, long z, short room_number
 void InitialiseMovingBlock(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	ClearMovableBlockSplitters(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 }
 
@@ -119,7 +123,7 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 
 	room_number = item->room_number;
 	floor = GetFloor(x, y - 256, z, &room_number);
-	r = GetRoom(currentLevel,room_number);
+	r = GetRoom(currentLevel, room_number);
 	rx = (x - r->x) >> 10;
 	rz = (z - r->z) >> 10;
 
@@ -197,7 +201,7 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 	z = item->pos.z_pos + destz;
 	room_number = item->room_number;
 	floor = GetFloor(x, y - 256, z, &room_number);
-	r = GetRoom(currentLevel,room_number);
+	r = GetRoom(currentLevel, room_number);
 	rx = (x - r->x) >> 10;
 	rz = (z - r->z) >> 10;
 
@@ -254,7 +258,7 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 	z = lara_item->pos.z_pos + destz;
 	room_number = lara_item->room_number;
 	GetFloor(x, y, z, &room_number);
-	r = GetRoom(currentLevel,room_number);
+	r = GetRoom(currentLevel, room_number);
 	rx = (x - r->x) >> 10;
 	rz = (z - r->z) >> 10;
 
@@ -291,7 +295,7 @@ void MovableBlock(short item_number) {
 	short frame, base, room_number;
 	static char sfx = 0;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	pos.x = 0;
 	pos.y = 0;
 	pos.z = 0;
@@ -300,9 +304,10 @@ void MovableBlock(short item_number) {
 	switch(lara_item->anim_number) {
 	case ANIM_PUSH:
 		frame = lara_item->frame_number;
-		base = GetAnim(currentLevel,ANIM_PUSH)->frame_base;
+		base = GetAnim(currentLevel, ANIM_PUSH)->frame_base;
 
-		if((frame < base + 30 || frame > base + 67) && (frame < base + 78 || frame > base + 125) && (frame < base + 140 || frame > base + 160)) {
+		if((frame < base + 30 || frame > base + 67) && (frame < base + 78 || frame > base + 125)
+		   && (frame < base + 140 || frame > base + 160)) {
 			if(sfx) {
 				SoundEffect(SFX_PUSH_BLOCK_END, &item->pos, SFX_ALWAYS);
 				sfx = 0;
@@ -349,7 +354,7 @@ void MovableBlock(short item_number) {
 		}
 
 
-		if(lara_item->frame_number == GetAnim(currentLevel,lara_item->anim_number)->frame_end - 1) {
+		if(lara_item->frame_number == GetAnim(currentLevel, lara_item->anim_number)->frame_end - 1) {
 			if(input & IN_ACTION) {
 				if(!TestBlockPush(item, 1024, quadrant))
 					lara_item->goal_anim_state = 2;
@@ -361,7 +366,7 @@ void MovableBlock(short item_number) {
 
 	case ANIM_PULL:
 		frame = lara_item->frame_number;
-		base = GetAnim(currentLevel,ANIM_PULL)->frame_base;
+		base = GetAnim(currentLevel, ANIM_PULL)->frame_base;
 
 		if((frame < base + 40 || frame > base + 122) && (frame < base + 130 || frame > base + 170)) {
 			if(sfx) {
@@ -409,7 +414,7 @@ void MovableBlock(short item_number) {
 			break;
 		}
 
-		if(lara_item->frame_number == GetAnim(currentLevel,lara_item->anim_number)->frame_end - 1) {
+		if(lara_item->frame_number == GetAnim(currentLevel, lara_item->anim_number)->frame_end - 1) {
 			if(input & IN_ACTION) {
 				if(!TestBlockPull(item, 1024, quadrant))
 					lara_item->goal_anim_state = 2;
@@ -423,15 +428,16 @@ void MovableBlock(short item_number) {
 	case 418:
 		frame = lara_item->frame_number;
 
-		if(frame == GetAnim(currentLevel,417)->frame_base || 
-		frame == GetAnim(currentLevel,418)->frame_base) {
+		if(frame == GetAnim(currentLevel, 417)->frame_base || frame == GetAnim(currentLevel, 418)->frame_base) {
 			item->pos.x_pos = (item->pos.x_pos & -512) | 512;
 			item->pos.z_pos = (item->pos.z_pos & -512) | 512;
 		}
 
-		if(frame == GetAnim(currentLevel,lara_item->anim_number)->frame_end) {
+		if(frame == GetAnim(currentLevel, lara_item->anim_number)->frame_end) {
 			room_number = item->room_number;
-			GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos);
+			GetHeight(
+				GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number), item->pos.x_pos,
+				item->pos.y_pos - 256, item->pos.z_pos);
 			TestTriggers(trigger_index, 1, item->flags & IFL_CODEBITS);
 			RemoveActiveItem(item_number);
 			item->status = ITEM_INACTIVE;
@@ -447,21 +453,19 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 	short* bounds;
 	short room_number, yrot, quadrant;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	room_number = item->room_number;
-	item->pos.y_pos = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	item->pos.y_pos = GetHeight(
+		GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number), item->pos.x_pos,
+		item->pos.y_pos, item->pos.z_pos);
 
 	if(item->room_number != room_number)
 		ItemNewRoom(item_number, room_number);
 
-	if(input & IN_ACTION 
-	&& laraitem->current_anim_state == AS_STOP 
-	&& laraitem->anim_number == ANIM_BREATH 
-	&& !laraitem->gravity_status 
-	&& lara.gun_status == LG_NO_ARMS 
-	&& item->status == ITEM_INACTIVE 
-	&& item->trigger_flags >= 0
-	|| (lara.IsMoving && lara.GeneralPtr == item_number)) {
+	if(input & IN_ACTION && laraitem->current_anim_state == AS_STOP && laraitem->anim_number == ANIM_BREATH
+		   && !laraitem->gravity_status && lara.gun_status == LG_NO_ARMS && item->status == ITEM_INACTIVE
+		   && item->trigger_flags >= 0
+	   || (lara.IsMoving && lara.GeneralPtr == item_number)) {
 		room_number = laraitem->room_number;
 		GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number);
 
@@ -482,7 +486,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 
 				if(MoveLaraPosition(&MovingBlockPos, item, laraitem)) {
 					laraitem->anim_number = ANIM_PPREADY;
-					laraitem->frame_number = GetAnim(currentLevel,ANIM_PPREADY)->frame_base;
+					laraitem->frame_number = GetAnim(currentLevel, ANIM_PPREADY)->frame_base;
 					laraitem->current_anim_state = AS_PPREADY;
 					laraitem->goal_anim_state = AS_PPREADY;
 					lara.IsMoving = 0;
@@ -497,7 +501,10 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 
 			item->pos.y_rot = yrot;
 		}
-	} else if(laraitem->current_anim_state == AS_PPREADY && laraitem->frame_number == GetAnim(currentLevel,ANIM_PPREADY)->frame_base + 19 && (ITEM_INFO*)lara.CornerX == item) {
+	} else if(
+		laraitem->current_anim_state == AS_PPREADY
+		&& laraitem->frame_number == GetAnim(currentLevel, ANIM_PPREADY)->frame_base + 19
+		&& (ITEM_INFO*)lara.CornerX == item) {
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
@@ -537,14 +544,15 @@ void InitialisePlanetEffect(short item_number) {
 	char* pifl;
 	unsigned char others[4];
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	item->mesh_bits = 0;
 
-	for(int i = 0; i < level_items; i++) // get the pushable we are linked to
+	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) // get the pushable we are linked to
 	{
-		item2 = &items[i];
+		item2 = GetItem(currentLevel, i);
 
-		if(item2->object_number >= PUSHABLE_OBJECT1 && item2->object_number <= PUSHABLE_OBJECT5 && item2->trigger_flags == item->trigger_flags) {
+		if(item2->object_number >= PUSHABLE_OBJECT1 && item2->object_number <= PUSHABLE_OBJECT5
+		   && item2->trigger_flags == item->trigger_flags) {
 			item->item_flags[0] = i;
 			break;
 		}
@@ -552,8 +560,8 @@ void InitialisePlanetEffect(short item_number) {
 
 	if(item->trigger_flags == 1) // get other planet effects
 	{
-		for(int i = 0, j = 0; i < level_items; i++) {
-			item2 = &items[i];
+		for(int i = 0, j = 0; i < GetNumLevelItems(currentLevel); i++) {
+			item2 = GetItem(currentLevel, i);
 
 			if(item2->object_number == PLANET_EFFECT && item_number != i)
 				others[j++] = i;
@@ -563,7 +571,7 @@ void InitialisePlanetEffect(short item_number) {
 
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
-				item2 = &items[others[j]];
+				item2 = GetItem(currentLevel, others[j]);
 
 				if(item2->trigger_flags == i + 2) {
 					*pifl++ = others[j];
@@ -582,13 +590,14 @@ void ControlPlanetEffect(short item_number) {
 	char* pifl;
 	long b, g;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
 
 	if(item->item_flags[0] > 0) {
-		items[item->item_flags[0]].trigger_flags = -items[item->item_flags[0]].trigger_flags; // disable pushable :D
+		GetItem(currentLevel, item->item_flags[0])->trigger_flags
+			= -GetItem(currentLevel, item->item_flags[0])->trigger_flags; // disable pushable :D
 		item->item_flags[0] = NO_ITEM;
 	}
 
@@ -596,7 +605,10 @@ void ControlPlanetEffect(short item_number) {
 	AnimateItem(item);
 
 	if(item->trigger_flags == 1) {
-		if((items[LOBYTE(item->item_flags[2])].flags & IFL_CODEBITS) == IFL_CODEBITS && (items[HIBYTE(item->item_flags[2])].flags & IFL_CODEBITS) == IFL_CODEBITS && (items[LOBYTE(item->item_flags[3])].flags & IFL_CODEBITS) == IFL_CODEBITS && (items[HIBYTE(item->item_flags[3])].flags & IFL_CODEBITS) == IFL_CODEBITS) {
+		if((GetItem(currentLevel, LOBYTE(item->item_flags[2]))->flags & IFL_CODEBITS) == IFL_CODEBITS
+		   && (GetItem(currentLevel, HIBYTE(item->item_flags[2]))->flags & IFL_CODEBITS) == IFL_CODEBITS
+		   && (GetItem(currentLevel, LOBYTE(item->item_flags[3]))->flags & IFL_CODEBITS) == IFL_CODEBITS
+		   && (GetItem(currentLevel, HIBYTE(item->item_flags[3]))->flags & IFL_CODEBITS) == IFL_CODEBITS) {
 			pos.x = 0;
 			pos.y = 0;
 			pos.z = 0;
@@ -622,7 +634,7 @@ void ControlPlanetEffect(short item_number) {
 				pos2.x = 0;
 				pos2.y = 0;
 				pos2.z = 0;
-				GetJointAbsPosition(&items[pifl[i]], &pos2, 0);
+				GetJointAbsPosition(GetItem(currentLevel, pifl[i]), &pos2, 0);
 
 				if(!(GlobalCounter & 3))
 					TriggerLightning(&pos2, &pos, (GetRandomControl() & 0x1F) + 32, RGBA(0, g, b, 24), 1, 32, 5);
@@ -655,9 +667,9 @@ void DrawPlanetEffect(ITEM_INFO* item) {
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 	CalculateObjectLighting(item, frm[0]);
 
-	obj = GetObjectInfo(currentLevel,item->object_number);
-	meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
-	bone = GetBone(currentLevel,obj->bone_index);
+	obj = GetObjectInfo(currentLevel, item->object_number);
+	meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
+	bone = GetBone(currentLevel, obj->bone_index);
 	phd_TranslateRel(frm[0][6], frm[0][7], frm[0][8]);
 	rot = frm[0] + 9;
 	gar_RotYXZsuperpack(&rot, 0);

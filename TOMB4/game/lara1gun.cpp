@@ -66,7 +66,7 @@ void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item) {
 					savegame.Level.Kills++;
 
 					if(baddie->object_number != BABOON_NORMAL && baddie->object_number != BABOON_INV && baddie->object_number != BABOON_SILENT)
-						CreatureDie(baddie - items, 1);
+						CreatureDie(GetItemNum(currentLevel, baddie), 1);
 				}
 			}
 		}
@@ -90,7 +90,7 @@ void FireCrossbow(PHD_3DPOS* pos) {
 	item_number = CreateItem();
 
 	if(item_number != NO_ITEM) {
-		item = &items[item_number];
+		item = GetItem(currentLevel,item_number);
 		item->object_number = CROSSBOW_BOLT;
 		item->shade = -0x3DF0;
 
@@ -187,7 +187,6 @@ void FireShotgun() {
 	long fired, scatter;
 	short angles[2];
 	short dangles[2];
-
 	angles[0] = lara.left_arm.y_rot + lara_item->pos.y_rot;
 	angles[1] = lara.left_arm.x_rot;
 
@@ -207,7 +206,7 @@ void FireShotgun() {
 		dangles[0] = short(angles[0] + scatter * (GetRandomControl() - 0x4000) / 0x10000);
 		dangles[1] = short(angles[1] + scatter * (GetRandomControl() - 0x4000) / 0x10000);
 
-		if(FireWeapon(WEAPON_SHOTGUN, &items[lara.target_item], lara_item, dangles))
+		if(FireWeapon(WEAPON_SHOTGUN, GetItem(currentLevel, lara.target_item), lara_item, dangles))
 			fired = 1;
 	}
 
@@ -259,7 +258,7 @@ void FireGrenade() {
 	if(item_number == NO_ITEM)
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	item->shade = -0x3DF0;
 	item->object_number = GRENADE;
 	item->room_number = lara_item->room_number;
@@ -328,7 +327,7 @@ void AnimateShotgun(long weapon_type) {
 	static long m16_firing = 0;
 	static long harpoon_fired = 0;
 
-	item = &items[lara.weapon_item];
+	item = GetItem(currentLevel, lara.weapon_item);
 
 	if(SmokeCountL) {
 		if(SmokeWeapon == WEAPON_GRENADE) {
@@ -560,15 +559,15 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 
 				for(int i = 0; i < NumTrigs; i++) {
 					AddActiveItem(TriggerItems[i]);
-					items[TriggerItems[i]].status = ITEM_ACTIVE;
-					items[TriggerItems[i]].flags |= IFL_CODEBITS;
+					GetItem(currentLevel, TriggerItems[i])->status = ITEM_ACTIVE;
+					GetItem(currentLevel, TriggerItems[i])->flags |= IFL_CODEBITS;
 				}
 			}
 
 			if(target->object_number == SWITCH_TYPE7)
 				ExplodeItemNode(target, GetObjectInfo(currentLevel,SWITCH_TYPE7)->nmeshes - 1, 0, 64);
 
-			AddActiveItem(target - items);
+			AddActiveItem(GetItemNum(currentLevel,target));
 			target->flags |= IFL_CODEBITS | IFL_SWITCH_ONESHOT;
 			target->status = ITEM_ACTIVE;
 		}
@@ -626,7 +625,7 @@ void draw_shotgun(long weapon_type) {
 
 	if(lara.weapon_item == NO_ITEM) {
 		lara.weapon_item = CreateItem();
-		item = &items[lara.weapon_item];
+		item = GetItem(currentLevel, lara.weapon_item);
 		item->object_number = (short)WeaponObject(weapon_type);
 
 		if(weapon_type == WEAPON_GRENADE)
@@ -642,7 +641,7 @@ void draw_shotgun(long weapon_type) {
 		lara.left_arm.frame_base = GetObjectInfo(currentLevel,item->object_number)->frame_base;
 		lara.right_arm.frame_base = GetObjectInfo(currentLevel,item->object_number)->frame_base;
 	} else
-		item = &items[lara.weapon_item];
+		item = GetItem(currentLevel, lara.weapon_item);
 
 	AnimateItem(item);
 
@@ -664,7 +663,7 @@ void draw_shotgun(long weapon_type) {
 void undraw_shotgun(long weapon_type) {
 	ITEM_INFO* item;
 
-	item = &items[lara.weapon_item];
+	item = GetItem(currentLevel, lara.weapon_item);
 
 	if(lara.water_status == LW_SURFACE)
 		item->goal_anim_state = 9;
@@ -708,7 +707,7 @@ void ControlCrossbow(short item_number) {
 	abovewater = 0;
 	exploded = 0;
 	collided = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	oldPos.x = item->pos.x_pos;
 	oldPos.y = item->pos.y_pos;
@@ -781,8 +780,8 @@ void ControlCrossbow(short item_number) {
 						TriggerShockwave((PHD_VECTOR*)&target->pos, 0x1300030, 96, 0x18806000, 0);
 						target->pos.y_pos += 128;
 						ExplodeItemNode(target, 0, 0, 128);
-						SmashObject(target - items);
-						KillItem(target - items);
+						SmashObject(GetItemNum(currentLevel,target));
+						KillItem(GetItemNum(currentLevel,target));
 					} else if(target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8)
 						CrossbowHitSwitchType78(item, target, 0);
 					else if(GetObjectInfo(currentLevel,target->object_number)->intelligent)
@@ -868,7 +867,7 @@ void ControlGrenade(short item_number) {
 	short new_num, yrot, room_number, NumTrigs;
 	short TriggerItems[8];
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(item->item_flags[1]) {
 		item->item_flags[1]--;
@@ -901,7 +900,7 @@ void ControlGrenade(short item_number) {
 			new_num = CreateItem();
 
 			if(new_num != NO_ITEM) {
-				item2 = &items[new_num];
+				item2 = GetItem(currentLevel,new_num);
 				item2->shade = -0x3DF0;
 				item2->object_number = GRENADE;
 				item2->room_number = item->room_number;
@@ -1055,16 +1054,16 @@ void ControlGrenade(short item_number) {
 						TriggerShockwave((PHD_VECTOR*)&target->pos, 0x1300030, 96, 0x18806000, 0);
 						target->pos.y_pos += 128;
 						ExplodeItemNode(target, 0, 0, 128);
-						SmashObject(target - items);
-						KillItem(target - items);
+						SmashObject(GetItemNum(currentLevel,target));
+						KillItem(GetItemNum(currentLevel,target));
 					} else if((target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8) && !(target->flags & IFL_SWITCH_ONESHOT)) {
 						if(!(target->flags & IFL_CODEBITS) || (target->flags & IFL_CODEBITS) == IFL_CODEBITS) {
 							NumTrigs = (short)GetSwitchTrigger(target, TriggerItems, 1);
 
 							for(int i = 0; i < NumTrigs; i++) {
 								AddActiveItem(TriggerItems[i]);
-								items[TriggerItems[i]].status = ITEM_ACTIVE;
-								items[TriggerItems[i]].flags |= IFL_CODEBITS;
+								GetItem(currentLevel, TriggerItems[i])->status = ITEM_ACTIVE;
+								GetItem(currentLevel, TriggerItems[i])->flags |= IFL_CODEBITS;
 							}
 						} else {
 							room_number = item->room_number;
@@ -1075,7 +1074,7 @@ void ControlGrenade(short item_number) {
 						if(target->object_number == SWITCH_TYPE7)
 							ExplodeItemNode(target, GetObjectInfo(currentLevel,SWITCH_TYPE7)->nmeshes - 1, 0, 64);
 
-						AddActiveItem(target - items);
+						AddActiveItem(GetItemNum(currentLevel,target));
 						target->status = ITEM_ACTIVE;
 						target->flags |= IFL_SWITCH_ONESHOT | IFL_CODEBITS;
 					} else if(GetObjectInfo(currentLevel,target->object_number)->intelligent || target->object_number == LARA)

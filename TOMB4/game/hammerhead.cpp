@@ -17,7 +17,7 @@ static BITE_INFO hammerhead_bite = { 0, 0, 0, 12 };
 void InitialiseHammerhead(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 	item->anim_number = GetObjectInfo(currentLevel,HAMMERHEAD)->anim_index + 8;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
@@ -34,7 +34,7 @@ void HammerheadControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	shark = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0) {

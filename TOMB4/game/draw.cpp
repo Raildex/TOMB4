@@ -1183,7 +1183,7 @@ void PrintObjects(short room_number) {
 
 	for(item_number = r->item_number; item_number != NO_ITEM; item_number = item->next_item) {
 		ClipRoomNum = room_number;
-		item = &items[item_number];
+		item = GetItem(currentLevel, item_number);
 		obj = GetObjectInfo(currentLevel,item->object_number);
 
 		if(item->status != ITEM_INVISIBLE) {

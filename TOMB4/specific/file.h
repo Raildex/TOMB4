@@ -1,4 +1,5 @@
 #pragma once
+#include "file.h"
 #include "thread.h"
 #include <cstdio>
 struct TEXTURESTRUCT;
@@ -21,10 +22,10 @@ bool LoadObjects(char** data,LEVEL_INFO* lvl);
 bool LoadSprites(char** data);
 bool LoadCameras(char** data);
 bool LoadSoundEffects(char** data);
-bool LoadBoxes(char** data);
 bool LoadAnimatedTextures(char** data);
 bool LoadTextureInfos(char** data);
-bool LoadItems(char** data);
+bool LoadBoxes(char **data,LEVEL_INFO* lvl);
+bool LoadItems(char** data, LEVEL_INFO* lvl);
 bool LoadCinematic(char** data);
 bool LoadAIInfo(char** data);
 bool LoadSamples(FILE* file, char** data);

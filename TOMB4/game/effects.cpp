@@ -177,7 +177,7 @@ void RubbleFX(ITEM_INFO* item) {
 	eq = find_a_fucking_item(EARTHQUAKE);
 
 	if(eq) {
-		AddActiveItem(eq - items);
+		AddActiveItem(GetItemNum(currentLevel,eq));
 		eq->status = ITEM_ACTIVE;
 		eq->flags |= IFL_CODEBITS;
 	} else
@@ -239,10 +239,10 @@ void GhostTrap(ITEM_INFO* item) {
 
 	if(next_item_active != NO_ITEM) {
 		while(nex != NO_ITEM) {
-			wraith = &items[nex];
+			wraith = GetItem(currentLevel, nex);
 
 			if(wraith->object_number == WRAITH3 && !wraith->hit_points) {
-				wraith->hit_points = item - items;
+				wraith->hit_points = GetItemNum(currentLevel,item);
 				break;
 			}
 
@@ -258,7 +258,7 @@ void KillActiveBaddies(ITEM_INFO* item) {
 	short item_num;
 
 	for(item_num = next_item_active; item_num != NO_ITEM; item_num = target_item->next_active) {
-		target_item = &items[item_num];
+		target_item = GetItem(currentLevel, item_num);
 
 		if(GetObjectInfo(currentLevel,target_item->object_number)->intelligent) {
 			target_item->status = ITEM_INVISIBLE;
@@ -384,7 +384,7 @@ void WaterFall(short item_number) {
 	ITEM_INFO* item;
 	long dx, dy, dz;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel, item_number);
 	dx = item->pos.x_pos - lara_item->pos.x_pos;
 	dy = item->pos.y_pos - lara_item->pos.y_pos;
 	dz = item->pos.z_pos - lara_item->pos.z_pos;

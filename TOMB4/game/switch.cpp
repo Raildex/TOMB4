@@ -68,7 +68,7 @@ unsigned char SequenceResults[3][3][3];
 void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(input & IN_ACTION && item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && CurrentSequence < 3 && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(TestLaraPosition(FullBlockSwitchBounds, item, l)) {
@@ -102,7 +102,7 @@ void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) 
 long SwitchTrigger(short item_number, short timer) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(item->status == ITEM_DEACTIVATED) {
 		if((item->current_anim_state || item->object_number == JUMP_SWITCH) && (item->current_anim_state != 1 || item->object_number != JUMP_SWITCH) || timer <= 0) {
@@ -153,7 +153,7 @@ long GetSwitchTrigger(ITEM_INFO* item, short* ItemNos, long AttatchedToSwitch) {
 	num = 0;
 
 	while(1) {
-		if((*data & 0x3C00) == TO_OBJECT && item != &items[*data & 0x3FF]) {
+		if((*data & 0x3C00) == TO_OBJECT && item != GetItem(currentLevel,*data & 0x3FF)) {
 			*ItemNos++ = *data & 0x3FF;
 			num++;
 		}
@@ -175,7 +175,7 @@ void TestTriggersAtXYZ(long x, long y, long z, short room_number, short heavy, s
 void SwitchControl(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	item->flags |= IFL_CODEBITS;
 
 	if(!TriggerActive(item) && !(item->flags & IFL_INVISIBLE)) {
@@ -194,7 +194,7 @@ void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	short* bounds;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS
 		   && item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && item->trigger_flags >= 0
@@ -270,7 +270,7 @@ void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void SwitchCollision2(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(input & IN_ACTION && item->status == ITEM_INACTIVE && lara.water_status == LW_UNDERWATER && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_TREAD) {
 		if(TestLaraPosition(Switch2Bounds, item, l)) {
@@ -302,7 +302,7 @@ void UnderwaterSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	ITEM_INFO* item;
 	long flag;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(input & IN_ACTION && lara.water_status == LW_UNDERWATER && l->current_anim_state == AS_TREAD && l->anim_number == ANIM_TREAD && lara.gun_status == LG_NO_ARMS && item->current_anim_state == 0 || lara.IsMoving && lara.GeneralPtr == item_number) {
 		flag = 0;
@@ -347,7 +347,7 @@ void PulleyCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	short roty;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(!(item->flags & IFL_INVISIBLE) && (input & IN_ACTION && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status || lara.IsMoving && lara.GeneralPtr == item_number)) {
 		roty = item->pos.y_rot;
@@ -393,7 +393,7 @@ void TurnSwitchControl(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* l;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	l = lara_item;
 
 	if(item->item_flags[0] == 2) {
@@ -454,7 +454,7 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	short Triggers[8];
 
 	flag = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(!item->current_anim_state && input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
 		   && !l->gravity_status && lara.gun_status == LG_NO_ARMS
@@ -522,7 +522,7 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		item->item_flags[1] = 0;
 
 		if(GetSwitchTrigger(item, Triggers, 0)) {
-			item = &items[*Triggers];
+			item = GetItem(currentLevel,*Triggers);
 
 			if(!TriggerActive(item)) {
 				if(flag >= 0)
@@ -541,7 +541,7 @@ void RailSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	long flag;
 
 	flag = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(item->current_anim_state == 1) {
@@ -597,7 +597,7 @@ void RailSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void JumpSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) && l->gravity_status && l->fallspeed > 0 && !item->current_anim_state) {
 		if(TestLaraPosition(JumpSwitchBounds, item, l)) {
@@ -620,7 +620,7 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	long flag;
 
 	flag = 0;
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(input & IN_ACTION || GLOBAL_inventoryitemchosen == CROWBAR_ITEM && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS && !item->item_flags[0] || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(item->current_anim_state == 1) {
@@ -697,7 +697,7 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void FullBlockSwitchControl(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 
 	if(item->anim_number != GetObjectInfo(currentLevel,item->object_number)->anim_index + 2 || CurrentSequence >= 3 || item->item_flags[0]) {
 		if(CurrentSequence >= 4) {
@@ -724,7 +724,7 @@ void FullBlockSwitchControl(short item_number) {
 void CogSwitchControl(short item_number) {
 	ITEM_INFO* item;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	AnimateItem(item);
 
 	if(item->current_anim_state == 1) {
@@ -755,14 +755,14 @@ void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	DOOR_DATA* door;
 	short* data;
 
-	item = &items[item_number];
+	item = GetItem(currentLevel,item_number);
 	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	data = trigger_index;
 
 	while((*data & 0x1F) != TRIGGER_TYPE && !(*data & 0x8000))
 		data++;
 
-	door_item = &items[data[3] & 0x3FF];
+	door_item = GetItem(currentLevel,data[3] & 0x3FF);
 	door = (DOOR_DATA*)door_item->data;
 
 	if(item->status != ITEM_INACTIVE)
@@ -787,7 +787,7 @@ void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				item->goal_anim_state = 1;
 
 				if(!door->Opened) {
-					AddActiveItem(door_item - items);
+					AddActiveItem(GetItemNum(currentLevel, door_item));
 					door_item->status = ITEM_ACTIVE;
 					*(long*)&door_item->item_flags[2] = door_item->pos.y_pos;
 				}

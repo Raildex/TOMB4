@@ -23,14 +23,14 @@ short next_item_active;
 static short next_fx_free;
 static short next_item_free;
 
-void InitialiseItemArray(short num) {
+void InitialiseItemArray(short num, long count) {
 	ITEM_INFO* item;
 
-	item = &items[level_items];
-	next_item_free = (short)level_items;
+	item = GetItem(currentLevel,count);
+	next_item_free = (short)count;
 	next_item_active = NO_ITEM;
 
-	for(int i = level_items + 1; i < num; i++) {
+	for(int i = count + 1; i < num; i++) {
 		item->next_item = i;
 		item->active = 0;
 		item++;
@@ -50,16 +50,16 @@ void KillItem(short item_num) {
 	}
 
 	DetatchSpark(item_num, 128);
-	item = &items[item_num];
+	item = GetItem(currentLevel, item_num);
 	item->active = 0;
 	item->really_active = 0;
 
 	if(next_item_active == item_num)
 		next_item_active = item->next_active;
 	else {
-		for(linknum = next_item_active; linknum != NO_ITEM; linknum = items[linknum].next_active) {
-			if(items[linknum].next_active == item_num) {
-				items[linknum].next_active = item->next_active;
+		for(linknum = next_item_active; linknum != NO_ITEM; linknum = GetItem(currentLevel, linknum)->next_active) {
+			if(GetItem(currentLevel, linknum)->next_active == item_num) {
+				GetItem(currentLevel, linknum)->next_active = item->next_active;
 				break;
 			}
 		}
@@ -71,9 +71,9 @@ void KillItem(short item_num) {
 		if(linknum == item_num)
 			GetRoom(currentLevel,item->room_number)->item_number = item->next_item;
 		else {
-			for(; linknum != NO_ITEM; linknum = items[linknum].next_item) {
-				if(items[linknum].next_item == item_num) {
-					items[linknum].next_item = item->next_item;
+			for(; linknum != NO_ITEM; linknum = GetItem(currentLevel, linknum)->next_item) {
+				if(GetItem(currentLevel, linknum)->next_item == item_num) {
+					GetItem(currentLevel, linknum)->next_item = item->next_item;
 					break;
 				}
 			}
@@ -83,7 +83,7 @@ void KillItem(short item_num) {
 	if(item_num == lara.target_item)
 		lara.target_item = NO_ITEM;
 
-	if(item_num < level_items)
+	if(item_num < GetNumLevelItems(currentLevel))
 		item->flags |= IFL_CLEARBODY;
 	else {
 		item->next_item = next_item_free;
@@ -97,8 +97,8 @@ short CreateItem() {
 	item_num = next_item_free;
 
 	if(item_num != NO_ITEM) {
-		items[item_num].flags = 0;
-		next_item_free = items[item_num].next_item;
+		GetItem(currentLevel,item_num)->flags = 0;
+		next_item_free = GetItem(currentLevel,item_num)->next_item;
 	}
 
 	return item_num;
@@ -109,7 +109,7 @@ void InitialiseItem(short item_num) {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
 
-	item = &items[item_num];
+	item = GetItem(currentLevel, item_num);
 	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
 	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 	item->current_anim_state = GetAnim(currentLevel,item->anim_number)->current_anim_state;
@@ -186,17 +186,17 @@ void InitialiseItem(short item_num) {
 void RemoveActiveItem(short item_num) {
 	short linknum;
 
-	if(!items[item_num].active)
+	if(!GetItem(currentLevel, item_num)->active)
 		return;
 
-	items[item_num].active = 0;
+	GetItem(currentLevel, item_num)->active = 0;
 
 	if(next_item_active == item_num)
-		next_item_active = items[item_num].next_active;
+		next_item_active = GetItem(currentLevel, item_num)->next_active;
 	else {
-		for(linknum = next_item_active; linknum != NO_ITEM; linknum = items[linknum].next_active) {
-			if(items[linknum].next_active == item_num) {
-				items[linknum].next_active = items[item_num].next_active;
+		for(linknum = next_item_active; linknum != NO_ITEM; linknum = GetItem(currentLevel, linknum)->next_active) {
+			if(GetItem(currentLevel, linknum)->next_active == item_num) {
+				GetItem(currentLevel, linknum)->next_active = GetItem(currentLevel, linknum)->next_active;
 				break;
 			}
 		}
@@ -207,15 +207,15 @@ void RemoveDrawnItem(short item_num) {
 	ITEM_INFO* item;
 	short linknum;
 
-	item = &items[item_num];
+	item = GetItem(currentLevel, item_num);
 	linknum = GetRoom(currentLevel,item->room_number)->item_number;
 
 	if(linknum == item_num)
 		GetRoom(currentLevel,item->room_number)->item_number = item->next_item;
 	else {
-		for(; linknum != NO_ITEM; linknum = items[linknum].next_item) {
-			if(items[linknum].next_item == item_num) {
-				items[linknum].next_item = item->next_item;
+		for(; linknum != NO_ITEM; linknum = GetItem(currentLevel, linknum)->next_item) {
+			if(GetItem(currentLevel, linknum)->next_item == item_num) {
+				GetItem(currentLevel, linknum)->next_item = item->next_item;
 				break;
 			}
 		}
@@ -225,7 +225,7 @@ void RemoveDrawnItem(short item_num) {
 void AddActiveItem(short item_num) {
 	ITEM_INFO* item;
 
-	item = &items[item_num];
+	item = GetItem(currentLevel, item_num);
 	item->flags |= IFL_TRIGGERED;
 
 	if(GetObjectInfo(currentLevel,item->object_number)->control) {
@@ -250,7 +250,7 @@ void ItemNewRoom(short item_num, short room_num) {
 		return;
 	}
 
-	item = &items[item_num];
+	item = GetItem(currentLevel, item_num);
 
 	if(item->room_number != 255) {
 		r = GetRoom(currentLevel,item->room_number);
@@ -259,9 +259,9 @@ void ItemNewRoom(short item_num, short room_num) {
 		if(linknum == item_num)
 			r->item_number = item->next_item;
 		else {
-			for(; linknum != NO_ITEM; linknum = items[linknum].next_item) {
-				if(items[linknum].next_item == item_num) {
-					items[linknum].next_item = item->next_item;
+			for(; linknum != NO_ITEM; linknum = GetItem(currentLevel, linknum)->next_item) {
+				if(GetItem(currentLevel, linknum)->next_item == item_num) {
+					GetItem(currentLevel, linknum)->next_item = item->next_item;
 					break;
 				}
 			}
