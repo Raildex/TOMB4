@@ -1,6 +1,6 @@
 #ifndef FIRE_SPARKS_INCLUDED
 #define FIRE_SPARKS_INCLUDED
-struct FIRE_SPARKS {
+typedef struct FIRE_SPARKS {
 	short x;
 	short y;
 	short z;
@@ -32,5 +32,5 @@ struct FIRE_SPARKS {
 	unsigned char FadeToBlack;
 	unsigned char sLife;
 	unsigned char Life;
-};
+} FIRE_SPARKS;
 #endif

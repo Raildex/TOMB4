@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_SPARKS_H
 #define TOMB4_GAME_SPARKS_H
-struct SPARKS {
+typedef struct SPARKS {
 	long x;
 	long y;
 	long z;
@@ -38,5 +38,5 @@ struct SPARKS {
 	unsigned char FxObj;
 	unsigned char RoomNumber;
 	unsigned char NodeNumber;
-};
+} SPARKS;
 #endif // TOMB4_GAME_SPARKS_H

@@ -1,6 +1,6 @@
 #pragma once
 
-struct CHARDEF;
+typedef struct CHARDEF CHARDEF;
 
 
 void InitFont();

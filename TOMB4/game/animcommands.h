@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_ANIMCOMMANDS_H
 #define TOMB4_GAME_ANIMCOMMANDS_H
-enum anim_commands {
+typedef enum anim_commands {
 	ACMD_NULL,
 	ACMD_SETPOS,
 	ACMD_JUMPVEL,
@@ -8,5 +8,5 @@ enum anim_commands {
 	ACMD_KILL,
 	ACMD_PLAYSFX,
 	ACMD_FLIPEFFECT
-};
+} anim_commands;
 #endif // TOMB4_GAME_ANIMCOMMANDS_H

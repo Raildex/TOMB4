@@ -1,6 +1,5 @@
 #pragma once
-
-struct HAIR_STRUCT;
+#include "game/hairstruct.h"
 void InitialiseHair();
 void HairControl(long in_cutscene, long pigtail, short* cutscenething);
 void GetCorrectStashPoints(long pigtail, long hair_node, long skin_node);

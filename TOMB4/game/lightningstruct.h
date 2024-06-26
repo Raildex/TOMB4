@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_LIGHTNINGSTRUCT_H
 #define TOMB4_GAME_LIGHTNINGSTRUCT_H
-struct LIGHTNING_STRUCT {
+typedef struct LIGHTNING_STRUCT {
 	PHD_VECTOR Point[4];
 	unsigned char r;
 	unsigned char g;
@@ -20,5 +20,5 @@ struct LIGHTNING_STRUCT {
 	unsigned char Rand;
 	unsigned char Segments;
 	unsigned char Pad[3];
-};
+} LIGHTNING_STRUCT;
 #endif // TOMB4_GAME_LIGHTNINGSTRUCT_H

@@ -1,10 +1,10 @@
 #pragma once
 #include "game/watertab.h"
 #include "specific/thread.h"
-
-
+#include <stdbool.h>
+#include <Windows.h>
 void GameClose();
-unsigned int __stdcall GameMain(void* ptr);
+unsigned int WINAPI GameMain(void* ptr);
 unsigned short GetRandom(WATERTAB* wt, long lp);
 void init_water_table();
 bool GameInitialise();

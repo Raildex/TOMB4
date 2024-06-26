@@ -2,9 +2,9 @@
 
 #include "game/matrixindices.h"
 
-struct ITEM_INFO;
-struct ROOM_INFO;
-struct STATIC_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct ROOM_INFO ROOM_INFO;
+typedef struct STATIC_INFO STATIC_INFO;
 
 void InitInterpolate(long frac, long rate);
 void phd_PopMatrix_I();

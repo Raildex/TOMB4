@@ -1,11 +1,11 @@
 #ifndef TOMB4_GAME_ROOMFLAGS_H
 #define TOMB4_GAME_ROOMFLAGS_H
-enum room_flags {
+typedef enum room_flags {
 	ROOM_UNDERWATER = 0x1,
 	ROOM_OUTSIDE = 0x8,
 	ROOM_DYNAMIC_LIT = 0x10,
 	ROOM_NOT_INSIDE = 0x20,
 	ROOM_INSIDE = 0x40,
 	ROOM_NO_LENSFLARE = 0x80
-};
+} room_flags;
 #endif // TOMB4_GAME_ROOMFLAGS_H

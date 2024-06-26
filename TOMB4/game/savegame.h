@@ -1,5 +1,5 @@
 #pragma once
-struct SAVEGAME_INFO;
+typedef struct SAVEGAME_INFO SAVEGAME_INFO;
 long CheckSumValid(char* buffer);
 void sgInitialiseHub(long dont_save_lara);
 void SaveLaraData();

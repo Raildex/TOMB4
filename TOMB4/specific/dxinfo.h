@@ -1,9 +1,9 @@
-#ifndef TOMB4_GAME_DXINFO_H
-#define TOMB4_GAME_DXINFO_H
-
-struct DXDIRECTDRAWINFO;
-struct DXDIRECTSOUNDINFO;
-struct DXINFO {
+#ifndef TOMB4_SPECIFIC_DXINFO_H
+#define TOMB4_SPECIFIC_DXINFO_H
+#include <stdbool.h>
+typedef struct DXDIRECTDRAWINFO DXDIRECTDRAWINFO;
+typedef struct DXDIRECTSOUNDINFO DXDIRECTSOUNDINFO;
+typedef struct DXINFO {
 	long nDDInfo;
 	long nDSInfo;
 	DXDIRECTDRAWINFO* DDInfo;
@@ -12,8 +12,6 @@ struct DXINFO {
 	long nD3D;
 	long nDisplayMode;
 	long nTexture;
-	long nZBuffer;
 	long nDS;
-	bool bHardware;
-};
-#endif // TOMB4_GAME_DXINFO_H
+} DXINFO;
+#endif// TOMB4_SPECIFIC_DXINFO_H

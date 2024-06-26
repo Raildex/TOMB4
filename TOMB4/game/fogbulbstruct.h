@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_FOGBULBSTRUCT_H
 #define TOMB4_GAME_FOGBULBSTRUCT_H
 #include "game/fvector.h"
-struct FOGBULB_STRUCT {
+typedef struct FOGBULB_STRUCT {
 	FVECTOR WorldPos;
 	FVECTOR pos;
 	FVECTOR vec;
@@ -18,5 +18,5 @@ struct FOGBULB_STRUCT {
 	long r;
 	long g;
 	long b;
-};
+} FOGBULB_STRUCT;
 #endif // TOMB4_GAME_FOGBULBSTRUCT_H

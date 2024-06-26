@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_OLDCAMERA_H
 #define TOMB4_GAME_OLDCAMERA_H
-struct OLD_CAMERA {
+typedef struct OLD_CAMERA {
 	short current_anim_state;
 	short goal_anim_state;
 	long target_distance;
@@ -9,5 +9,5 @@ struct OLD_CAMERA {
 	PHD_3DPOS pos;
 	PHD_3DPOS pos2;
 	PHD_VECTOR t;
-};
+} OLD_CAMERA;
 #endif // TOMB4_GAME_OLDCAMERA_H

@@ -2,7 +2,7 @@
 
 #include "game/cvector.h"
 #include "game/phdvector.h"
-struct GAMEFLOW;
+typedef struct GAMEFLOW GAMEFLOW;
 void DoGameflow();
 void DoLevel(unsigned char Name, unsigned char Audio);
 void DoTitle(unsigned char Name, unsigned char Audio);
@@ -45,7 +45,7 @@ extern char DEL_playingamefmv;
 extern char skipped_level;
 extern char Chris_Menu;
 extern char title_controls_locked_out;
-struct GAMEFLOW {
+typedef struct GAMEFLOW {
 	unsigned long CheatEnabled : 1;
 	unsigned long LoadSaveEnabled : 1;
 	unsigned long TitleEnabled : 1;
@@ -60,8 +60,8 @@ struct GAMEFLOW {
 	unsigned char Pad;
 	unsigned short FileNameLen;
 	unsigned short ScriptLen;
-};
-enum gf_commands {
+} GAMEFLOW;
+typedef enum gf_commands {
 	CMD_FMV = 0x80,
 	CMD_LEVEL,
 	CMD_TITLE,
@@ -152,9 +152,9 @@ enum gf_commands {
 	CMD_PICKUPCOMBO3_2,
 	CMD_PICKUPCOMBO4_1,
 	CMD_PICKUPCOMBO4_2,
-};
+} gf_commands;
 
-enum gf_strings // auto generated from the script compiler
+typedef enum gf_strings // auto generated from the script compiler
 {
 	TXT_Cambodia_1984,
 	TXT_Egypt_present_day,
@@ -526,4 +526,4 @@ enum gf_strings // auto generated from the script compiler
 	TXT_No_FMV,
 	TXT_THE_LAST_STRING_ENTRY,
 	TXT_NUM_STRINGS
-};
+} gf_strings;

@@ -1,6 +1,6 @@
 #ifndef LARA_MESH_INCLUDED
 #define LARA_MESH_INCLUDED
-enum lara_mesh {
+typedef enum lara_mesh {
 	LM_HIPS,
 	LM_LTHIGH,
 	LM_LSHIN,
@@ -17,5 +17,5 @@ enum lara_mesh {
 	LM_LHAND,
 	LM_HEAD,
 	NUM_LARA_MESHES
-};
+} lara_mesh;
 #endif

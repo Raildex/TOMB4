@@ -1,6 +1,7 @@
 #ifndef TOMB4_GAME_DXDISPLAYMODE_H
 #define TOMB4_GAME_DXDISPLAYMODE_H
-struct DXDISPLAYMODE {
+#include <ddraw.h>
+typedef struct DXDISPLAYMODE {
 	long w;
 	long h;
 	long bpp;
@@ -13,5 +14,5 @@ struct DXDISPLAYMODE {
 	unsigned char rshift;
 	unsigned char gshift;
 	unsigned char bshift;
-};
+} DXDISPLAYMODE;
 #endif // TOMB4_GAME_DXDISPLAYMODE_H

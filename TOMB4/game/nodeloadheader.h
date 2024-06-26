@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_NODELOADHEADER_H
 #define TOMB4_GAME_NODELOADHEADER_H
-struct NODELOADHEADER {
+typedef struct NODELOADHEADER {
 	short xkey;
 	short ykey;
 	short zkey;
@@ -8,5 +8,5 @@ struct NODELOADHEADER {
 	short xlength;
 	short ylength;
 	short zlength;
-};
+} NODELOADHEADER;
 #endif // TOMB4_GAME_NODELOADHEADER_H

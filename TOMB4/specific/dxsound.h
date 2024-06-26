@@ -1,6 +1,6 @@
 #pragma once
-
-struct SAMPLE_BUFFER;
+#include <stdbool.h> 
+typedef struct SAMPLE_BUFFER SAMPLE_BUFFER;
 bool DXChangeOutputFormat(long nSamplesPerSec, bool force);
 void DSChangeVolume(long num, long volume);
 void DSAdjustPitch(long num, long pitch);

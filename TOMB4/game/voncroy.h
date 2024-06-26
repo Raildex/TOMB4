@@ -1,7 +1,7 @@
 #pragma once
 
-struct ITEM_INFO;
-struct CREATURE_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct CREATURE_INFO CREATURE_INFO;
 
 void SetCutSceneCamera(ITEM_INFO* item);
 void ClearCutSceneCamera();

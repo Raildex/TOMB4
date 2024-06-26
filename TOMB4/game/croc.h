@@ -1,7 +1,7 @@
 #pragma once
-struct ITEM_INFO;
-struct PHD_3DPOS;
-struct LOCUST_STRUCT;
+#include "game/locuststruct.h"
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct PHD_3DPOS PHD_3DPOS;
 void InitialiseCroc(short item_number);
 void CrocControl(short item_number);
 long GetFreeLocust();

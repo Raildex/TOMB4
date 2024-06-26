@@ -4,10 +4,10 @@
 #include "game/phdvector.h"
 #include "game/shatteritem.h"
 
-struct GAME_VECTOR;
-struct PHD_VECTOR;
-struct ITEM_INFO;
-struct SHATTER_ITEM;
+typedef struct GAME_VECTOR GAME_VECTOR;
+typedef struct PHD_VECTOR PHD_VECTOR;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct SHATTER_ITEM SHATTER_ITEM;
 
 void InitialiseCamera();
 void MoveCamera(GAME_VECTOR* ideal, long speed);

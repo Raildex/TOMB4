@@ -1,8 +1,8 @@
 #pragma once
 
-struct COLL_INFO;
-struct ITEM_INFO;
-struct PHD_VECTOR;
+typedef struct COLL_INFO COLL_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct PHD_VECTOR PHD_VECTOR;
 
 void InitialiseBike(short item_number);
 void DrawBikeExtras(ITEM_INFO* item);

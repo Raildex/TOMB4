@@ -1,6 +1,6 @@
 #pragma once
 #include <windows.h>
-
+#include "stdbool.h"
 void CLSetup(char* cmd);
 void CLNoFMV(char* cmd);
 void InitDSDevice(HWND dlg, HWND hwnd);
@@ -9,7 +9,7 @@ void InitResolution(HWND dlg, HWND hwnd, bool resetvms);
 void InitD3DDevice(HWND dlg, HWND hwnd);
 void InitDDDevice(HWND dlg, HWND hwnd);
 char* MapASCIIToANSI(char* s, char* d);
-BOOL __stdcall DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam);
+BOOL WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam);
 bool DXSetupDialog();
 
 extern bool start_setup;

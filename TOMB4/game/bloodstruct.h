@@ -1,6 +1,6 @@
 #ifndef BLOOD_STRUCT_INCLUDED
 #define BLOOD_STRUCT_INCLUDED
-struct BLOOD_STRUCT {
+typedef struct BLOOD_STRUCT {
 	long x;
 	long y;
 	long z;
@@ -23,5 +23,5 @@ struct BLOOD_STRUCT {
 	char sLife;
 	char Life;
 	char Pad;
-};
+} BLOOD_STRUCT;
 #endif

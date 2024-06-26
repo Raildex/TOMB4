@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_INPUTBUTTONS_H
 #define TOMB4_GAME_INPUTBUTTONS_H
-enum input_buttons {
+typedef enum input_buttons {
 	IN_NONE = 0x0,
 	IN_FORWARD = 0x1,
 	IN_BACK = 0x2,
@@ -36,5 +36,5 @@ enum input_buttons {
 	IN_SPRINT = 0x40000000,
 	IN_TARGET = 0x80000000,
 	IN_ALL = 0xFFFFFFFF
-};
+} input_buttons;
 #endif // TOMB4_GAME_INPUTBUTTONS_H

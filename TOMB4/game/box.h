@@ -1,14 +1,14 @@
 #pragma once
 #include "game/targettype.h"
 
-struct ITEM_INFO;
-struct AI_INFO;
-struct LOT_INFO;
-struct PHD_VECTOR;
-struct BITE_INFO;
-struct CREATURE_INFO;
-struct PHD_3DPOS;
-struct BOX_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct AI_INFO AI_INFO;
+typedef struct LOT_INFO LOT_INFO;
+typedef struct PHD_VECTOR PHD_VECTOR;
+typedef struct BITE_INFO BITE_INFO;
+typedef struct CREATURE_INFO CREATURE_INFO;
+typedef struct PHD_3DPOS PHD_3DPOS;
+typedef struct BOX_INFO BOX_INFO;
 void CreatureDie(short item_number, long explode);
 void InitialiseCreature(short item_number);
 long CreatureActive(short item_number);

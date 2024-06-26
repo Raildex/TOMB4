@@ -1,6 +1,6 @@
 #pragma once
 
-struct PHD_VECTOR;
+typedef struct PHD_VECTOR PHD_VECTOR;
 
 
 void InitialiseHorseman(short item_number);

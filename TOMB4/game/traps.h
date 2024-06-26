@@ -3,8 +3,8 @@
 
 extern short SPxzoffs[8];
 extern short SPyoffs[8];
-struct ITEM_INFO;
-struct COLL_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct COLL_INFO COLL_INFO;
 
 void FlameEmitterControl(short item_number);
 void TwoBlockPlatformFloor(ITEM_INFO* item, long x, long y, long z, long* height);

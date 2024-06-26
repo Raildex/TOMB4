@@ -4,7 +4,7 @@
 #include "game/lotinfo.h"
 #include "game/phdvector.h"
 #include "game/iteminfo.h"
-struct CREATURE_INFO {
+typedef struct CREATURE_INFO {
 	short joint_rotation[4];
 	short maximum_turn;
 	short flags;
@@ -23,5 +23,5 @@ struct CREATURE_INFO {
 	short item_num;
 	PHD_VECTOR target;
 	LOT_INFO LOT;
-};
+} CREATURE_INFO;
 #endif

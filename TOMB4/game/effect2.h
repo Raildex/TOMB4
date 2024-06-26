@@ -1,11 +1,11 @@
 #pragma once
-struct SPLASH_SETUP;
-struct DYNAMIC;
-struct SPLASH_STRUCT;
-struct RIPPLE_STRUCT;
-struct SPARKS;
-struct GAME_VECTOR;
-struct ITEM_INFO;
+#include "game/dynamic.h"
+#include "game/splashstruct.h"
+#include "game/ripplestruct.h"
+#include "game/sparks.h"
+typedef struct SPLASH_SETUP SPLASH_SETUP;
+typedef struct GAME_VECTOR GAME_VECTOR;
+typedef struct ITEM_INFO ITEM_INFO;
 void ControlSmokeEmitter(short item_number);
 void TriggerExplosionSmokeEnd(long x, long y, long z, long uw);
 void TriggerExplosionSmoke(long x, long y, long z, long uw);

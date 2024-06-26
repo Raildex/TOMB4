@@ -1,14 +1,16 @@
 #pragma once
 #include "specific/file.h"
 #include "specific/thread.h"
-#include <cstdio>
-struct TEXTURESTRUCT;
-struct SPRITESTRUCT;
-struct CHANGE_STRUCT;
-struct RANGE_STRUCT;
-struct AIOBJECT;
-struct LEVEL_INFO;
-unsigned int __stdcall LoadLevel(void* name);
+#include <stdio.h>
+#include <stdbool.h>
+#include <windows.h>
+typedef struct TEXTURESTRUCT TEXTURESTRUCT;
+typedef struct SPRITESTRUCT SPRITESTRUCT;
+typedef struct CHANGE_STRUCT CHANGE_STRUCT;
+typedef struct RANGE_STRUCT RANGE_STRUCT;
+typedef struct AIOBJECT AIOBJECT;
+typedef struct LEVEL_INFO LEVEL_INFO;
+unsigned int WINAPI LoadLevel(void* name);
 long S_LoadLevelFile(long num);
 void FreeLevel();
 bool FindCDDrive();
@@ -17,7 +19,7 @@ void FileClose(FILE* file);
 long FileSize(FILE* file);
 long LoadFile(const char* name, char** dest);
 bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* f, char** FileData);
-bool LoadRooms(char** data);
+bool LoadRooms(char** data,LEVEL_INFO* lvl);
 bool LoadObjects(char** data,LEVEL_INFO* lvl);
 bool LoadSprites(char** data);
 bool LoadCameras(char** data);

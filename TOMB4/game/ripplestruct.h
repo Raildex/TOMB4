@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_RIPPLESTRUCT_H
 #define TOMB4_GAME_RIPPLESTRUCT_H
-struct RIPPLE_STRUCT {
+typedef struct RIPPLE_STRUCT {
 	long x;
 	long y;
 	long z;
@@ -8,5 +8,5 @@ struct RIPPLE_STRUCT {
 	unsigned char life;
 	unsigned char size;
 	unsigned char init;
-};
+} RIPPLE_STRUCT;
 #endif // TOMB4_GAME_RIPPLESTRUCT_H

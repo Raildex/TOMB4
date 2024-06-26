@@ -1,6 +1,6 @@
 #ifndef BUBBLE_STRUCT_INCLUDED
 #define BUBBLE_STRUCT_INCLUDED
-struct BUBBLE_STRUCT {
+typedef struct BUBBLE_STRUCT {
 	PHD_VECTOR pos;
 	short room_number;
 	short speed;
@@ -9,5 +9,5 @@ struct BUBBLE_STRUCT {
 	unsigned char shade;
 	unsigned char vel;
 	short pad;
-};
+} BUBBLE_STRUCT;
 #endif

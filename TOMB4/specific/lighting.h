@@ -2,11 +2,11 @@
 #include "game/pointlightstruct.h"
 #include "game/sunlightstruct.h"
 
-struct ITEM_INFO;
-struct FVECTOR;
-struct ROOM_INFO;
-struct PCLIGHT;
-struct DYNAMIC;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct FVECTOR FVECTOR;
+typedef struct ROOM_INFO ROOM_INFO;
+typedef struct PCLIGHT PCLIGHT;
+typedef struct DYNAMIC DYNAMIC;
 
 
 void S_CalculateStaticMeshLight(long x, long y, long z, long shade, ROOM_INFO* r);

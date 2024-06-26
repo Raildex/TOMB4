@@ -2,8 +2,8 @@
 #define TOMB4_GAME_LOTINFO_H
 #include "game/zonetype.h"
 #include "game/phdvector.h"
-struct BOX_NODE;
-struct LOT_INFO {
+typedef struct BOX_NODE BOX_NODE;
+typedef struct LOT_INFO {
 	BOX_NODE* node;
 	short head;
 	short tail;
@@ -22,5 +22,5 @@ struct LOT_INFO {
 	unsigned short is_monkeying : 1;
 	PHD_VECTOR target;
 	zone_type zone;
-};
+} LOT_INFO;
 #endif // TOMB4_GAME_LOTINFO_H

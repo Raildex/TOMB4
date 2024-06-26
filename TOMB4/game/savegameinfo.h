@@ -4,7 +4,7 @@
 #include "game/cvector.h"
 #include "game/larainfo.h"
 #pragma pack(push, 1)
-struct SAVEGAME_INFO {
+typedef struct SAVEGAME_INFO {
 	LARA_INFO Lara;
 	long cutscene_triggered;
 	unsigned char HubLevels[10]; // saved level indices. highest one that isn't 0 is the one we are currently in
@@ -24,6 +24,6 @@ struct SAVEGAME_INFO {
 	unsigned char AutoTarget : 1;
 	unsigned char HaveBikeBooster : 1; // have the bike nitro thing
 	char buffer[15410];
-};
+} SAVEGAME_INFO;
 #pragma pack(pop)
 #endif // TOMB4_GAME_SAVEGAMEINFO_H

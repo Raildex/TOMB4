@@ -1,10 +1,10 @@
 #pragma once
 
 
-struct WEAPON_INFO;
-struct LARA_ARM;
-struct GAME_VECTOR;
-struct ITEM_INFO;
+typedef struct WEAPON_INFO WEAPON_INFO;
+typedef struct LARA_ARM LARA_ARM;
+typedef struct GAME_VECTOR GAME_VECTOR;
+typedef struct ITEM_INFO ITEM_INFO;
 
 void InitialiseNewWeapon();
 void LaraTargetInfo(WEAPON_INFO* winfo);

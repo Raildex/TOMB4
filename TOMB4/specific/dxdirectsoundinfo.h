@@ -1,9 +1,10 @@
 #ifndef TOMB4_GAME_DXDIRECTSOUNDINFO_H
 #define TOMB4_GAME_DXDIRECTSOUNDINFO_H
-struct DXDIRECTSOUNDINFO {
+#include <guiddef.h>
+typedef struct DXDIRECTSOUNDINFO {
 	char Name[30];
 	char About[80];
 	LPGUID lpGuid;
 	GUID Guid;
-};
+} DXDIRECTSOUNDINFO;
 #endif // TOMB4_GAME_DXDIRECTSOUNDINFO_H

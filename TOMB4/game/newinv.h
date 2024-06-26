@@ -1,6 +1,6 @@
 #pragma once
 #include "game/invobj.h"
-struct INVDRAWITEM;
+typedef struct INVDRAWITEM INVDRAWITEM;
 long LoadGame();
 long SaveGame();
 void init_new_inventry();

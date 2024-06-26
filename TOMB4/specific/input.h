@@ -3,7 +3,7 @@
 
 long Key(long number);
 long S_UpdateInput();
-long ReadJoystick(long& x, long& y);
+long ReadJoystick(long* x, long* y);
 
 extern const char* KeyboardButtons[272];
 extern const char* GermanKeyboard[272];

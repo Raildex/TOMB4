@@ -1,11 +1,11 @@
 #pragma once
 
-struct LEVEL_INFO;
-struct TEXTUREBUCKET;
-struct MESH_DATA;
-struct ROOM_INFO;
-struct D3DTLBUMPVERTEX;
-struct _D3DVECTOR;
+typedef struct LEVEL_INFO LEVEL_INFO;
+typedef struct TEXTUREBUCKET TEXTUREBUCKET;
+typedef struct MESH_DATA MESH_DATA;
+typedef struct ROOM_INFO ROOM_INFO;
+typedef struct D3DTLBUMPVERTEX D3DTLBUMPVERTEX;
+typedef struct _D3DVECTOR _D3DVECTOR;
 void ProcessRoomDynamics(ROOM_INFO* r);
 void ProcessRoomVertices(ROOM_INFO* r);
 void ProcessRoomData(ROOM_INFO* r);

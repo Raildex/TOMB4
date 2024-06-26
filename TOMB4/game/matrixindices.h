@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_MATRIXINDICES_H
 #define TOMB4_GAME_MATRIXINDICES_H
-enum matrix_indices {
+typedef enum matrix_indices {
 	M00,
 	M01,
 	M02,
@@ -15,5 +15,5 @@ enum matrix_indices {
 	M23,
 
 	indices_count
-};
+} matrix_indices;
 #endif // TOMB4_GAME_MATRIXINDICES_H

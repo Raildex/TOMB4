@@ -1,8 +1,8 @@
 #pragma once
 #include "game/phdvector.h"
 
-struct ITEM_INFO;
-struct COLL_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct COLL_INFO COLL_INFO;
 
 
 void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);

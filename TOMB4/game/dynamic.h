@@ -1,6 +1,6 @@
 #ifndef DYNAMIC_INCLUDED
 #define DYNAMIC_INCLUDED
-struct DYNAMIC {
+typedef struct DYNAMIC {
 	long x;
 	long y;
 	long z;
@@ -12,5 +12,5 @@ struct DYNAMIC {
 	unsigned char used;
 	unsigned char pad1[1];
 	long FalloffScale;
-};
+} DYNAMIC;
 #endif

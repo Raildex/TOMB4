@@ -1,8 +1,8 @@
 #pragma once
 
-struct ITEM_INFO;
-struct AI_INFO;
-struct BITE_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct AI_INFO AI_INFO;
+typedef struct BITE_INFO BITE_INFO;
 
 
 short GunShot(long x, long y, long z, short speed, short yrot, short room_number);

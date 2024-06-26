@@ -1,6 +1,6 @@
 #pragma once
-struct MESH_DATA;
-struct ROOM_INFO;
+typedef struct MESH_DATA MESH_DATA;
+typedef struct ROOM_INFO ROOM_INFO;
 void ProcessObjectMeshVertices(MESH_DATA* mesh);
 void ProcessStaticMeshVertices(MESH_DATA* mesh);
 void ProcessTrainMeshVertices(MESH_DATA* mesh);

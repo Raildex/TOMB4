@@ -1,7 +1,7 @@
 #pragma once
-struct SoundSlot;
-struct PHD_3DPOS;
-struct SAMPLE_INFO;
+typedef struct SoundSlot SoundSlot;
+typedef struct PHD_3DPOS PHD_3DPOS;
+typedef struct SAMPLE_INFO SAMPLE_INFO;
 void GetPanVolume(SoundSlot* slot);
 void StopSoundEffect(long sfx);
 void SOUND_Init();

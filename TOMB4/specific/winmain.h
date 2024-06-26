@@ -1,5 +1,5 @@
 #include "specific/winapp.h"
-
+#include <stdbool.h>
 bool WinRunCheck(LPSTR WindowName, LPSTR ClassName, HANDLE* mutex);
 void WinProcessCommandLine(LPSTR cmd);
 void WinClose();
@@ -10,7 +10,7 @@ void WinProcessCommands(long cmd);
 void ClearSurfaces();
 bool WinRegisterWindow(HINSTANCE hinstance);
 bool WinCreateWindow();
-void WinSetStyle(bool fullscreen, unsigned long& set);
+void WinSetStyle(bool fullscreen, unsigned long* set);
 
 extern WINAPP App;
 extern char* cutseqpakPtr;

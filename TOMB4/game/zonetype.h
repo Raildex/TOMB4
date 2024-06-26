@@ -1,10 +1,10 @@
 #ifndef TOMB4_GAME_ZONETYPE_H
 #define TOMB4_GAME_ZONETYPE_H
-enum zone_type {
+typedef enum zone_type {
 	SKELLY_ZONE,
 	BASIC_ZONE,
 	CROC_ZONE,
 	HUMAN_ZONE,
 	FLYER_ZONE,
-};
+} zone_type;
 #endif // TOMB4_GAME_ZONETYPE_H

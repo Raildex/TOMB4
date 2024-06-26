@@ -1,7 +1,7 @@
 #pragma once
 #include "game/collinfo.h"
 
-struct ITEM_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
 
 
 void LaraCheatyBits();

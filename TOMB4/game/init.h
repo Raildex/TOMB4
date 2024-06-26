@@ -1,8 +1,8 @@
 #pragma once
 
-struct PHD_VECTOR;
-struct ROPE_STRUCT;
-struct ITEM_INFO;
+typedef struct PHD_VECTOR PHD_VECTOR;
+typedef struct ROPE_STRUCT ROPE_STRUCT;
+typedef struct ITEM_INFO ITEM_INFO;
 
 
 void InitialiseMapper(short item_number);

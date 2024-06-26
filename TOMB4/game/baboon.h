@@ -1,5 +1,5 @@
 #pragma once
-struct ITEM_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
 void InitialiseBaboon(short item_number);
 void BaboonControl(short item_number);
 void FindCrowbarSwitch(ITEM_INFO* item, short switch_index);

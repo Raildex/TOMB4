@@ -1,8 +1,8 @@
 #pragma once
 #include "game/matrixindices.h"
 #include "global/math_tbls.h"
-struct PHD_VECTOR;
-struct PHD_3DPOS;
+typedef struct PHD_VECTOR PHD_VECTOR;
+typedef struct PHD_3DPOS PHD_3DPOS;
 void phd_PushMatrix();
 void phd_PushUnitMatrix();
 void phd_SetTrans(long x, long y, long z);

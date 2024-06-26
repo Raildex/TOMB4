@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_SPLASHSETUP_H
 #define TOMB4_GAME_SPLASHSETUP_H
-struct SPLASH_SETUP {
+typedef struct SPLASH_SETUP {
 	long x;
 	long y;
 	long z;
@@ -18,5 +18,5 @@ struct SPLASH_SETUP {
 	short OuterSize;
 	short OuterRadVel;
 	short pad3;
-};
+} SPLASH_SETUP;
 #endif // TOMB4_GAME_SPLASHSETUP_H

@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_MONOSCREENSTRUCT_H
 #define TOMB4_GAME_MONOSCREENSTRUCT_H
-struct MONOSCREEN_STRUCT {
+typedef struct MONOSCREEN_STRUCT {
 	IDirect3DTexture2* tex;
 	IDirectDrawSurface4* surface;
-};
+} MONOSCREEN_STRUCT;
 #endif // TOMB4_GAME_MONOSCREENSTRUCT_H

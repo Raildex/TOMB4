@@ -1,7 +1,8 @@
 #pragma once
 #include <windows.h>
-struct TEXTURESTRUCT;
-struct _D3DTLVERTEX;
+#include <stdbool.h>
+typedef struct TEXTURESTRUCT TEXTURESTRUCT;
+typedef struct _D3DTLVERTEX _D3DTLVERTEX;
 
 void SetFogColor(long r, long g, long b);
 void HWInitialise();

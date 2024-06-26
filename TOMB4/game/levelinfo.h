@@ -1,21 +1,20 @@
 #ifndef TOMB4_GAME_LEVELINFO_H
 #define TOMB4_GAME_LEVELINFO_H
-
-struct ROOM_INFO;
-struct CHANGE_STRUCT;
-struct RANGE_STRUCT;
-struct LEVEL_INFO;
-struct OBJECT_INFO;
-struct ANIM_STRUCT;
-struct FX_INFO;
-struct STATIC_INFO;
-struct MESH_INFO;
-struct ITEM_INFO;
-struct BOX_INFO;
-struct SAMPLE_BUFFER;
-struct SAMPLE_INFO;
+#include <stdbool.h>
+typedef struct ROOM_INFO ROOM_INFO;
+typedef struct CHANGE_STRUCT CHANGE_STRUCT;
+typedef struct RANGE_STRUCT RANGE_STRUCT;
+typedef struct LEVEL_INFO LEVEL_INFO;
+typedef struct OBJECT_INFO OBJECT_INFO;
+typedef struct ANIM_STRUCT ANIM_STRUCT;
+typedef struct FX_INFO FX_INFO;
+typedef struct STATIC_INFO STATIC_INFO;
+typedef struct MESH_INFO MESH_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct BOX_INFO BOX_INFO;
+typedef struct SAMPLE_BUFFER SAMPLE_BUFFER;
+typedef struct SAMPLE_INFO SAMPLE_INFO;
 LEVEL_INFO* CreateLevel();
-void LoadLevel(LEVEL_INFO* lvl, char* file);
 void DestroyLevel(LEVEL_INFO* lvl);
 
 BOX_INFO* GetBox(LEVEL_INFO* lvl, long box);
@@ -33,7 +32,6 @@ short* GetMeshBase(LEVEL_INFO* lvl);
 ROOM_INFO* GetRoom(LEVEL_INFO* lvl, long room);
 long GetNumRooms(LEVEL_INFO* lvl);
 short* GetFloorData(LEVEL_INFO* lvl, long index);
-bool LoadRooms(char** FileData, LEVEL_INFO* lvl);
 long* GetBone(LEVEL_INFO* lvl, long index);
 CHANGE_STRUCT* GetAnimChange(LEVEL_INFO* lvl, long index);
 RANGE_STRUCT* GetAnimRange(LEVEL_INFO* lvl,long index);
@@ -43,7 +41,7 @@ short* GetAnimFrames(LEVEL_INFO* lvl, long offset);
 short* GetZone(LEVEL_INFO* lvl,long zone,long flip);
 unsigned short* GetOverlap(LEVEL_INFO* lvl,long overlap);
 FX_INFO* GetEffect(LEVEL_INFO* lvl, long fx);
-long GetItemNum(LEVEL_INFO* lvl, ITEM_INFO* i);
+short GetItemNum(LEVEL_INFO* lvl, ITEM_INFO* i);
 long GetNumBoxes(LEVEL_INFO* lvl);
 SAMPLE_BUFFER* GetSampleBuffer(LEVEL_INFO* lvl, long num);
 SAMPLE_INFO* GetSampleInfo(LEVEL_INFO* lvl, long num);

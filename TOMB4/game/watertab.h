@@ -1,9 +1,9 @@
 #ifndef TOMB4_GAME_WATERTAB_H
 #define TOMB4_GAME_WATERTAB_H
-struct WATERTAB {
+typedef struct WATERTAB {
 	char shimmer;
 	char choppy;
 	unsigned char random;
 	unsigned char abs;
-};
+} WATERTAB;
 #endif // TOMB4_GAME_WATERTAB_H

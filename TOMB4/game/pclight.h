@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_PCLIGHT_H
 #define TOMB4_GAME_PCLIGHT_H
 #include "game/phdvector.h"
-struct PCLIGHT {
+typedef struct PCLIGHT {
 	float x;
 	float y;
 	float z;
@@ -34,5 +34,5 @@ struct PCLIGHT {
 	unsigned char Active;
 	PHD_VECTOR rlp;
 	long Range;
-};
+} PCLIGHT;
 #endif // TOMB4_GAME_PCLIGHT_H

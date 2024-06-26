@@ -1,8 +1,8 @@
 #ifndef OBJECT_INFO_INCLUDED
 #define OBJECT_INFO_INCLUDED
-struct ITEM_INFO;
-struct COLL_INFO;
-struct OBJECT_INFO {
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct COLL_INFO COLL_INFO;
+typedef struct OBJECT_INFO {
 	short nmeshes;
 	short mesh_index;
 	long bone_index;
@@ -36,5 +36,5 @@ struct OBJECT_INFO {
 	void (*draw_routine_extra)(ITEM_INFO* item);
 	unsigned long explodable_meshbits;
 	unsigned long padfuck;
-};
+} OBJECT_INFO;
 #endif

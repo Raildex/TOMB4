@@ -1,20 +1,20 @@
 #pragma once
-struct LIGHTNING_STRUCT;
-struct PHD_VECTOR;
-struct ITEM_INFO;
-struct SVECTOR;
-struct PHD_3DPOS;
-struct NODEOFFSET_INFO;
-struct LIGHTNING_STRUCT;
-struct GUNSHELL_STRUCT;
-struct DRIP_STRUCT;
-struct SMOKE_SPARKS;
-struct BUBBLE_STRUCT;
-struct SHOCKWAVE_STRUCT;
-struct FIRE_SPARKS;
-struct BLOOD_STRUCT;
-struct GUNFLASH_STRUCT;
-struct FIRE_LIST;
+typedef struct LIGHTNING_STRUCT LIGHTNING_STRUCT;
+typedef struct PHD_VECTOR PHD_VECTOR;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct SVECTOR SVECTOR;
+typedef struct PHD_3DPOS PHD_3DPOS;
+typedef struct NODEOFFSET_INFO NODEOFFSET_INFO;
+typedef struct LIGHTNING_STRUCT LIGHTNING_STRUCT;
+typedef struct GUNSHELL_STRUCT GUNSHELL_STRUCT;
+typedef struct DRIP_STRUCT DRIP_STRUCT;
+typedef struct SMOKE_SPARKS SMOKE_SPARKS;
+typedef struct BUBBLE_STRUCT BUBBLE_STRUCT;
+typedef struct SHOCKWAVE_STRUCT SHOCKWAVE_STRUCT;
+typedef struct FIRE_SPARKS FIRE_SPARKS;
+typedef struct BLOOD_STRUCT BLOOD_STRUCT;
+typedef struct GUNFLASH_STRUCT GUNFLASH_STRUCT;
+typedef struct FIRE_LIST FIRE_LIST;
 
 LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, long rgb, unsigned char flags, unsigned char size, unsigned char segments);
 long ExplodingDeath2(short item_number, long mesh_bits, short Flags);

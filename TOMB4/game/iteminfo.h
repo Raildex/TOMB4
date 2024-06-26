@@ -3,7 +3,7 @@
 #include "game/itemlight.h"
 #include "game/phd3dpos.h"
 #pragma pack(push, 1)
-struct ITEM_INFO {
+typedef struct ITEM_INFO {
 	long floor;
 	unsigned long touch_bits;
 	unsigned long mesh_bits;
@@ -44,6 +44,6 @@ struct ITEM_INFO {
 	unsigned long meshswap_meshbits;
 	short draw_room;
 	short TOSSPAD;
-};
+} ITEM_INFO;
 #pragma pack(pop)
 #endif // TOMB4_GAME_ITEMINFO_H

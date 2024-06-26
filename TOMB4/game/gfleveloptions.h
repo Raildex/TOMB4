@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_GFLEVELOPTIONS_H
 #define TOMB4_GAME_GFLEVELOPTIONS_H
-enum gf_level_options {
+typedef enum gf_level_options {
 	GF_YOUNGLARA = 0x1,
 	GF_WEATHER = 0x2,
 	GF_HORIZON = 0x4,
@@ -17,5 +17,5 @@ enum gf_level_options {
 	GF_MIRROR = 0x2000,
 	GF_REMOVEAMULET = 0x4000,
 	GF_NOLEVEL = 0x8000
-};
+} gf_level_options;
 #endif // TOMB4_GAME_GFLEVELOPTIONS_H

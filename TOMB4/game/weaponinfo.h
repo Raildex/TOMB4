@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_WEAPONINFO_H
 #define TOMB4_GAME_WEAPONINFO_H
-struct WEAPON_INFO {
+typedef struct WEAPON_INFO {
 	short lock_angles[4];
 	short left_angles[4];
 	short right_angles[4];
@@ -13,5 +13,5 @@ struct WEAPON_INFO {
 	char flash_time;
 	char draw_frame;
 	short sample_num;
-};
+} WEAPON_INFO;
 #endif // TOMB4_GAME_WEAPONINFO_H

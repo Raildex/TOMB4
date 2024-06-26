@@ -1,10 +1,10 @@
 #ifndef TOMB4_GAME_LIGHTTYPES_H
 #define TOMB4_GAME_LIGHTTYPES_H
-enum LightTypes {
+typedef enum LightTypes {
 	LIGHT_SUN,
 	LIGHT_POINT,
 	LIGHT_SPOT,
 	LIGHT_SHADOW,
 	LIGHT_FOG
-};
+} LightTypes;
 #endif // TOMB4_GAME_LIGHTTYPES_H

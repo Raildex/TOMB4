@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_TRIGGERTYPES_H
 #define TOMB4_GAME_TRIGGERTYPES_H
-enum trigger_types {
+typedef enum trigger_types {
 	TRIGGER,
 	PAD,
 	SWITCH,
@@ -14,5 +14,5 @@ enum trigger_types {
 	HEAVYSWITCH,
 	HEAVYANTITRIGGER,
 	MONKEY
-};
+} trigger_types;
 #endif // TOMB4_GAME_TRIGGERTYPES_H

@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_PCLIGHTINFO_H
 #define TOMB4_GAME_PCLIGHTINFO_H
-struct PCLIGHT_INFO {
+typedef struct PCLIGHT_INFO {
 	float x;
 	float y;
 	float z;
@@ -24,5 +24,5 @@ struct PCLIGHT_INFO {
 	long inz;
 	unsigned char Type;
 	unsigned char Pad;
-};
+} PCLIGHT_INFO;
 #endif // TOMB4_GAME_PCLIGHTINFO_H

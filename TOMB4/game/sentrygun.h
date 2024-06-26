@@ -1,6 +1,6 @@
 #pragma once
 
-struct ITEM_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
 
 
 void TriggerAutogunFlamethrower(ITEM_INFO* item);

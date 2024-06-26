@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_AIOBJECT_H
 #define TOMB4_GAME_AIOBJECT_H
 #pragma pack(push, 1)
-struct AIOBJECT {
+typedef struct AIOBJECT {
 	short object_number;
 	short room_number;
 	long x;
@@ -11,6 +11,6 @@ struct AIOBJECT {
 	short flags;
 	short y_rot;
 	short box_number;
-};
+} AIOBJECT;
 #pragma pack(pop)
 #endif // TOMB4_GAME_AIOBJECT_H

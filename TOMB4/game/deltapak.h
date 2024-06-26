@@ -1,10 +1,10 @@
 #pragma once
-struct NODELOADHEADER;
-struct PACKNODE;
-struct RTDECODE;
-struct OBJECT_INFO;
-struct ITEM_INFO;
-struct PHD_VECTOR;
+typedef struct NODELOADHEADER NODELOADHEADER;
+typedef struct PACKNODE PACKNODE;
+typedef struct RTDECODE RTDECODE;
+typedef struct OBJECT_INFO OBJECT_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct PHD_VECTOR PHD_VECTOR;
 void handle_cutseq_triggering(long name);
 void do_new_cutscene_camera();
 void InitPackNodes(NODELOADHEADER* lnode, PACKNODE* pnode, char* packed, long numnodes);

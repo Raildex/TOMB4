@@ -1,5 +1,5 @@
 #pragma once
-struct DISPLAYPU;
+typedef struct DISPLAYPU DISPLAYPU;
 
 long FlashIt();
 void DrawGameInfo(long timed);

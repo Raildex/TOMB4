@@ -1,7 +1,7 @@
 #pragma once
 
-struct ITEM_INFO;
-struct COLL_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct COLL_INFO COLL_INFO;
 
 
 void lara_as_surfswim(ITEM_INFO* item, COLL_INFO* coll);

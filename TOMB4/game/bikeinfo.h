@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_BIKEINFO_H
 #define TOMB4_GAME_BIKEINFO_H
-struct BIKEINFO {
+typedef struct BIKEINFO {
 	short right_front_wheelrot;
 	short right_back_wheelrot;
 	long left_wheelrot;
@@ -14,5 +14,5 @@ struct BIKEINFO {
 	long pitch2;
 	short flags;
 	short light_intensity;
-};
+} BIKEINFO;
 #endif // TOMB4_GAME_BIKEINFO_H

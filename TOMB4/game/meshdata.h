@@ -1,8 +1,8 @@
 #ifndef TOMB4_GAME_MESHDATA_H
 #define TOMB4_GAME_MESHDATA_H
-struct IDirect3DVertexBuffer;
-struct _D3DVECTOR;
-struct MESH_DATA {
+typedef struct IDirect3DVertexBuffer IDirect3DVertexBuffer;
+typedef struct _D3DVECTOR _D3DVECTOR;
+typedef struct MESH_DATA {
 	short x;
 	short y;
 	short z;
@@ -17,5 +17,5 @@ struct MESH_DATA {
 	long* prelight;
 	IDirect3DVertexBuffer* SourceVB;
 	_D3DVECTOR* Normals;
-};
+} MESH_DATA;
 #endif // TOMB4_GAME_MESHDATA_H

@@ -1,6 +1,6 @@
 #pragma once
 
-enum lara_anim_state {
+typedef enum lara_anim_state {
 	AS_WALK = 0,
 	AS_RUN = 1,
 	AS_STOP = 2,
@@ -121,10 +121,10 @@ enum lara_anim_state {
 	AS_TWODOOR = 117,
 
 	NUM_LARA_STATES
-};
+} lara_anim_state;
 
 
-enum lara_anim {
+typedef enum lara_anim {
 	ANIM_RUN = 0,
 	ANIM_WALK_STOP_LEFT = 2,
 	ANIM_WALK_STOP_RIGHT = 3,
@@ -284,4 +284,4 @@ enum lara_anim {
 	ANIM_SETHDEATH = 443,
 	ANIM_USEBEETLE = 444,
 	NUM_LARA_ANIMS
-};
+} lara_anim;

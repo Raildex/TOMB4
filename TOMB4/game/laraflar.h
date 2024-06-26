@@ -1,7 +1,7 @@
 #pragma once
 
-struct ITEM_INFO;
-struct PHD_VECTOR;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct PHD_VECTOR PHD_VECTOR;
 
 
 void DrawFlareInAir(ITEM_INFO* item);

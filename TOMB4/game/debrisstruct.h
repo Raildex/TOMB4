@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_DEBRISSTRUCT_H
 #define TOMB4_GAME_DEBRISSTRUCT_H
-struct DEBRIS_STRUCT {
+typedef struct DEBRIS_STRUCT {
 	void* TextInfo;
 	long x;
 	long y;
@@ -26,5 +26,5 @@ struct DEBRIS_STRUCT {
 	long ambient;
 	long flags;
 	unsigned char nBounces;
-};
+} DEBRIS_STRUCT;
 #endif// TOMB4_GAME_DEBRISSTRUCT_H

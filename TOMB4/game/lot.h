@@ -1,7 +1,7 @@
 #pragma once
-struct LOT_INFO;
-struct ITEM_INFO;
-struct CREATURE_INFO;
+typedef struct LOT_INFO LOT_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct CREATURE_INFO CREATURE_INFO;
 void InitialiseLOTarray(long allocmem);
 void DisableBaddieAI(short item_number);
 void ClearLOT(LOT_INFO* lot);

@@ -1,6 +1,6 @@
 #pragma once
 
-struct FX_INFO;
+typedef struct FX_INFO FX_INFO;
 
 
 long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num);

@@ -1,7 +1,7 @@
 #pragma once
 
-struct ITEM_INFO;
-struct FOOTPRINT;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct FOOTPRINT FOOTPRINT;
 
 void AddFootPrint(ITEM_INFO* item);
 void S_DrawFootPrints();

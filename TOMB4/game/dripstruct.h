@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_DRIPSTRUCT_H
 #define TOMB4_GAME_DRIPSTRUCT_H
-struct DRIP_STRUCT {
+typedef struct DRIP_STRUCT {
 	long x;
 	long y;
 	long z;
@@ -14,5 +14,5 @@ struct DRIP_STRUCT {
 	short RoomNumber;
 	unsigned char Outside;
 	unsigned char Pad;
-};
+} DRIP_STRUCT;
 #endif // TOMB4_GAME_DRIPSTRUCT_H

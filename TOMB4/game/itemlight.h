@@ -1,7 +1,7 @@
 #ifndef ITEM_LIGHT_INCLUDED
 #define ITEM_LIGHT_INCLUDED
 #include "game/pclight.h"
-struct ITEM_LIGHT {
+typedef struct ITEM_LIGHT {
 	long r;
 	long g;
 	long b;
@@ -19,5 +19,5 @@ struct ITEM_LIGHT {
 	PHD_VECTOR item_pos;
 	void* pCurrentLights;
 	void* pPrevLights;
-};
+} ITEM_LIGHT;
 #endif

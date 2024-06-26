@@ -1,6 +1,6 @@
 #pragma once
 #pragma pack(push, 1)
-struct SPOTCAM {
+typedef struct SPOTCAM {
 	long x;
 	long y;
 	long z;
@@ -16,7 +16,7 @@ struct SPOTCAM {
 	short flags;
 	short room_number;
 	short pad;
-};
+} SPOTCAM;
 #pragma pack(pop)
 void SetSplineData(long num, long cam);
 void InitialiseSpotCam(short Sequence);
@@ -32,7 +32,7 @@ extern short number_spotcams;
 extern long bUseSpotCam;
 extern long bDisableLaraControl;
 
-enum spotcam_flags {
+typedef enum spotcam_flags {
 	SP_SNAPCAMERA = (1 << 0), // snaps the camera to the first spline
 	SP_VIGNETTE = (1 << 1), //?
 	SP_LOOPCAMERA = (1 << 2), // loops the sequence (if past last camera -> go back to first)
@@ -49,4 +49,4 @@ enum spotcam_flags {
 	SP_FADEOUTSCREEN = (1 << 13), // do screen fadeout
 	SP_TESTTRIGGER = (1 << 14), // test heavy triggers
 	SP_FLYBYONESHOT = (1 << 15) // used in TestTriggers to force the flyby trigger to be one shot
-};
+} spotcam_flags;

@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_SPRITESTRUCT_H
 #define TOMB4_GAME_SPRITESTRUCT_H
 #pragma pack(push, 1)
-struct SPRITESTRUCT {
+typedef struct SPRITESTRUCT {
 	unsigned short tpage;
 	unsigned short offset;
 	unsigned short width;
@@ -10,6 +10,6 @@ struct SPRITESTRUCT {
 	float y1; // top
 	float x2; // right
 	float y2; // bottom
-};
+} SPRITESTRUCT;
 #pragma pack(pop)
 #endif // TOMB4_GAME_SPRITESTRUCT_H

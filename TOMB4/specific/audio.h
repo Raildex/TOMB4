@@ -3,12 +3,12 @@
 #include <mmreg.h>
 #include <mmiscapi.h>
 #include <MSAcm.h>
-
+#include <stdbool.h>
 void OpenStreamFile(char* name);
 void GetADPCMData();
 void ACMSetVolume();
 void ACMEmulateCDPlay(long track, long mode);
-BOOL __stdcall ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwSupport);
+BOOL WINAPI ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwSupport);
 long ACMSetupNotifications();
 void FillADPCMBuffer(char* p, long track);
 long ACMHandleNotifications();

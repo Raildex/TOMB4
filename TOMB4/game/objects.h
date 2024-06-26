@@ -1,8 +1,8 @@
 #pragma once
-struct ITEM_INFO;
-struct COLL_INFO;
-struct PHD_VECTOR;
-struct OBJECT_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct COLL_INFO COLL_INFO;
+typedef struct PHD_VECTOR PHD_VECTOR;
+typedef struct OBJECT_INFO OBJECT_INFO;
 void ControlMapper(short item_number);
 void ControlLightningConductor(short item_number);
 void BridgeFlatFloor(ITEM_INFO* item, long x, long y, long z, long* height);

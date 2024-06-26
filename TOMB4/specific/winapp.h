@@ -5,7 +5,7 @@
 #include <windows.h>
 #include "global/types.h"
 #include <d3dtypes.h>
-struct WINAPP {
+typedef struct WINAPP {
 	HINSTANCE hInstance;
 	HWND hWnd;
 	WNDCLASS WindowClass;
@@ -28,5 +28,5 @@ struct WINAPP {
 	volatile bool fmv;
 	long Desktopbpp;
 	long AutoTarget;
-};
+} WINAPP;
 #endif

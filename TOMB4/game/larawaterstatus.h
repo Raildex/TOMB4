@@ -1,10 +1,10 @@
 #ifndef TOMB4_GAME_LARAWATERSTATUS_H
 #define TOMB4_GAME_LARAWATERSTATUS_H
-enum lara_water_status {
+typedef enum lara_water_status {
 	LW_ABOVE_WATER,
 	LW_UNDERWATER,
 	LW_SURFACE,
 	LW_FLYCHEAT,
 	LW_WADE
-};
+} lara_water_status;
 #endif // TOMB4_GAME_LARAWATERSTATUS_H

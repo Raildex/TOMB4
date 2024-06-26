@@ -1,6 +1,6 @@
 #ifndef LANGUAGES_INCLUDED
 #define LANGUAGES_INCLUDED
-enum languages {
+typedef enum languages {
 	ENGLISH,
 	FRENCH,
 	GERMAN,
@@ -9,5 +9,5 @@ enum languages {
 	US,
 	JAPAN,
 	DUTCH
-};
+} languages;
 #endif

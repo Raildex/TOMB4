@@ -1,7 +1,7 @@
 #pragma once
 
-struct ITEM_INFO;
-struct PHD_3DPOS;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct PHD_3DPOS PHD_3DPOS;
 
 
 void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item);

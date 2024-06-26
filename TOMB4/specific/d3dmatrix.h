@@ -1,7 +1,7 @@
 #pragma once
 
-struct _D3DMATRIX;
-struct _D3DVECTOR;
+typedef struct _D3DMATRIX _D3DMATRIX;
+typedef struct _D3DVECTOR _D3DVECTOR;
 
 
 _D3DMATRIX* D3DIdentityMatrix(_D3DMATRIX* mx);

@@ -1,6 +1,6 @@
 #ifndef SPLASH_STRUCT_INCLUDED
 #define SPLASH_STRUCT_INCLUDED
-struct SPLASH_STRUCT {
+typedef struct SPLASH_STRUCT {
 	long x;
 	long y;
 	long z;
@@ -19,5 +19,5 @@ struct SPLASH_STRUCT {
 	short OuterRadVel;
 	char flags;
 	unsigned char life;
-};
+} SPLASH_STRUCT;
 #endif

@@ -1,7 +1,7 @@
 #pragma once
-struct ITEM_INFO;
-struct COLL_INFO;
-struct LARA_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct COLL_INFO COLL_INFO;
+typedef struct LARA_INFO LARA_INFO;
 void lara_void_func(ITEM_INFO* item, COLL_INFO* coll);
 void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll);
 void SetCornerAnim(ITEM_INFO* item, COLL_INFO* coll, short rot, short flip);

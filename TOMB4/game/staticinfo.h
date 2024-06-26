@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_STATICINFO_H
 #define TOMB4_GAME_STATICINFO_H
-struct STATIC_INFO {
+typedef struct STATIC_INFO {
 	short mesh_number;
 	short flags;
 	short x_minp;
@@ -15,5 +15,5 @@ struct STATIC_INFO {
 	short y_maxc;
 	short z_minc;
 	short z_maxc;
-};
+} STATIC_INFO;
 #endif // TOMB4_GAME_STATICINFO_H

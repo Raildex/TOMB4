@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_WRAITHSTRUCT_H
 #define TOMB4_GAME_WRAITHSTRUCT_H
-struct WRAITH_STRUCT {
+typedef struct WRAITH_STRUCT {
 	PHD_VECTOR pos;
 	short xv;
 	short yv;
@@ -9,5 +9,5 @@ struct WRAITH_STRUCT {
 	unsigned char g;
 	unsigned char b;
 	unsigned char pad[3];
-};
+} WRAITH_STRUCT;
 #endif // TOMB4_GAME_WRAITHSTRUCT_H

@@ -1,13 +1,13 @@
 #ifndef ROOM_INFO_INCLUDED
 #define ROOM_INFO_INCLUDED
-struct _D3DVECTOR;
-struct FLOOR_INFO;
-struct LIGHTINFO;
-struct MESH_INFO;
-struct PCLIGHT_INFO;
-struct IDirect3DVertexBuffer;
+typedef struct _D3DVECTOR _D3DVECTOR;
+typedef struct FLOOR_INFO FLOOR_INFO;
+typedef struct LIGHTINFO LIGHTINFO;
+typedef struct MESH_INFO MESH_INFO;
+typedef struct PCLIGHT_INFO PCLIGHT_INFO;
+typedef struct IDirect3DVertexBuffer IDirect3DVertexBuffer;
 #pragma pack(push, 1)
-struct ROOM_INFO {
+typedef struct ROOM_INFO {
 	short* data;
 	short* door;
 	FLOOR_INFO* floor;
@@ -56,6 +56,6 @@ struct ROOM_INFO {
 	long gt3cnt;
 	long gt4cnt;
 	PCLIGHT_INFO* pclight;
-};
+} ROOM_INFO;
 #pragma pack(pop)
 #endif

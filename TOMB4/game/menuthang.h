@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_MENUTHANG_H
 #define TOMB4_GAME_MENUTHANG_H
-struct MENUTHANG {
+typedef struct MENUTHANG {
 	long type;
 	char* text;
-};
+} MENUTHANG;
 #endif // TOMB4_GAME_MENUTHANG_H

@@ -1,7 +1,7 @@
 #pragma once
-struct DOORPOS_DATA;
-struct ITEM_INFO;
-struct COLL_INFO;
+typedef struct DOORPOS_DATA DOORPOS_DATA;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct COLL_INFO COLL_INFO;
 void ShutThatDoor(DOORPOS_DATA* d);
 void OpenThatDoor(DOORPOS_DATA* d);
 void DoorControl(short item_number);

@@ -1,13 +1,12 @@
 #pragma once
-struct ROOM_INFO;
-struct FLOOR_INFO;
-struct ITEM_INFO;
-struct ANIM_STRUCT;
-struct GAME_VECTOR;
-struct PHD_VECTOR;
-struct MESH_INFO;
-struct PHD_3DPOS;
-
+typedef struct ROOM_INFO ROOM_INFO;
+typedef struct FLOOR_INFO FLOOR_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct ANIM_STRUCT ANIM_STRUCT;
+typedef struct PHD_VECTOR PHD_VECTOR;
+typedef struct MESH_INFO MESH_INFO;
+typedef struct PHD_3DPOS PHD_3DPOS;
+typedef struct GAME_VECTOR GAME_VECTOR;
 long ControlPhase(long nframes, long demo_mode);
 void FlipMap(long FlipNumber);
 void RemoveRoomFlipItems(ROOM_INFO* r);

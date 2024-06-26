@@ -1,10 +1,10 @@
 #pragma once
-struct ITEM_INFO;
-struct COLL_INFO;
-struct FLOOR_INFO;
-struct PHD_3DPOS;
-struct PHD_VECTOR;
-struct MESH_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct COLL_INFO COLL_INFO;
+typedef struct FLOOR_INFO FLOOR_INFO;
+typedef struct PHD_3DPOS PHD_3DPOS;
+typedef struct PHD_VECTOR PHD_VECTOR;
+typedef struct MESH_INFO MESH_INFO;
 void ShiftItem(ITEM_INFO* item, COLL_INFO* coll);
 long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO** StoredItems, MESH_INFO** StoredStatics, long StoreLara);
 void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);

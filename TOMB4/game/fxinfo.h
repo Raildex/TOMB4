@@ -1,7 +1,7 @@
 #ifndef FX_INFO_INCLUDED
 #define FX_INFO_INCLUDED
 #include "game/phd3dpos.h"
-struct FX_INFO {
+typedef struct FX_INFO {
 	PHD_3DPOS pos;
 	short room_number;
 	short object_number;
@@ -14,5 +14,5 @@ struct FX_INFO {
 	short shade;
 	short flag1;
 	short flag2;
-};
+} FX_INFO;
 #endif

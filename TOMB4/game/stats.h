@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_STATS_H
 #define TOMB4_GAME_STATS_H
-struct STATS {
+typedef struct STATS {
 	unsigned long Timer;
 	unsigned long Distance;
 	unsigned long AmmoUsed;
@@ -8,5 +8,5 @@ struct STATS {
 	unsigned short Kills;
 	unsigned char Secrets;
 	unsigned char HealthUsed;
-};
+} STATS;
 #endif // TOMB4_GAME_STATS_H

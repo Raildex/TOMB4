@@ -1,9 +1,10 @@
 #pragma once
 #include "global/types.h"
-struct IDirect3DTexture2;
-struct IDirectDrawSurface4;
+#include <stdbool.h>
+typedef struct IDirect3DTexture2 IDirect3DTexture2;
+typedef struct IDirectDrawSurface4 IDirectDrawSurface4;
 #pragma pack(push, 1)
-struct TEXTURE {
+typedef struct TEXTURE {
 	IDirect3DTexture2* tex;
 	IDirectDrawSurface4* surface;
 	unsigned long xoff;
@@ -13,7 +14,7 @@ struct TEXTURE {
 	long tpage;
 	bool bump;
 	long bumptpage;
-};
+} TEXTURE;
 #pragma pack(pop)
 typedef void(__cdecl* rgbfunc)(unsigned char*, unsigned char*, unsigned char*);
 IDirectDrawSurface4* CreateTexturePage(long w, long h, long MipMapCount, long* pSrc, rgbfunc RGBM, long format);

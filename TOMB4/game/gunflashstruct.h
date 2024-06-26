@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_GUNFLASHSTRUCT_H
 #define TOMB4_GAME_GUNFLASHSTRUCT_H
-struct GUNFLASH_STRUCT {
+typedef struct GUNFLASH_STRUCT {
 	float mx[12];
 	short on;
-};
+} GUNFLASH_STRUCT;
 #endif // TOMB4_GAME_GUNFLASHSTRUCT_H

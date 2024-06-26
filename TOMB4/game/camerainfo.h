@@ -3,10 +3,10 @@
 #include "game/gamevector.h"
 #include "game/cameratype.h"
 #include "game/phdvector.h"
-struct ITEM_INFO;
-struct OBJECT_VECTOR;
+typedef struct ITEM_INFO ITEM_INFO;
+typedef struct OBJECT_VECTOR OBJECT_VECTOR;
 
-struct CAMERA_INFO {
+typedef struct CAMERA_INFO {
 	GAME_VECTOR pos;
 	GAME_VECTOR target;
 	camera_type type;
@@ -31,5 +31,5 @@ struct CAMERA_INFO {
 	OBJECT_VECTOR* fixed;
 	long mike_at_lara;
 	PHD_VECTOR mike_pos;
-};
+} CAMERA_INFO;
 #endif // TOMB4_GAME_CAMERAINFO_H

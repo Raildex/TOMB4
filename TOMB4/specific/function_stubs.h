@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdio>
+#include <stdio.h>
 #include "game/phdvector.h"
 
 long GetRandomControl();

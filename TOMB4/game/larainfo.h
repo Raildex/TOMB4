@@ -3,11 +3,11 @@
 #include "game/laraarm.h"
 #include "game/phdvector.h"
 
-struct CREATURE_INFO;
-struct FX_INFO;
-struct ITEM_INFO;
+typedef struct CREATURE_INFO CREATURE_INFO;
+typedef struct FX_INFO FX_INFO;
+typedef struct ITEM_INFO ITEM_INFO;
 #pragma pack(push, 1)
-struct LARA_INFO {
+typedef struct LARA_INFO {
 	short item_number;
 	short gun_status;
 	short gun_type;
@@ -126,6 +126,6 @@ struct LARA_INFO {
 	char location;
 	char highest_location;
 	char locationPad;
-};
+} LARA_INFO;
 #pragma pack(pop)
 #endif // TOMB4_GAME_LARAINFO_H

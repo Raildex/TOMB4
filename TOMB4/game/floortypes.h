@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_FLOORTYPES_H
 #define TOMB4_GAME_FLOORTYPES_H
-enum floor_types {
+typedef enum floor_types {
 	FLOOR_TYPE,
 	DOOR_TYPE,
 	TILT_TYPE,
@@ -23,5 +23,5 @@ enum floor_types {
 	MONKEY_TYPE,
 	TRIGTRIGGER_TYPE,
 	MINER_TYPE
-};
+} floor_types;
 #endif // TOMB4_GAME_FLOORTYPES_H

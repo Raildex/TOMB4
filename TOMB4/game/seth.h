@@ -1,6 +1,6 @@
 #pragma once
 
-struct PHD_3DPOS;
+typedef struct PHD_3DPOS PHD_3DPOS;
 
 
 void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv);

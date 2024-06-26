@@ -6,7 +6,7 @@
 #include <d3d.h>
 #include <dinput.h>
 #include <dsound.h>
-struct DXPTR {
+typedef struct DXPTR {
 	IDirectDraw4* lpDD;
 	IDirect3D3* lpD3D;
 	IDirect3DDevice3* lpD3DDevice;
@@ -30,5 +30,5 @@ struct DXPTR {
 	volatile long InScene;
 	volatile long WaitAtBeginScene;
 	volatile long DoneBlit;
-};
+} DXPTR;
 #endif // TOMB4_GAME_DXPTR_H
