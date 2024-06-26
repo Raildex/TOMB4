@@ -2499,7 +2499,7 @@ void lara_col_turnswitch(ITEM_INFO* item, COLL_INFO* coll) {
 void lara_as_pulley(ITEM_INFO* item, COLL_INFO* coll) {
 	ITEM_INFO* p;
 
-	p = (ITEM_INFO*)lara.GeneralPtr;
+	p = GetItem(currentLevel,lara.GeneralPtr);
 	lara.look = 0;
 	coll->enable_spaz = 0;
 	coll->enable_baddie_push = 0;
