@@ -422,9 +422,9 @@ void ProcessRoomData(ROOM_INFO* r) {
 		cG = ((prelight[i] & 0x3E0) >> 5) << 3;
 		cB = (prelight[i] & 0x1F) << 3;
 		r->prelight[i] = RGBA(cR, cG, cB, 0xFF);
-		cR = unsigned short((cR * water_color_R) >> 8);
-		cG = unsigned short((cG * water_color_G) >> 8);
-		cB = unsigned short((cB * water_color_B) >> 8);
+		cR = (unsigned short)((cR * water_color_R) >> 8);
+		cG = (unsigned short)((cG * water_color_G) >> 8);
+		cB = (unsigned short)((cB * water_color_B) >> 8);
 		r->prelightwater[i] = RGBA(cR, cG, cB, 0xFF);
 		vptr++;
 		data_ptr += 6;

@@ -90,7 +90,7 @@ __inline float fSin(long angle) {
 }
 
 __inline float fCos(long angle) {
-	return fcossin_tbl[unsigned short(angle + 0x4000)];
+	return fcossin_tbl[(unsigned short)(angle + 0x4000)];
 }
 
 __inline void mPopMatrix() {

@@ -426,7 +426,7 @@ void DrawChar(long x, long y, unsigned short col, CHARDEF* def) {
 	tex.v4 = v2;
 
 	tex.drawtype = 1;
-	tex.tpage = unsigned short(nTextures - 2);
+	tex.tpage = (unsigned short)(nTextures - 2);
 	tex.flag = 0;
 	nPolyType = 4;
 	AddQuadClippedSorted(v, 0, 1, 2, 3, &tex, 0);

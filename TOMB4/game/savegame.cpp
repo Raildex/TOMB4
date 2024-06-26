@@ -138,7 +138,7 @@ void ReadSG(void* pointer, long size) {
 }
 
 void SaveHubData(long index) {
-	savegame.HubSizes[index] = unsigned short(SGcount - savegame.HubOffsets[index]);
+	savegame.HubSizes[index] = (unsigned short)(SGcount - savegame.HubOffsets[index]);
 
 	if(index < 10)
 		savegame.HubSizes[index - 9] = savegame.HubSizes[index] + savegame.HubOffsets[index];
@@ -937,7 +937,7 @@ void RestoreLevelData(long FullSave) {
 						ReadSG(creature, 22);
 						creature->enemy = (ITEM_INFO*)((long)creature->enemy + (long)malloc_buffer);
 
-						if(creature->enemy < 0)
+						if((int)creature->enemy < 0)
 							creature->enemy = 0;
 
 						ReadSG(&creature->ai_target.object_number, sizeof(short));

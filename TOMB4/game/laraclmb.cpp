@@ -455,7 +455,7 @@ long LaraTestClimbUpPos(ITEM_INFO* item, long front, long right, long* shift, lo
 	xfront = 0;
 	zfront = 0;
 	y = item->pos.y_pos - 768;
-	angle = unsigned short(item->pos.y_rot + 0x2000) / 0x4000;
+	angle = (unsigned short)(item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch(angle) {
 	case NORTH:
@@ -573,7 +573,7 @@ long LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 	oldX = item->pos.x_pos;
 	oldY = item->pos.y_rot;
 	oldZ = item->pos.z_pos;
-	angle = unsigned short(item->pos.y_rot + 0x2000) / 0x4000;
+	angle = (unsigned short)(item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch(angle) {
 	case NORTH:
@@ -664,7 +664,7 @@ long LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 	oldX = item->pos.x_pos;
 	oldY = item->pos.y_rot;
 	oldZ = item->pos.z_pos;
-	angle = unsigned short(item->pos.y_rot + 0x2000) / 0x4000;
+	angle = (unsigned short)(item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch(angle) {
 	case NORTH:

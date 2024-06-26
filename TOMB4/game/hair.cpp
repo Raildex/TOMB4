@@ -451,7 +451,7 @@ void GetCorrectStashPoints(long pigtail, long hair_node, long skin_node) {
 	if(hair_node)
 		rot1 = hair->pos.y_rot;
 	else
-		rot1 = unsigned short(0x8000 - (CamRot.y << 4));
+		rot1 = (unsigned short)(0x8000 - (CamRot.y << 4));
 
 	rot2 = hair[2].pos.y_rot;
 

@@ -406,7 +406,7 @@ void DoSlider(long x, long y, long width, long height, long pos, long c1, long c
 	w = (float)GetFixedScale(width);
 	h = (float)GetFixedScale(height >> 1);
 
-	tex.tpage = unsigned short(nTextures - 1);
+	tex.tpage = (unsigned short)(nTextures - 1);
 	tex.drawtype = 0;
 	tex.flag = 0;
 	tex.u1 = 0;
