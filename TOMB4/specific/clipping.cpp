@@ -153,7 +153,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 		sb2 = float(CLRB(v2->specular));
 		sa2 = float(CLRA(v2->specular));
 
-		if(false /*v1->sx < f_left*/) {
+		if(v1->sx < f_left) {
 			if(v2->sx < f_left)
 				continue;
 
@@ -183,7 +183,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			output[nPoints].sx = f_left;
 			output[nPoints].sy = clipper * (v1->sy - v2->sy) + v2->sy;
 			nPoints++;
-		} else if(false /*v1->sx > f_right*/) {
+		} else if(v1->sx > f_right) {
 			if(v2->sx > f_right)
 				continue;
 
@@ -216,7 +216,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 		}
 
 
-		if(false /*v2->sx < f_left*/) {
+		if(v2->sx < f_left) {
 			clipper = (f_left - v2->sx) / (v1->sx - v2->sx);
 			VertClip(output[nPoints], v2, v1);
 
@@ -243,7 +243,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			output[nPoints].sx = f_left;
 			output[nPoints].sy = clipper * (v1->sy - v2->sy) + v2->sy;
 			nPoints++;
-		} else if(false /*v2->sx > f_right*/) {
+		} else if(v2->sx > f_right) {
 			clipper = (f_right - v2->sx) / (v1->sx - v2->sx);
 			VertClip(output[nPoints], v2, v1);
 
@@ -321,7 +321,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 		sb2 = float(CLRB(v2->specular));
 		sa2 = float(CLRA(v2->specular));
 
-		if(false /*v1->sy < f_top*/) {
+		if(v1->sy < f_top) {
 			if(v2->sy < f_top)
 				continue;
 
@@ -351,7 +351,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			in[nPoints].sx = clipper * (v1->sx - v2->sx) + v2->sx;
 			in[nPoints].sy = f_top;
 			nPoints++;
-		} else if(false /*v1->sy > f_bottom*/) {
+		} else if(v1->sy > f_bottom) {
 			if(v2->sy > f_bottom)
 				continue;
 
@@ -383,7 +383,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			nPoints++;
 		}
 
-		if(false /*v2->sy < f_top*/) {
+		if(v2->sy < f_top) {
 			clipper = (f_top - v2->sy) / (v1->sy - v2->sy);
 			VertClip(in[nPoints], v2, v1);
 
@@ -410,7 +410,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			in[nPoints].sx = clipper * (v1->sx - v2->sx) + v2->sx;
 			in[nPoints].sy = f_top;
 			nPoints++;
-		} else if(false /*v2->sy > f_bottom*/) {
+		} else if(v2->sy > f_bottom) {
 			clipper = (f_bottom - v2->sy) / (v1->sy - v2->sy);
 			VertClip(in[nPoints], v2, v1);
 
