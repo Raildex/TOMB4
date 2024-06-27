@@ -787,7 +787,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 		memset(&desc, 0, sizeof(DDSURFACEDESC2));
 		desc.dwSize = sizeof(DDSURFACEDESC2);
 		desc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
-		desc.ddsCaps.dwCaps = DDSCAPS_ZBUFFER | DDSCAPS_SYSTEMMEMORY;
+		desc.ddsCaps.dwCaps = DDSCAPS_ZBUFFER | DDSCAPS_VIDEOMEMORY;
 		desc.dwWidth = G_dxptr->dwRenderWidth;
 		desc.dwHeight = G_dxptr->dwRenderHeight;
 		memcpy(&desc.ddpfPixelFormat, &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].ZBufferInfos->ddpf, sizeof(DDPIXELFORMAT));
