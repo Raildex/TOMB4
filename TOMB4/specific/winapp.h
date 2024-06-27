@@ -13,8 +13,6 @@ typedef struct WINAPP {
 	DXPTR dx;
 	HANDLE mutex;
 	float fps;
-	IDirect3DMaterial3* GlobalMaterial;
-	D3DMATERIALHANDLE GlobalMaterialHandle;
 	HACCEL hAccel;
 	bool SetupComplete;
 	bool BumpMapping;

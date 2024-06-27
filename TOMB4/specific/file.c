@@ -3,15 +3,12 @@
 #include "specific/file.h"
 #include "specific/function_stubs.h"
 #include "specific/texture.h"
-#include "specific/lighting.h"
 #include "specific/dxsound.h"
 #include "specific/drawbars.h"
 #include "specific/dxshell.h"
 #include "specific/drawroom.h"
 #include "game/setup.h"
 #include "game/objects.h"
-#include "game/laraskin.h"
-#include "game/items.h"
 #include "specific/specificfx.h"
 #include "game/tomb4fx.h"
 #include "specific/audio.h"
@@ -19,11 +16,8 @@
 #include "game/control.h"
 #include "game/camera.h"
 #include "specific/polyinsert.h"
-#include "game/box.h"
 #include "game/draw.h"
-#include "game/effect2.h"
 #include "game/effects.h"
-#include "game/sound.h"
 #include "specific/winmain.h"
 #include "game/lara.h"
 #include "specific/output.h"
@@ -36,29 +30,19 @@
 #include "game/objectinfo.h"
 #include "game/meshdata.h"
 #include "game/texturestruct.h"
-#include "game/roominfo.h"
 #include <d3dtypes.h>
 #include "game/phdspritestruct.h"
 #include "game/spritestruct.h"
 #include "game/objectvector.h"
 #include "game/phdtexturestruct.h"
-#include "game/iteminfo.h"
-#include "game/meshinfo.h"
-#include "game/boxinfo.h"
-#include "game/floorinfo.h"
 #include "game/staticinfo.h"
-#include "game/sampleinfo.h"
 #include "game/aiobject.h"
-#include "game/gfleveloptions.h"
-#include "game/animstruct.h"
-#include "game/rangestruct.h"
-#include "game/changestruct.h"
-#include "game/lightinfo.h"
 #include "specific/texture.h"
 #include "game/larainfo.h"
 #include "game/languages.h"
 #include <process.h>
 #include "game/levelinfo.h"
+
 
 TEXTURESTRUCT* textinfo;
 SPRITESTRUCT* spriteinfo;
@@ -218,7 +202,7 @@ void FreeLevel() {
 		mesh = *vbuf;
 
 		if(mesh->SourceVB) {
-			Log(4, "Released %s @ %x - RefCnt = %d", "Mesh VB", mesh->SourceVB, IUnknown_Release(mesh->SourceVB));
+			Log(4, "Released %s @ %x - RefCnt = %d", "Mesh VB", mesh->SourceVB, IDirect3DVertexBuffer_Release(mesh->SourceVB));
 			mesh->SourceVB = 0;
 		}
 	}
@@ -395,7 +379,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 		nTex = nTextures;
 		nTextures++;
 		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 8, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
-		DXAttempt(IUnknown_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
+		DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
 		Textures[nTex].tex = pTex;
 		Textures[nTex].surface = tSurf;
 		Textures[nTex].width = App.TextureSize;
@@ -418,7 +402,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 		nTex = nTextures;
 		nTextures++;
 		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 8, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
-		DXAttempt(IUnknown_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
+		DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
 		Textures[nTex].tex = pTex;
 		Textures[nTex].surface = tSurf;
 		Textures[nTex].width = App.TextureSize;
@@ -451,7 +435,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 			Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
 			nTex = nTextures;
 			nTextures++;
-			DXAttempt(IUnknown_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
+			DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
 			Textures[nTex].tex = pTex;
 			Textures[nTex].surface = tSurf;
 
@@ -524,7 +508,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 			nTex = nTextures;
 			nTextures++;
 			tSurf = CreateTexturePage(256, 256, 0, (long*)TextureData, 0, 0);
-			DXAttempt(IUnknown_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
+			DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
 			Textures[nTex].tex = pTex;
 			Textures[nTex].surface = tSurf;
 			Textures[nTex].width = 256;
@@ -543,7 +527,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 	nTex = nTextures;
 	nTextures++;
 	tSurf = CreateTexturePage(256, 256, 1, (long*)TextureData, 0, 0);
-	DXAttempt(IUnknown_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
+	DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
 	Textures[nTex].tex = pTex;
 	Textures[nTex].surface = tSurf;
 	Textures[nTex].width = 256;
@@ -558,7 +542,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 	nTex = nTextures;
 	nTextures++;
 	tSurf = CreateTexturePage(256, 256, 8, (long*)TextureData, 0, 0);
-	DXAttempt(IUnknown_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
+	DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
 	Textures[nTex].tex = pTex;
 	Textures[nTex].surface = tSurf;
 	Textures[nTex].width = 256;

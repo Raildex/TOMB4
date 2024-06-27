@@ -26,7 +26,7 @@
 #include <excpt.h>
 #include <nb30.h>
 #include <stdio.h>
-
+#include <dsound.h>
 static void(WINAPI* BinkCopyToBuffer)(BINK_STRUCT*, LPVOID, LONG, long, long, long, long);
 static void(WINAPI* BinkOpenDirectSound)(unsigned long);
 static void(WINAPI* BinkSetSoundSystem)(LPVOID, LPDIRECTSOUND);

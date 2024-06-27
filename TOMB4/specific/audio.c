@@ -7,7 +7,7 @@
 #include "specific/loadsave.h"
 #include "specific/winmain.h"
 #include <MSAcm.h>
-
+#include <dsound.h>
 const char* TrackFileNames[112] = {
 	"044_attack_part_i.wav",
 	"008_voncroy9a.wav",

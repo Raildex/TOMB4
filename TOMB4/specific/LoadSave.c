@@ -710,13 +710,13 @@ void CreateMonoScreen() {
 
 void FreeMonoScreen() {
 	if(MonoScreen.surface) {
-		Log(4, "Released %s @ %x - RefCnt = %d", "Mono Screen Surface", MonoScreen.surface, IUnknown_Release(MonoScreen.surface));
+		Log(4, "Released %s @ %x - RefCnt = %d", "Mono Screen Surface", MonoScreen.surface, IDirectDrawSurface4_Release(MonoScreen.surface));
 		MonoScreen.surface = 0;
 	} else
 		Log(1, "%s Attempt To Release NULL Ptr", "Mono Screen Surface");
 
 	if(MonoScreen.tex) {
-		Log(4, "Released %s @ %x - RefCnt = %d", "Mono Screen Texture", MonoScreen.tex, IUnknown_Release(MonoScreen.tex));
+		Log(4, "Released %s @ %x - RefCnt = %d", "Mono Screen Texture", MonoScreen.tex, IDirect3DTexture2_Release(MonoScreen.tex));
 		MonoScreen.tex = 0;
 	} else
 		Log(1, "%s Attempt To Release NULL Ptr", "Mono Screen Texture");
@@ -857,7 +857,7 @@ void ConvertSurfaceToTextures(IDirectDrawSurface4* surface) {
 	CustomBlt(&uSurf, 0, 0, &tSurf, &r);
 
 	IDirectDrawSurface4_Unlock(MonoScreen.surface,0);
-	DXAttempt(IUnknown_QueryInterface(MonoScreen.surface,&TEXGUID, (void**)&MonoScreen.tex));
+	DXAttempt(IDirectDrawSurface4_QueryInterface(MonoScreen.surface,&TEXGUID, (void**)&MonoScreen.tex));
 	IDirectDrawSurface4_Unlock(surface,0);
 }
 

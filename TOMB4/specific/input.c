@@ -23,7 +23,7 @@
 #include "game/savegameinfo.h"
 #include <stdio.h>
 #include <joystickapi.h>
-
+#include <dinput.h>
 const char* KeyboardButtons[272] = {
 	0,
 	"Esc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "Bksp",

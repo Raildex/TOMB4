@@ -174,13 +174,13 @@ void FreeTextures() {
 		tex = &Textures[i];
 
 		if(tex->tex) {
-			Log(4, "Released %s @ %x - RefCnt = %d", "Texture", tex->tex, IUnknown_Release(tex->tex));
+			Log(4, "Released %s @ %x - RefCnt = %d", "Texture", tex->tex, IDirect3DTexture2_Release(tex->tex));
 			tex->tex = 0;
 		} else
 			Log(1, "%s Attempt To Release NULL Ptr", "Texture");
 
 		if(tex->surface) {
-			Log(4, "Released %s @ %x - RefCnt = %d", "Surface", tex->surface, IUnknown_Release(tex->surface));
+			Log(4, "Released %s @ %x - RefCnt = %d", "Surface", tex->surface, IDirectDrawSurface4_Release(tex->surface));
 			tex->surface = 0;
 		} else
 			Log(1, "%s Attempt To Release NULL Ptr", "Surface");

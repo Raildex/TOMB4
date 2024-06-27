@@ -6,7 +6,6 @@
 #include "specific/function_table.h"
 #include "specific/3dmath.h"
 #include "game/text.h"
-#include <time.h>
 #include "specific/winmain.h"
 #include "game/sound.h"
 #include "game/gameflow.h"
@@ -35,7 +34,7 @@ void GameClose() {
 	FreeLevel();
 
 	if(DestVB) {
-		Log(4, "Released %s @ %x - RefCnt = %d", "Dest VB", DestVB, IUnknown_Release(DestVB));
+		Log(4, "Released %s @ %x - RefCnt = %d", "Dest VB", DestVB, IDirect3DVertexBuffer_Release(DestVB));
 		DestVB = 0;
 	} else
 		Log(1, "%s Attempt To Release NULL Ptr", "Dest VB");

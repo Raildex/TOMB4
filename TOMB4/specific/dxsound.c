@@ -14,6 +14,7 @@
 #include <xaudio2fx.h>
 #include "game/samplebuffer.h"
 #include <xaudio2redist.h>
+#include <dsound.h>
 #pragma warning(push)
 #pragma warning(disable : 4838)
 #pragma warning(disable : 4309)

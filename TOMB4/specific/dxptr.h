@@ -1,11 +1,15 @@
 #ifndef TOMB4_GAME_DXPTR_H
 #define TOMB4_GAME_DXPTR_H
 #include <windows.h>
-#include <xaudio2.h>
-#include <ddraw.h>
-#include <d3d.h>
-#include <dinput.h>
-#include <dsound.h>
+typedef struct IDirectDraw4 IDirectDraw4;
+typedef struct IDirect3D3 IDirect3D3;
+typedef struct IDirect3DDevice3 IDirect3DDevice3;
+typedef struct IDirectDrawSurface4 IDirectDrawSurface4;
+typedef struct IDirect3DViewport3 IDirect3DViewport3;
+typedef struct IDirectSound8 IDirectSound8;
+typedef struct IXAudio2 IXAudio2;
+typedef struct IDirectInputDevice2A IDirectInputDevice2A;
+typedef struct IDirectInput2A IDirectInput2A;
 typedef struct DXPTR {
 	IDirectDraw4* lpDD;
 	IDirect3D3* lpD3D;
@@ -24,8 +28,8 @@ typedef struct DXPTR {
 	long Flags;
 	unsigned long WindowStyle;
 	long CoopLevel;
-	IDirectInput2* lpDirectInput;
-	IDirectInputDevice2* Keyboard;
+	IDirectInput2A* lpDirectInput;
+	IDirectInputDevice2A* Keyboard;
 	HWND hWnd;
 	volatile long InScene;
 	volatile long WaitAtBeginScene;

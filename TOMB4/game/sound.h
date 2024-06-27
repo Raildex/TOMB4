@@ -1,4 +1,5 @@
 #pragma once
+#include "game/soundslot.h"
 typedef struct SoundSlot SoundSlot;
 typedef struct PHD_3DPOS PHD_3DPOS;
 typedef struct SAMPLE_INFO SAMPLE_INFO;

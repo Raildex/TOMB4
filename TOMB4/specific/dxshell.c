@@ -12,6 +12,7 @@
 #include "specific/dxflags.h"
 #include "specific/dxdisplaymode.h"
 #include "specific/dxptr.h"
+#include <mmeapi.h>
 #include <dsound.h>
 #include <dinput.h>
 long DDSCL_FLAGS[11] = // for DXSetCooperativeLevel logging

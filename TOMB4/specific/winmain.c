@@ -27,7 +27,7 @@
 #include "tomb4/resource.h"
 #include <windowsx.h>
 #include <process.h>
-
+#include <dinput.h>
 static COMMANDLINES commandlines[] = {
 	{ "SETUP", 0, &CLSetup },
 	{ "NOFMV", 0, &CLNoFMV }
@@ -137,13 +137,13 @@ void WinClose() {
 	DXAttempt(IDirectInputDevice_Unacquire(G_dxptr->Keyboard));
 
 	if(G_dxptr->Keyboard) {
-		Log(4, "Released %s @ %x - RefCnt = %d", "Keyboard", G_dxptr->Keyboard, IUnknown_Release(G_dxptr->Keyboard));
+		Log(4, "Released %s @ %x - RefCnt = %d", "Keyboard", G_dxptr->Keyboard, IDirectInputDevice_Release(G_dxptr->Keyboard));
 		G_dxptr->Keyboard = 0;
 	} else
 		Log(1, "%s Attempt To Release NULL Ptr", "Keyboard");
 
 	if(G_dxptr->lpDirectInput) {
-		Log(4, "Released %s @ %x - RefCnt = %d", "DirectInput", G_dxptr->lpDirectInput, IUnknown_Release(G_dxptr->lpDirectInput));
+		Log(4, "Released %s @ %x - RefCnt = %d", "DirectInput", G_dxptr->lpDirectInput, IDirectInput_Release(G_dxptr->lpDirectInput));
 		G_dxptr->lpDirectInput = 0;
 	} else
 		Log(1, "%s Attempt To Release NULL Ptr", "DirectInput");
