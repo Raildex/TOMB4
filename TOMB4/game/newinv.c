@@ -2058,7 +2058,7 @@ void handle_inventry_menu() {
 
 	for(int i = 0; i < 3; i++) {
 		current_options[i].type = 0;
-		current_options[i].text = 0;
+		current_options[i].text = NULL;
 	}
 
 	num = 0;

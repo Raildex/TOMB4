@@ -163,7 +163,7 @@ void ScorpionControl(short item_number) {
 			if(scorpion->hurt_by_lara && item->current_anim_state != 8)
 				scorpion->enemy = lara_item;
 			else {
-				scorpion->enemy = 0;
+				scorpion->enemy = NULL;
 				bestdist = 0x7FFFFFFF;
 
 				for(int i = 0; i < 5; i++) {

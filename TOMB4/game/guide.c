@@ -202,7 +202,7 @@ void GuideControl(short item_number) {
 				item->goal_anim_state = 2;
 		} else if(!enemy->flags) {
 			guide->reached_goal = 0;
-			guide->enemy = 0;
+			guide->enemy = NULL;
 			item->ai_bits = FOLLOW;
 			item->item_flags[3]++;
 		} else if(info.distance > 0x4000) {
@@ -278,7 +278,7 @@ void GuideControl(short item_number) {
 		} else if(guide->reached_goal) {
 			if(!enemy->flags) {
 				guide->reached_goal = 0;
-				guide->enemy = 0;
+				guide->enemy = NULL;
 				item->ai_bits = FOLLOW;
 				item->item_flags[3]++;
 			} else
@@ -311,7 +311,7 @@ void GuideControl(short item_number) {
 		else if(guide->reached_goal) {
 			if(!enemy->flags) {
 				guide->reached_goal = 0;
-				guide->enemy = 0;
+				guide->enemy = NULL;
 				item->ai_bits = FOLLOW;
 				item->item_flags[3]++;
 			} else
@@ -444,7 +444,7 @@ void GuideControl(short item_number) {
 			item->goal_anim_state = 1;
 			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			guide->reached_goal = 0;
-			guide->enemy = 0;
+			guide->enemy = NULL;
 			item->ai_bits = FOLLOW;
 			item->item_flags[3]++;
 		}
@@ -478,7 +478,7 @@ void GuideControl(short item_number) {
 
 		if(got_torch) {
 			guide->reached_goal = 0;
-			guide->enemy = 0;
+			guide->enemy = NULL;
 			item->ai_bits = FOLLOW;
 			item->item_flags[3]++;
 		}
@@ -495,7 +495,7 @@ void GuideControl(short item_number) {
 			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			item->pos.y_rot = enemy->pos.y_rot;
 			guide->reached_goal = 0;
-			guide->enemy = 0;
+			guide->enemy = NULL;
 			item->ai_bits = FOLLOW;
 			item->item_flags[3]++;
 		} else if(item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 42) {
@@ -522,7 +522,7 @@ void GuideControl(short item_number) {
 			item->goal_anim_state = 1;
 			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			guide->reached_goal = 0;
-			guide->enemy = 0;
+			guide->enemy = NULL;
 			item->ai_bits = FOLLOW;
 			item->item_flags[3]++;
 		} else if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 70 && item->room_number == 70) {
@@ -545,7 +545,7 @@ void GuideControl(short item_number) {
 		if(guide->reached_goal) {
 			if(!enemy->flags) {
 				guide->reached_goal = 0;
-				guide->enemy = 0;
+				guide->enemy = NULL;
 				item->ai_bits = FOLLOW;
 				item->item_flags[3]++;
 				break;
@@ -554,7 +554,7 @@ void GuideControl(short item_number) {
 			if(enemy->flags == 42) {
 				TestTriggersAtXYZ(enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, enemy->room_number, 1, 0);
 				guide->reached_goal = 0;
-				guide->enemy = 0;
+				guide->enemy = NULL;
 				item->ai_bits = FOLLOW;
 				item->item_flags[3]++;
 			} else if(item->trigger_flags <= 999)

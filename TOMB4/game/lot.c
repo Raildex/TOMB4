@@ -45,7 +45,7 @@ void DisableBaddieAI(short item_number) {
 
 	item = GetItem(currentLevel,item_number);
 	creature = (CREATURE_INFO*)item->data;
-	item->data = 0;
+	item->data = NULL;
 
 	if(creature) {
 		creature->item_num = NO_ITEM;
@@ -140,7 +140,7 @@ void InitialiseSlot(short item_number, long slot) {
 	creature->LOT.is_monkeying = 0;
 	creature->maximum_turn = 182;
 	creature->flags = 0;
-	creature->enemy = 0;
+	creature->enemy = NULL;
 	creature->LOT.step = 256;
 	creature->LOT.drop = -512;
 	creature->LOT.block_mask = 0x4000;

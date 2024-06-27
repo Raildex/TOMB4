@@ -1302,7 +1302,7 @@ void CalculateCamera() {
 		camera.speed = 10;
 		camera.number = -1;
 		camera.last_item = camera.item;
-		camera.item = 0;
+		camera.item = NULL;
 		camera.target_elevation = 0;
 		camera.target_angle = 0;
 		camera.target_distance = 1536;

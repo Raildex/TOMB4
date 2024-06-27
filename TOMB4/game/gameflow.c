@@ -146,8 +146,8 @@ char Chris_Menu = 0;
 char title_controls_locked_out;
 
 static unsigned short* gfScriptOffset;
-static unsigned char* gfScriptWad = 0;
-static char* gfExtensions = 0;
+static unsigned char* gfScriptWad = NULL;
+static char* gfExtensions = NULL;
 static long nFrames = 1;
 static unsigned char gfLegend;
 static unsigned char gfLegendTime = 0;

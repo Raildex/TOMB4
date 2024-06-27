@@ -79,7 +79,7 @@ void HorsemanControl(short item_number) {
 		if(item->item_flags[0])
 			item2 = GetItem(currentLevel, item->item_flags[0]);
 		else
-			item2 = 0;
+			item2 = NULL;
 
 		horseman = (CREATURE_INFO*)item->data;
 		angle = 0;
@@ -113,7 +113,7 @@ void HorsemanControl(short item_number) {
 				item->hit_points = 100;
 				item->ai_bits = 0;
 				item->item_flags[1] = 0;
-				horseman->enemy = 0;
+				horseman->enemy = NULL;
 				item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 3;
 				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 				item->current_anim_state = 8;
@@ -338,7 +338,7 @@ void HorsemanControl(short item_number) {
 					item->ai_bits = 0;
 					item->pos = item2->pos;
 					horseman->reached_goal = 0;
-					horseman->enemy = 0;
+					horseman->enemy = NULL;
 					item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 14;
 					item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
 					item->current_anim_state = 5;

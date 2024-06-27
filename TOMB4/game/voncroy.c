@@ -808,7 +808,7 @@ void VoncroyRaceControl(short item_number) {
 
 	if(ifl3) {
 		VonCroy->reached_goal = 0;
-		VonCroy->enemy = 0;
+		VonCroy->enemy = NULL;
 		item->item_flags[3] += ifl3;
 		item->ai_bits = FOLLOW;
 	}
@@ -1006,7 +1006,7 @@ void VoncroyControl(short item_number) {
 
 	if(item->item_flags[3] == 43 && savegame.Game.Secrets > 7) {
 		VonCroy->reached_goal = 0;
-		VonCroy->enemy = 0;
+		VonCroy->enemy = NULL;
 		item->ai_bits = FOLLOW;
 		item->item_flags[3] = 53;
 		lara.location = 53;
@@ -1503,7 +1503,7 @@ void VoncroyControl(short item_number) {
 
 	if(ifl3) {
 		VonCroy->reached_goal = 0;
-		VonCroy->enemy = 0;
+		VonCroy->enemy = NULL;
 		item->ai_bits = FOLLOW;
 		item->item_flags[3] += ifl3;
 	}

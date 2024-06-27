@@ -95,7 +95,7 @@ void InitialiseDoor(short item_number) {
 	memcpy(&door->d1.data, door->d1.floor, sizeof(FLOOR_INFO));
 
 	if(r->flipped_room == -1)
-		door->d1flip.floor = 0;
+		door->d1flip.floor = NULL;
 	else {
 		r = GetRoom(currentLevel,r->flipped_room);
 		door->d1flip.floor = &r->floor[(((item->pos.z_pos - r->z) >> 10) + dx) + (((item->pos.x_pos - r->x) >> 10) + dy) * r->x_size];
@@ -117,8 +117,8 @@ void InitialiseDoor(short item_number) {
 	ShutThatDoor(&door->d1flip);
 
 	if(two_room == 255) {
-		door->d2.floor = 0;
-		door->d2flip.floor = 0;
+		door->d2.floor = NULL;
+		door->d2flip.floor = NULL;
 	} else {
 		r = GetRoom(currentLevel,two_room);
 		door->d2.floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + ((item->pos.x_pos - r->x) >> 10) * r->x_size];
@@ -135,7 +135,7 @@ void InitialiseDoor(short item_number) {
 		memcpy(&door->d2.data, door->d2.floor, sizeof(FLOOR_INFO));
 
 		if(r->flipped_room == -1)
-			door->d2flip.floor = 0;
+			door->d2flip.floor = NULL;
 		else {
 			r = GetRoom(currentLevel,r->flipped_room);
 			door->d2flip.floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + ((item->pos.x_pos - r->x) >> 10) * r->x_size];

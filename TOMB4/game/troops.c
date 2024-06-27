@@ -101,7 +101,7 @@ void TroopControl(short item_number) {
 		if(item->ai_bits)
 			GetAITarget(troop);
 		else {
-			troop->enemy = 0;
+			troop->enemy = NULL;
 			max_dist = 0x7FFFFFFF;
 
 			for(int i = 0; i < 5; i++) {
@@ -140,7 +140,7 @@ void TroopControl(short item_number) {
 		}
 
 		if(!troop->hurt_by_lara && troop->enemy == lara_item)
-			troop->enemy = 0;
+			troop->enemy = NULL;
 
 		GetCreatureMood(item, &info, 0);
 		CreatureMood(item, &info, 0);

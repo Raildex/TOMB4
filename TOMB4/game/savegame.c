@@ -949,7 +949,7 @@ void RestoreLevelData(long FullSave) {
 						creature->enemy = (ITEM_INFO*)((long)creature->enemy + (long)malloc_buffer);
 
 						if((int)creature->enemy < 0)
-							creature->enemy = 0;
+							creature->enemy = NULL;
 
 						ReadSG(&creature->ai_target.object_number, sizeof(short));
 						ReadSG(&creature->ai_target.room_number, sizeof(short));

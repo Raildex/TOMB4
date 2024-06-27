@@ -673,7 +673,7 @@ void RagheadControl(short item_number) {
 			if(item->item_flags[0]) {
 				if(info.distance < 0x718E4) {
 					item->goal_anim_state = 28;
-					raghead->enemy = 0;
+					raghead->enemy = NULL;
 				}
 			} else if(enemy && (enemy->object_number == SMALLMEDI_ITEM || enemy->object_number == UZI_AMMO_ITEM) && info.distance < 0x40000)
 				item->goal_anim_state = 27;
@@ -690,7 +690,7 @@ void RagheadControl(short item_number) {
 					break;
 
 				if(raghead->enemy->room_number == 255 || raghead->enemy->status == ITEM_INVISIBLE || raghead->enemy->flags & IFL_CLEARBODY) {
-					raghead->enemy = 0;
+					raghead->enemy = NULL;
 					break;
 				}
 
@@ -706,10 +706,10 @@ void RagheadControl(short item_number) {
 
 				for(int i = 0; i < 5; i++) {
 					if(baddie_slots[i].item_num != -1 && baddie_slots[i].item_num != item_number && baddie_slots[i].enemy == raghead->enemy)
-						baddie_slots[i].enemy = 0;
+						baddie_slots[i].enemy = NULL;
 				}
 
-				raghead->enemy = 0;
+				raghead->enemy = NULL;
 			}
 
 			break;

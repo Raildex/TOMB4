@@ -148,7 +148,7 @@ void InitialiseItem(short item_num) {
 	item->touch_bits = 0;
 	item->after_death = 0;
 	item->fired_weapon = 0;
-	item->data = 0;
+	item->data = NULL;
 
 	if(item->flags & IFL_INVISIBLE) {
 		item->status = ITEM_INVISIBLE;

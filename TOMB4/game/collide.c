@@ -107,7 +107,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 								statics_count++;
 
 								if(!rad) {
-									StoredItems[0] = 0;
+									StoredItems[0] = NULL;
 									return 1;
 								}
 							}
@@ -117,7 +117,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 			}
 		}
 
-		StoredStatics[statics_count] = 0;
+		StoredStatics[statics_count] = NULL;
 	}
 
 	for(int i = 0; i < room_count; i++) {
@@ -210,7 +210,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 		}
 	}
 
-	StoredItems[items_count] = 0;
+	StoredItems[items_count] = NULL;
 	return items_count | statics_count;
 }
 

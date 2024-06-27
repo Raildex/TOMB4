@@ -300,7 +300,7 @@ void DemigodControl(short item_number) {
 		} else {
 			item->ai_bits = FOLLOW;
 			item->item_flags[3] = lara.location;
-			god->enemy = 0;
+			god->enemy = NULL;
 		}
 	}
 

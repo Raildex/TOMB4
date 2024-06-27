@@ -91,7 +91,7 @@ void InitialiseCreature(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 	item->collidable = 1;
-	item->data = 0;
+	item->data = NULL;
 }
 
 long CreatureActive(short item_number) {

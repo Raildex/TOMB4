@@ -436,7 +436,7 @@ long ControlPhase(long nframes, long demo_mode) {
 			GetHeight(floor, mesh->x, mesh->y, mesh->z);
 			TestTriggers(trigger_index, 1, 0);
 			floor->stopper = 0;
-			SmashedMesh[SmashedMeshCount] = 0;
+			SmashedMesh[SmashedMeshCount] = NULL;
 		}
 
 		KillMoveItems();
@@ -1782,7 +1782,7 @@ void RefreshCamera(short type, short* data) {
 
 	if(camera.item) {
 		if(!target_ok || target_ok == 2 && camera.item->looked_at && camera.item != camera.last_item)
-			camera.item = 0;
+			camera.item = NULL;
 	}
 
 	if(camera.number == -1 && camera.timer > 0)
@@ -2739,9 +2739,9 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 
 	phd_PopMatrix();
 	max_dist = 0x7FFFFFFF;
-	ClosestMesh = 0;
+	ClosestMesh = NULL;
 	ClosestBit = 0;
-	item = 0;
+	item = NULL;
 
 	if(item_number < 0)
 		ClosestNode = -1;

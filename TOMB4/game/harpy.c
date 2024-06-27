@@ -328,7 +328,7 @@ void HarpyControl(short item_number) {
 		if(item->ai_bits)
 			GetAITarget(harpy);
 
-		harpy->enemy = 0;
+		harpy->enemy = NULL;
 		max_dist = 0x7FFFFFFF;
 
 		for(int i = 0; i < 5; i++) {

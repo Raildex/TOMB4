@@ -1735,7 +1735,7 @@ void EnemyJeepControl(short item_number) {
 		if(lara.location >= item->item_flags[3] || !(jeep->enemy->flags & 4)) {
 			jeep->reached_goal = 0;
 			item->item_flags[3]++;
-			jeep->enemy = 0;
+			jeep->enemy = NULL;
 
 			for(int i = 0; i < nAIObjects; i++) {
 				aiobj = &AIObjects[i];

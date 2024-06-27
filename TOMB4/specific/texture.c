@@ -81,7 +81,7 @@ HRESULT WINAPI CreateMipMapFormat0(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 		}
 	}
 	DXAttempt(IDirectDrawSurface4_Unlock(surface,0));
-	DXAttempt(IDirectDrawSurface4_EnumAttachedSurfaces(surface,payload, CreateMipMapFormat0));
+	DXAttempt(IDirectDrawSurface4_EnumAttachedSurfaces(surface, payload, CreateMipMapFormat0));
 	return DDENUMRET_OK;
 }
 HRESULT WINAPI CreateMipMapFormat2(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC2 desc, LPVOID source) {
@@ -167,7 +167,7 @@ IDirectDrawSurface4* CreateTexturePage(long w, long h, long MipMapCount, long* p
 void FreeTextures() {
 	TEXTURE* tex;
 
-	DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, 0));
+	DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, NULL));
 	DXAttempt(IDirect3D3_EvictManagedTextures(App.dx.lpD3D));
 
 	for(int i = 0; i < nTextures; i++) {
@@ -175,13 +175,13 @@ void FreeTextures() {
 
 		if(tex->tex) {
 			Log(4, "Released %s @ %x - RefCnt = %d", "Texture", tex->tex, IDirect3DTexture2_Release(tex->tex));
-			tex->tex = 0;
+			tex->tex = NULL;
 		} else
 			Log(1, "%s Attempt To Release NULL Ptr", "Texture");
 
 		if(tex->surface) {
 			Log(4, "Released %s @ %x - RefCnt = %d", "Surface", tex->surface, IDirectDrawSurface4_Release(tex->surface));
-			tex->surface = 0;
+			tex->surface = NULL;
 		} else
 			Log(1, "%s Attempt To Release NULL Ptr", "Surface");
 	}

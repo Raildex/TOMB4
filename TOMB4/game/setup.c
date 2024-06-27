@@ -83,10 +83,10 @@ void ObjectObjects() {
 
 	obj = GetObjectInfo(currentLevel, CAMERA_TARGET);
 	obj->using_drawanimating_item = 0;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 
 	obj = GetObjectInfo(currentLevel, FLARE_ITEM);
-	obj->initialise = 0;
+	obj->initialise = NULL;
 	obj->control = FlareControl;
 	obj->collision = PickUpCollision;
 	obj->draw_routine = DrawFlareInAir;
@@ -266,7 +266,7 @@ void ObjectObjects() {
 	}
 
 	obj = GetObjectInfo(currentLevel, BURNING_TORCH_ITEM);
-	obj->initialise = 0;
+	obj->initialise = NULL;
 	obj->control = FlameTorchControl;
 	obj->save_position = 1;
 	obj->save_flags = 1;
@@ -286,16 +286,16 @@ void ObjectObjects() {
 	obj->save_flags = 1;
 
 	obj = GetObjectInfo(currentLevel, CROSSBOW_BOLT);
-	obj->initialise = 0;
+	obj->initialise = NULL;
 	obj->control = ControlCrossbow;
-	obj->collision = 0;
+	obj->collision = NULL;
 	obj->draw_routine = DrawWeaponMissile;
 	obj->using_drawanimating_item = 0;
 
 	obj = GetObjectInfo(currentLevel, GRENADE);
-	obj->initialise = 0;
+	obj->initialise = NULL;
 	obj->control = ControlGrenade;
-	obj->collision = 0;
+	obj->collision = NULL;
 	obj->draw_routine = DrawWeaponMissile;
 	obj->using_drawanimating_item = 0;
 
@@ -457,7 +457,7 @@ void ObjectObjects() {
 		obj = GetObjectInfo(currentLevel, i);
 		obj->initialise = InitialiseRaisingBlock;
 		obj->control = ControlRaisingBlock;
-		obj->collision = 0;
+		obj->collision = NULL;
 		obj->draw_routine = DrawScaledSpike;
 		obj->using_drawanimating_item = 0;
 		obj->save_flags = 1;
@@ -467,7 +467,7 @@ void ObjectObjects() {
 		obj = GetObjectInfo(currentLevel, i);
 		obj->initialise = InitialiseSmokeEmitter;
 		obj->control = ControlSmokeEmitter;
-		obj->draw_routine = 0;
+		obj->draw_routine = NULL;
 		obj->using_drawanimating_item = 0;
 		obj->save_flags = 1;
 	}
@@ -475,7 +475,7 @@ void ObjectObjects() {
 	for(int i = RED_LIGHT; i <= BLUE_LIGHT; i++) {
 		obj = GetObjectInfo(currentLevel, i);
 		obj->control = ControlColouredLights;
-		obj->draw_routine = 0;
+		obj->draw_routine = NULL;
 		obj->using_drawanimating_item = 0;
 		obj->save_flags = 1;
 	}
@@ -483,7 +483,7 @@ void ObjectObjects() {
 	obj = GetObjectInfo(currentLevel, LIGHTNING_CONDUCTOR);
 	obj->initialise = InitialiseLightningConductor;
 	obj->control = ControlLightningConductor;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
@@ -495,18 +495,18 @@ void ObjectObjects() {
 
 	obj = GetObjectInfo(currentLevel, WATERFALLMIST);
 	obj->control = WaterFall;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 
 	obj = GetObjectInfo(currentLevel, AMBER_LIGHT);
 	obj->control = ControlPulseLight;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = GetObjectInfo(currentLevel, WHITE_LIGHT);
 	obj->control = ControlElectricalLight;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
@@ -525,7 +525,7 @@ void ObjectObjects() {
 	}
 
 	obj = GetObjectInfo(currentLevel, CLOCKWORK_BEETLE);
-	obj->initialise = 0;
+	obj->initialise = NULL;
 	obj->control = ControlClockworkBeetle;
 
 	obj = GetObjectInfo(currentLevel, GOD_HEAD);
@@ -536,7 +536,7 @@ void ObjectObjects() {
 
 	obj = GetObjectInfo(currentLevel, EARTHQUAKE);
 	obj->control = EarthQuake;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
@@ -652,7 +652,7 @@ void TrapObjects() {
 
 	obj = GetObjectInfo(currentLevel, KILL_ALL_TRIGGERS);
 	obj->control = KillAllCurrentItems;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->hit_points = 0;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
@@ -725,26 +725,26 @@ void TrapObjects() {
 
 	obj = GetObjectInfo(currentLevel, DART_EMITTER);
 	obj->control = DartEmitterControl;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->save_flags = 1;
 	obj->using_drawanimating_item = 0;
 
 	obj = GetObjectInfo(currentLevel, HOMING_DART_EMITTER);
 	obj->control = DartEmitterControl;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->save_flags = 1;
 	obj->using_drawanimating_item = 0;
 
 	obj = GetObjectInfo(currentLevel, FLAME);
 	obj->control = FlameControl;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 
 	obj = GetObjectInfo(currentLevel, FLAME_EMITTER);
 	obj->initialise = InitialiseFlameEmitter;
 	obj->control = FlameEmitterControl;
 	obj->collision = FireCollision;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
@@ -752,14 +752,14 @@ void TrapObjects() {
 	obj->initialise = InitialiseFlameEmitter2;
 	obj->control = FlameEmitter2Control;
 	obj->collision = FireCollision;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = GetObjectInfo(currentLevel, FLAME_EMITTER3);
 	obj->initialise = InitialiseFlameEmitter3;
 	obj->control = FlameEmitter3Control;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
@@ -768,7 +768,7 @@ void TrapObjects() {
 	obj->initialise = InitialiseRope;
 	obj->control = RopeControl;
 	obj->collision = RopeCollision;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
@@ -790,7 +790,7 @@ void TrapObjects() {
 	obj = GetObjectInfo(currentLevel, TRIGGER_TRIGGERER);
 	obj->initialise = ControlTriggerTriggerer;
 	obj->control = ControlTriggerTriggerer;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
@@ -808,7 +808,7 @@ void BaddyObjects() {
 
 	obj = GetObjectInfo(currentLevel, LARA);
 	obj->initialise = InitialiseLaraLoad;
-	obj->draw_routine = 0;
+	obj->draw_routine = NULL;
 	obj->shadow_size = 160;
 	obj->hit_points = 1000;
 	obj->using_drawanimating_item = 0;
@@ -1721,7 +1721,7 @@ void BaddyObjects() {
 	if(obj->loaded) {
 		obj->initialise = InitialiseScarabGenerator;
 		obj->control = TriggerScarab;
-		obj->draw_routine = 0;
+		obj->draw_routine = NULL;
 		obj->using_drawanimating_item = 0;
 	}
 
@@ -1730,7 +1730,7 @@ void BaddyObjects() {
 	if(obj->loaded) {
 		obj->initialise = InitialiseLocustEmitter;
 		obj->control = ControlLocustEmitter;
-		obj->draw_routine = 0;
+		obj->draw_routine = NULL;
 		obj->using_drawanimating_item = 0;
 		obj->save_flags = 1;
 	}
@@ -1931,9 +1931,9 @@ void InitialiseObjects() {
 
 	for(int i = 0; i < NUMBER_OBJECTS; i++) {
 		obj = GetObjectInfo(currentLevel, i);
-		obj->initialise = 0;
-		obj->collision = 0;
-		obj->control = 0;
+		obj->initialise = NULL;
+		obj->collision = NULL;
+		obj->control = NULL;
 		obj->intelligent = 0;
 		obj->save_position = 0;
 		obj->save_hitpoints = 0;
@@ -1943,14 +1943,14 @@ void InitialiseObjects() {
 		obj->using_drawanimating_item = 1;
 		obj->save_mesh = 0;
 		obj->draw_routine = DrawAnimatingItem;
-		obj->ceiling = 0;
-		obj->floor = 0;
+		obj->ceiling = NULL;
+		obj->floor = NULL;
 		obj->pivot_length = 0;
 		obj->radius = 10;
 		obj->shadow_size = 0;
 		obj->hit_points = -16384;
 		obj->explodable_meshbits = 0;
-		obj->draw_routine_extra = 0;
+		obj->draw_routine_extra = NULL;
 		obj->frame_base = (short*)((long)obj->frame_base
 								   + (char*)GetAnimFrameBase(currentLevel));
 		obj->object_mip = 0;

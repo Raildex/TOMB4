@@ -83,8 +83,8 @@ unsigned int WINAPI LoadLevel(void* name) {
 	S_InitLoadBar(20);
 	S_LoadBar();
 
-	CompressedData = 0;
-	char* FileData = 0;
+	CompressedData = NULL;
+	char* FileData = NULL;
 	FILE* level_fp = 0;
 	level_fp = FileOpen((const char*)name);
 
@@ -470,7 +470,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char
 	if(!gfCurrentLevel) // main menu logo
 	{
 		pComp = 0;
-		CompressedData = 0;
+		CompressedData = NULL;
 
 		if(Gameflow->Language == US)
 			size = LoadFile("data\\uslogo.pak", &CompressedData);
