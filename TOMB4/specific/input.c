@@ -350,6 +350,7 @@ long S_UpdateInput() {
 		linput |= IN_DRAW;
 
 	if(Key(10)) {
+		
 		if(!flare_no_db) {
 			state = lara_item->current_anim_state;
 
@@ -361,6 +362,7 @@ long S_UpdateInput() {
 				linput |= IN_FLARE;
 			}
 		}
+		
 	} else
 		flare_no_db = 0;
 

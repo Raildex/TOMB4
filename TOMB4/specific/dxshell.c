@@ -72,13 +72,13 @@ void DXBitMask2ShiftCnt(unsigned long mask, unsigned char* shift, unsigned char*
 void DXReadKeyboard(char* KeyMap) {
 	HRESULT state;
 	
-	state = IDirectInputDevice_GetDeviceState(G_dxptr->Keyboard, 256, KeyMap);
+	state = IDirectInputDevice8_GetDeviceState(G_dxptr->Keyboard, 256, KeyMap);
 
 	if(FAILED(state)) {
 		if(state == DIERR_INPUTLOST)
-			IDirectInputDevice_Acquire(G_dxptr->Keyboard);
+			IDirectInputDevice8_Acquire(G_dxptr->Keyboard);
 
-		IDirectInputDevice_GetDeviceState(G_dxptr->Keyboard, 256, KeyMap);
+		IDirectInputDevice8_GetDeviceState(G_dxptr->Keyboard, 256, KeyMap);
 	}
 }
 

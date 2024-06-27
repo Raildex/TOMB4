@@ -23,15 +23,15 @@ wchar_t ASCIIToANSITable[7][2] = {
 	{ L' ', L' ' }
 };
 
-bool start_setup = 0;
-bool fmvs_disabled = 0;
+long start_setup = 0;
+long fmvs_disabled = 0;
 
 static long nDDDevice = 0;
 static long nD3DDevice = 0;
-static bool Filter = 1;
-static bool VolumetricFx = 0;
-static bool BumpMap = 0;
-static bool TextLow = 0;
+static long Filter = 1;
+static long VolumetricFx = 0;
+static long BumpMap = 0;
+static long TextLow = 0;
 
 void CLSetup(char* cmd) {
 	Log(2, "CLSetup");
@@ -102,7 +102,7 @@ void InitTFormats(HWND dlg, HWND hwnd) {
 	}
 }
 
-void InitResolution(HWND dlg, HWND hwnd, bool resetvms) {
+void InitResolution(HWND dlg, HWND hwnd, long resetvms) {
 	DXD3DDEVICE* device;
 	DXDISPLAYMODE* dm;
 	long bpp, w, h, n;
@@ -254,7 +254,7 @@ char* MapASCIIToANSI(char* s, char* d) {
 	return p;
 }
 
-BOOL WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam) {
+INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	static HFONT hfont = 0;
 	char d[256];
 
@@ -418,11 +418,11 @@ BOOL WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-bool DXSetupDialog() {
+long DXSetupDialog() {
 	long ret;
 
 	ShowCursor(1);
-	ret = DialogBoxA(App.hInstance, MAKEINTRESOURCE(109), 0, (DLGPROC)DXSetupDlgProc);
+	ret = DialogBoxA(App.hInstance, MAKEINTRESOURCE(109), 0, DXSetupDlgProc);
 	ShowCursor(0);
 
 	if(ret == -1) {

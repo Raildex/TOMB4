@@ -5,18 +5,18 @@
 #include "specific/input.h"
 #include "specific/winmain.h"
 #include "specific/dxflags.h"
-#include <stdio.h>
+#include <string.h>
 #include <stdio.h>
 
 static HKEY phkResult;
 static DWORD dwDisposition;
-static bool REG_Setup;
+static long REG_Setup;
 
-bool REG_OpenKey(LPCSTR lpSubKey) {
+char REG_OpenKey(LPCSTR lpSubKey) {
 	return RegCreateKeyEx(HKEY_CURRENT_USER, lpSubKey, 0, (CHAR*)"", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, 0, &phkResult, &dwDisposition) == ERROR_SUCCESS;
 }
 
-bool OpenRegistry(LPCSTR SubKeyName) {
+char OpenRegistry(LPCSTR SubKeyName) {
 	char buffer[256];
 
 	if(!SubKeyName)
@@ -35,14 +35,7 @@ void CloseRegistry() {
 }
 
 void REG_WriteLong(char* SubKeyName, long value) {
-	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*)&value, sizeof(unsigned long));
-}
-
-void REG_WriteBool(char* SubKeyName, bool value) {
-	unsigned long Lvalue;
-
-	Lvalue = (unsigned long)value;
-	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*)&Lvalue, sizeof(unsigned long));
+	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*)&value, sizeof(value));
 }
 
 void REG_WriteString(char* SubKeyName, char* string, long length) {
@@ -67,38 +60,26 @@ void REG_WriteFloat(char* SubKeyName, float value) {
 	REG_WriteString(SubKeyName, buf, length);
 }
 
-bool REG_ReadLongDefault(char* SubKeyName, long* value, long defaultValue) {
+char REG_ReadLongDefault(char* SubKeyName, long* value, long defaultValue) {
 	unsigned long type;
 	unsigned long cbData;
 
-	cbData = 4;
+	cbData = sizeof(*value);
+	unsigned char buffer[sizeof(*value)];
 
-	if(RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)&value, &cbData) == ERROR_SUCCESS && type == REG_DWORD && cbData == 4)
+	if(RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)&buffer[0], &cbData) == ERROR_SUCCESS && type == REG_DWORD && cbData == sizeof(*value)) {
+		long readValue;
+		memcpy(&readValue, buffer, sizeof(*value));
+		*value = readValue;
 		return 1;
+	}
 
 	REG_WriteLong(SubKeyName, defaultValue);
 	*value = defaultValue;
 	return 0;
 }
 
-bool REG_ReadBoolDefault(char* SubKeyName, bool* value, bool defaultValue) {
-	unsigned long type;
-	unsigned long cbData;
-	unsigned long data;
-
-	cbData = 4;
-
-	if(RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)&data, &cbData) == ERROR_SUCCESS && type == REG_DWORD && cbData == 4) {
-		*value = (bool)data;
-		return 1;
-	}
-
-	REG_WriteBool(SubKeyName, defaultValue);
-	*value = defaultValue;
-	return 0;
-}
-
-bool REG_ReadString(char* SubKeyName, char* value, long length, char* defaultValue) {
+char REG_ReadString(char* SubKeyName, char* value, long length, char* defaultValue) {
 	unsigned long type;
 	unsigned long cbData;
 	long len;
@@ -124,7 +105,7 @@ bool REG_ReadString(char* SubKeyName, char* value, long length, char* defaultVal
 	return 0;
 }
 
-bool REG_ReadFloatDefault(char* SubKeyName, float* value, float defaultValue) {
+char REG_ReadFloatDefault(char* SubKeyName, float* value, float defaultValue) {
 	char buf[64];
 
 	if(REG_ReadString(SubKeyName, buf, sizeof(buf), 0)) {
@@ -137,14 +118,14 @@ bool REG_ReadFloatDefault(char* SubKeyName, float* value, float defaultValue) {
 	return 0;
 }
 
-bool LoadSettings() {
+char LoadSettings() {
 	long key;
-	bool val;
+	long val;
 
 	if(!OpenRegistry("System"))
 		return 0;
 
-	REG_ReadBoolDefault((char*)"Setup", &REG_Setup, 0);
+	REG_ReadLongDefault((char*)"Setup", &REG_Setup, 0);
 
 	if(REG_Setup) {
 		App.TextureSize = 256;
@@ -156,28 +137,28 @@ bool LoadSettings() {
 		REG_ReadLongDefault("VMode", &App.DXInfo.nDisplayMode, 0);
 		REG_ReadLongDefault("TFormat", &App.DXInfo.nTexture, 0);
 		REG_ReadLongDefault("DS", &App.DXInfo.nDS, 0);
-		REG_ReadBoolDefault("BumpMap", &App.BumpMapping, 1);
-		REG_ReadBoolDefault("Filter", &App.Filtering, 1);
-		REG_ReadBoolDefault("DisableSound", &App.SoundDisabled, 0);
-		REG_ReadBoolDefault("Volumetric", &App.Volumetric, 1);
-		REG_ReadBoolDefault("NoFMV", &fmvs_disabled, 0);
+		REG_ReadLongDefault("BumpMap", &App.BumpMapping, 1);
+		REG_ReadLongDefault("Filter", &App.Filtering, 1);
+		REG_ReadLongDefault("DisableSound", &App.SoundDisabled, 0);
+		REG_ReadLongDefault("Volumetric", &App.Volumetric, 1);
+		REG_ReadLongDefault("NoFMV", &fmvs_disabled, 0);
 
-		REG_ReadBoolDefault("TextLow", &val, 0);
+		REG_ReadLongDefault("TextLow", &val, 0);
 
 		if(val)
 			App.TextureSize = 128;
 
-		REG_ReadBoolDefault("BumpLow", &val, 0);
+		REG_ReadLongDefault("BumpLow", &val, 0);
 
 		if(val)
 			App.BumpMapSize = 128;
 
-		REG_ReadBoolDefault("HardWare", &val, 0);
+		REG_ReadLongDefault("HardWare", &val, 1);
 
 		if(val)
 			App.StartFlags |= DXF_ZBUFFER | DXF_HWR;
 
-		REG_ReadBoolDefault("Window", &val, 0);
+		REG_ReadLongDefault("Window", &val, 0);
 
 		if(val)
 			App.StartFlags |= DXF_WINDOWED;
@@ -287,11 +268,11 @@ void SaveSettings() {
 
 	OpenRegistry("System");
 	REG_WriteLong("VMode", App.DXInfo.nDisplayMode);
-	REG_WriteBool("Window", (App.dx.Flags & DXF_WINDOWED) != 0);
+	REG_WriteLong("Window", (App.dx.Flags & DXF_WINDOWED) != 0);
 	CloseRegistry();
 }
 
-bool SaveSetup(HWND hDlg) {
+char SaveSetup(HWND hDlg) {
 	OpenRegistry("System");
 
 	REG_WriteLong("DD", SendMessage(GetDlgItem(hDlg, 1000), CB_GETCURSEL, 0, 0));
@@ -300,21 +281,21 @@ bool SaveSetup(HWND hDlg) {
 	REG_WriteLong("DS", SendMessage(GetDlgItem(hDlg, 1005), CB_GETCURSEL, 0, 0));
 	REG_WriteLong("TFormat", SendMessage(GetDlgItem(hDlg, 1006), CB_GETCURSEL, 0, 0));
 
-	REG_WriteBool("Filter", SendMessage(GetDlgItem(hDlg, 1012), BM_GETCHECK, 0, 0));
-	REG_WriteBool("BumpMap", SendMessage(GetDlgItem(hDlg, 1016), BM_GETCHECK, 0, 0));
-	REG_WriteBool("HardWare", SendMessage(GetDlgItem(hDlg, 1010), BM_GETCHECK, 0, 0));
-	REG_WriteBool("DisableSound", SendMessage(GetDlgItem(hDlg, 1018), BM_GETCHECK, 0, 0));
-	REG_WriteBool("TextLow", SendMessage(GetDlgItem(hDlg, 1014), BM_GETCHECK, 0, 0));
-	REG_WriteBool("BumpLow", SendMessage(GetDlgItem(hDlg, 1015), BM_GETCHECK, 0, 0));
-	REG_WriteBool("Window", SendMessage(GetDlgItem(hDlg, 1025), BM_GETCHECK, 0, 0));
-	REG_WriteBool("Volumetric", SendMessage(GetDlgItem(hDlg, 1029), BM_GETCHECK, 0, 0));
-	REG_WriteBool("NoFMV", SendMessage(GetDlgItem(hDlg, 1030), BM_GETCHECK, 0, 0));
-	REG_WriteBool("Setup", 1);
+	REG_WriteLong("Filter", SendMessage(GetDlgItem(hDlg, 1012), BM_GETCHECK, 0, 0));
+	REG_WriteLong("BumpMap", SendMessage(GetDlgItem(hDlg, 1016), BM_GETCHECK, 0, 0));
+	REG_WriteLong("HardWare", SendMessage(GetDlgItem(hDlg, 1010), BM_GETCHECK, 0, 0));
+	REG_WriteLong("DisableSound", SendMessage(GetDlgItem(hDlg, 1018), BM_GETCHECK, 0, 0));
+	REG_WriteLong("TextLow", SendMessage(GetDlgItem(hDlg, 1014), BM_GETCHECK, 0, 0));
+	REG_WriteLong("BumpLow", SendMessage(GetDlgItem(hDlg, 1015), BM_GETCHECK, 0, 0));
+	REG_WriteLong("Window", SendMessage(GetDlgItem(hDlg, 1025), BM_GETCHECK, 0, 0));
+	REG_WriteLong("Volumetric", SendMessage(GetDlgItem(hDlg, 1029), BM_GETCHECK, 0, 0));
+	REG_WriteLong("NoFMV", SendMessage(GetDlgItem(hDlg, 1030), BM_GETCHECK, 0, 0));
+	REG_WriteLong("Setup", 1);
 
 	CloseRegistry();
 	return 1;
 }
 
-bool REG_KeyWasCreated() {
+char REG_KeyWasCreated() {
 	return dwDisposition == REG_CREATED_NEW_KEY;
 }

@@ -5,12 +5,12 @@ void CLSetup(char* cmd);
 void CLNoFMV(char* cmd);
 void InitDSDevice(HWND dlg, HWND hwnd);
 void InitTFormats(HWND dlg, HWND hwnd);
-void InitResolution(HWND dlg, HWND hwnd, bool resetvms);
+void InitResolution(HWND dlg, HWND hwnd, long resetvms);
 void InitD3DDevice(HWND dlg, HWND hwnd);
 void InitDDDevice(HWND dlg, HWND hwnd);
 char* MapASCIIToANSI(char* s, char* d);
-BOOL WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam);
-bool DXSetupDialog();
+INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lParam);
+long DXSetupDialog();
 
-extern bool start_setup;
-extern bool fmvs_disabled;
+extern long start_setup;
+extern long fmvs_disabled;

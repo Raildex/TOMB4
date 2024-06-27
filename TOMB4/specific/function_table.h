@@ -1,6 +1,7 @@
 #pragma once
 #include <windows.h>
 #include <stdbool.h>
+#include <d3dtypes.h>
 typedef struct TEXTURESTRUCT TEXTURESTRUCT;
 typedef struct _D3DTLVERTEX _D3DTLVERTEX;
 
