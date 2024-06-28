@@ -53,12 +53,12 @@ void ShutThatDoor(DOORPOS_DATA* d) {
 		d->floor->pit_room = -1;
 		d->floor->sky_room = -1;
 
-		if(d->block != 2047) {
+		if(d->block != NO_BOX) {
 			GetBox(currentLevel,d->block)->overlap_index |= 0x4000;
 
 			for(short slot = 0; slot < 5; slot++) {
 				cinfo = &baddie_slots[slot];
-				cinfo->LOT.target_box = 2047;
+				cinfo->LOT.target_box = NO_BOX;
 			}
 		}
 	}
@@ -70,12 +70,12 @@ void OpenThatDoor(DOORPOS_DATA* d) {
 	if(d->floor) {
 		*d->floor = d->data;
 
-		if(d->block != 2047) {
+		if(d->block != NO_BOX) {
 			GetBox(currentLevel,d->block)->overlap_index &= ~0x4000;
 
 			for(short slot = 0; slot < 5; slot++) {
 				cinfo = &baddie_slots[slot];
-				cinfo->LOT.target_box = 2047;
+				cinfo->LOT.target_box = NO_BOX;
 			}
 		}
 	}

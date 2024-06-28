@@ -528,7 +528,7 @@ void FlipMap(long FlipNumber) {
 
 	for(short slot = 0; slot < 5; slot++) {
 		cinfo = &baddie_slots[slot];
-		cinfo->LOT.target_box = 2047;
+		cinfo->LOT.target_box = NO_BOX;
 	}
 }
 

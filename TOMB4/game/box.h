@@ -1,6 +1,8 @@
 #pragma once
 #include "game/targettype.h"
-
+enum no_box {
+	NO_BOX = 2047
+};
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct AI_INFO AI_INFO;
 typedef struct LOT_INFO LOT_INFO;

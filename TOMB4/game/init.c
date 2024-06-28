@@ -91,7 +91,7 @@ void InitialiseDoor(short item_number) {
 		box_number = b->floor[(((item->pos.z_pos - b->z) >> 10) + dx) + (((item->pos.x_pos - b->x) >> 10) + dy) * b->x_size].box;
 	}
 
-	door->d1.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : 2047;
+	door->d1.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
 	memcpy(&door->d1.data, door->d1.floor, sizeof(FLOOR_INFO));
 
 	if(r->flipped_room == -1)
@@ -108,7 +108,7 @@ void InitialiseDoor(short item_number) {
 			box_number = b->floor[(((item->pos.z_pos - b->z) >> 10) + dx) + (((item->pos.x_pos - b->x) >> 10) + dy) * b->x_size].box;
 		}
 
-		door->d1flip.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : 2047;
+		door->d1flip.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
 		memcpy(&door->d1flip.data, door->d1flip.floor, sizeof(FLOOR_INFO));
 	}
 
@@ -131,7 +131,7 @@ void InitialiseDoor(short item_number) {
 			box_number = b->floor[((item->pos.z_pos - b->z) >> 10) + ((item->pos.x_pos - b->x) >> 10) * b->x_size].box;
 		}
 
-		door->d2.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : 2047;
+		door->d2.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
 		memcpy(&door->d2.data, door->d2.floor, sizeof(FLOOR_INFO));
 
 		if(r->flipped_room == -1)
@@ -148,7 +148,7 @@ void InitialiseDoor(short item_number) {
 				box_number = b->floor[((item->pos.z_pos - b->z) >> 10) + ((item->pos.x_pos - b->x) >> 10) * b->x_size].box;
 			}
 
-			door->d2flip.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : 2047;
+			door->d2flip.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
 			memcpy(&door->d2flip.data, door->d2flip.floor, sizeof(FLOOR_INFO));
 		}
 

@@ -40,6 +40,8 @@
 #include <stdlib.h>
 #include "game/levelinfo.h"
 
+
+
 void CreatureDie(short item_number, long explode) {
 	ITEM_INFO* item;
 	ITEM_INFO* pickup;
@@ -217,8 +219,8 @@ long SearchLOT(LOT_INFO* LOT, long expansion) {
 	search_zone = zone[LOT->head];
 
 	for(int i = 0; i < expansion; i++) {
-		if(LOT->head == 2047) {
-			LOT->tail = 2047;
+		if(LOT->head == NO_BOX) {
+			LOT->tail = NO_BOX;
 			return 0;
 		}
 
@@ -230,12 +232,12 @@ long SearchLOT(LOT_INFO* LOT, long expansion) {
 		do {
 			box_number = *GetOverlap(currentLevel,index);
 			index++;
-			overlap_flags = box_number & ~2047;
+			overlap_flags = box_number & ~NO_BOX;
 
 			if(box_number & 0x8000)
 				done = 1;
 
-			box_number &= 2047;
+			box_number &= NO_BOX;
 
 			if(!LOT->fly && search_zone != zone[box_number]) // zone isn't in search area + can't fly
 				continue;
@@ -270,7 +272,7 @@ long SearchLOT(LOT_INFO* LOT, long expansion) {
 				}
 			}
 
-			if(expand->next_expansion == 2047 && box_number != LOT->tail) {
+			if(expand->next_expansion == NO_BOX && box_number != LOT->tail) {
 				LOT->node[LOT->tail].next_expansion = (short)box_number;
 				LOT->tail = (short)box_number;
 			}
@@ -278,7 +280,7 @@ long SearchLOT(LOT_INFO* LOT, long expansion) {
 		} while(!done);
 
 		LOT->head = node->next_expansion;
-		node->next_expansion = 2047;
+		node->next_expansion = NO_BOX;
 	}
 
 	return 1;
@@ -287,14 +289,14 @@ long SearchLOT(LOT_INFO* LOT, long expansion) {
 long UpdateLOT(LOT_INFO* LOT, long expansion) {
 	BOX_NODE* expand;
 
-	if(LOT->required_box != 2047 && LOT->required_box != LOT->target_box) {
+	if(LOT->required_box != NO_BOX && LOT->required_box != LOT->target_box) {
 		LOT->target_box = LOT->required_box;
 		expand = &LOT->node[LOT->required_box];
 
-		if(expand->next_expansion == 2047 && LOT->tail != LOT->required_box) {
+		if(expand->next_expansion == NO_BOX && LOT->tail != LOT->required_box) {
 			expand->next_expansion = LOT->head;
 
-			if(LOT->head == 2047)
+			if(LOT->head == NO_BOX)
 				LOT->tail = LOT->target_box;
 
 			LOT->head = LOT->target_box;
@@ -302,7 +304,7 @@ long UpdateLOT(LOT_INFO* LOT, long expansion) {
 
 		LOT->search_number++;
 		expand->search_number = LOT->search_number;
-		expand->exit_box = 2047;
+		expand->exit_box = NO_BOX;
 	}
 
 	return SearchLOT(LOT, expansion);
@@ -386,7 +388,6 @@ target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT) 
 	BOX_INFO* box;
 	long box_number, box_left, box_right, box_top, box_bottom;
 	long left, right, top, bottom, prime_free;
-	static unsigned short loops;
 
 	UpdateLOT(LOT, 5);
 	target->x = item->pos.x_pos;
@@ -394,7 +395,7 @@ target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT) 
 	target->z = item->pos.z_pos;
 	box_number = item->box_number;
 
-	if(box_number == 2047)
+	if(box_number == NO_BOX)
 		return NO_TARGET;
 
 	box = GetBox(currentLevel,box_number);
@@ -402,11 +403,9 @@ target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT) 
 	right = (box->right << 10) - 1;
 	top = box->top << 10;
 	bottom = (box->bottom << 10) - 1;
-	loops = 0;
 	prime_free = 15;
 
 	do {
-		loops++;
 		box = GetBox(currentLevel,box_number);
 
 		if(LOT->fly) {
@@ -548,9 +547,9 @@ target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT) 
 
 		box_number = LOT->node[box_number].exit_box;
 
-		if(box_number != 2047 && GetBox(currentLevel,box_number)->overlap_index & LOT->block_mask)
+		if(box_number != NO_BOX && GetBox(currentLevel,box_number)->overlap_index & LOT->block_mask)
 			break;
-	} while(box_number != 2047);
+	} while(box_number != NO_BOX);
 
 	if(!(prime_free & 16)) {
 		if(target->z < box_left + 512)
@@ -579,7 +578,7 @@ void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 	CREATURE_INFO* creature;
 	ITEM_INFO* enemy;
 	LOT_INFO* LOT;
-	static target_type type;
+	/* static */ target_type type;
 	short index, box_no;
 
 	creature = (CREATURE_INFO*)item->data;
@@ -598,7 +597,7 @@ void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 			if(StalkBox(item, enemy, box_no) && enemy->hit_points > 0 && creature->enemy) {
 				TargetBox(&creature->LOT, box_no);
 				creature->mood = BORED_MOOD;
-			} else if(creature->LOT.required_box == 2047)
+			} else if(creature->LOT.required_box == NO_BOX)
 				TargetBox(&creature->LOT, box_no);
 		}
 
@@ -618,7 +617,7 @@ void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 	case ESCAPE_MOOD:
 		box_no = LOT->node[(creature->LOT.zone_count * GetRandomControl()) >> 15].box_number;
 
-		if(ValidBox(item, info->zone_number, box_no) && creature->LOT.required_box == 2047) {
+		if(ValidBox(item, info->zone_number, box_no) && creature->LOT.required_box == NO_BOX) {
 			if(EscapeBox(item, enemy, box_no))
 				TargetBox(&creature->LOT, box_no);
 			else if(info->zone_number == info->enemy_zone && StalkBox(item, enemy, box_no) && !violent) {
@@ -631,13 +630,13 @@ void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 
 	case STALK_MOOD:
 
-		if(creature->LOT.required_box == 2047 || !StalkBox(item, enemy, creature->LOT.required_box)) {
+		if(creature->LOT.required_box == NO_BOX || !StalkBox(item, enemy, creature->LOT.required_box)) {
 			box_no = LOT->node[(creature->LOT.zone_count * GetRandomControl()) >> 15].box_number;
 
 			if(ValidBox(item, info->zone_number, box_no)) {
 				if(StalkBox(item, enemy, box_no))
 					TargetBox(&creature->LOT, box_no);
-				else if(creature->LOT.required_box == 2047) {
+				else if(creature->LOT.required_box == NO_BOX) {
 					TargetBox(&creature->LOT, box_no);
 
 					if(info->zone_number != info->enemy_zone)
@@ -649,19 +648,19 @@ void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 		break;
 	}
 
-	if(creature->LOT.target_box == 2047)
+	if(creature->LOT.target_box == NO_BOX)
 		TargetBox(&creature->LOT, item->box_number);
 
 	type = CalculateTarget(&creature->target, item, &creature->LOT);
 	creature->jump_ahead = 0;
 	creature->monkey_ahead = 0;
 
-	if(LOT->node[item->box_number].exit_box != 2047) {
+	if(LOT->node[item->box_number].exit_box != NO_BOX) {
 		index = GetBox(currentLevel,item->box_number)->overlap_index & 0x3FFF;
 
 		do
 			box_no = *GetOverlap(currentLevel,index++);
-		while(box_no != 2047 && !(box_no & 0x8000) && (box_no & 0x7FF) != LOT->node[item->box_number].exit_box);
+		while(box_no != NO_BOX && !(box_no & 0x8000) && (box_no & 0x7FF) != LOT->node[item->box_number].exit_box);
 
 		if((box_no & 0x7FF) == LOT->node[item->box_number].exit_box) {
 			if(box_no & 0x800)
@@ -688,13 +687,13 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 	enemy = creature->enemy;
 
 	if(creature->LOT.node[item->box_number].search_number == (creature->LOT.search_number | 0x8000))
-		creature->LOT.required_box = 2047;
+		creature->LOT.required_box = NO_BOX;
 
-	if(creature->mood != ATTACK_MOOD && creature->LOT.required_box != 2047 && !ValidBox(item, info->zone_number, creature->LOT.target_box)) {
+	if(creature->mood != ATTACK_MOOD && creature->LOT.required_box != NO_BOX && !ValidBox(item, info->zone_number, creature->LOT.target_box)) {
 		if(info->zone_number == info->enemy_zone)
 			creature->mood = BORED_MOOD;
 
-		creature->LOT.required_box = 2047;
+		creature->LOT.required_box = NO_BOX;
 	}
 
 	mood = creature->mood;
@@ -736,7 +735,7 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 				if(creature->alerted && info->zone_number != info->enemy_zone)
 					creature->mood = info->distance > 3072 ? STALK_MOOD : BORED_MOOD;
 				else if(info->zone_number == info->enemy_zone) {
-					if(info->distance < 0x900000 || mood == STALK_MOOD && LOT->required_box == 2047)
+					if(info->distance < 0x900000 || mood == STALK_MOOD && LOT->required_box == NO_BOX)
 						creature->mood = ATTACK_MOOD;
 					else
 						creature->mood = STALK_MOOD;
@@ -746,7 +745,7 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 
 			case ATTACK_MOOD:
 
-				if(item->hit_status && GetRandomControl() < 2048 || info->zone_number != info->enemy_zone)
+				if((item->hit_status && GetRandomControl() < 2048) || info->zone_number != info->enemy_zone)
 					creature->mood = STALK_MOOD;
 				else if(info->zone_number != info->enemy_zone && info->distance > 6144)
 					creature->mood = BORED_MOOD;
@@ -770,7 +769,7 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 			LOT = &creature->LOT;
 		}
 
-		LOT->required_box = 2047;
+		LOT->required_box = NO_BOX;
 	}
 }
 
@@ -807,7 +806,7 @@ long BadFloor(long x, long y, long z, long box_height, long next_height, short r
 
 	floor = GetFloor(x, y, z, &room_number);
 
-	if(floor->box == 2047)
+	if(floor->box == NO_BOX)
 		return 1;
 
 	if(LOT->is_jumping)
@@ -868,12 +867,12 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 	box_height = GetBox(currentLevel,floor->box)->height;
 	next_box = LOT->node[floor->box].exit_box;
 
-	if(next_box == 2047)
+	if(next_box == NO_BOX)
 		next_height = GetBox(currentLevel,floor->box)->height;
 	else
 		next_height = GetBox(currentLevel,next_box)->height;
 
-	if(floor->box == 2047 || !LOT->is_jumping && (zone[item->box_number] != zone[floor->box] || height - box_height > LOT->step || height - box_height < LOT->drop)) {
+	if(floor->box == NO_BOX || !LOT->is_jumping && (zone[item->box_number] != zone[floor->box] || height - box_height > LOT->step || height - box_height < LOT->drop)) {
 		wx = item->pos.x_pos >> 10;
 		wz = item->pos.z_pos >> 10;
 
@@ -891,7 +890,7 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 		box_height = GetBox(currentLevel,floor->box)->height;
 		next_box = LOT->node[floor->box].exit_box;
 
-		if(next_box == 2047)
+		if(next_box == NO_BOX)
 			next_height = GetBox(currentLevel,floor->box)->height;
 		else
 			next_height = GetBox(currentLevel,next_box)->height;

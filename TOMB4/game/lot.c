@@ -57,16 +57,16 @@ void DisableBaddieAI(short item_number) {
 void ClearLOT(LOT_INFO* lot) {
 	BOX_NODE* node;
 
-	lot->tail = 2047;
-	lot->head = 2047;
+	lot->tail = NO_BOX;
+	lot->head = NO_BOX;
 	lot->search_number = 0;
-	lot->target_box = 2047;
-	lot->required_box = 2047;
+	lot->target_box = NO_BOX;
+	lot->required_box = NO_BOX;
 	node = lot->node;
 
 	for(int i = 0; i < GetNumBoxes(currentLevel); i++) {
-		node->next_expansion = 2047;
-		node->exit_box = 2047;
+		node->next_expansion = NO_BOX;
+		node->exit_box = NO_BOX;
 		node->search_number = 0;
 		node++;
 	}
