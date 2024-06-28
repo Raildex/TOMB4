@@ -20,7 +20,7 @@
 #include "game/larainfo.h"
 #include <stdlib.h>
 #include "game/levelinfo.h"
-
+#include "game/items.h"
 static BITE_INFO troop_gun = { 0, 300, 64, 7 };
 
 void InitialiseTroop(short item_number) {

@@ -28,6 +28,7 @@
 #include "global/types.h"
 #include <stdlib.h>
 #include "game/levelinfo.h"
+#include "game/items.h"
 CAMERA_INFO camera;
 
 GAME_VECTOR ForcedFixedCamera;

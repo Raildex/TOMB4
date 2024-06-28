@@ -7,6 +7,9 @@ typedef struct PHD_VECTOR PHD_VECTOR;
 typedef struct MESH_INFO MESH_INFO;
 typedef struct PHD_3DPOS PHD_3DPOS;
 typedef struct GAME_VECTOR GAME_VECTOR;
+enum no_height {
+	NO_HEIGHT = -32512
+};
 long ControlPhase(long nframes, long demo_mode);
 void FlipMap(long FlipNumber);
 void RemoveRoomFlipItems(ROOM_INFO* r);

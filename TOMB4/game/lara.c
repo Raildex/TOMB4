@@ -43,7 +43,7 @@
 #include "game/ropestruct.h"
 #include <stdlib.h>
 #include "game/levelinfo.h"
-
+#include "game/items.h"
 
 void (*lara_control_routines[118])(ITEM_INFO* item, COLL_INFO* coll) = {
 	lara_as_walk,

@@ -15,7 +15,6 @@ typedef enum TEXTURE_FORMAT {
 	b8g8r8a8,
 	r5g5b5a1,
 	r4g4b4a4,
-	r8g8b8, // used by logo?
 } TEXTURE_FORMAT;
 
 typedef void(__cdecl* rgbfunc)(unsigned char*, unsigned char*, unsigned char*);

@@ -44,6 +44,11 @@
 #include "game/texturestruct.h"
 #include "game/phdtexturestruct.h"
 #include "specific/file.h"
+
+enum num_samples {
+	sample_lookuptable_size = 512,
+};
+
 LEVEL_INFO* currentLevel;
 struct LEVEL_INFO {
 	OBJECT_INFO* objects;
@@ -726,9 +731,9 @@ char LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl) {
 	long uncomp_size, comp_size;
 
 	Log(2, "LoadSamples");
-	lvl->sample_lut = (short*)calloc(MAX_SAMPLES, sizeof(short));
-	memcpy(lvl->sample_lut, *data, MAX_SAMPLES * sizeof(short));
-	*data += MAX_SAMPLES * sizeof(short);
+	lvl->sample_lut = (short*)calloc(sample_lookuptable_size, sizeof(short));
+	memcpy(lvl->sample_lut, *data, sample_lookuptable_size * sizeof(short));
+	*data += sample_lookuptable_size * sizeof(short);
 	lvl->num_sample_infos = *(long*)*data;
 	*data += sizeof(long);
 	Log(8, "Number Of Sample Infos %d", lvl->num_sample_infos);

@@ -28,7 +28,7 @@
 #include <math.h>
 #include <windows.h>
 #include "game/levelinfo.h"
-
+#include "game/items.h"
 short* GLaraShadowframe;
 float lara_matrices[180];
 float lara_joint_matrices[180];

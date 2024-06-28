@@ -16,7 +16,7 @@
 #include "global/types.h"
 #include <stdlib.h>
 #include "game/levelinfo.h"
-
+#include "game/items.h"
 static BITE_INFO wildboar_bite = { 0, 0, 0, 14 };
 
 void InitialiseWildboar(short item_number) {

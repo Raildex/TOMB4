@@ -1,5 +1,7 @@
 #pragma once
-
+enum no_item {
+	NO_ITEM = -1,
+};
 
 void InitialiseItemArray(short num, long count);
 void KillItem(short item_num);

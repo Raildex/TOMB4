@@ -17,6 +17,7 @@
 #include "global/types.h"
 #include <stdlib.h>
 #include "game/levelinfo.h"
+#include "game/items.h"
 static BITE_INFO bat_bite = { 0, 16, 45, 4 };
 
 void InitialiseBat(short item_number) {

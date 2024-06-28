@@ -24,11 +24,8 @@
 #define SetCutNotPlayed(num) (CutSceneTriggered &= ~(1 << (num)))
 #define CheckCutPlayed(num) (CutSceneTriggered & (1 << (num)))
 
-#define NO_HEIGHT -32512
-#define NO_ITEM -1
 #define FVF (D3DFVF_TEX2 | D3DFVF_SPECULAR | D3DFVF_DIFFUSE | D3DFVF_XYZRHW)
 #define W2V_SHIFT 14
-#define MAX_SAMPLES 370
 #define MAX_DYNAMICS 64
 #define MALLOC_SIZE 1024 * 1024 * 128 // 128MB
 

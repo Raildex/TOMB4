@@ -28,6 +28,7 @@
 #include "game/savegameinfo.h"
 #include "game/gfleveloptions.h"
 #include "game/levelinfo.h"
+#include "game/items.h"
 static PISTOL_DEF PistolTable[4] = {
 	{ LARA, 0, 0, 0, 0 }, { PISTOLS_ANIM, 4, 5, 13, 24 }, { SIXSHOOTER_ANIM, 7, 8, 15, 29 }, { UZI_ANIM, 4, 5, 13, 24 }
 };

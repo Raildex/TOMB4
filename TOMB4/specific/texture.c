@@ -52,12 +52,6 @@ void ConvertFormat(void** destination,void* source, TEXTURE_FORMAT tfmt, TEXTURE
 			sb = ((*(unsigned short*)(source) & 0x7C00) >> 10)<<27;
 			sa = ((*(unsigned short*)(source) & 0x8000) >> 15)<<31;
 		break;
-		case r8g8b8:
-			sr = *(((unsigned char*)source));
-			sg = *(((unsigned char*)source)+1);
-			sb = *(((unsigned char*)source)+2);
-			sa = 0;
-		break;
 	}
 	switch (tfmt) {
 		case b8g8r8a8: {
@@ -80,13 +74,6 @@ void ConvertFormat(void** destination,void* source, TEXTURE_FORMAT tfmt, TEXTURE
 			*destination = dst;
 		}
 		break;
-		case r8g8b8: {
-			unsigned char* dst = (unsigned char*)(*destination);
-			*(dst++) = sr;
-			*(dst++) = sg;
-			*(dst++) = sb;
-			*destination = dst;
-		}
 			
 		break;
 	}

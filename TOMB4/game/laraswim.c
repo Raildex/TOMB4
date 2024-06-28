@@ -25,6 +25,7 @@
 #include "game/objectvector.h"
 #include <stdlib.h>
 #include "game/levelinfo.h"
+#include "game/items.h"
 static void lara_as_swimcheat(ITEM_INFO* item, COLL_INFO* coll) {
 	if(input & IN_FORWARD)
 		item->pos.x_rot -= 546;

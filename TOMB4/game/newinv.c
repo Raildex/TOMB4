@@ -43,11 +43,11 @@
 #include <dinput.h>
 #include <stdio.h>
 #include "game/levelinfo.h"
+#include "game/items.h"
 
-#pragma warning(push)
-#pragma warning(disable : 4838)
-#pragma warning(disable : 4309)
-#define ALL_MESHBITS 0xFFFFFFFF
+enum meshbits {
+	ALL_MESHBITS = 0xFFFFFFFF
+};
 INVOBJ inventry_objects_list[NUM_INVOBJ] = {
 	// main items
 	{ UZI_ITEM, -4, 0x3E8, 0x4000, 0x6000, 0x4000, 2, TXT_Uzi, ALL_MESHBITS },

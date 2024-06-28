@@ -22,6 +22,7 @@
 #include "game/collisiontypes.h"
 #include <stdlib.h>
 #include "game/levelinfo.h"
+#include "game/items.h"
 void lara_as_surfswim(ITEM_INFO* item, COLL_INFO* coll) {
 	if(item->hit_points <= 0) {
 		item->goal_anim_state = AS_UWDEATH;

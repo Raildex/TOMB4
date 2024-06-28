@@ -27,6 +27,7 @@
 #include "game/gfleveloptions.h"
 #include <stdio.h>
 #include "game/levelinfo.h"
+#include "game/items.h"
 DISPLAYPU pickups[8];
 long PickupX;
 short CurrentPickup;

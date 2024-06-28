@@ -18,6 +18,7 @@
 #include "game/itemstatus.h"
 #include "game/floorinfo.h"
 #include "game/levelinfo.h"
+#include "game/items.h"
 CREATURE_INFO* baddie_slots;
 
 static long slots_used = 0;

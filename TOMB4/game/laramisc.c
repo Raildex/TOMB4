@@ -39,6 +39,7 @@
 #include "game/savegameinfo.h"
 #include <dinput.h>
 #include "game/levelinfo.h"
+#include "game/items.h"
 
 COLL_INFO mycoll;
 
