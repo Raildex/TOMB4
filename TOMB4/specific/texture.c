@@ -1,10 +1,15 @@
 
 #include "specific/texture.h"
+#include "global/types.h"
+#include "haltexture.h"
 #include "specific/dxshell.h"
 #include "specific/function_stubs.h"
+#include "specific/winapp.h"
 #include "specific/winmain.h"
 #include <assert.h>
-#include <string.h>
+#include <math.h>
+#include <minwindef.h>
+#include <stdlib.h>
 #include <ddraw.h>
 #include "specific/texture.h"
 #include "specific/dxinfo.h"
@@ -12,103 +17,118 @@
 #include "specific/dxd3ddevice.h"
 #include "specific/dxflags.h"
 #include "specific/dxtextureinfo.h"
-
-TEXTURE* Textures;
-long nTextures;
-HRESULT WINAPI CreateMipMapFormat1(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC2 desc, LPVOID source) {
-	assert(desc->dwWidth == desc->dwHeight);
-	assert(surface);
-	assert(desc);
-	assert(source);
-	DXAttempt(IDirectDrawSurface4_Lock(surface,0, desc, DDLOCK_NOSYSLOCK, 0));
-	Log(1, "Mip Map Surface found of size %d", desc->dwWidth);
-	int w = desc->dwWidth;
-	int h = desc->dwHeight;
-	long* lD = (long*)desc->lpSurface;
-	for(unsigned long y = 0; y < desc->dwHeight; y++) {
-		for(unsigned long x = 0; x < desc->dwWidth; x++) {
-			long value = *((long*)source + x * 256 / w + y * 0x10000 / h);
-			*lD++ = value;
-		}
-	}
-	DXAttempt(IDirectDrawSurface4_Unlock(surface,0));
-	DXAttempt(IDirectDrawSurface4_EnumAttachedSurfaces(surface,source, CreateMipMapFormat1));
-	return DDENUMRET_OK;
-}
+#include "texture.h"
 
 typedef struct CreateMipMapFormat0Payload {
-	unsigned long rbpp;
-	unsigned long bbpp;
-	unsigned long gbpp;
-	unsigned long abpp;
-	unsigned long rshift;
-	unsigned long gshift;
-	unsigned long bshift;
-	unsigned long ashift;
-	unsigned long bpp;
-	long* lS;
+	long width;
+	long height;
+	TEXTURE_FORMAT sourceFmt;
+	TEXTURE_FORMAT destinationFmt;
+	void* source;
 } CreateMipMapFormat0Payload;
-HRESULT WINAPI CreateMipMapFormat0(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC2 desc, LPVOID payload) {
-	assert(desc->dwWidth == desc->dwHeight);
-	CreateMipMapFormat0Payload* data = (CreateMipMapFormat0Payload*)payload;
 
+
+void ConvertFormat(void** destination,void* source, TEXTURE_FORMAT tfmt, TEXTURE_FORMAT sfmt ) {
+	unsigned char sr;
+	unsigned char sg;
+	unsigned char sb;
+	unsigned char sa;
+	switch(sfmt) {
+		case b8g8r8a8:
+			sb = *(((unsigned char*)source));
+			sg = *(((unsigned char*)source)+1);
+			sr = *(((unsigned char*)source)+2);
+			sa = *(((unsigned char*)source)+3);
+		break;
+		case r4g4b4a4:
+			sr = (*(unsigned short*)(source) & 0xF)<<28;
+			sg = ((*(unsigned short*)(source) & 0xF0) >> 4)<<28;
+			sb = ((*(unsigned short*)(source) & 0xF00) >> 8)<<28;
+			sa = ((*(unsigned short*)(source) & 0xF000) >> 12)<<28;
+		break;
+		case r5g5b5a1:
+			sr = (*(unsigned short*)(source) & 0x1F)<<27;
+			sg = ((*(unsigned short*)(source) & 0x3E0) >> 5)<<27;
+			sb = ((*(unsigned short*)(source) & 0x7C00) >> 10)<<27;
+			sa = ((*(unsigned short*)(source) & 0x8000) >> 15)<<31;
+		break;
+		case r8g8b8:
+			sr = *(((unsigned char*)source));
+			sg = *(((unsigned char*)source)+1);
+			sb = *(((unsigned char*)source)+2);
+			sa = 0;
+		break;
+	}
+	switch (tfmt) {
+		case b8g8r8a8: {
+			long* dst = (long*)(*destination);
+			*(dst++) = RGBA(sr, sg, sb, sa);
+			*destination = dst;
+		}
+
+		break;
+		case r4g4b4a4: {
+			short* dst = (short*)(*destination);
+			*(dst++) = (sr & 0xF) | (sg << 4 & 0xF0) | (sb << 8 & 0xF00) | sa << 12 & 0xF000;
+			*destination = dst;
+		}
+
+		break;
+		case r5g5b5a1: {
+			short* dst = (short*)(*destination);
+			*(dst++) = (sr & 0x1F) | (sg << 5 & 0x3E0) | (sb << 10 & 0x7C00) | (sa << 15 & 0x8000);
+			*destination = dst;
+		}
+		break;
+		case r8g8b8: {
+			unsigned char* dst = (unsigned char*)(*destination);
+			*(dst++) = sr;
+			*(dst++) = sg;
+			*(dst++) = sb;
+			*destination = dst;
+		}
+			
+		break;
+	}
+}
+
+HRESULT WINAPI CreateMipMapFormat0(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC2 desc, LPVOID payload) {
+	CreateMipMapFormat0Payload* data = (CreateMipMapFormat0Payload*)payload;
+	assert(desc->dwWidth);
+	assert(desc->dwHeight);
+	assert(surface);
+	assert(desc);
+	assert(data);
 	DXAttempt(IDirectDrawSurface4_Lock(surface,0, desc, DDLOCK_NOSYSLOCK, 0));
 	Log(1, "Mip Map Surface found of size %d", desc->dwWidth);
 	int w = desc->dwWidth;
 	int h = desc->dwHeight;
-	long* lS = (long*)data->lS;
-	char* cD = (char*)desc->lpSurface;
+	Log(1, "Surface Size");
+	void* dest = (char*)desc->lpSurface;
+	long skip;
+	switch(data->sourceFmt) {
+		case b8g8r8a8:
+			skip = 4;
+		break;
+		default:
+			skip = 2;
+		break;
+	}
 	for(unsigned long y = 0; y < desc->dwHeight; y++) {
 		for(unsigned long x = 0; x < desc->dwWidth; x++) {
-			unsigned long c, o, ro, go, bo, ao;
-			unsigned char r, g, b, a;
-			c = *(lS + x * 256 / w + y * 0x10000 / h);
-			r = CLRR(c);
-			g = CLRG(c);
-			b = CLRB(c);
-			a = CLRA(c);
-
-			ro = r >> (8 - data->rbpp) << (data->rshift);
-			go = g >> (8 - data->gbpp) << (data->gshift);
-			bo = b >> (8 - data->bbpp) << (data->bshift);
-			ao = a >> (8 - data->abpp) << (data->ashift);
-			o = ro | go | bo | ao;
-
-			for(int i = data->bpp; i > 0; i -= 8) {
-				*cD++ = (char)o;
-				o >>= 8;
-			}
+			long offset = (x * data->width / w + y * (data->width * data->height) / h) * skip;
+			ConvertFormat(&dest,((char*)data->source + offset),data->destinationFmt,data->sourceFmt);
 		}
 	}
 	DXAttempt(IDirectDrawSurface4_Unlock(surface,0));
-	DXAttempt(IDirectDrawSurface4_EnumAttachedSurfaces(surface, payload, CreateMipMapFormat0));
-	return DDENUMRET_OK;
-}
-HRESULT WINAPI CreateMipMapFormat2(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC2 desc, LPVOID source) {
-	assert(desc->dwWidth == desc->dwHeight);
-	DXAttempt(IDirectDrawSurface4_Lock(surface,0, desc, DDLOCK_NOSYSLOCK, 0));
-	Log(1, "Mip Map Surface found of size %d", desc->dwWidth);
-	int w = desc->dwWidth;
-	int h = desc->dwHeight;
-	short* sS = (short*)source;
-	short* sD = (short*)desc->lpSurface;
-	for(unsigned long y = 0; y < desc->dwHeight; y++) {
-		for(unsigned long x = 0; x < desc->dwWidth; x++)
-			*sD++ = *(sS + x * 256 / w + y * 0x10000 / h);
-	}
-
-	DXAttempt(IDirectDrawSurface4_Unlock(surface,0));
-	DXAttempt(IDirectDrawSurface4_EnumAttachedSurfaces(surface,source, CreateMipMapFormat2));
+	DXAttempt(IDirectDrawSurface4_EnumAttachedSurfaces(surface,payload, CreateMipMapFormat0));
 	return DDENUMRET_OK;
 }
 
-IDirectDrawSurface4* CreateTexturePage(long w, long h, long MipMapCount, long* pSrc, rgbfunc RGBM, long format) {
-	DXTEXTUREINFO* tex;
+char CreateTexturePage(long w, long h, TEXTURE_FORMAT tfmt, TEXTURE_FORMAT sfmt, long MipMapCount, void* pSrc, rgbfunc RGBM, HAL_TEXTURE* dst) {
 	IDirectDrawSurface4* tSurf;
-	DDSURFACEDESC2 desc;
+	DDSURFACEDESC2 desc = {0};
 	long* lS;
-
-	memset(&desc, 0, sizeof(DDSURFACEDESC2));
 	desc.dwSize = sizeof(DDSURFACEDESC2);
 	desc.dwWidth = w;
 	desc.dwHeight = h;
@@ -119,7 +139,6 @@ IDirectDrawSurface4* CreateTexturePage(long w, long h, long MipMapCount, long* p
 	desc.ddpfPixelFormat = G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].TextureInfos[G_dxinfo->nTexture].ddpf;
 	desc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
 	desc.ddsCaps.dwCaps = DDSCAPS_TEXTURE;
-
 	if(App.dx.Flags & DXF_HWR)
 		desc.ddsCaps.dwCaps2 = DDSCAPS2_TEXTUREMANAGE;
 	else
@@ -131,61 +150,27 @@ IDirectDrawSurface4* CreateTexturePage(long w, long h, long MipMapCount, long* p
 		desc.ddsCaps.dwCaps |= DDSCAPS_COMPLEX | DDSCAPS_MIPMAP;
 	}
 
-	DXCreateSurface(App.dx.lpDD, &desc, &tSurf);
-
-	if(!format) {
-		lS = pSrc;
-
-		tex = &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].TextureInfos[G_dxinfo->nTexture];
-		CreateMipMapFormat0Payload payload;
-		memset(&payload, 0, sizeof(payload));
-		payload.rbpp = tex->rbpp;
-		payload.gbpp = tex->gbpp;
-		payload.bbpp = tex->bbpp;
-		payload.abpp = tex->abpp;
-		payload.rshift = tex->rshift;
-		payload.gshift = tex->gshift;
-		payload.bshift = tex->bshift;
-		payload.ashift = tex->ashift;
-		payload.lS = lS;
-		payload.bpp = tex->bpp;
-		DXAttempt(CreateMipMapFormat0(tSurf, &desc, &payload));
-		DXAttempt(IDirectDrawSurface4_EnumAttachedSurfaces(tSurf,&payload, &CreateMipMapFormat0));
-	} else if(format == 2) {
-		DXAttempt(CreateMipMapFormat2(tSurf, &desc, pSrc));
-		DXAttempt(IDirectDrawSurface4_EnumAttachedSurfaces(tSurf,pSrc, &CreateMipMapFormat2));
-
-	} else if(format == 1) {
-		DXAttempt(CreateMipMapFormat1(tSurf, &desc, pSrc));
-		DXAttempt(IDirectDrawSurface4_EnumAttachedSurfaces(tSurf,pSrc, &CreateMipMapFormat1));
-	}
-
-	return tSurf;
+	DXAttempt(DXCreateSurface(App.dx.lpDD, &desc, &tSurf));
+	lS = pSrc;
+	CreateMipMapFormat0Payload payload = {0};
+	payload.destinationFmt = tfmt;
+	payload.sourceFmt = sfmt;
+	payload.source = pSrc;
+	payload.width = w;
+	payload.height = h;
+	DXAttempt(CreateMipMapFormat0(tSurf, &desc, &payload));
+	DXAttempt(IDirectDrawSurface4_EnumAttachedSurfaces(tSurf,&payload, &CreateMipMapFormat0));
+	DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID,(LPVOID*)&dst->dxTex));
+	dst->surface = tSurf;
+	return 1;
 }
 
 
 void FreeTextures() {
-	TEXTURE* tex;
+	
+}
 
-	DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, NULL));
-	DXAttempt(IDirect3D3_EvictManagedTextures(App.dx.lpD3D));
 
-	for(int i = 0; i < nTextures; i++) {
-		tex = &Textures[i];
-
-		if(tex->tex) {
-			Log(4, "Released %s @ %x - RefCnt = %d", "Texture", tex->tex, IDirect3DTexture2_Release(tex->tex));
-			tex->tex = NULL;
-		} else
-			Log(1, "%s Attempt To Release NULL Ptr", "Texture");
-
-		if(tex->surface) {
-			Log(4, "Released %s @ %x - RefCnt = %d", "Surface", tex->surface, IDirectDrawSurface4_Release(tex->surface));
-			tex->surface = NULL;
-		} else
-			Log(1, "%s Attempt To Release NULL Ptr", "Surface");
-	}
-
-	free(Textures);
-	Textures = 0;
+long CalcMipMapCount(long w, long h) {
+	return (long)floor(log2(max(w, h)));
 }

@@ -234,7 +234,7 @@ char LoadSettings() {
 
 	CloseRegistry();
 	CheckKeyConflicts();
-	return REG_Setup;
+	return (char)REG_Setup;
 }
 
 void SaveSettings() {

@@ -481,7 +481,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		dz = abs(sphere->z - pos.z);
 
 		if(dx < sphere->r && dy < sphere->r && dz < sphere->r) {
-			if(false /*gfCurrentLevel == 27)*/) {
+			if(0 /*gfCurrentLevel == 27)*/) {
 				SoundEffect(SFX_BOULDER_FALL, 0, SFX_DEFAULT);
 				TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			}

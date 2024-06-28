@@ -721,7 +721,7 @@ void SaveLevelData(long FullSave) {
 			WriteSG(item->item_flags, sizeof(short) * 4);
 		}
 
-		if(false *//*gfCurrentLevel == 1)*//*) {
+		if(0 *//*gfCurrentLevel == 1)*//*) {
 			flags = 0;
 
 			for(int i = 0; i < 64; i++) {
@@ -1075,7 +1075,7 @@ void RestoreLevelData(long FullSave) {
 			ReadSG(item->item_flags, sizeof(short) * 4);
 		}
 
-		if(false *//*gfCurrentLevel == 1)*//*) {
+		if(0 *//*gfCurrentLevel == 1)*//*) {
 			for(int i = 0; i < 64; i++) {
 				if(!(i & 0xF))
 					ReadSG(&uword, sizeof(unsigned short));

@@ -714,7 +714,7 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 
 				if(rings[RING_INVENTORY]->current_object_list[rings[RING_INVENTORY]->curobjinlist].invitem == INV_MEMCARD_LOAD_ITEM) {
 					if(keymap[DIK_H] && keymap[DIK_E] && keymap[DIK_L] && keymap[DIK_P]) {
-						if(false /*gfCurrentLevel == 2 || gfCurrentLevel == 6 || gfCurrentLevel == 13 || gfCurrentLevel == 21 || gfCurrentLevel == 27)*/)
+						if(0 /*gfCurrentLevel == 2 || gfCurrentLevel == 6 || gfCurrentLevel == 13 || gfCurrentLevel == 21 || gfCurrentLevel == 27)*/)
 							skipped_level = 1;
 
 						gfRequiredStartPos = 0;

@@ -531,7 +531,7 @@ void InsertRoom(ROOM_INFO* r) {
 		numQuads = *data++;
 
 		for(int i = 0; i < numQuads; i++, data += 5) {
-			pTex = &textinfo[data[4] & 0x3FFF];
+			pTex = GetTextInfo(currentLevel,data[4] & 0x3FFF);
 			doublesided = (data[4] >> 15) & 1;
 
 			if(!pTex->drawtype)
@@ -543,7 +543,7 @@ void InsertRoom(ROOM_INFO* r) {
 		numTris = *data++;
 
 		for(int i = 0; i < numTris; i++, data += 4) {
-			pTex = &textinfo[data[3] & 0x3FFF];
+			pTex = GetTextInfo(currentLevel,data[3] & 0x3FFF);
 			doublesided = (data[3] >> 15) & 1;
 
 			if(!pTex->drawtype)
@@ -587,7 +587,7 @@ void DrawBucket(TEXTUREBUCKET* bucket) {
 	if(!bucket->nVtx)
 		return;
 
-	if(Textures[bucket->tpage].bump && App.BumpMapping) {
+	if(HasRendererBumpTexture(currentLevel, bucket->tpage) && App.BumpMapping) {
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_FOGENABLE, 0);
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 0);
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
@@ -596,7 +596,7 @@ void DrawBucket(TEXTUREBUCKET* bucket) {
 		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLORARG2, D3DTA_CURRENT);
 		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
-		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, Textures[Textures[bucket->tpage].bumptpage].tex));
+		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, GetRendererBumpTexture(currentLevel, bucket->tpage)->dxTex));
 		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTCLIP);
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_FOGENABLE, 1);
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 1);
@@ -608,7 +608,7 @@ void DrawBucket(TEXTUREBUCKET* bucket) {
 		DrawPrimitiveCnt++;
 	}
 
-	DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, Textures[bucket->tpage].tex));
+	DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, GetRendererTexture(currentLevel, bucket->tpage)->dxTex));
 	IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
 
 	if(App.BumpMapping)
@@ -685,8 +685,8 @@ void DrawBuckets() {
 		for(int i = 0; i < 20; i++) {
 			bucket = &Bucket[i];
 
-			if(Textures[bucket->tpage].bump && bucket->nVtx) {
-				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, Textures[Textures[bucket->tpage].bumptpage].tex));
+			if(HasRendererBumpTexture(currentLevel, bucket->tpage) && bucket->nVtx) {
+				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, GetRendererBumpTexture(currentLevel, bucket->tpage)->dxTex));
 				IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTCLIP);
 				DrawPrimitiveCnt++;
 			}
@@ -703,8 +703,8 @@ void DrawBuckets() {
 		for(int i = 0; i < 20; i++) {
 			bucket = &Bucket[i];
 
-			if(Textures[bucket->tpage].bump && bucket->nVtx) {
-				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, Textures[bucket->tpage].tex));
+			if(HasRendererBumpTexture(currentLevel, bucket->tpage) && bucket->nVtx) {
+				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel, bucket->tpage)->dxTex));
 				IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
 				bucket->nVtx = 0;
 				bucket->tpage = -1;
@@ -717,8 +717,8 @@ void DrawBuckets() {
 		for(int i = 0; i < 20; i++) {
 			bucket = &Bucket[i];
 
-			if(!Textures[bucket->tpage].bump && bucket->nVtx) {
-				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, Textures[bucket->tpage].tex));
+			if(!HasRendererBumpTexture(currentLevel, bucket->tpage) && bucket->nVtx) {
+				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel, bucket->tpage)->dxTex));
 				IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
 				bucket->nVtx = 0;
 				bucket->tpage = -1;

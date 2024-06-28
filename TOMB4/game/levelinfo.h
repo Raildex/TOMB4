@@ -1,6 +1,9 @@
 #ifndef TOMB4_GAME_LEVELINFO_H
 #define TOMB4_GAME_LEVELINFO_H
-#include <stdbool.h>
+
+
+typedef struct HAL_TEXTURE HAL_TEXTURE;
+typedef struct TEXTURESTRUCT TEXTURESTRUCT;
 typedef struct ROOM_INFO ROOM_INFO;
 typedef struct CHANGE_STRUCT CHANGE_STRUCT;
 typedef struct RANGE_STRUCT RANGE_STRUCT;
@@ -14,6 +17,7 @@ typedef struct ITEM_INFO ITEM_INFO;
 typedef struct BOX_INFO BOX_INFO;
 typedef struct SAMPLE_BUFFER SAMPLE_BUFFER;
 typedef struct SAMPLE_INFO SAMPLE_INFO;
+typedef struct TEXTURE TEXTURE;
 LEVEL_INFO* CreateLevel();
 void DestroyLevel(LEVEL_INFO* lvl);
 
@@ -46,5 +50,10 @@ long GetNumBoxes(LEVEL_INFO* lvl);
 SAMPLE_BUFFER* GetSampleBuffer(LEVEL_INFO* lvl, long num);
 SAMPLE_INFO* GetSampleInfo(LEVEL_INFO* lvl, long num);
 short* GetSampleLookup(LEVEL_INFO* lvl, long num);
+HAL_TEXTURE* GetRendererTexture(LEVEL_INFO* lvl, long num);
+long GetNumTextures(LEVEL_INFO* lvl);
+TEXTURESTRUCT* GetTextInfo(LEVEL_INFO* lvl, long num);
+HAL_TEXTURE* GetRendererBumpTexture(LEVEL_INFO* lvl, long num);
+char HasRendererBumpTexture(LEVEL_INFO* lvl, long num);
 extern LEVEL_INFO* currentLevel;
 #endif// TOMB4_GAME_LEVELINFO_H

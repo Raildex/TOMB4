@@ -35,6 +35,7 @@
 #include "game/monoscreenstruct.h"
 #include "specific/d3dtlbumpvertex.h"
 #include "game/languages.h"
+#include "texture.h"
 #include <dinput.h>
 #include <joystickapi.h>
 long sfx_frequencies[3] = { 11025, 22050, 44100 };
@@ -696,7 +697,7 @@ static void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, lon
 void S_DisplayMonoScreen() {
 	unsigned long col = 0xFFFFFF80;
 
-	S_DrawTile(0, 0, phd_winwidth, phd_winheight, MonoScreen.tex, col, col, col, col);
+	S_DrawTile(0, 0, phd_winwidth, phd_winheight, MonoScreen.hal.dxTex, col, col, col, col);
 }
 
 void CreateMonoScreen() {
@@ -709,17 +710,6 @@ void CreateMonoScreen() {
 }
 
 void FreeMonoScreen() {
-	if(MonoScreen.surface) {
-		Log(4, "Released %s @ %x - RefCnt = %d", "Mono Screen Surface", MonoScreen.surface, IDirectDrawSurface4_Release(MonoScreen.surface));
-		MonoScreen.surface = 0;
-	} else
-		Log(1, "%s Attempt To Release NULL Ptr", "Mono Screen Surface");
-
-	if(MonoScreen.tex) {
-		Log(4, "Released %s @ %x - RefCnt = %d", "Mono Screen Texture", MonoScreen.tex, IDirect3DTexture2_Release(MonoScreen.tex));
-		MonoScreen.tex = 0;
-	} else
-		Log(1, "%s Attempt To Release NULL Ptr", "Mono Screen Texture");
 
 	MonoScreenOn = 0;
 }
@@ -836,19 +826,17 @@ void ConvertSurfaceToTextures(IDirectDrawSurface4* surface) {
 	DDSURFACEDESC2 tSurf;
 	DDSURFACEDESC2 uSurf;
 	RECT r;
-	unsigned short* pTexture;
 	unsigned short* pSrc;
 
 	memset(&tSurf, 0, sizeof(tSurf));
 	tSurf.dwSize = sizeof(DDSURFACEDESC2);
 	IDirectDrawSurface4_Lock(surface,0, &tSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
 	pSrc = (unsigned short*)tSurf.lpSurface;
-	MonoScreen.surface = CreateTexturePage(tSurf.dwWidth, tSurf.dwHeight, 0, 0, RGBM_Mono, -1);
+	CreateTexturePage(tSurf.dwWidth, tSurf.dwHeight,b8g8r8a8, b8g8r8a8, 0, pSrc, RGBM_Mono, &MonoScreen.hal);
 
 	memset(&uSurf, 0, sizeof(uSurf));
 	uSurf.dwSize = sizeof(DDSURFACEDESC2);
-	IDirectDrawSurface4_Lock(MonoScreen.surface,0, &uSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
-	pTexture = (unsigned short*)uSurf.lpSurface;
+	IDirectDrawSurface4_Lock(MonoScreen.hal.surface,0, &uSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
 
 	r.left = 0;
 	r.top = 0;
@@ -856,8 +844,8 @@ void ConvertSurfaceToTextures(IDirectDrawSurface4* surface) {
 	r.bottom = tSurf.dwHeight;
 	CustomBlt(&uSurf, 0, 0, &tSurf, &r);
 
-	IDirectDrawSurface4_Unlock(MonoScreen.surface,0);
-	DXAttempt(IDirectDrawSurface4_QueryInterface(MonoScreen.surface,&TEXGUID, (void**)&MonoScreen.tex));
+	IDirectDrawSurface4_Unlock(MonoScreen.hal.surface,0);
+	DXAttempt(IDirectDrawSurface4_QueryInterface(MonoScreen.hal.surface,&TEXGUID, (void**)&MonoScreen.hal.dxTex));
 	IDirectDrawSurface4_Unlock(surface,0);
 }
 

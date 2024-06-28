@@ -333,7 +333,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 		sG = 0;
 		sB = 0;
 
-		if(true) {
+		if(1) {
 			for(int j = 0; j < MAX_DYNAMICS; j++) {
 				l = &dynamics[j];
 
@@ -787,7 +787,7 @@ void phd_PutPolygons(short* objptr, long clip) {
 	quad = mesh->gt4;
 
 	for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-		pTex = &textinfo[quad[4] & 0x7FFF];
+		pTex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
@@ -870,7 +870,7 @@ void phd_PutPolygons(short* objptr, long clip) {
 	tri = mesh->gt3;
 
 	for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-		pTex = &textinfo[tri[3] & 0x7FFF];
+		pTex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
@@ -971,7 +971,7 @@ void phd_PutPolygons_train(short* objptr, long x) {
 	quad = mesh->gt4;
 
 	for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-		pTex = &textinfo[quad[4] & 0x7FFF];
+		pTex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
 		drawbak = pTex->drawtype;
 
 		if(quad[5] & 1)
@@ -988,7 +988,7 @@ void phd_PutPolygons_train(short* objptr, long x) {
 	tri = mesh->gt3;
 
 	for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-		pTex = &textinfo[tri[3] & 0x7FFF];
+		pTex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
 
 		drawbak = pTex->drawtype;
 
@@ -1041,7 +1041,7 @@ void RenderLoadPic(long unused) {
 		S_InitialisePolyList();
 		RenderIt(camera.pos.room_number);
 
-		if(true) {
+		if(1) {
 			PrintString(phd_centerx, (long)((float)(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1), 5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
 		}
 
@@ -1054,7 +1054,7 @@ void RenderLoadPic(long unused) {
 	S_InitialisePolyList();
 	RenderIt(camera.pos.room_number);
 
-	if(true) {
+	if(1) {
 		PrintString(phd_centerx, (long)((float)(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1), 5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
 	}
 
@@ -1075,7 +1075,7 @@ void S_InitialisePolyList() {
 
 	if(gfLevelFlags & GF_TRAIN)
 		col = 0xD2B163;
-	else if(false /*gfCurrentLevel == 5 || gfCurrentLevel == 6)*/) {
+	else if(0 /*gfCurrentLevel == 5 || gfCurrentLevel == 6)*/) {
 		col = FogTableColor[19];
 		SetFogColor(CLRR(col), CLRG(col), CLRB(col));
 	} else
@@ -1130,7 +1130,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	quad = mesh->gt4;
 
 	for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-		pTex = &textinfo[quad[4] & 0x7FFF];
+		pTex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
@@ -1208,7 +1208,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	tri = mesh->gt3;
 
 	for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-		pTex = &textinfo[tri[3] & 0x7FFF];
+		pTex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
@@ -1296,7 +1296,7 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus) {
 	quad = mesh->gt4;
 
 	for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-		pTex = &textinfo[quad[4] & 0x7FFF];
+		pTex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
 		drawbak = pTex->drawtype;
 
 		if(quad[5] & 1) {
@@ -1341,7 +1341,7 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus) {
 	tri = mesh->gt3;
 
 	for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-		pTex = &textinfo[tri[3] & 0x7FFF];
+		pTex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
 		drawbak = pTex->drawtype;
 		pTex->drawtype = 4;
 		AddTriSorted(MyVertexBuffer, tri[0], tri[1], tri[2], pTex, 0);
@@ -1602,15 +1602,15 @@ void S_AnimateTextures(long n) {
 				if(nRangeFrames > 0)
 					range += nRangeFrames;
 			} else {
-				tex2 = textinfo[*range];
+				tex2 = *GetTextInfo(currentLevel,*range);;
 
 				while(nRangeFrames > 0) {
-					textinfo[range[0]] = textinfo[range[1]];
+					*GetTextInfo(currentLevel,range[0]) = *GetTextInfo(currentLevel,range[1]);
 					range++;
 					nRangeFrames--;
 				}
 
-				textinfo[*range] = tex2;
+				*GetTextInfo(currentLevel,*range) = tex2;
 			}
 
 			range++;
@@ -1625,7 +1625,7 @@ void S_AnimateTextures(long n) {
 			nRangeFrames = *range++;
 
 			while(nRangeFrames >= 0) {
-				tex = &textinfo[range[0]];
+				tex = GetTextInfo(currentLevel,range[0]);
 				voff = AnimatingTexturesVOffset * (1.0F / 256.0F);
 				tex->v1 = voff + AnimatingTexturesV[i][nRangeFrames][0];
 				tex->v2 = voff + AnimatingTexturesV[i][nRangeFrames][0];

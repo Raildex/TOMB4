@@ -288,7 +288,7 @@ void DemigodControl(short item_number) {
 	torso_y = 0;
 	torso_z = 0;
 
-	if(false /*gfCurrentLevel == 24)*/) // Chambers of Tulun
+	if(0 /*gfCurrentLevel == 24)*/) // Chambers of Tulun
 	{
 		r = GetRoom(currentLevel,lara_item->room_number);
 		zone = GetZone(currentLevel,god->LOT.zone,flip_status);

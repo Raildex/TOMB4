@@ -1,5 +1,7 @@
 
 #include "game/laramisc.h"
+#include "game/carriedweaponflags.h"
+#include "game/gfleveloptions.h"
 #include "game/objects.h"
 #include "game/laraswim.h"
 #include "game/lara_states.h"
@@ -109,7 +111,7 @@ void LaraCheatyBits() {
 
 #ifdef _DEBUG
 	if(keymap[DIK_F3]) {
-		if(false /*gfCurrentLevel == 2 || gfCurrentLevel == 6 || gfCurrentLevel == 13 || gfCurrentLevel == 21 || gfCurrentLevel == 27*/)
+		if(0 /*gfCurrentLevel == 2 || gfCurrentLevel == 6 || gfCurrentLevel == 13 || gfCurrentLevel == 21 || gfCurrentLevel == 27*/)
 			skipped_level = 1;
 
 		gfRequiredStartPos = 0;

@@ -47,6 +47,7 @@
 #include "game/meshdata.h"
 #include "global/types.h"
 #include "game/debrisstruct.h"
+#include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include "game/levelinfo.h"
@@ -464,7 +465,7 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item) {
 	long x, y, z, x1, y1, z1, x2, y2, z2, x3, y3, z3, xSize, zSize, xDist, zDist;
 	short s;
 
-	if(true) {
+	if(1) {
 
 		S_PrintSpriteShadow(size, box, item);
 		return;
@@ -600,13 +601,14 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item) {
 }
 
 void DrawTrainStrips() {
-	DrawTrainFloorStrip(-20480, -5120, &textinfo[aranges[7]], 0x1101010);
-	DrawTrainFloorStrip(-20480, 3072, &textinfo[aranges[7]], 0x1101010);
-	DrawTrainFloorStrip(-20480, -2048, &textinfo[aranges[5]], 0x100800);
-	DrawTrainFloorStrip(-20480, 2048, &textinfo[aranges[6]], 0x810);
-	DrawTrainFloorStrip(-20480, -1024, &textinfo[aranges[3]], 0);
-	DrawTrainFloorStrip(-20480, 1024, &textinfo[aranges[4]], 0);
-	DrawTrainFloorStrip(-20480, 0, &textinfo[aranges[2]], 0);
+
+	DrawTrainFloorStrip(-20480, -5120, GetTextInfo(currentLevel,aranges[7]), 0x1101010);
+	DrawTrainFloorStrip(-20480, 3072, GetTextInfo(currentLevel,aranges[7]), 0x1101010);
+	DrawTrainFloorStrip(-20480, -2048, GetTextInfo(currentLevel,aranges[5]), 0x100800);
+	DrawTrainFloorStrip(-20480, 2048, GetTextInfo(currentLevel,aranges[6]), 0x810);
+	DrawTrainFloorStrip(-20480, -1024, GetTextInfo(currentLevel,aranges[3]), 0);
+	DrawTrainFloorStrip(-20480, 1024, GetTextInfo(currentLevel,aranges[4]), 0);
+	DrawTrainFloorStrip(-20480, 0, GetTextInfo(currentLevel,aranges[2]), 0);
 }
 
 void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr) {
@@ -1075,7 +1077,7 @@ void DrawDebris() {
 		v[1].specular |= 0xFF000000;
 		v[2].specular |= 0xFF000000;
 
-		tex = &textinfo[(uintptr_t)dptr->TextInfo & 0x7FFF];
+		tex = GetTextInfo(currentLevel,(uintptr_t)dptr->TextInfo & 0x7FFF);
 		drawbak = tex->drawtype;
 
 		if(dptr->flags & 1)
@@ -1352,7 +1354,7 @@ void DrawFlatSky(unsigned long color, long zpos, long ypos, long drawtype) {
 	ClipCheckPoint(&v[3], vec[3].x, vec[3].y, vec[3].z, clip); // the only one that survived
 	Tex.drawtype = (unsigned short)drawtype;
 	Tex.flag = 0;
-	Tex.tpage = (unsigned short)(nTextures - 1);
+	Tex.tpage = (unsigned short)(GetNumTextures(currentLevel) - 1);
 	Tex.u1 = 0;
 	Tex.v1 = 0;
 	Tex.u2 = 1;
@@ -1941,7 +1943,7 @@ void ShowTitle() {
 
 	tex.drawtype = 1;
 	tex.flag = 0;
-	tex.tpage = (unsigned short)(nTextures - 4);
+	tex.tpage = (unsigned short)(GetNumTextures(currentLevel) - 4);
 	tex.u1 = (float)(1.0F / 256.0F);
 	tex.v1 = (float)(1.0F / 256.0F);
 	tex.u2 = 1.0F - (float)(1.0F / 256.0F);
@@ -1982,7 +1984,7 @@ void ShowTitle() {
 
 	tex.drawtype = 1;
 	tex.flag = 0;
-	tex.tpage = (unsigned short)(nTextures - 3);
+	tex.tpage = (unsigned short)(GetNumTextures(currentLevel) - 3);
 	tex.u1 = (float)(1.0F / 256.0F);
 	tex.v1 = (float)(1.0F / 256.0F);
 	tex.u2 = 1.0F - (float)(1.0F / 256.0F);
@@ -2270,7 +2272,7 @@ void DrawBinoculars() {
 
 	if(LaserSight) {
 		for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-			tex = &textinfo[quad[4] & 0x7FFF];
+			tex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
@@ -2287,7 +2289,7 @@ void DrawBinoculars() {
 		}
 
 		for(int i = 0, j = 0; i < mesh->ngt3; i++, tri += 5) {
-			tex = &textinfo[tri[3] & 0x7FFF];
+			tex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
@@ -2304,7 +2306,7 @@ void DrawBinoculars() {
 		}
 	} else {
 		for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-			tex = &textinfo[quad[4] & 0x7FFF];
+			tex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
@@ -2321,7 +2323,7 @@ void DrawBinoculars() {
 		}
 
 		for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-			tex = &textinfo[tri[3] & 0x7FFF];
+			tex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 

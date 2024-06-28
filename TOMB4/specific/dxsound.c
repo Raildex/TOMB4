@@ -356,7 +356,7 @@ void S_SetReverbType(long reverb) {
 	if(App.SoundDisabled)
 		return;
 
-	if(/*tomb4.reverb == 1*/ true)
+	if(/*tomb4.reverb == 1*/ 1)
 		reverb = 0;
 
 	if(current_reverb != reverb) {

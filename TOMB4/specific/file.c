@@ -1,4 +1,3 @@
-
 #include <zlib.h>
 #include "specific/file.h"
 #include "specific/function_stubs.h"
@@ -42,9 +41,9 @@
 #include "game/languages.h"
 #include <process.h>
 #include "game/levelinfo.h"
+#include "texture.h"
 
 
-TEXTURESTRUCT* textinfo;
 SPRITESTRUCT* spriteinfo;
 THREAD LevelLoadingThread;
 
@@ -64,44 +63,37 @@ unsigned int WINAPI LoadLevel(void* name) {
 	TEXTURESTRUCT* tex;
 	char* pData;
 	long version, size, compressedSize;
-	short RTPages, OTPages, BTPages;
 
 	Log(2, "LoadLevel");
 	FreeLevel();
 	currentLevel = CreateLevel();
+
 	memset(malloc_ptr, 0, MALLOC_SIZE);
 	memset(&lara, 0, sizeof(LARA_INFO));
 
-	Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
-	nTextures = 1;
-	Textures[0].tex = 0;
-	Textures[0].surface = 0;
-	Textures[0].width = 0;
-	Textures[0].height = 0;
-	Textures[0].bump = 0;
-
 	S_InitLoadBar(20);
-	S_LoadBar();
+	//S_LoadBar();
 
 	CompressedData = NULL;
 	char* FileData = NULL;
-	FILE* level_fp = 0;
+	FILE* level_fp = NULL;
 	level_fp = FileOpen((const char*)name);
 
 	if(level_fp) {
-		fread(&version, 1, 4, level_fp);
-		fread(&RTPages, 1, 2, level_fp);
-		fread(&OTPages, 1, 2, level_fp);
-		fread(&BTPages, 1, 2, level_fp);
-
+		fread(&version, 4, 1, level_fp);
 		Log(7, "Process Level Data");
-		LoadTextures(RTPages, OTPages, BTPages, level_fp, &FileData);
+		LoadTextures(b8g8r8a8,level_fp,currentLevel);
+		char geoMarker[3];
+		fread(&geoMarker[0], 1, 3, level_fp);
+		if(!(geoMarker[0] == 'G' && geoMarker[1] == 'E' && geoMarker[2] == 'O')) {
+			Log(-1, "Invalid Marker %c %c %c!",geoMarker[0],geoMarker[1],geoMarker[2]);
+		}
 		fread(&size, 1, 4, level_fp);
 		fread(&compressedSize, 1, 4, level_fp);
-		CompressedData = (char*)malloc(compressedSize);
-		FileData = (char*)malloc(size);
+		CompressedData = (char*)calloc(1 ,compressedSize);
+		FileData = (char*)calloc(1,size);
 		fread(CompressedData, compressedSize, 1u, level_fp);
-		Decompress(FileData, CompressedData, compressedSize, size);
+		S_Decompress(FileData, CompressedData, compressedSize, size);
 		free(CompressedData);
 
 		pData = FileData;
@@ -113,33 +105,37 @@ unsigned int WINAPI LoadLevel(void* name) {
 		LoadObjects(&FileData,currentLevel);
 		S_LoadBar();
 
-		LoadSprites(&FileData);
+		LoadSprites(&FileData, currentLevel);
 		S_LoadBar();
 
-		LoadCameras(&FileData);
+		LoadCameras(&FileData, currentLevel);
 		S_LoadBar();
 
-		LoadSoundEffects(&FileData);
+		LoadSoundEffects(&FileData, currentLevel);
 		S_LoadBar();
 
 		LoadBoxes(&FileData,currentLevel);
 		S_LoadBar();
 
-		LoadAnimatedTextures(&FileData);
+		LoadAnimatedTextures(&FileData, currentLevel);
 		S_LoadBar();
 
-		LoadTextureInfos(&FileData);
+		LoadTextureInfos(&FileData, currentLevel);
 		S_LoadBar();
 
 		LoadItems(&FileData,currentLevel);
 		S_LoadBar();
 
-		LoadAIInfo(&FileData);
+		LoadAIInfo(&FileData, currentLevel);
 		S_LoadBar();
 
-		LoadCinematic(&FileData);
+		LoadCinematic(&FileData, currentLevel);
 		S_LoadBar();
-
+		char sfxMarker[3];
+		fread(&sfxMarker[0], 1, 3, level_fp);
+		if(!(sfxMarker[0] == 'S' && sfxMarker[1] == 'F' && sfxMarker[2] == 'X')) {
+			Log(-1, "Invalid Marker %c %c %c!",sfxMarker[0],sfxMarker[1],sfxMarker[2]);
+		}
 		if(acm_ready && !App.SoundDisabled)
 			LoadSamples(level_fp, &FileData, currentLevel);
 
@@ -150,7 +146,7 @@ unsigned int WINAPI LoadLevel(void* name) {
 			obj = GetObjectInfo(currentLevel,WATERFALL1 + i);
 
 			if(obj->loaded) {
-				tex = &textinfo[mesh_vtxbuf[obj->mesh_index]->gt4[4] & 0x7FFF];
+				tex = GetTextInfo(currentLevel,mesh_vtxbuf[obj->mesh_index]->gt4[4] & 0x7FFF);
 				AnimatingWaterfalls[i] = tex;
 				AnimatingWaterfallsV[i] = (long)tex->v1;
 			}
@@ -168,6 +164,9 @@ unsigned int WINAPI LoadLevel(void* name) {
 		SetFadeClip(0, 1);
 		reset_cutseq_vars();
 		FileClose(level_fp);
+	}else {
+		Log(-1, "Could not open Level file!");
+		return 0;
 	}
 
 	LevelLoadingThread.active = 0;
@@ -192,27 +191,6 @@ long S_LoadLevelFile(long num) {
 void FreeLevel() {
 	if(currentLevel)
 		DestroyLevel(currentLevel);
-	MESH_DATA** vbuf;
-	MESH_DATA* mesh;
-
-	Log(2, "FreeLevel");
-
-	for(int i = 0; i < num_level_meshes; i++) {
-		vbuf = &mesh_vtxbuf[i];
-		mesh = *vbuf;
-
-		if(mesh->SourceVB) {
-			Log(4, "Released %s @ %x - RefCnt = %d", "Mesh VB", mesh->SourceVB, IDirect3DVertexBuffer_Release(mesh->SourceVB));
-			mesh->SourceVB = 0;
-		}
-	}
-
-	Log(5, "Free Textures");
-	FreeTextures();
-	Log(5, "Free Lights");
-	DXFreeSounds();
-	free(OutsideRoomTable);
-	free(OutsideRoomOffsets);
 	malloc_ptr = malloc_buffer;
 	malloc_free = malloc_size;
 }
@@ -311,250 +289,9 @@ long LoadFile(const char* name, char** dest) {
 	return size;
 }
 
-bool LoadTextures(long RTPages, long OTPages, long BTPages, FILE* level_fp, char** FileData) {
-	DXTEXTUREINFO* dxtex;
-	IDirectDrawSurface4* tSurf;
-	IDirect3DTexture2* pTex;
-	unsigned char* TextureData;
-	long* d;
-	char* pData;
-	char* pComp;
-	char* s;
-	long format, skip, size, compressedSize, nTex, c;
-	unsigned char r, g, b, a;
 
-	Log(2, "LoadTextures");
-	nTextures = 1;
-	format = 0;
-	skip = 4;
-	dxtex = &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].TextureInfos[G_dxinfo->nTexture];
 
-	if(dxtex->rbpp == 8 && dxtex->gbpp == 8 && dxtex->bbpp == 8 && dxtex->abpp == 8)
-		format = 1;
-	else if(dxtex->rbpp == 5 && dxtex->gbpp == 5 && dxtex->bbpp == 5 && dxtex->abpp == 1) {
-		format = 2;
-		skip = 2;
-	}
-
-	if(format <= 1) {
-		fread(&size, 1, 4, level_fp);
-		fread(&compressedSize, 1, 4, level_fp);
-
-		CompressedData = (char*)malloc(compressedSize);
-		*FileData = (char*)malloc(size);
-
-		fread(CompressedData, compressedSize, 1, level_fp);
-		Decompress(*FileData, CompressedData, compressedSize, size);
-
-		fread(&size, 1, 4, level_fp);
-		fread(&compressedSize, 1, 4, level_fp);
-		fseek(level_fp, compressedSize, SEEK_CUR);
-		free(CompressedData);
-	} else {
-		fread(&size, 1, 4, level_fp);
-		fread(&compressedSize, 1, 4, level_fp);
-		fseek(level_fp, compressedSize, SEEK_CUR);
-
-		fread(&size, 1, 4, level_fp);
-		fread(&compressedSize, 1, 4, level_fp);
-
-		CompressedData = (char*)malloc(compressedSize);
-		*FileData = (char*)malloc(size);
-		fread(CompressedData, compressedSize, 1, level_fp);
-		Decompress(*FileData, CompressedData, compressedSize, size);
-		free(CompressedData);
-	}
-
-	pData = *FileData;
-
-	Log(5, "RTPages %d", RTPages);
-	size = RTPages * skip * 0x10000;
-	TextureData = (unsigned char*)malloc(size);
-	memcpy(TextureData, *FileData, size);
-	*FileData += size;
-	S_LoadBar();
-
-	for(int i = 0; i < RTPages; i++) {
-		Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
-		nTex = nTextures;
-		nTextures++;
-		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 8, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
-		DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
-		Textures[nTex].tex = pTex;
-		Textures[nTex].surface = tSurf;
-		Textures[nTex].width = App.TextureSize;
-		Textures[nTex].height = App.TextureSize;
-		Textures[nTex].bump = 0;
-		IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, pTex);
-	}
-
-	free(TextureData);
-
-	Log(5, "OTPages %d", OTPages);
-	size = OTPages * skip * 0x10000;
-	TextureData = (unsigned char*)malloc(size);
-	memcpy(TextureData, *FileData, size);
-	*FileData += size;
-	S_LoadBar();
-
-	for(int i = 0; i < OTPages; i++) {
-		Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
-		nTex = nTextures;
-		nTextures++;
-		tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 8, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
-		DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
-		Textures[nTex].tex = pTex;
-		Textures[nTex].surface = tSurf;
-		Textures[nTex].width = App.TextureSize;
-		Textures[nTex].height = App.TextureSize;
-		Textures[nTex].bump = 0;
-		IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, pTex);
-	}
-
-	free(TextureData);
-	S_LoadBar();
-
-	Log(5, "BTPages %d", BTPages);
-
-	if(BTPages) {
-		size = BTPages * skip * 0x10000;
-		TextureData = (unsigned char*)malloc(size);
-		memcpy(TextureData, *FileData, size);
-		*FileData += size;
-
-		for(int i = 0; i < BTPages; i++) {
-			if(i < (BTPages >> 1))
-				tSurf = CreateTexturePage(App.TextureSize, App.TextureSize, 8, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
-			else {
-				if(!App.BumpMapping)
-					break;
-
-				tSurf = CreateTexturePage(App.BumpMapSize, App.BumpMapSize, 8, (long*)(TextureData + (i * skip * 0x10000)), 0, format);
-			}
-
-			Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
-			nTex = nTextures;
-			nTextures++;
-			DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
-			Textures[nTex].tex = pTex;
-			Textures[nTex].surface = tSurf;
-
-			if(i < (BTPages >> 1)) {
-				Textures[nTex].width = App.TextureSize;
-				Textures[nTex].height = App.TextureSize;
-			} else {
-				Textures[nTex].width = App.BumpMapSize;
-				Textures[nTex].height = App.BumpMapSize;
-			}
-
-			Textures[nTex].bump = 1;
-			Textures[nTex].bumptpage = nTex + (BTPages >> 1);
-		}
-
-		free(TextureData);
-	}
-
-	free(pData);
-
-	fread(&size, 1, 4, level_fp);
-	fread(&compressedSize, 1, 4, level_fp);
-	CompressedData = (char*)malloc(compressedSize);
-	*FileData = (char*)malloc(size);
-	fread(CompressedData, compressedSize, 1, level_fp);
-	Decompress(*FileData, CompressedData, compressedSize, size);
-	free(CompressedData);
-
-	pData = *FileData;
-	TextureData = (unsigned char*)malloc(0x40000);
-
-	if(!gfCurrentLevel) // main menu logo
-	{
-		pComp = 0;
-		CompressedData = NULL;
-
-		if(Gameflow->Language == US)
-			size = LoadFile("data\\uslogo.pak", &CompressedData);
-		else if(Gameflow->Language == GERMAN)
-			size = LoadFile("data\\grlogo.pak", &CompressedData);
-		else if(Gameflow->Language == FRENCH)
-			size = LoadFile("data\\frlogo.pak", &CompressedData);
-		else
-			size = LoadFile("data\\uklogo.pak", &CompressedData);
-
-		pComp = (char*)malloc(*(long*)CompressedData);
-		Decompress(pComp, CompressedData + 4, size - 4, *(long*)CompressedData);
-		free(CompressedData);
-
-		for(int i = 0; i < 2; i++) {
-			s = pComp + (i * 768);
-			d = (long*)TextureData;
-
-			for(int y = 0; y < 256; y++) {
-				for(int x = 0; x < 256; x++) {
-					r = *(s + (x * 3) + (y * 1536));
-					g = *(s + (x * 3) + (y * 1536) + 1);
-					b = *(s + (x * 3) + (y * 1536) + 2);
-					a = -1;
-
-					if(!r && !b && !g)
-						a = 0;
-
-					c = RGBA(r, g, b, a);
-					*d++ = c;
-				}
-			}
-
-			Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
-			nTex = nTextures;
-			nTextures++;
-			tSurf = CreateTexturePage(256, 256, 0, (long*)TextureData, 0, 0);
-			DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
-			Textures[nTex].tex = pTex;
-			Textures[nTex].surface = tSurf;
-			Textures[nTex].width = 256;
-			Textures[nTex].height = 256;
-			Textures[nTex].bump = 0;
-		}
-
-		free(pComp);
-	}
-
-	// font
-	memcpy(TextureData, *FileData, 0x40000);
-	*FileData += 0x40000;
-
-	Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
-	nTex = nTextures;
-	nTextures++;
-	tSurf = CreateTexturePage(256, 256, 1, (long*)TextureData, 0, 0);
-	DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
-	Textures[nTex].tex = pTex;
-	Textures[nTex].surface = tSurf;
-	Textures[nTex].width = 256;
-	Textures[nTex].height = 256;
-	Textures[nTex].bump = 0;
-
-	// sky
-	memcpy(TextureData, *FileData, 0x40000);
-	*FileData += 0x40000;
-
-	Textures = (TEXTURE*)AddStruct(Textures, nTextures, sizeof(TEXTURE));
-	nTex = nTextures;
-	nTextures++;
-	tSurf = CreateTexturePage(256, 256, 8, (long*)TextureData, 0, 0);
-	DXAttempt(IDirectDrawSurface4_QueryInterface(tSurf,&TEXGUID, (LPVOID*)&pTex));
-	Textures[nTex].tex = pTex;
-	Textures[nTex].surface = tSurf;
-	Textures[nTex].width = 256;
-	Textures[nTex].height = 256;
-	Textures[nTex].bump = 0;
-
-	free(TextureData);
-	free(pData);
-	return 1;
-}
-
-bool LoadSprites(char** FileData) {
+char LoadSprites(char** data, LEVEL_INFO* lvl) {
 	STATIC_INFO* stat;
 	OBJECT_INFO* obj;
 	SPRITESTRUCT* sptr;
@@ -562,15 +299,15 @@ bool LoadSprites(char** FileData) {
 	long num_sprites, num_slots, slot;
 
 	Log(2, "LoadSprites");
-	*FileData += 3;
-	num_sprites = *(long*)*FileData;
-	*FileData += sizeof(long);
+	*data += 3;
+	num_sprites = *(long*)*data;
+	*data += sizeof(long);
 	spriteinfo = (SPRITESTRUCT*)game_malloc(sizeof(SPRITESTRUCT) * num_sprites);
 
 	for(int i = 0; i < num_sprites; i++) {
 		sptr = &spriteinfo[i];
-		memcpy(&sprite, *FileData, sizeof(PHDSPRITESTRUCT));
-		*FileData += sizeof(PHDSPRITESTRUCT);
+		memcpy(&sprite, *data, sizeof(PHDSPRITESTRUCT));
+		*data += sizeof(PHDSPRITESTRUCT);
 		sptr->height = sprite.height;
 		sptr->offset = sprite.offset;
 		sptr->tpage = sprite.tpage;
@@ -586,29 +323,29 @@ bool LoadSprites(char** FileData) {
 		sptr->tpage++;
 	}
 
-	num_slots = *(long*)*FileData;
-	*FileData += sizeof(long);
+	num_slots = *(long*)*data;
+	*data += sizeof(long);
 
 	if(num_slots <= 0)
 		return 1;
 
 	for(int i = 0; i < num_slots; i++) {
-		slot = *(long*)*FileData;
-		*FileData += sizeof(long);
+		slot = *(long*)*data;
+		*data += sizeof(long);
 
 		if(slot >= NUMBER_OBJECTS) {
 			slot -= NUMBER_OBJECTS;
 			stat = GetStaticObject(currentLevel,slot);
-			stat->mesh_number = *(short*)*FileData;
-			*FileData += sizeof(short);
-			stat->mesh_number = *(short*)*FileData;
-			*FileData += sizeof(short);
+			stat->mesh_number = *(short*)*data;
+			*data += sizeof(short);
+			stat->mesh_number = *(short*)*data;
+			*data += sizeof(short);
 		} else {
 			obj = GetObjectInfo(currentLevel,slot);
-			obj->nmeshes = *(short*)*FileData;
-			*FileData += sizeof(short);
-			obj->mesh_index = *(short*)*FileData;
-			*FileData += sizeof(short);
+			obj->nmeshes = *(short*)*data;
+			*data += sizeof(short);
+			obj->mesh_index = *(short*)*data;
+			*data += sizeof(short);
 			obj->loaded = 1;
 		}
 	}
@@ -616,107 +353,73 @@ bool LoadSprites(char** FileData) {
 	return 1;
 }
 
-bool LoadCameras(char** FileData) {
+char LoadCameras(char** data, LEVEL_INFO* lvl) {
 	Log(2, "LoadCameras");
-	number_cameras = *(long*)*FileData;
-	*FileData += sizeof(long);
+	number_cameras = *(long*)*data;
+	*data += sizeof(long);
 
 	if(number_cameras) {
 		camera.fixed = (OBJECT_VECTOR*)game_malloc(number_cameras * sizeof(OBJECT_VECTOR));
-		memcpy(camera.fixed, *FileData, number_cameras * sizeof(OBJECT_VECTOR));
-		*FileData += number_cameras * sizeof(OBJECT_VECTOR);
+		memcpy(camera.fixed, *data, number_cameras * sizeof(OBJECT_VECTOR));
+		*data += number_cameras * sizeof(OBJECT_VECTOR);
 	}
 
-	number_spotcams = *(short*)*FileData;
-	*FileData += sizeof(long); //<<---- look at me
+	number_spotcams = *(short*)*data;
+	*data += sizeof(long); //<<---- look at me
 
 	if(number_spotcams) {
-		memcpy(SpotCam, *FileData, number_spotcams * sizeof(SPOTCAM));
-		*FileData += number_spotcams * sizeof(SPOTCAM);
+		memcpy(SpotCam, *data, number_spotcams * sizeof(SPOTCAM));
+		*data += number_spotcams * sizeof(SPOTCAM);
 	}
 
 	return 1;
 }
 
-bool LoadSoundEffects(char** FileData) {
+char LoadSoundEffects(char** data, LEVEL_INFO* lvl) {
 	Log(2, "LoadSoundEffects");
-	number_sound_effects = *(long*)*FileData;
-	*FileData += sizeof(long);
+	number_sound_effects = *(long*)*data;
+	*data += sizeof(long);
 	Log(8, "Number of SFX %d", number_sound_effects);
 
 	if(number_sound_effects) {
 		sound_effects = (OBJECT_VECTOR*)game_malloc(number_sound_effects * sizeof(OBJECT_VECTOR));
-		memcpy(sound_effects, *FileData, number_sound_effects * sizeof(OBJECT_VECTOR));
-		*FileData += number_sound_effects * sizeof(OBJECT_VECTOR);
+		memcpy(sound_effects, *data, number_sound_effects * sizeof(OBJECT_VECTOR));
+		*data += number_sound_effects * sizeof(OBJECT_VECTOR);
 	}
 
 	return 1;
 }
 
-bool LoadAnimatedTextures(char** FileData) {
+char LoadAnimatedTextures(char** data, LEVEL_INFO* lvl) {
 	long num_anim_ranges;
 
-	num_anim_ranges = *(long*)*FileData;
-	*FileData += sizeof(long);
+	num_anim_ranges = *(long*)*data;
+	*data += sizeof(long);
 	aranges = (short*)game_malloc(num_anim_ranges * 2);
-	memcpy(aranges, *FileData, num_anim_ranges * 2);
-	*FileData += num_anim_ranges * sizeof(short);
-	nAnimUVRanges = *(char*)*FileData;
-	*FileData += sizeof(char);
+	memcpy(aranges, *data, num_anim_ranges * 2);
+	*data += num_anim_ranges * sizeof(short);
+	nAnimUVRanges = *(char*)*data;
+	*data += sizeof(char);
 	return 1;
 }
 
-bool LoadTextureInfos(char** FileData) {
-	TEXTURESTRUCT* t;
-	PHDTEXTURESTRUCT tex;
-	long val;
 
-	Log(2, "LoadTextureInfos");
-	*FileData += 3;
-
-	val = *(long*)*FileData;
-	*FileData += sizeof(long);
-	Log(5, "Texture Infos : %d", val);
-	textinfo = (TEXTURESTRUCT*)game_malloc(val * sizeof(TEXTURESTRUCT));
-
-	for(int i = 0; i < val; i++) {
-		t = &textinfo[i];
-		memcpy(&tex, *FileData, sizeof(PHDTEXTURESTRUCT));
-		*FileData += sizeof(PHDTEXTURESTRUCT);
-		t->drawtype = tex.drawtype;
-		t->tpage = tex.tpage & 0x7FFF;
-		t->flag = tex.tpage ^ ((tex.tpage ^ tex.flag) & 0x7FFF);
-		t->u1 = (float)(tex.u1) * (1.0F / 65535.0F);
-		t->v1 = (float)(tex.v1) * (1.0f / 65535.0F);
-		t->u2 = (float)(tex.u2) * (1.0f / 65535.0F);
-		t->v2 = (float)(tex.v2) * (1.0f / 65535.0F);
-		t->u3 = (float)(tex.u3) * (1.0f / 65535.0F);
-		t->v3 = (float)(tex.v3) * (1.0f / 65535.0F);
-		t->u4 = (float)(tex.u4) * (1.0f / 65535.0F);
-		t->v4 = (float)(tex.v4) * (1.0f / 65535.0F);
-	}
-
-	AdjustUV(val);
-	Log(5, "Created %d Texture Pages", nTextures - 1);
+char LoadCinematic(char** data, LEVEL_INFO* lvl) {
+	*data += sizeof(short);
 	return 1;
 }
 
-bool LoadCinematic(char** FileData) {
-	*FileData += sizeof(short);
-	return 1;
-}
-
-bool LoadAIInfo(char** FileData) {
+char LoadAIInfo(char** data, LEVEL_INFO* lvl) {
 	long num_ai;
 
-	num_ai = *(long*)*FileData;
-	*FileData += sizeof(long);
+	num_ai = *(long*)*data;
+	*data += sizeof(long);
 
 	if(num_ai) {
 		nAIObjects = (short)num_ai;
 		AIObjects = (AIOBJECT*)game_malloc(sizeof(AIOBJECT) * num_ai);
-		memcpy(AIObjects, *FileData, sizeof(AIOBJECT) * num_ai);
-		*FileData += sizeof(AIOBJECT) * num_ai;
+		memcpy(AIObjects, *data, sizeof(AIOBJECT) * num_ai);
+		*data += sizeof(AIOBJECT) * num_ai;
 	}
 
 	return 1;
@@ -732,7 +435,7 @@ void S_GetUVRotateTextures() {
 
 	for(int i = 0; i < nAnimUVRanges; i++, pRange++) {
 		for(int j = (int)*(pRange++); j >= 0; j--, pRange++) {
-			tex = &textinfo[*pRange];
+			tex = GetTextInfo(currentLevel,*pRange);
 			AnimatingTexturesV[i][j][0] = tex->v1;
 		}
 
@@ -740,132 +443,9 @@ void S_GetUVRotateTextures() {
 	}
 }
 
-void AdjustUV(long num) {
-	TEXTURESTRUCT* tex;
-	float u, v;
-	unsigned short type;
 
-	Log(2, "AdjustUV");
 
-	for(int i = 0; i < num; i++) {
-		tex = &textinfo[i];
-		Textures[tex->tpage].tpage++;
-		tex->tpage++;
-		u = 1.0F / (float)(Textures[tex->tpage].width << 1);
-		v = 1.0F / (float)(Textures[tex->tpage].height << 1);
-		type = tex->flag & 7;
-
-		if(tex->flag & 0x8000) {
-			switch(type) {
-			case 0:
-				tex->u1 += u;
-				tex->v1 += v;
-				tex->u2 -= u;
-				tex->v2 += v;
-				tex->u3 += u;
-				tex->v3 -= v;
-				break;
-
-			case 1:
-				tex->u1 -= u;
-				tex->v1 += v;
-				tex->u2 -= u;
-				tex->v2 -= v;
-				tex->u3 += u;
-				tex->v3 += v;
-				break;
-
-			case 2:
-				tex->u1 -= u;
-				tex->v1 -= v;
-				tex->u2 += u;
-				tex->v2 -= v;
-				tex->u3 -= u;
-				tex->v3 += v;
-				break;
-
-			case 3:
-				tex->u1 += u;
-				tex->v1 -= v;
-				tex->u2 += u;
-				tex->v2 += v;
-				tex->u3 -= u;
-				tex->v3 -= v;
-				break;
-
-			case 4:
-				tex->u1 -= u;
-				tex->v1 += v;
-				tex->u2 += u;
-				tex->v2 += v;
-				tex->u3 -= u;
-				tex->v3 -= v;
-				break;
-
-			case 5:
-				tex->u1 += u;
-				tex->v1 += v;
-				tex->u2 += u;
-				tex->v2 -= v;
-				tex->u3 -= u;
-				tex->v3 += v;
-				break;
-
-			case 6:
-				tex->u1 += u;
-				tex->v1 -= v;
-				tex->u2 -= u;
-				tex->v2 -= v;
-				tex->u3 += u;
-				tex->v3 += v;
-				break;
-
-			case 7:
-				tex->u1 -= u;
-				tex->v1 -= v;
-				tex->u2 -= u;
-				tex->v2 += v;
-				tex->u3 += u;
-				tex->v3 -= v;
-				break;
-
-			default:
-				Log(1, "TextureInfo Type %d Not Found", type);
-				break;
-			}
-		} else {
-			switch(type) {
-			case 0:
-				tex->u1 += u;
-				tex->v1 += v;
-				tex->u2 -= u;
-				tex->v2 += v;
-				tex->u3 -= u;
-				tex->v3 -= v;
-				tex->u4 += u;
-				tex->v4 -= v;
-				break;
-
-			case 1:
-				tex->u1 -= u;
-				tex->v1 += v;
-				tex->u2 += u;
-				tex->v2 += v;
-				tex->u3 += u;
-				tex->v3 -= v;
-				tex->u4 -= u;
-				tex->v4 -= v;
-				break;
-
-			default:
-				Log(1, "TextureInfo Type %d Not Found", type);
-				break;
-			}
-		}
-	}
-}
-
-bool Decompress(char* pDest, char* pCompressed, long compressedSize, long size) {
+char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size) {
 	z_stream stream;
 
 	Log(2, "Decompress");

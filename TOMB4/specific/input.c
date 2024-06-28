@@ -127,7 +127,7 @@ static void DoWeaponHotkey() // adds extra checks and does ammo type swaps..
 			if(lara.gun_status == LG_NO_ARMS)
 				lara.gun_status = LG_DRAW_GUNS;
 			else if(lara.gun_status == LG_READY && !ammo_change_timer) {
-				if(true)
+				if(1)
 					return;
 
 				memset(ammo_change_buf, 0, sizeof(ammo_change_buf));
@@ -171,7 +171,7 @@ static void DoWeaponHotkey() // adds extra checks and does ammo type swaps..
 			if(lara.gun_status == LG_NO_ARMS)
 				lara.gun_status = LG_DRAW_GUNS;
 			else if(lara.gun_status == LG_READY && !ammo_change_timer) {
-				if(true)
+				if(1)
 					return;
 
 				memset(ammo_change_buf, 0, sizeof(ammo_change_buf));
@@ -204,7 +204,7 @@ static void DoWeaponHotkey() // adds extra checks and does ammo type swaps..
 			if(lara.gun_status == LG_NO_ARMS)
 				lara.gun_status = LG_DRAW_GUNS;
 			else if(lara.gun_status == LG_READY && !ammo_change_timer) {
-				if(true)
+				if(1)
 					return;
 
 				memset(ammo_change_buf, 0, sizeof(ammo_change_buf));

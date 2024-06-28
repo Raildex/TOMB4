@@ -86,7 +86,7 @@ void DrawGameInfo(long timed) {
 			PrintString(phd_winwidth >> 1, font_height, 0, buf, 0x8000);
 		}
 
-		if(/*tomb4.ammo_counter*/ true) {
+		if(/*tomb4.ammo_counter*/ 1) {
 			if(lara.gun_status == LG_READY) {
 				ammo = *get_current_ammo_pointer(lara.gun_type);
 

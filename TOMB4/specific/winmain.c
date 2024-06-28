@@ -4,6 +4,7 @@
 #include "specific/cmdline.h"
 #include "specific/registry.h"
 #include "specific/dxshell.h"
+#include <crtdbg.h>
 #include <time.h>
 #include "game/text.h"
 #include "specific/function_table.h"
@@ -434,6 +435,7 @@ void WinSetStyle(bool fullscreen, unsigned long* set) {
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nShowCmd) {
+	_CrtSetDbgFlag(_CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_ALLOC_MEM_DF);
 	DXDISPLAYMODE* dm;
 	HWND desktop;
 	HDC hdc;
@@ -526,7 +528,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 
 	if(size) {
 		cutseqpakPtr = (char*)malloc(*(long*)buf);
-		Decompress(cutseqpakPtr, buf + 4, size - 4, *(long*)buf);
+		S_Decompress(cutseqpakPtr, buf + 4, size - 4, *(long*)buf);
 		free(buf);
 	}
 

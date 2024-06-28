@@ -128,7 +128,7 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 	if(lara.vehicle == NO_ITEM)
 		S_PrintShadow(obj->shadow_size, GLaraShadowframe, item);
 
-	if(true) {
+	if(1) {
 		if(input & IN_LOOK) {
 			dx = lara_item->pos.x_pos - CamPos.x;
 			dy = lara_item->pos.y_pos - CamPos.y - 512;

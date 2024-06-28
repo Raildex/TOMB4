@@ -1,4 +1,5 @@
 
+#include "game/levelinfo.h"
 #include "specific/loadsave.h"
 #include "specific/function_table.h"
 #include "specific/3dmath.h"
@@ -314,7 +315,7 @@ void S_DrawHealthBar(long pos) {
 	w = GetRenderScale(150);
 	h = GetRenderScale(6);
 
-	if(true) // original or improved
+	if(1) // original or improved
 	{
 		x = GetRenderScale(8);
 		y = GetRenderScale(8);
@@ -406,7 +407,7 @@ void DoSlider(long x, long y, long width, long height, long pos, long c1, long c
 	w = (float)GetFixedScale(width);
 	h = (float)GetFixedScale(height >> 1);
 
-	tex.tpage = (unsigned short)(nTextures - 1);
+	tex.tpage = (unsigned short)(GetNumTextures(currentLevel) - 1);
 	tex.drawtype = 0;
 	tex.flag = 0;
 	tex.u1 = 0;
