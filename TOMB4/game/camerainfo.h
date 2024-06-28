@@ -22,6 +22,7 @@ typedef struct CAMERA_INFO {
 	short target_elevation;
 	short actual_elevation;
 	short actual_angle;
+	short node;
 	short number;
 	short last;
 	short timer;

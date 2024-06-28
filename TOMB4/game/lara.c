@@ -1739,33 +1739,37 @@ void lara_as_extcornerl(ITEM_INFO* item, COLL_INFO* coll) {
 	camera.target_elevation = -6144;
 	flip = item->anim_number == ANIM_EXTCORNERL_END || item->anim_number == ANIM_EXTCLIMBL_END;
 	SetCornerAnim(item, coll, 0x4000, flip);
+	camera.node = LM_TORSO;
 }
 
 void lara_as_extcornerr(ITEM_INFO* item, COLL_INFO* coll) {
 	short flip;
 
-	camera.target_angle = -0x4000;
+	camera.target_angle = 0;
 	camera.target_elevation = -6144;
 	flip = item->anim_number == ANIM_EXTCORNERR_END || item->anim_number == ANIM_EXTCLIMBR_END;
 	SetCornerAnim(item, coll, -0x4000, flip);
+	camera.node = LM_TORSO;
 }
 
 void lara_as_intcornerl(ITEM_INFO* item, COLL_INFO* coll) {
 	short flip;
 
-	camera.target_angle = -0x4000;
+	camera.target_angle = 0;
 	camera.target_elevation = -6144;
 	flip = item->anim_number == ANIM_INTCORNERL_END || item->anim_number == ANIM_INTCLIMBL_END;
 	SetCornerAnim(item, coll, -0x4000, flip);
+	camera.node = LM_TORSO;
 }
 
 void lara_as_intcornerr(ITEM_INFO* item, COLL_INFO* coll) {
 	short flip;
 
-	camera.target_angle = 0x4000;
+	camera.target_angle = 0;
 	camera.target_elevation = -6144;
 	flip = item->anim_number == ANIM_INTCORNERR_END || item->anim_number == ANIM_INTCLIMBR_END;
 	SetCornerAnim(item, coll, 0x4000, flip);
+	camera.node = LM_TORSO;
 }
 
 void lara_as_splat(ITEM_INFO* item, COLL_INFO* coll) {
@@ -2113,6 +2117,7 @@ void lara_col_slideback(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_col_roll(ITEM_INFO* item, COLL_INFO* coll) {
+	camera.node = LM_HIPS;
 	lara.move_angle = item->pos.y_rot;
 	coll->bad_pos = -NO_HEIGHT;
 	coll->bad_neg = -384;
@@ -2176,6 +2181,8 @@ void lara_as_pushblock(ITEM_INFO* item, COLL_INFO* coll) {
 	camera.flags = 1;
 	camera.target_angle = 16380;
 	camera.target_elevation = -4550;
+	camera.node = LM_TORSO;
+
 }
 
 void lara_as_pullblock(ITEM_INFO* item, COLL_INFO* coll) {
@@ -2185,6 +2192,7 @@ void lara_as_pullblock(ITEM_INFO* item, COLL_INFO* coll) {
 	camera.flags = 1;
 	camera.target_angle = 6370;
 	camera.target_elevation = -4550;
+	camera.node = LM_TORSO;
 }
 
 void lara_as_ppready(ITEM_INFO* item, COLL_INFO* coll) {
@@ -2327,6 +2335,7 @@ void lara_as_waterout(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->enable_baddie_push = 0;
 	coll->enable_spaz = 0;
 	camera.flags = 1;
+	camera.node = LM_HIPS;
 }
 
 void lara_as_wade(ITEM_INFO* item, COLL_INFO* coll) {

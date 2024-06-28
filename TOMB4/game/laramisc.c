@@ -2,6 +2,7 @@
 #include "game/laramisc.h"
 #include "game/carriedweaponflags.h"
 #include "game/gfleveloptions.h"
+#include "game/laramesh.h"
 #include "game/objects.h"
 #include "game/laraswim.h"
 #include "game/lara_states.h"
