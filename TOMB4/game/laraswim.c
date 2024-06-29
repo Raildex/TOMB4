@@ -401,70 +401,127 @@ void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 }
 
-void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll) {
-	long y;
+void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll)
+{
+	COLL_INFO coll2, coll3;
+	long height;
+	short oxr, hit;
 
-	if(item->pos.x_rot < -0x4000 || item->pos.x_rot > 0x4000)
-		lara.move_angle = item->pos.y_rot + 0x8000;
+	hit = 0;
+	oxr = item->pos.x_rot;
+
+	if (oxr < -0x4000 || oxr > 0x4000)
+	{
+		lara.move_angle = item->pos.y_rot - 0x8000;
+		coll->facing = item->pos.y_rot - 0x8000;
+	}
 	else
+	{
 		lara.move_angle = item->pos.y_rot;
+		coll->facing = item->pos.y_rot;
+	}
 
-	coll->facing = lara.move_angle;
-	y = 762 * phd_sin(item->pos.x_rot) >> W2V_SHIFT;
-	y = abs(y);
+	height = 640 * phd_sin(item->pos.x_rot) >> W2V_SHIFT;
 
-	if(y < 200)
-		y = 200;
+	if (height < 0)
+		height = -height;
+
 
 	coll->bad_neg = -64;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos + y / 2, item->pos.z_pos, item->room_number, y);
+	coll2 = *coll;
+	coll3 = *coll;
+
+	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos + height / 2, item->pos.z_pos, item->room_number, height);
+
+	coll2.facing += 0x2000;
+	GetCollisionInfo(&coll2, item->pos.x_pos, item->pos.y_pos + height / 2, item->pos.z_pos, item->room_number, height);
+
+	coll3.facing -= 0x2000;
+	GetCollisionInfo(&coll3, item->pos.x_pos, item->pos.y_pos + height / 2, item->pos.z_pos, item->room_number, height);
+
 	ShiftItem(item, coll);
 
-	switch(coll->coll_type) {
+	switch (coll->coll_type)
+	{
 	case CT_FRONT:
 
-		if(item->pos.x_rot > 8190)
-			item->pos.x_rot += 364;
-		else if(item->pos.x_rot < -8190)
-			item->pos.x_rot -= 364;
+		if (item->pos.x_rot > 4550)
+		{
+			item->pos.x_rot += 182;
+			hit = 1;
+		}
+		else if (item->pos.x_rot < -4550)
+		{
+			item->pos.x_rot -= 182;
+			hit = 1;
+		}
+		else if (item->pos.x_rot > 910)
+			item->pos.x_rot += 91;
+		else if (item->pos.x_rot < -910)
+			item->pos.x_rot -= 91;
+		else if (item->pos.x_rot > 0)
+			item->pos.x_rot += 45;
+		else if (item->pos.x_rot < 0)
+			item->pos.x_rot -= 45;
 		else
+		{
+			hit = 1;
 			item->fallspeed = 0;
+		}
+
+		if (coll2.coll_type == CT_LEFT)
+			item->pos.y_rot += 364;
+		else if (coll2.coll_type == CT_RIGHT)
+			item->pos.y_rot -= 364;
+		else if (coll3.coll_type == CT_LEFT)
+			item->pos.y_rot += 364;
+		else if (coll3.coll_type == CT_RIGHT)
+			item->pos.y_rot -= 364;
 
 		break;
 
 	case CT_TOP:
 
-		if(item->pos.x_rot < -8190)
-			item->pos.x_rot -= 364;
+		if (item->pos.x_rot >= -8190)
+		{
+			hit = 1;
+			item->pos.x_rot -= 182;
+		}
 
 		break;
 
 	case CT_TOP_FRONT:
 		item->fallspeed = 0;
+		hit = 1;
 		break;
 
 	case CT_LEFT:
-		item->pos.y_rot += 910;
+		item->pos.y_rot += 364;
+		hit = 1;
 		break;
 
 	case CT_RIGHT:
-		item->pos.y_rot -= 910;
+		item->pos.y_rot -= 364;
+		hit = 1;
 		break;
 
 	case CT_CLAMP:
+		hit = 2;
 		item->pos.x_pos = coll->old.x;
 		item->pos.y_pos = coll->old.y;
 		item->pos.z_pos = coll->old.z;
 		item->fallspeed = 0;
-		return;
+		break;
 	}
 
-	if(coll->mid_floor < 0 && coll->mid_floor != NO_HEIGHT) {
-		item->pos.x_rot += 364;
+	if (coll->mid_floor < 0 && coll->mid_floor != NO_HEIGHT)
+	{
+		hit = 1;
+		item->pos.x_rot += 182;
 		item->pos.y_pos += coll->mid_floor;
 	}
 
-	if(lara.water_status != LW_FLYCHEAT)
+	if (hit != 2 && lara.water_status != LW_FLYCHEAT)
 		LaraTestWaterDepth(item, coll);
 }
 
