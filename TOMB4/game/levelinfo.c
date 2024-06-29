@@ -4,9 +4,7 @@
 #include "game/control.h"
 #include "game/languages.h"
 #include "levelinfo.h"
-#include "specific/d3dmatrix.h"
 #include "specific/drawroom.h"
-#include "specific/dxshell.h"
 #include "game/effect2.h"
 #include "specific/function_stubs.h"
 #include "game/fxinfo.h"
@@ -95,6 +93,8 @@ LEVEL_INFO* CreateLevel() {
 	lvl->nTextures = 1;
 	return lvl;
 }
+
+void ProcessMeshData(LEVEL_INFO* lvl,long num_meshes);
 
 char LoadObjects(char** data, LEVEL_INFO* lvl) {
 	OBJECT_INFO* obj;
@@ -231,6 +231,12 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 		stat->mesh_number *= 2;
 	}
 
+	Log(2, "ProcessMeshData %d", num_meshes);
+	num_level_meshes = num_meshes;
+	mesh_vtxbuf = (MESH_DATA**)malloc(4 * num_meshes);
+	lvl->mesh_base = (short*)mesh_vtxbuf;
+	short* last_mesh_ptr = 0;
+	MESH_DATA* msh = (MESH_DATA*)(uintptr_t)num_meshes;
 	ProcessMeshData(lvl, num_meshes * 2);
 	return 1;
 }
@@ -420,12 +426,8 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 
 void ProcessMeshData(LEVEL_INFO* lvl, long num_meshes) {
 	MESH_DATA* mesh;
-	D3DVERTEX* vtx;
-	D3DVERTEXBUFFERDESC buf;
 	short* mesh_ptr;
 	short* last_mesh_ptr;
-	long lp;
-	short c;
 
 	Log(2, "ProcessMeshData %d", num_meshes);
 	num_level_meshes = num_meshes;
@@ -437,104 +439,7 @@ void ProcessMeshData(LEVEL_INFO* lvl, long num_meshes) {
 	for(int i = 0; i < num_meshes; i++) {
 		mesh_ptr = GetMesh(currentLevel, i);
 
-		if(mesh_ptr == last_mesh_ptr) {
-			lvl->meshes[i] = (short*)mesh;
-			mesh_vtxbuf[i] = mesh;
-		} else {
-			last_mesh_ptr = mesh_ptr;
-			mesh = (MESH_DATA*)malloc(sizeof(MESH_DATA));
-			memset(mesh, 0, sizeof(MESH_DATA));
-			*GetMeshPointer(currentLevel, i) = (short*)mesh;
-			mesh_vtxbuf[i] = mesh;
-			mesh->x = mesh_ptr[0];
-			mesh->y = mesh_ptr[1];
-			mesh->z = mesh_ptr[2];
-			mesh->r = mesh_ptr[3];
-			mesh->flags = mesh_ptr[4];
-			mesh->nVerts = mesh_ptr[5] & 0xFF;
-			lp = 0;
-
-			if(!mesh->nVerts)
-				lp = mesh_ptr[5] >> 8;
-
-			mesh_ptr += 6;
-
-			if(mesh->nVerts) {
-				buf.dwNumVertices = mesh->nVerts;
-				buf.dwSize = sizeof(D3DVERTEXBUFFERDESC);
-				buf.dwCaps = 0;
-				buf.dwFVF = D3DFVF_TEX1 | D3DFVF_NORMAL | D3DFVF_XYZ;
-				DXAttempt(IDirect3D3_CreateVertexBuffer(App.dx.lpD3D, &buf, &mesh->SourceVB, 0, 0));
-				DXAttempt(IDirect3DVertexBuffer7_Lock(mesh->SourceVB, DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0));
-				IDirect3DVertexBuffer_Lock(mesh->SourceVB, DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0);
-
-				for(int j = 0; j < mesh->nVerts; j++) {
-					vtx[j].x = mesh_ptr[0];
-					vtx[j].y = mesh_ptr[1];
-					vtx[j].z = mesh_ptr[2];
-					mesh_ptr += 3;
-				}
-
-				mesh->nNorms = mesh_ptr[0];
-				mesh_ptr++;
-
-				if(!mesh->nNorms)
-					mesh->nNorms = mesh->nVerts;
-
-				if(mesh->nNorms > 0) {
-					mesh->Normals = (_D3DVECTOR*)malloc(mesh->nNorms * sizeof(_D3DVECTOR));
-
-					for(int j = 0; j < mesh->nVerts; j++) {
-						vtx[j].nx = mesh_ptr[0];
-						vtx[j].ny = mesh_ptr[1];
-						vtx[j].nz = mesh_ptr[2];
-						mesh_ptr += 3;
-						D3DNormalise((_D3DVECTOR*)&vtx[j].nx);
-						mesh->Normals[j].x = vtx[j].nx;
-						mesh->Normals[j].y = vtx[j].ny;
-						mesh->Normals[j].z = vtx[j].nz;
-					}
-
-					mesh->prelight = 0;
-				} else {
-					mesh->Normals = 0;
-					mesh->prelight = (long*)malloc(4 * mesh->nVerts);
-
-					for(int j = 0; j < mesh->nVerts; j++) {
-						c = 255 - (mesh_ptr[0] >> 5);
-						mesh->prelight[j] = RGBONLY(c, c, c);
-						mesh_ptr++;
-					}
-				}
-
-				IDirect3DVertexBuffer_Unlock(mesh->SourceVB);
-			} else
-				mesh_ptr += 6 * lp + 1;
-
-			mesh->ngt4 = mesh_ptr[0];
-			mesh_ptr++;
-
-			if(mesh->ngt4) {
-				mesh->gt4 = (short*)malloc(12 * mesh->ngt4);
-				lp = 6 * mesh->ngt4;
-
-				for(int j = 0; j < lp; j++)
-					mesh->gt4[j] = mesh_ptr[j];
-
-				mesh_ptr += lp;
-			}
-
-			mesh->ngt3 = mesh_ptr[0];
-			mesh_ptr++;
-
-			if(mesh->ngt3) {
-				mesh->gt3 = (short*)malloc(10 * mesh->ngt3);
-				lp = 5 * mesh->ngt3;
-
-				for(int j = 0; j < lp; j++)
-					mesh->gt3[j] = mesh_ptr[j];
-			}
-		}
+		ProcessMesh(lvl,mesh_ptr,last_mesh_ptr,i);
 	}
 
 	Log(2, "End ProcessMeshData");

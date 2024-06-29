@@ -288,6 +288,107 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 	}
 }
 
+void CalcTriFaceNormal(_D3DVECTOR* p1, _D3DVECTOR* p2, _D3DVECTOR* p3, _D3DVECTOR* N) {
+	FVECTOR u, v;
+
+	u.x = p1->x - p2->x;
+	u.y = p1->y - p2->y;
+	u.z = p1->z - p2->z;
+	v.x = p3->x - p2->x;
+	v.y = p3->y - p2->y;
+	v.z = p3->z - p2->z;
+	N->x = v.z * u.y - v.y * u.z;
+	N->y = v.x * u.z - v.z * u.x;
+	N->z = v.y * u.x - v.x * u.y;
+}
+
+void CreateVertexNormals(ROOM_INFO* r) {
+	_D3DVECTOR p1;
+	_D3DVECTOR p2;
+	_D3DVECTOR p3;
+	_D3DVECTOR n1;
+	_D3DVECTOR n2;
+	short* data;
+	short nQuads;
+	short nTris;
+
+	data = r->FaceData;
+	r->fnormals = (_D3DVECTOR*)game_malloc(sizeof(_D3DVECTOR) * (r->gt3cnt + r->gt4cnt));
+	nQuads = *data++;
+
+	for(int i = 0; i < nQuads; i++) {
+		p1 = r->verts[data[0]];
+		p2 = r->verts[data[1]];
+		p3 = r->verts[data[2]];
+		CalcTriFaceNormal(&p1, &p2, &p3, &n1);
+
+		p1 = r->verts[data[0]];
+		p2 = r->verts[data[2]];
+		p3 = r->verts[data[3]];
+		CalcTriFaceNormal(&p1, &p2, &p3, &n2);
+
+		n1.x += n2.x;
+		n1.y += n2.y;
+		n1.z += n2.z;
+		D3DNormalise(&n1);
+		r->fnormals[i] = n1;
+		data += 5;
+	}
+
+	nTris = *data++;
+
+	for(int i = 0; i < nTris; i++) {
+		p1 = r->verts[data[0]];
+		p2 = r->verts[data[1]];
+		p3 = r->verts[data[2]];
+		CalcTriFaceNormal(&p1, &p2, &p3, &n1);
+		D3DNormalise(&n1);
+		r->fnormals[nQuads + i] = n1;
+		data += 4;
+	}
+
+	r->vnormals = (_D3DVECTOR*)game_malloc(sizeof(_D3DVECTOR) * r->nVerts);
+
+	data = r->FaceData;
+	nQuads = *data++;
+
+	data += nQuads * 5;
+	nTris = *data;
+
+	for(int i = 0; i < r->nVerts; i++) {
+		n1.x = 0;
+		n1.y = 0;
+		n1.z = 0;
+
+		data = r->FaceData + 1;
+
+		for(int j = 0; j < nQuads; j++) {
+			if(data[0] == i || data[1] == i || data[2] == i || data[3] == i) {
+				n1.x += r->fnormals[j].x;
+				n1.y += r->fnormals[j].y;
+				n1.z += r->fnormals[j].z;
+			}
+
+			data += 5;
+		}
+
+		data++;
+
+		for(int j = 0; j < nTris; j++) {
+			if(data[0] == i || data[1] == i || data[2] == i) {
+				n1.x += r->fnormals[nQuads + j].x;
+				n1.y += r->fnormals[nQuads + j].y;
+				n1.z += r->fnormals[nQuads + j].z;
+			}
+
+			data += 4;
+		}
+
+		D3DNormalise(&n1);
+		r->vnormals[i] = n1;
+	}
+}
+
 void ProcessRoomData(ROOM_INFO* r) {
 	D3DVERTEX* vptr;
 	LIGHTINFO* light;
@@ -483,15 +584,11 @@ void ProcessRoomData(ROOM_INFO* r) {
 				pclight->x = (float)light->x;
 				pclight->y = (float)light->y;
 				pclight->z = (float)light->z;
-				pclight->ix = light->x;
-				pclight->iy = light->y;
-				pclight->iz = light->z;
+
 				pclight->nx = -light->nx;
 				pclight->ny = -light->ny;
 				pclight->nz = -light->nz;
-				pclight->inx = (long)(light->nx * -16384.0F);
-				pclight->iny = (long)(light->ny * -16384.0F);
-				pclight->inz = (long)(light->nz * -16384.0F);
+
 				pclight->Inner = light->Inner;
 				pclight->Outer = light->Outer;
 				pclight->InnerAngle = 2 * (float)acos(light->Inner);
@@ -552,20 +649,6 @@ void InsertRoom(ROOM_INFO* r) {
 				AddTriSorted(MyVertexBuffer, data[0], data[1], data[2], pTex, doublesided);
 		}
 	}
-}
-
-void CalcTriFaceNormal(_D3DVECTOR* p1, _D3DVECTOR* p2, _D3DVECTOR* p3, _D3DVECTOR* N) {
-	FVECTOR u, v;
-
-	u.x = p1->x - p2->x;
-	u.y = p1->y - p2->y;
-	u.z = p1->z - p2->z;
-	v.x = p3->x - p2->x;
-	v.y = p3->y - p2->y;
-	v.z = p3->z - p2->z;
-	N->x = v.z * u.y - v.y * u.z;
-	N->y = v.x * u.z - v.z * u.x;
-	N->z = v.y * u.x - v.x * u.y;
 }
 
 
@@ -733,89 +816,111 @@ void DrawBuckets() {
 	}
 }
 
-void CreateVertexNormals(ROOM_INFO* r) {
-	_D3DVECTOR p1;
-	_D3DVECTOR p2;
-	_D3DVECTOR p3;
-	_D3DVECTOR n1;
-	_D3DVECTOR n2;
-	short* data;
-	short nQuads;
-	short nTris;
 
-	data = r->FaceData;
-	r->fnormals = (_D3DVECTOR*)game_malloc(sizeof(_D3DVECTOR) * (r->gt3cnt + r->gt4cnt));
-	nQuads = *data++;
 
-	for(int i = 0; i < nQuads; i++) {
-		p1 = r->verts[data[0]];
-		p2 = r->verts[data[1]];
-		p3 = r->verts[data[2]];
-		CalcTriFaceNormal(&p1, &p2, &p3, &n1);
+void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i) {
+	MESH_DATA* mesh;
+	D3DVERTEXBUFFERDESC buf;
+	D3DVERTEX* vtx;
+	long lp;
+	char c;
+	if(mesh_ptr == last_mesh_ptr) {
+			
+			mesh = (MESH_DATA*)mesh_ptr;
+			mesh_vtxbuf[i] = mesh;
+		} else {
+			last_mesh_ptr = mesh_ptr;
+			mesh = (MESH_DATA*)malloc(sizeof(MESH_DATA));
+			memset(mesh, 0, sizeof(MESH_DATA));
+			*GetMeshPointer(currentLevel, i) = (short*)mesh;
+			mesh_vtxbuf[i] = mesh;
+			mesh->x = mesh_ptr[0];
+			mesh->y = mesh_ptr[1];
+			mesh->z = mesh_ptr[2];
+			mesh->r = mesh_ptr[3];
+			mesh->flags = mesh_ptr[4];
+			mesh->nVerts = mesh_ptr[5] & 0xFF;
+			lp = 0;
 
-		p1 = r->verts[data[0]];
-		p2 = r->verts[data[2]];
-		p3 = r->verts[data[3]];
-		CalcTriFaceNormal(&p1, &p2, &p3, &n2);
+			if(!mesh->nVerts)
+				lp = mesh_ptr[5] >> 8;
 
-		n1.x += n2.x;
-		n1.y += n2.y;
-		n1.z += n2.z;
-		D3DNormalise(&n1);
-		r->fnormals[i] = n1;
-		data += 5;
-	}
+			mesh_ptr += 6;
 
-	nTris = *data++;
+			if(mesh->nVerts) {
+				buf.dwNumVertices = mesh->nVerts;
+				buf.dwSize = sizeof(D3DVERTEXBUFFERDESC);
+				buf.dwCaps = 0;
+				buf.dwFVF = D3DFVF_TEX1 | D3DFVF_NORMAL | D3DFVF_XYZ;
+				DXAttempt(IDirect3D3_CreateVertexBuffer(App.dx.lpD3D, &buf, &mesh->SourceVB, 0, 0));
+				DXAttempt(IDirect3DVertexBuffer7_Lock(mesh->SourceVB, DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0));
+				IDirect3DVertexBuffer_Lock(mesh->SourceVB, DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0);
 
-	for(int i = 0; i < nTris; i++) {
-		p1 = r->verts[data[0]];
-		p2 = r->verts[data[1]];
-		p3 = r->verts[data[2]];
-		CalcTriFaceNormal(&p1, &p2, &p3, &n1);
-		D3DNormalise(&n1);
-		r->fnormals[nQuads + i] = n1;
-		data += 4;
-	}
+				for(int j = 0; j < mesh->nVerts; j++) {
+					vtx[j].x = mesh_ptr[0];
+					vtx[j].y = mesh_ptr[1];
+					vtx[j].z = mesh_ptr[2];
+					mesh_ptr += 3;
+				}
 
-	r->vnormals = (_D3DVECTOR*)game_malloc(sizeof(_D3DVECTOR) * r->nVerts);
+				mesh->nNorms = mesh_ptr[0];
+				mesh_ptr++;
 
-	data = r->FaceData;
-	nQuads = *data++;
+				if(!mesh->nNorms)
+					mesh->nNorms = mesh->nVerts;
 
-	data += nQuads * 5;
-	nTris = *data;
+				if(mesh->nNorms > 0) {
+					mesh->Normals = (_D3DVECTOR*)malloc(mesh->nNorms * sizeof(_D3DVECTOR));
 
-	for(int i = 0; i < r->nVerts; i++) {
-		n1.x = 0;
-		n1.y = 0;
-		n1.z = 0;
+					for(int j = 0; j < mesh->nVerts; j++) {
+						vtx[j].nx = mesh_ptr[0];
+						vtx[j].ny = mesh_ptr[1];
+						vtx[j].nz = mesh_ptr[2];
+						mesh_ptr += 3;
+						D3DNormalise((_D3DVECTOR*)&vtx[j].nx);
+						mesh->Normals[j].x = vtx[j].nx;
+						mesh->Normals[j].y = vtx[j].ny;
+						mesh->Normals[j].z = vtx[j].nz;
+					}
 
-		data = r->FaceData + 1;
+					mesh->prelight = 0;
+				} else {
+					mesh->Normals = 0;
+					mesh->prelight = (long*)malloc(4 * mesh->nVerts);
 
-		for(int j = 0; j < nQuads; j++) {
-			if(data[0] == i || data[1] == i || data[2] == i || data[3] == i) {
-				n1.x += r->fnormals[j].x;
-				n1.y += r->fnormals[j].y;
-				n1.z += r->fnormals[j].z;
+					for(int j = 0; j < mesh->nVerts; j++) {
+						c = 255 - (mesh_ptr[0] >> 5);
+						mesh->prelight[j] = RGBONLY(c, c, c);
+						mesh_ptr++;
+					}
+				}
+
+				IDirect3DVertexBuffer_Unlock(mesh->SourceVB);
+			} else
+				mesh_ptr += 6 * lp + 1;
+
+			mesh->ngt4 = mesh_ptr[0];
+			mesh_ptr++;
+
+			if(mesh->ngt4) {
+				mesh->gt4 = (short*)malloc(12 * mesh->ngt4);
+				lp = 6 * mesh->ngt4;
+
+				for(int j = 0; j < lp; j++)
+					mesh->gt4[j] = mesh_ptr[j];
+
+				mesh_ptr += lp;
 			}
 
-			data += 5;
-		}
+			mesh->ngt3 = mesh_ptr[0];
+			mesh_ptr++;
 
-		data++;
+			if(mesh->ngt3) {
+				mesh->gt3 = (short*)malloc(10 * mesh->ngt3);
+				lp = 5 * mesh->ngt3;
 
-		for(int j = 0; j < nTris; j++) {
-			if(data[0] == i || data[1] == i || data[2] == i) {
-				n1.x += r->fnormals[nQuads + j].x;
-				n1.y += r->fnormals[nQuads + j].y;
-				n1.z += r->fnormals[nQuads + j].z;
+				for(int j = 0; j < lp; j++)
+					mesh->gt3[j] = mesh_ptr[j];
 			}
-
-			data += 4;
 		}
-
-		D3DNormalise(&n1);
-		r->vnormals[i] = n1;
-	}
 }
