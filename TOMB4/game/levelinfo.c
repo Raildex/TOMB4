@@ -2,7 +2,7 @@
 #include "game/animstruct.h"
 #include "game/changestruct.h"
 #include "game/control.h"
-#include "game/languages.h"
+#include "game/phdspritestruct.h"
 #include "levelinfo.h"
 #include "specific/drawroom.h"
 #include "game/effect2.h"
@@ -42,6 +42,7 @@
 #include "game/texturestruct.h"
 #include "game/phdtexturestruct.h"
 #include "specific/file.h"
+#include "game/spritestruct.h"
 
 enum num_samples {
 	sample_lookuptable_size = 512,
@@ -79,6 +80,7 @@ struct LEVEL_INFO {
 	long nTextures;
 	TEXTURE* Textures;
 	TEXTURESTRUCT* textinfo;
+	SPRITESTRUCT* spriteinfo;
 };
 
 LEVEL_INFO* CreateLevel() {
@@ -1038,4 +1040,70 @@ char HasRendererBumpTexture(LEVEL_INFO* lvl, long num) {
 
 TEXTURESTRUCT* GetTextInfo(LEVEL_INFO* lvl, long num) {
 	return lvl->textinfo + num;
+}
+
+char LoadSprites(char** data, LEVEL_INFO* lvl) {
+	STATIC_INFO* stat;
+	OBJECT_INFO* obj;
+	SPRITESTRUCT* sptr;
+	PHDSPRITESTRUCT sprite;
+	long num_sprites, num_slots, slot;
+
+	Log(2, "LoadSprites");
+	*data += 3;
+	num_sprites = *(long*)*data;
+	*data += sizeof(long);
+	lvl->spriteinfo = (SPRITESTRUCT*)calloc(num_sprites,sizeof(SPRITESTRUCT));
+
+	for(int i = 0; i < num_sprites; i++) {
+		sptr = &lvl->spriteinfo[i];
+		memcpy(&sprite, *data, sizeof(PHDSPRITESTRUCT));
+		*data += sizeof(PHDSPRITESTRUCT);
+		sptr->height = sprite.height;
+		sptr->offset = sprite.offset;
+		sptr->tpage = sprite.tpage;
+		sptr->width = sprite.width;
+		sptr->x1 = (float)((sprite.x1) * (1.0F / 256.0F));
+		sptr->y1 = (float)((sprite.y1) * (1.0F / 256.0F));
+		sptr->x2 = (float)((sprite.x2) * (1.0F / 256.0F));
+		sptr->y2 = (float)((sprite.y2) * (1.0F / 256.0F));
+		sptr->x1 += (1.0F / 256.0F);
+		sptr->y1 += (1.0F / 256.0F);
+		sptr->x2 -= (1.0F / 256.0F);
+		sptr->y2 -= (1.0F / 256.0F);
+		sptr->tpage++;
+	}
+
+	num_slots = *(long*)*data;
+	*data += sizeof(long);
+
+	if(num_slots <= 0)
+		return 1;
+
+	for(int i = 0; i < num_slots; i++) {
+		slot = *(long*)*data;
+		*data += sizeof(long);
+
+		if(slot >= NUMBER_OBJECTS) {
+			slot -= NUMBER_OBJECTS;
+			stat = GetStaticObject(currentLevel,slot);
+			stat->mesh_number = *(short*)*data;
+			*data += sizeof(short);
+			stat->mesh_number = *(short*)*data;
+			*data += sizeof(short);
+		} else {
+			obj = GetObjectInfo(currentLevel,slot);
+			obj->nmeshes = *(short*)*data;
+			*data += sizeof(short);
+			obj->mesh_index = *(short*)*data;
+			*data += sizeof(short);
+			obj->loaded = 1;
+		}
+	}
+
+	return 1;
+}
+
+SPRITESTRUCT* GetSpriteInfo(LEVEL_INFO* lvl, long num) {
+	return lvl->spriteinfo + num;
 }

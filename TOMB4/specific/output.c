@@ -756,9 +756,9 @@ void phd_PutPolygons(short* objptr, long clip) {
 		return;
 
 	if(objptr == GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_DOUBLE)->mesh_index) || objptr == GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_DOUBLE)->mesh_index + 2))
-		envmap_sprite = &spriteinfo[GetObjectInfo(currentLevel,SKY_GRAPHICS)->mesh_index];
+		envmap_sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,SKY_GRAPHICS)->mesh_index);
 	else
-		envmap_sprite = &spriteinfo[GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11];
+		envmap_sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11);
 
 	ResetLighting();
 
@@ -1107,7 +1107,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	bWaterEffect = 0;
 	SetD3DViewMatrix();
 	mesh = (MESH_DATA*)objptr;
-	envmap_sprite = &spriteinfo[GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11];
+	envmap_sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11);
 
 	ResetLighting();
 	ambientR = CLRR(color);

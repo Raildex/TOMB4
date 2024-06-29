@@ -35,7 +35,6 @@ char LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl);
 void S_GetUVRotateTextures();
 char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size);
 
-extern SPRITESTRUCT* spriteinfo;
 extern THREAD LevelLoadingThread;
 
 extern TEXTURESTRUCT* AnimatingWaterfalls[3];

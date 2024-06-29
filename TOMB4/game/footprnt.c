@@ -126,7 +126,7 @@ void S_DrawFootPrints() {
 				v[j].specular = 0xFF000000;
 			}
 
-			sprite = &spriteinfo[GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 10];
+			sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 10);
 			tex.drawtype = 5;
 			tex.flag = 0;
 			tex.tpage = sprite->tpage;

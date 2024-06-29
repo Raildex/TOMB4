@@ -2,9 +2,7 @@
 #include "specific/file.h"
 #include "specific/function_stubs.h"
 #include "specific/texture.h"
-#include "specific/dxsound.h"
 #include "specific/drawbars.h"
-#include "specific/dxshell.h"
 #include "specific/drawroom.h"
 #include "game/setup.h"
 #include "game/objects.h"
@@ -12,7 +10,6 @@
 #include "game/tomb4fx.h"
 #include "specific/audio.h"
 #include "game/spotcam.h"
-#include "game/control.h"
 #include "game/camera.h"
 #include "specific/polyinsert.h"
 #include "game/draw.h"
@@ -21,10 +18,6 @@
 #include "game/lara.h"
 #include "specific/output.h"
 #include "game/gameflow.h"
-#include "specific/dxinfo.h"
-#include "specific/dxdirectdrawinfo.h"
-#include "specific/dxd3ddevice.h"
-#include "specific/dxtextureinfo.h"
 #include "specific/texture.h"
 #include "game/objectinfo.h"
 #include "game/meshdata.h"
@@ -33,18 +26,14 @@
 #include "game/phdspritestruct.h"
 #include "game/spritestruct.h"
 #include "game/objectvector.h"
-#include "game/phdtexturestruct.h"
 #include "game/staticinfo.h"
 #include "game/aiobject.h"
 #include "specific/texture.h"
 #include "game/larainfo.h"
-#include "game/languages.h"
 #include <process.h>
 #include "game/levelinfo.h"
 #include "texture.h"
 
-
-SPRITESTRUCT* spriteinfo;
 THREAD LevelLoadingThread;
 
 TEXTURESTRUCT* AnimatingWaterfalls[3];
@@ -291,67 +280,6 @@ long LoadFile(const char* name, char** dest) {
 
 
 
-char LoadSprites(char** data, LEVEL_INFO* lvl) {
-	STATIC_INFO* stat;
-	OBJECT_INFO* obj;
-	SPRITESTRUCT* sptr;
-	PHDSPRITESTRUCT sprite;
-	long num_sprites, num_slots, slot;
-
-	Log(2, "LoadSprites");
-	*data += 3;
-	num_sprites = *(long*)*data;
-	*data += sizeof(long);
-	spriteinfo = (SPRITESTRUCT*)game_malloc(sizeof(SPRITESTRUCT) * num_sprites);
-
-	for(int i = 0; i < num_sprites; i++) {
-		sptr = &spriteinfo[i];
-		memcpy(&sprite, *data, sizeof(PHDSPRITESTRUCT));
-		*data += sizeof(PHDSPRITESTRUCT);
-		sptr->height = sprite.height;
-		sptr->offset = sprite.offset;
-		sptr->tpage = sprite.tpage;
-		sptr->width = sprite.width;
-		sptr->x1 = (float)((sprite.x1) * (1.0F / 256.0F));
-		sptr->y1 = (float)((sprite.y1) * (1.0F / 256.0F));
-		sptr->x2 = (float)((sprite.x2) * (1.0F / 256.0F));
-		sptr->y2 = (float)((sprite.y2) * (1.0F / 256.0F));
-		sptr->x1 += (1.0F / 256.0F);
-		sptr->y1 += (1.0F / 256.0F);
-		sptr->x2 -= (1.0F / 256.0F);
-		sptr->y2 -= (1.0F / 256.0F);
-		sptr->tpage++;
-	}
-
-	num_slots = *(long*)*data;
-	*data += sizeof(long);
-
-	if(num_slots <= 0)
-		return 1;
-
-	for(int i = 0; i < num_slots; i++) {
-		slot = *(long*)*data;
-		*data += sizeof(long);
-
-		if(slot >= NUMBER_OBJECTS) {
-			slot -= NUMBER_OBJECTS;
-			stat = GetStaticObject(currentLevel,slot);
-			stat->mesh_number = *(short*)*data;
-			*data += sizeof(short);
-			stat->mesh_number = *(short*)*data;
-			*data += sizeof(short);
-		} else {
-			obj = GetObjectInfo(currentLevel,slot);
-			obj->nmeshes = *(short*)*data;
-			*data += sizeof(short);
-			obj->mesh_index = *(short*)*data;
-			*data += sizeof(short);
-			obj->loaded = 1;
-		}
-	}
-
-	return 1;
-}
 
 char LoadCameras(char** data, LEVEL_INFO* lvl) {
 	Log(2, "LoadCameras");
