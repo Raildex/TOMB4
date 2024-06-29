@@ -699,16 +699,16 @@ void SetupRipple(long x, long y, long z, long size, long flags) {
 	ripple = &ripples[num];
 	ripple->flags = (char)flags | 1;
 	ripple->size = (unsigned char)size;
-	ripple->life = (GetRandomControl() & 0xF) + 48;
+	ripple->life = (GetRandomControl() & 0x3F) + 64;
 	ripple->init = 1;
 	ripple->x = x;
 	ripple->y = y;
 	ripple->z = z;
 
-	if(flags & 0x40) {
-		ripple->x += (GetRandomControl() & 0x7F) - 64;
-		ripple->z += (GetRandomControl() & 0x7F) - 64;
-	}
+
+	ripple->x += (GetRandomControl() & 0x3F) - 32;
+	ripple->z += (GetRandomControl() & 0x3F) - 32;
+	
 }
 
 void TriggerUnderwaterBlood(long x, long y, long z, long size) {
@@ -1813,9 +1813,9 @@ void UpdateSplashes() //(and ripples)
 
 		if(ripple->size < 252) {
 			if(ripple->flags & 2)
-				ripple->size += 2;
+				ripple->size += 3;
 			else
-				ripple->size += 4;
+				ripple->size += 7;
 		}
 
 		if(ripple->init) {
