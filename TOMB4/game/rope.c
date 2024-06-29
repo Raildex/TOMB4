@@ -473,7 +473,7 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		bounds = GetBoundsAccurate(l);
 		x = l->pos.x_pos;
 		y = l->pos.y_pos + bounds[2] + 512;
-		z = l->pos.z_pos + (bounds[5] * phd_cos(l->pos.y_rot) >> 14);
+		z = l->pos.z_pos + (bounds[5] * phd_cos(l->pos.y_rot) >> W2V_SHIFT);
 		rad = l->current_anim_state == AS_REACH ? 128 : 320;
 		i = RopeNodeCollision(rope, x, y, z, rad);
 

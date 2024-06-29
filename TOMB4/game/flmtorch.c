@@ -39,6 +39,7 @@
 #include "game/roominfo.h"
 #include <stdlib.h>
 #include "game/levelinfo.h"
+#include "global/types.h"
 
 static short FireBounds[12] = { 0, 0, 0, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 static ITEM_INFO* TorchItem = 0;
@@ -281,8 +282,8 @@ void FlameTorchControl(short item_number) {
 	x = item->pos.x_pos;
 	y = item->pos.y_pos;
 	z = item->pos.z_pos;
-	xv = item->speed * phd_sin(item->pos.y_rot) >> 14;
-	zv = item->speed * phd_cos(item->pos.y_rot) >> 14;
+	xv = item->speed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
+	zv = item->speed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 	item->pos.x_pos += xv;
 	item->pos.z_pos += zv;
 

@@ -192,7 +192,7 @@ void gar_RotYXZsuperpack(short** pprot, long skip) {
 
 	prot = (unsigned short*)*pprot;
 
-	switch(prot[0] >> 14) {
+	switch(prot[0] >> W2V_SHIFT) {
 	case 0:
 		phd_RotYXZpack((prot[0] << 16) + prot[1]);
 		++*pprot;

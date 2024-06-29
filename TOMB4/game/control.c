@@ -596,7 +596,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 
 	if((*data & 0x1F) == CLIMB_TYPE) {
 		if(!heavy) {
-			quad = (unsigned short)(lara_item->pos.y_rot + 8192) >> 14;
+			quad = (unsigned short)(lara_item->pos.y_rot + 8192) >> W2V_SHIFT;
 
 			if((1 << (quad + 8)) & *data)
 				lara.climb_status = 1;

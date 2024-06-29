@@ -508,7 +508,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
-		quadrant = (unsigned short)(laraitem->pos.y_rot + 8192) >> 14;
+		quadrant = (unsigned short)(laraitem->pos.y_rot + 8192) >> W2V_SHIFT;
 
 		if(input & IN_FORWARD) {
 			if(!TestBlockPush(item, 1024, quadrant))

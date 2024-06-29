@@ -890,7 +890,7 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 
 	if(!lara.IsMoving) {
 		if(lara.water_status != LW_UNDERWATER) {
-			switch((((unsigned long)(mGetAngle(dest->x_pos, dest->z_pos, pos->x_pos, pos->z_pos) + 8192) >> 14) - ((unsigned short)(dest->y_rot + 8192) >> 14)) & 3) {
+			switch((((unsigned long)(mGetAngle(dest->x_pos, dest->z_pos, pos->x_pos, pos->z_pos) + 8192) >> W2V_SHIFT) - ((unsigned short)(dest->y_rot + 8192) >> W2V_SHIFT)) & 3) {
 			case 0:
 				lara_item->anim_number = 65;
 				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;

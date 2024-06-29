@@ -198,7 +198,7 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 	pitch += info->pitch << 9;
 
 	if(info->flags & 0x2000)
-		pitch += ((6000 * GetRandomDraw()) >> 14) - 6000;
+		pitch += ((6000 * GetRandomDraw()) >> W2V_SHIFT) - 6000;
 
 	if(info->number < 0)
 		return 0;

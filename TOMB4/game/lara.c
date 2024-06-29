@@ -4395,8 +4395,8 @@ void LaraSlideEdgeJump(ITEM_INFO* item, COLL_INFO* coll) {
 		break;
 
 	case CT_CLAMP:
-		item->pos.z_pos -= (100 * phd_cos(coll->facing)) >> 14;
-		item->pos.x_pos -= (100 * phd_sin(coll->facing)) >> 14;
+		item->pos.z_pos -= (100 * phd_cos(coll->facing)) >> W2V_SHIFT;
+		item->pos.x_pos -= (100 * phd_sin(coll->facing)) >> W2V_SHIFT;
 		item->speed = 0;
 		coll->mid_floor = 0;
 

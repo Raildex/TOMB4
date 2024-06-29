@@ -374,7 +374,7 @@ long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number) {
 	if(x > xrange || x < -xrange || z > zrange || z < -zrange)
 		return 0;
 
-	enemy_quad = (enemy->pos.y_rot >> 14) + 2;
+	enemy_quad = (enemy->pos.y_rot >> W2V_SHIFT) + 2;
 	box_quad = z <= 0 ? (x <= 0 ? 0 : 3) : (x > 0) + 1;
 
 	if(enemy_quad == box_quad)

@@ -404,13 +404,13 @@ void ControlSlicerDicer(short item_number) {
 	item = GetItem(currentLevel, item_number);
 	SoundEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_DEFAULT);
 	SoundEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_DEFAULT);
-	distance = 4608 * phd_cos(item->trigger_flags) >> 14;
+	distance = 4608 * phd_cos(item->trigger_flags) >> W2V_SHIFT;
 	item->pos.x_pos = 256 * item->item_flags[0]
-		+ (phd_sin(item->pos.y_rot) * distance >> 14);
+		+ (phd_sin(item->pos.y_rot) * distance >> W2V_SHIFT);
 	item->pos.y_pos = 256 * item->item_flags[1]
-		- (4608 * phd_sin(item->trigger_flags) >> 14);
+		- (4608 * phd_sin(item->trigger_flags) >> W2V_SHIFT);
 	item->pos.z_pos = 256 * item->item_flags[2]
-		+ (phd_cos(item->pos.y_rot) * distance >> 14);
+		+ (phd_cos(item->pos.y_rot) * distance >> W2V_SHIFT);
 	item->trigger_flags += 170;
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);

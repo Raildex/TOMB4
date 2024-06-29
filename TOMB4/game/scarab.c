@@ -251,9 +251,9 @@ void UpdateScarabs() {
 			oldx = fx->pos.x_pos;
 			oldy = fx->pos.y_pos;
 			oldz = fx->pos.z_pos;
-			fx->pos.x_pos += fx->speed * phd_sin(fx->pos.y_rot) >> 14;
+			fx->pos.x_pos += fx->speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
 			fx->pos.y_pos += fx->fallspeed;
-			fx->pos.z_pos += fx->speed * phd_cos(fx->pos.y_rot) >> 14;
+			fx->pos.z_pos += fx->speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
 			fx->fallspeed += 6;
 			dx = lara_item->pos.x_pos - fx->pos.x_pos;
 			dy = lara_item->pos.y_pos - fx->pos.y_pos;

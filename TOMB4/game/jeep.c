@@ -835,8 +835,8 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 			maxTurn = 910;
 			turn = 242;
 		} else {
-			maxTurn = (910 * vel) >> 14;
-			turn = ((60 * vel) >> 14) + 182;
+			maxTurn = (910 * vel) >> W2V_SHIFT;
+			turn = ((60 * vel) >> W2V_SHIFT) + 182;
 		}
 
 		if(jeep->velocity > 0) {
@@ -1205,7 +1205,7 @@ long JeepDynamics(ITEM_INFO* item) {
 				ang2 = item->pos.y_rot + 0x4000;
 
 			item->pos.x_pos += ((abs(ang) - 24) * phd_sin(ang2)) >> W2V_SHIFT;
-			item->pos.z_pos += ((abs(ang) - 24) * phd_cos(ang2)) >> 14;
+			item->pos.z_pos += ((abs(ang) - 24) * phd_cos(ang2)) >> W2V_SHIFT;
 		}
 	}
 
