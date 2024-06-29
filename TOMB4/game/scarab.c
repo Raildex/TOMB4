@@ -2,6 +2,8 @@
 #include "game/scarab.h"
 #include "game/box.h"
 #include "game/objects.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
 #include "specific/function_stubs.h"
 #include "game/effects.h"
 #include "specific/3dmath.h"
@@ -32,10 +34,10 @@ static long next_scarab = 0;
 void InitialiseScarab(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,BIG_BEETLE)->anim_index + 3;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, BIG_BEETLE)->anim_index + 3;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -50,7 +52,7 @@ void ScarabControl(short item_number) {
 		return;
 
 	angle = 0;
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	beetle = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0) {
@@ -66,8 +68,8 @@ void ScarabControl(short item_number) {
 				item->pos.x_rot = 0;
 				item->pos.y_pos = item->floor;
 			} else {
-				item->anim_number = GetObjectInfo(currentLevel,BIG_BEETLE)->anim_index + 5;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, BIG_BEETLE)->anim_index + 5;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->gravity_status = 1;
 				item->current_anim_state = 6;
 				item->speed = 0;
@@ -204,7 +206,7 @@ void TriggerScarab(short item_number) {
 	ITEM_INFO* item;
 	short fx_num;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags && (!item->item_flags[2] || !(GetRandomControl() & 0xF))) {
 		item->trigger_flags--;
@@ -242,70 +244,91 @@ void UpdateScarabs() {
 	SCARAB_STRUCT* fx;
 	FLOOR_INFO* floor;
 	long h, dx, dy, dz, oldx, oldy, oldz;
-	short angle;
+	short angle, old_room;
 
 	for(int i = 0; i < 128; i++) {
 		fx = &Scarabs[i];
+		if(!fx->On) {
+			continue;
+		}
 
-		if(fx->On) {
-			oldx = fx->pos.x_pos;
-			oldy = fx->pos.y_pos;
-			oldz = fx->pos.z_pos;
-			fx->pos.x_pos += fx->speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
-			fx->pos.y_pos += fx->fallspeed;
-			fx->pos.z_pos += fx->speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
-			fx->fallspeed += 6;
-			dx = lara_item->pos.x_pos - fx->pos.x_pos;
-			dy = lara_item->pos.y_pos - fx->pos.y_pos;
-			dz = lara_item->pos.z_pos - fx->pos.z_pos;
-			angle = (short)phd_atan(dz, dx) - fx->pos.y_rot;
 
-			if(abs(dz) < 85 && abs(dy) < 85 && abs(dx) < 85) {
-				lara_item->hit_points--;
-				lara_item->hit_status = 1;
+		oldx = fx->pos.x_pos;
+		oldy = fx->pos.y_pos;
+		oldz = fx->pos.z_pos;
+		fx->pos.x_pos += fx->speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
+		fx->pos.y_pos += fx->fallspeed;
+		fx->pos.z_pos += fx->speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
+		fx->fallspeed += 6;
+		dx = lara_item->pos.x_pos - fx->pos.x_pos;
+		dy = lara_item->pos.y_pos - fx->pos.y_pos;
+		dz = lara_item->pos.z_pos - fx->pos.z_pos;
+		angle = (short)phd_atan(dz, dx) - fx->pos.y_rot;
+
+		if(abs(dz) < 85 && abs(dy) < 85 && abs(dx) < 85) {
+			lara_item->hit_points--;
+			lara_item->hit_status = 1;
+		}
+
+		if(fx->flags) {
+			if(abs(dx) + abs(dz) > 1024) {
+				if(fx->speed < (i & 0x1F) + 24)
+					fx->speed++;
+
+				if(abs(angle) < 4096)
+					fx->pos.y_rot += (short)((wibble - i) << 3);
+				else if(angle < 0)
+					fx->pos.y_rot -= 1024;
+				else
+					fx->pos.y_rot += 1024;
+			} else {
+				fx->pos.y_rot += fx->speed & 1 ? 512 : -512;
+				fx->speed = 48 - (lara.LitTorch << 6) - (abs(angle) >> 7);
+
+				if(fx->speed < -16)
+					fx->speed = i & 0xF;
 			}
+		}
+		old_room = fx->room_number;
+		floor = GetFloor(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &fx->room_number);
+		h = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
 
-			if(fx->flags) {
-				if(abs(dx) + abs(dz) > 1024) {
-					if(fx->speed < (i & 0x1F) + 24)
-						fx->speed++;
+		if(h < fx->pos.y_pos - 1280 || h == NO_HEIGHT) {
 
-					if(abs(angle) < 4096)
-						fx->pos.y_rot += (short)((wibble - i) << 3);
-					else if(angle < 0)
-						fx->pos.y_rot -= 1024;
-					else
-						fx->pos.y_rot += 1024;
-				} else {
-					fx->pos.y_rot += fx->speed & 1 ? 512 : -512;
-					fx->speed = 48 - (lara.LitTorch << 6) - (abs(angle) >> 7);
+			if(angle <= 0)
+				fx->pos.y_rot -= 0x4000;
+			else
+				fx->pos.y_rot += 0x4000;
 
-					if(fx->speed < -16)
-						fx->speed = i & 0xF;
-				}
-			}
+			fx->pos.x_pos = oldx;
+			fx->pos.y_pos = oldy;
+			fx->pos.z_pos = oldz;
+			fx->fallspeed = 0;
+		} else if(h < fx->pos.y_pos - 64) {
+			fx->pos.x_rot = 0x3800;
+			fx->pos.x_pos = oldx;
+			fx->pos.y_pos = oldy - 24;
+			fx->pos.z_pos = oldz;
+			fx->fallspeed = 0;
+		} else if(fx->pos.y_pos > h) {
+			fx->pos.y_pos = h;
+			fx->fallspeed = 0;
+			fx->flags |= 1;
+		} else if(fx->fallspeed < 500 && fx->flags < 200)
+			fx->pos.x_rot = -(fx->fallspeed << 7);
 
-			floor = GetFloor(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &fx->room_number);
-			h = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
 
-			if(h < fx->pos.y_pos - 1280 || h == NO_HEIGHT) {
-				fx->pos.y_rot += angle > 0 ? 0x4000 : -0x4000;
-				fx->pos.x_pos = oldx;
-				fx->pos.y_pos = oldy;
-				fx->pos.z_pos = oldz;
-				fx->fallspeed = 0;
-			} else if(fx->pos.y_pos > h) {
-				fx->pos.y_pos = h;
-				fx->fallspeed = 0;
-				fx->flags = 1;
-			}
+		if(GetRoom(currentLevel,fx->room_number)->flags & ROOM_UNDERWATER) {
+			fx->fallspeed = 0;
+			fx->speed = 16;
+			fx->pos.y_pos = GetRoom(currentLevel,fx->room_number)->maxceiling + 50;
 
-			if(fx->fallspeed < 500)
-				fx->pos.x_rot = -64 * fx->fallspeed;
-			else {
-				fx->On = 0;
-				next_scarab = 0;
-			}
+			if(!(GetRoom(currentLevel,old_room)->flags & ROOM_UNDERWATER)) {
+				// TriggerSmallSplash(fx->pos.x_pos, room[fx->room_number].maxceiling, fx->pos.z_pos, 16);
+				SetupRipple(fx->pos.x_pos, GetRoom(currentLevel,fx->room_number)->maxceiling, fx->pos.z_pos, (GetRandomControl() & 3) + 48, 2);
+				// SoundEffect(SFX_RATSPLASH, &fx->pos, 0);
+			} else if(!(GetRandomControl() & 0xF))
+				SetupRipple(fx->pos.x_pos, GetRoom(currentLevel,fx->room_number)->maxceiling, fx->pos.z_pos, (GetRandomControl() & 3) + 48, 2);
 		}
 	}
 }
@@ -314,7 +337,7 @@ void DrawScarabs() {
 	SCARAB_STRUCT* fx;
 	short** meshpp;
 
-	meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,LITTLE_BEETLE)->mesh_index + (wibble >> 2 & 2));
+	meshpp = GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, LITTLE_BEETLE)->mesh_index + (wibble >> 2 & 2));
 
 	for(int i = 0; i < 128; i++) {
 		fx = &Scarabs[i];
@@ -333,7 +356,7 @@ void InitialiseScarabGenerator(short item_number) {
 	ITEM_INFO* item;
 	short flag;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	flag = item->trigger_flags / 1000;
 	item->pos.x_rot = 0x2000;
 	item->item_flags[0] = flag & 1;
