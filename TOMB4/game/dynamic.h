@@ -11,6 +11,5 @@ typedef struct DYNAMIC {
 	unsigned short falloff;
 	unsigned char used;
 	unsigned char pad1[1];
-	long FalloffScale;
 } DYNAMIC;
 #endif

@@ -481,7 +481,6 @@ void TriggerDynamic(long x, long y, long z, long falloff, long r, long g, long b
 		dl->b = (unsigned char)b;
 	}
 
-	dl->FalloffScale = 0x200000 / (falloff << 8);
 	number_dynamics++;
 }
 
@@ -509,7 +508,6 @@ void TriggerDynamic_MIRROR(long x, long y, long z, long falloff, long r, long g,
 			dl->b = (unsigned char)b;
 		}
 
-		dl->FalloffScale = 0x200000 / (falloff << 8);
 		number_dynamics++;
 		z = 2 * gfMirrorZPlane - z;
 	}
