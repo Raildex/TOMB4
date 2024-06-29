@@ -12,14 +12,15 @@
 #include "game/lara.h"
 #include "game/creatureinfo.h"
 #include "game/aiinfo.h"
-#include "game/animstruct.h"
 #include "game/larainfo.h"
 #include "game/objectinfo.h"
-#include "game/itemstatus.h"
 #include "game/biteinfo.h"
-#include "game/weapontypes.h"
 #include "game/gamevector.h"
 #include "global/types.h"
+
+enum no_distance {
+	NO_DISTANCE = 0x40000000
+};
 
 short GunShot(long x, long y, long z, short speed, short yrot, short room_number) {
 	return -1;
@@ -58,7 +59,7 @@ long TargetVisible(ITEM_INFO* item, AI_INFO* info) {
 	creature = (CREATURE_INFO*)item->data;
 	enemy = creature->enemy;
 
-	if(!enemy || enemy->hit_points <= 0 || !enemy->data || info->angle - creature->joint_rotation[2] <= -0x4000 || info->angle - creature->joint_rotation[2] >= 0x4000 || info->distance >= 0x4000000)
+	if(!enemy || enemy->hit_points <= 0 || !enemy->data || info->angle - creature->joint_rotation[2] <= -0x4000 || info->angle - creature->joint_rotation[2] >= 0x4000 || info->distance >= NO_DISTANCE)
 		return 0;
 
 	bounds = GetBestFrame(enemy);
@@ -84,7 +85,7 @@ long Targetable(ITEM_INFO* item, AI_INFO* info) {
 	creature = (CREATURE_INFO*)item->data;
 	enemy = creature->enemy;
 
-	if(!enemy || enemy->hit_points <= 0 || !enemy->data || !info->ahead || info->distance >= 0x4000000 && item->object_number != SETHA)
+	if(!enemy || enemy->hit_points <= 0 || !enemy->data || !info->ahead || (info->distance >= NO_DISTANCE && item->object_number != SETHA))
 		return 0;
 
 	bounds = GetBestFrame(item);
@@ -109,12 +110,12 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotati
 	creature = (CREATURE_INFO*)item->data;
 	enemy = creature->enemy;
 
-	if(info->distance <= 0x4000000 && Targetable(item, info)) {
-		distance = phd_sin(info->enemy_facing) * enemy->speed * 0x4000000 / 300 >> 14;
+	if(info->distance <= NO_DISTANCE && Targetable(item, info)) {
+		distance = phd_sin(info->enemy_facing) * enemy->speed * NO_DISTANCE / 300 >> W2V_SHIFT;
 		distance = info->distance + SQUARE(distance);
 
-		if(distance <= 0x4000000) {
-			random = (0x4000000 - info->distance) / 3276 + 0x2000;
+		if(distance <= NO_DISTANCE) {
+			random = (NO_DISTANCE - info->distance) / 3276 + 0x2000;
 			hit = (GetRandomControl() < random);
 		} else
 			hit = 0;
