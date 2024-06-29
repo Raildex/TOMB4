@@ -313,7 +313,7 @@ void CreateVertexNormals(ROOM_INFO* r) {
 	short nTris;
 
 	data = r->FaceData;
-	r->fnormals = (_D3DVECTOR*)game_malloc(sizeof(_D3DVECTOR) * (r->gt3cnt + r->gt4cnt));
+	r->fnormals = (_D3DVECTOR*)calloc((r->gt3cnt + r->gt4cnt),sizeof(_D3DVECTOR) );
 	nQuads = *data++;
 
 	for(int i = 0; i < nQuads; i++) {
@@ -347,7 +347,7 @@ void CreateVertexNormals(ROOM_INFO* r) {
 		data += 4;
 	}
 
-	r->vnormals = (_D3DVECTOR*)game_malloc(sizeof(_D3DVECTOR) * r->nVerts);
+	r->vnormals = (_D3DVECTOR*)calloc( r->nVerts, sizeof(_D3DVECTOR));
 
 	data = r->FaceData;
 	nQuads = *data++;
@@ -416,9 +416,9 @@ void ProcessRoomData(ROOM_INFO* r) {
 	r->gt4cnt = *data_ptr++;
 	data_ptr += r->gt4cnt * 5;
 	r->gt3cnt = *data_ptr;
-	r->verts = (_D3DVECTOR*)game_malloc(sizeof(_D3DVECTOR) * r->nVerts);
-	faces = (short*)malloc(2 * r->nVerts);
-	prelight = (short*)malloc(2 * r->nVerts);
+	r->verts = (_D3DVECTOR*)calloc(r->nVerts,sizeof(_D3DVECTOR));
+	faces = (short*)calloc(r->nVerts, sizeof(short));
+	prelight = (short*)calloc(r->nVerts, sizeof(short));
 	data_ptr = r->data + 1; // go to vert data
 	nWaterVerts = 0;
 
@@ -498,8 +498,8 @@ void ProcessRoomData(ROOM_INFO* r) {
 
 	free(faces);
 	CreateVertexNormals(r);
-	r->prelight = (long*)game_malloc(4 * r->nVerts);
-	r->prelightwater = (long*)game_malloc(4 * r->nVerts);
+	r->prelight = (long*)calloc(r->nVerts,sizeof(long));
+	r->prelightwater = (long*)calloc(r->nVerts,sizeof(long));
 	r->watercalc = 0;
 	vb.dwNumVertices = r->nVerts;
 	vb.dwSize = sizeof(D3DVERTEXBUFFERDESC);
@@ -533,10 +533,10 @@ void ProcessRoomData(ROOM_INFO* r) {
 
 	IDirect3DVertexBuffer_Unlock(r->SourceVB);
 	free(prelight);
-	r->pclight = 0;
+	r->pclight = NULL;
 
 	if(r->num_lights) {
-		r->pclight = (PCLIGHT_INFO*)game_malloc(sizeof(PCLIGHT_INFO) * r->num_lights);
+		r->pclight = (PCLIGHT_INFO*)calloc(r->num_lights, sizeof(PCLIGHT_INFO) );
 		nLights = 0;
 		nBulbs = NumLevelFogBulbs;
 

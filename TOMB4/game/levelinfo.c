@@ -244,12 +244,14 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 void DestroyRoom(ROOM_INFO* r) {
 	free(r->data);
 	free(r->door);
-	// free(r->pclight);
+	free(r->pclight);
 	free(r->light);
-	// free(r->FaceData);
-	// free(r->vnormals);
-	// free(r->verts);
-	// free(r->fnormals);
+	//free(r->FaceData);
+	free(r->prelight);
+	free(r->prelightwater);
+	free(r->vnormals);
+	free(r->verts);
+	free(r->fnormals);
 	free(r->floor);
 }
 
@@ -356,10 +358,10 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 		r->y_size = *(short*)*data;
 		*data += sizeof(short);
 
-		size = r->x_size * r->y_size * sizeof(FLOOR_INFO);
-		r->floor = (FLOOR_INFO*)malloc(size);
-		memcpy(r->floor, *data, size);
-		*data += size;
+		size = r->x_size * r->y_size;
+		r->floor = (FLOOR_INFO*)calloc(size,sizeof(FLOOR_INFO));
+		memcpy(r->floor, *data, size * sizeof(FLOOR_INFO));
+		*data += size * sizeof(FLOOR_INFO);
 
 		r->ambient = *(long*)*data;
 		*data += sizeof(long);
@@ -368,10 +370,10 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 		*data += sizeof(short);
 
 		if(r->num_lights) {
-			size = sizeof(LIGHTINFO) * r->num_lights;
-			r->light = (LIGHTINFO*)malloc(size);
-			memcpy(r->light, *data, size);
-			*data += size;
+			size = r->num_lights;
+			r->light = (LIGHTINFO*)calloc(size,sizeof(LIGHTINFO));
+			memcpy(r->light, *data, size * sizeof(LIGHTINFO));
+			*data += size * sizeof(LIGHTINFO);
 		} else
 			r->light = 0;
 
@@ -379,10 +381,10 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 		*data += sizeof(short);
 
 		if(r->num_meshes) {
-			size = sizeof(MESH_INFO) * r->num_meshes;
-			r->mesh = (MESH_INFO*)malloc(size);
-			memcpy(r->mesh, *data, size);
-			*data += size;
+			size = r->num_meshes;
+			r->mesh = (MESH_INFO*)calloc(size,sizeof(MESH_INFO));
+			memcpy(r->mesh, *data, size * sizeof(MESH_INFO));
+			*data += size * sizeof(MESH_INFO);
 
 			for(int j = 0; j < r->num_meshes; j++)
 				r->mesh[j].Flags = 1;
@@ -417,7 +419,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 	BuildOutsideTable(lvl);
 	size = *(long*)*data;
 	*data += sizeof(long);
-	lvl->floor_data = (short*)malloc(2 * size);
+	lvl->floor_data = (short*)calloc(size, sizeof(short));
 	memcpy(lvl->floor_data, *data, 2 * size);
 	*data += sizeof(short) * size;
 	Log(0, "Floor Data Size %d @ %x", size, lvl->floor_data);
