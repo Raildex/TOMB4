@@ -59,8 +59,12 @@ void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, sho
 	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_TEXTUREMAG, D3DFILTER_LINEARMIPLINEAR);
 	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_TEXTUREMIN, D3DFILTER_LINEARMIPLINEAR);
 	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ANISOTROPY, 16);
-	D3DVALUE bias = 0.0f;
+	D3DVALUE bias = 1.0f;
 	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_MIPMAPLODBIAS, *(DWORD*)&bias);
+	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MAXANISOTROPY, 8);
+	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MIPFILTER, D3DTFP_LINEAR);
+	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MAGFILTER, D3DTFG_LINEAR);
+	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MINFILTER, D3DTFN_ANISOTROPIC);
 	switch(type) {
 	case 0:
 
