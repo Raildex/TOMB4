@@ -59,7 +59,7 @@ void SarcophagusCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_number) {
+	if((input & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS) || (lara.IsMoving && lara.GeneralPtr == item_number)) {
 		if(TestLaraPosition(SarcophagusBounds, item, l)) {
 			if(MoveLaraPosition(&SarcophagusPos, item, l)) {
 				l->anim_number = ANIM_SARCOPHAGUS;
@@ -299,7 +299,7 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	item->pos.z_rot = 0;
 
 	if(lara.water_status == LW_ABOVE_WATER || lara.water_status == LW_WADE) {
-		if((input & IN_ACTION || (GLOBAL_inventoryitemchosen != NO_ITEM && ocb == 2)) && !BinocularRange && ((l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS) || (l->current_anim_state == AS_DUCK && l->anim_number == ANIM_DUCKBREATHE && lara.gun_status == LG_NO_ARMS) || (l->current_anim_state == AS_ALL4S && l->anim_number == ANIM_ALL4S)) || lara.IsMoving && lara.GeneralPtr == item_number) {
+		if(((input & IN_ACTION || (GLOBAL_inventoryitemchosen != NO_ITEM && ocb == 2)) && !BinocularRange && ((l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS) || (l->current_anim_state == AS_DUCK && l->anim_number == ANIM_DUCKBREATHE && lara.gun_status == LG_NO_ARMS) || (l->current_anim_state == AS_ALL4S && l->anim_number == ANIM_ALL4S))) || lara.IsMoving && lara.GeneralPtr == item_number) {
 			flag = 0;
 			item->pos.x_rot = 0;
 
@@ -489,7 +489,7 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	} else if(lara.water_status == LW_UNDERWATER) {
 		item->pos.x_rot = -4550;
 
-		if(input & IN_ACTION && item->object_number != BURNING_TORCH_ITEM && l->current_anim_state == AS_TREAD && lara.gun_status == LG_NO_ARMS && TestLaraPosition(PickUpBoundsUW, item, l) || lara.IsMoving && lara.GeneralPtr == item_number) {
+		if((input & IN_ACTION && item->object_number != BURNING_TORCH_ITEM && l->current_anim_state == AS_TREAD && lara.gun_status == LG_NO_ARMS && TestLaraPosition(PickUpBoundsUW, item, l)) || lara.IsMoving && lara.GeneralPtr == item_number) {
 			if(TestLaraPosition(PickUpBoundsUW, item, l)) {
 				if(MoveLaraPosition(&PickUpPositionUW, item, l)) {
 					if(item->object_number == FLARE_ITEM) {
