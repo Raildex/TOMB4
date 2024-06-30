@@ -32,7 +32,6 @@
 #include "game/larainfo.h"
 #include "game/sparks.h"
 #include "game/gunflashstruct.h"
-#include "game/svector.h"
 #include "game/bloodstruct.h"
 #include "game/bubblestruct.h"
 #include "game/shockwavestruct.h"
@@ -40,6 +39,7 @@
 #include "game/nodeoffsetinfo.h"
 #include "game/fvector.h"
 #include "game/levelinfo.h"
+#include "tomb4fx.h"
 
 NODEOFFSET_INFO NodeOffsets[16] = {
 	{ -16, 40, 160, -14, 0 },
@@ -1145,7 +1145,7 @@ void TriggerSmallSplash(long x, long y, long z, long num) {
 	}
 }
 
-void TriggerGunflash(SVECTOR* pos) {
+void TriggerGunflash(PHD_VECTOR* pos) {
 	GUNFLASH_STRUCT* flash;
 	long num;
 
@@ -1177,7 +1177,7 @@ void TriggerGunflash(SVECTOR* pos) {
 }
 
 void SetGunFlash(short weapon) {
-	SVECTOR pos;
+	PHD_VECTOR pos;
 
 	switch(weapon) {
 	case WEAPON_REVOLVER:
@@ -1726,7 +1726,7 @@ long LSpline(long x, long* knots, long nk) {
 	return ret + k[3];
 }
 
-void CalcLightningSpline(PHD_VECTOR* pos, SVECTOR* dest, LIGHTNING_STRUCT* lptr) {
+void CalcLightningSpline(PHD_VECTOR* pos, PHD_VECTOR* dest, LIGHTNING_STRUCT* lptr) {
 	long segments, x, y, z, xadd, yadd, zadd;
 
 	dest->x = (short)pos->x;

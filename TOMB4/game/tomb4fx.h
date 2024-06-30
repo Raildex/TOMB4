@@ -39,7 +39,7 @@ long GetFreeGunshell();
 void TriggerGunShell(short leftright, short objnum, long weapon);
 void UpdateGunShells();
 void TriggerSmallSplash(long x, long y, long z, long num);
-void TriggerGunflash(SVECTOR* pos);
+void TriggerGunflash(PHD_VECTOR* pos);
 void SetGunFlash(short weapon);
 void DrawGunflashes();
 long GetFreeBlood();
@@ -56,7 +56,7 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 void UpdateShockwaves();
 void UpdateLightning();
 long LSpline(long x, long* knots, long nk);
-void CalcLightningSpline(PHD_VECTOR* pos, SVECTOR* dest, LIGHTNING_STRUCT* lptr);
+void CalcLightningSpline(PHD_VECTOR* pos, PHD_VECTOR* dest, LIGHTNING_STRUCT* lptr);
 void TriggerLightningGlow(long x, long y, long z, long rgb);
 void TriggerFlashSmoke(long x, long y, long z, short room_number);
 void S_DrawSparks();

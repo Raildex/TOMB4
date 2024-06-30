@@ -41,7 +41,6 @@
 #include "game/roominfo.h"
 #include "game/roomflags.h"
 #include "game/lightningstruct.h"
-#include "game/svector.h"
 #include "game/dripstruct.h"
 #include "game/wraithstruct.h"
 #include "game/meshdata.h"
@@ -3897,7 +3896,7 @@ void DrawLightning() {
 	LIGHTNING_STRUCT* pL;
 	SPRITESTRUCT* sprite;
 	PHD_VECTOR* vec;
-	SVECTOR* offsets;
+	PHD_VECTOR* offsets;
 	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	FVECTOR p1, p2, p3;
@@ -3930,7 +3929,7 @@ void DrawLightning() {
 			vec[j].z -= lara_item->pos.z_pos;
 		}
 
-		offsets = (SVECTOR*)&tsv_buffer[0];
+		offsets = (PHD_VECTOR*)&tsv_buffer[0];
 		XY = (long*)&tsv_buffer[1024];
 		Z = (long*)&tsv_buffer[2048];
 		CalcLightningSpline(vec, offsets, pL);
