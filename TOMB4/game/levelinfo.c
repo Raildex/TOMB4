@@ -95,7 +95,8 @@ struct LEVEL_INFO {
 	SPOTCAM* Spotcams;
 	long number_sound_effects;
 	OBJECT_VECTOR* sound_effects;
-
+	TEXTURESTRUCT* AnimatingWaterfalls[3];
+	long AnimatingWaterfallsV[3];
 };
 
 LEVEL_INFO* CreateLevel() {
@@ -106,12 +107,12 @@ LEVEL_INFO* CreateLevel() {
 	lvl->effectsCapacity = 128;
 	lvl->items = (ITEM_INFO*)calloc(1024, sizeof(ITEM_INFO));
 	lvl->itemsCapacity = 1024;
-	lvl->Textures = (TEXTURE*)calloc(1,sizeof(TEXTURE));
+	lvl->Textures = (TEXTURE*)calloc(1, sizeof(TEXTURE));
 	lvl->nTextures = 1;
 	return lvl;
 }
 
-void ProcessMeshData(LEVEL_INFO* lvl,long num_meshes);
+void ProcessMeshData(LEVEL_INFO* lvl, long num_meshes);
 
 char LoadObjects(char** data, LEVEL_INFO* lvl) {
 	OBJECT_INFO* obj;
@@ -263,7 +264,7 @@ void DestroyRoom(ROOM_INFO* r) {
 	free(r->door);
 	free(r->pclight);
 	free(r->light);
-	//free(r->FaceData);
+	// free(r->FaceData);
 	free(r->prelight);
 	free(r->prelightwater);
 	free(r->vnormals);
@@ -376,7 +377,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 		*data += sizeof(short);
 
 		size = r->x_size * r->y_size;
-		r->floor = (FLOOR_INFO*)calloc(size,sizeof(FLOOR_INFO));
+		r->floor = (FLOOR_INFO*)calloc(size, sizeof(FLOOR_INFO));
 		memcpy(r->floor, *data, size * sizeof(FLOOR_INFO));
 		*data += size * sizeof(FLOOR_INFO);
 
@@ -388,7 +389,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 
 		if(r->num_lights) {
 			size = r->num_lights;
-			r->light = (LIGHTINFO*)calloc(size,sizeof(LIGHTINFO));
+			r->light = (LIGHTINFO*)calloc(size, sizeof(LIGHTINFO));
 			memcpy(r->light, *data, size * sizeof(LIGHTINFO));
 			*data += size * sizeof(LIGHTINFO);
 		} else
@@ -399,7 +400,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 
 		if(r->num_meshes) {
 			size = r->num_meshes;
-			r->mesh = (MESH_INFO*)calloc(size,sizeof(MESH_INFO));
+			r->mesh = (MESH_INFO*)calloc(size, sizeof(MESH_INFO));
 			memcpy(r->mesh, *data, size * sizeof(MESH_INFO));
 			*data += size * sizeof(MESH_INFO);
 
@@ -449,14 +450,14 @@ void ProcessMeshData(LEVEL_INFO* lvl, long num_meshes) {
 
 	Log(2, "ProcessMeshData %d", num_meshes);
 	num_level_meshes = num_meshes;
-	mesh_vtxbuf = (MESH_DATA**)calloc(num_meshes,5);
+	mesh_vtxbuf = (MESH_DATA**)calloc(num_meshes, 5);
 	lvl->mesh_base = (short*)mesh_vtxbuf;
 	last_mesh_ptr = 0;
 
 	for(int i = 0; i < num_meshes; i++) {
 		mesh_ptr = GetMesh(currentLevel, i);
 
-		ProcessMesh(lvl,mesh_ptr,last_mesh_ptr,i);
+		ProcessMesh(lvl, mesh_ptr, last_mesh_ptr, i);
 	}
 
 	Log(2, "End ProcessMeshData");
@@ -867,7 +868,18 @@ char LoadTextureInfos(char** data, LEVEL_INFO* lvl) {
 		t->v4 = (float)(tex.v4) * (1.0f / 65535.0F);
 	}
 
-	AdjustUV(val,lvl);
+	AdjustUV(val, lvl);
+	
+	for(int i = 0; i < 3; i++) {
+		TEXTURESTRUCT* tex;
+		OBJECT_INFO* obj = GetObjectInfo(currentLevel, WATERFALL1 + i);
+
+		if(obj->loaded) {
+			tex = GetTextInfo(currentLevel, mesh_vtxbuf[obj->mesh_index]->gt4[4] & 0x7FFF);
+			lvl->AnimatingWaterfalls[i] = tex;
+			lvl->AnimatingWaterfallsV[i] = (long)tex->v1;
+		}
+	}
 	return 1;
 }
 
@@ -878,14 +890,14 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	fread(&RTPages, sizeof(RTPages), 1, f);
 	fread(&OTPages, sizeof(OTPages), 1, f);
 	fread(&BTPages, sizeof(BTPages), 1, f);
-	Log(1,"RTPages %d OTPages %d BTPages %d",RTPages,OTPages,BTPages);
+	Log(1, "RTPages %d OTPages %d BTPages %d", RTPages, OTPages, BTPages);
 	char texMarker[3];
 	fread(texMarker, 1, 3, f);
 	if(!(texMarker[0] == 'T' && texMarker[1] == 'E' && texMarker[2] == 'X')) {
-		Log(-1, "Invalid Marker! %c %c %c", texMarker[0],texMarker[1],texMarker[2]);
+		Log(-1, "Invalid Marker! %c %c %c", texMarker[0], texMarker[1], texMarker[2]);
 		return 0;
 	}
-	Log(-1, "Marker %c %c %c", texMarker[0],texMarker[1],texMarker[2]);
+	Log(-1, "Marker %c %c %c", texMarker[0], texMarker[1], texMarker[2]);
 	unsigned long uncompSize;
 	unsigned long compSize;
 	fread(&uncompSize, 4, 1, f);
@@ -900,56 +912,56 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		return 0;
 	}
 	free(Compressed32Data);
-	Log(1,"Successfully decompressed Texture Data!");
+	Log(1, "Successfully decompressed Texture Data!");
 	Log(1, "Allocating Texture Space");
-	short count = RTPages + OTPages + BTPages + 2+1;
+	short count = RTPages + OTPages + BTPages + 2 + 1;
 	if(gfCurrentLevel == 0) {
 		Log(1, "Current Level is Title, Allocate Space for Logo as well");
 		count += 2;
 	}
-	Log(1, "Total count of texture pages: %d",count);
+	Log(1, "Total count of texture pages: %d", count);
 	if(lvl->Textures) {
-		lvl->Textures = realloc(lvl->Textures, (count+1) * sizeof(TEXTURE));
-		memset(lvl->Textures, 0, (1+count) * sizeof(TEXTURE));
-	}else {
-		lvl->Textures = calloc(count+1, sizeof(TEXTURE));
+		lvl->Textures = realloc(lvl->Textures, (count + 1) * sizeof(TEXTURE));
+		memset(lvl->Textures, 0, (1 + count) * sizeof(TEXTURE));
+	} else {
+		lvl->Textures = calloc(count + 1, sizeof(TEXTURE));
 	}
 	lvl->nTextures = count;
-	for (int i = 0; i < RTPages + OTPages; ++i) {
+	for(int i = 0; i < RTPages + OTPages; ++i) {
 		long* src = (long*)Uncompressed32Data + i * ((256 * 256));
-		TEXTURE* tex = &lvl->Textures[i+1];
+		TEXTURE* tex = &lvl->Textures[i + 1];
 		tex->width = (unsigned short)App.TextureSize;
 		tex->height = (unsigned short)App.TextureSize;
-		if(!CreateTexturePage(tex->width, tex->height, fmt,b8g8r8a8, CalcMipMapCount(tex->width,tex->height), src, NULL, &tex->hal) ) {
-			Log(-1, "Could not create texture page for texture %d",i);
+		if(!CreateTexturePage(tex->width, tex->height, fmt, b8g8r8a8, CalcMipMapCount(tex->width, tex->height), src, NULL, &tex->hal)) {
+			Log(-1, "Could not create texture page for texture %d", i);
 			free(Uncompressed32Data);
 			return 0;
 		}
 	}
 	Log(1, "Create bump maps");
 	long offset = RTPages + OTPages;
-	for (int i = 0; i < BTPages / 2; ++i) {
+	for(int i = 0; i < BTPages / 2; ++i) {
 		long* src = (long*)Uncompressed32Data + (i + offset) * ((256 * 256));
 		TEXTURE* tex = &lvl->Textures[offset + i + 1];
 		tex->width = (unsigned short)App.TextureSize;
 		tex->height = (unsigned short)App.TextureSize;
 		tex->bumptpage = offset + i + (BTPages / 2) + 1;
 		tex->bump = 1;
-		if(!CreateTexturePage(tex->width, tex->height, fmt,b8g8r8a8, CalcMipMapCount(tex->width,tex->height), src, NULL, &tex->hal) ) {
-			Log(-1, "Could not create texture page for texture %d",i);
+		if(!CreateTexturePage(tex->width, tex->height, fmt, b8g8r8a8, CalcMipMapCount(tex->width, tex->height), src, NULL, &tex->hal)) {
+			Log(-1, "Could not create texture page for texture %d", i);
 			free(Uncompressed32Data);
 			return 0;
 		}
 	}
-	offset = RTPages + OTPages + (BTPages/2);
-	for (int i = 0; i < BTPages / 2; ++i) {
+	offset = RTPages + OTPages + (BTPages / 2);
+	for(int i = 0; i < BTPages / 2; ++i) {
 		long* src = (long*)Uncompressed32Data + (i + offset) * ((256 * 256));
 		TEXTURE* tex = &lvl->Textures[offset + i + 1];
 		tex->width = (unsigned short)App.BumpMapSize;
 		tex->height = (unsigned short)App.BumpMapSize;
 		tex->bump = 0;
-		if(!CreateTexturePage(tex->width, tex->height, fmt,b8g8r8a8, CalcMipMapCount(tex->width,tex->height), src, NULL, &tex->hal) ) {
-			Log(-1, "Could not create texture page for texture %d",i);
+		if(!CreateTexturePage(tex->width, tex->height, fmt, b8g8r8a8, CalcMipMapCount(tex->width, tex->height), src, NULL, &tex->hal)) {
+			Log(-1, "Could not create texture page for texture %d", i);
 			free(Uncompressed32Data);
 			return 0;
 		}
@@ -960,15 +972,15 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		Log(1, "Loading uslogo.pak");
 		char* pComp;
 		char* logoCompressed = NULL;
-		long size = LoadFile("data/uslogo.pak",&logoCompressed);
+		long size = LoadFile("data/uslogo.pak", &logoCompressed);
 		long uncompSize = *(long*)logoCompressed; // logo files contain uncompSize, compSize, compData
 		pComp = (char*)malloc(uncompSize);
 		if(!S_Decompress(pComp, logoCompressed + 4, size - 4, uncompSize)) {
-			Log(-1, "Error decompressing logo! Filesize: %d Decompression size: %d",size,uncompSize);
+			Log(-1, "Error decompressing logo! Filesize: %d Decompression size: %d", size, uncompSize);
 		}
-		for(int i =0; i < 2; ++i) {
-			for(int i =0; i < 2; ++i) {
-				long* data = (long*)calloc(uncompSize,1);
+		for(int i = 0; i < 2; ++i) {
+			for(int i = 0; i < 2; ++i) {
+				long* data = (long*)calloc(uncompSize, 1);
 				char* source = pComp + (i * 768);
 				long* d = data;
 				for(int y = 0; y < 256; y++) {
@@ -985,11 +997,11 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 						*d++ = c;
 					}
 				}
-				TEXTURE* logoTex = &lvl->Textures[offset+i+1];
+				TEXTURE* logoTex = &lvl->Textures[offset + i + 1];
 				logoTex->width = 256;
 				logoTex->height = 256;
-				if(!CreateTexturePage(logoTex->width, logoTex->height,b8g8r8a8, b8g8r8a8, 0, data, NULL, &logoTex->hal)) {
-					Log(-1, "Could not create texture page for Logo %d",i);
+				if(!CreateTexturePage(logoTex->width, logoTex->height, b8g8r8a8, b8g8r8a8, 0, data, NULL, &logoTex->hal)) {
+					Log(-1, "Could not create texture page for Logo %d", i);
 					free(Uncompressed32Data);
 					free(data);
 					return 0;
@@ -1003,12 +1015,12 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	char mscMarker[3];
 	fread(&mscMarker[0], 1, 3, f);
 	if(!(mscMarker[0] == 'M' && mscMarker[1] == 'S' && mscMarker[2] == 'C')) {
-		Log(-1, "Invalid Marker! %c %c %c", mscMarker[0],mscMarker[1],mscMarker[2]);
+		Log(-1, "Invalid Marker! %c %c %c", mscMarker[0], mscMarker[1], mscMarker[2]);
 	}
 	long miscUncompSize;
 	long miscCompSize;
 	fread(&miscUncompSize, 4, 1, f);
-	fread(&miscCompSize,4,1,f);
+	fread(&miscCompSize, 4, 1, f);
 	char* miscUncompressed32Data = (char*)calloc(miscUncompSize, 1);
 	char* miscCompressed = (char*)calloc(miscCompSize, 1);
 	fread(miscCompressed, miscCompSize, 1, f);
@@ -1018,13 +1030,13 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		free(miscUncompressed32Data);
 		return 0;
 	}
-	for(int i =0; i < 2; i++) {
+	for(int i = 0; i < 2; i++) {
 		long* src = (long*)miscUncompressed32Data + (i) * ((256 * 256));
-		TEXTURE* tex = &lvl->Textures[i+offset+1];
+		TEXTURE* tex = &lvl->Textures[i + offset + 1];
 		tex->width = 256;
 		tex->height = 256;
-		if(!CreateTexturePage(tex->width, tex->height, fmt,b8g8r8a8, CalcMipMapCount(tex->width,tex->height), src, NULL, &tex->hal)) {
-			Log(-1, "Error creating texture page for misc texture %d",i);
+		if(!CreateTexturePage(tex->width, tex->height, fmt, b8g8r8a8, CalcMipMapCount(tex->width, tex->height), src, NULL, &tex->hal)) {
+			Log(-1, "Error creating texture page for misc texture %d", i);
 			free(miscCompressed);
 			free(miscUncompressed32Data);
 			return 0;
@@ -1066,7 +1078,7 @@ char LoadSprites(char** data, LEVEL_INFO* lvl) {
 	*data += 3;
 	num_sprites = *(long*)*data;
 	*data += sizeof(long);
-	lvl->spriteinfo = (SPRITESTRUCT*)calloc(num_sprites,sizeof(SPRITESTRUCT));
+	lvl->spriteinfo = (SPRITESTRUCT*)calloc(num_sprites, sizeof(SPRITESTRUCT));
 
 	for(int i = 0; i < num_sprites; i++) {
 		sptr = &lvl->spriteinfo[i];
@@ -1099,13 +1111,13 @@ char LoadSprites(char** data, LEVEL_INFO* lvl) {
 
 		if(slot >= NUMBER_OBJECTS) {
 			slot -= NUMBER_OBJECTS;
-			stat = GetStaticObject(currentLevel,slot);
+			stat = GetStaticObject(currentLevel, slot);
 			stat->mesh_number = *(short*)*data;
 			*data += sizeof(short);
 			stat->mesh_number = *(short*)*data;
 			*data += sizeof(short);
 		} else {
-			obj = GetObjectInfo(currentLevel,slot);
+			obj = GetObjectInfo(currentLevel, slot);
 			obj->nmeshes = *(short*)*data;
 			*data += sizeof(short);
 			obj->mesh_index = *(short*)*data;
@@ -1129,7 +1141,7 @@ char LoadAIInfo(char** data, LEVEL_INFO* lvl) {
 
 	if(num_ai) {
 		lvl->nAIObjects = (short)num_ai;
-		lvl->AIObjects = (AIOBJECT*)calloc(num_ai,sizeof(AIOBJECT));
+		lvl->AIObjects = (AIOBJECT*)calloc(num_ai, sizeof(AIOBJECT));
 		memcpy(lvl->AIObjects, *data, sizeof(AIOBJECT) * num_ai);
 		*data += sizeof(AIOBJECT) * num_ai;
 	}
@@ -1166,7 +1178,7 @@ void S_GetUVRotateTextures(LEVEL_INFO* lvl) {
 
 	for(int i = 0; i < lvl->nAnimUVRanges; i++, pRange++) {
 		for(int j = (int)*(pRange++); j >= 0; j--, pRange++) {
-			tex = GetTextInfo(currentLevel,*pRange);
+			tex = GetTextInfo(currentLevel, *pRange);
 			lvl->AnimatingTexturesV[i][j][0] = tex->v1;
 		}
 
@@ -1201,14 +1213,14 @@ char LoadCameras(char** data, LEVEL_INFO* lvl) {
 	*data += sizeof(long); //<<---- look at me
 
 	if(lvl->number_spotcams) {
-		lvl->Spotcams = (SPOTCAM*)calloc(lvl->number_spotcams,sizeof(SPOTCAM));
+		lvl->Spotcams = (SPOTCAM*)calloc(lvl->number_spotcams, sizeof(SPOTCAM));
 		memcpy(lvl->Spotcams, *data, lvl->number_spotcams * sizeof(SPOTCAM));
 		*data += lvl->number_spotcams * sizeof(SPOTCAM);
 	}
 
 	return 1;
 }
-OBJECT_VECTOR* GetFixedCamera(LEVEL_INFO* lvl,long num) {
+OBJECT_VECTOR* GetFixedCamera(LEVEL_INFO* lvl, long num) {
 	return lvl->fixedCameras + num;
 }
 SPOTCAM* GetSpotCam(LEVEL_INFO* lvl, long num) {
@@ -1238,4 +1250,12 @@ OBJECT_VECTOR* GetSoundEffect(LEVEL_INFO* lvl, long num) {
 }
 long GetNumSoundEffects(LEVEL_INFO* lvl) {
 	return lvl->number_sound_effects;
+}
+
+TEXTURESTRUCT* GetWaterfallTextInfos(LEVEL_INFO* lvl, long waterfall) {
+	return lvl->AnimatingWaterfalls[waterfall];
+}
+
+long GetWaterfallVCoordinate(LEVEL_INFO *lvl, long waterfall) {
+	return lvl->AnimatingWaterfallsV[waterfall];
 }

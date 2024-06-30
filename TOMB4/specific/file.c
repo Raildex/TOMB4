@@ -27,16 +27,9 @@
 
 THREAD LevelLoadingThread;
 
-TEXTURESTRUCT* AnimatingWaterfalls[3];
-long AnimatingWaterfallsV[3];
-
-long number_cameras;
-
 static char* CompressedData;
 
 unsigned int WINAPI LoadLevel(void* name) {
-	OBJECT_INFO* obj;
-	TEXTURESTRUCT* tex;
 	char* pData;
 	long version, size, compressedSize;
 
@@ -117,16 +110,6 @@ unsigned int WINAPI LoadLevel(void* name) {
 
 		free(pData);
 		S_LoadBar();
-
-		for(int i = 0; i < 3; i++) {
-			obj = GetObjectInfo(currentLevel,WATERFALL1 + i);
-
-			if(obj->loaded) {
-				tex = GetTextInfo(currentLevel,mesh_vtxbuf[obj->mesh_index]->gt4[4] & 0x7FFF);
-				AnimatingWaterfalls[i] = tex;
-				AnimatingWaterfallsV[i] = (long)tex->v1;
-			}
-		}
 
 		S_LoadBar();
 		S_GetUVRotateTextures(currentLevel);

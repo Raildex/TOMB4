@@ -530,17 +530,17 @@ void AnimateWaterfalls() {
 		obj = GetObjectInfo(currentLevel,WATERFALL1 + i);
 
 		if(obj->loaded) {
-			tex = AnimatingWaterfalls[i];
-			tex->v1 = AnimatingWaterfallsV[i] + off;
-			tex->v2 = AnimatingWaterfallsV[i] + off;
-			tex->v3 = AnimatingWaterfallsV[i] + off + 0.25F;
-			tex->v4 = AnimatingWaterfallsV[i] + off + 0.25F;
+			tex = GetWaterfallTextInfos(currentLevel, i);
+			tex->v1 = GetWaterfallVCoordinate(currentLevel, i) + off;
+			tex->v2 = GetWaterfallVCoordinate(currentLevel, i) + off;
+			tex->v3 = GetWaterfallVCoordinate(currentLevel, i) + off + 0.25F;
+			tex->v4 = GetWaterfallVCoordinate(currentLevel, i) + off + 0.25F;
 
 			tex++;
-			tex->v1 = AnimatingWaterfallsV[i] + off;
-			tex->v2 = AnimatingWaterfallsV[i] + off;
-			tex->v3 = AnimatingWaterfallsV[i] + off + 0.25F;
-			tex->v4 = AnimatingWaterfallsV[i] + off + 0.25F;
+			tex->v1 = GetWaterfallVCoordinate(currentLevel, i) + off;
+			tex->v2 = GetWaterfallVCoordinate(currentLevel, i) + off;
+			tex->v3 = GetWaterfallVCoordinate(currentLevel, i) + off + 0.25F;
+			tex->v4 = GetWaterfallVCoordinate(currentLevel, i) + off + 0.25F;
 		}
 	}
 }

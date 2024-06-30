@@ -10,7 +10,6 @@
 #include "game/draw.h"
 #include "game/effect2.h"
 #include "specific/gamemain.h"
-#include "specific/texture.h"
 #include "specific/3dmath.h"
 #include "specific/winmain.h"
 #include "specific/file.h"
@@ -29,7 +28,6 @@
 #include "game/gfleveloptions.h"
 #include "game/lighttypes.h"
 #include "game/fogbulbstruct.h"
-#include "specific/texture.h"
 #include <math.h>
 #include "game/levelinfo.h"
 static ROOM_DYNAMIC RoomDynamics[MAX_DYNAMICS];

@@ -36,6 +36,3 @@ void S_GetUVRotateTextures(LEVEL_INFO* lvl);
 char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size);
 
 extern THREAD LevelLoadingThread;
-
-extern TEXTURESTRUCT* AnimatingWaterfalls[3];
-extern long AnimatingWaterfallsV[3];
