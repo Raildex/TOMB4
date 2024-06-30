@@ -2643,7 +2643,7 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 	if(!plane)
 		Coord->x = planes[0];
 	else {
-		Coord->x = origin->x + (((__int64)dir->x * (__int64)dists[plane]) >> 16);
+		Coord->x = origin->x + (((long long)dir->x * (long long)dists[plane]) >> 16);
 
 		if((!quad[0] && Coord->x < min->x) || (quad[0] == 1 && Coord->x > max->x))
 			return 0;
@@ -2652,7 +2652,7 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 	if(plane == 1)
 		Coord->y = planes[1];
 	else {
-		Coord->y = origin->y + (((__int64)dir->y * (__int64)dists[plane]) >> 16);
+		Coord->y = origin->y + (((long long)dir->y * (long long)dists[plane]) >> 16);
 
 		if((!quad[1] && Coord->y < min->y) || (quad[1] == 1 && Coord->y > max->y))
 			return 0;
@@ -2661,7 +2661,7 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 	if(plane == 2)
 		Coord->z = planes[2];
 	else {
-		Coord->z = origin->z + (((__int64)dir->z * (__int64)dists[plane]) >> 16);
+		Coord->z = origin->z + (((long long)dir->z * (long long)dists[plane]) >> 16);
 
 		if((!quad[2] && Coord->z < min->z) || (quad[2] == 1 && Coord->z > max->z))
 			return 0;

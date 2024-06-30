@@ -3405,8 +3405,8 @@ void DrawRope(ROPE_STRUCT* rope) {
 	if(d) {
 		d = ((0x1000000 / (d >> 8)) << 8) >> 8;
 		b = dx;
-		dx = ((__int64)-dy * (__int64)d) >> (W2V_SHIFT + 2);
-		dy = ((__int64)b * (__int64)d) >> (W2V_SHIFT + 2);
+		dx = ((long long)-dy * (long long)d) >> (W2V_SHIFT + 2);
+		dy = ((long long)b * (long long)d) >> (W2V_SHIFT + 2);
 	}
 
 	w = 0x60000;
@@ -3419,8 +3419,8 @@ void DrawRope(ROPE_STRUCT* rope) {
 	}
 
 	w <<= (W2V_SHIFT + 2);
-	dx = (((__int64)dx * (__int64)w) >> (W2V_SHIFT + 2)) >> (W2V_SHIFT + 2);
-	dy = (((__int64)dy * (__int64)w) >> (W2V_SHIFT + 2)) >> (W2V_SHIFT + 2);
+	dx = (((long long)dx * (long long)w) >> (W2V_SHIFT + 2)) >> (W2V_SHIFT + 2);
+	dy = (((long long)dy * (long long)w) >> (W2V_SHIFT + 2)) >> (W2V_SHIFT + 2);
 	x1 = rope->Coords[0][0] - dx;
 	y1 = rope->Coords[0][1] - dy;
 	z1 = rope->Coords[0][2] >> W2V_SHIFT;
@@ -3440,8 +3440,8 @@ void DrawRope(ROPE_STRUCT* rope) {
 		if(d) {
 			d = ((0x1000000 / (d >> 8)) << 8) >> 8;
 			b = dx;
-			dx = ((__int64)-dy * (__int64)d) >> (W2V_SHIFT + 2);
-			dy = ((__int64)b * (__int64)d) >> (W2V_SHIFT + 2);
+			dx = ((long long)-dy * (long long)d) >> (W2V_SHIFT + 2);
+			dy = ((long long)b * (long long)d) >> (W2V_SHIFT + 2);
 		}
 
 		w = 0x60000;
@@ -3454,8 +3454,8 @@ void DrawRope(ROPE_STRUCT* rope) {
 		}
 
 		w <<= (W2V_SHIFT + 2);
-		dx = (((__int64)dx * (__int64)w) >> (W2V_SHIFT + 2)) >> (W2V_SHIFT + 2);
-		dy = (((__int64)dy * (__int64)w) >> (W2V_SHIFT + 2)) >> (W2V_SHIFT + 2);
+		dx = (((long long)dx * (long long)w) >> (W2V_SHIFT + 2)) >> (W2V_SHIFT + 2);
+		dy = (((long long)dy * (long long)w) >> (W2V_SHIFT + 2)) >> (W2V_SHIFT + 2);
 		x2 = rope->Coords[i + 1][0] - dx;
 		y2 = rope->Coords[i + 1][1] - dy;
 		z2 = rope->Coords[i + 1][2] >> W2V_SHIFT;

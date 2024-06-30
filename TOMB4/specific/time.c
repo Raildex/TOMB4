@@ -2,10 +2,10 @@
 #include "specific/function_stubs.h"
 #include <windows.h>
 #include <stdbool.h>
-static __int64 counter, frequency;
+static long long counter, frequency;
 
 long Sync() {
-	__int64 PerformanceCount, f;
+	long long PerformanceCount, f;
 	long n;
 
 	QueryPerformanceCounter((LARGE_INTEGER*)&PerformanceCount);
@@ -20,7 +20,7 @@ void TIME_Reset() {
 }
 
 bool TIME_Init() {
-	__int64 pfq;
+	long long pfq;
 
 	Log(2, "TIME_Init");
 

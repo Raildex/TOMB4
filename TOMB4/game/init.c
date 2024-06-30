@@ -480,9 +480,9 @@ void CreateRope(ROPE_STRUCT* rope, PHD_VECTOR* pos, PHD_VECTOR* dir, long slengt
 	Normalise(dir);
 
 	for(int n = 0; n < 24; ++n) {
-		rope->Segment[n].x = (__int64)(rope->SegmentLength * n) * dir->x >> (W2V_SHIFT + 2);
-		rope->Segment[n].y = (__int64)(rope->SegmentLength * n) * dir->y >> (W2V_SHIFT + 2);
-		rope->Segment[n].z = (__int64)(rope->SegmentLength * n) * dir->z >> (W2V_SHIFT + 2);
+		rope->Segment[n].x = (long long)(rope->SegmentLength * n) * dir->x >> (W2V_SHIFT + 2);
+		rope->Segment[n].y = (long long)(rope->SegmentLength * n) * dir->y >> (W2V_SHIFT + 2);
+		rope->Segment[n].z = (long long)(rope->SegmentLength * n) * dir->z >> (W2V_SHIFT + 2);
 		rope->Velocity[n].x = 0;
 		rope->Velocity[n].y = 0;
 		rope->Velocity[n].z = 0;

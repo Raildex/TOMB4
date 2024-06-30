@@ -604,9 +604,9 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 }
 
 long TitleOptions() {
-	static __int64 selection = 1;
-	static __int64 selection_bak = 0;
-	__int64 flag, sel;
+	static long long selection = 1;
+	static long long selection_bak = 0;
+	long long flag, sel;
 	long nLevels, nFirst, lp;
 	long ret, n, load, y;
 	static long load_or_new;

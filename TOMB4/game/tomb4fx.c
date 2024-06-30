@@ -1718,11 +1718,11 @@ long LSpline(long x, long* knots, long nk) {
 	x -= 65536 * span;
 	k = &knots[3 * span];
 	c1 = k[3] + (k[3] >> 1) - (k[6] >> 1) - k[6] + (k[9] >> 1) + ((-k[0] - 1) >> 1);
-	ret = (__int64)c1 * x >> 16;
+	ret = (long long)c1 * x >> 16;
 	c2 = ret + 2 * k[6] - 2 * k[3] - (k[3] >> 1) - (k[9] >> 1) + k[0];
-	ret = (__int64)c2 * x >> 16;
+	ret = (long long)c2 * x >> 16;
 	c3 = ret + (k[6] >> 1) + ((-k[0] - 1) >> 1);
-	ret = (__int64)c3 * x >> 16;
+	ret = (long long)c3 * x >> 16;
 	return ret + k[3];
 }
 

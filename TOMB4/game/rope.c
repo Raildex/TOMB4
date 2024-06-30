@@ -67,9 +67,9 @@ PHD_VECTOR* Normalise(PHD_VECTOR* v) {
 	d = abs(SQUARE(a) + SQUARE(b) + SQUARE(c));
 	e = phd_sqrt(d);
 	mod = 65536 / e;
-	v->x = (__int64)mod * v->x >> 16;
-	v->y = (__int64)mod * v->y >> 16;
-	v->z = (__int64)mod * v->z >> 16;
+	v->x = (long long)mod * v->x >> 16;
+	v->y = (long long)mod * v->y >> 16;
+	v->z = (long long)mod * v->z >> 16;
 	return v;
 }
 
@@ -220,9 +220,9 @@ void ModelRigid(PHD_VECTOR* pa, PHD_VECTOR* pb, PHD_VECTOR* va, PHD_VECTOR* vb, 
 	length = phd_sqrt(abs(SQUARE(d.x >> (W2V_SHIFT + 2)) + SQUARE(d.y >> 16) + SQUARE(d.z >> 16)));
 	scale = ((length << (W2V_SHIFT + 2)) - rlength) >> 1;
 	Normalise(&d);
-	delta.x = (__int64)scale * d.x >> (W2V_SHIFT + 2);
-	delta.y = (__int64)scale * d.y >> (W2V_SHIFT + 2);
-	delta.z = (__int64)scale * d.z >> (W2V_SHIFT + 2);
+	delta.x = (long long)scale * d.x >> (W2V_SHIFT + 2);
+	delta.y = (long long)scale * d.y >> (W2V_SHIFT + 2);
+	delta.z = (long long)scale * d.z >> (W2V_SHIFT + 2);
 	va->x += delta.x;
 	va->y += delta.y;
 	va->z += delta.z;
@@ -247,9 +247,9 @@ void ModelRigidRope(PHD_VECTOR* pa, PHD_VECTOR* pb, PHD_VECTOR* va, PHD_VECTOR* 
 	length = phd_sqrt(abs(SQUARE(d.x >> (W2V_SHIFT + 2)) + SQUARE(d.y >> (W2V_SHIFT + 2)) + SQUARE(d.z >> (W2V_SHIFT + 2))));
 	scale = (length << (W2V_SHIFT + 2)) - rlength;
 	Normalise(&d);
-	delta.x = (__int64)scale * d.x >> (W2V_SHIFT + 2);
-	delta.y = (__int64)scale * d.y >> (W2V_SHIFT + 2);
-	delta.z = (__int64)scale * d.z >> (W2V_SHIFT + 2);
+	delta.x = (long long)scale * d.x >> (W2V_SHIFT + 2);
+	delta.y = (long long)scale * d.y >> (W2V_SHIFT + 2);
+	delta.z = (long long)scale * d.z >> (W2V_SHIFT + 2);
 	vb->x -= delta.x;
 	vb->y -= delta.y;
 	vb->z -= delta.z;
@@ -275,9 +275,9 @@ void SetPendulumVelocity(long x, long y, long z) {
 
 	if(2 * (CurrentPendulum.node >> 1) < 24) {
 		scale = 4096 / (24 - 2 * (CurrentPendulum.node >> 1)) * 256;
-		x = (__int64)scale * x >> (W2V_SHIFT + 2);
-		y = (__int64)scale * y >> (W2V_SHIFT + 2);
-		z = (__int64)scale * z >> (W2V_SHIFT + 2);
+		x = (long long)scale * x >> (W2V_SHIFT + 2);
+		y = (long long)scale * y >> (W2V_SHIFT + 2);
+		z = (long long)scale * z >> (W2V_SHIFT + 2);
 	}
 
 	CurrentPendulum.Velocity.x += x;
@@ -327,9 +327,9 @@ void CalculateRope(ROPE_STRUCT* Rope) {
 		Normalise(&dir);
 
 		for(n = Pendulum->node; n >= 0; n--) {
-			Rope->Segment[n].x = Rope->MeshSegment[n - 1].x + ((__int64)Rope->SegmentLength * dir.x >> (W2V_SHIFT + 2));
-			Rope->Segment[n].y = Rope->MeshSegment[n - 1].y + ((__int64)Rope->SegmentLength * dir.y >> (W2V_SHIFT + 2));
-			Rope->Segment[n].z = Rope->MeshSegment[n - 1].z + ((__int64)Rope->SegmentLength * dir.z >> (W2V_SHIFT + 2));
+			Rope->Segment[n].x = Rope->MeshSegment[n - 1].x + ((long long)Rope->SegmentLength * dir.x >> (W2V_SHIFT + 2));
+			Rope->Segment[n].y = Rope->MeshSegment[n - 1].y + ((long long)Rope->SegmentLength * dir.y >> (W2V_SHIFT + 2));
+			Rope->Segment[n].z = Rope->MeshSegment[n - 1].z + ((long long)Rope->SegmentLength * dir.z >> (W2V_SHIFT + 2));
 			Rope->Velocity[n].x = 0;
 			Rope->Velocity[n].y = 0;
 			Rope->Velocity[n].z = 0;
@@ -401,27 +401,27 @@ void CalculateRope(ROPE_STRUCT* Rope) {
 		Rope->MeshSegment[0].x = Rope->Segment[0].x;
 		Rope->MeshSegment[0].y = Rope->Segment[0].y;
 		Rope->MeshSegment[0].z = Rope->Segment[0].z;
-		Rope->MeshSegment[1].x = Rope->Segment[0].x + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[0].x >> 16);
-		Rope->MeshSegment[1].y = Rope->Segment[0].y + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[0].y >> 16);
-		Rope->MeshSegment[1].z = Rope->Segment[0].z + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[0].z >> 16);
+		Rope->MeshSegment[1].x = Rope->Segment[0].x + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[0].x >> 16);
+		Rope->MeshSegment[1].y = Rope->Segment[0].y + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[0].y >> 16);
+		Rope->MeshSegment[1].z = Rope->Segment[0].z + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[0].z >> 16);
 
 		for(n = 2; n < 24; n++) {
-			Rope->MeshSegment[n].x = Rope->MeshSegment[n - 1].x + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].x >> (W2V_SHIFT + 2));
-			Rope->MeshSegment[n].y = Rope->MeshSegment[n - 1].y + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].y >> (W2V_SHIFT + 2));
-			Rope->MeshSegment[n].z = Rope->MeshSegment[n - 1].z + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].z >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n].x = Rope->MeshSegment[n - 1].x + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].x >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n].y = Rope->MeshSegment[n - 1].y + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].y >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n].z = Rope->MeshSegment[n - 1].z + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].z >> (W2V_SHIFT + 2));
 		}
 	} else {
 		Rope->MeshSegment[Pendulum->node].x = Rope->Segment[Pendulum->node].x;
 		Rope->MeshSegment[Pendulum->node].y = Rope->Segment[Pendulum->node].y;
 		Rope->MeshSegment[Pendulum->node].z = Rope->Segment[Pendulum->node].z;
-		Rope->MeshSegment[Pendulum->node + 1].x = Rope->Segment[Pendulum->node].x + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].x >> (W2V_SHIFT + 2));
-		Rope->MeshSegment[Pendulum->node + 1].y = Rope->Segment[Pendulum->node].y + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].y >> (W2V_SHIFT + 2));
-		Rope->MeshSegment[Pendulum->node + 1].z = Rope->Segment[Pendulum->node].z + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].z >> (W2V_SHIFT + 2));
+		Rope->MeshSegment[Pendulum->node + 1].x = Rope->Segment[Pendulum->node].x + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].x >> (W2V_SHIFT + 2));
+		Rope->MeshSegment[Pendulum->node + 1].y = Rope->Segment[Pendulum->node].y + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].y >> (W2V_SHIFT + 2));
+		Rope->MeshSegment[Pendulum->node + 1].z = Rope->Segment[Pendulum->node].z + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].z >> (W2V_SHIFT + 2));
 
 		for(n = Pendulum->node + 1; n < 23; n++) {
-			Rope->MeshSegment[n + 1].x = Rope->MeshSegment[n].x + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[n].x >> (W2V_SHIFT + 2));
-			Rope->MeshSegment[n + 1].y = Rope->MeshSegment[n].y + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[n].y >> (W2V_SHIFT + 2));
-			Rope->MeshSegment[n + 1].z = Rope->MeshSegment[n].z + ((__int64)Rope->SegmentLength * Rope->NormalisedSegment[n].z >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n + 1].x = Rope->MeshSegment[n].x + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n].x >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n + 1].y = Rope->MeshSegment[n].y + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n].y >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n + 1].z = Rope->MeshSegment[n].z + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n].z >> (W2V_SHIFT + 2));
 		}
 
 		for(n = 0; n < Pendulum->node; n++) {
