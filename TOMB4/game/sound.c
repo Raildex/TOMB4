@@ -22,9 +22,9 @@ void GetPanVolume(SoundSlot* slot) {
 	long dx, dy, dz, radius, distance, nPan, nVolume;
 
 	if(slot->distance || slot->pos.x || slot->pos.y || slot->pos.z) {
-		dx = slot->pos.x - camera.pos.x;
-		dy = slot->pos.y - camera.pos.y;
-		dz = slot->pos.z - camera.pos.z;
+		dx = slot->pos.x - camera.pos.pos.x;
+		dy = slot->pos.y - camera.pos.pos.y;
+		dz = slot->pos.z - camera.pos.pos.z;
 		radius = GetSampleInfo(currentLevel,slot->nSampleInfo)->radius << 10;
 
 		if(dx < -radius || dx > radius || dy < -radius || dy > radius || dz < -radius || dz > radius) {
@@ -147,9 +147,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 	pan = 0;
 
 	if(pos) {
-		dx = pos->x_pos - camera.pos.x;
-		dy = pos->y_pos - camera.pos.y;
-		dz = pos->z_pos - camera.pos.z;
+		dx = pos->x_pos - camera.pos.pos.x;
+		dy = pos->y_pos - camera.pos.pos.y;
+		dz = pos->z_pos - camera.pos.pos.z;
 
 		if(dx < -radius || dx > radius || dy < -radius || dy > radius || dz < -radius || dz > radius)
 			return 0;

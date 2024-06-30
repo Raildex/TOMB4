@@ -466,9 +466,9 @@ void TriggerDynamic(long x, long y, long z, long falloff, long r, long g, long b
 
 	dl = &dynamics[number_dynamics];
 	dl->on = 1;
-	dl->x = x;
-	dl->y = y;
-	dl->z = z;
+	dl->pos.x = x;
+	dl->pos.y = y;
+	dl->pos.z = z;
 	dl->falloff = (unsigned short)(falloff << 8);
 
 	if(falloff < 8) {
@@ -493,9 +493,9 @@ void TriggerDynamic_MIRROR(long x, long y, long z, long falloff, long r, long g,
 
 		dl = &dynamics[number_dynamics];
 		dl->on = 1;
-		dl->x = x;
-		dl->y = y;
-		dl->z = z;
+		dl->pos.x = x;
+		dl->pos.y = y;
+		dl->pos.z = z;
 		dl->falloff = (unsigned short)(falloff << 8);
 
 		if(falloff < 8) {
@@ -1198,9 +1198,9 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 			sptr->Life = 9;
 			sptr->sLife = 9;
 			sptr->TransType = 2;
-			sptr->x = pos->x;
-			sptr->y = pos->y;
-			sptr->z = pos->z;
+			sptr->x = pos->pos.x;
+			sptr->y = pos->pos.y;
+			sptr->z = pos->pos.z;
 			sptr->Yvel = (rnd & 0xFFF) - 2048;
 			sptr->Gravity = (rnd >> 7) & 0x1F;
 			rnd = (((rnd >> 3) & 0x7FF) + ang - 1024) & 0xFFF;
@@ -1225,9 +1225,9 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 		sptr->Life = 4;
 		sptr->sLife = 4;
 		sptr->TransType = 2;
-		sptr->x = pos->x;
-		sptr->y = pos->y;
-		sptr->z = pos->z;
+		sptr->x = pos->pos.x;
+		sptr->y = pos->pos.y;
+		sptr->z = pos->pos.z;
 		sptr->Xvel = 0;
 		sptr->Yvel = 0;
 		sptr->Zvel = 0;
@@ -1262,9 +1262,9 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 		sptr->FadeToBlack = 8;
 		sptr->Life = ((rnd >> 2) & 7) + 16;
 		sptr->sLife = sptr->Life;
-		sptr->x = pos->x;
-		sptr->y = pos->y;
-		sptr->z = pos->z;
+		sptr->x = pos->pos.x;
+		sptr->y = pos->pos.y;
+		sptr->z = pos->pos.z;
 
 		if(smoke_only) {
 			sptr->ColFadeSpeed >>= 1;
@@ -1733,7 +1733,7 @@ void SetupSplash(SPLASH_SETUP* setup) {
 	splash->x = setup->x;
 	splash->y = setup->y;
 	splash->z = setup->z;
-	splash->life = 62;
+	splash->life = 96;
 	splash->InnerRad = setup->InnerRad;
 	splash->InnerSize = setup->InnerSize;
 	splash->InnerRadVel = setup->InnerRadVel;
@@ -1782,7 +1782,7 @@ void UpdateSplashes() //(and ripples)
 		} else {
 			splash->InnerY = 0;
 			splash->flags |= 4;
-			splash->life -= 2;
+			splash->life -= 1;
 
 			if(!splash->life)
 				splash->flags = 0;

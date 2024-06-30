@@ -35,9 +35,9 @@ void InitialiseDeathSlide(short item_number) {
 	item = GetItem(currentLevel, item_number);
 	old = (GAME_VECTOR*)malloc(sizeof(GAME_VECTOR));
 	item->data = old;
-	old->x = item->pos.x_pos;
-	old->y = item->pos.y_pos;
-	old->z = item->pos.z_pos;
+	old->pos.x = item->pos.x_pos;
+	old->pos.y = item->pos.y_pos;
+	old->pos.z = item->pos.z_pos;
 	old->room_number = item->room_number;
 }
 
@@ -129,9 +129,9 @@ void ControlDeathSlide(short item_number) {
 			SoundEffect(SFX_TRAIN_DOOR_CLOSE, &item->pos, SFX_DEFAULT);
 	} else {
 		old = (GAME_VECTOR*)item->data;
-		item->pos.x_pos = old->x;
-		item->pos.y_pos = old->y;
-		item->pos.z_pos = old->z;
+		item->pos.x_pos = old->pos.x;
+		item->pos.y_pos = old->pos.y;
+		item->pos.z_pos = old->pos.z;
 
 		if(old->room_number != item->room_number)
 			ItemNewRoom(item_number, old->room_number);

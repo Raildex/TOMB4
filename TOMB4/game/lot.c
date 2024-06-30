@@ -242,9 +242,9 @@ long EnableBaddieAI(short item_number, long Always) {
 	if(Always)
 		worstdist = 0;
 	else {
-		x = (item->pos.x_pos - camera.pos.x) >> 8;
-		y = (item->pos.y_pos - camera.pos.y) >> 8;
-		z = (item->pos.z_pos - camera.pos.z) >> 8;
+		x = (item->pos.x_pos - camera.pos.pos.x) >> 8;
+		y = (item->pos.y_pos - camera.pos.pos.y) >> 8;
+		z = (item->pos.z_pos - camera.pos.pos.z) >> 8;
 		worstdist = SQUARE(x) + SQUARE(y) + SQUARE(z);
 	}
 
@@ -253,9 +253,9 @@ long EnableBaddieAI(short item_number, long Always) {
 	for(slot = 0; slot < 5; slot++) {
 		creature = &baddie_slots[slot];
 		item = GetItem(currentLevel, creature->item_num);
-		x = (item->pos.x_pos - camera.pos.x) >> 8;
-		y = (item->pos.y_pos - camera.pos.y) >> 8;
-		z = (item->pos.z_pos - camera.pos.z) >> 8;
+		x = (item->pos.x_pos - camera.pos.pos.x) >> 8;
+		y = (item->pos.y_pos - camera.pos.pos.y) >> 8;
+		z = (item->pos.z_pos - camera.pos.pos.z) >> 8;
 		dist = SQUARE(x) + SQUARE(y) + SQUARE(z);
 
 		if(dist > worstdist) {

@@ -2011,9 +2011,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 	los = 0;
 
 	if(lfobj) {
-		pos.x = lfobj->x;
-		pos.y = lfobj->y;
-		pos.z = lfobj->z;
+		pos.x = lfobj->pos.x;
+		pos.y = lfobj->pos.y;
+		pos.z = lfobj->pos.z;
 		dx = abs(pos.x - lara_item->pos.x_pos);
 		dy = abs(pos.y - lara_item->pos.y_pos);
 		dz = abs(pos.z - lara_item->pos.z_pos);
@@ -2037,24 +2037,24 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 		pos.z = z;
 
 		while(abs(pos.x) > 0x36000 || abs(pos.y) > 0x36000 || abs(pos.z) > 0x36000) {
-			pos.x -= (x - camera.pos.x) >> 4;
-			pos.y -= (y - camera.pos.y) >> 4;
-			pos.z -= (z - camera.pos.z) >> 4;
+			pos.x -= (x - camera.pos.pos.x) >> 4;
+			pos.y -= (y - camera.pos.pos.y) >> 4;
+			pos.z -= (z - camera.pos.pos.z) >> 4;
 		}
 
-		dx = (pos.x - camera.pos.x) >> 4;
-		dy = (pos.y - camera.pos.y) >> 4;
-		dz = (pos.z - camera.pos.z) >> 4;
+		dx = (pos.x - camera.pos.pos.x) >> 4;
+		dy = (pos.y - camera.pos.pos.y) >> 4;
+		dz = (pos.z - camera.pos.pos.z) >> 4;
 
-		while(abs(pos.x - camera.pos.x) > 0x8000 || abs(pos.y - camera.pos.y) > 0x8000 || abs(pos.z - camera.pos.z) > 0x8000) {
+		while(abs(pos.x - camera.pos.pos.x) > 0x8000 || abs(pos.y - camera.pos.pos.y) > 0x8000 || abs(pos.z - camera.pos.pos.z) > 0x8000) {
 			pos.x -= dx;
 			pos.y -= dy;
 			pos.z -= dz;
 		}
 
-		dx = (pos.x - camera.pos.x) >> 4;
-		dy = (pos.y - camera.pos.y) >> 4;
-		dz = (pos.z - camera.pos.z) >> 4;
+		dx = (pos.x - camera.pos.pos.x) >> 4;
+		dy = (pos.y - camera.pos.pos.y) >> 4;
+		dz = (pos.z - camera.pos.pos.z) >> 4;
 
 		for(int i = 0; i < 16; i++) {
 			IsRoomOutsideNo = 255;
@@ -2072,13 +2072,13 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 
 	if(rn != 255) {
 		if(GetRoom(currentLevel,rn)->flags & ROOM_NOT_INSIDE || lfobj) {
-			start.y = camera.pos.y;
-			start.z = camera.pos.z;
-			start.x = camera.pos.x;
+			start.pos.y = camera.pos.pos.y;
+			start.pos.z = camera.pos.pos.z;
+			start.pos.x = camera.pos.pos.x;
 			start.room_number = camera.pos.room_number;
-			target.x = pos.x;
-			target.y = pos.y;
-			target.z = pos.z;
+			target.pos.x = pos.x;
+			target.pos.y = pos.y;
+			target.pos.z = pos.z;
 			los = LOS(&start, &target);
 		}
 	}
@@ -2465,9 +2465,9 @@ void DrawDrips() {
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
 		pos = (long*)&tsv_buffer[1024];
-		pos[0] = drip->x - lara_item->pos.x_pos;
-		pos[1] = drip->y - lara_item->pos.y_pos;
-		pos[2] = drip->z - lara_item->pos.z_pos;
+		pos[0] = drip->pos.x - lara_item->pos.x_pos;
+		pos[1] = drip->pos.y - lara_item->pos.y_pos;
+		pos[2] = drip->pos.z - lara_item->pos.z_pos;
 
 		if(pos[0] < -20480 || pos[0] > 20480 || pos[1] < -20480 || pos[1] > 20480 || pos[2] < -20480 || pos[2] > 20480)
 			continue;

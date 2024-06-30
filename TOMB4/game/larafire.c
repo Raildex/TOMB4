@@ -262,9 +262,9 @@ static void find_target_point(ITEM_INFO* item, GAME_VECTOR* target) {
 	z = (bounds[4] + bounds[5]) >> 1;
 	s = phd_sin(item->pos.y_rot);
 	c = phd_cos(item->pos.y_rot);
-	target->x = item->pos.x_pos + ((x * c + z * s) >> W2V_SHIFT);
-	target->y = item->pos.y_pos + y;
-	target->z = item->pos.z_pos + ((z * c - x * s) >> W2V_SHIFT);
+	target->pos.x = item->pos.x_pos + ((x * c + z * s) >> W2V_SHIFT);
+	target->pos.y = item->pos.y_pos + y;
+	target->pos.z = item->pos.z_pos + ((z * c - x * s) >> W2V_SHIFT);
 	target->room_number = item->room_number;
 }
 
@@ -280,15 +280,15 @@ void LaraTargetInfo(WEAPON_INFO* winfo) {
 		return;
 	}
 
-	src.x = 0;
-	src.y = 0;
-	src.z = 0;
+	src.pos.x = 0;
+	src.pos.y = 0;
+	src.pos.z = 0;
 	GetLaraJointPos((PHD_VECTOR*)&src, 11);
-	src.x = lara_item->pos.x_pos;
-	src.z = lara_item->pos.z_pos;
+	src.pos.x = lara_item->pos.x_pos;
+	src.pos.z = lara_item->pos.z_pos;
 	src.room_number = lara_item->room_number;
 	find_target_point(GetItem(currentLevel, lara.target_item), &target);
-	phd_GetVectorAngles(target.x - src.x, target.y - src.y, target.z - src.z, ang);
+	phd_GetVectorAngles(target.pos.x - src.pos.x, target.pos.y - src.pos.y, target.pos.z - src.pos.z, ang);
 	ang[0] -= lara_item->pos.y_rot;
 	ang[1] -= lara_item->pos.x_rot;
 
@@ -419,24 +419,24 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 	}
 
 	lara.has_fired = 1;
-	bum_vsrc.x = bum_view.x_pos;
-	bum_vsrc.y = bum_view.y_pos;
-	bum_vsrc.z = bum_view.z_pos;
+	bum_vsrc.pos.x = bum_view.x_pos;
+	bum_vsrc.pos.y = bum_view.y_pos;
+	bum_vsrc.pos.z = bum_view.z_pos;
 	room_number = src->room_number;
 	GetFloor(bum_view.x_pos, bum_view.y_pos, bum_view.z_pos, &room_number);
 	bum_vsrc.room_number = room_number;
 
 	if(best < 0) {
-		bum_vdest.x = bum_vsrc.x + (long)(0x5000 * mMXPtr[M20]);
-		bum_vdest.y = bum_vsrc.y + (long)(0x5000 * mMXPtr[M21]);
-		bum_vdest.z = bum_vsrc.z + (long)(0x5000 * mMXPtr[M22]);
+		bum_vdest.pos.x = bum_vsrc.pos.x + (long)(0x5000 * mMXPtr[M20]);
+		bum_vdest.pos.y = bum_vsrc.pos.y + (long)(0x5000 * mMXPtr[M21]);
+		bum_vdest.pos.z = bum_vsrc.pos.z + (long)(0x5000 * mMXPtr[M22]);
 		GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1);
 		return -1;
 	} else {
 		savegame.Game.AmmoHits++;
-		bum_vdest.x = bum_vsrc.x + (long)(bestdist * mMXPtr[M20]);
-		bum_vdest.y = bum_vsrc.y + (long)(bestdist * mMXPtr[M21]);
-		bum_vdest.z = bum_vsrc.z + (long)(bestdist * mMXPtr[M22]);
+		bum_vdest.pos.x = bum_vsrc.pos.x + (long)(bestdist * mMXPtr[M20]);
+		bum_vdest.pos.y = bum_vsrc.pos.y + (long)(bestdist * mMXPtr[M21]);
+		bum_vdest.pos.z = bum_vsrc.pos.z + (long)(bestdist * mMXPtr[M22]);
 
 		if(!GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1))
 			HitTarget(target, &bum_vdest, winfo->damage, 0);
@@ -490,9 +490,9 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 	}
 
 	bestitem = NO_ITEM;
-	src.x = lara_item->pos.x_pos;
-	src.y = lara_item->pos.y_pos - 650;
-	src.z = lara_item->pos.z_pos;
+	src.pos.x = lara_item->pos.x_pos;
+	src.pos.y = lara_item->pos.y_pos - 650;
+	src.pos.z = lara_item->pos.z_pos;
 	src.room_number = lara_item->room_number;
 	bestyrot = 0x7FFF;
 	bestdist = 0x7FFFFFFF;
@@ -506,9 +506,9 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 			item = GetItem(currentLevel, creature->item_num);
 
 			if(item->hit_points > 0) {
-				x = item->pos.x_pos - src.x;
-				y = item->pos.y_pos - src.y;
-				z = item->pos.z_pos - src.z;
+				x = item->pos.x_pos - src.pos.x;
+				y = item->pos.y_pos - src.pos.y;
+				z = item->pos.z_pos - src.pos.z;
 
 				if(abs(x) <= maxdist && abs(y) <= maxdist && abs(z) <= maxdist) {
 					dist = SQUARE(x) + SQUARE(y) + SQUARE(z);
@@ -517,7 +517,7 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 						find_target_point(item, &target);
 
 						if(LOS(&src, &target)) {
-							phd_GetVectorAngles(target.x - src.x, target.y - src.y, target.z - src.z, ang);
+							phd_GetVectorAngles(target.pos.x - src.pos.x, target.pos.y - src.pos.y, target.pos.z - src.pos.z, ang);
 							ang[0] -= (lara.torso_y_rot + lara_item->pos.y_rot);
 							ang[1] -= (lara.torso_x_rot + lara_item->pos.x_rot);
 
@@ -614,7 +614,7 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade) 
 				return;
 			}
 
-			DoBloodSplat(hitpos->x, hitpos->y, hitpos->z, (GetRandomControl() & 3) + 3, item->pos.y_rot, item->room_number);
+			DoBloodSplat(hitpos->pos.x, hitpos->pos.y, hitpos->pos.z, (GetRandomControl() & 3) + 3, item->pos.y_rot, item->room_number);
 			break;
 
 		case 2:

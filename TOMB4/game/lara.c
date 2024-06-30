@@ -415,14 +415,14 @@ void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(item->current_anim_state != AS_DEATH && gfLevelFlags & GF_TRAIN && item->pos.y_pos >= 0) {
 		if(item->pos.z_pos <= 51900 || item->pos.z_pos >= 53554) {
-			ForcedFixedCamera.y = -1024;
-			ForcedFixedCamera.z = item->pos.z_pos > 51900 ? 55296 : 50176;
+			ForcedFixedCamera.pos.y = -1024;
+			ForcedFixedCamera.pos.z = item->pos.z_pos > 51900 ? 55296 : 50176;
 		} else {
-			ForcedFixedCamera.y = -384;
-			ForcedFixedCamera.z = 52736;
+			ForcedFixedCamera.pos.y = -384;
+			ForcedFixedCamera.pos.z = 52736;
 		}
 
-		ForcedFixedCamera.x = item->pos.x_pos;
+		ForcedFixedCamera.pos.x = item->pos.x_pos;
 		ForcedFixedCamera.room_number = item->room_number;
 		UseForcedFixedCamera = 1;
 		item->anim_number = ANIM_TRAINDEATH;

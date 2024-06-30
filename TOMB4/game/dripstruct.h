@@ -1,9 +1,8 @@
 #ifndef TOMB4_GAME_DRIPSTRUCT_H
 #define TOMB4_GAME_DRIPSTRUCT_H
+#include "game/phdvector.h"
 typedef struct DRIP_STRUCT {
-	long x;
-	long y;
-	long z;
+	PHD_VECTOR pos;
 	unsigned char On;
 	unsigned char R;
 	unsigned char G;

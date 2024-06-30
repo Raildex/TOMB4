@@ -1,9 +1,8 @@
 #ifndef DYNAMIC_INCLUDED
 #define DYNAMIC_INCLUDED
+#include "game/phdvector.h"
 typedef struct DYNAMIC {
-	long x;
-	long y;
-	long z;
+	PHD_VECTOR pos;
 	unsigned char on;
 	unsigned char r;
 	unsigned char g;

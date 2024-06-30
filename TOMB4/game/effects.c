@@ -154,9 +154,9 @@ void turn180_effect(ITEM_INFO* item) {
 void floor_shake_effect(ITEM_INFO* item) {
 	long dx, dy, dz, dist;
 
-	dx = item->pos.x_pos - camera.pos.x;
-	dy = item->pos.y_pos - camera.pos.y;
-	dz = item->pos.z_pos - camera.pos.z;
+	dx = item->pos.x_pos - camera.pos.pos.x;
+	dy = item->pos.y_pos - camera.pos.pos.y;
+	dz = item->pos.z_pos - camera.pos.pos.z;
 
 	if(abs(dx) < 0x4000 && abs(dy) < 0x4000 && abs(dz) < 0x4000) {
 		dist = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
@@ -486,7 +486,7 @@ void DoLotsOfBlood(long x, long y, long z, short speed, short ang, short room_nu
 }
 
 void Richochet(GAME_VECTOR* pos) {
-	TriggerRicochetSpark(pos, mGetAngle(pos->z, pos->x, lara_item->pos.z_pos, lara_item->pos.x_pos) >> 4, 3, 0);
+	TriggerRicochetSpark(pos, mGetAngle(pos->pos.z, pos->pos.x, lara_item->pos.z_pos, lara_item->pos.x_pos) >> 4, 3, 0);
 	SoundEffect(SFX_LARA_RICOCHET, (PHD_3DPOS*)pos, SFX_DEFAULT);
 }
 

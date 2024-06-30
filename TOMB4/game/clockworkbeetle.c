@@ -25,7 +25,7 @@ ITEM_INFO* TriggerClockworkBeetle(long flag) {
 	long dx, dy, dz;
 	short item_number;
 
-	if(flag || lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH && !lara_item->gravity_status && lara.gun_status == LG_NO_ARMS) {
+	if(flag || (lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH && !lara_item->gravity_status && lara.gun_status == LG_NO_ARMS)) {
 		item_number = CreateItem();
 
 		if(item_number != NO_ITEM) {

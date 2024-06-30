@@ -1,5 +1,5 @@
-#ifndef ITEM_LIGHT_INCLUDED
-#define ITEM_LIGHT_INCLUDED
+#ifndef TOMB4_GAME_ITEMLIGHT_H
+#define TOMB4_GAME_ITEMLIGHT_H
 #include "game/pclight.h"
 typedef struct ITEM_LIGHT {
 	long r;
@@ -20,4 +20,4 @@ typedef struct ITEM_LIGHT {
 	void* pCurrentLights;
 	void* pPrevLights;
 } ITEM_LIGHT;
-#endif
+#endif// TOMB4_GAME_ITEMLIGHT_H

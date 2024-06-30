@@ -327,19 +327,19 @@ void do_new_cutscene_camera() {
 		cutseq_control_routines[cutseq_num].control_func();
 
 	DecodeAnim(camera_pnodes, 2, GLOBAL_cutseq_frame, 0xFFFF);
-	camera.target.x = GLOBAL_cutme->orgx + 2 * camera_pnodes->xrot_run;
-	camera.target.y = GLOBAL_cutme->orgy + 2 * camera_pnodes->yrot_run;
-	camera.target.z = GLOBAL_cutme->orgz + 2 * camera_pnodes->zrot_run;
-	camera.pos.x = GLOBAL_cutme->orgx + 2 * camera_pnodes[1].xrot_run;
-	camera.pos.y = GLOBAL_cutme->orgy + 2 * camera_pnodes[1].yrot_run;
-	camera.pos.z = GLOBAL_cutme->orgz + 2 * camera_pnodes[1].zrot_run;
+	camera.target.pos.x = GLOBAL_cutme->orgx + 2 * camera_pnodes->xrot_run;
+	camera.target.pos.y = GLOBAL_cutme->orgy + 2 * camera_pnodes->yrot_run;
+	camera.target.pos.z = GLOBAL_cutme->orgz + 2 * camera_pnodes->zrot_run;
+	camera.pos.pos.x = GLOBAL_cutme->orgx + 2 * camera_pnodes[1].xrot_run;
+	camera.pos.pos.y = GLOBAL_cutme->orgy + 2 * camera_pnodes[1].yrot_run;
+	camera.pos.pos.z = GLOBAL_cutme->orgz + 2 * camera_pnodes[1].zrot_run;
 	IsRoomOutsideNo = -1;
-	IsRoomOutside(camera.pos.x, camera.pos.y, camera.pos.z);
+	IsRoomOutside(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z);
 
 	if(IsRoomOutsideNo != -1)
 		camera.pos.room_number = IsRoomOutsideNo;
 
-	phd_LookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.target.x, camera.target.y, camera.target.z, 0);
+	phd_LookAt(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.target.pos.x, camera.target.pos.y, camera.target.pos.z, 0);
 	DecodeAnim(actor_pnodes[0], 16, GLOBAL_cutseq_frame, 1023);
 
 	for(int i = 1; i < GLOBAL_cutme->numactors; i++)
@@ -1434,9 +1434,9 @@ void init_cutseq_actors(char* data, long resident) {
 	GLOBAL_playing_cutseq = 1;
 	GLOBAL_cutseq_frame = 0;
 	DelsHandyTeleportLara(GLOBAL_cutme->orgx, GLOBAL_cutme->orgy, GLOBAL_cutme->orgz, 0);
-	camera.pos.x = lara_item->pos.x_pos;
-	camera.pos.y = lara_item->pos.y_pos;
-	camera.pos.z = lara_item->pos.z_pos;
+	camera.pos.pos.x = lara_item->pos.x_pos;
+	camera.pos.pos.y = lara_item->pos.y_pos;
+	camera.pos.pos.z = lara_item->pos.z_pos;
 	camera.pos.room_number = lara_item->room_number;
 	InitialiseHair();
 }

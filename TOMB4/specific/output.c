@@ -340,9 +340,9 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 				if(!l->on)
 					continue;
 
-				d.x = l->x - lGlobalMeshPos.x;
-				d.y = l->y - lGlobalMeshPos.y;
-				d.z = l->z - lGlobalMeshPos.z;
+				d.x = l->pos.x - lGlobalMeshPos.x;
+				d.y = l->pos.y - lGlobalMeshPos.y;
+				d.z = l->pos.z - lGlobalMeshPos.z;
 				lPos.x = D3DLightMatrix._11 * d.x + D3DLightMatrix._12 * d.y + D3DLightMatrix._13 * d.z;
 				lPos.y = D3DLightMatrix._21 * d.x + D3DLightMatrix._22 * d.y + D3DLightMatrix._23 * d.z;
 				lPos.z = D3DLightMatrix._31 * d.x + D3DLightMatrix._32 * d.y + D3DLightMatrix._33 * d.z;
@@ -1010,15 +1010,15 @@ void _InsertRoom(ROOM_INFO* r) {
 void RenderLoadPic(long unused) {
 	short poisoned;
 
-	camera.pos.y = gfLoadCam.y;
-	camera.pos.x = gfLoadCam.x;
-	camera.pos.z = gfLoadCam.z;
-	lara_item->pos.x_pos = camera.pos.x;
-	lara_item->pos.y_pos = camera.pos.y;
-	lara_item->pos.z_pos = camera.pos.z;
-	camera.target.x = gfLoadTarget.x;
-	camera.target.y = gfLoadTarget.y;
-	camera.target.z = gfLoadTarget.z;
+	camera.pos.pos.y = gfLoadCam.y;
+	camera.pos.pos.x = gfLoadCam.x;
+	camera.pos.pos.z = gfLoadCam.z;
+	lara_item->pos.x_pos = camera.pos.pos.x;
+	lara_item->pos.y_pos = camera.pos.pos.y;
+	lara_item->pos.z_pos = camera.pos.pos.z;
+	camera.target.pos.x = gfLoadTarget.x;
+	camera.target.pos.y = gfLoadTarget.y;
+	camera.target.pos.z = gfLoadTarget.z;
 	camera.pos.room_number = gfLoadRoom;
 	camera.underwater = GetRoom(currentLevel,gfLoadRoom)->flags & ROOM_UNDERWATER;
 
@@ -1037,7 +1037,7 @@ void RenderLoadPic(long unused) {
 		_EndScene();
 
 	do {
-		phd_LookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.target.x, camera.target.y, camera.target.z, 0);
+		phd_LookAt(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.target.pos.x, camera.target.pos.y, camera.target.pos.z, 0);
 		S_InitialisePolyList();
 		RenderIt(camera.pos.room_number);
 
@@ -1050,7 +1050,7 @@ void RenderLoadPic(long unused) {
 
 	} while(DoFade != 2);
 
-	phd_LookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.target.x, camera.target.y, camera.target.z, 0);
+	phd_LookAt(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.target.pos.x, camera.target.pos.y, camera.target.pos.z, 0);
 	S_InitialisePolyList();
 	RenderIt(camera.pos.room_number);
 

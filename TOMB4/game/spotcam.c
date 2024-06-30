@@ -109,12 +109,12 @@ void InitialiseSpotCam(short Sequence) {
 	bDisableLaraControl = 0;
 	LaraHealth = lara_item->hit_points;
 	LaraAir = lara.air;
-	InitialCameraTarget.x = camera.target.x;
-	InitialCameraTarget.y = camera.target.y;
-	InitialCameraTarget.z = camera.target.z;
-	InitialCameraPosition.x = camera.pos.x;
-	InitialCameraPosition.y = camera.pos.y;
-	InitialCameraPosition.z = camera.pos.z;
+	InitialCameraTarget.x = camera.target.pos.x;
+	InitialCameraTarget.y = camera.target.pos.y;
+	InitialCameraTarget.z = camera.target.pos.z;
+	InitialCameraPosition.x = camera.pos.pos.x;
+	InitialCameraPosition.y = camera.pos.pos.y;
+	InitialCameraPosition.z = camera.pos.pos.z;
 	InitialCameraRoom = camera.pos.room_number;
 	LaraFixedPosition.x = lara_item->pos.x_pos;
 	LaraFixedPosition.y = lara_item->pos.y_pos;
@@ -345,48 +345,48 @@ void CalculateSpotCams() {
 		bFirstLook = 0;
 
 	if(FirstCam->flags & 0x200 || !(input & IN_LOOK) || gfGameMode == 1) {
-		camera.pos.x = cpx;
-		camera.pos.y = cpy;
-		camera.pos.z = cpz;
+		camera.pos.pos.x = cpx;
+		camera.pos.pos.y = cpy;
+		camera.pos.pos.z = cpz;
 
 		if(FirstCam->flags & 0x28) {
-			camera.target.x = lara_item->pos.x_pos;
-			camera.target.y = lara_item->pos.y_pos;
-			camera.target.z = lara_item->pos.z_pos;
+			camera.target.pos.x = lara_item->pos.x_pos;
+			camera.target.pos.y = lara_item->pos.y_pos;
+			camera.target.pos.z = lara_item->pos.z_pos;
 		} else {
-			camera.target.x = ctx;
-			camera.target.y = cty;
-			camera.target.z = ctz;
+			camera.target.pos.x = ctx;
+			camera.target.pos.y = cty;
+			camera.target.pos.z = ctz;
 		}
 
 		if(CurrentCam->flags & 2) {
 			item = GetItem(currentLevel,GetSpotCam(currentLevel,current_spline_camera)->timer);
 
 			if(item) {
-				camera.target.x = item->pos.x_pos;
-				camera.target.y = item->pos.y_pos;
-				camera.target.z = item->pos.z_pos;
+				camera.target.pos.x = item->pos.x_pos;
+				camera.target.pos.y = item->pos.y_pos;
+				camera.target.pos.z = item->pos.z_pos;
 			}
 		}
 
 		if(IsRoomOutside(cpx, cpy, cpz) == -2) {
 			camera.pos.room_number = GetSpotCam(currentLevel,current_spline_camera)->room_number;
-			GetFloor(camera.pos.x, camera.pos.y, camera.pos.z, &camera.pos.room_number);
+			GetFloor(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, &camera.pos.room_number);
 		} else
 			camera.pos.room_number = IsRoomOutsideNo;
 
 		AlterFOV((short)cfov);
-		phd_LookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.target.x, camera.target.y, camera.target.z, (short)croll);
+		phd_LookAt(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.target.pos.x, camera.target.pos.y, camera.target.pos.z, (short)croll);
 
 		if(bCheckTrigger) {
 			ctype = camera.type;
 			camera.type = HEAVY_CAMERA;
 
 			if(gfCurrentLevel)
-				TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 1, 0);
+				TestTriggersAtXYZ(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.pos.room_number, 1, 0);
 			else {
-				TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 0, 0);
-				TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 1, 0);
+				TestTriggersAtXYZ(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.pos.room_number, 0, 0);
+				TestTriggersAtXYZ(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.pos.room_number, 1, 0);
 			}
 
 			camera.type = ctype;
@@ -467,10 +467,10 @@ void CalculateSpotCams() {
 							camera.type = HEAVY_CAMERA;
 
 							if(gfCurrentLevel)
-								TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 1, 0);
+								TestTriggersAtXYZ(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.pos.room_number, 1, 0);
 							else {
-								TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 0, 0);
-								TestTriggersAtXYZ(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number, 1, 0);
+								TestTriggersAtXYZ(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.pos.room_number, 0, 0);
+								TestTriggersAtXYZ(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.pos.room_number, 1, 0);
 							}
 
 							camera.type = ctype;
@@ -486,12 +486,12 @@ void CalculateSpotCams() {
 						camera.speed = 1;
 
 						if(FirstCam->flags & 0x40) {
-							camera.pos.x = InitialCameraPosition.x;
-							camera.pos.y = InitialCameraPosition.y;
-							camera.pos.z = InitialCameraPosition.z;
-							camera.target.x = InitialCameraTarget.x;
-							camera.target.y = InitialCameraTarget.y;
-							camera.target.z = InitialCameraTarget.z;
+							camera.pos.pos.x = InitialCameraPosition.x;
+							camera.pos.pos.y = InitialCameraPosition.y;
+							camera.pos.pos.z = InitialCameraPosition.z;
+							camera.target.pos.x = InitialCameraTarget.x;
+							camera.target.pos.y = InitialCameraTarget.y;
+							camera.target.pos.z = InitialCameraTarget.z;
 							camera.pos.room_number = InitialCameraRoom;
 						}
 
@@ -506,30 +506,30 @@ void CalculateSpotCams() {
 						camera.speed = 1;
 						CalculateCamera();
 						camera_fov[2] = CurrentFov;
-						InitialCameraPosition.x = camera.pos.x;
-						InitialCameraPosition.y = camera.pos.y;
-						InitialCameraPosition.z = camera.pos.z;
-						InitialCameraTarget.x = camera.target.x;
-						InitialCameraTarget.y = camera.target.y;
-						InitialCameraTarget.z = camera.target.z;
-						camera_xposition[2] = camera.pos.x;
-						camera_yposition[2] = camera.pos.y;
-						camera_zposition[2] = camera.pos.z;
-						camera_xtarget[2] = camera.target.x;
-						camera_ytarget[2] = camera.target.y;
-						camera_ztarget[2] = camera.target.z;
+						InitialCameraPosition.x = camera.pos.pos.x;
+						InitialCameraPosition.y = camera.pos.pos.y;
+						InitialCameraPosition.z = camera.pos.pos.z;
+						InitialCameraTarget.x = camera.target.pos.x;
+						InitialCameraTarget.y = camera.target.pos.y;
+						InitialCameraTarget.z = camera.target.pos.z;
+						camera_xposition[2] = camera.pos.pos.x;
+						camera_yposition[2] = camera.pos.pos.y;
+						camera_zposition[2] = camera.pos.pos.z;
+						camera_xtarget[2] = camera.target.pos.x;
+						camera_ytarget[2] = camera.target.pos.y;
+						camera_ztarget[2] = camera.target.pos.z;
 						camera_roll[2] = 0;
 						camera_speed[2] = camera_speed[1];
-						camera_xposition[3] = camera.pos.x;
-						camera_yposition[3] = camera.pos.y;
-						camera_zposition[3] = camera.pos.z;
-						camera_xtarget[3] = camera.target.x;
-						camera_ytarget[3] = camera.target.y;
-						camera_ztarget[3] = camera.target.z;
+						camera_xposition[3] = camera.pos.pos.x;
+						camera_yposition[3] = camera.pos.pos.y;
+						camera_zposition[3] = camera.pos.pos.z;
+						camera_xtarget[3] = camera.target.pos.x;
+						camera_ytarget[3] = camera.target.pos.y;
+						camera_ztarget[3] = camera.target.pos.z;
 						camera_fov[3] = CurrentFov;
 						camera_speed[3] = camera_speed[1] >> 1;
 						memcpy(&camera, &backup, sizeof(CAMERA_INFO));
-						phd_LookAt(backup.pos.x, backup.pos.y, backup.pos.z, backup.target.x, backup.target.y, backup.target.z, (short)croll);
+						phd_LookAt(backup.pos.pos.x, backup.pos.pos.y, backup.pos.pos.z, backup.target.pos.x, backup.target.pos.y, backup.target.pos.z, (short)croll);
 						spline_to_camera = 1;
 					}
 				}

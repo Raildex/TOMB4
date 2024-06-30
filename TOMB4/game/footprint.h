@@ -1,9 +1,8 @@
 #ifndef FOOTPRINT_INCLUDED
 #define FOOTPRINT_INCLUDED
+#include "game/camera.h"
 typedef struct FOOTPRINT {
-	long x;
-	long y;
-	long z;
+	PHD_VECTOR pos;
 	short YRot;
 	short Active;
 } FOOTPRINT;

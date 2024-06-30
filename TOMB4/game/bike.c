@@ -118,7 +118,7 @@ long GetOnBike(short item_number, COLL_INFO* coll) {
 		return 0;
 
 	if(abs(item->pos.y_pos - lara_item->pos.y_pos) > 256
-	   || !(input & IN_ACTION) && GLOBAL_inventoryitemchosen != PUZZLE_ITEM1)
+	   || (!(input & IN_ACTION) && GLOBAL_inventoryitemchosen != PUZZLE_ITEM1))
 		return 0;
 
 	dx = lara_item->pos.x_pos - item->pos.x_pos;

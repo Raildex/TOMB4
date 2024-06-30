@@ -54,9 +54,9 @@ void AddFootPrint(ITEM_INFO* item) {
 
 	if(floor->fx < 3 && !OnObject) {
 		print = &FootPrint[FootPrintNum];
-		print->x = pos.x;
-		print->y = GetHeight(floor, pos.x, pos.y, pos.z);
-		print->z = pos.z;
+		print->pos.x = pos.x;
+		print->pos.y = GetHeight(floor, pos.x, pos.y, pos.z);
+		print->pos.z = pos.z;
 		print->YRot = item->pos.y_rot;
 		print->Active = 512;
 		FootPrintNum = (FootPrintNum + 1) & 0x1F;
@@ -95,14 +95,14 @@ void S_DrawFootPrints() {
 			pos[2].z = 64;
 
 			phd_PushUnitMatrix();
-			phd_TranslateRel(print->x, print->y, print->z);
+			phd_TranslateRel(print->pos.x, print->pos.y, print->pos.z);
 			phd_RotY(print->YRot);
 
 			for(int j = 0; j < 3; j++) {
 				x = (long)(pos[j].x * mMXPtr[M00] + pos[j].z * mMXPtr[M02] + mMXPtr[M03]);
 				z = (long)(pos[j].x * mMXPtr[M20] + pos[j].z * mMXPtr[M22] + mMXPtr[M23]);
 				room_number = lara_item->room_number;
-				pos[j].y = GetHeight(GetFloor(x, print->y, z, &room_number), x, print->y, z) - print->y;
+				pos[j].y = GetHeight(GetFloor(x, print->pos.y, z, &room_number), x, print->pos.y, z) - print->pos.y;
 
 				if(abs(pos[j].y) > PRINT_HEIGHT_CORRECTION)
 					pos[j].y = 0;
@@ -111,7 +111,7 @@ void S_DrawFootPrints() {
 			phd_PopMatrix();
 
 			phd_PushMatrix();
-			phd_TranslateAbs(print->x, print->y - 16, print->z);
+			phd_TranslateAbs(print->pos.x, print->pos.y - 16, print->pos.z);
 			phd_RotY(print->YRot);
 
 			ProjectTriPoints(&pos[0], &x1, &y1, &z1);

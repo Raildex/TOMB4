@@ -63,9 +63,9 @@ void ProcessRoomDynamics(ROOM_INFO* r) {
 			continue;
 
 		falloff = (float)((d->falloff >> 1) + (d->falloff >> 3));
-		l->x = d->x - r->posx;
-		l->y = d->y - r->posy;
-		l->z = d->z - r->posz;
+		l->x = d->pos.x - r->posx;
+		l->y = d->pos.y - r->posy;
+		l->z = d->pos.z - r->posz;
 		l->r = (float)d->r * (1.0F / 255.0F);
 		l->g = (float)d->g * (1.0F / 255.0F);
 		l->b = (float)d->b * (1.0F / 255.0F);

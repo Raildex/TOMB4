@@ -65,9 +65,9 @@ void SetupDynamicLight(DYNAMIC* light, ITEM_INFO* item) {
 	POINTLIGHT_STRUCT* point;
 	float x, y, z, falloff, dist, val;
 
-	x = light->x - lGlobalMeshPos.x;
-	y = light->y - lGlobalMeshPos.y;
-	z = light->z - lGlobalMeshPos.z;
+	x = light->pos.x - lGlobalMeshPos.x;
+	y = light->pos.y - lGlobalMeshPos.y;
+	z = light->pos.z - lGlobalMeshPos.z;
 	falloff = (float)((light->falloff >> 1) + (light->falloff >> 3));
 	dist = (float)sqrt(SQUARE(z) + SQUARE(y) + SQUARE(x));
 	point = &PointLights[nPointLights];

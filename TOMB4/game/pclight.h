@@ -35,4 +35,4 @@ typedef struct PCLIGHT {
 	PHD_VECTOR rlp;
 	long Range;
 } PCLIGHT;
-#endif // TOMB4_GAME_PCLIGHT_H
+#endif// TOMB4_GAME_PCLIGHT_H

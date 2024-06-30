@@ -87,10 +87,8 @@ HRESULT WINAPI CreateMipMapFormat0(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 	assert(desc);
 	assert(data);
 	DXAttempt(IDirectDrawSurface4_Lock(surface,0, desc, DDLOCK_NOSYSLOCK, 0));
-	Log(1, "Mip Map Surface found of size %d", desc->dwWidth);
 	int w = desc->dwWidth;
 	int h = desc->dwHeight;
-	Log(1, "Surface Size");
 	void* dest = (char*)desc->lpSurface;
 	long skip;
 	switch(data->sourceFmt) {

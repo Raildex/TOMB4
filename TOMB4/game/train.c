@@ -111,7 +111,7 @@ void DrawTrainFloor() {
 	long x;
 
 	x = lara_item->pos.x_pos;
-	lara_item->pos.x_pos = camera.pos.x;
+	lara_item->pos.x_pos = camera.pos.pos.x;
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.x_pos & -1024, 0, 52224);
 	DrawTrainStrips();

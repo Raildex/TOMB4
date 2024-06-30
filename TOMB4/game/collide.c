@@ -982,13 +982,12 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
 				lara.gun_status = LG_NO_ARMS;
 			}
 
+			if(phd_sqrt(SQUARE(pos.x_pos - l->pos.x_pos) + SQUARE(pos.y_pos - l->pos.y_pos) + SQUARE(pos.z_pos - l->pos.z_pos)) < 192)
+				return 1;
 			return 0;
 		}
 
 	}
-	if(!lara.IsMoving)
-		if(phd_sqrt(SQUARE(pos.x_pos - l->pos.x_pos) + SQUARE(pos.y_pos - l->pos.y_pos) + SQUARE(pos.z_pos - l->pos.z_pos)) < 192)
-			return 1;
 
 	return Move3DPosTo3DPos(&l->pos, &pos, 12, 364);
 }

@@ -414,15 +414,15 @@ void UpdateDrips() {
 		drip->Yvel += drip->Gravity;
 
 		if(GetRoom(currentLevel,drip->RoomNumber)->flags & ROOM_NOT_INSIDE) {
-			drip->x += SmokeWindX >> 1;
-			drip->z += SmokeWindZ >> 1;
+			drip->pos.x += SmokeWindX >> 1;
+			drip->pos.z += SmokeWindZ >> 1;
 		}
 
-		drip->y += drip->Yvel >> 5;
-		floor = GetFloor(drip->x, drip->y, drip->z, &drip->RoomNumber);
-		h = GetHeight(floor, drip->x, drip->y, drip->z);
+		drip->pos.y += drip->Yvel >> 5;
+		floor = GetFloor(drip->pos.x, drip->pos.y, drip->pos.z, &drip->RoomNumber);
+		h = GetHeight(floor, drip->pos.x, drip->pos.y, drip->pos.z);
 
-		if(GetRoom(currentLevel,drip->RoomNumber)->flags & ROOM_UNDERWATER || drip->y > h)
+		if(GetRoom(currentLevel,drip->RoomNumber)->flags & ROOM_UNDERWATER || drip->pos.y > h)
 			drip->On = 0;
 	}
 }
@@ -885,9 +885,9 @@ void TriggerShatterSmoke(long x, long y, long z) {
 void DrawLensFlares(ITEM_INFO* item) {
 	GAME_VECTOR sun;
 
-	sun.x = item->pos.x_pos;
-	sun.y = item->pos.y_pos;
-	sun.z = item->pos.z_pos;
+	sun.pos.x = item->pos.x_pos;
+	sun.pos.y = item->pos.y_pos;
+	sun.pos.z = item->pos.z_pos;
 	sun.room_number = item->room_number;
 	SetUpLensFlare(0, 0, 0, &sun);
 }
@@ -1533,9 +1533,9 @@ void TriggerLaraDrips() {
 			GetLaraJointPos(&pos, i);
 
 			drip = &Drips[GetFreeDrip()];
-			drip->x = pos.x;
-			drip->y = pos.y;
-			drip->z = pos.z;
+			drip->pos.x = pos.x;
+			drip->pos.y = pos.y;
+			drip->pos.z = pos.z;
 			drip->On = 1;
 			drip->R = (GetRandomControl() & 7) + 16;
 			drip->G = (GetRandomControl() & 7) + 24;

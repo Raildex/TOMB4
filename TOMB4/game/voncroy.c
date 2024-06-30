@@ -85,15 +85,15 @@ void SetCutSceneCamera(ITEM_INFO* item) {
 	camera.type = CHASE_CAMERA;
 	camera.speed = 1;
 	CalculateCamera();
-	actualCameraTarget.x = camera.target.x;
-	actualCameraTarget.y = camera.target.y;
-	actualCameraTarget.z = camera.target.z;
+	actualCameraTarget.x = camera.target.pos.x;
+	actualCameraTarget.y = camera.target.pos.y;
+	actualCameraTarget.z = camera.target.pos.z;
 	actualFOV = CurrentFov;
 	actualRoomNumber = camera.pos.room_number;
 	camera.underwater = 0;
-	actualCameraPos.x = camera.pos.x;
-	actualCameraPos.y = camera.pos.y;
-	actualCameraPos.z = camera.pos.z;
+	actualCameraPos.x = camera.pos.pos.x;
+	actualCameraPos.y = camera.pos.pos.y;
+	actualCameraPos.z = camera.pos.pos.z;
 	cut = &VonCroyCutscenes[VonCroyCutIndices[lara.locationPad]];
 	f = cut->f;
 
@@ -101,49 +101,49 @@ void SetCutSceneCamera(ITEM_INFO* item) {
 		AlterFOV(182 * (f & 0xFFFF));
 
 	if(f & 0x40000) {
-		camera.pos.x = cut->CameraPos.x;
-		camera.pos.y = cut->CameraPos.y;
-		camera.pos.z = cut->CameraPos.z;
+		camera.pos.pos.x = cut->CameraPos.x;
+		camera.pos.pos.y = cut->CameraPos.y;
+		camera.pos.pos.z = cut->CameraPos.z;
 	} else {
-		camera.pos.x += cut->CameraPos.x;
-		camera.pos.y += cut->CameraPos.y;
-		camera.pos.z += cut->CameraPos.z;
+		camera.pos.pos.x += cut->CameraPos.x;
+		camera.pos.pos.y += cut->CameraPos.y;
+		camera.pos.pos.z += cut->CameraPos.z;
 	}
 
 	if(f & 0x80000) {
-		camera.target.x = cut->CameraTarget.x;
-		camera.target.y = cut->CameraTarget.y;
-		camera.target.z = cut->CameraTarget.z;
+		camera.target.pos.x = cut->CameraTarget.x;
+		camera.target.pos.y = cut->CameraTarget.y;
+		camera.target.pos.z = cut->CameraTarget.z;
 	} else {
-		camera.target.x += cut->CameraTarget.x;
-		camera.target.y += cut->CameraTarget.y;
-		camera.target.z += cut->CameraTarget.z;
+		camera.target.pos.x += cut->CameraTarget.x;
+		camera.target.pos.y += cut->CameraTarget.y;
+		camera.target.pos.z += cut->CameraTarget.z;
 	}
 
 	if(f & 0x20000) {
-		camera.target.x = item->pos.x_pos;
-		camera.target.y = item->pos.y_pos - 256;
-		camera.target.z = item->pos.z_pos;
+		camera.target.pos.x = item->pos.x_pos;
+		camera.target.pos.y = item->pos.y_pos - 256;
+		camera.target.pos.z = item->pos.z_pos;
 	}
 
-	if(IsRoomOutside(camera.pos.x, camera.pos.y, camera.pos.z) == -2) {
-		camera.pos.x = actualCameraPos.x;
-		camera.pos.y = actualCameraPos.y;
-		camera.pos.z = actualCameraPos.z;
+	if(IsRoomOutside(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z) == -2) {
+		camera.pos.pos.x = actualCameraPos.x;
+		camera.pos.pos.y = actualCameraPos.y;
+		camera.pos.pos.z = actualCameraPos.z;
 		camera.pos.room_number = (short)actualRoomNumber;
 	} else
 		camera.pos.room_number = IsRoomOutsideNo;
 
-	phd_LookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.target.x, camera.target.y, camera.target.z, 0);
+	phd_LookAt(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.target.pos.x, camera.target.pos.y, camera.target.pos.z, 0);
 }
 
 void ClearCutSceneCamera() {
-	camera.pos.x = actualCameraPos.x;
-	camera.pos.y = actualCameraPos.y;
-	camera.pos.z = actualCameraPos.z;
-	camera.target.x = actualCameraTarget.x;
-	camera.target.y = actualCameraTarget.y;
-	camera.target.z = actualCameraTarget.z;
+	camera.pos.pos.x = actualCameraPos.x;
+	camera.pos.pos.y = actualCameraPos.y;
+	camera.pos.pos.z = actualCameraPos.z;
+	camera.target.pos.x = actualCameraTarget.x;
+	camera.target.pos.y = actualCameraTarget.y;
+	camera.target.pos.z = actualCameraTarget.z;
 	camera.pos.room_number = (short)actualRoomNumber;
 	camera.speed = 1;
 	camera.old_type = FIXED_CAMERA;

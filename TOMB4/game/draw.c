@@ -629,7 +629,7 @@ void DrawRooms(short CurrentRoom) {
 				AlterFOV(14560 - (short)BinocularRange);
 
 			phd_PushMatrix();
-			phd_TranslateAbs(camera.pos.x, camera.pos.y, camera.pos.z);
+			phd_TranslateAbs(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z);
 
 			if(gfLevelFlags & GF_LIGHTNING) {
 				if(!LightningCount && !LightningRand) {
@@ -734,11 +734,11 @@ void DrawRooms(short CurrentRoom) {
 
 	for(int i = 0; i < MAX_DYNAMICS; i++) {
 		if(dynamics[i].on) {
-			if(dynamics[i].x < 0)
-				dynamics[i].x = 0;
+			if(dynamics[i].pos.x < 0)
+				dynamics[i].pos.x = 0;
 
-			if(dynamics[i].z < 0)
-				dynamics[i].z = 0;
+			if(dynamics[i].pos.z < 0)
+				dynamics[i].pos.z = 0;
 		}
 	}
 
@@ -762,9 +762,9 @@ void DrawRooms(short CurrentRoom) {
 	ly = lara_item->pos.y_pos;
 	lz = lara_item->pos.z_pos;
 	lr = lara_item->room_number;
-	lara_item->pos.x_pos = camera.pos.x;
-	lara_item->pos.y_pos = camera.pos.y;
-	lara_item->pos.z_pos = camera.pos.z;
+	lara_item->pos.x_pos = camera.pos.pos.x;
+	lara_item->pos.y_pos = camera.pos.pos.y;
+	lara_item->pos.z_pos = camera.pos.pos.z;
 	lara_item->room_number = camera.pos.room_number;
 	DoUwEffect();
 	S_DrawFires();
@@ -839,7 +839,7 @@ void RenderIt(short CurrentRoom) {
 				AlterFOV(14560 - (short)BinocularRange);
 
 			phd_PushMatrix();
-			phd_TranslateAbs(camera.pos.x, camera.pos.y, camera.pos.z);
+			phd_TranslateAbs(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z);
 			nPolyType = 6;
 			phd_PushMatrix();
 

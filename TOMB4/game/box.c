@@ -1345,9 +1345,9 @@ void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara
 	lara.hit_direction = -1;
 	lara.air = -1;
 	camera.pos.room_number = lara_item->room_number;
-	ForcedFixedCamera.x = item->pos.x_pos + ((2048 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
-	ForcedFixedCamera.y = item->pos.y_pos - 1024;
-	ForcedFixedCamera.z = item->pos.z_pos + ((2048 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
+	ForcedFixedCamera.pos.x = item->pos.x_pos + ((2048 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
+	ForcedFixedCamera.pos.y = item->pos.y_pos - 1024;
+	ForcedFixedCamera.pos.z = item->pos.z_pos + ((2048 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
 	ForcedFixedCamera.room_number = item->room_number;
 	UseForcedFixedCamera = 1;
 }

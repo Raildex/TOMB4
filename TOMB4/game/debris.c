@@ -80,14 +80,14 @@ void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels,
 		if(rgb < 0)
 			rgb = -rgb;
 	} else if(rgb >= 0)
-		TriggerShatterSmoke(pos->x, pos->y, pos->z);
+		TriggerShatterSmoke(pos->pos.x, pos->pos.y, pos->pos.z);
 
 	dptr = &debris[GetFreeDebris()];
 	dptr->On = 1;
 	dptr->nBounces = 0;
-	dptr->x = pos->x;
-	dptr->y = pos->y;
-	dptr->z = pos->z;
+	dptr->x = pos->pos.x;
+	dptr->y = pos->pos.y;
+	dptr->z = pos->pos.z;
 
 	if(DebrisFlags & 1) {
 		dptr->Dir = (short)(GetRandomControl() << 1);
@@ -303,38 +303,38 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 			offsets[7] = RotVerts[v3 + 1];
 			offsets[8] = RotVerts[v3 + 2];
 
-			vec.x = (offsets[0] + offsets[3] + offsets[6]) / 3;
-			vec.y = (offsets[1] + offsets[4] + offsets[7]) / 3;
-			vec.z = (offsets[2] + offsets[5] + offsets[8]) / 3;
+			vec.pos.x = (offsets[0] + offsets[3] + offsets[6]) / 3;
+			vec.pos.y = (offsets[1] + offsets[4] + offsets[7]) / 3;
+			vec.pos.z = (offsets[2] + offsets[5] + offsets[8]) / 3;
 
-			offsets[0] -= (short)vec.x;
-			offsets[1] -= (short)vec.y;
-			offsets[2] -= (short)vec.z;
+			offsets[0] -= (short)vec.pos.x;
+			offsets[1] -= (short)vec.pos.y;
+			offsets[2] -= (short)vec.pos.z;
 
-			offsets[3] -= (short)vec.x;
-			offsets[4] -= (short)vec.y;
-			offsets[5] -= (short)vec.z;
+			offsets[3] -= (short)vec.pos.x;
+			offsets[4] -= (short)vec.pos.y;
+			offsets[5] -= (short)vec.pos.z;
 
-			offsets[6] -= (short)vec.x;
-			offsets[7] -= (short)vec.y;
-			offsets[8] -= (short)vec.z;
+			offsets[6] -= (short)vec.pos.x;
+			offsets[7] -= (short)vec.pos.y;
+			offsets[8] -= (short)vec.pos.z;
 
 			if(NoXZVel > 0) {
 				Vels[0] = 0;
 				Vels[1] = 0;
 				Vels[2] = 0;
 			} else {
-				Vels[0] = vec.x - VPos.x;
-				Vels[1] = vec.y - VPos.y;
-				Vels[2] = vec.z - VPos.z;
+				Vels[0] = vec.pos.x - VPos.x;
+				Vels[1] = vec.pos.y - VPos.y;
+				Vels[2] = vec.pos.z - VPos.z;
 			}
 
 			if(NoXZVel < 0)
 				Vels[1] = NoXZVel;
 
-			vec.x += TPos.x;
-			vec.y += TPos.y;
-			vec.z += TPos.z;
+			vec.pos.x += TPos.x;
+			vec.pos.y += TPos.y;
+			vec.pos.z += TPos.z;
 			c = rgb;
 
 			if(shatter_item && shatter_item->Flags & 0x400)
@@ -363,7 +363,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 		tex = (TEXTURESTRUCT*)*face_data++;
 		DebrisMeshFlags = *face_data++;
 
-		if(v1 < 0x300 && v2 < 0x300 && v3 < 0x300 && (!rnd || rnd == 1 && GetRandomControl() & 1)) {
+		if(v1 < 0x300 && v2 < 0x300 && v3 < 0x300 && (!rnd || (rnd == 1 && GetRandomControl() & 1))) {
 			offsets[0] = RotVerts[v1];
 			offsets[1] = RotVerts[v1 + 1];
 			offsets[2] = RotVerts[v1 + 2];
@@ -376,38 +376,38 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 			offsets[7] = RotVerts[v3 + 1];
 			offsets[8] = RotVerts[v3 + 2];
 
-			vec.x = (offsets[0] + offsets[3] + offsets[6]) / 3;
-			vec.y = (offsets[1] + offsets[4] + offsets[7]) / 3;
-			vec.z = (offsets[2] + offsets[5] + offsets[8]) / 3;
+			vec.pos.x = (offsets[0] + offsets[3] + offsets[6]) / 3;
+			vec.pos.y = (offsets[1] + offsets[4] + offsets[7]) / 3;
+			vec.pos.z = (offsets[2] + offsets[5] + offsets[8]) / 3;
 
-			offsets[0] -= (short)vec.x;
-			offsets[1] -= (short)vec.y;
-			offsets[2] -= (short)vec.z;
+			offsets[0] -= (short)vec.pos.x;
+			offsets[1] -= (short)vec.pos.y;
+			offsets[2] -= (short)vec.pos.z;
 
-			offsets[3] -= (short)vec.x;
-			offsets[4] -= (short)vec.y;
-			offsets[5] -= (short)vec.z;
+			offsets[3] -= (short)vec.pos.x;
+			offsets[4] -= (short)vec.pos.y;
+			offsets[5] -= (short)vec.pos.z;
 
-			offsets[6] -= (short)vec.x;
-			offsets[7] -= (short)vec.y;
-			offsets[8] -= (short)vec.z;
+			offsets[6] -= (short)vec.pos.x;
+			offsets[7] -= (short)vec.pos.y;
+			offsets[8] -= (short)vec.pos.z;
 
 			if(NoXZVel > 0) {
 				Vels[0] = 0;
 				Vels[1] = 0;
 				Vels[2] = 0;
 			} else {
-				Vels[0] = vec.x - VPos.x;
-				Vels[1] = vec.y - VPos.y;
-				Vels[2] = vec.z - VPos.z;
+				Vels[0] = vec.pos.x - VPos.x;
+				Vels[1] = vec.pos.y - VPos.y;
+				Vels[2] = vec.pos.z - VPos.z;
 			}
 
 			if(NoXZVel < 0)
 				Vels[1] = NoXZVel;
 
-			vec.x += TPos.x;
-			vec.y += TPos.y;
-			vec.z += TPos.z;
+			vec.pos.x += TPos.x;
+			vec.pos.y += TPos.y;
+			vec.pos.z += TPos.z;
 			c = rgb;
 
 			if(shatter_item && shatter_item->Flags & 0x400)

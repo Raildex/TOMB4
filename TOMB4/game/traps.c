@@ -437,9 +437,9 @@ void ControlSprinkler(short item_number) {
 		   && (item->item_flags[0] <= 600
 			   || GetRandomControl() % (item->item_flags[0] - 600) < 100)) {
 			drip = &Drips[GetFreeDrip()];
-			drip->x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
-			drip->y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
-			drip->z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
+			drip->pos.x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
+			drip->pos.y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
+			drip->pos.z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
 			drip->On = 1;
 			drip->R = 112;
 			drip->G = (GetRandomControl() & 0x1F) + 128;
@@ -1724,9 +1724,9 @@ void ControlRollingBall(short item_number) {
 	if(item->pos.y_pos > h) {
 		if(abs(item->fallspeed) > 16) {
 			fz = phd_sqrt(
-				SQUARE(camera.pos.x - item->pos.x_pos)
-				+ SQUARE(camera.pos.y - item->pos.y_pos)
-				+ SQUARE(camera.pos.z - item->pos.z_pos));
+				SQUARE(camera.pos.pos.x - item->pos.x_pos)
+				+ SQUARE(camera.pos.pos.y - item->pos.y_pos)
+				+ SQUARE(camera.pos.pos.z - item->pos.z_pos));
 
 			if(fz < 0x4000)
 				camera.bounce
@@ -2219,10 +2219,10 @@ void CeilingTrapDoorCollision(
 		item->status = ITEM_ACTIVE;
 		item->goal_anim_state = 1;
 		UseForcedFixedCamera = 1;
-		ForcedFixedCamera.x = item->pos.x_pos
+		ForcedFixedCamera.pos.x = item->pos.x_pos
 			- ((1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
-		ForcedFixedCamera.y = item->pos.y_pos + 1024;
-		ForcedFixedCamera.z = item->pos.z_pos
+		ForcedFixedCamera.pos.y = item->pos.y_pos + 1024;
+		ForcedFixedCamera.pos.z = item->pos.z_pos
 			- ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
 		ForcedFixedCamera.room_number = item->room_number;
 	} else if(item->current_anim_state == 1)
@@ -2235,9 +2235,9 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && item->status != ITEM_ACTIVE
+	if((input & IN_ACTION && item->status != ITEM_ACTIVE
 		   && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
-		   && lara.gun_status == LG_NO_ARMS
+		   && lara.gun_status == LG_NO_ARMS)
 	   || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(TestLaraPosition(FloorTrapDoorBounds, item, l)) {
 			if(MoveLaraPosition(&FloorTrapDoorPos, item, l)) {
@@ -2255,16 +2255,16 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				item->goal_anim_state = 1;
 				item->status = ITEM_ACTIVE;
 				UseForcedFixedCamera = 1;
-				ForcedFixedCamera.x = item->pos.x_pos
+				ForcedFixedCamera.pos.x = item->pos.x_pos
 					- ((2048 * phd_sin(item->pos.y_rot) >> W2V_SHIFT));
-				ForcedFixedCamera.z = item->pos.z_pos
+				ForcedFixedCamera.pos.z = item->pos.z_pos
 					- ((2048 * phd_cos(item->pos.y_rot) >> W2V_SHIFT));
 				y = item->pos.y_pos - 2048;
 
 				if(y < GetRoom(currentLevel, item->room_number)->maxceiling)
 					y = GetRoom(currentLevel, item->room_number)->maxceiling;
 
-				ForcedFixedCamera.y = y;
+				ForcedFixedCamera.pos.y = y;
 				ForcedFixedCamera.room_number = item->room_number;
 			} else
 				lara.GeneralPtr = item_number;

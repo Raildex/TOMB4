@@ -461,7 +461,7 @@ long ControlPhase(long nframes, long demo_mode) {
 		else if(!bVoncroyCutScene)
 			CalculateCamera();
 
-		CamRot.y = (mGetAngle(camera.pos.z, camera.pos.x, camera.target.z, camera.target.x) >> 4) & 0xFFF;
+		CamRot.y = (mGetAngle(camera.pos.pos.z, camera.pos.pos.x, camera.target.pos.z, camera.target.pos.x) >> 4) & 0xFFF;
 		wibble = (wibble + 4) & 0xFC;
 		TriggerLaraDrips();
 		UpdateSparks();
@@ -1851,46 +1851,46 @@ long ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {
 
 	room_no = target->room_number;
 
-	if(target->y > GetHeight(GetFloor(target->x, target->y, target->z, &room_no), target->x, target->y, target->z)) {
-		src.x = (7 * (target->x - start->x) >> 3) + start->x;
-		src.y = (7 * (target->y - start->y) >> 3) + start->y;
-		src.z = (7 * (target->z - start->z) >> 3) + start->z;
+	if(target->pos.y > GetHeight(GetFloor(target->pos.x, target->pos.y, target->pos.z, &room_no), target->pos.x, target->pos.y, target->pos.z)) {
+		src.pos.x = (7 * (target->pos.x - start->pos.x) >> 3) + start->pos.x;
+		src.pos.y = (7 * (target->pos.y - start->pos.y) >> 3) + start->pos.y;
+		src.pos.z = (7 * (target->pos.z - start->pos.z) >> 3) + start->pos.z;
 
 		for(int i = 3; i > 0; i--) {
-			dx = ((target->x - src.x) * i >> 2) + src.x;
-			dy = ((target->y - src.y) * i >> 2) + src.y;
-			dz = ((target->z - src.z) * i >> 2) + src.z;
+			dx = ((target->pos.x - src.pos.x) * i >> 2) + src.pos.x;
+			dy = ((target->pos.y - src.pos.y) * i >> 2) + src.pos.y;
+			dz = ((target->pos.z - src.pos.z) * i >> 2) + src.pos.z;
 
 			if(dy < GetHeight(GetFloor(dx, dy, dz, &room_no), dx, dy, dz))
 				break;
 		}
 
-		target->x = dx;
-		target->y = dy;
-		target->z = dz;
+		target->pos.x = dx;
+		target->pos.y = dy;
+		target->pos.z = dz;
 		target->room_number = room_no;
 		return 0;
 	}
 
 	room_no = target->room_number;
 
-	if(target->y < GetCeiling(GetFloor(target->x, target->y, target->z, &room_no), target->x, target->y, target->z)) {
-		src.x = (7 * (target->x - start->x) >> 3) + start->x;
-		src.y = (7 * (target->y - start->y) >> 3) + start->y;
-		src.z = (7 * (target->z - start->z) >> 3) + start->z;
+	if(target->pos.y < GetCeiling(GetFloor(target->pos.x, target->pos.y, target->pos.z, &room_no), target->pos.x, target->pos.y, target->pos.z)) {
+		src.pos.x = (7 * (target->pos.x - start->pos.x) >> 3) + start->pos.x;
+		src.pos.y = (7 * (target->pos.y - start->pos.y) >> 3) + start->pos.y;
+		src.pos.z = (7 * (target->pos.z - start->pos.z) >> 3) + start->pos.z;
 
 		for(int i = 3; i > 0; i--) {
-			dx = ((target->x - src.x) * i >> 2) + src.x;
-			dy = ((target->y - src.y) * i >> 2) + src.y;
-			dz = ((target->z - src.z) * i >> 2) + src.z;
+			dx = ((target->pos.x - src.pos.x) * i >> 2) + src.pos.x;
+			dy = ((target->pos.y - src.pos.y) * i >> 2) + src.pos.y;
+			dz = ((target->pos.z - src.pos.z) * i >> 2) + src.pos.z;
 
 			if(dy > GetCeiling(GetFloor(dx, dy, dz, &room_no), dx, dy, dz))
 				break;
 		}
 
-		target->x = dx;
-		target->y = dy;
-		target->z = dz;
+		target->pos.x = dx;
+		target->pos.y = dy;
+		target->pos.z = dz;
 		target->room_number = room_no;
 		return 0;
 	}
@@ -1903,24 +1903,24 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 	long dx, dy, dz, x, y, z;
 	short room_number, last_room;
 
-	dx = target->x - start->x;
+	dx = target->pos.x - start->pos.x;
 
 	if(!dx)
 		return 1;
 
-	dy = 1024 * (target->y - start->y) / dx;
-	dz = 1024 * (target->z - start->z) / dx;
+	dy = 1024 * (target->pos.y - start->pos.y) / dx;
+	dz = 1024 * (target->pos.z - start->pos.z) / dx;
 	number_los_rooms = 1;
 	los_rooms[0] = start->room_number;
 	room_number = start->room_number;
 	last_room = start->room_number;
 
 	if(dx < 0) {
-		x = start->x & ~1023;
-		y = ((x - start->x) * dy >> 10) + start->y;
-		z = ((x - start->x) * dz >> 10) + start->z;
+		x = start->pos.x & ~1023;
+		y = ((x - start->pos.x) * dy >> 10) + start->pos.y;
+		z = ((x - start->pos.x) * dz >> 10) + start->pos.z;
 
-		while(x > target->x) {
+		while(x > target->pos.x) {
 			floor = GetFloor(x, y, z, &room_number);
 
 			if(room_number != last_room) {
@@ -1930,9 +1930,9 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 			}
 
 			if(y > GetHeight(floor, x, y, z) || y < GetCeiling(floor, x, y, z)) {
-				target->x = x;
-				target->y = y;
-				target->z = z;
+				target->pos.x = x;
+				target->pos.y = y;
+				target->pos.z = z;
 				target->room_number = room_number;
 				return -1;
 			}
@@ -1946,9 +1946,9 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 			}
 
 			if(y > GetHeight(floor, x - 1, y, z) || y < GetCeiling(floor, x - 1, y, z)) {
-				target->x = x;
-				target->y = y;
-				target->z = z;
+				target->pos.x = x;
+				target->pos.y = y;
+				target->pos.z = z;
 				target->room_number = last_room;
 				return 0;
 			}
@@ -1958,11 +1958,11 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 			z -= dz;
 		}
 	} else {
-		x = start->x | 1023;
-		y = ((x - start->x) * dy >> 10) + start->y;
-		z = ((x - start->x) * dz >> 10) + start->z;
+		x = start->pos.x | 1023;
+		y = ((x - start->pos.x) * dy >> 10) + start->pos.y;
+		z = ((x - start->pos.x) * dz >> 10) + start->pos.z;
 
-		while(x < target->x) {
+		while(x < target->pos.x) {
 			floor = GetFloor(x, y, z, &room_number);
 
 			if(room_number != last_room) {
@@ -1972,9 +1972,9 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 			}
 
 			if(y > GetHeight(floor, x, y, z) || y < GetCeiling(floor, x, y, z)) {
-				target->x = x;
-				target->y = y;
-				target->z = z;
+				target->pos.x = x;
+				target->pos.y = y;
+				target->pos.z = z;
 				target->room_number = room_number;
 				return -1;
 			}
@@ -1988,9 +1988,9 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 			}
 
 			if(y > GetHeight(floor, x + 1, y, z) || y < GetCeiling(floor, x + 1, y, z)) {
-				target->x = x;
-				target->y = y;
-				target->z = z;
+				target->pos.x = x;
+				target->pos.y = y;
+				target->pos.z = z;
 				target->room_number = last_room;
 				return 0;
 			}
@@ -2010,24 +2010,24 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 	long dx, dy, dz, x, y, z;
 	short room_number, last_room;
 
-	dz = target->z - start->z;
+	dz = target->pos.z - start->pos.z;
 
 	if(!dz)
 		return 1;
 
-	dx = 1024 * (target->x - start->x) / dz;
-	dy = 1024 * (target->y - start->y) / dz;
+	dx = 1024 * (target->pos.x - start->pos.x) / dz;
+	dy = 1024 * (target->pos.y - start->pos.y) / dz;
 	number_los_rooms = 1;
 	los_rooms[0] = start->room_number;
 	room_number = start->room_number;
 	last_room = start->room_number;
 
 	if(dz < 0) {
-		z = start->z & ~1023;
-		x = ((z - start->z) * dx >> 10) + start->x;
-		y = ((z - start->z) * dy >> 10) + start->y;
+		z = start->pos.z & ~1023;
+		x = ((z - start->pos.z) * dx >> 10) + start->pos.x;
+		y = ((z - start->pos.z) * dy >> 10) + start->pos.y;
 
-		while(z > target->z) {
+		while(z > target->pos.z) {
 			floor = GetFloor(x, y, z, &room_number);
 
 			if(room_number != last_room) {
@@ -2037,9 +2037,9 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 			}
 
 			if(y > GetHeight(floor, x, y, z) || y < GetCeiling(floor, x, y, z)) {
-				target->x = x;
-				target->y = y;
-				target->z = z;
+				target->pos.x = x;
+				target->pos.y = y;
+				target->pos.z = z;
 				target->room_number = room_number;
 				return -1;
 			}
@@ -2053,9 +2053,9 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 			}
 
 			if(y > GetHeight(floor, x, y, z - 1) || y < GetCeiling(floor, x, y, z - 1)) {
-				target->x = x;
-				target->y = y;
-				target->z = z;
+				target->pos.x = x;
+				target->pos.y = y;
+				target->pos.z = z;
 				target->room_number = last_room;
 				return 0;
 			}
@@ -2065,11 +2065,11 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 			y -= dy;
 		}
 	} else {
-		z = start->z | 1023;
-		x = ((z - start->z) * dx >> 10) + start->x;
-		y = ((z - start->z) * dy >> 10) + start->y;
+		z = start->pos.z | 1023;
+		x = ((z - start->pos.z) * dx >> 10) + start->pos.x;
+		y = ((z - start->pos.z) * dy >> 10) + start->pos.y;
 
-		while(z < target->z) {
+		while(z < target->pos.z) {
 			floor = GetFloor(x, y, z, &room_number);
 
 			if(room_number != last_room) {
@@ -2079,9 +2079,9 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 			}
 
 			if(y > GetHeight(floor, x, y, z) || y < GetCeiling(floor, x, y, z)) {
-				target->x = x;
-				target->y = y;
-				target->z = z;
+				target->pos.x = x;
+				target->pos.y = y;
+				target->pos.z = z;
 				target->room_number = room_number;
 				return -1;
 			}
@@ -2095,9 +2095,9 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 			}
 
 			if(y > GetHeight(floor, x, y, z + 1) || y < GetCeiling(floor, x, y, z + 1)) {
-				target->x = x;
-				target->y = y;
-				target->z = z;
+				target->pos.x = x;
+				target->pos.y = y;
+				target->pos.z = z;
 				target->room_number = last_room;
 				return 0;
 			}
@@ -2117,7 +2117,7 @@ long LOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 
 	target->room_number = start->room_number;
 
-	if(abs(target->z - start->z) > abs(target->x - start->x)) {
+	if(abs(target->pos.z - start->pos.z) > abs(target->pos.x - start->pos.x)) {
 		los1 = xLOS(start, target);
 		los2 = zLOS(start, target);
 	} else {
@@ -2126,7 +2126,7 @@ long LOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 	}
 
 	if(los2) {
-		GetFloor(target->x, target->y, target->z, &target->room_number);
+		GetFloor(target->pos.x, target->pos.y, target->pos.z, &target->room_number);
 
 		if(ClipTarget(start, target) && los1 == 1 && los2 == 1)
 			return 1;
@@ -2139,10 +2139,10 @@ void FireCrossBowFromLaserSight(GAME_VECTOR* start, GAME_VECTOR* target) {
 	PHD_3DPOS pos;
 	short angles[2];
 
-	phd_GetVectorAngles(target->x - start->x, target->y - start->y, target->z - start->z, angles);
-	pos.x_pos = start->x;
-	pos.y_pos = start->y;
-	pos.z_pos = start->z;
+	phd_GetVectorAngles(target->pos.x - start->pos.x, target->pos.y - start->pos.y, target->pos.z - start->pos.z, angles);
+	pos.x_pos = start->pos.x;
+	pos.y_pos = start->pos.y;
+	pos.z_pos = start->pos.z;
 	pos.x_rot = angles[1];
 	pos.y_rot = angles[0];
 	pos.z_rot = 0;
@@ -2248,9 +2248,9 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 	long dx, dy, dz;
 	short item_number;
 
-	dx = target->x - start->x;
-	dy = target->y - start->y;
-	dz = target->z - start->z;
+	dx = target->pos.x - start->pos.x;
+	dy = target->pos.y - start->pos.y;
+	dz = target->pos.z - start->pos.z;
 	ClosestItem = 999;
 	ClosestDist = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
 
@@ -2303,11 +2303,11 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 	short item_no, hit, ricochet, room_number, TriggerItems[8], NumTrigs;
 
 	hit = 0;
-	target.x = dest->x;
-	target.y = dest->y;
-	target.z = dest->z;
+	target.pos.x = dest->pos.x;
+	target.pos.y = dest->pos.y;
+	target.pos.z = dest->pos.z;
 	ricochet = (short)LOS(src, &target);
-	GetFloor(target.x, target.y, target.z, &target.room_number);
+	GetFloor(target.pos.x, target.pos.y, target.pos.z, &target.room_number);
 
 	if(firing && LaserSight) {
 		if(lara.gun_type == WEAPON_REVOLVER)
@@ -2317,9 +2317,9 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 	item_no = (short)ObjectOnLOS2(src, dest, &v, &Mesh);
 
 	if(item_no != 999) {
-		target.x = v.x - ((v.x - src->x) >> 5);
-		target.y = v.y - ((v.y - src->y) >> 5);
-		target.z = v.z - ((v.z - src->z) >> 5);
+		target.pos.x = v.x - ((v.x - src->pos.x) >> 5);
+		target.pos.y = v.y - ((v.y - src->pos.y) >> 5);
+		target.pos.z = v.z - ((v.z - src->pos.z) >> 5);
 
 		if(item_no >= 0 && DrawTarget)
 			lara.target_item = item_no;
@@ -2351,7 +2351,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 								HitTarget(shotitem, &target, weapons[lara.gun_type].damage, 0);
 						} else {
 							if(GetObjectInfo(currentLevel,shotitem->object_number)->HitEffect == 1)
-								DoBloodSplat(target.x, target.y, target.z, (GetRandomControl() & 3) + 3, shotitem->pos.y_rot, shotitem->room_number);
+								DoBloodSplat(target.pos.x, target.pos.y, target.pos.z, (GetRandomControl() & 3) + 3, shotitem->pos.y_rot, shotitem->room_number);
 							else if(GetObjectInfo(currentLevel,shotitem->object_number)->HitEffect == 2)
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, -5);
 							else if(GetObjectInfo(currentLevel,shotitem->object_number)->HitEffect == 3)
@@ -2395,9 +2395,9 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 
 		hit = 1;
 	} else if(lara.gun_type != WEAPON_CROSSBOW) {
-		target.x -= (target.x - src->x) >> 5;
-		target.y -= (target.y - src->y) >> 5;
-		target.z -= (target.z - src->z) >> 5;
+		target.pos.x -= (target.pos.x - src->pos.x) >> 5;
+		target.pos.y -= (target.pos.y - src->pos.y) >> 5;
+		target.pos.z -= (target.pos.z - src->pos.z) >> 5;
 
 		if(firing && !ricochet)
 			TriggerRicochetSpark(&target, lara_item->pos.y_rot, 8, 0);
@@ -2406,10 +2406,10 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 
 	if(DrawTarget && (hit || !ricochet)) {
 		LaserSightActive = 1;
-		LaserSightX = target.x;
-		LaserSightY = target.y;
-		LaserSightZ = target.z;
-		TriggerDynamic(target.x, target.y, target.z, 16, 32, 0, 0);
+		LaserSightX = target.pos.x;
+		LaserSightY = target.pos.y;
+		LaserSightZ = target.pos.z;
+		TriggerDynamic(target.pos.x, target.pos.y, target.pos.z, 16, 32, 0, 0);
 	}
 
 	return hit;
@@ -2694,16 +2694,16 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	phd_PushUnitMatrix();
 	phd_RotY(-ItemPos->y_rot);
 
-	x = target->x - ItemPos->x_pos;
-	y = target->y - ItemPos->y_pos;
-	z = target->z - ItemPos->z_pos;
+	x = target->pos.x - ItemPos->x_pos;
+	y = target->pos.y - ItemPos->y_pos;
+	z = target->pos.z - ItemPos->z_pos;
 	tpos.x = (long)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
 	tpos.y = (long)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
 	tpos.z = (long)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
 
-	x = start->x - ItemPos->x_pos;
-	y = start->y - ItemPos->y_pos;
-	z = start->z - ItemPos->z_pos;
+	x = start->pos.x - ItemPos->x_pos;
+	y = start->pos.y - ItemPos->y_pos;
+	z = start->pos.z - ItemPos->z_pos;
 	spos.x = (long)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
 	spos.y = (long)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
 	spos.z = (long)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
@@ -2759,13 +2759,13 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 				continue;
 
 			sphere = &Slist[i];
-			s.x = start->x;
-			s.y = start->y;
-			s.z = start->z;
+			s.x = start->pos.x;
+			s.y = start->pos.y;
+			s.z = start->pos.z;
 
-			t.x = target->x;
-			t.y = target->y;
-			t.z = target->z;
+			t.x = target->pos.x;
+			t.y = target->pos.y;
+			t.z = target->pos.z;
 
 			sp.x = sphere->x;
 			sp.y = sphere->y;
@@ -2789,7 +2789,7 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 			pos.z = s.z + ((r * (t.z - s.z)) >> 16);
 
 			if(SQUARE(pos.x - sp.x) + SQUARE(pos.y - sp.y) + SQUARE(pos.z - sp.z) < SQUARE(sphere->r)) {
-				dist = SQUARE(sphere->x - start->x) + SQUARE(sphere->y - start->y) + SQUARE(sphere->z - start->z);
+				dist = SQUARE(sphere->x - start->pos.x) + SQUARE(sphere->y - start->pos.y) + SQUARE(sphere->z - start->pos.z);
 
 				if(dist < max_dist) {
 					max_dist = dist;
@@ -2802,7 +2802,7 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	}
 
 	if(ClosestNode >= -1) {
-		dist = SQUARE(Coord->x + ItemPos->x_pos - start->x) + SQUARE(Coord->y + ItemPos->y_pos - start->y) + SQUARE(Coord->z + ItemPos->z_pos - start->z);
+		dist = SQUARE(Coord->x + ItemPos->x_pos - start->pos.x) + SQUARE(Coord->y + ItemPos->y_pos - start->pos.y) + SQUARE(Coord->z + ItemPos->z_pos - start->pos.z);
 
 		if(dist < ClosestDist) {
 			ClosestCoord.x = Coord->x + ItemPos->x_pos;

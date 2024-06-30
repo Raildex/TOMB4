@@ -1,5 +1,6 @@
 #ifndef BUBBLE_STRUCT_INCLUDED
 #define BUBBLE_STRUCT_INCLUDED
+#include "game/phdvector.h"
 typedef struct BUBBLE_STRUCT {
 	PHD_VECTOR pos;
 	short room_number;
