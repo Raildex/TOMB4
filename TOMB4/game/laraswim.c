@@ -72,7 +72,7 @@ void lara_as_swim(ITEM_INFO* item, COLL_INFO* coll) {
 	if(input & IN_ROLL) {
 		item->current_anim_state = AS_WATERROLL;
 		item->anim_number = ANIM_WATERROLL;
-		item->frame_number = GetAnim(currentLevel,ANIM_WATERROLL)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_WATERROLL)->frame_base;
 	} else {
 		SwimTurn(item);
 		item->fallspeed += 8;
@@ -152,7 +152,7 @@ void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(lara.water_status == LW_FLYCHEAT) {
 		item->anim_number = ANIM_FASTFALL;
-		item->frame_number = GetAnim(currentLevel,ANIM_FASTFALL)->frame_base + 5;
+		item->frame_number = GetAnim(currentLevel, ANIM_FASTFALL)->frame_base + 5;
 	}
 }
 
@@ -188,7 +188,7 @@ void lara_as_glide(ITEM_INFO* item, COLL_INFO* coll) {
 		if(input & IN_ROLL) {
 			item->current_anim_state = AS_WATERROLL;
 			item->anim_number = ANIM_WATERROLL;
-			item->frame_number = GetAnim(currentLevel,ANIM_WATERROLL)->frame_base;
+			item->frame_number = GetAnim(currentLevel, ANIM_WATERROLL)->frame_base;
 		} else {
 			SwimTurn(item);
 
@@ -215,7 +215,7 @@ void lara_as_tread(ITEM_INFO* item, COLL_INFO* coll) {
 	if(input & IN_ROLL) {
 		item->current_anim_state = AS_WATERROLL;
 		item->anim_number = ANIM_WATERROLL;
-		item->frame_number = GetAnim(currentLevel,ANIM_WATERROLL)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_WATERROLL)->frame_base;
 		return;
 	}
 
@@ -283,7 +283,7 @@ long GetWaterDepth(long x, long y, long z, short room_number) {
 	long x_floor, y_floor, h;
 	short door;
 
-	r = GetRoom(currentLevel,room_number);
+	r = GetRoom(currentLevel, room_number);
 
 	do {
 		x_floor = (z - r->z) >> 10;
@@ -313,14 +313,14 @@ long GetWaterDepth(long x, long y, long z, short room_number) {
 
 		if(door != 255) {
 			room_number = door;
-			r = GetRoom(currentLevel,door);
+			r = GetRoom(currentLevel, door);
 		}
 
 	} while(door != 255);
 
 	if(r->flags & ROOM_UNDERWATER) {
 		while(floor->sky_room != 255) {
-			r = GetRoom(currentLevel,floor->sky_room);
+			r = GetRoom(currentLevel, floor->sky_room);
 
 			if(!(r->flags & ROOM_UNDERWATER)) {
 				h = GetMinimumCeiling(floor, x, z);
@@ -334,7 +334,7 @@ long GetWaterDepth(long x, long y, long z, short room_number) {
 		return 0x7FFF;
 	} else {
 		while(floor->pit_room != 255) {
-			r = GetRoom(currentLevel,floor->pit_room);
+			r = GetRoom(currentLevel, floor->pit_room);
 
 			if(r->flags & ROOM_UNDERWATER) {
 				h = GetMaximumFloor(floor, x, z);
@@ -388,7 +388,7 @@ void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll) {
 		item->fallspeed = 0;
 	} else if(wd <= 512) {
 		item->anim_number = ANIM_SWIM2QSTND;
-		item->frame_number = GetAnim(currentLevel,ANIM_SWIM2QSTND)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_SWIM2QSTND)->frame_base;
 		item->current_anim_state = AS_WATEROUT;
 		item->goal_anim_state = AS_STOP;
 		item->pos.x_rot = 0;
@@ -401,8 +401,7 @@ void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 }
 
-void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll)
-{
+void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll) {
 	COLL_INFO coll2, coll3;
 	long height;
 	short oxr, hit;
@@ -410,20 +409,17 @@ void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll)
 	hit = 0;
 	oxr = item->pos.x_rot;
 
-	if (oxr < -0x4000 || oxr > 0x4000)
-	{
+	if(oxr < -0x4000 || oxr > 0x4000) {
 		lara.move_angle = item->pos.y_rot - 0x8000;
 		coll->facing = item->pos.y_rot - 0x8000;
-	}
-	else
-	{
+	} else {
 		lara.move_angle = item->pos.y_rot;
 		coll->facing = item->pos.y_rot;
 	}
 
 	height = 640 * phd_sin(item->pos.x_rot) >> W2V_SHIFT;
 
-	if (height < 0)
+	if(height < 0)
 		height = -height;
 
 
@@ -441,49 +437,42 @@ void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll)
 
 	ShiftItem(item, coll);
 
-	switch (coll->coll_type)
-	{
+	switch(coll->coll_type) {
 	case CT_FRONT:
 
-		if (item->pos.x_rot > 4550)
-		{
+		if(item->pos.x_rot > 4550) {
 			item->pos.x_rot += 182;
 			hit = 1;
-		}
-		else if (item->pos.x_rot < -4550)
-		{
+		} else if(item->pos.x_rot < -4550) {
 			item->pos.x_rot -= 182;
 			hit = 1;
-		}
-		else if (item->pos.x_rot > 910)
+		} else if(item->pos.x_rot > 910)
 			item->pos.x_rot += 91;
-		else if (item->pos.x_rot < -910)
+		else if(item->pos.x_rot < -910)
 			item->pos.x_rot -= 91;
-		else if (item->pos.x_rot > 0)
+		else if(item->pos.x_rot > 0)
 			item->pos.x_rot += 45;
-		else if (item->pos.x_rot < 0)
+		else if(item->pos.x_rot < 0)
 			item->pos.x_rot -= 45;
-		else
-		{
+		else {
 			hit = 1;
 			item->fallspeed = 0;
 		}
 
-		if (coll2.coll_type == CT_LEFT)
+		if(coll2.coll_type == CT_LEFT)
 			item->pos.y_rot += 364;
-		else if (coll2.coll_type == CT_RIGHT)
+		else if(coll2.coll_type == CT_RIGHT)
 			item->pos.y_rot -= 364;
-		else if (coll3.coll_type == CT_LEFT)
+		else if(coll3.coll_type == CT_LEFT)
 			item->pos.y_rot += 364;
-		else if (coll3.coll_type == CT_RIGHT)
+		else if(coll3.coll_type == CT_RIGHT)
 			item->pos.y_rot -= 364;
 
 		break;
 
 	case CT_TOP:
 
-		if (item->pos.x_rot >= -8190)
-		{
+		if(item->pos.x_rot >= -8190) {
 			hit = 1;
 			item->pos.x_rot -= 182;
 		}
@@ -514,14 +503,13 @@ void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll)
 		break;
 	}
 
-	if (coll->mid_floor < 0 && coll->mid_floor != NO_HEIGHT)
-	{
+	if(coll->mid_floor < 0 && coll->mid_floor != NO_HEIGHT) {
 		hit = 1;
 		item->pos.x_rot += 182;
 		item->pos.y_pos += coll->mid_floor;
 	}
 
-	if (hit != 2 && lara.water_status != LW_FLYCHEAT)
+	if(hit != 2 && lara.water_status != LW_FLYCHEAT)
 		LaraTestWaterDepth(item, coll);
 }
 
@@ -530,11 +518,11 @@ void LaraWaterCurrent(COLL_INFO* coll) {
 
 	if(lara.current_active) {
 		sinkval = lara.current_active - 1;
-		speed = camera.fixed[sinkval].data;
-		angle = ((mGetAngle(camera.fixed[sinkval].x, camera.fixed[sinkval].z, lara_item->pos.x_pos, lara_item->pos.z_pos) - 0x4000) >> 4) & 0xFFF;
+		speed = GetFixedCamera(currentLevel, sinkval)->data;
+		angle = ((mGetAngle(GetFixedCamera(currentLevel, sinkval)->x, GetFixedCamera(currentLevel, sinkval)->z, lara_item->pos.x_pos, lara_item->pos.z_pos) - 0x4000) >> 4) & 0xFFF;
 		lara.current_xvel += (short)((((speed * rcossin_tbl[2 * angle]) >> 2) - lara.current_xvel) >> 4);
 		lara.current_zvel += (short)((((speed * rcossin_tbl[2 * angle + 1]) >> 2) - lara.current_zvel) >> 4);
-		lara_item->pos.y_pos += (camera.fixed[sinkval].y - lara_item->pos.y_pos) >> 4;
+		lara_item->pos.y_pos += (GetFixedCamera(currentLevel, sinkval)->y - lara_item->pos.y_pos) >> 4;
 	} else {
 		absvel = abs(lara.current_xvel);
 

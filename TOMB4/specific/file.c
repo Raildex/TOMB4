@@ -9,11 +9,7 @@
 #include "specific/specificfx.h"
 #include "game/tomb4fx.h"
 #include "specific/audio.h"
-#include "game/spotcam.h"
-#include "game/camera.h"
 #include "specific/polyinsert.h"
-#include "game/draw.h"
-#include "game/effects.h"
 #include "specific/winmain.h"
 #include "game/lara.h"
 #include "specific/output.h"
@@ -23,11 +19,6 @@
 #include "game/meshdata.h"
 #include "game/texturestruct.h"
 #include <d3dtypes.h>
-#include "game/phdspritestruct.h"
-#include "game/spritestruct.h"
-#include "game/objectvector.h"
-#include "game/staticinfo.h"
-#include "game/aiobject.h"
 #include "specific/texture.h"
 #include "game/larainfo.h"
 #include <process.h>
@@ -272,46 +263,6 @@ long LoadFile(const char* name, char** dest) {
 
 	FileClose(file);
 	return size;
-}
-
-
-
-
-char LoadCameras(char** data, LEVEL_INFO* lvl) {
-	Log(2, "LoadCameras");
-	number_cameras = *(long*)*data;
-	*data += sizeof(long);
-
-	if(number_cameras) {
-		camera.fixed = (OBJECT_VECTOR*)game_malloc(number_cameras * sizeof(OBJECT_VECTOR));
-		memcpy(camera.fixed, *data, number_cameras * sizeof(OBJECT_VECTOR));
-		*data += number_cameras * sizeof(OBJECT_VECTOR);
-	}
-
-	number_spotcams = *(short*)*data;
-	*data += sizeof(long); //<<---- look at me
-
-	if(number_spotcams) {
-		memcpy(SpotCam, *data, number_spotcams * sizeof(SPOTCAM));
-		*data += number_spotcams * sizeof(SPOTCAM);
-	}
-
-	return 1;
-}
-
-char LoadSoundEffects(char** data, LEVEL_INFO* lvl) {
-	Log(2, "LoadSoundEffects");
-	number_sound_effects = *(long*)*data;
-	*data += sizeof(long);
-	Log(8, "Number of SFX %d", number_sound_effects);
-
-	if(number_sound_effects) {
-		sound_effects = (OBJECT_VECTOR*)game_malloc(number_sound_effects * sizeof(OBJECT_VECTOR));
-		memcpy(sound_effects, *data, number_sound_effects * sizeof(OBJECT_VECTOR));
-		*data += number_sound_effects * sizeof(OBJECT_VECTOR);
-	}
-
-	return 1;
 }
 
 

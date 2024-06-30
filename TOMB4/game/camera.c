@@ -992,7 +992,7 @@ void FixedCamera() {
 		ideal.z = ForcedFixedCamera.z;
 		ideal.room_number = ForcedFixedCamera.room_number;
 	} else {
-		fixed = &camera.fixed[camera.number];
+		fixed = GetFixedCamera(currentLevel, camera.number);
 		ideal.x = fixed->x;
 		ideal.y = fixed->y;
 		ideal.z = fixed->z;
@@ -1314,7 +1314,7 @@ void CalculateCamera() {
 
 		if (camera.type != CHASE_CAMERA && camera.flags != 3)
 		{
-			fixed = &camera.fixed[camera.number];
+			fixed = GetFixedCamera(currentLevel, camera.number);
 
 			if (fixed->flags & 2)
 			{

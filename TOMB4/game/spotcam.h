@@ -24,11 +24,9 @@ void InitSpotCamSequences();
 long Spline(long x, long* knots, long nk);
 void CalculateSpotCams();
 
-extern SPOTCAM SpotCam[];
 extern long bTrackCamInit;
 extern short LastSequence;
 extern short CurrentFov;
-extern short number_spotcams;
 extern long bUseSpotCam;
 extern long bDisableLaraControl;
 

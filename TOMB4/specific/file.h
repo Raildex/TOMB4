@@ -39,5 +39,3 @@ extern THREAD LevelLoadingThread;
 
 extern TEXTURESTRUCT* AnimatingWaterfalls[3];
 extern long AnimatingWaterfallsV[3];
-
-extern long number_cameras;

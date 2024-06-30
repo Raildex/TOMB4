@@ -810,19 +810,19 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 			camera_flags = trigger;
 			camera_timer = trigger & 0xFF;
 
-			if(key == 1 || camera.fixed[value].flags & IFL_INVISIBLE)
+			if(key == 1 || GetFixedCamera(currentLevel, value)->flags & IFL_INVISIBLE)
 				break;
 
 			camera.number = value;
 
-			if((camera.type == LOOK_CAMERA || camera.type == COMBAT_CAMERA) && !(camera.fixed[camera.number].flags & 1) || type == COMBAT || type == SWITCH && timer && switch_off)
+			if(((camera.type == LOOK_CAMERA || camera.type == COMBAT_CAMERA) && !(GetFixedCamera(currentLevel, camera.number)->flags & 1)) || type == COMBAT || (type == SWITCH && timer && switch_off))
 				break;
 
 			if(camera.number != camera.last || type == SWITCH) {
 				camera.timer = camera_timer * 30;
 
 				if(camera_flags & IFL_INVISIBLE)
-					camera.fixed[camera.number].flags |= IFL_INVISIBLE;
+					GetFixedCamera(currentLevel, camera.number)->flags |= IFL_INVISIBLE;
 
 				camera.speed = ((camera_flags & IFL_CODEBITS) >> 6) + 1;
 
@@ -917,11 +917,11 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 				break;
 			}
 
-			if(SpotCam[value].flags & SP_FLYBYONESHOT)
+			if(GetSpotCam(currentLevel, value)->flags & SP_FLYBYONESHOT)
 				break;
 
 			if(camera_flags & IFL_INVISIBLE)
-				SpotCam[value].flags |= SP_FLYBYONESHOT;
+				GetSpotCam(currentLevel, value)->flags |= SP_FLYBYONESHOT;
 
 			if(bUseSpotCam)
 				break;
@@ -1763,7 +1763,7 @@ void RefreshCamera(short type, short* data) {
 			if(value == camera.last) {
 				camera.number = trigger & 0x3FF;
 
-				if(camera.timer >= 0 && (camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA || camera.fixed[camera.number].flags & 3)) {
+				if(camera.timer >= 0 && ((camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA) || GetFixedCamera(currentLevel, camera.number)->flags & 3)) {
 					camera.type = FIXED_CAMERA;
 					target_ok = 1;
 					continue;
@@ -1774,14 +1774,14 @@ void RefreshCamera(short type, short* data) {
 
 			target_ok = 0;
 		} else if(((trigger >> 10) & 0xF) == TO_TARGET) {
-			if(camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA || camera.number == NO_ITEM || camera.fixed[camera.number].flags & 1)
+			if((camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA) || camera.number == NO_ITEM || GetFixedCamera(currentLevel, camera.number)->flags & 1)
 				camera.item = GetItem(currentLevel,value);
 		}
 
 	} while(!(trigger & 0x8000));
 
 	if(camera.item) {
-		if(!target_ok || target_ok == 2 && camera.item->looked_at && camera.item != camera.last_item)
+		if(!target_ok || (target_ok == 2 && camera.item->looked_at && camera.item != camera.last_item))
 			camera.item = NULL;
 	}
 
@@ -1821,7 +1821,7 @@ long TriggerActive(ITEM_INFO* item) {
 void TriggerNormalCDTrack(short value, short flags, short type) {
 	long code;
 
-	if(value >= 105 && value <= 111 || value == 102 || value == 97) {
+	if((value >= 105 && value <= 111) || value == 102 || value == 97) {
 		if(CurrentAtmosphere != value) {
 			CurrentAtmosphere = (unsigned char)value;
 

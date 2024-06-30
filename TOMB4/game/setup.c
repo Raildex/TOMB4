@@ -1995,7 +1995,7 @@ void GetAIPickups() {
 		if(GetObjectInfo(currentLevel, item->object_number)->intelligent) {
 			item->ai_bits = 0;
 
-			for(int aiObjNum = 0; aiObjNum < GetNumAIObjects(currentLevel); aiObjNum++) {
+			for(aiObjNum = 0; aiObjNum < GetNumAIObjects(currentLevel); aiObjNum++) {
 				aiObj = GetAIObject(currentLevel, aiObjNum);
 
 				if(aiObj->x == item->pos.x_pos && aiObj->z == item->pos.z_pos

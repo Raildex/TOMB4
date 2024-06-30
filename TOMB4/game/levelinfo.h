@@ -2,6 +2,8 @@
 #define TOMB4_GAME_LEVELINFO_H
 
 
+#include "game/camerainfo.h"
+#include "game/spotcam.h"
 typedef struct HAL_TEXTURE HAL_TEXTURE;
 typedef struct TEXTURESTRUCT TEXTURESTRUCT;
 typedef struct ROOM_INFO ROOM_INFO;
@@ -63,5 +65,11 @@ long GetNumAnimTextureRanges(LEVEL_INFO* lvl);
 short* GetAnimTextureRange(LEVEL_INFO* lvl, long num);
 long GetNumAnimUVRanges(LEVEL_INFO* lvl);
 long GetNumAIObjects(LEVEL_INFO* lvl);
+OBJECT_VECTOR* GetFixedCamera(LEVEL_INFO* lvl, long num);
+SPOTCAM* GetSpotCam(LEVEL_INFO* lvl, long num);
+long GetNumSpotcams(LEVEL_INFO* lvl);
+OBJECT_VECTOR* GetSoundEffect(LEVEL_INFO* lvl, long num);
+long GetNumSoundEffects(LEVEL_INFO* lvl);
+
 extern LEVEL_INFO* currentLevel;
 #endif// TOMB4_GAME_LEVELINFO_H

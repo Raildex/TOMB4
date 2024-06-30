@@ -39,9 +39,7 @@
 #include "game/laragunstatus.h"
 #include "game/levelinfo.h"
 
-OBJECT_VECTOR* sound_effects;
 long GlobalFogOff = 0;
-long number_sound_effects;
 
 long FogTableColor[28] = {
 	0,
@@ -496,8 +494,8 @@ void SoundEffects() {
 	OBJECT_VECTOR* sfx;
 	SoundSlot* slot;
 
-	for(int i = 0; i < number_sound_effects; i++) {
-		sfx = &sound_effects[i];
+	for(int i = 0; i < GetNumSoundEffects(currentLevel); i++) {
+		sfx =GetSoundEffect(currentLevel, i);
 
 		if(flip_status) {
 			if(sfx->flags & 0x40)

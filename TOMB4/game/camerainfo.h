@@ -29,7 +29,6 @@ typedef struct CAMERA_INFO {
 	short speed;
 	ITEM_INFO* item;
 	ITEM_INFO* last_item;
-	OBJECT_VECTOR* fixed;
 	long mike_at_lara;
 	PHD_VECTOR mike_pos;
 } CAMERA_INFO;

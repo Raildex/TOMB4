@@ -1,8 +1,10 @@
 #include "game/levelinfo.h"
 #include "game/animstruct.h"
+#include "game/camerainfo.h"
 #include "game/changestruct.h"
 #include "game/control.h"
 #include "game/phdspritestruct.h"
+#include "game/spotcam.h"
 #include "levelinfo.h"
 #include "specific/drawroom.h"
 #include "game/effect2.h"
@@ -44,7 +46,7 @@
 #include "specific/file.h"
 #include "game/spritestruct.h"
 #include "game/aiobject.h"
-
+#include "game/objectvector.h"
 enum num_samples {
 	sample_lookuptable_size = 512,
 };
@@ -87,6 +89,13 @@ struct LEVEL_INFO {
 	short* aranges;
 	long nAnimUVRanges;
 	float AnimatingTexturesV[16][8][3];
+	long number_cameras;
+	OBJECT_VECTOR* fixedCameras;
+	long number_spotcams;
+	SPOTCAM* Spotcams;
+	long number_sound_effects;
+	OBJECT_VECTOR* sound_effects;
+
 };
 
 LEVEL_INFO* CreateLevel() {
@@ -1175,4 +1184,58 @@ short* GetAnimTextureRange(LEVEL_INFO* lvl, long num) {
 
 long GetNumAnimUVRanges(LEVEL_INFO* lvl) {
 	return lvl->nAnimUVRanges;
+}
+
+char LoadCameras(char** data, LEVEL_INFO* lvl) {
+	Log(2, "LoadCameras");
+	lvl->number_cameras = *(long*)*data;
+	*data += sizeof(long);
+
+	if(lvl->number_cameras) {
+		lvl->fixedCameras = (OBJECT_VECTOR*)calloc(lvl->number_cameras, sizeof(OBJECT_VECTOR));
+		memcpy(lvl->fixedCameras, *data, lvl->number_cameras * sizeof(OBJECT_VECTOR));
+		*data += lvl->number_cameras * sizeof(OBJECT_VECTOR);
+	}
+
+	lvl->number_spotcams = *(short*)*data;
+	*data += sizeof(long); //<<---- look at me
+
+	if(lvl->number_spotcams) {
+		lvl->Spotcams = (SPOTCAM*)calloc(lvl->number_spotcams,sizeof(SPOTCAM));
+		memcpy(lvl->Spotcams, *data, lvl->number_spotcams * sizeof(SPOTCAM));
+		*data += lvl->number_spotcams * sizeof(SPOTCAM);
+	}
+
+	return 1;
+}
+OBJECT_VECTOR* GetFixedCamera(LEVEL_INFO* lvl,long num) {
+	return lvl->fixedCameras + num;
+}
+SPOTCAM* GetSpotCam(LEVEL_INFO* lvl, long num) {
+	return lvl->Spotcams + num;
+}
+long GetNumSpotcams(LEVEL_INFO* lvl) {
+	return lvl->number_spotcams;
+}
+
+char LoadSoundEffects(char** data, LEVEL_INFO* lvl) {
+	Log(2, "LoadSoundEffects");
+	lvl->number_sound_effects = *(long*)*data;
+	*data += sizeof(long);
+	Log(8, "Number of SFX %d", lvl->number_sound_effects);
+
+	if(lvl->number_sound_effects) {
+		lvl->sound_effects = (OBJECT_VECTOR*)calloc(lvl->number_sound_effects, sizeof(OBJECT_VECTOR));
+		memcpy(lvl->sound_effects, *data, lvl->number_sound_effects * sizeof(OBJECT_VECTOR));
+		*data += lvl->number_sound_effects * sizeof(OBJECT_VECTOR);
+	}
+
+	return 1;
+}
+
+OBJECT_VECTOR* GetSoundEffect(LEVEL_INFO* lvl, long num) {
+	return lvl->sound_effects + num;
+}
+long GetNumSoundEffects(LEVEL_INFO* lvl) {
+	return lvl->number_sound_effects;
 }
