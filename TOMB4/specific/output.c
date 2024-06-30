@@ -1592,13 +1592,13 @@ void S_AnimateTextures(long n) {
 	short nRanges, nRangeFrames;
 
 	for(comp += n; comp > 5; comp -= 5) {
-		nRanges = *aranges;
-		range = aranges + 1;
+		nRanges = *GetAnimTextureRange(currentLevel, 0);
+		range = GetAnimTextureRange(currentLevel,1);
 
 		for(int i = 0; i < nRanges; i++) {
 			nRangeFrames = *range++;
 
-			if(i < nAnimUVRanges && gfUVRotate) {
+			if(i < GetNumAnimUVRanges(currentLevel) && gfUVRotate) {
 				if(nRangeFrames > 0)
 					range += nRangeFrames;
 			} else {
@@ -1618,10 +1618,10 @@ void S_AnimateTextures(long n) {
 	}
 
 	if(gfUVRotate) {
-		range = aranges + 1;
+		range = GetAnimTextureRange(currentLevel,*GetAnimTextureRange(currentLevel,1) );
 		AnimatingTexturesVOffset = (AnimatingTexturesVOffset - gfUVRotate * (n >> 1)) & 0x1F;
 
-		for(int i = 0; i < nAnimUVRanges; i++) {
+		for(int i = 0; i < GetNumAnimUVRanges(currentLevel); i++) {
 			nRangeFrames = *range++;
 
 			while(nRangeFrames >= 0) {

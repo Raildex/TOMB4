@@ -198,6 +198,7 @@ void RestoreLaraData(long FullSave) {
 }
 
 void sgRestoreLevel() {
+	/*
 	AIOBJECT* lsp;
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
@@ -246,6 +247,7 @@ void sgRestoreLevel() {
 			}
 		}
 	}
+	*/
 }
 
 void CreateCheckSum() {

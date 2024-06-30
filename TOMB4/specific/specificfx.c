@@ -602,13 +602,13 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item) {
 
 void DrawTrainStrips() {
 
-	DrawTrainFloorStrip(-20480, -5120, GetTextInfo(currentLevel,aranges[7]), 0x1101010);
-	DrawTrainFloorStrip(-20480, 3072, GetTextInfo(currentLevel,aranges[7]), 0x1101010);
-	DrawTrainFloorStrip(-20480, -2048, GetTextInfo(currentLevel,aranges[5]), 0x100800);
-	DrawTrainFloorStrip(-20480, 2048, GetTextInfo(currentLevel,aranges[6]), 0x810);
-	DrawTrainFloorStrip(-20480, -1024, GetTextInfo(currentLevel,aranges[3]), 0);
-	DrawTrainFloorStrip(-20480, 1024, GetTextInfo(currentLevel,aranges[4]), 0);
-	DrawTrainFloorStrip(-20480, 0, GetTextInfo(currentLevel,aranges[2]), 0);
+	DrawTrainFloorStrip(-20480, -5120, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,7)), 0x1101010);
+	DrawTrainFloorStrip(-20480, 3072, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,7)), 0x1101010);
+	DrawTrainFloorStrip(-20480, -2048, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,5)), 0x100800);
+	DrawTrainFloorStrip(-20480, 2048, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,6)), 0x810);
+	DrawTrainFloorStrip(-20480, -1024, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,3)), 0);
+	DrawTrainFloorStrip(-20480, 1024, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,4)), 0);
+	DrawTrainFloorStrip(-20480, 0, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,3)), 0);
 }
 
 void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr) {

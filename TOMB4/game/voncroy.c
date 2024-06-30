@@ -155,8 +155,8 @@ void ClearCutSceneCamera() {
 void GetAIEnemy(CREATURE_INFO* info, long tfl) {
 	AIOBJECT* ai;
 
-	for(int i = 0; i < nAIObjects; i++) {
-		ai = &AIObjects[i];
+	for(int aiObjNum = 0; aiObjNum < GetNumAIObjects(currentLevel); aiObjNum++) {
+				ai = GetAIObject(currentLevel, aiObjNum);
 
 		if(ai->trigger_flags == tfl && ai->room_number != 255) {
 			info->enemy = &info->ai_target;

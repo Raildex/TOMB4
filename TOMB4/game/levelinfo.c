@@ -43,6 +43,7 @@
 #include "game/phdtexturestruct.h"
 #include "specific/file.h"
 #include "game/spritestruct.h"
+#include "game/aiobject.h"
 
 enum num_samples {
 	sample_lookuptable_size = 512,
@@ -81,6 +82,11 @@ struct LEVEL_INFO {
 	TEXTURE* Textures;
 	TEXTURESTRUCT* textinfo;
 	SPRITESTRUCT* spriteinfo;
+	long nAIObjects;
+	AIOBJECT* AIObjects;
+	short* aranges;
+	long nAnimUVRanges;
+	float AnimatingTexturesV[16][8][3];
 };
 
 LEVEL_INFO* CreateLevel() {
@@ -429,16 +435,14 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 }
 
 void ProcessMeshData(LEVEL_INFO* lvl, long num_meshes) {
-	MESH_DATA* mesh;
 	short* mesh_ptr;
 	short* last_mesh_ptr;
 
 	Log(2, "ProcessMeshData %d", num_meshes);
 	num_level_meshes = num_meshes;
-	mesh_vtxbuf = (MESH_DATA**)malloc(4 * num_meshes);
+	mesh_vtxbuf = (MESH_DATA**)calloc(num_meshes,5);
 	lvl->mesh_base = (short*)mesh_vtxbuf;
 	last_mesh_ptr = 0;
-	mesh = (MESH_DATA*)(uintptr_t)num_meshes;
 
 	for(int i = 0; i < num_meshes; i++) {
 		mesh_ptr = GetMesh(currentLevel, i);
@@ -1106,4 +1110,69 @@ char LoadSprites(char** data, LEVEL_INFO* lvl) {
 
 SPRITESTRUCT* GetSpriteInfo(LEVEL_INFO* lvl, long num) {
 	return lvl->spriteinfo + num;
+}
+
+char LoadAIInfo(char** data, LEVEL_INFO* lvl) {
+	long num_ai;
+
+	num_ai = *(long*)*data;
+	*data += sizeof(long);
+
+	if(num_ai) {
+		lvl->nAIObjects = (short)num_ai;
+		lvl->AIObjects = (AIOBJECT*)calloc(num_ai,sizeof(AIOBJECT));
+		memcpy(lvl->AIObjects, *data, sizeof(AIOBJECT) * num_ai);
+		*data += sizeof(AIOBJECT) * num_ai;
+	}
+
+	return 1;
+}
+
+AIOBJECT* GetAIObject(LEVEL_INFO* lvl, long num) {
+	return lvl->AIObjects + num;
+}
+
+long GetNumAIObjects(LEVEL_INFO* lvl) {
+	return lvl->nAIObjects;
+}
+
+char LoadAnimatedTextures(char** data, LEVEL_INFO* lvl) {
+	long num_anim_ranges;
+
+	num_anim_ranges = *(long*)*data;
+	*data += sizeof(long);
+	lvl->aranges = (short*)calloc(num_anim_ranges, sizeof(short));
+	memcpy(lvl->aranges, *data, num_anim_ranges * 2);
+	*data += num_anim_ranges * sizeof(short);
+	lvl->nAnimUVRanges = *(char*)*data;
+	*data += sizeof(char);
+	return 1;
+}
+
+void S_GetUVRotateTextures(LEVEL_INFO* lvl) {
+	TEXTURESTRUCT* tex;
+	short* pRange;
+
+	pRange = lvl->aranges + 1;
+
+	for(int i = 0; i < lvl->nAnimUVRanges; i++, pRange++) {
+		for(int j = (int)*(pRange++); j >= 0; j--, pRange++) {
+			tex = GetTextInfo(currentLevel,*pRange);
+			lvl->AnimatingTexturesV[i][j][0] = tex->v1;
+		}
+
+		pRange--;
+	}
+}
+
+long GetNumAnimTextureRanges(LEVEL_INFO* lvl) {
+	return lvl->nAnimUVRanges;
+}
+
+short* GetAnimTextureRange(LEVEL_INFO* lvl, long num) {
+	return lvl->aranges + num;
+}
+
+long GetNumAnimUVRanges(LEVEL_INFO* lvl) {
+	return lvl->nAnimUVRanges;
 }

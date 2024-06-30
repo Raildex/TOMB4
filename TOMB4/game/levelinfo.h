@@ -19,6 +19,7 @@ typedef struct SAMPLE_BUFFER SAMPLE_BUFFER;
 typedef struct SAMPLE_INFO SAMPLE_INFO;
 typedef struct TEXTURE TEXTURE;
 typedef struct SPRITESTRUCT SPRITESTRUCT;
+typedef struct AIOBJECT AIOBJECT;
 LEVEL_INFO* CreateLevel();
 void DestroyLevel(LEVEL_INFO* lvl);
 
@@ -57,5 +58,10 @@ TEXTURESTRUCT* GetTextInfo(LEVEL_INFO* lvl, long num);
 HAL_TEXTURE* GetRendererBumpTexture(LEVEL_INFO* lvl, long num);
 char HasRendererBumpTexture(LEVEL_INFO* lvl, long num);
 SPRITESTRUCT* GetSpriteInfo(LEVEL_INFO* lvl, long num);
+AIOBJECT* GetAIObject(LEVEL_INFO* lvl, long num);
+long GetNumAnimTextureRanges(LEVEL_INFO* lvl);
+short* GetAnimTextureRange(LEVEL_INFO* lvl, long num);
+long GetNumAnimUVRanges(LEVEL_INFO* lvl);
+long GetNumAIObjects(LEVEL_INFO* lvl);
 extern LEVEL_INFO* currentLevel;
 #endif// TOMB4_GAME_LEVELINFO_H

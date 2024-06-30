@@ -1737,8 +1737,8 @@ void EnemyJeepControl(short item_number) {
 			item->item_flags[3]++;
 			jeep->enemy = NULL;
 
-			for(int i = 0; i < nAIObjects; i++) {
-				aiobj = &AIObjects[i];
+			for(int i = 0; i < GetNumAIObjects(currentLevel); i++) {
+				aiobj = GetAIObject(currentLevel, i);
 
 				if(aiobj->trigger_flags == item->item_flags[3] && aiobj->room_number != 255) {
 					jeep->enemy = &jeep->ai_target;

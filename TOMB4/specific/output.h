@@ -25,5 +25,3 @@ long GetFixedScale(long unit);
 
 extern long GlobalAlpha;
 extern long GlobalAmbient;
-
-extern float AnimatingTexturesV[16][8][3];

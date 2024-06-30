@@ -32,7 +32,7 @@ char LoadItems(char** data, LEVEL_INFO* lvl);
 char LoadCinematic(char** data, LEVEL_INFO* lvl);
 char LoadAIInfo(char** data, LEVEL_INFO* lvl);
 char LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl);
-void S_GetUVRotateTextures();
+void S_GetUVRotateTextures(LEVEL_INFO* lvl);
 char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size);
 
 extern THREAD LevelLoadingThread;
@@ -40,8 +40,4 @@ extern THREAD LevelLoadingThread;
 extern TEXTURESTRUCT* AnimatingWaterfalls[3];
 extern long AnimatingWaterfallsV[3];
 
-extern AIOBJECT* AIObjects;
-extern short* aranges;
-extern long nAnimUVRanges;
 extern long number_cameras;
-extern short nAIObjects;

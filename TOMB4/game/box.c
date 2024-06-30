@@ -1437,8 +1437,8 @@ void FindAITarGetObjectInfo(CREATURE_INFO* creature, short obj_num) {
 
 	item = GetItem(currentLevel,creature->item_num);
 
-	for(int i = 0; i < nAIObjects; i++) {
-		aiObj = &AIObjects[i];
+	for(int i = 0; i < GetNumAIObjects(currentLevel); i++) {
+		aiObj = GetAIObject(currentLevel, i);
 
 		if(aiObj->object_number != obj_num || aiObj->trigger_flags != item->item_flags[3] || aiObj->room_number == 255)
 			continue;

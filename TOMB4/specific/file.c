@@ -39,11 +39,7 @@ THREAD LevelLoadingThread;
 TEXTURESTRUCT* AnimatingWaterfalls[3];
 long AnimatingWaterfallsV[3];
 
-AIOBJECT* AIObjects;
-short* aranges;
-long nAnimUVRanges;
 long number_cameras;
-short nAIObjects;
 
 static char* CompressedData;
 
@@ -142,7 +138,7 @@ unsigned int WINAPI LoadLevel(void* name) {
 		}
 
 		S_LoadBar();
-		S_GetUVRotateTextures();
+		S_GetUVRotateTextures(currentLevel);
 
 		InitTarget_2();
 		S_LoadBar();
@@ -318,60 +314,11 @@ char LoadSoundEffects(char** data, LEVEL_INFO* lvl) {
 	return 1;
 }
 
-char LoadAnimatedTextures(char** data, LEVEL_INFO* lvl) {
-	long num_anim_ranges;
-
-	num_anim_ranges = *(long*)*data;
-	*data += sizeof(long);
-	aranges = (short*)game_malloc(num_anim_ranges * 2);
-	memcpy(aranges, *data, num_anim_ranges * 2);
-	*data += num_anim_ranges * sizeof(short);
-	nAnimUVRanges = *(char*)*data;
-	*data += sizeof(char);
-	return 1;
-}
-
 
 char LoadCinematic(char** data, LEVEL_INFO* lvl) {
 	*data += sizeof(short);
 	return 1;
 }
-
-char LoadAIInfo(char** data, LEVEL_INFO* lvl) {
-	long num_ai;
-
-	num_ai = *(long*)*data;
-	*data += sizeof(long);
-
-	if(num_ai) {
-		nAIObjects = (short)num_ai;
-		AIObjects = (AIOBJECT*)game_malloc(sizeof(AIOBJECT) * num_ai);
-		memcpy(AIObjects, *data, sizeof(AIOBJECT) * num_ai);
-		*data += sizeof(AIOBJECT) * num_ai;
-	}
-
-	return 1;
-}
-
-
-
-void S_GetUVRotateTextures() {
-	TEXTURESTRUCT* tex;
-	short* pRange;
-
-	pRange = aranges + 1;
-
-	for(int i = 0; i < nAnimUVRanges; i++, pRange++) {
-		for(int j = (int)*(pRange++); j >= 0; j--, pRange++) {
-			tex = GetTextInfo(currentLevel,*pRange);
-			AnimatingTexturesV[i][j][0] = tex->v1;
-		}
-
-		pRange--;
-	}
-}
-
-
 
 char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size) {
 	z_stream stream;
