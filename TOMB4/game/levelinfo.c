@@ -1259,3 +1259,11 @@ TEXTURESTRUCT* GetWaterfallTextInfos(LEVEL_INFO* lvl, long waterfall) {
 long GetWaterfallVCoordinate(LEVEL_INFO *lvl, long waterfall) {
 	return lvl->AnimatingWaterfallsV[waterfall];
 }
+
+void* Allocate(LEVEL_INFO* lvl, long size, long count) {
+	return calloc(count,size);
+}
+
+void Deallocate(LEVEL_INFO* lvl, void* ptr) {
+	free(ptr);
+}

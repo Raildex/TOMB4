@@ -37,7 +37,6 @@ unsigned int WINAPI LoadLevel(void* name) {
 	FreeLevel();
 	currentLevel = CreateLevel();
 
-	memset(malloc_ptr, 0, MALLOC_SIZE);
 	memset(&lara, 0, sizeof(LARA_INFO));
 
 	S_InitLoadBar(20);
@@ -150,8 +149,7 @@ long S_LoadLevelFile(long num) {
 void FreeLevel() {
 	if(currentLevel)
 		DestroyLevel(currentLevel);
-	malloc_ptr = malloc_buffer;
-	malloc_free = malloc_size;
+	currentLevel = NULL;
 }
 
 bool FindCDDrive() {

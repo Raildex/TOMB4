@@ -65,7 +65,7 @@ void InitialiseDoor(short item_number) {
 	short two_room, box_number, room_number;
 
 	item = GetItem(currentLevel, item_number);
-	door = (DOOR_DATA*)game_malloc(sizeof(DOOR_DATA));
+	door = (DOOR_DATA*)Allocate(currentLevel,sizeof(DOOR_DATA),1);
 	item->data = door;
 	door->Opened = 0;
 	dx = 0;

@@ -57,7 +57,7 @@ void InitialiseBike(short item_number) {
 	BIKEINFO* bike;
 
 	item = GetItem(currentLevel, item_number);
-	bike = (BIKEINFO*)game_malloc(sizeof(BIKEINFO));
+	bike = (BIKEINFO*)Allocate(currentLevel,sizeof(BIKEINFO),1);
 	item->data = bike;
 	bike->velocity = 0;
 	bike->bike_turn = 0;

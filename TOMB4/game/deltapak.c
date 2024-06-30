@@ -526,7 +526,7 @@ void updateAnimFrame(PACKNODE* node, int flags, short* frame) {
 }
 
 void* cutseq_malloc(long size) {
-	return game_malloc(size);
+	return Allocate(currentLevel,size,1);
 }
 
 void finish_cutseq() {

@@ -26,7 +26,7 @@ void InitialiseWraith(short item_number) {
 	WRAITH_STRUCT* data;
 
 	item = GetItem(currentLevel,item_number);
-	data = (WRAITH_STRUCT*)game_malloc(8 * sizeof(WRAITH_STRUCT));
+	data = (WRAITH_STRUCT*)Allocate(currentLevel,sizeof(WRAITH_STRUCT),8);
 	item->data = data;
 	item->item_flags[0] = 0;
 	item->hit_points = 0;

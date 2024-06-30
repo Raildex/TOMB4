@@ -62,7 +62,7 @@ void InitialiseJeep(short item_number) {
 	JEEPINFO* jeep;
 
 	item = GetItem(currentLevel, item_number);
-	jeep = (JEEPINFO*)game_malloc(sizeof(JEEPINFO));
+	jeep = (JEEPINFO*)Allocate(currentLevel,sizeof(JEEPINFO),1);
 	item->data = jeep;
 	jeep->velocity = 0;
 	jeep->unused1 = 0;

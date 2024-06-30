@@ -27,14 +27,14 @@ void InitialiseLOTarray(long allocmem) {
 	CREATURE_INFO* creature;
 
 	if(allocmem)
-		baddie_slots = (CREATURE_INFO*)game_malloc(5 * sizeof(CREATURE_INFO));
+		baddie_slots = (CREATURE_INFO*)Allocate(currentLevel,sizeof(CREATURE_INFO),5);
 
 	for(int i = 0; i < 5; i++) {
 		creature = &baddie_slots[i];
 		creature->item_num = NO_ITEM;
 
 		if(allocmem)
-			creature->LOT.node = (BOX_NODE*)game_malloc(sizeof(BOX_NODE) * GetNumBoxes(currentLevel));
+			creature->LOT.node = (BOX_NODE*)Allocate(currentLevel,sizeof(BOX_NODE),GetNumBoxes(currentLevel));
 	}
 
 	slots_used = 0;

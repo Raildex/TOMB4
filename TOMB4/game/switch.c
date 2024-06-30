@@ -214,7 +214,7 @@ void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			if(item->trigger_flags == 3)
 				SwitchPos.z = bounds[4] - 256;
 			else
-				SwitchPos.z = bounds[4] - 128;
+				SwitchPos.z = bounds[4] - 196;
 		} else {
 			SwitchBounds[4] = bounds[4] - 200;
 			SwitchBounds[5] = bounds[5] + 200;

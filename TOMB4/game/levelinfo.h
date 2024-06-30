@@ -72,5 +72,7 @@ OBJECT_VECTOR* GetSoundEffect(LEVEL_INFO* lvl, long num);
 long GetNumSoundEffects(LEVEL_INFO* lvl);
 TEXTURESTRUCT* GetWaterfallTextInfos(LEVEL_INFO* lvl, long waterfall);
 long GetWaterfallVCoordinate(LEVEL_INFO* lvl, long waterfall);
+void* Allocate(LEVEL_INFO* lvl, long size, long count);
+void Deallocate(LEVEL_INFO* lvl, void* memory);
 extern LEVEL_INFO* currentLevel;
 #endif// TOMB4_GAME_LEVELINFO_H

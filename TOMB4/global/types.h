@@ -27,7 +27,6 @@
 #define FVF (D3DFVF_TEX2 | D3DFVF_SPECULAR | D3DFVF_DIFFUSE | D3DFVF_XYZRHW)
 #define W2V_SHIFT 14
 #define MAX_DYNAMICS 64
-#define MALLOC_SIZE 1024 * 1024 * 128 // 128MB
 
 /********************DX defs********************/
 #define TEXGUID IID_IDirect3DTexture2

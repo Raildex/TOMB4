@@ -522,8 +522,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 		ACMInit();
 	}
 
-	cutseqpakPtr = 0;
-	buf = 0;
+	cutseqpakPtr = NULL;
+	buf = NULL;
 	size = LoadFile("data\\cutseq.pak", &buf);
 
 	if(size) {
