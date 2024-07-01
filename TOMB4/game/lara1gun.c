@@ -1,5 +1,6 @@
 
 #include "game/lara1gun.h"
+#include "distances.h"
 #include "game/traps.h"
 #include "game/objects.h"
 #include "game/larafire.h"
@@ -497,7 +498,7 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 	} else {
 		num1 = GetSpheres(target, Slist, 1);
 		cs = -1;
-		cd = 0x7FFFFFFF;
+		cd = infinite_distance;
 
 		if(target->object_number == SKELETON) {
 			for(int i = 0; i < 8; i++) {

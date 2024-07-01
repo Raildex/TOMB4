@@ -1,5 +1,6 @@
 
 #include "game/larafire.h"
+#include "distances.h"
 #include "game/lara_states.h"
 #include "game/objects.h"
 #include "game/lara2gun.h"
@@ -404,7 +405,7 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 
 	nSpheres = GetSpheres(target, Slist, 0);
 	best = -1;
-	bestdist = 0x7FFFFFFF;
+	bestdist = infinite_distance;
 
 	for(int i = 0; i < nSpheres; i++) {
 		sptr = &Slist[i];
@@ -495,7 +496,7 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 	src.pos.z = lara_item->pos.z_pos;
 	src.room_number = lara_item->room_number;
 	bestyrot = 0x7FFF;
-	bestdist = 0x7FFFFFFF;
+	bestdist = infinite_distance;
 	maxdist = winfo->target_dist;
 	maxdist2 = SQUARE(maxdist);
 	creature = baddie_slots;

@@ -1,5 +1,6 @@
 
 #include "game/harpy.h"
+#include "distances.h"
 #include "game/effect2.h"
 #include "specific/function_stubs.h"
 #include "game/items.h"
@@ -329,7 +330,7 @@ void HarpyControl(short item_number) {
 			GetAITarget(harpy);
 
 		harpy->enemy = NULL;
-		max_dist = 0x7FFFFFFF;
+		max_dist = infinite_distance;
 
 		for(int i = 0; i < 5; i++) {
 			baddie = &baddie_slots[i];

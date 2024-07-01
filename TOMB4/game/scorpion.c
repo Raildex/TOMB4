@@ -1,5 +1,6 @@
 
 #include "game/scorpion.h"
+#include "distances.h"
 #include "game/box.h"
 #include "game/objects.h"
 #include "specific/3dmath.h"
@@ -164,7 +165,7 @@ void ScorpionControl(short item_number) {
 				scorpion->enemy = lara_item;
 			else {
 				scorpion->enemy = NULL;
-				bestdist = 0x7FFFFFFF;
+				bestdist = infinite_distance;
 
 				for(int i = 0; i < 5; i++) {
 					target_num = baddie_slots[i].item_num;

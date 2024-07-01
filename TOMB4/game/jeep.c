@@ -1,5 +1,6 @@
 
 #include "game/jeep.h"
+#include "distances.h"
 #include "specific/function_stubs.h"
 #include "game/objects.h"
 #include "game/lara_states.h"
@@ -1608,7 +1609,7 @@ void EnemyJeepControl(short item_number) {
 		iAngle = phd_atan(z, x) - item->pos.y_rot;
 
 		if(x > 32000 || x < -32000 || z > 32000 || z < -32000)
-			iDist = 0x7FFFFFFF;
+			iDist = infinite_distance;
 		else
 			iDist = SQUARE(x) + SQUARE(z);
 	}

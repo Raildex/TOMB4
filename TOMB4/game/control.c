@@ -1,5 +1,6 @@
 
 #include "game/control.h"
+#include "distances.h"
 #include "game/pickup.h"
 #include "specific/function_stubs.h"
 #include "specific/input.h"
@@ -2738,7 +2739,7 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	Coord->z = z;
 
 	phd_PopMatrix();
-	max_dist = 0x7FFFFFFF;
+	max_dist = infinite_distance;
 	ClosestMesh = NULL;
 	ClosestBit = 0;
 	item = NULL;

@@ -1,5 +1,6 @@
 
 #include "game/wildboar.h"
+#include "distances.h"
 #include "game/box.h"
 #include "game/objects.h"
 #include "game/effects.h"
@@ -67,7 +68,7 @@ void WildboarControl(short item_number) {
 			GetAITarget(boar);
 		else {
 			boar->enemy = lara_item;
-			max_dist = 0x7FFFFFFF;
+			max_dist = infinite_distance;
 
 			for(int i = 0; i < 5; i++) {
 				baddie = &baddie_slots[i];

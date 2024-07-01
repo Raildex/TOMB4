@@ -1,5 +1,6 @@
 
 #include "game/camera.h"
+#include "distances.h"
 #include "game/laramesh.h"
 #include "game/objects.h"
 #include "specific/3dmath.h"
@@ -555,7 +556,7 @@ void ChaseCamera(ITEM_INFO* item) {
 	for(int i = 0; i < 5; i++)
 		ideals[i].pos.y = (camera.target_distance * phd_sin(camera.target_elevation) >> W2V_SHIFT) + camera.target.pos.y;
 
-	farthest = 0x7FFFFFFF;
+	farthest = infinite_distance;
 	farthestnum = 0;
 
 	for(int i = 0; i < 5; i++) {
@@ -685,7 +686,7 @@ void CombatCamera(ITEM_INFO* item) {
 	for(int i = 0; i < 5; i++)
 		ideals[i].pos.y = (1536 * phd_sin(camera.target_elevation) >> W2V_SHIFT) + camera.target.pos.y;
 
-	farthest = 0x7FFFFFFF;
+	farthest = infinite_distance;
 	farthestnum = 0;
 
 	for(int i = 0; i < 5; i++) {

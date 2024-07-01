@@ -1,5 +1,6 @@
 
 #include "game/troops.h"
+#include "distances.h"
 #include "game/box.h"
 #include "game/objects.h"
 #include "game/sphere.h"
@@ -102,7 +103,7 @@ void TroopControl(short item_number) {
 			GetAITarget(troop);
 		else {
 			troop->enemy = NULL;
-			max_dist = 0x7FFFFFFF;
+			max_dist = infinite_distance;
 
 			for(int i = 0; i < 5; i++) {
 				baddie = &baddie_slots[i];

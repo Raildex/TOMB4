@@ -1,5 +1,6 @@
 
 #include "game/box.h"
+#include "distances.h"
 #include "game/tomb4fx.h"
 #include "game/items.h"
 #include "game/lot.h"
@@ -39,8 +40,6 @@
 #include "global/types.h"
 #include <stdlib.h>
 #include "game/levelinfo.h"
-
-
 
 void CreatureDie(short item_number, long explode) {
 	ITEM_INFO* item;
@@ -172,11 +171,11 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info) {
 	ang = (short)phd_atan(z, x);
 
 	if(z > 32000 || z < -32000 || x > 32000 || x < -32000)
-		info->distance = 0x7FFFFFFF;
+		info->distance = infinite_distance;
 	else if(creature->enemy)
 		info->distance = SQUARE(x) + SQUARE(z);
 	else
-		info->distance = 0x7FFFFFFF;
+		info->distance = infinite_distance;
 
 	info->angle = ang - item->pos.y_rot;
 	info->enemy_facing = ang - enemy->pos.y_rot + 0x8000;

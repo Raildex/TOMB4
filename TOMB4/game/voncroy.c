@@ -1,5 +1,6 @@
 
 #include "game/voncroy.h"
+#include "distances.h"
 #include "game/camera.h"
 #include "specific/3dmath.h"
 #include "game/control.h"
@@ -924,7 +925,7 @@ void VoncroyControl(short item_number) {
 	target = 0;
 
 	if(lara.location <= item->item_flags[3]) {
-		max_dist = 0x7FFFFFFF;
+		max_dist = infinite_distance;
 
 		for(int i = 0; i < 5; i++) {
 			baddie = &baddie_slots[i];
@@ -983,7 +984,7 @@ void VoncroyControl(short item_number) {
 		VonCroyLaraAI.enemy_facing = VonCroyLaraAI.angle + 0x8000 - lara_item->pos.y_rot;
 
 		if(dx > 32000 || dx < -32000 || dz > 32000 || dz < -32000)
-			VonCroyLaraAI.distance = 0x7FFFFFFF;
+			VonCroyLaraAI.distance = infinite_distance;
 		else
 			VonCroyLaraAI.distance = SQUARE(dx) + SQUARE(dz);
 

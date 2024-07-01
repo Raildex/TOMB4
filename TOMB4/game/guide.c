@@ -1,5 +1,6 @@
 
 #include "game/guide.h"
+#include "distances.h"
 #include "game/box.h"
 #include "game/objects.h"
 #include "specific/function_stubs.h"
@@ -109,7 +110,7 @@ void GuideControl(short item_number) {
 		iAhead = 0;
 
 	if(z > 32000 || z < -32000 || x > 32000 || x < -32000)
-		iDistance = 0x7FFFFFFF;
+		iDistance = infinite_distance;
 	else
 		iDistance = SQUARE(x) + SQUARE(z);
 
@@ -122,7 +123,7 @@ void GuideControl(short item_number) {
 		xAngle = (short)phd_atan(z + (x >> 1), item->pos.y_pos - lara_item->pos.y_pos);
 
 	target = 0;
-	bestdist = 0x7FFFFFFF;
+	bestdist = infinite_distance;
 
 	if(!GetObjectInfo(currentLevel,WRAITH1)->loaded && (item->current_anim_state < 4 || item->current_anim_state == 31)) {
 		for(int i = 0; i < 5; i++) {
@@ -134,7 +135,7 @@ void GuideControl(short item_number) {
 					z = candidate->pos.z_pos - item->pos.z_pos;
 
 					if(z > 32000 || z < -32000 || x > 32000 || x < -32000)
-						dist = 0x7FFFFFFF;
+						dist = infinite_distance;
 					else
 						dist = SQUARE(x) + SQUARE(z);
 

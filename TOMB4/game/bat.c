@@ -1,5 +1,6 @@
 
 #include "game/bat.h"
+#include "distances.h"
 #include "game/box.h"
 #include "game/objects.h"
 #include "specific/function_stubs.h"
@@ -71,7 +72,7 @@ void BatControl(short item_number) {
 		if(item->ai_bits)
 			GetAITarget(bat);
 		else {
-			max_dist = 0x7FFFFFFF;
+			max_dist = infinite_distance;
 
 			for(int i = 0; i < 5; i++) {
 				baddie = &baddie_slots[i];
