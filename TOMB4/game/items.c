@@ -53,6 +53,7 @@ void KillItem(short item_num) {
 	item = GetItem(currentLevel, item_num);
 	item->active = 0;
 	item->really_active = 0;
+	void* data = item->data;
 
 	if(next_item_active == item_num)
 		next_item_active = item->next_active;
@@ -89,6 +90,7 @@ void KillItem(short item_num) {
 		item->next_item = next_item_free;
 		next_item_free = item_num;
 	}
+	Deallocate(currentLevel, data);
 }
 
 short CreateItem() {
