@@ -1,5 +1,6 @@
 
 #include "game/laraflar.h"
+#include "flareinfo.h"
 #include "specific/3dmath.h"
 #include "game/objects.h"
 #include "specific/output.h"
@@ -28,6 +29,7 @@
 #include "game/gfleveloptions.h"
 #include "game/laramesh.h"
 #include "game/levelinfo.h"
+#include <stdlib.h>
 
 void DrawFlareInAir(ITEM_INFO* item) {
 	short* bounds;
@@ -197,10 +199,10 @@ void CreateFlare(short object, long thrown) {
 			flare->speed >>= 1;
 
 		if(object == FLARE_ITEM) {
-			if(DoFlareLight((PHD_VECTOR*)&flare->pos, lara.flare_age))
-				flare->data = (void*)(lara.flare_age | 0x8000);
-			else
-				flare->data = (void*)(lara.flare_age & 0x7FFF);
+			FLARE_INFO* info = (FLARE_INFO*)calloc(1,sizeof(FLARE_INFO));
+			DoFlareLight((PHD_VECTOR*)&flare->pos, lara.flare_age);
+			info->age = (lara.flare_age & 0x7FFF);
+			flare->data = info;
 		} else
 			flare->item_flags[3] = lara.LitTorch;
 
@@ -370,7 +372,7 @@ void FlareControl(short item_number) {
 	long x, y, z, xv, yv, zv, flare_age;
 
 	flare = GetItem(currentLevel, item_number);
-
+	FLARE_INFO* data = flare->data;
 	if(flare->fallspeed) {
 		flare->pos.x_rot += 546;
 		flare->pos.z_rot += 910;
@@ -396,7 +398,7 @@ void FlareControl(short item_number) {
 	yv = flare->fallspeed;
 	flare->pos.y_pos += yv;
 	DoProperDetection(item_number, x, y, z, xv, yv, zv);
-	flare_age = (long)flare->data & 0x7FFF;
+	flare_age = data->age;
 
 	if(flare_age >= 900) {
 		if(!flare->fallspeed && !flare->speed) {
@@ -413,8 +415,8 @@ void FlareControl(short item_number) {
 			flare->pos.z_pos = 2 * gfMirrorZPlane - flare->pos.z_pos;
 		}
 
-		flare_age |= 0x8000;
+		//flare_age |= 0x8000;
 	}
 
-	flare->data = (void*)flare_age;
+	data->age = flare_age;
 }

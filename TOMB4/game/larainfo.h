@@ -128,4 +128,4 @@ typedef struct LARA_INFO {
 	char locationPad;
 } LARA_INFO;
 #pragma pack(pop)
-#endif // TOMB4_GAME_LARAINFO_H
+#endif// TOMB4_GAME_LARAINFO_H

@@ -1,5 +1,20 @@
 
 #include "game/pickup.h"
+#include "game/animstruct.h"
+#include "game/camera.h"
+#include "game/collide.h"
+#include "game/control.h"
+#include "game/deltapak.h"
+#include "game/draw.h"
+#include "game/flareinfo.h"
+#include "game/flmtorch.h"
+#include "game/health.h"
+#include "game/inputbuttons.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
 #include "game/lara_states.h"
 #include "game/collide.h"
 #include "game/items.h"
@@ -482,7 +497,7 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				lara.gun_type = WEAPON_FLARE;
 				InitialiseNewWeapon();
 				lara.gun_status = LG_FLARE;
-				lara.flare_age = (long)item->data & 0x7FFF;
+				lara.flare_age = ((FLARE_INFO*)item->data)->age;
 				KillItem(item_number);
 			}
 		}
