@@ -1,5 +1,6 @@
 #ifndef TOMB4_GAME_WATERDUST_H
 #define TOMB4_GAME_WATERDUST_H
+#include "game/phdvector.h"
 typedef struct WATER_DUST {
 	PHD_VECTOR pos;
 	char xvel;

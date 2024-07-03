@@ -316,9 +316,9 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 		sptr->dShade = 64;
 
 	sptr->TransType = 2;
-	sptr->x = (GetRandomControl() & 0x1F) + x - 16;
-	sptr->y = (GetRandomControl() & 0x1F) + y - 16;
-	sptr->z = (GetRandomControl() & 0x1F) + z - 16;
+	sptr->pos.x = (GetRandomControl() & 0x1F) + x - 16;
+	sptr->pos.y = (GetRandomControl() & 0x1F) + y - 16;
+	sptr->pos.z = (GetRandomControl() & 0x1F) + z - 16;
 
 	if(notLara) {
 		sptr->Xvel = (short)((GetRandomControl() & 0x3FF) + xVel - 512);
@@ -680,9 +680,9 @@ void AddFire(long x, long y, long z, long size, short room_number, short fade) {
 		else
 			fire->on = 1;
 
-		fire->x = x;
-		fire->y = y;
-		fire->z = z;
+		fire->pos.x = x;
+		fire->pos.y = y;
+		fire->pos.z = z;
 		fire->size = (char)size;
 		fire->room_number = room_number;
 		break;
@@ -722,7 +722,7 @@ void S_DrawFires() {
 		phd_bottom = r->bottom;
 
 		phd_PushMatrix();
-		phd_TranslateAbs(fire->x, fire->y, fire->z);
+		phd_TranslateAbs(fire->pos.x, fire->pos.y, fire->pos.z);
 
 		if(S_GetObjectInfoBounds(bounds)) {
 			if(fire->on == 1)
@@ -829,13 +829,13 @@ void UpdateSmokeSparks() {
 		if(sptr->Friction & 0xF0)
 			sptr->Yvel -= sptr->Yvel >> (sptr->Friction >> 4);
 
-		sptr->x += sptr->Xvel >> 5;
-		sptr->y += sptr->Yvel >> 5;
-		sptr->z += sptr->Zvel >> 5;
+		sptr->pos.x += sptr->Xvel >> 5;
+		sptr->pos.y += sptr->Yvel >> 5;
+		sptr->pos.z += sptr->Zvel >> 5;
 
 		if(sptr->Flags & 0x100) {
-			sptr->x += SmokeWindX >> 1;
-			sptr->z += SmokeWindZ >> 1;
+			sptr->pos.x += SmokeWindX >> 1;
+			sptr->pos.z += SmokeWindZ >> 1;
 		}
 
 		sptr->Size = (unsigned char)(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
@@ -854,9 +854,9 @@ void TriggerShatterSmoke(long x, long y, long z) {
 	sptr->TransType = 2;
 	sptr->Life = (GetRandomControl() & 7) + 48;
 	sptr->sLife = sptr->Life;
-	sptr->x = (GetRandomControl() & 0x1F) + x - 16;
-	sptr->y = (GetRandomControl() & 0x1F) + y - 16;
-	sptr->z = (GetRandomControl() & 0x1F) + z - 16;
+	sptr->pos.x = (GetRandomControl() & 0x1F) + x - 16;
+	sptr->pos.y = (GetRandomControl() & 0x1F) + y - 16;
+	sptr->pos.z = (GetRandomControl() & 0x1F) + z - 16;
 	sptr->Xvel = 2 * (GetRandomControl() & 0x1FF) - 512;
 	sptr->Yvel = 2 * (GetRandomControl() & 0x1FF) - 512;
 	sptr->Zvel = 2 * (GetRandomControl() & 0x1FF) - 512;
@@ -1828,9 +1828,9 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number) {
 	sptr->TransType = 2;
 	sptr->Life = (GetRandomControl() & 0xF) + 64;
 	sptr->sLife = sptr->Life;
-	sptr->x = (GetRandomControl() & 0x1F) + x - 16;
-	sptr->y = (GetRandomControl() & 0x1F) + y - 16;
-	sptr->z = (GetRandomControl() & 0x1F) + z - 16;
+	sptr->pos.x = (GetRandomControl() & 0x1F) + x - 16;
+	sptr->pos.y = (GetRandomControl() & 0x1F) + y - 16;
+	sptr->pos.z = (GetRandomControl() & 0x1F) + z - 16;
 
 	if(uw) {
 		sptr->Xvel = (GetRandomControl() & 0x3FF) - 512;

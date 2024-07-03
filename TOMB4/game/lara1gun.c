@@ -600,9 +600,9 @@ void TriggerUnderwaterExplosion(ITEM_INFO* item, long vehicle) {
 			y = item->pos.y_pos - wh;
 
 			if(y < 2048) {
-				splash_setup.x = item->pos.x_pos;
-				splash_setup.y = wh;
-				splash_setup.z = item->pos.z_pos;
+				splash_setup.pos.x = item->pos.x_pos;
+				splash_setup.pos.y = wh;
+				splash_setup.pos.z = item->pos.z_pos;
 				wh = 2048 - y;
 				splash_setup.InnerRadVel = 160;
 				splash_setup.MiddleSize = 224;
@@ -1002,9 +1002,9 @@ void ControlGrenade(short item_number) {
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
 	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER && abovewater) {
-		splash_setup.x = item->pos.x_pos;
-		splash_setup.y = GetRoom(currentLevel,room_number)->maxceiling;
-		splash_setup.z = item->pos.z_pos;
+		splash_setup.pos.x = item->pos.x_pos;
+		splash_setup.pos.y = GetRoom(currentLevel,room_number)->maxceiling;
+		splash_setup.pos.z = item->pos.z_pos;
 		splash_setup.InnerRad = 32;
 		splash_setup.InnerSize = 8;
 		splash_setup.InnerRadVel = 320;

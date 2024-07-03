@@ -147,9 +147,9 @@ void TriggerHammerSmoke(long x, long y, long z, long num) {
 		sptr->TransType = 2;
 		sptr->Life = (GetRandomControl() & 7) + 48;
 		sptr->sLife = sptr->Life;
-		sptr->x = (GetRandomControl() & 0x1F) + x - 16;
-		sptr->y = (GetRandomControl() & 0x1F) + y - 16;
-		sptr->z = (GetRandomControl() & 0x1F) + z - 16;
+		sptr->pos.x = (GetRandomControl() & 0x1F) + x - 16;
+		sptr->pos.y = (GetRandomControl() & 0x1F) + y - 16;
+		sptr->pos.z = (GetRandomControl() & 0x1F) + z - 16;
 		off = (GetRandomControl() & 0xFF) + 255;
 		sptr->Xvel = (short)((off * phd_sin(angle)) >> W2V_SHIFT);
 		sptr->Yvel = -32 - (GetRandomControl() & 0x3F);

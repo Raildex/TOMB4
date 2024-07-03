@@ -1730,9 +1730,9 @@ void SetupSplash(SPLASH_SETUP* setup) {
 	}
 
 	splash->flags = 1;
-	splash->x = setup->x;
-	splash->y = setup->y;
-	splash->z = setup->z;
+	splash->pos.x = setup->pos.x;
+	splash->pos.y = setup->pos.y;
+	splash->pos.z = setup->pos.z;
 	splash->life = 96;
 	splash->InnerRad = setup->InnerRad;
 	splash->InnerSize = setup->InnerSize;

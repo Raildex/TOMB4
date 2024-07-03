@@ -492,9 +492,9 @@ void ControlSprinkler(short item_number) {
 			smokeptr->TransType = 2;
 			smokeptr->Life = (GetRandomControl() & 3) + 24;
 			smokeptr->sLife = smokeptr->Life;
-			smokeptr->x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
-			smokeptr->y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
-			smokeptr->z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
+			smokeptr->pos.x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
+			smokeptr->pos.y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
+			smokeptr->pos.z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
 			smokeptr->Xvel = 2 * (GetRandomControl() & 0x1FF) - 512;
 
 			if(i)

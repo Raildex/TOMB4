@@ -1,9 +1,8 @@
 #ifndef TOMB4_GAME_SPLASHSETUP_H
 #define TOMB4_GAME_SPLASHSETUP_H
+#include "game/phdvector.h"
 typedef struct SPLASH_SETUP {
-	long x;
-	long y;
-	long z;
+	PHD_VECTOR pos;
 	short InnerRad;
 	short InnerSize;
 	short InnerRadVel;

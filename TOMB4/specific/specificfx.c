@@ -2929,7 +2929,7 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 			continue;
 
 		phd_PushMatrix();
-		phd_TranslateAbs(splash->x, splash->y, splash->z);
+		phd_TranslateAbs(splash->pos.x, splash->pos.y, splash->pos.z);
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
 
@@ -3639,12 +3639,12 @@ void S_DrawSmokeSparks() {
 		else
 			is_mirror = 0;
 
-		dx = sptr->x - lara_item->pos.x_pos;
-		dy = sptr->y - lara_item->pos.y_pos;
-		dz = sptr->z - lara_item->pos.z_pos;
+		dx = sptr->pos.x - lara_item->pos.x_pos;
+		dy = sptr->pos.y - lara_item->pos.y_pos;
+		dz = sptr->pos.z - lara_item->pos.z_pos;
 
 		if(is_mirror)
-			dz = 2 * gfMirrorZPlane - lara_item->pos.z_pos - sptr->z;
+			dz = 2 * gfMirrorZPlane - lara_item->pos.z_pos - sptr->pos.z;
 
 		if(dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000) {
 			if(!is_mirror)

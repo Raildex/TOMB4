@@ -1,9 +1,8 @@
 #ifndef SPLASH_STRUCT_INCLUDED
 #define SPLASH_STRUCT_INCLUDED
+#include "game/phdvector.h"
 typedef struct SPLASH_STRUCT {
-	long x;
-	long y;
-	long z;
+	PHD_VECTOR pos;
 	short InnerRad;
 	short InnerSize;
 	short InnerRadVel;

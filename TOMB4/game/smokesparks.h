@@ -1,9 +1,8 @@
 #ifndef TOMB4_GAME_SMOKESPARKS_H
 #define TOMB4_GAME_SMOKESPARKS_H
+#include "game/phdvector.h"
 typedef struct SMOKE_SPARKS {
-	long x;
-	long y;
-	long z;
+	PHD_VECTOR pos;
 	short Xvel;
 	short Yvel;
 	short Zvel;

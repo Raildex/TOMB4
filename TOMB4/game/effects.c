@@ -416,9 +416,9 @@ void WadeSplash(ITEM_INFO* item, long water, long depth) {
 		return;
 
 	if(item->fallspeed > 0 && depth < 474 && !SplashCount) {
-		splash_setup.x = item->pos.x_pos;
-		splash_setup.y = water;
-		splash_setup.z = item->pos.z_pos;
+		splash_setup.pos.x = item->pos.x_pos;
+		splash_setup.pos.y = water;
+		splash_setup.pos.z = item->pos.z_pos;
 		splash_setup.InnerRad = 16;
 		splash_setup.InnerSize = 12;
 		splash_setup.InnerRadVel = 160;
@@ -447,9 +447,9 @@ void Splash(ITEM_INFO* item) {
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
 	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER) {
-		splash_setup.x = item->pos.x_pos;
-		splash_setup.y = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, room_number);
-		splash_setup.z = item->pos.z_pos;
+		splash_setup.pos.x = item->pos.x_pos;
+		splash_setup.pos.y = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, room_number);
+		splash_setup.pos.z = item->pos.z_pos;
 		splash_setup.InnerRad = 32;
 		splash_setup.InnerSize = 8;
 		splash_setup.InnerRadVel = 320;
