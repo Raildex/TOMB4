@@ -15,7 +15,6 @@ typedef struct ITEM_LIGHT {
 	long nCurrentLights;
 	long nPrevLights;
 	long room_number;
-	long RoomChange;
 	PHD_VECTOR item_pos;
 	void* pCurrentLights;
 	void* pPrevLights;

@@ -1408,7 +1408,6 @@ void init_cutseq_actors(char* data, long resident) {
 		item->il.ambient = lara_item->il.ambient;
 		item->il.fcnt = -1;
 		item->il.room_number = -1;
-		item->il.RoomChange = 0;
 		item->il.nCurrentLights = 0;
 		item->il.nPrevLights = 0;
 		item->il.pCurrentLights = &item->il.CurrentLights;

@@ -40,10 +40,7 @@ typedef struct ITEM_INFO {
 	unsigned long dynamic_light : 1;
 	unsigned long poisoned : 1;
 	unsigned long ai_bits : 5;
-	unsigned long really_active : 1;
 	unsigned long meshswap_meshbits;
-	short draw_room;
-	short TOSSPAD;
 } ITEM_INFO;
 #pragma pack(pop)
-#endif // TOMB4_GAME_ITEMINFO_H
+#endif// TOMB4_GAME_ITEMINFO_H

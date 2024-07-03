@@ -52,7 +52,6 @@ void KillItem(short item_num) {
 	DetatchSpark(item_num, 128);
 	item = GetItem(currentLevel, item_num);
 	item->active = 0;
-	item->really_active = 0;
 	void* data = item->data;
 
 	if(next_item_active == item_num)
@@ -128,7 +127,6 @@ void InitialiseItem(short item_num) {
 	item->looked_at = 0;
 	item->dynamic_light = 0;
 	item->ai_bits = 0;
-	item->really_active = 0;
 	item->item_flags[0] = 0;
 	item->item_flags[1] = 0;
 	item->item_flags[2] = 0;
@@ -177,7 +175,6 @@ void InitialiseItem(short item_num) {
 
 	item->il.fcnt = -1;
 	item->il.room_number = -1;
-	item->il.RoomChange = 0;
 	item->il.nCurrentLights = 0;
 	item->il.nPrevLights = 0;
 	item->il.ambient = r->ambient;

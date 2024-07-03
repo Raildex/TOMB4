@@ -1,4 +1,3 @@
-
 #include "game/traps.h"
 #include "game/control.h"
 #include "game/effect2.h"
