@@ -1,13 +1,14 @@
 #ifndef TOMB4_GAME_ITEMINFO_H
 #define TOMB4_GAME_ITEMINFO_H
 #include "game/itemlight.h"
+#include "game/objects.h"
 #include "game/phd3dpos.h"
 #pragma pack(push, 1)
 typedef struct ITEM_INFO {
 	long floor;
 	unsigned long touch_bits;
 	unsigned long mesh_bits;
-	short object_number;
+	enum object_types object_number;
 	short current_anim_state;
 	short goal_anim_state;
 	short required_anim_state;

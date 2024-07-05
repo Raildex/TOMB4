@@ -1,5 +1,6 @@
 
 #include "game/setup.h"
+#include "game/attachediteminfo.h"
 #include "game/objects.h"
 #include "game/pickup.h"
 #include "game/collide.h"
@@ -544,6 +545,11 @@ void ObjectObjects() {
 	obj->control = ControlBodyPart;
 	obj->draw_routine = (void (*)(ITEM_INFO*))1;
 	obj->nmeshes = 0;
+	obj->loaded = 1;
+
+	obj = GetObjectInfo(currentLevel, ATTACHED_OBJECT);
+	obj->control = AttachedItemControl;
+	obj->draw_routine = DrawAttachedItem;
 	obj->loaded = 1;
 }
 

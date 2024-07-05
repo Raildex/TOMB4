@@ -1,5 +1,7 @@
 
 #include "game/sphere.h"
+#include "control.h"
+#include "game/matrixindices.h"
 #include "specific/3dmath.h"
 #include "game/draw.h"
 #include "game/lara.h"
@@ -8,6 +10,7 @@
 #include "game/iteminfo.h"
 #include "game/objectinfo.h"
 #include "global/types.h"
+#include <math.h>
 #include <string.h>
 #include "game/levelinfo.h"
 
@@ -277,6 +280,115 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 	pos->x = item->pos.x_pos + (long)mMXPtr[M03];
 	pos->y = item->pos.y_pos + (long)mMXPtr[M13];
 	pos->z = item->pos.z_pos + (long)mMXPtr[M23];
+	mMXPtr = mMx;
+	mIMptr = mIMx;
+	phd_mxptr = iMx;
+}
+
+void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
+	OBJECT_INFO* obj;
+	float* mMx;
+	float* mIMx;
+	long* iMx;
+	long* bone;
+	short* frm[2];
+	short* extra_rotation;
+	short* rot;
+	short* rot2;
+	long frac, rate, poppush;
+
+	mMx = mMXPtr;
+	mIMx = mIMptr;
+	iMx = phd_mxptr;
+	obj = GetObjectInfo(currentLevel,item->object_number);
+	frac = GetFrames(item, frm, &rate);
+
+	phd_PushUnitMatrix();
+	phd_SetTrans(0, 0, 0);
+	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
+
+	extra_rotation = (short*)item->data;
+
+	if(!extra_rotation)
+		extra_rotation = no_rotation;
+
+	bone = GetBone(currentLevel,obj->bone_index);
+
+	if(frac) {
+		InitInterpolate2(frac, rate);
+		rot = frm[0] + 9;
+		rot2 = frm[1] + 9;
+		phd_TranslateRel_ID(frm[0][6], frm[0][7], frm[0][8], frm[1][6], frm[1][7], frm[1][8]);
+		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
+
+		for(int i = 0; i < joint; i++) {
+			poppush = *bone;
+
+			if(poppush & 1)
+				phd_PopMatrix_I();
+
+			if(poppush & 2)
+				phd_PushMatrix_I();
+
+			phd_TranslateRel_I(bone[1], bone[2], bone[3]);
+			gar_RotYXZsuperpack_I(&rot, &rot2, 0);
+
+			if(poppush & 0x1C) {
+				if(poppush & 8)
+					phd_RotY_I(*extra_rotation++);
+
+				if(poppush & 4)
+					phd_RotX_I(*extra_rotation++);
+
+				if(poppush & 0x10)
+					phd_RotZ_I(*extra_rotation++);
+			}
+
+			bone += 4;
+		}
+
+		phd_TranslateRel_I(vec->x_pos, vec->y_pos, vec->z_pos);
+		phd_RotYXZ_I(vec->y_rot, vec->x_rot, vec->z_rot);
+		mInterpolateMatrix();
+	} else {
+		phd_TranslateRel(frm[0][6], frm[0][7], frm[0][8]);
+		rot = frm[0] + 9;
+		gar_RotYXZsuperpack(&rot, 0);
+
+		for(int i = 0; i < joint; i++) {
+			poppush = *bone;
+
+			if(poppush & 1)
+				phd_PopMatrix();
+
+			if(poppush & 2)
+				phd_PushMatrix();
+
+			phd_TranslateRel(bone[1], bone[2], bone[3]);
+			gar_RotYXZsuperpack(&rot, 0);
+
+			if(poppush & 0x1C) {
+				if(poppush & 8)
+					phd_RotY(*extra_rotation++);
+
+				if(poppush & 4)
+					phd_RotX(*extra_rotation++);
+
+				if(poppush & 0x10)
+					phd_RotZ(*extra_rotation++);
+			}
+
+			bone += 4;
+		}
+		phd_TranslateRel(vec->x_pos, vec->y_pos, vec->z_pos);
+		phd_RotYXZ(vec->y_rot, vec->x_rot, vec->z_rot);
+	}
+	vec->y_rot = atan2(mMXPtr[M10],mMXPtr[M00]) * 16384;
+	vec->x_rot = asin(-mMXPtr[M20])* 16384;
+	vec->z_rot = atan2(-mMXPtr[M21], mMXPtr[M22])* 16384;
+	vec->x_pos = item->pos.x_pos + (long)mMXPtr[M03];
+	vec->y_pos = item->pos.y_pos + (long)mMXPtr[M13];
+	vec->z_pos = item->pos.z_pos + (long)mMXPtr[M23];
 	mMXPtr = mMx;
 	mIMptr = mIMx;
 	phd_mxptr = iMx;

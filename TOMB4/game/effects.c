@@ -1,5 +1,7 @@
 
 #include "game/effects.h"
+#include "game/attachediteminfo.h"
+#include "lara.h"
 #include "specific/polyinsert.h"
 #include "specific/function_table.h"
 #include "game/sound.h"
@@ -70,56 +72,6 @@ long FogTableColor[28] = {
 	RGBONLY(77, 140, 141),
 	RGBONLY(4, 181, 154),
 	RGBONLY(255, 174, 0)
-};
-
-void (*effect_routines[47])(ITEM_INFO* item) = {
-	turn180_effect,
-	floor_shake_effect,
-	PoseidonSFX,
-	LaraBubbles,
-	finish_level_effect,
-	ActivateCamera,
-	ActivateKey,
-	RubbleFX,
-	SwapCrowbar,
-	void_effect,
-	SoundFlipEffect,
-	ExplosionFX,
-	lara_hands_free,
-	void_effect,
-	draw_right_gun,
-	draw_left_gun,
-	shoot_right_gun,
-	shoot_left_gun,
-	swap_meshes_with_meshswap1,
-	swap_meshes_with_meshswap2,
-	swap_meshes_with_meshswap3,
-	invisibility_on,
-	invisibility_off,
-	void_effect,
-	void_effect,
-	void_effect,
-	reset_hair,
-	void_effect,
-	SetFog,
-	GhostTrap,
-	LaraLocation,
-	ClearScarabsPatch,
-	AddFootPrint,
-	void_effect,
-	void_effect,
-	void_effect,
-	void_effect,
-	void_effect,
-	void_effect,
-	void_effect,
-	void_effect,
-	void_effect,
-	void_effect,
-	MeshSwapToPour,
-	MeshSwapFromPour,
-	LaraLocationPad,
-	KillActiveBaddies,
 };
 
 void SetFog(ITEM_INFO* item) {
@@ -553,3 +505,90 @@ long ItemNearLara(PHD_3DPOS* pos, long rad) {
 
 	return 0;
 }
+
+void AttachKeyPuzzleObject(ITEM_INFO* item) {
+	if(item->object_number == LARA) {
+		LARA_INFO* l = (LARA_INFO*) item->data;
+		short keyPuzzleItemNo = l->GeneralPtr;
+		ITEM_INFO* keyPuzzleItem = GetItem(currentLevel, keyPuzzleItemNo);
+		enum object_types obj = keyPuzzleItem->object_number;
+		if(obj >= PUZZLE_HOLE1 && obj <= PUZZLE_HOLE12) {
+			obj = obj - PUZZLE_HOLE1 + PUZZLE_ITEM1;
+		}else if(obj >= KEY_HOLE1 && obj <= KEY_HOLE12) {
+			obj = obj - KEY_HOLE1 + KEY_ITEM1;
+		}
+		short attachedItem = CreateItem();
+		if(attachedItem == NO_ITEM)
+			return;
+		ITEM_INFO* attached = GetItem(currentLevel, attachedItem);
+		attached->object_number = ATTACHED_OBJECT;
+		attached->room_number = item->room_number;
+		InitialiseItem(attachedItem);
+		ATTACHEDITEM_INFO* info = Allocate(currentLevel, sizeof(ATTACHEDITEM_INFO), 1);
+		info->item_carrier = l->item_number;
+		info->node = LM_RHAND;
+		info->object = obj;
+		attached->data = info;
+		l->pose_count = attachedItem;
+		AddActiveItem(attachedItem);
+	}
+}
+
+void RemoveKeyPuzzleObject(ITEM_INFO* item) {
+	if(item->object_number == LARA) {
+		LARA_INFO* l = (LARA_INFO*) item->data;
+		if(l->pose_count != NO_ITEM) {
+			KillItem(l->pose_count);
+		}
+	}
+}
+
+void (*effect_routines[47])(ITEM_INFO* item) = {
+	turn180_effect,
+	floor_shake_effect,
+	PoseidonSFX,
+	LaraBubbles,
+	finish_level_effect,
+	ActivateCamera,
+	ActivateKey,
+	RubbleFX,
+	SwapCrowbar,
+	void_effect,
+	SoundFlipEffect,
+	ExplosionFX,
+	lara_hands_free,
+	void_effect,
+	draw_right_gun,
+	draw_left_gun,
+	shoot_right_gun,
+	shoot_left_gun,
+	swap_meshes_with_meshswap1,
+	swap_meshes_with_meshswap2,
+	swap_meshes_with_meshswap3,
+	invisibility_on,
+	invisibility_off,
+	void_effect,
+	void_effect,
+	void_effect,
+	reset_hair,
+	void_effect,
+	SetFog,
+	GhostTrap,
+	LaraLocation,
+	ClearScarabsPatch,
+	AddFootPrint,
+	AttachKeyPuzzleObject,
+	RemoveKeyPuzzleObject,
+	void_effect,
+	void_effect,
+	void_effect,
+	void_effect,
+	void_effect,
+	void_effect,
+	void_effect,
+	void_effect,
+	MeshSwapToPour,
+	MeshSwapFromPour,
+	LaraLocationPad,
+	KillActiveBaddies,
+};

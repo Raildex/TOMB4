@@ -516,7 +516,7 @@ enum object_types {
 
 	DEFAULT_SPRITES,
 	MISC_SPRITES,
-
+	ATTACHED_OBJECT,
 	NUMBER_OBJECTS
 };
 
