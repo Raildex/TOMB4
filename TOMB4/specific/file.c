@@ -230,7 +230,7 @@ long LoadFile(const char* name, char** dest) {
 	size = FileSize(file);
 
 	if(!*dest)
-		*dest = (char*)malloc(size);
+		*dest = (char*)calloc(size,1);
 
 	count = fread(*dest, 1, size, file);
 	Log(__func__, "Read - %d FileSize - %d", count, size);

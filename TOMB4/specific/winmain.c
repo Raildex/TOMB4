@@ -527,7 +527,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	size = LoadFile("data\\cutseq.pak", &buf);
 
 	if(size) {
-		cutseqpakPtr = (char*)malloc(*(long*)buf);
+		cutseqpakPtr = (char*)calloc(*(long*)buf,1);
 		S_Decompress(cutseqpakPtr, buf + 4, size - 4, *(long*)buf);
 		free(buf);
 	}

@@ -251,7 +251,7 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 
 	Log(__func__, "ProcessMeshData %d", num_meshes);
 	num_level_meshes = num_meshes;
-	mesh_vtxbuf = (MESH_DATA**)malloc(4 * num_meshes);
+	mesh_vtxbuf = (MESH_DATA**)calloc(4 * num_meshes,sizeof(MESH_DATA*));
 	lvl->mesh_base = (short*)mesh_vtxbuf;
 	short* last_mesh_ptr = 0;
 	MESH_DATA* msh = (MESH_DATA*)(uintptr_t)num_meshes;
@@ -355,7 +355,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 
 		size = *(long*)*data;
 		*data += sizeof(long);
-		r->data = (short*)malloc(size * sizeof(short));
+		r->data = (short*)calloc(size ,sizeof(short));
 		memcpy(r->data, *data, size * sizeof(short));
 		*data += size * sizeof(short);
 
@@ -363,7 +363,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 		*data += sizeof(short);
 
 		if(nDoors) {
-			r->door = (short*)malloc((16 * nDoors + 1) * sizeof(short));
+			r->door = (short*)calloc((16 * nDoors + 1) , sizeof(short));
 			r->door[0] = (short)nDoors;
 			memcpy(r->door + 1, *data, 16 * nDoors * sizeof(short));
 			*data += 16 * nDoors * sizeof(short);
@@ -974,7 +974,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		char* logoCompressed = NULL;
 		long size = LoadFile("data/uslogo.pak", &logoCompressed);
 		long uncompSize = *(long*)logoCompressed; // logo files contain uncompSize, compSize, compData
-		pComp = (char*)malloc(uncompSize);
+		pComp = (char*)calloc(uncompSize,1);
 		if(!S_Decompress(pComp, logoCompressed + 4, size - 4, uncompSize)) {
 			Log(__func__, "Error decompressing logo! Filesize: %d Decompression size: %d", size, uncompSize);
 		}

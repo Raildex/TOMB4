@@ -161,7 +161,7 @@ bool GameInitialise() {
 	desc.dwFVF = D3DFVF_TLVERTEX;
 	desc.dwNumVertices = 0xFFFF;
 	DXAttempt(IDirect3D3_CreateVertexBuffer(App.dx.lpD3D,&desc, &DestVB, D3DDP_DONOTCLIP, 0));
-	clipflags = (short*)malloc(0x4000);
+	clipflags = (short*)calloc(0x4000,1);
 	init_water_table();
 	return 1;
 }

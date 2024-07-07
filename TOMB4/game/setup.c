@@ -1751,8 +1751,8 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 	char flipped[256];
 
 	max_slots = 0;
-	OutsideRoomOffsets = (short*)malloc(0x5B2);
-	OutsideRoomTable = (char*)malloc(0xB640);
+	OutsideRoomOffsets = (short*)calloc(0x5B2,1);
+	OutsideRoomTable = (char*)calloc(0xB640,1);
 	memset(OutsideRoomTable, 0xFF, 0xB640);
 	memset(flipped, 0, 255);
 

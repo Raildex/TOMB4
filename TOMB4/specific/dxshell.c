@@ -557,7 +557,7 @@ void DXSaveScreen(IDirectDrawSurface4* surf, const char* name) {
 		*(short*)&tga_header[12] = (short)desc.dwWidth;
 		*(short*)&tga_header[14] = (short)desc.dwHeight;
 		fwrite(tga_header, sizeof(tga_header), 1, file);
-		pM = (char*)malloc(2 * desc.dwWidth * desc.dwHeight);
+		pM = (char*)calloc(2 * desc.dwWidth * desc.dwHeight,1);
 		pDest = (short*)pM;
 		pSurf += desc.dwHeight * (desc.lPitch / 2);
 

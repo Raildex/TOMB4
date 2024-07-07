@@ -828,8 +828,7 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 			mesh_vtxbuf[i] = mesh;
 		} else {
 			last_mesh_ptr = mesh_ptr;
-			mesh = (MESH_DATA*)malloc(sizeof(MESH_DATA));
-			memset(mesh, 0, sizeof(MESH_DATA));
+			mesh = (MESH_DATA*)calloc(1,sizeof(MESH_DATA));
 			*GetMeshPointer(currentLevel, i) = (short*)mesh;
 			mesh_vtxbuf[i] = mesh;
 			mesh->x = mesh_ptr[0];
@@ -868,7 +867,7 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 					mesh->nNorms = mesh->nVerts;
 
 				if(mesh->nNorms > 0) {
-					mesh->Normals = (_D3DVECTOR*)malloc(mesh->nNorms * sizeof(_D3DVECTOR));
+					mesh->Normals = (_D3DVECTOR*)calloc(mesh->nNorms, sizeof(_D3DVECTOR));
 
 					for(int j = 0; j < mesh->nVerts; j++) {
 						vtx[j].nx = mesh_ptr[0];
@@ -884,7 +883,7 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 					mesh->prelight = 0;
 				} else {
 					mesh->Normals = 0;
-					mesh->prelight = (long*)malloc(4 * mesh->nVerts);
+					mesh->prelight = (long*)calloc(mesh->nVerts,sizeof(long));
 
 					for(int j = 0; j < mesh->nVerts; j++) {
 						c = 255 - (mesh_ptr[0] >> 5);
@@ -901,7 +900,7 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 			mesh_ptr++;
 
 			if(mesh->ngt4) {
-				mesh->gt4 = (short*)malloc(12 * mesh->ngt4);
+				mesh->gt4 = (short*)calloc(6 * mesh->ngt4,sizeof(short));
 				lp = 6 * mesh->ngt4;
 
 				for(int j = 0; j < lp; j++)
@@ -914,7 +913,7 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 			mesh_ptr++;
 
 			if(mesh->ngt3) {
-				mesh->gt3 = (short*)malloc(10 * mesh->ngt3);
+				mesh->gt3 = (short*)calloc(5 * mesh->ngt3,sizeof(short));
 				lp = 5 * mesh->ngt3;
 
 				for(int j = 0; j < lp; j++)
