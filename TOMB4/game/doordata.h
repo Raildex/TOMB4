@@ -8,4 +8,4 @@ typedef struct DOOR_DATA {
 	DOORPOS_DATA d2flip;
 	short Opened;
 } DOOR_DATA;
-#endif // TOMB4_GAME_DOORDATA_H
+#endif// TOMB4_GAME_DOORDATA_H

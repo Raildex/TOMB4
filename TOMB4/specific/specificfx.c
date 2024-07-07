@@ -2455,7 +2455,7 @@ void DrawDrips() {
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
 
-	for(int i = 0; i < 32; i++) {
+	for(int i = 0; i < nDrips; i++) {
 		drip = &Drips[i];
 
 		if(!drip->On)
@@ -2563,7 +2563,7 @@ void DrawBubbles() {
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
 
-	for(int i = 0; i < 40; i++) {
+	for(int i = 0; i < nBubbles; i++) {
 		if(!bubble->size) {
 			bubble++;
 			continue;
@@ -2668,7 +2668,7 @@ void DrawShockwaves() {
 	sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 8);
 	offsets = (long*)&tsv_buffer[1024];
 
-	for(int i = 0; i < 16; i++) {
+	for(int i = 0; i < nShockWaves; i++) {
 		wave = &ShockWaves[i];
 
 		if(!wave->life)
@@ -2922,7 +2922,7 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 	v = MyVertexBuffer;
 	offsets = (long*)&tsv_buffer[1024];
 
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < nSplashes; i++) {
 		splash = &splashes[i];
 
 		if(!(splash->flags & 1))
@@ -3049,7 +3049,7 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 		}
 	}
 
-	for(int i = 0; i < 16; i++) {
+	for(int i = 0; i < nRipples; i++) {
 		ripple = &ripples[i];
 
 		if(!(ripple->flags & 1))
@@ -3276,7 +3276,7 @@ void S_DrawFireSparks(long size, long life) {
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
 
-	for(int i = 0; i < 20; i++) {
+	for(int i = 0; i < nFireSparks; i++) {
 		sptr = &fire_spark[i];
 
 		if(!sptr->On)
@@ -3524,7 +3524,7 @@ void DrawBlood() {
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
 
-	for(int i = 0; i < 32; i++) {
+	for(int i = 0; i < nBlood; i++) {
 		bptr = &blood[i];
 
 		if(!bptr->On)
@@ -3626,11 +3626,10 @@ void S_DrawSmokeSparks() {
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
 	is_mirror = 0;
-	sptr = &smoke_spark[0];
 
-	for(int i = 0; i < 32; i++) {
+	for(int i = 0; i < nSmokeSparks; i++) {
+		sptr = &smoke_spark[i];
 		if(!sptr->On) {
-			sptr++;
 			continue;
 		}
 
@@ -3648,7 +3647,7 @@ void S_DrawSmokeSparks() {
 
 		if(dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000) {
 			if(!is_mirror)
-				sptr++;
+				continue;
 
 			continue;
 		}
@@ -3666,7 +3665,7 @@ void S_DrawSmokeSparks() {
 
 		if(Z[0] <= 0 || Z[0] >= 0x5000) {
 			if(!is_mirror)
-				sptr++;
+				continue;
 
 			continue;
 		}
@@ -3682,7 +3681,7 @@ void S_DrawSmokeSparks() {
 
 		if(XY[0] + size < phd_winxmin || XY[0] - size >= phd_winxmax || XY[1] + size < phd_winymin || XY[1] - size >= phd_winymax) {
 			if(!is_mirror)
-				sptr++;
+				continue;
 
 			continue;
 		}
@@ -3743,7 +3742,7 @@ void S_DrawSmokeSparks() {
 		AddQuadSorted(v, 0, 1, 2, 3, &tex, 0);
 
 		if(!is_mirror)
-			sptr++;
+			continue;
 	}
 
 	phd_PopMatrix();
@@ -3912,7 +3911,7 @@ void DrawLightning() {
 	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
 	sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 28);
 
-	for(int i = 0; i < 16; i++) {
+	for(int i = 0; i < nLightnings; i++) {
 		pL = &Lightning[i];
 
 		if(!pL->Life)

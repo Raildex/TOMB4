@@ -99,7 +99,7 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		pos.y = 0;
 		pos.z = 0;
 		GetLaraJointPos(&pos, 14);
-		drip = &Drips[GetFreeDrip()];
+		drip = GetFreeDrip();
 		drip->pos.x = pos.x;
 		drip->pos.y = pos.y;
 		drip->pos.z = pos.z;

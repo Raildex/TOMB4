@@ -41,7 +41,7 @@ void TriggerHarpyMissileFlame(short fx_number, long xv, long yv, long zv) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 0;
 	sptr->sG = (GetRandomControl() & 0x7F) + 32;
@@ -111,7 +111,7 @@ void TriggerHarpySparks(long x, long y, long z, short xv, short yv, short zv) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 0;
 	sptr->sG = 0;
@@ -150,7 +150,7 @@ void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size) 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 0;
 	sptr->sG = 0;

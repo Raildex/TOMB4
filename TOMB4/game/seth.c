@@ -43,7 +43,7 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 0;
 	sptr->sG = (GetRandomControl() & 0x7F) + 32;
@@ -118,7 +118,7 @@ void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 0;
 	sptr->sG = 0;
@@ -157,7 +157,7 @@ void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 0;
 	sptr->sG = 0;

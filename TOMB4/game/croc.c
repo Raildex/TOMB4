@@ -563,7 +563,7 @@ void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = (GetRandomControl() & 0x3F) + 128;
 	sptr->sG = sptr->sR >> 1;

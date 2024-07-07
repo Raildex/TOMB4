@@ -73,7 +73,7 @@ void ControlMapper(short item_number) {
 		h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 		for(int i = 0; i < 2; i++) {
-			sptr = &spark[GetFreeSpark()];
+			sptr = GetFreeSpark();
 			sptr->On = 1;
 			sptr->sR = (GetRandomControl() & 0x7F) + 64;
 			sptr->sG = sptr->sR;
@@ -321,7 +321,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void TriggerRopeFlame(PHD_VECTOR* pos) {
 	SPARKS* sptr;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 255;
 	sptr->sG = (GetRandomControl() & 0x1F) + 48;

@@ -32,7 +32,7 @@ void TriggerAutogunFlamethrower(ITEM_INFO* item) {
 	long v;
 
 	for(int i = 0; i < 3; i++) {
-		sptr = &spark[GetFreeSpark()];
+		sptr = GetFreeSpark();
 		sptr->On = 1;
 		sptr->sR = (GetRandomControl() & 0x1F) + 48;
 		sptr->sG = 48;

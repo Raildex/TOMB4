@@ -65,7 +65,7 @@ void TriggerRiseEffect(ITEM_INFO* item) {
 	fx->shade = 0x4210;
 	fx->flag2 = 1537;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 0;
 	sptr->sG = 0;

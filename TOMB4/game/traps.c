@@ -435,7 +435,7 @@ void ControlSprinkler(short item_number) {
 		if(!(wibble & 0xF)
 		   && (item->item_flags[0] <= 600
 			   || GetRandomControl() % (item->item_flags[0] - 600) < 100)) {
-			drip = &Drips[GetFreeDrip()];
+			drip = GetFreeDrip();
 			drip->pos.x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
 			drip->pos.y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
 			drip->pos.z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
@@ -454,7 +454,7 @@ void ControlSprinkler(short item_number) {
 		SoundEffect(SFX_SANDHAM_IN_THE_HOUSE, &item->pos, SFX_DEFAULT);
 
 		for(int i = 0; i < 3; i++) {
-			sptr = &spark[GetFreeSpark()];
+			sptr = GetFreeSpark();
 			sptr->On = 1;
 			sptr->sR = 112;
 			sptr->sG = (GetRandomControl() & 0x1F) + 128;
@@ -483,7 +483,7 @@ void ControlSprinkler(short item_number) {
 		}
 
 		for(int i = 0; i < 1; i++) {
-			smokeptr = &smoke_spark[GetFreeSmokeSpark()];
+			smokeptr = GetFreeSmokeSpark();
 			smokeptr->On = 1;
 			smokeptr->sShade = 0;
 			smokeptr->dShade = (GetRandomControl() & 0x1F) + 32;

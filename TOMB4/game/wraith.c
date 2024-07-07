@@ -50,7 +50,7 @@ void TriggerWraithFlame(long x, long y, long z, short xv, short yv, short zv, lo
 	SPARKS* sptr;
 	unsigned char col;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 
 	if(objnum == WRAITH1) {
@@ -132,7 +132,7 @@ void TriggerWraithEffect(long x, long y, long z, short vel, long objnum) {
 	dcol = (0xFF << 24) | (db << 16) | (dg << 8) | dr; // sptr->dR = dr; sptr->dG = dg; sptr->dB = sb; sptr->R = 0xFF;
 
 	for(int i = 0; i < 15; i++) {
-		sptr = &spark[GetFreeSpark()];
+		sptr = GetFreeSpark();
 		*(unsigned long*)&sptr->On = scol; // just.. why
 		*(unsigned long*)&sptr->dR = dcol;
 		sptr->ColFadeSpeed = 4;

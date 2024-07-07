@@ -470,7 +470,7 @@ void TriggerHorsemanRicochets(PHD_VECTOR* pos, long yrot, long num) {
 	long random, rot;
 
 	for(int i = 0; i < num; i++) {
-		sptr = &spark[GetFreeSpark()];
+		sptr = GetFreeSpark();
 		random = GetRandomControl();
 		sptr->On = 1;
 		sptr->sR = 0;
@@ -498,7 +498,7 @@ void TriggerHorsemanRicochets(PHD_VECTOR* pos, long yrot, long num) {
 	}
 
 	for(int i = 0; i < num; i++) {
-		sptr = &spark[GetFreeSpark()];
+		sptr = GetFreeSpark();
 		random = GetRandomControl();
 		sptr->On = 1;
 		sptr->sR = 0;

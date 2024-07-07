@@ -47,7 +47,7 @@ static ITEM_INFO* TorchItem = 0;
 void TriggerTorchFlame(short item_number, long node) {
 	SPARKS* sptr;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 255;
 	sptr->sG = (GetRandomControl() & 0x1F) + 48;

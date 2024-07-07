@@ -520,16 +520,9 @@ void init_all_ropes() {
 }
 
 void InitialiseEffects() {
-	for(int i = 0; i < 256; i++)
+	for(int i = 0; i < nSpark; i++)
 		spark[i].Dynamic = -1;
-
-	next_fire_spark = 1;
-	next_smoke_spark = 0;
-	next_gunshell = 0;
-	next_bubble = 0;
-	next_drip = 0;
 	next_debris = 0;
-	next_blood = 0;
 	ClearScarabs();
 
 	for(int i = 0; i < 64; i++)

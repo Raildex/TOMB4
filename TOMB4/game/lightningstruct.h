@@ -1,5 +1,6 @@
 #ifndef TOMB4_GAME_LIGHTNINGSTRUCT_H
 #define TOMB4_GAME_LIGHTNINGSTRUCT_H
+#include "game/phdvector.h"
 typedef struct LIGHTNING_STRUCT {
 	PHD_VECTOR Point[4];
 	unsigned char r;

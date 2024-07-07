@@ -146,7 +146,7 @@ void DrawJeepExtras(ITEM_INFO* item) {
 static void TriggerExhaustSmoke(long x, long y, long z, short angle, long velocity, long thing) {
 	SPARKS* sptr;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->dR = 16;
 	sptr->dG = 16;

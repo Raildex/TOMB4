@@ -40,6 +40,9 @@
 #include "game/fvector.h"
 #include "game/levelinfo.h"
 #include "tomb4fx.h"
+#include <string.h>
+#include <stdlib.h>
+
 
 NODEOFFSET_INFO NodeOffsets[16] = {
 	{ -16, 40, 160, -14, 0 },
@@ -61,22 +64,26 @@ NODEOFFSET_INFO NodeOffsets[16] = {
 	{ 0, 0, 0, 0, 0 }
 };
 
-LIGHTNING_STRUCT Lightning[16];
-GUNSHELL_STRUCT Gunshells[24];
-DRIP_STRUCT Drips[32];
-SMOKE_SPARKS smoke_spark[32];
-BUBBLE_STRUCT Bubbles[40];
-SHOCKWAVE_STRUCT ShockWaves[16];
-FIRE_SPARKS fire_spark[20];
-BLOOD_STRUCT blood[32];
-GUNFLASH_STRUCT Gunflashes[4];
-FIRE_LIST fires[32];
-long next_fire_spark = 1;
-long next_smoke_spark = 0;
-long next_gunshell = 0;
-long next_bubble = 0;
-long next_drip = 0;
-long next_blood = 0;
+long nLightnings;
+LIGHTNING_STRUCT* Lightning;
+long nGunshells;
+GUNSHELL_STRUCT* Gunshells;
+long nDrips;
+DRIP_STRUCT* Drips;
+long nSmokeSparks;
+SMOKE_SPARKS* smoke_spark;
+long nBubbles;
+BUBBLE_STRUCT* Bubbles;
+long nShockWaves;
+SHOCKWAVE_STRUCT* ShockWaves;
+long nFireSparks;
+FIRE_SPARKS* fire_spark;
+long nBlood;
+BLOOD_STRUCT* blood;
+long nGunflashes;
+GUNFLASH_STRUCT* Gunflashes;
+long nFires;
+FIRE_LIST* fires;
 short FlashFadeR = 0;
 short FlashFadeG = 0;
 short FlashFadeB = 0;
@@ -94,47 +101,74 @@ char tsv_buffer[16384];
 
 static PHD_VECTOR NodeVectors[16];
 
+SMOKE_SPARKS* GetFreeSmokeSpark() {
+	for(int i =0; i < nSmokeSparks; ++i) {
+		if(!smoke_spark[i].On) {
+			return &smoke_spark[i];
+		}
+	}
+	size_t idx = nSmokeSparks;
+	nSmokeSparks = (nSmokeSparks * 2) + 4;
+	smoke_spark = realloc(smoke_spark, nSmokeSparks * sizeof(SMOKE_SPARKS));
+	for(int i = idx; i < nSmokeSparks; ++i) {
+		SMOKE_SPARKS* sptr = &smoke_spark[i];
+		memset(sptr, 0, sizeof(SMOKE_SPARKS));
+	}
+	return &smoke_spark[idx];
+}
+
+LIGHTNING_STRUCT* GetFreeLightning() {
+	for(int i =0; i < nLightnings; ++i) {
+		if(!Lightning[i].Life) {
+			return &Lightning[i];
+		}
+	}
+	size_t idx = nLightnings;
+	nLightnings = (nLightnings * 2) + 4;
+	Lightning = realloc(Lightning, nLightnings * sizeof(LIGHTNING_STRUCT));
+	for(int i = idx; i < nLightnings; ++i) {
+		LIGHTNING_STRUCT* bptr = &Lightning[i];
+		memset(bptr, 0, sizeof(LIGHTNING_STRUCT));
+	}
+	return &Lightning[idx];
+}
 
 LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, long rgb, unsigned char flags, unsigned char size, unsigned char segments) {
 	LIGHTNING_STRUCT* lptr;
 	char* vptr;
 
-	for(int i = 0; i < 16; i++) {
-		lptr = &Lightning[i];
+	lptr = GetFreeLightning();
+	lptr->Life = 254;
+	lptr->Point[0].x = s->x;
+	lptr->Point[0].y = s->y;
+	lptr->Point[0].z = s->z;
+	lptr->Point[1].x = ((s->x * 3) + d->x) >> 2;
+	lptr->Point[1].y = ((s->y * 3) + d->y) >> 2;
+	lptr->Point[1].z = ((s->z * 3) + d->z) >> 2;
+	lptr->Point[2].x = ((d->x * 3) + s->x) >> 2;
+	lptr->Point[2].y = ((d->y * 3) + s->y) >> 2;
+	lptr->Point[2].z = ((d->z * 3) + s->z) >> 2;
+	lptr->Point[3].x = d->x;
+	lptr->Point[3].y = d->y;
+	lptr->Point[3].z = d->z;
+	vptr = &lptr->Xvel1;
 
-		if(!lptr->Life) {
-			lptr->Point[0].x = s->x;
-			lptr->Point[0].y = s->y;
-			lptr->Point[0].z = s->z;
-			lptr->Point[1].x = ((s->x * 3) + d->x) >> 2;
-			lptr->Point[1].y = ((s->y * 3) + d->y) >> 2;
-			lptr->Point[1].z = ((s->z * 3) + d->z) >> 2;
-			lptr->Point[2].x = ((d->x * 3) + s->x) >> 2;
-			lptr->Point[2].y = ((d->y * 3) + s->y) >> 2;
-			lptr->Point[2].z = ((d->z * 3) + s->z) >> 2;
-			lptr->Point[3].x = d->x;
-			lptr->Point[3].y = d->y;
-			lptr->Point[3].z = d->z;
-			vptr = &lptr->Xvel1;
+	for(int j = 0; j < 6; j++)
+		*vptr++ = (GetRandomControl() % variation) - (variation >> 1);
 
-			for(int j = 0; j < 6; j++)
-				*vptr++ = (GetRandomControl() % variation) - (variation >> 1);
-
-			for(int j = 0; j < 3; j++) {
-				if(flags & 2)
-					*vptr++ = (GetRandomControl() % variation) - (variation >> 1);
-				else
-					*vptr++ = 0;
-			}
-
-			lptr->Flags = flags;
-			*(long*)&lptr->r = rgb;
-			lptr->Segments = segments;
-			lptr->Rand = variation;
-			lptr->Size = size;
-			return lptr;
-		}
+	for(int j = 0; j < 3; j++) {
+		if(flags & 2)
+			*vptr++ = (GetRandomControl() % variation) - (variation >> 1);
+		else
+			*vptr++ = 0;
 	}
+
+	lptr->Flags = flags;
+	*(long*)&lptr->r = rgb;
+	lptr->Segments = segments;
+	lptr->Rand = variation;
+	lptr->Size = size;
+	return lptr;
 
 	return 0;
 }
@@ -285,7 +319,7 @@ void DrawGunshells() {
 	phd_top = 0;
 	phd_bottom = phd_winheight;
 
-	for(int i = 0; i < 24; i++) {
+	for(int i = 0; i < nGunshells; i++) {
 		p = &Gunshells[i];
 
 		if(p->counter) {
@@ -303,7 +337,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	SMOKE_SPARKS* sptr;
 	unsigned char size;
 
-	sptr = &smoke_spark[GetFreeSmokeSpark()];
+	sptr = GetFreeSmokeSpark();
 	sptr->On = 1;
 	sptr->sShade = 0;
 	sptr->dShade = (unsigned char)(4 * shade);
@@ -392,7 +426,7 @@ void UpdateDrips() {
 	FLOOR_INFO* floor;
 	long h;
 
-	for(int i = 0; i < 32; i++) {
+	for(int i = 0; i < nDrips; i++) {
 		drip = &Drips[i];
 
 		if(!drip->On)
@@ -427,50 +461,26 @@ void UpdateDrips() {
 	}
 }
 
-long GetFreeFireSpark() {
-	FIRE_SPARKS* sptr;
-	long min_life, min_life_num;
-
-	sptr = &fire_spark[next_fire_spark];
-	min_life = 4095;
-	min_life_num = 0;
-
-	for(int free = next_fire_spark, i = 0; i < 20; i++) {
-		if(sptr->On) {
-			if(sptr->Life < min_life) {
-				min_life_num = free;
-				min_life = sptr->Life;
-			}
-
-			if(free == 19) {
-				sptr = &fire_spark[1];
-				free = 1;
-			} else {
-				free++;
-				sptr++;
-			}
-		} else {
-			next_fire_spark = free + 1;
-
-			if(next_fire_spark >= 20)
-				next_fire_spark = 1;
-
-			return free;
+FIRE_SPARKS* GetFreeFireSpark() {
+	for(int i =0; i < nFireSparks; ++i) {
+		if(!fire_spark[i].On) {
+			return &fire_spark[i];
 		}
 	}
-
-	next_fire_spark = min_life_num + 1;
-
-	if(next_fire_spark >= 20)
-		next_fire_spark = 1;
-
-	return min_life_num;
+	size_t idx = nFireSparks;
+	nFireSparks = (nFireSparks * 2) + 4;
+	fire_spark = realloc(fire_spark, nFireSparks * sizeof(FIRE_SPARKS));
+	for(int i = idx; i < nFireSparks; ++i) {
+		FIRE_SPARKS* bptr = &fire_spark[i];
+		memset(bptr, 0, sizeof(FIRE_SPARKS));
+	}
+	return &fire_spark[idx];
 }
 
 void TriggerGlobalStaticFlame() {
 	FIRE_SPARKS* sptr;
 
-	sptr = &fire_spark[0];
+	sptr = GetFreeFireSpark();
 	sptr->On = 1;
 	sptr->dR = (GetRandomControl() & 0x3F) - 64;
 	sptr->dG = (GetRandomControl() & 0x3F) + 96;
@@ -500,7 +510,7 @@ void TriggerGlobalStaticFlame() {
 void TriggerGlobalFireFlame() {
 	FIRE_SPARKS* sptr;
 
-	sptr = &fire_spark[GetFreeFireSpark()];
+	sptr = GetFreeFireSpark();
 	sptr->On = 1;
 	sptr->sR = 255;
 	sptr->sG = (GetRandomControl() & 0x1F) + 48;
@@ -547,7 +557,7 @@ void keep_those_fires_burning() {
 		TriggerGlobalFireFlame();
 
 		if(!(wibble & 0x1F)) {
-			sptr = &fire_spark[GetFreeFireSpark()];
+			sptr = GetFreeFireSpark();
 			sptr->On = 1;
 			sptr->sR = 0;
 			sptr->sG = 0;
@@ -593,7 +603,7 @@ void UpdateFireSparks() {
 
 	keep_those_fires_burning();
 
-	for(int i = 0; i < 20; i++) {
+	for(int i = 0; i < nFireSparks; i++) {
 		sptr = &fire_spark[i];
 
 		if(!sptr->On)
@@ -660,33 +670,43 @@ void UpdateFireSparks() {
 void ClearFires() {
 	FIRE_LIST* fire;
 
-	for(int i = 0; i < 32; i++) {
+	for(int i = 0; i < nFires; i++) {
 		fire = &fires[i];
 		fire->on = 0;
 	}
 }
 
+FIRE_LIST* GetFreeFire() {
+	for(int i =0; i < nFires; ++i) {
+		if(!fires[i].on) {
+			return &fires[i];
+		}
+	}
+	size_t idx = nFires;
+	nFires = (nFires * 2) + 4;
+	fires = realloc(fires, nFires * sizeof(FIRE_LIST));
+	for(int i = idx; i < nFires; ++i) {
+		FIRE_LIST* bptr = &fires[i];
+		memset(bptr, 0, sizeof(FIRE_LIST));
+	}
+	return &fires[idx];
+}
+
 void AddFire(long x, long y, long z, long size, short room_number, short fade) {
 	FIRE_LIST* fire;
 
-	for(int i = 0; i < 32; i++) {
-		fire = &fires[i];
+	fire = GetFreeFire();
 
-		if(fire->on)
-			continue;
+	if(fade)
+		fire->on = (char)fade;
+	else
+		fire->on = 1;
 
-		if(fade)
-			fire->on = (char)fade;
-		else
-			fire->on = 1;
-
-		fire->pos.x = x;
-		fire->pos.y = y;
-		fire->pos.z = z;
-		fire->size = (char)size;
-		fire->room_number = room_number;
-		break;
-	}
+	fire->pos.x = x;
+	fire->pos.y = y;
+	fire->pos.z = z;
+	fire->size = (char)size;
+	fire->room_number = room_number;
 }
 
 void S_DrawFires() {
@@ -697,7 +717,7 @@ void S_DrawFires() {
 
 	bounds = (short*)&tsv_buffer[0];
 
-	for(int i = 0; i < 32; i++) {
+	for(int i = 0; i < nFires; i++) {
 		fire = &fires[i];
 
 		if(!fire->on)
@@ -740,43 +760,11 @@ void S_DrawFires() {
 	phd_bottom = phd_winheight;
 }
 
-long GetFreeSmokeSpark() {
-	SMOKE_SPARKS* sptr;
-	long min_life, min_life_num;
-
-	sptr = &smoke_spark[next_smoke_spark];
-	min_life = 4095;
-	min_life_num = 0;
-
-	for(int free = next_smoke_spark, i = 0; i < 32; i++) {
-		if(sptr->On) {
-			if(sptr->Life < min_life) {
-				min_life_num = free;
-				min_life = sptr->Life;
-			}
-
-			if(free == 31) {
-				sptr = &smoke_spark[0];
-				free = 0;
-			} else {
-				free++;
-				sptr++;
-			}
-		} else {
-			next_smoke_spark = (free + 1) & 0x1F;
-			return free;
-		}
-	}
-
-	next_smoke_spark = (min_life_num + 1) & 0x1F;
-	return min_life_num;
-}
-
 void UpdateSmokeSparks() {
 	SMOKE_SPARKS* sptr;
 	long fade;
 
-	for(int i = 0; i < 32; i++) {
+	for(int i = 0; i < nSmokeSparks; i++) {
 		sptr = &smoke_spark[i];
 
 		if(!sptr->On)
@@ -845,7 +833,7 @@ void UpdateSmokeSparks() {
 void TriggerShatterSmoke(long x, long y, long z) {
 	SMOKE_SPARKS* sptr;
 
-	sptr = &smoke_spark[GetFreeSmokeSpark()];
+	sptr = GetFreeSmokeSpark();
 	sptr->On = 1;
 	sptr->sShade = 0;
 	sptr->dShade = 255 - (GetRandomControl() & 0x1F);
@@ -908,44 +896,20 @@ void DrawWeaponMissile(ITEM_INFO* item) {
 	}
 }
 
-long GetFreeGunshell() {
-	GUNSHELL_STRUCT* shell;
-	long min_life, min_life_num;
-
-	shell = &Gunshells[next_gunshell];
-	min_life = 4095;
-	min_life_num = 0;
-
-	for(int free = next_gunshell, i = 0; i < 24; i++) {
-		if(shell->counter) {
-			if(shell->counter < min_life) {
-				min_life_num = free;
-				min_life = shell->counter;
-			}
-
-			if(free == 23) {
-				shell = &Gunshells[0];
-				free = 0;
-			} else {
-				free++;
-				shell++;
-			}
-		} else {
-			next_gunshell = free + 1;
-
-			if(next_gunshell >= 24)
-				next_gunshell = 0;
-
-			return free;
+GUNSHELL_STRUCT* GetFreeGunshell() {
+	for(int i =0; i < nGunshells; ++i) {
+		if(!Gunshells[i].counter) {
+			return &Gunshells[i];
 		}
 	}
-
-	next_gunshell = min_life_num + 1;
-
-	if(next_gunshell >= 24)
-		next_gunshell = 0;
-
-	return min_life_num;
+	size_t idx = nGunshells;
+	nGunshells = (nGunshells * 2) + 4;
+	Gunshells = realloc(Gunshells, nGunshells * sizeof(GUNSHELL_STRUCT));
+	for(int i = idx; i < nGunshells; ++i) {
+		GUNSHELL_STRUCT* bptr = &Gunshells[i];
+		memset(bptr, 0, sizeof(GUNSHELL_STRUCT));
+	}
+	return &Gunshells[idx];
 }
 
 void TriggerGunShell(short leftright, short objnum, long weapon) {
@@ -1002,7 +966,7 @@ void TriggerGunShell(short leftright, short objnum, long weapon) {
 		TriggerGunSmoke(pos.x, pos.y, pos.z, 0, 0, 0, 0, weapon, shade);
 	}
 
-	shell = &Gunshells[GetFreeGunshell()];
+	shell = GetFreeGunshell();
 	shell->pos.x_pos = pos.x;
 	shell->pos.y_pos = pos.y;
 	shell->pos.z_pos = pos.z;
@@ -1034,7 +998,7 @@ void UpdateGunShells() {
 	long ox, oy, oz, c, h;
 	short oroom;
 
-	for(int i = 0; i < 24; i++) {
+	for(int i = 0; i < nGunshells; i++) {
 		shell = &Gunshells[i];
 
 		if(!shell->counter)
@@ -1117,7 +1081,7 @@ void TriggerSmallSplash(long x, long y, long z, long num) {
 	short ang;
 
 	while(num) {
-		sptr = &spark[GetFreeSpark()];
+		sptr = GetFreeSpark();
 		sptr->On = 1;
 		sptr->sR = 112;
 		sptr->sG = (GetRandomControl() & 0x1F) + 128;
@@ -1145,20 +1109,26 @@ void TriggerSmallSplash(long x, long y, long z, long num) {
 	}
 }
 
+GUNFLASH_STRUCT* GetFreeGunflash() {
+	for(int i =0; i < nGunflashes; ++i) {
+		if(!Gunflashes[i].on) {
+			return &Gunflashes[i];
+		}
+	}
+	size_t idx = nGunflashes;
+	nGunflashes = (nGunflashes * 2) + 4;
+	Gunflashes = realloc(Gunflashes, nGunflashes * sizeof(GUNFLASH_STRUCT));
+	for(int i = idx; i < nGunflashes; ++i) {
+		GUNFLASH_STRUCT* bptr = &Gunflashes[i];
+		memset(bptr, 0, sizeof(GUNFLASH_STRUCT));
+	}
+	return &Gunflashes[idx];
+}
+
 void TriggerGunflash(PHD_VECTOR* pos) {
 	GUNFLASH_STRUCT* flash;
-	long num;
 
-	num = 0;
-
-	while(Gunflashes[num].on) {
-		num++;
-
-		if(num >= 4)
-			return;
-	}
-
-	flash = &Gunflashes[num];
+	flash = GetFreeGunflash();
 	phd_TranslateRel(pos->x, pos->y, pos->z);
 	phd_RotX(-0x4000);
 	flash->mx[M00] = mMXPtr[M00];
@@ -1211,9 +1181,6 @@ void SetGunFlash(short weapon) {
 void DrawGunflashes() {
 	GUNFLASH_STRUCT* flash;
 
-	if(!Gunflashes[0].on)
-		return;
-
 	phd_top = 0;
 	phd_left = 0;
 	phd_right = phd_winwidth;
@@ -1224,7 +1191,7 @@ void DrawGunflashes() {
 	GetRandomDraw();
 	GetRandomDraw();
 
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < nGunflashes; i++) {
 		flash = &Gunflashes[i];
 
 		if(!flash->on)
@@ -1251,44 +1218,27 @@ void DrawGunflashes() {
 	phd_PopMatrix();
 }
 
-long GetFreeBlood() {
-	BLOOD_STRUCT* bptr;
-	long min_life, min_life_num, free;
-
-	free = next_blood;
-	bptr = &blood[next_blood];
-	min_life = 4095;
-	min_life_num = 0;
-
-	for(int i = 0; i < 32; i++) {
-		if(bptr->On) {
-			if(bptr->Life < min_life) {
-				min_life_num = free;
-				min_life = bptr->Life;
-			}
-
-			if(free == 31) {
-				bptr = &blood[0];
-				free = 0;
-			} else {
-				free++;
-				bptr++;
-			}
-		} else {
-			next_blood = (free + 1) & 0x1F;
-			return free;
+BLOOD_STRUCT* GetFreeBlood() {
+	for(int i =0; i < nBlood; ++i) {
+		if(!blood[i].On) {
+			return &blood[i];
 		}
 	}
-
-	next_blood = (min_life_num + 1) & 0x1F;
-	return min_life_num;
+	size_t idx = nBlood;
+	nBlood = (nBlood * 2) + 4;
+	blood = realloc(blood, nBlood * sizeof(BLOOD_STRUCT));
+	for(int i = idx; i < nBlood; ++i) {
+		BLOOD_STRUCT* bptr = &blood[i];
+		memset(bptr, 0, sizeof(BLOOD_STRUCT));
+	}
+	return &blood[idx];
 }
 
 void UpdateBlood() {
 	BLOOD_STRUCT* bptr;
 	long fade;
 
-	for(int i = 0; i < 32; i++) {
+	for(int i = 0; i < nBlood; i++) {
 		bptr = &blood[i];
 
 		if(!bptr->On)
@@ -1339,7 +1289,7 @@ void TriggerBlood(long x, long y, long z, long angle, long num) {
 	unsigned char size;
 
 	for(int i = 0; i < num; i++) {
-		bptr = &blood[GetFreeBlood()];
+		bptr = GetFreeBlood();
 		bptr->On = 1;
 		bptr->sShade = 0;
 		bptr->ColFadeSpeed = 4;
@@ -1377,61 +1327,38 @@ void TriggerBlood(long x, long y, long z, long angle, long num) {
 	}
 }
 
-long GetFreeBubble() {
-	BUBBLE_STRUCT* bubble;
-	long free;
-
-	free = next_bubble;
-	bubble = &Bubbles[next_bubble];
-
-	for(int i = 0; i < 40; i++) {
-		if(bubble->size) {
-			if(free == 39) {
-				bubble = &Bubbles[0];
-				free = 0;
-			} else {
-				free++;
-				bubble++;
-			}
-		} else {
-			next_bubble = free + 1;
-
-			if(next_bubble >= 40)
-				next_bubble = 0;
-
-			return free;
+BUBBLE_STRUCT* GetFreeBubble() {
+	for(int i =0; i < nBubbles; ++i) {
+		if(!Bubbles[i].size) {
+			return &Bubbles[i];
 		}
 	}
-
-	next_bubble = free + 1;
-
-	if(next_bubble >= 40)
-		next_bubble = 0;
-
-	return free;
+	size_t idx = nBubbles;
+	nBubbles = (nBubbles * 2) + 4;
+	Bubbles = realloc(Bubbles, nBubbles * sizeof(BUBBLE_STRUCT));
+	for(int i = idx; i < nBubbles; ++i) {
+		BUBBLE_STRUCT* bptr = &Bubbles[i];
+		memset(bptr, 0, sizeof(BUBBLE_STRUCT));
+	}
+	return &Bubbles[idx];
 }
 
 void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long biggest) {
 	BUBBLE_STRUCT* bubble;
-	long bubble_num;
 
 	GetFloor(pos->x_pos, pos->y_pos, pos->z_pos, &room_number);
 
 	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER) {
-		bubble_num = GetFreeBubble();
-
-		if(bubble_num != -1) {
-			bubble = &Bubbles[bubble_num];
-			bubble->pos.x = pos->x_pos;
-			bubble->pos.y = pos->y_pos;
-			bubble->pos.z = pos->z_pos;
-			bubble->room_number = room_number;
-			bubble->speed = (GetRandomControl() & 0xFF) + 64;
-			bubble->shade = 0;
-			bubble->size = (short)((size + (biggest & GetRandomControl())) << 1);
-			bubble->dsize = bubble->size << 4;
-			bubble->vel = (GetRandomControl() & 0x1F) + 32;
-		}
+		bubble = GetFreeBubble();
+		bubble->pos.x = pos->x_pos;
+		bubble->pos.y = pos->y_pos;
+		bubble->pos.z = pos->z_pos;
+		bubble->room_number = room_number;
+		bubble->speed = (GetRandomControl() & 0xFF) + 64;
+		bubble->shade = 0;
+		bubble->size = (short)((size + (biggest & GetRandomControl())) << 1);
+		bubble->dsize = bubble->size << 4;
+		bubble->vel = (GetRandomControl() & 0x1F) + 32;
 	}
 }
 
@@ -1441,7 +1368,7 @@ void UpdateBubbles() {
 	long h, c;
 	short room_number;
 
-	for(int i = 0; i < 40; i++) {
+	for(int i = 0; i < nBubbles; i++) {
 		bubble = &Bubbles[i];
 
 		if(!bubble->size)
@@ -1485,37 +1412,20 @@ void UpdateBubbles() {
 	}
 }
 
-long GetFreeDrip() {
-	DRIP_STRUCT* drip;
-	long min_life, min_life_num, free;
-
-	free = next_drip;
-	drip = &Drips[next_drip];
-	min_life = 4095;
-	min_life_num = 0;
-
-	for(int i = 0; i < 32; i++) {
-		if(drip->On) {
-			if(drip->Life < min_life) {
-				min_life_num = free;
-				min_life = drip->Life;
-			}
-
-			if(free == 31) {
-				drip = &Drips[0];
-				free = 0;
-			} else {
-				free++;
-				drip++;
-			}
-		} else {
-			next_drip = (free + 1) & 0x1F;
-			return free;
+DRIP_STRUCT* GetFreeDrip() {
+	for(int i =0; i < nDrips; ++i) {
+		if(!Drips[i].On) {
+			return &Drips[i];
 		}
 	}
-
-	next_drip = (min_life_num + 1) & 0x1F;
-	return min_life_num;
+	size_t idx = nDrips;
+	nDrips = (nDrips * 2) + 4;
+	Drips = realloc(Drips, nDrips * sizeof(DRIP_STRUCT));
+	for(int i = idx; i < nDrips; ++i) {
+		DRIP_STRUCT* bptr = &Drips[i];
+		memset(bptr, 0, sizeof(DRIP_STRUCT));
+	}
+	return &Drips[idx];
 }
 
 void TriggerLaraDrips() {
@@ -1532,7 +1442,7 @@ void TriggerLaraDrips() {
 			pos.z = (GetRandomControl() & 0x1F) - 16;
 			GetLaraJointPos(&pos, i);
 
-			drip = &Drips[GetFreeDrip()];
+			drip = GetFreeDrip();
 			drip->pos.x = pos.x;
 			drip->pos.y = pos.y;
 			drip->pos.z = pos.z;
@@ -1549,37 +1459,40 @@ void TriggerLaraDrips() {
 	}
 }
 
-long GetFreeShockwave() {
-	for(int i = 0; i < 16; i++) {
-		if(!ShockWaves[i].life)
-			return i;
+SHOCKWAVE_STRUCT* GetFreeShockwave() {
+	for(int i =0; i < nShockWaves; ++i) {
+		if(!ShockWaves[i].life) {
+			return &ShockWaves[i];
+		}
 	}
-
-	return -1;
+	size_t idx = nShockWaves;
+	nShockWaves = (nShockWaves * 2) + 4;
+	ShockWaves = realloc(ShockWaves, nShockWaves * sizeof(BLOOD_STRUCT));
+	for(int i = idx; i < nShockWaves; ++i) {
+		SHOCKWAVE_STRUCT* bptr = &ShockWaves[i];
+		memset(bptr, 0, sizeof(SHOCKWAVE_STRUCT));
+	}
+	return &ShockWaves[idx];
 }
 
 void TriggerShockwave(PHD_VECTOR* pos, long InnerOuterRads, long speed, long bgrl, long XRotFlags) {
 	SHOCKWAVE_STRUCT* sw;
-	long swn;
 
-	swn = GetFreeShockwave();
-
-	if(swn != -1) {
-		sw = &ShockWaves[swn];
-		sw->x = pos->x;
-		sw->y = pos->y;
-		sw->z = pos->z;
-		sw->InnerRad = InnerOuterRads & 0xFFFF;
-		sw->OuterRad = InnerOuterRads >> 16;
-		sw->XRot = XRotFlags & 0xFFFF;
-		sw->Flags = XRotFlags >> 16;
-		sw->Speed = (short)speed;
-		sw->r = CLRB(bgrl);
-		sw->g = CLRG(bgrl);
-		sw->b = CLRR(bgrl);
-		sw->life = CLRA(bgrl);
-		SoundEffect(SFX_DEMI_SIREN_SWAVE, (PHD_3DPOS*)pos, SFX_DEFAULT);
-	}
+	sw = GetFreeShockwave();
+	sw->x = pos->x;
+	sw->y = pos->y;
+	sw->z = pos->z;
+	sw->InnerRad = InnerOuterRads & 0xFFFF;
+	sw->OuterRad = InnerOuterRads >> 16;
+	sw->XRot = XRotFlags & 0xFFFF;
+	sw->Flags = XRotFlags >> 16;
+	sw->Speed = (short)speed;
+	sw->r = CLRB(bgrl);
+	sw->g = CLRG(bgrl);
+	sw->b = CLRR(bgrl);
+	sw->life = CLRA(bgrl);
+	SoundEffect(SFX_DEMI_SIREN_SWAVE, (PHD_3DPOS*)pos, SFX_DEFAULT);
+	
 }
 
 void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long speed) {
@@ -1592,7 +1505,7 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 0;
 	sptr->sG = 0;
@@ -1647,7 +1560,7 @@ void UpdateShockwaves() {
 	long dx, dz, dist;
 	short dir;
 
-	for(int i = 0; i < 16; i++) {
+	for(int i = 0; i < nShockWaves; i++) {
 		sw = &ShockWaves[i];
 
 		if(!sw->life)
@@ -1683,16 +1596,13 @@ void UpdateLightning() {
 	long* pPoint;
 	char* pVel;
 
-	for(int i = 0; i < 16; i++) {
+	for(int i = 0; i < nLightnings; i++) {
 		lptr = &Lightning[i];
 
 		if(!lptr->Life)
 			continue;
 
 		lptr->Life -= 2;
-
-		if(!lptr->Life)
-			continue;
 
 		pPoint = &lptr->Point[1].x;
 		pVel = &lptr->Xvel1;
@@ -1780,7 +1690,7 @@ void TriggerLightningGlow(long x, long y, long z, long rgb) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = CLRR(rgb);
 	sptr->sG = CLRG(rgb);
@@ -1819,7 +1729,7 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number) {
 	} else
 		uw = 0;
 
-	sptr = &smoke_spark[GetFreeSmokeSpark()];
+	sptr = GetFreeSmokeSpark();
 	sptr->On = 1;
 	sptr->sShade = 0;
 	sptr->dShade = 128;
@@ -1887,7 +1797,7 @@ void S_DrawSparks() {
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
 
-	for(int i = 0; i < 256; i++) {
+	for(int i = 0; i < nSpark; i++) {
 		sptr = &spark[i];
 
 		if(!sptr->On)

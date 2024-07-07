@@ -82,7 +82,7 @@ void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 
 	if(fx->flag1 == 3 || fx->flag1 == 4) {
@@ -138,7 +138,7 @@ void TriggerHammerSmoke(long x, long y, long z, long num) {
 	step = 0x10000 / num;
 
 	for(; num > 0; num--) {
-		sptr = &smoke_spark[GetFreeSmokeSpark()];
+		sptr = GetFreeSmokeSpark();
 		sptr->On = 1;
 		sptr->sShade = 0;
 		sptr->ColFadeSpeed = 4;

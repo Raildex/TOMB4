@@ -47,7 +47,7 @@ long DrawPrimitiveCnt;
 SORTLIST* SortList[16384];
 long SortCount;
 
-static char SortBuffer[655360];
+static char SortBuffer[8388608];
 static SORTLIST** pSortList;
 static char* pSortBuffer;
 

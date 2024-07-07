@@ -34,13 +34,17 @@
 #include "game/splashstruct.h"
 #include "global/types.h"
 #include <stdlib.h>
+#include <string.h>
 #include "game/levelinfo.h"
 
 DYNAMIC dynamics[MAX_DYNAMICS * 2];
-SPLASH_STRUCT splashes[4];
-RIPPLE_STRUCT ripples[16];
+long nSplashes;
+SPLASH_STRUCT* splashes;
+long nRipples;
+RIPPLE_STRUCT* ripples;
 SPLASH_SETUP splash_setup;
-SPARKS spark[256];
+long nSpark;
+SPARKS* spark;
 long wibble = 0;
 long SplashCount = 0;
 long KillEverythingFlag = 0;
@@ -53,7 +57,6 @@ long SmokeWindZ;
 static SP_DYNAMIC spark_dynamics[8];
 static long DeadlyBounds[6];
 static long number_dynamics;
-static long next_spark = 0;
 
 void ControlSmokeEmitter(short item_number) {
 	ITEM_INFO* item;
@@ -113,7 +116,7 @@ void ControlSmokeEmitter(short item_number) {
 			if(dx < -16384 || dx > 16384 || dz < -16384 || dz > 16384)
 				return;
 
-			sptr = &spark[GetFreeSpark()];
+			sptr = GetFreeSpark();
 			sptr->On = 1;
 			sptr->sR = 96;
 			sptr->sG = 96;
@@ -175,7 +178,7 @@ void ControlSmokeEmitter(short item_number) {
 		if(dx < -16384 || dx > 16384 || dz < -16384 || dz > 16384)
 			return;
 
-		sptr = &spark[GetFreeSpark()];
+		sptr = GetFreeSpark();
 		sptr->On = 1;
 		sptr->sR = 0;
 		sptr->sG = 0;
@@ -251,7 +254,7 @@ void TriggerExplosionSmokeEnd(long x, long y, long z, long uw) {
 	if(dx < -16384 || dx > 16384 || dz < -16384 || dz > 16384)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 
 	if(uw) {
@@ -327,7 +330,7 @@ void TriggerExplosionSmoke(long x, long y, long z, long uw) {
 	if(dx < -16384 || dx > 16384 || dz < -16384 || dz > 16384)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 
 	if(!uw) {
@@ -387,7 +390,7 @@ void TriggerFlareSparks(long x, long y, long z, long xvel, long yvel, long zvel,
 		return;
 
 	rnd = GetRandomDraw();
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->dR = -1;
 	sptr->dG = (rnd & 0x7F) + 64;
@@ -417,7 +420,7 @@ void TriggerFlareSparks(long x, long y, long z, long xvel, long yvel, long zvel,
 
 	if(smoke) {
 		rnd = GetRandomDraw();
-		smokeSpark = &spark[GetFreeSpark()];
+		smokeSpark = GetFreeSpark();
 		smokeSpark->On = 1;
 		smokeSpark->sR = sptr->dR >> 1;
 		smokeSpark->sG = sptr->dG >> 1;
@@ -681,20 +684,27 @@ void ControlEnemyMissile(short fx_number) {
 	}
 }
 
+RIPPLE_STRUCT* GetFreeRipple() {
+	for(int i =0; i < nRipples; ++i) {
+		if(!(ripples[i].flags & 1)) {
+			return &ripples[i];
+		}
+	}
+	size_t idx = nRipples;
+	nRipples = (nRipples * 2) + 4;
+	ripples = realloc(ripples, nRipples * sizeof(RIPPLE_STRUCT));
+	for(int i = idx; i < nRipples; ++i) {
+		RIPPLE_STRUCT* bptr = &ripples[i];
+		memset(bptr, 0, sizeof(RIPPLE_STRUCT));
+	}
+	return &ripples[idx];
+}
+
 void SetupRipple(long x, long y, long z, long size, long flags) {
 	RIPPLE_STRUCT* ripple;
-	long num;
+	
 
-	num = 0;
-
-	while(ripples[num].flags & 1) {
-		num++;
-
-		if(num >= 16)
-			return;
-	}
-
-	ripple = &ripples[num];
+	ripple = GetFreeRipple();
 	ripple->flags = (char)flags | 1;
 	ripple->size = (unsigned char)size;
 	ripple->life = (GetRandomControl() & 0x3F) + 64;
@@ -702,8 +712,6 @@ void SetupRipple(long x, long y, long z, long size, long flags) {
 	ripple->x = x;
 	ripple->y = y;
 	ripple->z = z;
-
-
 	ripple->x += (GetRandomControl() & 0x3F) - 32;
 	ripple->z += (GetRandomControl() & 0x3F) - 32;
 	
@@ -716,7 +724,7 @@ void TriggerUnderwaterBlood(long x, long y, long z, long size) {
 	ripple = ripples;
 	n = 0;
 
-	while(ripple->flags & 1) {
+	while(ripple->flags & ripple_on) {
 		ripple++;
 		n++;
 
@@ -750,7 +758,7 @@ void TriggerWaterfallMist(long x, long y, long z, long ang) {
 	vc = rcossin_tbl[(ang << 2) + 1];
 
 	for(int i = 0; i < 4; i++) {
-		sptr = &spark[GetFreeSpark()];
+		sptr = GetFreeSpark();
 		sptr->On = 1;
 		sptr->sR = 128;
 		sptr->sG = 128;
@@ -801,7 +809,7 @@ void TriggerDartSmoke(long x, long y, long z, long xv, long zv, long hit) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 16;
 	sptr->sG = 8;
@@ -887,7 +895,7 @@ void TriggerExplosionBubble(long x, long y, long z, short room_number) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 128;
 	sptr->sG = 64;
@@ -949,10 +957,10 @@ void DetatchSpark(long num, long type) {
 	FX_INFO* fx;
 	ITEM_INFO* item;
 
-	for(int i = 0; i < 256; i++) {
+	for(int i = 0; i < nSpark; i++) {
 		sptr = &spark[i];
-
 		if(sptr->On && (sptr->Flags & type) && sptr->FxObj == num) {
+
 			if(type == 64) {
 				fx = GetEffect(currentLevel,num);
 				sptr->x += fx->pos.x_pos;
@@ -970,48 +978,26 @@ void DetatchSpark(long num, long type) {
 	}
 }
 
-long GetFreeSpark() {
-	SPARKS* sptr;
-	long free, min_life;
-
-	free = next_spark;
-	sptr = &spark[next_spark];
-
-	for(int i = 0; i < 256; i++) {
-		if(sptr->On) {
-			if(free == 255) {
-				sptr = &spark[0];
-				free = 0;
-			} else {
-				free++;
-				sptr++;
-			}
-		} else {
-			next_spark = (free + 1) & 0xFF;
-			spark[free].extras = 0;
-			spark[free].Dynamic = -1;
-			spark[free].Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
-			return free;
+SPARKS* GetFreeSpark() {
+	for(int i =0; i < nSpark; ++i) {
+		if(!spark[i].On) {
+			memset(&spark[i],0,sizeof(SPARKS));
+			spark[i].extras = 0;
+			spark[i].Dynamic = -1;
+			spark[i].Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
+			return &spark[i];
 		}
 	}
-
-	free = 0;
-	min_life = 4095;
-
-	for(int i = 0; i < 256; i++) {
-		sptr = &spark[i];
-
-		if(sptr->Life < min_life && sptr->Dynamic == -1 && !(sptr->Flags & 0x20)) {
-			free = i;
-			min_life = sptr->Life;
-		}
+	size_t idx = nSpark;
+	nSpark = (nSpark * 2) + 4;
+	spark = realloc(spark, nSpark * sizeof(SPARKS));
+	for(int i = idx; i < nSpark; ++i) {
+		SPARKS* sptr = &spark[i];
+		memset(sptr, 0, sizeof(SPARKS));
+		sptr->Dynamic = -1;
+		sptr->Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
 	}
-
-	next_spark = (free + 1) & 0xFF;
-	spark[free].extras = 0;
-	spark[free].Dynamic = -1;
-	spark[free].Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
-	return free;
+	return &spark[idx];
 }
 
 void UpdateSparks() {
@@ -1028,7 +1014,7 @@ void UpdateSparks() {
 	DeadlyBounds[4] = lara_item->pos.z_pos + bounds[4];
 	DeadlyBounds[5] = lara_item->pos.z_pos + bounds[5];
 
-	for(int i = 0; i < 256; i++) {
+	for(int i = 0; i < nSpark; i++) {
 		sptr = &spark[i];
 
 		if(!sptr->On)
@@ -1129,7 +1115,7 @@ void UpdateSparks() {
 		}
 	}
 
-	for(int i = 0; i < 256; i++) {
+	for(int i = 0; i < nSpark; i++) {
 		sptr = &spark[i];
 
 		if(!sptr->On || sptr->Dynamic == -1)
@@ -1184,7 +1170,7 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 
 	if(!smoke_only) {
 		for(int i = 0; i < num; i++) {
-			sptr = &spark[GetFreeSpark()];
+			sptr = GetFreeSpark();
 			rnd = GetRandomControl();
 			sptr->On = 1;
 			sptr->sR = 128;
@@ -1212,7 +1198,7 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 		}
 
 		rnd = GetRandomControl();
-		sptr = &spark[GetFreeSpark()];
+		sptr = GetFreeSpark();
 		sptr->On = 1;
 		sptr->sR = 48;
 		sptr->sG = (rnd & 0xF) + 32;
@@ -1250,7 +1236,7 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 
 	for(int i = 0; i < 1 - smoke_only; i++) {
 		rnd = GetRandomControl();
-		sptr = &spark[GetFreeSpark()];
+		sptr = GetFreeSpark();
 		sptr->On = 1;
 		sptr->sR = 0;
 		sptr->sG = 0;
@@ -1327,7 +1313,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 		mirror = 1;
 
 	do {
-		sptr = &spark[GetFreeSpark()];
+		sptr = GetFreeSpark();
 		sptr->On = 1;
 		sptr->sR = 255;
 
@@ -1461,7 +1447,7 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type) {
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 
 	if(type == 2) {
@@ -1614,7 +1600,7 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly) {
 	if(dy < 512)
 		dy = 512;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = (GetRandomControl() & 0x1F) + 48;
 	sptr->sG = sptr->sR;
@@ -1672,7 +1658,7 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly) {
 void TriggerRocketSmoke(long x, long y, long z, long col) {
 	SPARKS* sptr;
 
-	sptr = &spark[GetFreeSpark()];
+	sptr = GetFreeSpark();
 	sptr->On = 1;
 	sptr->sR = 0;
 	sptr->sG = 0;
@@ -1712,23 +1698,26 @@ void TriggerRocketSmoke(long x, long y, long z, long col) {
 	sptr->Size = sptr->dSize >> 2;
 }
 
-void SetupSplash(SPLASH_SETUP* setup) {
-	SPLASH_STRUCT* splash;
-	long n;
-
-	splash = splashes;
-	n = 0;
-
-	while(splash->flags & 1) {
-		splash++;
-		n++;
-
-		if(n >= 4) {
-			SoundEffect(SFX_LARA_SPLASH, (PHD_3DPOS*)setup, SFX_DEFAULT);
-			return;
+SPLASH_STRUCT* GetFreeSplash() {
+	for(int i =0; i < nSplashes; ++i) {
+		if(!(splashes[i].flags & 1)) {
+			return &splashes[i];
 		}
 	}
+	size_t idx = nSplashes;
+	nSplashes = (nSplashes * 2) + 4;
+	splashes = realloc(splashes, nSplashes * sizeof(SPLASH_STRUCT));
+	for(int i = idx; i < nSplashes; ++i) {
+		SPLASH_STRUCT* bptr = &splashes[i];
+		memset(bptr, 0, sizeof(SPLASH_STRUCT));
+	}
+	return &splashes[idx];
+}
 
+void SetupSplash(SPLASH_SETUP* setup) {
+	SPLASH_STRUCT* splash;
+
+	splash = GetFreeSplash();
 	splash->flags = 1;
 	splash->pos.x = setup->pos.x;
 	splash->pos.y = setup->pos.y;
@@ -1755,7 +1744,7 @@ void UpdateSplashes() //(and ripples)
 	SPLASH_STRUCT* splash;
 	RIPPLE_STRUCT* ripple;
 
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < nSplashes; i++) {
 		splash = &splashes[i];
 
 		if(!(splash->flags & 1))
@@ -1803,7 +1792,7 @@ void UpdateSplashes() //(and ripples)
 		}
 	}
 
-	for(int i = 0; i < 16; i++) {
+	for(int i = 0; i < nRipples; i++) {
 		ripple = &ripples[i];
 
 		if(!(ripple->flags & 1))
