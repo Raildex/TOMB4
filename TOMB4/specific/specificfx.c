@@ -3138,24 +3138,24 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 				}
 			} else {
 				if(ripple->init) {
-					r = ripple->init << 1;
-					g = ripple->init << 1;
-					b = ripple->init << 1;
+					r = ripple->init;
+					g = ripple->init;
+					b = ripple->init;
 				} else {
-					r = ripple->life << 1;
-					g = ripple->life << 1;
-					b = ripple->life << 1;
+					r = ripple->life;
+					g = ripple->life;
+					b = ripple->life;
 				}
 			}
 		} else {
 			if(ripple->init) {
-				r = ripple->init << 2;
-				g = ripple->init << 2;
-				b = ripple->init << 2;
+				r = ripple->init;
+				g = ripple->init;
+				b = ripple->init;
 			} else {
-				r = ripple->life << 2;
-				g = ripple->life << 2;
-				b = ripple->life << 2;
+				r = ripple->life;
+				g = ripple->life;
+				b = ripple->life;
 			}
 		}
 
