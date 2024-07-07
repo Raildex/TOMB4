@@ -1,11 +1,8 @@
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdarg.h>
-#include <string.h>
 #include "specific/function_stubs.h"
 #include "game/phdvector.h"
-#include "global/types.h"
 
 FILE* logF = 0;
 
@@ -35,14 +32,34 @@ void SeedRandomDraw(long seed) {
 	rand_2 = seed;
 }
 
-void Log(unsigned long type, const char* s, ...) {
-#ifdef DO_LOG
+void Log(const char* scope, const char* s, ...) {
+	fprintf(stderr, "%s : ", scope);
 	va_list list;
-
 	va_start(list, s);
 	vfprintf(stdout, s, list);
 	fprintf(stdout, "\n");
 	va_end(list);
-	fflush(stdout);
-#endif
+}
+
+void LogE(const char* scope, const char* s, ...) {
+	fprintf(stderr, "%s : ", scope);
+	va_list list;
+	va_start(list, s);
+	vfprintf(stderr, s, list);
+	fprintf(stderr, "\n");
+	va_end(list);
+	fflush(stderr);
+}
+
+void LogD(const char* scope, const char* s, ...) {
+	#if defined(NDEBUG) && defined (DO_LOG)
+	fprintf(stdout, "%s : ", scope);
+	va_list list;
+
+	va_start(list, s);
+	vfprintf(stderr, s, list);
+	fprintf(stderr, "\n");
+	va_end(list);
+	fflush(stderr);
+	#endif
 }

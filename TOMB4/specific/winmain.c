@@ -41,7 +41,7 @@ long resChangeCounter;
 bool WinRunCheck(LPSTR WindowName, LPSTR ClassName, HANDLE* mutex) {
 	HWND window;
 
-	Log(2, "WinRunCheck");
+	Log(__func__, "WinRunCheck");
 	*mutex = CreateMutex(0, 1, WindowName);
 
 	if(GetLastError() == ERROR_ALREADY_EXISTS) {
@@ -68,7 +68,7 @@ void WinProcessCommandLine(LPSTR cmd) {
 	long num;
 	char parameter[20];
 
-	Log(2, "WinProcessCommandLine");
+	Log(__func__, "WinProcessCommandLine");
 
 	num = sizeof(commandlines) / sizeof(commandlines[0]);
 
@@ -124,7 +124,7 @@ void WinProcessCommandLine(LPSTR cmd) {
 }
 
 void WinClose() {
-	Log(2, "WinClose");
+	Log(__func__, "WinClose");
 	SaveSettings();
 	CloseHandle(App.mutex);
 	DXFreeInfo(&App.DXInfo);
@@ -138,16 +138,16 @@ void WinClose() {
 	DXAttempt(IDirectInputDevice_Unacquire(G_dxptr->Keyboard));
 
 	if(G_dxptr->Keyboard) {
-		Log(4, "Released %s @ %x - RefCnt = %d", "Keyboard", G_dxptr->Keyboard, IDirectInputDevice_Release(G_dxptr->Keyboard));
+		Log(__func__, "Released %s @ %x - RefCnt = %d", "Keyboard", G_dxptr->Keyboard, IDirectInputDevice_Release(G_dxptr->Keyboard));
 		G_dxptr->Keyboard = 0;
 	} else
-		Log(1, "%s Attempt To Release NULL Ptr", "Keyboard");
+		Log(__func__, "%s Attempt To Release NULL Ptr", "Keyboard");
 
 	if(G_dxptr->lpDirectInput) {
-		Log(4, "Released %s @ %x - RefCnt = %d", "DirectInput", G_dxptr->lpDirectInput, IDirectInput_Release(G_dxptr->lpDirectInput));
+		Log(__func__, "Released %s @ %x - RefCnt = %d", "DirectInput", G_dxptr->lpDirectInput, IDirectInput_Release(G_dxptr->lpDirectInput));
 		G_dxptr->lpDirectInput = 0;
 	} else
-		Log(1, "%s Attempt To Release NULL Ptr", "DirectInput");
+		Log(__func__, "%s Attempt To Release NULL Ptr", "DirectInput");
 
 	DXDSClose();
 }
@@ -189,7 +189,7 @@ void WinDisplayString(long x, long y, char* string, ...) {
 void WinProcMsg() {
 	MSG msg;
 
-	Log(2, "WinProcMsg");
+	Log(__func__, "WinProcMsg");
 
 	do {
 		GetMessage(&msg, 0, 0, 0);
@@ -209,13 +209,13 @@ void WinProcessCommands(long cmd) {
 		if(App.fmv || !(G_dxinfo->DDInfo[G_dxinfo->nDD].DDCaps.dwCaps2 & DDCAPS2_CANRENDERWINDOWED) || LevelLoadingThread.active)
 			return;
 
-		Log(6, "KA_ALTENTER");
-		Log(5, "HangGameThread");
+		Log(__func__, "KA_ALTENTER");
+		Log(__func__, "HangGameThread");
 		while(App.dx.InScene) { };
 		App.dx.WaitAtBeginScene = 1;
 		while(!App.dx.InScene) { };
 		SuspendThread((HANDLE)(uintptr_t)MainThread.handle);
-		Log(5, "Game Thread Suspended");
+		Log(__func__, "Game Thread Suspended");
 
 		DXToggleFullScreen();
 		HWInitialise();
@@ -223,7 +223,7 @@ void WinProcessCommands(long cmd) {
 		SetD3DViewMatrix();
 		ResumeThread((HANDLE)(uintptr_t)MainThread.handle);
 		App.dx.WaitAtBeginScene = 0;
-		Log(5, "Game Thread Resumed");
+		Log(__func__, "Game Thread Resumed");
 
 		if(App.dx.Flags & DXF_FULLSCREEN) {
 			SetCursor(0);
@@ -236,13 +236,13 @@ void WinProcessCommands(long cmd) {
 		if(LevelLoadingThread.active || App.fmv)
 			return;
 
-		Log(5, "Change Video Mode");
-		Log(5, "HangGameThread");
+		Log(__func__, "Change Video Mode");
+		Log(__func__, "HangGameThread");
 		while(App.dx.InScene) { };
 		App.dx.WaitAtBeginScene = 1;
 		while(!App.dx.InScene) { };
 		SuspendThread((HANDLE)(uintptr_t)MainThread.handle);
-		Log(5, "Game Thread Suspended");
+		Log(__func__, "Game Thread Suspended");
 
 		odm = App.DXInfo.nDisplayMode;
 
@@ -295,7 +295,7 @@ void WinProcessCommands(long cmd) {
 
 		ResumeThread((HANDLE)(uintptr_t)MainThread.handle);
 		App.dx.WaitAtBeginScene = 0;
-		Log(5, "Game Thread Resumed");
+		Log(__func__, "Game Thread Resumed");
 		resChangeCounter = 120;
 	}
 }
@@ -306,11 +306,11 @@ LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	switch(uMsg) {
 	case WM_CREATE:
 		resChangeCounter = 0;
-		Log(6, "WM_CREATE");
+		Log(__func__, "WM_CREATE");
 		break;
 
 	case WM_MOVE:
-		Log(6, "WM_MOVE");
+		Log(__func__, "WM_MOVE");
 		DXMove((short)lParam, (short)((lParam >> 16) & 0xFFFF));
 		break;
 
@@ -322,28 +322,28 @@ LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
 			switch(wParam & 0xFFFF) {
 			case WA_INACTIVE:
-				Log(6, "WM_INACTIVE");
+				Log(__func__, "WM_INACTIVE");
 
 				if(App.SetupComplete) {
-					Log(5, "Change Video Mode");
-					Log(5, "HangGameThread");
+					Log(__func__, "Change Video Mode");
+					Log(__func__, "HangGameThread");
 					while(App.dx.InScene) { };
 					App.dx.WaitAtBeginScene = 1;
 					while(!App.dx.InScene) { };
 					SuspendThread((HANDLE)(uintptr_t)MainThread.handle);
-					Log(5, "Game Thread Suspended");
+					Log(__func__, "Game Thread Suspended");
 				}
 
 				return 0;
 
 			case WA_ACTIVE:
 			case WA_CLICKACTIVE:
-				Log(6, "WM_ACTIVE");
+				Log(__func__, "WM_ACTIVE");
 
 				if(App.SetupComplete) {
 					ResumeThread((HANDLE)(uintptr_t)MainThread.handle);
 					App.dx.WaitAtBeginScene = 0;
-					Log(5, "Game Thread Resumed");
+					Log(__func__, "Game Thread Resumed");
 				}
 
 				return 0;
@@ -358,7 +358,7 @@ LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		break;
 
 	case WM_COMMAND:
-		Log(6, "WM_COMMAND");
+		Log(__func__, "WM_COMMAND");
 		WinProcessCommands(wParam & 0xFFFF);
 		break;
 
@@ -455,12 +455,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	WinProcessCommandLine(lpCmdLine);
 
 	if(!WinRegisterWindow(hInstance)) {
-		Log(1, "Unable To Register Window Class");
+		Log(__func__, "Unable To Register Window Class");
 		return 0;
 	}
 
 	if(!WinCreateWindow()) {
-		Log(1, "Unable To Create Window");
+		Log(__func__, "Unable To Create Window");
 		return 0;
 	}
 

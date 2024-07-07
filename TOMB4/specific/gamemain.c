@@ -29,15 +29,15 @@ static short water_shimmer[4] = { 31, 63, 95, 127 };
 static short water_choppy[4] = { 16, 53, 90, 127 };
 
 void GameClose() {
-	Log(2, "GameClose");
+	Log(__func__, "GameClose");
 	ACMClose();
 	FreeLevel();
 
 	if(DestVB) {
-		Log(4, "Released %s @ %x - RefCnt = %d", "Dest VB", DestVB, IDirect3DVertexBuffer_Release(DestVB));
+		Log(__func__, "Released %s @ %x - RefCnt = %d", "Dest VB", DestVB, IDirect3DVertexBuffer_Release(DestVB));
 		DestVB = 0;
 	} else
-		Log(1, "%s Attempt To Release NULL Ptr", "Dest VB");
+		Log(__func__, "%s Attempt To Release NULL Ptr", "Dest VB");
 
 	free(clipflags);
 
@@ -55,7 +55,7 @@ void GameClose() {
 }
 
 unsigned int WINAPI GameMain(void* ptr) {
-	Log(2, "GameMain");
+	Log(__func__, "GameMain");
 
 	if(GameInitialise()) {
 		InitialiseFunctionTable();

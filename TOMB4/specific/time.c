@@ -22,7 +22,7 @@ void TIME_Reset() {
 bool TIME_Init() {
 	long long pfq;
 
-	Log(2, "TIME_Init");
+	Log(__func__, "TIME_Init");
 
 	if(!QueryPerformanceFrequency((LARGE_INTEGER*)&pfq))
 		return 0;

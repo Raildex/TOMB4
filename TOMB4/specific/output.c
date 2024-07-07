@@ -1531,7 +1531,7 @@ HRESULT _LoadBitmap(IDirectDrawSurface4* surf, LPCSTR name) {
 }
 
 void do_boot_screen(long language) {
-	Log(2, "do_boot_screen");
+	Log(__func__, "do_boot_screen");
 
 	switch(language) {
 	case ENGLISH:

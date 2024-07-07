@@ -34,7 +34,7 @@ static long BumpMap = 0;
 static long TextLow = 0;
 
 void CLSetup(char* cmd) {
-	Log(2, "CLSetup");
+	Log(__func__, "CLSetup");
 
 	if(cmd)
 		start_setup = 0;
@@ -43,7 +43,7 @@ void CLSetup(char* cmd) {
 }
 
 void CLNoFMV(char* cmd) {
-	Log(2, "CLNoFMV");
+	Log(__func__, "CLNoFMV");
 
 	if(cmd)
 		fmvs_disabled = 0;
@@ -244,7 +244,7 @@ char* MapASCIIToANSI(char* s, char* d) {
 			}
 
 			if(!found)
-				Log(1, "Reqd : %x", c);
+				Log(__func__, "Reqd : %x", c);
 		}
 
 		*d++ = c;
@@ -259,7 +259,7 @@ INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPar
 	char d[256];
 
 	if(message == WM_INITDIALOG) {
-		Log(2, "WM_INITDIALOG");
+		Log(__func__, "WM_INITDIALOG");
 
 		if(Gameflow->Language == JAPAN) {
 			hfont = (HFONT)GetStockObject(SYSTEM_FONT);

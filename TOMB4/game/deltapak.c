@@ -1355,25 +1355,25 @@ long Load_and_Init_Cutseq(long num) {
 	char* packed;
 	long Offset, Length;
 
-	Log(5, "Initialising Cut Scene");
+	Log(__func__, "Initialising Cut Scene");
 	SetCutPlayed(num);
 
 	headerbuf = (long*)cutseqpakPtr + (2 * num); // cutseq.pak header is offsets then lengths, go to current num
 	Offset = headerbuf[0]; // first long, offset
 	Length = headerbuf[1]; // second long, length
 
-	Log(5, "Offset=%d, Length=%d\n", Offset, Length);
+	Log(__func__, "Offset=%d, Length=%d\n", Offset, Length);
 	packed = &cutseqpakPtr[Offset];
 	GLOBAL_cutme = (NEW_CUTSCENE*)packed; // go to current cut data
-	Log(5, "Loaded cutscene data...");
-	Log(5, "num actors = %d\n", GLOBAL_cutme->numactors);
-	Log(5, "num frames = %d\n", GLOBAL_cutme->numframes);
-	Log(5, "OrgX=%d,OrgY=%d,OrgZ=%d\n", GLOBAL_cutme->orgx, GLOBAL_cutme->orgy, GLOBAL_cutme->orgz);
-	Log(5, "CameraOffset=%d\n", GLOBAL_cutme->camera_offset);
+	Log(__func__, "Loaded cutscene data...");
+	Log(__func__, "num actors = %d\n", GLOBAL_cutme->numactors);
+	Log(__func__, "num frames = %d\n", GLOBAL_cutme->numframes);
+	Log(__func__, "OrgX=%d,OrgY=%d,OrgZ=%d\n", GLOBAL_cutme->orgx, GLOBAL_cutme->orgy, GLOBAL_cutme->orgz);
+	Log(__func__, "CameraOffset=%d\n", GLOBAL_cutme->camera_offset);
 
 	for(int i = 0; i < GLOBAL_cutme->numactors; i++) {
 		actor = &GLOBAL_cutme->actor_data[i];
-		Log(5, "Actor %d --- offset=%d,slot=%d,nodes=%d\n", i, actor->offset, actor->objslot, actor->nodes);
+		Log(__func__, "Actor %d --- offset=%d,slot=%d,nodes=%d\n", i, actor->offset, actor->objslot, actor->nodes);
 	}
 
 	init_cutseq_actors(packed, 0);

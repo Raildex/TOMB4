@@ -249,7 +249,7 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 		stat->mesh_number *= 2;
 	}
 
-	Log(2, "ProcessMeshData %d", num_meshes);
+	Log(__func__, "ProcessMeshData %d", num_meshes);
 	num_level_meshes = num_meshes;
 	mesh_vtxbuf = (MESH_DATA**)malloc(4 * num_meshes);
 	lvl->mesh_base = (short*)mesh_vtxbuf;
@@ -318,16 +318,16 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 	ROOM_INFO* r;
 	long size, nDoors;
 
-	Log(2, "LoadRooms");
+	Log(__func__, "LoadRooms");
 	wibble = 0;
 	NumLevelFogBulbs = 0;
 	*data += sizeof(long);
 	lvl->nRooms = *(short*)*data;
 	*data += sizeof(short);
-	Log(7, "Number Of Rooms %d", lvl->nRooms);
+	Log(__func__, "Number Of Rooms %d", lvl->nRooms);
 
 	if(lvl->nRooms < 0) {
-		Log(1, "Incorrect Number Of Rooms");
+		Log(__func__, "Incorrect Number Of Rooms");
 		return 0;
 	}
 
@@ -440,7 +440,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 	lvl->floor_data = (short*)calloc(size, sizeof(short));
 	memcpy(lvl->floor_data, *data, 2 * size);
 	*data += sizeof(short) * size;
-	Log(0, "Floor Data Size %d @ %x", size, lvl->floor_data);
+	Log(__func__, "Floor Data Size %d @ %x", size, lvl->floor_data);
 	return 1;
 }
 
@@ -448,7 +448,7 @@ void ProcessMeshData(LEVEL_INFO* lvl, long num_meshes) {
 	short* mesh_ptr;
 	short* last_mesh_ptr;
 
-	Log(2, "ProcessMeshData %d", num_meshes);
+	Log(__func__, "ProcessMeshData %d", num_meshes);
 	num_level_meshes = num_meshes;
 	mesh_vtxbuf = (MESH_DATA**)calloc(num_meshes, 5);
 	lvl->mesh_base = (short*)mesh_vtxbuf;
@@ -460,7 +460,7 @@ void ProcessMeshData(LEVEL_INFO* lvl, long num_meshes) {
 		ProcessMesh(lvl, mesh_ptr, last_mesh_ptr, i);
 	}
 
-	Log(2, "End ProcessMeshData");
+	Log(__func__, "End ProcessMeshData");
 }
 
 
@@ -507,7 +507,7 @@ char LoadItems(char** data, LEVEL_INFO* lvl) {
 
 	long num_items, x, y, z;
 
-	Log(2, "LoadItems");
+	Log(__func__, "LoadItems");
 	num_items = *(long*)*data;
 	*data += 4;
 
@@ -594,7 +594,7 @@ char LoadBoxes(char** data, LEVEL_INFO* lvl) {
 	BOX_INFO* box;
 	long size;
 
-	Log(2, "LoadBoxes");
+	Log(__func__, "LoadBoxes");
 	lvl->num_boxes = *(long*)*data;
 	*data += sizeof(long);
 
@@ -653,16 +653,16 @@ unsigned short* GetOverlap(LEVEL_INFO* lvl, long overlap) {
 char LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl) {
 	long uncomp_size, comp_size;
 
-	Log(2, "LoadSamples");
+	Log(__func__, "LoadSamples");
 	lvl->sample_lut = (short*)calloc(sample_lookuptable_size, sizeof(short));
 	memcpy(lvl->sample_lut, *data, sample_lookuptable_size * sizeof(short));
 	*data += sample_lookuptable_size * sizeof(short);
 	lvl->num_sample_infos = *(long*)*data;
 	*data += sizeof(long);
-	Log(8, "Number Of Sample Infos %d", lvl->num_sample_infos);
+	Log(__func__, "Number Of Sample Infos %d", lvl->num_sample_infos);
 
 	if(!lvl->num_sample_infos) {
-		Log(1, "No Sample Infos");
+		Log(__func__, "No Sample Infos");
 		return 0;
 	}
 
@@ -673,11 +673,11 @@ char LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl) {
 	*data += sizeof(long);
 
 	if(!lvl->num_samples) {
-		Log(1, "No Samples");
+		Log(__func__, "No Samples");
 		return 0;
 	}
 
-	Log(8, "Number Of Samples %d", lvl->num_samples);
+	Log(__func__, "Number Of Samples %d", lvl->num_samples);
 	lvl->sample_buffers = (SAMPLE_BUFFER*)calloc(lvl->num_samples, sizeof(SAMPLE_BUFFER));
 
 	fread(&lvl->num_samples, 1, 4, file);
@@ -718,7 +718,7 @@ void AdjustUV(long num, LEVEL_INFO* lvl) {
 	float u, v;
 	unsigned short type;
 
-	Log(2, "AdjustUV");
+	Log(__func__, "AdjustUV");
 
 	for(int i = 0; i < num; i++) {
 		tex = &lvl->textinfo[i];
@@ -803,7 +803,7 @@ void AdjustUV(long num, LEVEL_INFO* lvl) {
 				break;
 
 			default:
-				Log(1, "TextureInfo Type %d Not Found", type);
+				Log(__func__, "TextureInfo Type %d Not Found", type);
 				break;
 			}
 		} else {
@@ -831,7 +831,7 @@ void AdjustUV(long num, LEVEL_INFO* lvl) {
 				break;
 
 			default:
-				Log(1, "TextureInfo Type %d Not Found", type);
+				Log(__func__, "TextureInfo Type %d Not Found", type);
 				break;
 			}
 		}
@@ -843,12 +843,12 @@ char LoadTextureInfos(char** data, LEVEL_INFO* lvl) {
 	PHDTEXTURESTRUCT tex;
 	long val;
 
-	Log(2, "LoadTextureInfos");
+	Log(__func__, "LoadTextureInfos");
 	*data += 3;
 
 	val = *(long*)*data;
 	*data += sizeof(long);
-	Log(5, "Texture Infos : %d", val);
+	Log(__func__, "Texture Infos : %d", val);
 	lvl->textinfo = (TEXTURESTRUCT*)calloc(val, sizeof(TEXTURESTRUCT));
 
 	for(int i = 0; i < val; i++) {
@@ -890,14 +890,14 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	fread(&RTPages, sizeof(RTPages), 1, f);
 	fread(&OTPages, sizeof(OTPages), 1, f);
 	fread(&BTPages, sizeof(BTPages), 1, f);
-	Log(1, "RTPages %d OTPages %d BTPages %d", RTPages, OTPages, BTPages);
+	Log(__func__, "RTPages %d OTPages %d BTPages %d", RTPages, OTPages, BTPages);
 	char texMarker[3];
 	fread(texMarker, 1, 3, f);
 	if(!(texMarker[0] == 'T' && texMarker[1] == 'E' && texMarker[2] == 'X')) {
-		Log(-1, "Invalid Marker! %c %c %c", texMarker[0], texMarker[1], texMarker[2]);
+		Log(__func__, "Invalid Marker! %c %c %c", texMarker[0], texMarker[1], texMarker[2]);
 		return 0;
 	}
-	Log(-1, "Marker %c %c %c", texMarker[0], texMarker[1], texMarker[2]);
+	Log(__func__, "Marker %c %c %c", texMarker[0], texMarker[1], texMarker[2]);
 	unsigned long uncompSize;
 	unsigned long compSize;
 	fread(&uncompSize, 4, 1, f);
@@ -906,20 +906,20 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	char* Uncompressed32Data = (char*)calloc(1, uncompSize);
 	fread(Compressed32Data, compSize, 1, f);
 	if(!S_Decompress(Uncompressed32Data, Compressed32Data, compSize, uncompSize)) {
-		Log(-1, "Could not decompress texture data");
+		Log(__func__, "Could not decompress texture data");
 		free(Compressed32Data);
 		free(Uncompressed32Data);
 		return 0;
 	}
 	free(Compressed32Data);
-	Log(1, "Successfully decompressed Texture Data!");
-	Log(1, "Allocating Texture Space");
+	Log(__func__, "Successfully decompressed Texture Data!");
+	Log(__func__, "Allocating Texture Space");
 	short count = RTPages + OTPages + BTPages + 2 + 1;
 	if(gfCurrentLevel == 0) {
-		Log(1, "Current Level is Title, Allocate Space for Logo as well");
+		Log(__func__, "Current Level is Title, Allocate Space for Logo as well");
 		count += 2;
 	}
-	Log(1, "Total count of texture pages: %d", count);
+	Log(__func__, "Total count of texture pages: %d", count);
 	if(lvl->Textures) {
 		lvl->Textures = realloc(lvl->Textures, (count + 1) * sizeof(TEXTURE));
 		memset(lvl->Textures, 0, (1 + count) * sizeof(TEXTURE));
@@ -933,12 +933,12 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		tex->width = (unsigned short)App.TextureSize;
 		tex->height = (unsigned short)App.TextureSize;
 		if(!CreateTexturePage(tex->width, tex->height, fmt, b8g8r8a8, CalcMipMapCount(tex->width, tex->height), src, NULL, &tex->hal)) {
-			Log(-1, "Could not create texture page for texture %d", i);
+			Log(__func__, "Could not create texture page for texture %d", i);
 			free(Uncompressed32Data);
 			return 0;
 		}
 	}
-	Log(1, "Create bump maps");
+	Log(__func__, "Create bump maps");
 	long offset = RTPages + OTPages;
 	for(int i = 0; i < BTPages / 2; ++i) {
 		long* src = (long*)Uncompressed32Data + (i + offset) * ((256 * 256));
@@ -948,7 +948,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		tex->bumptpage = offset + i + (BTPages / 2) + 1;
 		tex->bump = 1;
 		if(!CreateTexturePage(tex->width, tex->height, fmt, b8g8r8a8, CalcMipMapCount(tex->width, tex->height), src, NULL, &tex->hal)) {
-			Log(-1, "Could not create texture page for texture %d", i);
+			Log(__func__, "Could not create texture page for texture %d", i);
 			free(Uncompressed32Data);
 			return 0;
 		}
@@ -961,7 +961,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		tex->height = (unsigned short)App.BumpMapSize;
 		tex->bump = 0;
 		if(!CreateTexturePage(tex->width, tex->height, fmt, b8g8r8a8, CalcMipMapCount(tex->width, tex->height), src, NULL, &tex->hal)) {
-			Log(-1, "Could not create texture page for texture %d", i);
+			Log(__func__, "Could not create texture page for texture %d", i);
 			free(Uncompressed32Data);
 			return 0;
 		}
@@ -969,14 +969,14 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	free(Uncompressed32Data);
 	offset = RTPages + OTPages + BTPages;
 	if(gfCurrentLevel == 0) {
-		Log(1, "Loading uslogo.pak");
+		Log(__func__, "Loading uslogo.pak");
 		char* pComp;
 		char* logoCompressed = NULL;
 		long size = LoadFile("data/uslogo.pak", &logoCompressed);
 		long uncompSize = *(long*)logoCompressed; // logo files contain uncompSize, compSize, compData
 		pComp = (char*)malloc(uncompSize);
 		if(!S_Decompress(pComp, logoCompressed + 4, size - 4, uncompSize)) {
-			Log(-1, "Error decompressing logo! Filesize: %d Decompression size: %d", size, uncompSize);
+			Log(__func__, "Error decompressing logo! Filesize: %d Decompression size: %d", size, uncompSize);
 		}
 		for(int i = 0; i < 2; ++i) {
 			for(int i = 0; i < 2; ++i) {
@@ -1001,7 +1001,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 				logoTex->width = 256;
 				logoTex->height = 256;
 				if(!CreateTexturePage(logoTex->width, logoTex->height, b8g8r8a8, b8g8r8a8, 0, data, NULL, &logoTex->hal)) {
-					Log(-1, "Could not create texture page for Logo %d", i);
+					Log(__func__, "Could not create texture page for Logo %d", i);
 					free(Uncompressed32Data);
 					free(data);
 					return 0;
@@ -1015,7 +1015,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	char mscMarker[3];
 	fread(&mscMarker[0], 1, 3, f);
 	if(!(mscMarker[0] == 'M' && mscMarker[1] == 'S' && mscMarker[2] == 'C')) {
-		Log(-1, "Invalid Marker! %c %c %c", mscMarker[0], mscMarker[1], mscMarker[2]);
+		Log(__func__, "Invalid Marker! %c %c %c", mscMarker[0], mscMarker[1], mscMarker[2]);
 	}
 	long miscUncompSize;
 	long miscCompSize;
@@ -1025,7 +1025,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	char* miscCompressed = (char*)calloc(miscCompSize, 1);
 	fread(miscCompressed, miscCompSize, 1, f);
 	if(!S_Decompress(miscUncompressed32Data, miscCompressed, miscCompSize, miscUncompSize)) {
-		Log(-1, "Error decompressing font image!");
+		Log(__func__, "Error decompressing font image!");
 		free(miscCompressed);
 		free(miscUncompressed32Data);
 		return 0;
@@ -1036,7 +1036,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		tex->width = 256;
 		tex->height = 256;
 		if(!CreateTexturePage(tex->width, tex->height, fmt, b8g8r8a8, CalcMipMapCount(tex->width, tex->height), src, NULL, &tex->hal)) {
-			Log(-1, "Error creating texture page for misc texture %d", i);
+			Log(__func__, "Error creating texture page for misc texture %d", i);
 			free(miscCompressed);
 			free(miscUncompressed32Data);
 			return 0;
@@ -1074,7 +1074,7 @@ char LoadSprites(char** data, LEVEL_INFO* lvl) {
 	PHDSPRITESTRUCT sprite;
 	long num_sprites, num_slots, slot;
 
-	Log(2, "LoadSprites");
+	Log(__func__, "LoadSprites");
 	*data += 3;
 	num_sprites = *(long*)*data;
 	*data += sizeof(long);
@@ -1199,7 +1199,7 @@ long GetNumAnimUVRanges(LEVEL_INFO* lvl) {
 }
 
 char LoadCameras(char** data, LEVEL_INFO* lvl) {
-	Log(2, "LoadCameras");
+	Log(__func__, "LoadCameras");
 	lvl->number_cameras = *(long*)*data;
 	*data += sizeof(long);
 
@@ -1231,10 +1231,10 @@ long GetNumSpotcams(LEVEL_INFO* lvl) {
 }
 
 char LoadSoundEffects(char** data, LEVEL_INFO* lvl) {
-	Log(2, "LoadSoundEffects");
+	Log(__func__, "LoadSoundEffects");
 	lvl->number_sound_effects = *(long*)*data;
 	*data += sizeof(long);
-	Log(8, "Number of SFX %d", lvl->number_sound_effects);
+	Log(__func__, "Number of SFX %d", lvl->number_sound_effects);
 
 	if(lvl->number_sound_effects) {
 		lvl->sound_effects = (OBJECT_VECTOR*)calloc(lvl->number_sound_effects, sizeof(OBJECT_VECTOR));

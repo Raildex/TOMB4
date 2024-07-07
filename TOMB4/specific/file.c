@@ -33,7 +33,7 @@ unsigned int WINAPI LoadLevel(void* name) {
 	char* pData;
 	long version, size, compressedSize;
 
-	Log(2, "LoadLevel");
+	Log(__func__, "LoadLevel");
 	FreeLevel();
 	currentLevel = CreateLevel();
 
@@ -49,12 +49,12 @@ unsigned int WINAPI LoadLevel(void* name) {
 
 	if(level_fp) {
 		fread(&version, 4, 1, level_fp);
-		Log(7, "Process Level Data");
+		Log(__func__, "Process Level Data");
 		LoadTextures(b8g8r8a8,level_fp,currentLevel);
 		char geoMarker[3];
 		fread(&geoMarker[0], 1, 3, level_fp);
 		if(!(geoMarker[0] == 'G' && geoMarker[1] == 'E' && geoMarker[2] == 'O')) {
-			Log(-1, "Invalid Marker %c %c %c!",geoMarker[0],geoMarker[1],geoMarker[2]);
+			Log(__func__, "Invalid Marker %c %c %c!",geoMarker[0],geoMarker[1],geoMarker[2]);
 		}
 		fread(&size, 1, 4, level_fp);
 		fread(&compressedSize, 1, 4, level_fp);
@@ -102,7 +102,7 @@ unsigned int WINAPI LoadLevel(void* name) {
 		char sfxMarker[3];
 		fread(&sfxMarker[0], 1, 3, level_fp);
 		if(!(sfxMarker[0] == 'S' && sfxMarker[1] == 'F' && sfxMarker[2] == 'X')) {
-			Log(-1, "Invalid Marker %c %c %c!",sfxMarker[0],sfxMarker[1],sfxMarker[2]);
+			Log(__func__, "Invalid Marker %c %c %c!",sfxMarker[0],sfxMarker[1],sfxMarker[2]);
 		}
 		if(acm_ready && !App.SoundDisabled)
 			LoadSamples(level_fp, &FileData, currentLevel);
@@ -123,7 +123,7 @@ unsigned int WINAPI LoadLevel(void* name) {
 		reset_cutseq_vars();
 		FileClose(level_fp);
 	}else {
-		Log(-1, "Could not open Level file!");
+		Log(__func__, "Could not open Level file!");
 		return 0;
 	}
 
@@ -135,7 +135,7 @@ unsigned int WINAPI LoadLevel(void* name) {
 long S_LoadLevelFile(long num) {
 	char name[80];
 
-	Log(2, "S_LoadLevelFile");
+	Log(__func__, "S_LoadLevelFile");
 	strcpy(name, &gfFilenameWad[gfFilenameOffset[num]]);
 	strcat(name, ".TR4");
 	LevelLoadingThread.active = 1;
@@ -193,17 +193,17 @@ FILE* FileOpen(const char* name) {
 
 	memset(path_name, 0, 80);
 	strcat(path_name, name);
-	Log(5, "FileOpen - %s", path_name);
+	Log(__func__, "FileOpen - %s", path_name);
 	file = fopen(path_name, "rb");
 
 	if(!file)
-		Log(1, "Unable To Open %s", path_name);
+		Log(__func__, "Unable To Open %s", path_name);
 
 	return file;
 }
 
 void FileClose(FILE* file) {
-	Log(2, "FileClose");
+	Log(__func__, "FileClose");
 	fclose(file);
 }
 
@@ -220,8 +220,8 @@ long LoadFile(const char* name, char** dest) {
 	FILE* file;
 	long size, count;
 
-	Log(2, "LoadFile");
-	Log(5, "File - %s", name);
+	Log(__func__, "LoadFile");
+	Log(__func__, "File - %s", name);
 	file = FileOpen(name);
 
 	if(!file)
@@ -233,10 +233,10 @@ long LoadFile(const char* name, char** dest) {
 		*dest = (char*)malloc(size);
 
 	count = fread(*dest, 1, size, file);
-	Log(5, "Read - %d FileSize - %d", count, size);
+	Log(__func__, "Read - %d FileSize - %d", count, size);
 
 	if(count != size) {
-		Log(1, "Error Reading File");
+		Log(__func__, "Error Reading File");
 		FileClose(file);
 		free(*dest);
 		return 0;
@@ -255,7 +255,7 @@ char LoadCinematic(char** data, LEVEL_INFO* lvl) {
 char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size) {
 	z_stream stream;
 
-	Log(2, "Decompress");
+	Log(__func__, "Decompress");
 	memset(&stream, 0, sizeof(z_stream));
 	stream.avail_in = compressedSize;
 	stream.avail_out = size;
@@ -265,11 +265,11 @@ char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size
 	inflate(&stream, Z_FINISH);
 
 	if(stream.total_out != size) {
-		Log(1, "Error Decompressing Data");
+		Log(__func__, "Error Decompressing Data");
 		return 0;
 	}
 
 	inflateEnd(&stream);
-	Log(5, "Decompression OK");
+	Log(__func__, "Decompression OK");
 	return 1;
 }

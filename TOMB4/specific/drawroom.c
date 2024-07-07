@@ -543,7 +543,7 @@ void ProcessRoomData(ROOM_INFO* r) {
 
 			if(light->Type == LIGHT_FOG) {
 				if(NumLevelFogBulbs >= 20) {
-					Log(1, "Fog Bulb Discarded - More Than %d", 20);
+					Log(__func__, "Fog Bulb Discarded - More Than %d", 20);
 					continue;
 				}
 
@@ -593,7 +593,7 @@ void ProcessRoomData(ROOM_INFO* r) {
 				pclight->OuterAngle = 2 * (float)acos(light->Outer);
 
 				if(r->light[nLights].Type == LIGHT_SPOT && pclight->OuterAngle > 3.1415927F) {
-					Log(1, "SpotLight Corrected");
+					Log(__func__, "SpotLight Corrected");
 					pclight->OuterAngle = 3.1415927F;
 				}
 

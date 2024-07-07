@@ -28,7 +28,7 @@ void SetFogColor(long r, long g, long b) {
 }
 
 void HWInitialise() {
-	Log(2, "HWIntialise"); // nice typo
+	Log(__func__, "HWIntialise"); // nice typo
 	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,2, D3DTSS_COLOROP, D3DTOP_DISABLE);
@@ -101,7 +101,7 @@ void SetCullCCW() {
 
 HRESULT HWBeginScene() {
 	if(App.dx.InScene)
-		Log(1, "Already In Scene");
+		Log(__func__, "Already In Scene");
 
 	App.dx.InScene = 1;
 	App.dx.DoneBlit = 0;

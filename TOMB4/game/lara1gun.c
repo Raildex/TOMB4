@@ -1090,7 +1090,7 @@ void ControlGrenade(short item_number) {
 
 				while(mesh) {
 					if(mesh->static_number >= SHATTER0 && mesh->static_number < SHATTER8) {
-						Log(0, "Shatter");
+						Log(__func__, "Shatter");
 						TriggerExplosionSparks(mesh->x, mesh->y, mesh->z, 3, -2, 0, item->room_number);
 						mesh->y -= 128;
 						TriggerShockwave((PHD_VECTOR*)&mesh->x, 0xB00028, 64, 0x10806000, 0);
