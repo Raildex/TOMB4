@@ -16,7 +16,6 @@
 #include "specific/timing.h"
 #include <process.h>
 
-LPDIRECT3DVERTEXBUFFER DestVB;
 WATERTAB WaterTable[22][64];
 short* clipflags;
 float vert_wibble_table[32];
@@ -31,12 +30,6 @@ void GameClose() {
 	Log(__func__, "GameClose");
 	ACMClose();
 	FreeLevel();
-
-	if(DestVB) {
-		Log(__func__, "Released %s @ %x - RefCnt = %d", "Dest VB", DestVB, IDirect3DVertexBuffer_Release(DestVB));
-		DestVB = 0;
-	} else
-		Log(__func__, "%s Attempt To Release NULL Ptr", "Dest VB");
 
 	free(clipflags);
 
@@ -53,10 +46,10 @@ void GameClose() {
 	free(gfLanguageFile);
 }
 
-unsigned int WINAPI GameMain(void* ptr) {
+void S_GameMain() {
 	Log(__func__, "GameMain");
 
-	if(GameInitialise()) {
+	if(S_GameInitialise()) {
 		InitialiseFunctionTable();
 		HWInitialise();
 		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
@@ -74,8 +67,6 @@ unsigned int WINAPI GameMain(void* ptr) {
 		S_CDStop();
 		PostMessage(App.hWnd, WM_CLOSE, 0, 0);
 	}
-
-	return 1;
 }
 
 unsigned short GetRandom(WATERTAB* wt, long lp) {
@@ -150,14 +141,7 @@ void init_water_table() {
 	}
 }
 
-bool GameInitialise() {
-	D3DVERTEXBUFFERDESC desc;
-
-	desc.dwCaps = 0;
-	desc.dwSize = sizeof(desc);
-	desc.dwFVF = D3DFVF_TLVERTEX;
-	desc.dwNumVertices = 0xFFFF;
-	DXAttempt(IDirect3D3_CreateVertexBuffer(App.dx.lpD3D,&desc, &DestVB, D3DDP_DONOTCLIP, 0));
+long S_GameInitialise() {
 	clipflags = (short*)calloc(0x4000,1);
 	init_water_table();
 	return 1;
