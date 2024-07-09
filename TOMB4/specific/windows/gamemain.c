@@ -1,6 +1,7 @@
 
 #include "specific/gamemain.h"
 #include "specific/audio.h"
+#include "specific/drawroom.h"
 #include "specific/file.h"
 #include "specific/function_stubs.h"
 #include "specific/function_table.h"
@@ -16,9 +17,6 @@
 #include "specific/timing.h"
 #include <process.h>
 
-WATERTAB WaterTable[22][64];
-short* clipflags;
-float vert_wibble_table[32];
 long SaveCounter;
 
 static float unused_vert_wibble_table[256];
@@ -142,7 +140,6 @@ void init_water_table() {
 }
 
 long S_GameInitialise() {
-	clipflags = (short*)calloc(0x4000,1);
 	init_water_table();
 	return 1;
 }

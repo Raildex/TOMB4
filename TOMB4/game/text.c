@@ -1,6 +1,7 @@
 
 #include "game/text.h"
 #include "game/levelinfo.h"
+#include "specific/drawroom.h"
 #include "specific/polyinsert.h"
 #include "specific/specificfx.h"
 #include "specific/texture.h"

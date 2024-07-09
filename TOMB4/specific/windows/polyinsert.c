@@ -28,6 +28,7 @@
 #include <math.h>
 #include "specific/windows/texturebucket.h"
 
+extern TEXTUREBUCKET Bucket[20];
 D3DTLBUMPVERTEX XYUVClipperBuffer[20];
 D3DTLBUMPVERTEX zClipperBuffer[20];
 

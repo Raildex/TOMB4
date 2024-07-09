@@ -3,6 +3,7 @@
 #include "game/control.h"
 #include "game/sound.h"
 #include "game/objects.h"
+#include "specific/drawroom.h"
 #include "specific/specificfx.h"
 #include "specific/function_table.h"
 #include "specific/3dmath.h"

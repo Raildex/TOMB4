@@ -41,6 +41,9 @@ float clip_right;
 float clip_bottom;
 long bWaterEffect;
 long num_level_meshes;
+WATERTAB WaterTable[22][64];
+short clipflags[8192];
+float vert_wibble_table[32];
 
 long water_color_R = 128;
 long water_color_G = 224;
