@@ -9,7 +9,7 @@
 #include "specific/function_stubs.h"
 #include "game/tomb4fx.h"
 #include "specific/function_table.h"
-#include "specific/clipping.h"
+#include "specific/windows/clipping.h"
 #include "game/newinv.h"
 #include "game/camera.h"
 #include "game/effects.h"

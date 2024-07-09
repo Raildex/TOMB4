@@ -1,5 +1,5 @@
 
-#include "specific/clipping.h"
+#include "specific/windows/clipping.h"
 #include "specific/3dmath.h"
 #include "specific/windows/d3dtlbumpvertex.h"
 #include "global/types.h"
