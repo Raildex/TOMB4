@@ -12,7 +12,7 @@
 #include "specific/windows/d3dmatrix.h"
 #include "specific/windows/dxsound.h"
 #include "game/control.h"
-#include "specific/cmdline.h"
+#include "specific/windows/cmdline.h"
 #include "specific/gamemain.h"
 #include "specific/loadsave.h"
 #include "specific/windows/dxflags.h"

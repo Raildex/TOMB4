@@ -1,7 +1,7 @@
 
 #include "specific/registry.h"
 #include "specific/loadsave.h"
-#include "specific/cmdline.h"
+#include "specific/windows/cmdline.h"
 #include "specific/input.h"
 #include "specific/windows/winmain.h"
 #include "specific/windows/dxflags.h"

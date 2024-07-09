@@ -1,7 +1,7 @@
 
 #include "specific/windows/winmain.h"
 #include "specific/function_stubs.h"
-#include "specific/cmdline.h"
+#include "specific/windows/cmdline.h"
 #include "specific/registry.h"
 #include "specific/windows/dxshell.h"
 #include <crtdbg.h>
