@@ -386,7 +386,7 @@ void S_DrawEnemyBar(long pos) {
 	S_DoTR5Bar(x, y, w, h, pos, 0xA00000, 0xA0A000, 1);
 }
 
-void DoSlider(long x, long y, long width, long height, long pos, long c1, long c2, long c3) {
+void S_DoSlider(long x, long y, long width, long height, long pos, long c1, long c2, long c3) {
 	TEXTURESTRUCT tex;
 	float sx, sy, w, h;
 	static float V;

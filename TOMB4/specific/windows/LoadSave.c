@@ -264,8 +264,8 @@ void DoOptions() {
 		PrintString(phd_centerx >> 2, f + 4 * font_height, sel & 0x4 ? 1 : 2, SCRIPT_TEXT(TXT_SFX_Volume), 0);
 		PrintString(phd_centerx >> 2, f + 5 * font_height, sel & 0x8 ? 1 : 2, SCRIPT_TEXT(TXT_Sound_Quality), 0);
 		PrintString(phd_centerx >> 2, f + 6 * font_height, sel & 0x10 ? 1 : 2, SCRIPT_TEXT(TXT_Targeting), 0);
-		DoSlider(400, 3 * font_height - (font_height >> 1) + f + 4, 200, 16, MusicVolume, 0xFF1F1F1F, 0xFF3F3FFF, mSliderCol);
-		DoSlider(400, f + 4 * font_height + 4 - (font_height >> 1), 200, 16, SFXVolume, 0xFF1F1F1F, 0xFF3F3FFF, sSliderCol);
+		S_DoSlider(400, 3 * font_height - (font_height >> 1) + f + 4, 200, 16, MusicVolume, 0xFF1F1F1F, 0xFF3F3FFF, mSliderCol);
+		S_DoSlider(400, f + 4 * font_height + 4 - (font_height >> 1), 200, 16, SFXVolume, 0xFF1F1F1F, 0xFF3F3FFF, sSliderCol);
 
 		if(!SoundQuality)
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 5 * font_height, sel & 8 ? 1 : 6, SCRIPT_TEXT(TXT_Low), 0);
