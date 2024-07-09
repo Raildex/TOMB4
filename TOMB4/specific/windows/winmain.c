@@ -1,29 +1,29 @@
 
-#include "specific/winmain.h"
+#include "specific/windows/winmain.h"
 #include "specific/function_stubs.h"
 #include "specific/cmdline.h"
 #include "specific/registry.h"
-#include "specific/dxshell.h"
+#include "specific/windows/dxshell.h"
 #include <crtdbg.h>
 #include <time.h>
 #include "game/text.h"
 #include "specific/function_table.h"
-#include "specific/d3dmatrix.h"
+#include "specific/windows/d3dmatrix.h"
 #include "specific/3dmath.h"
 #include "specific/audio.h"
 #include "specific/output.h"
 #include "specific/file.h"
 #include "game/gameflow.h"
-#include "specific/dxsound.h"
+#include "specific/windows/dxsound.h"
 #include "specific/gamemain.h"
 #include "specific/fmv.h"
-#include "specific/winapp.h"
+#include "specific/windows/winapp.h"
 #include "game/commandlines.h"
-#include "specific/dxflags.h"
-#include "specific/dxdisplaymode.h"
-#include "specific/dxinfo.h"
-#include "specific/dxdirectdrawinfo.h"
-#include "specific/dxd3ddevice.h"
+#include "specific/windows/dxflags.h"
+#include "specific/windows/dxdisplaymode.h"
+#include "specific/windows/dxinfo.h"
+#include "specific/windows/dxdirectdrawinfo.h"
+#include "specific/windows/dxd3ddevice.h"
 #include <winuser.h>
 #include "tomb4/resource.h"
 #include <windowsx.h>
@@ -191,14 +191,12 @@ void WinProcMsg() {
 
 	Log(__func__, "WinProcMsg");
 
-	do {
-		GetMessage(&msg, 0, 0, 0);
+	GetMessage(&msg, 0, 0, 0);
 
-		if(!TranslateAccelerator(App.hWnd, App.hAccel, &msg)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-	} while(!MainThread.ended && msg.message != WM_QUIT);
+	if(!TranslateAccelerator(App.hWnd, App.hAccel, &msg)) {
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 }
 
 void WinProcessCommands(long cmd) {
@@ -206,7 +204,7 @@ void WinProcessCommands(long cmd) {
 	long odm;
 
 	if(cmd == KA_ALTENTER) {
-		if(App.fmv || !(G_dxinfo->DDInfo[G_dxinfo->nDD].DDCaps.dwCaps2 & DDCAPS2_CANRENDERWINDOWED) || LevelLoadingThread.active)
+		if(App.fmv || !(G_dxinfo->DDInfo[G_dxinfo->nDD].DDCaps.dwCaps2 & DDCAPS2_CANRENDERWINDOWED))
 			return;
 
 		Log(__func__, "KA_ALTENTER");
@@ -214,14 +212,12 @@ void WinProcessCommands(long cmd) {
 		while(App.dx.InScene) { };
 		App.dx.WaitAtBeginScene = 1;
 		while(!App.dx.InScene) { };
-		SuspendThread((HANDLE)(uintptr_t)MainThread.handle);
 		Log(__func__, "Game Thread Suspended");
 
 		DXToggleFullScreen();
 		HWInitialise();
 		S_Init_D3DMATRIX();
 		SetD3DViewMatrix();
-		ResumeThread((HANDLE)(uintptr_t)MainThread.handle);
 		App.dx.WaitAtBeginScene = 0;
 		Log(__func__, "Game Thread Resumed");
 
@@ -233,15 +229,12 @@ void WinProcessCommands(long cmd) {
 			ShowCursor(1);
 		}
 	} else if(cmd == KA_ALTP || cmd == KA_ALTM) {
-		if(LevelLoadingThread.active || App.fmv)
-			return;
 
 		Log(__func__, "Change Video Mode");
 		Log(__func__, "HangGameThread");
 		while(App.dx.InScene) { };
 		App.dx.WaitAtBeginScene = 1;
 		while(!App.dx.InScene) { };
-		SuspendThread((HANDLE)(uintptr_t)MainThread.handle);
 		Log(__func__, "Game Thread Suspended");
 
 		odm = App.DXInfo.nDisplayMode;
@@ -293,7 +286,6 @@ void WinProcessCommands(long cmd) {
 			SetD3DViewMatrix();
 		}
 
-		ResumeThread((HANDLE)(uintptr_t)MainThread.handle);
 		App.dx.WaitAtBeginScene = 0;
 		Log(__func__, "Game Thread Resumed");
 		resChangeCounter = 120;
@@ -330,7 +322,6 @@ LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 					while(App.dx.InScene) { };
 					App.dx.WaitAtBeginScene = 1;
 					while(!App.dx.InScene) { };
-					SuspendThread((HANDLE)(uintptr_t)MainThread.handle);
 					Log(__func__, "Game Thread Suspended");
 				}
 
@@ -341,7 +332,6 @@ LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 				Log(__func__, "WM_ACTIVE");
 
 				if(App.SetupComplete) {
-					ResumeThread((HANDLE)(uintptr_t)MainThread.handle);
 					App.dx.WaitAtBeginScene = 0;
 					Log(__func__, "Game Thread Resumed");
 				}
@@ -532,12 +522,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 		free(buf);
 	}
 
-	MainThread.active = 1;
-	MainThread.ended = 0;
-	MainThread.handle = _beginthreadex(0, 0, GameMain, 0, 0, (unsigned int*)&MainThread.address);
+	GameMain(NULL);
 	WinProcMsg();
-	MainThread.ended = 1;
-	while(MainThread.active) { };
 
 	if(cutseqpakPtr)
 		free(cutseqpakPtr);

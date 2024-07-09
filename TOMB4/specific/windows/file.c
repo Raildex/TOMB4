@@ -10,7 +10,8 @@
 #include "game/tomb4fx.h"
 #include "specific/audio.h"
 #include "specific/polyinsert.h"
-#include "specific/winmain.h"
+#include "specific/thread.h"
+#include "specific/windows/winmain.h"
 #include "game/lara.h"
 #include "specific/output.h"
 #include "game/gameflow.h"
@@ -23,13 +24,13 @@
 #include "game/larainfo.h"
 #include <process.h>
 #include "game/levelinfo.h"
-#include "texture.h"
+#include "specific/texture.h"
 
-THREAD LevelLoadingThread;
+THREAD* LevelLoadingThread;
 
 static char* CompressedData;
 
-unsigned int WINAPI LoadLevel(void* name) {
+int LoadLevel(void* name) {
 	char* pData;
 	long version, size, compressedSize;
 
@@ -126,9 +127,6 @@ unsigned int WINAPI LoadLevel(void* name) {
 		Log(__func__, "Could not open Level file!");
 		return 0;
 	}
-
-	LevelLoadingThread.active = 0;
-	_endthreadex(1);
 	return 1;
 }
 
@@ -138,11 +136,7 @@ long S_LoadLevelFile(long num) {
 	Log(__func__, "S_LoadLevelFile");
 	strcpy(name, &gfFilenameWad[gfFilenameOffset[num]]);
 	strcat(name, ".TR4");
-	LevelLoadingThread.active = 1;
-	LevelLoadingThread.ended = 0;
-	LevelLoadingThread.handle = _beginthreadex(0, 0, &LoadLevel, name, 0, (unsigned int*)&LevelLoadingThread.address);
-	while(LevelLoadingThread.active)
-		;
+	LoadLevel(name);
 	return 1;
 }
 
@@ -152,7 +146,7 @@ void FreeLevel() {
 	currentLevel = NULL;
 }
 
-bool FindCDDrive() {
+long FindCDDrive() {
 	HANDLE file;
 	unsigned long drives, type;
 	char path[14];

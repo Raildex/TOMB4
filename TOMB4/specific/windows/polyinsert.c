@@ -1,11 +1,11 @@
 
 #include "specific/polyinsert.h"
 #include "game/levelinfo.h"
-#include "specific/dxshell.h"
+#include "specific/windows/dxshell.h"
 #include "specific/drawroom.h"
 #include "specific/haltexture.h"
 #include "specific/output.h"
-#include "specific/d3dmatrix.h"
+#include "specific/windows/d3dmatrix.h"
 #include "specific/function_stubs.h"
 #include "game/tomb4fx.h"
 #include "specific/function_table.h"
@@ -14,19 +14,19 @@
 #include "game/camera.h"
 #include "game/effects.h"
 #include "specific/3dmath.h"
-#include "specific/winmain.h"
+#include "specific/windows/winmain.h"
 #include "specific/gamemain.h"
 #include "game/gameflow.h"
 #include "game/fogbulbstruct.h"
 #include "game/sortlist.h"
-#include "specific/d3dtlbumpvertex.h"
+#include "specific/windows/d3dtlbumpvertex.h"
 #include "global/types.h"
 #include "game/fvector.h"
 #include "game/gfleveloptions.h"
 #include "game/texturestruct.h"
 #include <d3dtypes.h>
 #include <math.h>
-#include "specific/texturebucket.h"
+#include "specific/windows/texturebucket.h"
 
 D3DTLBUMPVERTEX XYUVClipperBuffer[20];
 D3DTLBUMPVERTEX zClipperBuffer[20];

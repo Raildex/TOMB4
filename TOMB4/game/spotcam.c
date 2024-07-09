@@ -6,7 +6,7 @@
 #include "game/control.h"
 #include "game/camera.h"
 #include "game/switch.h"
-#include "specific/dxshell.h"
+#include "specific/windows/dxshell.h"
 #include "specific/input.h"
 #include "game/lara.h"
 #include "game/gameflow.h"

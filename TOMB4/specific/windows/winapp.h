@@ -1,7 +1,7 @@
 #ifndef WINAPP_INCLUDED
 #define WINAPP_INCLUDED
-#include "specific/dxinfo.h"
-#include "specific/dxptr.h"
+#include "specific/windows/dxinfo.h"
+#include "specific/windows/dxptr.h"
 #include <windows.h>
 #include "global/types.h"
 #include <d3dtypes.h>

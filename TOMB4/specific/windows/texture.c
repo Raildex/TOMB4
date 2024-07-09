@@ -1,23 +1,23 @@
 
 #include "specific/texture.h"
 #include "global/types.h"
-#include "haltexture.h"
-#include "specific/dxshell.h"
+#include "specific/haltexture.h"
+#include "specific/windows/dxshell.h"
 #include "specific/function_stubs.h"
-#include "specific/winapp.h"
-#include "specific/winmain.h"
+#include "specific/windows/winapp.h"
+#include "specific/windows/winmain.h"
 #include <assert.h>
 #include <math.h>
 #include <minwindef.h>
 #include <stdlib.h>
 #include <ddraw.h>
 #include "specific/texture.h"
-#include "specific/dxinfo.h"
-#include "specific/dxdirectdrawinfo.h"
-#include "specific/dxd3ddevice.h"
-#include "specific/dxflags.h"
-#include "specific/dxtextureinfo.h"
-#include "texture.h"
+#include "specific/windows/dxinfo.h"
+#include "specific/windows/dxdirectdrawinfo.h"
+#include "specific/windows/dxd3ddevice.h"
+#include "specific/windows/dxflags.h"
+#include "specific/windows/dxtextureinfo.h"
+#include "specific/texture.h"
 
 typedef struct CreateMipMapFormat0Payload {
 	long width;

@@ -3,14 +3,14 @@
 #include "specific/function_stubs.h"
 #include "game/gameflow.h"
 #include "specific/registry.h"
-#include "specific/winmain.h"
-#include "specific/dxd3ddevice.h"
-#include "specific/dxtextureinfo.h"
-#include "specific/dxdisplaymode.h"
-#include "specific/dxdirectdrawinfo.h"
+#include "specific/windows/winmain.h"
+#include "specific/windows/dxd3ddevice.h"
+#include "specific/windows/dxtextureinfo.h"
+#include "specific/windows/dxdisplaymode.h"
+#include "specific/windows/dxdirectdrawinfo.h"
 #include "game/languages.h"
-#include "specific/winapp.h"
-#include "specific/dxdirectsoundinfo.h"
+#include "specific/windows/winapp.h"
+#include "specific/windows/dxdirectsoundinfo.h"
 #include <winuser.h>
 
 wchar_t ASCIIToANSITable[7][2] = {

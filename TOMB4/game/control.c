@@ -39,7 +39,7 @@
 #include "game/lara.h"
 #include "game/deltapak.h"
 #include "game/health.h"
-#include "specific/dxshell.h"
+#include "specific/windows/dxshell.h"
 #include "game/savegame.h"
 #include "specific/file.h"
 #include "game/iteminfo.h"
@@ -156,9 +156,6 @@ static long S_Death() {
 		UpdatePulseColour();
 		lara.death_count++;
 		S_DisplayMonoScreen();
-
-		if(MainThread.ended)
-			return 4;
 
 		if(Gameflow->LoadSaveEnabled) {
 			if(!menu) //"main" menu
@@ -309,9 +306,6 @@ long ControlPhase(long nframes, long demo_mode) {
 					return 1;
 			}
 		}
-
-		if(MainThread.ended)
-			return 4;
 
 		if(input & IN_LOOK && (lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH || (lara.IsDucked && !(input & IN_DUCK) && lara_item->anim_number == ANIM_DUCKBREATHE && lara_item->goal_anim_state == AS_DUCK))) {
 			if(!BinocularRange) {

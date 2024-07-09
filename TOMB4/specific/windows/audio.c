@@ -2,10 +2,10 @@
 #include "specific/audio.h"
 #include "specific/file.h"
 #include "specific/function_stubs.h"
-#include "specific/dxshell.h"
+#include "specific/windows/dxshell.h"
 #include "game/control.h"
 #include "specific/loadsave.h"
-#include "specific/winmain.h"
+#include "specific/windows/winmain.h"
 #include <MSAcm.h>
 #include <dsound.h>
 const char* TrackFileNames[112] = {

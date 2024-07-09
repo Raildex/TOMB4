@@ -1,9 +1,7 @@
 #pragma once
-#include "specific/file.h"
 #include "specific/thread.h"
 #include "texture.h"
 #include <stdio.h>
-#include <stdbool.h>
 #include <windows.h>
 typedef struct TEXTURESTRUCT TEXTURESTRUCT;
 typedef struct SPRITESTRUCT SPRITESTRUCT;
@@ -11,10 +9,9 @@ typedef struct CHANGE_STRUCT CHANGE_STRUCT;
 typedef struct RANGE_STRUCT RANGE_STRUCT;
 typedef struct AIOBJECT AIOBJECT;
 typedef struct LEVEL_INFO LEVEL_INFO;
-unsigned int WINAPI LoadLevel(void* name);
 long S_LoadLevelFile(long num);
 void FreeLevel();
-bool FindCDDrive();
+long FindCDDrive();
 FILE* FileOpen(const char* name);
 void FileClose(FILE* file);
 long FileSize(FILE* file);
@@ -35,4 +32,4 @@ char LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl);
 void S_GetUVRotateTextures(LEVEL_INFO* lvl);
 char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size);
 
-extern THREAD LevelLoadingThread;
+extern THREAD* LevelLoadingThread;

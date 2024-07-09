@@ -19,7 +19,7 @@
 #include "game/lot.h"
 #include "game/spotcam.h"
 #include "game/camera.h"
-#include "specific/winmain.h"
+#include "specific/windows/winmain.h"
 #include "game/lara.h"
 #include "game/gameflow.h"
 #ifdef TIMES_LEVEL

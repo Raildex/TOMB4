@@ -6,10 +6,10 @@
 #include "specific/function_table.h"
 #include "specific/3dmath.h"
 #include "game/text.h"
-#include "specific/winmain.h"
+#include "specific/windows/winmain.h"
 #include "game/sound.h"
 #include "game/gameflow.h"
-#include "specific/dxshell.h"
+#include "specific/windows/dxshell.h"
 #include "game/savegame.h"
 #include "game/watertab.h"
 #include "game/savegameinfo.h"
@@ -18,7 +18,6 @@
 
 LPDIRECT3DVERTEXBUFFER DestVB;
 WATERTAB WaterTable[22][64];
-THREAD MainThread;
 short* clipflags;
 float vert_wibble_table[32];
 long SaveCounter;
@@ -74,8 +73,6 @@ unsigned int WINAPI GameMain(void* ptr) {
 		GameClose();
 		S_CDStop();
 		PostMessage(App.hWnd, WM_CLOSE, 0, 0);
-		MainThread.active = 0;
-		_endthreadex(1);
 	}
 
 	return 1;

@@ -16,14 +16,14 @@
 #include "game/camera.h"
 #include "game/control.h"
 #include "game/tomb4fx.h"
-#include "specific/dxsound.h"
+#include "specific/windows/dxsound.h"
 #include "game/text.h"
 #include "game/deltapak.h"
 #include "game/draw.h"
 #include "specific/LoadSave.h"
 #include "specific/gamemain.h"
 #include "game/newinv.h"
-#include "specific/dxshell.h"
+#include "specific/windows/dxshell.h"
 #include "specific/input.h"
 #include "specific/3dmath.h"
 #include "game/lara.h"
@@ -783,9 +783,6 @@ long TitleOptions() {
 			ret = 3;
 		}
 	}
-
-	if(MainThread.ended)
-		return 4;
 
 	if(ret) {
 		load_or_new = ret;

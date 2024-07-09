@@ -1,6 +1,6 @@
 
 #include "specific/3dmath.h"
-#include "specific/d3dmatrix.h"
+#include "specific/windows/d3dmatrix.h"
 #include "game/spotcam.h"
 #include "game/control.h"
 #include "specific/function_stubs.h"

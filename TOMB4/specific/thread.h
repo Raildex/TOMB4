@@ -1,11 +1,10 @@
-#ifndef THREAD_INCLUDED
-#define THREAD_INCLUDED
+#ifndef TOMB4_SPECIFIC_THREAD_H
+#define TOMB4_SPECIFIC_THREAD_H
+typedef struct THREAD THREAD;
+typedef int (*THREADFUNC)(void* arg);
+long S_CreateThread(THREAD** output, THREADFUNC func, void* arg);
+long S_RunThread(THREAD* thrd);
+long S_PauseThread(THREAD* thrd);
+long S_WaitThread(THREAD* thrd);
 
-typedef struct THREAD {
-	volatile long active;
-	long unk;
-	volatile long ended;
-	unsigned long handle;
-	unsigned long address;
-} THREAD;
-#endif
+#endif// TOMB4_SPECIFIC_THREAD_H

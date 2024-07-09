@@ -3,8 +3,8 @@
 #include "specific/loadsave.h"
 #include "specific/cmdline.h"
 #include "specific/input.h"
-#include "specific/winmain.h"
-#include "specific/dxflags.h"
+#include "specific/windows/winmain.h"
+#include "specific/windows/dxflags.h"
 #include <string.h>
 #include <stdio.h>
 

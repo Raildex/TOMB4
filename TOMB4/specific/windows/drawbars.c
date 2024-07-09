@@ -9,14 +9,14 @@
 #include "game/camera.h"
 #include "game/lara.h"
 #include "game/gameflow.h"
-#include "specific/winmain.h"
+#include "specific/windows/winmain.h"
 #include "specific/drawroom.h"
 #include "specific/polyinsert.h"
 #include "specific/texture.h"
 #include "game/gouraudbarcolourset.h"
 #include "game/texturestruct.h"
 #include <d3dtypes.h>
-#include "specific/dxflags.h"
+#include "specific/windows/dxflags.h"
 #include "game/larainfo.h"
 #include <d3d.h>
 

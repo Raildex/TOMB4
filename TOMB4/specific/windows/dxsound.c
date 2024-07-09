@@ -1,13 +1,13 @@
 
-#include "specific/dxsound.h"
-#include "specific/dxshell.h"
+#include "specific/windows/dxsound.h"
+#include "specific/windows/dxshell.h"
 #include "specific/function_stubs.h"
 #include "specific/audio.h"
 #include "game/sound.h"
 #include "specific/loadsave.h"
-#include "specific/winmain.h"
-#include "specific/dxinfo.h"
-#include "specific/dxdirectsoundinfo.h"
+#include "specific/windows/winmain.h"
+#include "specific/windows/dxinfo.h"
+#include "specific/windows/dxdirectsoundinfo.h"
 #include <MSAcm.h>
 #include <string.h>
 #include <xaudio2.h>

@@ -3,19 +3,19 @@
 #include "game/text.h"
 #include "game/sound.h"
 #include "specific/audio.h"
-#include "specific/dxsound.h"
+#include "specific/windows/dxsound.h"
 #include "specific/input.h"
 #include "specific/function_table.h"
 #include "specific/drawroom.h"
 #include "specific/polyinsert.h"
-#include "specific/winmain.h"
+#include "specific/windows/winmain.h"
 #include "specific/output.h"
 #include "game/gameflow.h"
 #include "game/savegame.h"
 #include "specific/gamemain.h"
 #include "specific/specificfx.h"
 #include <time.h>
-#include "specific/dxshell.h"
+#include "specific/windows/dxshell.h"
 #include "specific/function_stubs.h"
 #include "specific/texture.h"
 #include "game/newinv.h"
@@ -30,12 +30,12 @@
 #include "game/savefileinfo.h"
 #include "game/colorbitmasks.h"
 #include <ddraw.h>
-#include "specific/dxflags.h"
+#include "specific/windows/dxflags.h"
 #include "specific/timing.h"
 #include "game/monoscreenstruct.h"
-#include "specific/d3dtlbumpvertex.h"
+#include "specific/windows/d3dtlbumpvertex.h"
 #include "game/languages.h"
-#include "texture.h"
+#include "specific/texture.h"
 #include <dinput.h>
 #include <joystickapi.h>
 long sfx_frequencies[3] = { 11025, 22050, 44100 };
@@ -620,9 +620,6 @@ long S_LoadSave(long load_or_save, long mono, long inv_active) {
 			ret = -1;
 			break;
 		}
-
-		if(MainThread.ended)
-			break;
 	}
 
 	TIME_Init();
@@ -903,7 +900,7 @@ long S_PauseMenu() {
 			break;
 		}
 
-	} while(!MainThread.ended);
+	} while(1);
 
 	TIME_Init();
 	FreeMonoScreen();

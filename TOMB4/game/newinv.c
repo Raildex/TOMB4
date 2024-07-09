@@ -5,7 +5,7 @@
 #include "game/objects.h"
 #include "game/draw.h"
 #include "specific/output.h"
-#include "specific/d3dmatrix.h"
+#include "specific/windows/d3dmatrix.h"
 #include "game/lara2gun.h"
 #include "game/lara1gun.h"
 #include "game/text.h"
@@ -17,11 +17,11 @@
 #include "game/gameflow.h"
 #include "game/control.h"
 #include "game/camera.h"
-#include "specific/dxshell.h"
+#include "specific/windows/dxshell.h"
 #include "specific/gamemain.h"
 #include "game/lara.h"
 #include "game/savegame.h"
-#include "specific/dxsound.h"
+#include "specific/windows/dxsound.h"
 #include "specific/drawbars.h"
 #include "game/inputbuttons.h"
 #include "game/invdrawitem.h"
@@ -2616,9 +2616,6 @@ long S_CallInventory2() {
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			val = 1;
 		}
-
-		if(MainThread.ended)
-			return MainThread.ended;
 
 		S_DisplayMonoScreen();
 		do_debounced_joystick_poo();

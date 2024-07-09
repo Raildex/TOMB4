@@ -1,26 +1,26 @@
 
 #include "specific/fmv.h"
 #include "dxptr.h"
-#include "specific/dxshell.h"
+#include "specific/windows/dxshell.h"
 #include "specific/audio.h"
 #include "specific/lighting.h"
 #include "specific/function_table.h"
-#include "specific/winmain.h"
+#include "specific/windows/winmain.h"
 #include "specific/input.h"
 #include "specific/3dmath.h"
 #include "game/text.h"
-#include "specific/d3dmatrix.h"
-#include "specific/dxsound.h"
+#include "specific/windows/d3dmatrix.h"
+#include "specific/windows/dxsound.h"
 #include "game/control.h"
 #include "specific/cmdline.h"
 #include "specific/gamemain.h"
 #include "specific/loadsave.h"
-#include "specific/dxflags.h"
-#include "specific/dxdisplaymode.h"
+#include "specific/windows/dxflags.h"
+#include "specific/windows/dxdisplaymode.h"
 #include "game/binkstruct.h"
-#include "specific/dxinfo.h"
-#include "specific/dxdirectdrawinfo.h"
-#include "specific/dxd3ddevice.h"
+#include "specific/windows/dxinfo.h"
+#include "specific/windows/dxdirectdrawinfo.h"
+#include "specific/windows/dxd3ddevice.h"
 #include "game/inputbuttons.h"
 #include <basetsd.h>
 #include <excpt.h>
@@ -101,9 +101,6 @@ long PlayFmvNow(long num) {
 	char name[80];
 	char path[80];
 
-	if(MainThread.ended)
-		return 0;
-
 	if((1 << num) & FmvSceneTriggered)
 		return 1;
 
@@ -156,7 +153,7 @@ long PlayFmvNow(long num) {
 		S_UpdateInput();
 
 		for(int i = 0; i != Bink->num2; i++) {
-			if(input & IN_OPTION || MainThread.ended)
+			if(input & IN_OPTION)
 				break;
 
 			BinkNextFrame(Bink);

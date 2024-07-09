@@ -8,7 +8,7 @@
 #include "specific/polyinsert.h"
 #include "specific/function_stubs.h"
 #include "specific/drawroom.h"
-#include "specific/winmain.h"
+#include "specific/windows/winmain.h"
 #include "game/debris.h"
 #include "game/rope.h"
 #include "game/tomb4fx.h"
