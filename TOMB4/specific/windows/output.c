@@ -1641,10 +1641,10 @@ void S_AnimateTextures(long n) {
 long S_DumpScreen() {
 	long n;
 
-	n = Sync();
+	n = S_Sync();
 
 	while(n < 2) {
-		while(!Sync())
+		while(!S_Sync())
 			; // wait for sync
 		n++;
 	}

@@ -61,7 +61,7 @@ unsigned int WINAPI GameMain(void* ptr) {
 		HWInitialise();
 		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
 		InitFont();
-		TIME_Init();
+		S_TimeInit();
 		App.SetupComplete = 1;
 		S_CDStop();
 		ClearSurfaces();

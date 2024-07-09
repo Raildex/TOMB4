@@ -622,7 +622,7 @@ long S_LoadSave(long load_or_save, long mono, long inv_active) {
 		}
 	}
 
-	TIME_Init();
+	S_TimeInit();
 
 	if(!mono)
 		FreeMonoScreen();
@@ -902,7 +902,7 @@ long S_PauseMenu() {
 
 	} while(1);
 
-	TIME_Init();
+	S_TimeInit();
 	FreeMonoScreen();
 	InventoryActive = 0;
 	return ret;
