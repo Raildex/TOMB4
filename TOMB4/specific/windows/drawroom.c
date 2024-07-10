@@ -614,7 +614,7 @@ void ProcessRoomData(ROOM_INFO* r) {
 	IDirect3DVertexBuffer_Optimize(r->SourceVB,App.dx._lpD3DDevice, 0);
 }
 
-void InsertRoom(ROOM_INFO* r) {
+void S_InsertRoom(ROOM_INFO* r) {
 	TEXTURESTRUCT* pTex;
 	short* data;
 	short numQuads, numTris;
@@ -624,6 +624,7 @@ void InsertRoom(ROOM_INFO* r) {
 	clip_right = r->right;
 	clip_bottom = r->bottom;
 	clip_top = r->top;
+	SetD3DViewMatrix();
 
 	if(r->nVerts) {
 		ProcessRoomDynamics(r);

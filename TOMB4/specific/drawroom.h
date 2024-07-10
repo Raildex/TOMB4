@@ -8,7 +8,6 @@ typedef struct ROOM_INFO ROOM_INFO;
 typedef struct D3DTLBUMPVERTEX D3DTLBUMPVERTEX;
 typedef struct _D3DVECTOR _D3DVECTOR;
 void ProcessRoomData(ROOM_INFO* r);
-void InsertRoom(ROOM_INFO* r);
 void InitBuckets();
 void FindBucket(long tpage, D3DTLBUMPVERTEX** Vpp, long** nVtxpp);
 void DrawBuckets();

@@ -289,7 +289,7 @@ void mInterpolateArmMatrix(float* mx) {
 	}
 }
 
-void S_InsertRoom(short room_number) {
+void InsertRoom(short room_number) {
 	ROOM_INFO* r;
 
 	current_room = room_number;
@@ -299,7 +299,7 @@ void S_InsertRoom(short room_number) {
 	phd_right = r->right;
 	phd_top = r->top;
 	phd_bottom = r->bottom;
-	_InsertRoom(r);
+	S_InsertRoom(r);
 }
 
 void CalculateObjectLighting(ITEM_INFO* item, short* frame) {
@@ -743,7 +743,7 @@ void DrawRooms(short CurrentRoom) {
 	}
 
 	for(int i = 0; i < number_draw_rooms; i++)
-		S_InsertRoom(draw_rooms[i]);
+		InsertRoom(draw_rooms[i]);
 
 	if(gfLevelFlags & GF_TRAIN)
 		DrawTrainFloor();
@@ -872,7 +872,7 @@ void RenderIt(short CurrentRoom) {
 	nPolyType = 0;
 
 	for(int i = 0; i < number_draw_rooms; i++)
-		S_InsertRoom(draw_rooms[i]);
+		InsertRoom(draw_rooms[i]);
 
 	if(gfLevelFlags & GF_TRAIN)
 		DrawTrainFloor();

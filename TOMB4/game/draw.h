@@ -20,7 +20,7 @@ void gar_RotYXZsuperpack(short** pprot, long skip);
 void phd_PutPolygons_I(short* ptr, long clip);
 void mInterpolateMatrix();
 void mInterpolateArmMatrix(float* mx);
-void S_InsertRoom(short room_number);
+void InsertRoom(short room_number);
 void CalculateObjectLighting(ITEM_INFO* item, short* frame);
 void CalculateObjectLightingLara();
 void DrawAnimatingItem(ITEM_INFO* item);

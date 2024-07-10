@@ -1002,11 +1002,6 @@ void phd_PutPolygons_train(short* objptr, long x) {
 	}
 }
 
-void _InsertRoom(ROOM_INFO* r) {
-	SetD3DViewMatrix();
-	InsertRoom(r);
-}
-
 void RenderLoadPic(long unused) {
 	short poisoned;
 
