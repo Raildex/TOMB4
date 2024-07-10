@@ -18,9 +18,9 @@ void AttachedItemControl(short item_num) {
 		return;
 	}
 	PHD_3DPOS pos;
-	pos.x_pos = -16;
-	pos.y_pos = 64;
-	pos.z_pos = 0;
+	pos.pos.x = -16;
+	pos.pos.y = 64;
+	pos.pos.z = 0;
 	pos.x_rot = 0;
 	pos.y_rot = 0;
 	pos.z_rot = 16384 / 4;
@@ -35,7 +35,7 @@ void AttachedItemControl(short item_num) {
 void DrawAttachedItem(ITEM_INFO* item) {
 	ATTACHEDITEM_INFO* info = item->data;
 	phd_PushMatrix();
-	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 	phd_RotX(item->pos.x_rot);
 	phd_RotZ(item->pos.z_rot);
 	phd_RotY(item->pos.y_rot);

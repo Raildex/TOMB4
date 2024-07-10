@@ -45,9 +45,9 @@ void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type) {
 
 	if(fx_number != NO_ITEM) {
 		fx = GetEffect(currentLevel, fx_number);
-		fx->pos.x_pos = pos->x_pos;
-		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
-		fx->pos.z_pos = pos->z_pos;
+		fx->pos.pos.x = pos->pos.x;
+		fx->pos.pos.y = pos->pos.y - (GetRandomControl() & 0x3F) - 32;
+		fx->pos.pos.z = pos->pos.z;
 		fx->pos.x_rot = pos->x_rot;
 
 		if(type < 4) {
@@ -78,8 +78,8 @@ void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	long dx, dz;
 
 	fx = GetEffect(currentLevel, fx_number);
-	dx = lara_item->pos.x_pos - fx->pos.x_pos;
-	dz = lara_item->pos.z_pos - fx->pos.z_pos;
+	dx = lara_item->pos.pos.x - fx->pos.pos.x;
+	dz = lara_item->pos.pos.z - fx->pos.pos.z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -205,9 +205,9 @@ void DoDemigodEffects(short item_number) {
 			pos2.y = 96;
 			pos2.z = 0;
 			GetJointAbsPosition(item, &pos2, 16);
-			pos.z_pos = pos1.z;
-			pos.y_pos = pos1.y;
-			pos.x_pos = pos1.x;
+			pos.pos.z = pos1.z;
+			pos.pos.y = pos1.y;
+			pos.pos.x = pos1.x;
 			phd_GetVectorAngles(pos2.x - pos1.x, pos2.y - pos1.y, pos2.z - pos1.z, angles);
 			pos.x_rot = angles[1];
 			pos.y_rot = angles[0];
@@ -230,9 +230,9 @@ void DoDemigodEffects(short item_number) {
 			pos2.z = 384;
 			GetJointAbsPosition(item, &pos1, GlobalCounter & 1 ? 18 : 17);
 			GetJointAbsPosition(item, &pos2, GlobalCounter & 1 ? 18 : 17);
-			pos.z_pos = pos1.z;
-			pos.y_pos = pos1.y;
-			pos.x_pos = pos1.x;
+			pos.pos.z = pos1.z;
+			pos.pos.y = pos1.y;
+			pos.pos.x = pos1.x;
 			phd_GetVectorAngles(pos2.x - pos1.x, pos2.y - pos1.y, pos2.z - pos1.z, angles);
 			pos.x_rot = angles[1];
 			pos.y_rot = angles[0];
@@ -303,7 +303,7 @@ void DemigodControl(short item_number) {
 	{
 		r = GetRoom(currentLevel, lara_item->room_number);
 		zone = GetZone(currentLevel, god->LOT.zone, flip_status);
-		lara_item->box_number = r->floor[((lara_item->pos.z_pos - r->z) >> 10) + r->x_size * ((lara_item->pos.x_pos - r->x) >> 10)].box;
+		lara_item->box_number = r->floor[((lara_item->pos.pos.z - r->z) >> 10) + r->x_size * ((lara_item->pos.pos.x - r->x) >> 10)].box;
 
 		if(zone[item->box_number] == zone[lara_item->box_number]) {
 			item->ai_bits = 0;
@@ -340,17 +340,17 @@ void DemigodControl(short item_number) {
 			iAngle = (short)info.angle;
 			iAhead = (short)info.ahead;
 		} else {
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = lara_item->pos.pos.x - item->pos.pos.x;
+			dz = lara_item->pos.pos.z - item->pos.pos.z;
 			iAngle = (short)phd_atan(dz, dx) - item->pos.y_rot;
 			iAhead = abs(iAngle) < 16384;
 			dx = abs(dx);
 			dz = abs(dz);
 
 			if(dx > dz) {
-				info.x_angle = (short)phd_atan(dx + (dz >> 1), item->pos.y_pos - lara_item->pos.y_pos);
+				info.x_angle = (short)phd_atan(dx + (dz >> 1), item->pos.pos.y - lara_item->pos.pos.y);
 			} else {
-				info.x_angle = (short)phd_atan(dz + (dx >> 1), item->pos.y_pos - lara_item->pos.y_pos);
+				info.x_angle = (short)phd_atan(dz + (dx >> 1), item->pos.pos.y - lara_item->pos.pos.y);
 			}
 		}
 
@@ -610,7 +610,7 @@ void DemigodControl(short item_number) {
 					lara_item->frame_number = GetAnim(currentLevel, ANIM_FALLDOWN)->frame_base;
 					lara_item->current_anim_state = AS_FORWARDJUMP;
 					lara_item->goal_anim_state = AS_FORWARDJUMP;
-					lara_item->pos.x_pos += -50 * phd_sin(lara_item->pos.y_rot) >> W2V_SHIFT;
+					lara_item->pos.pos.x += -50 * phd_sin(lara_item->pos.y_rot) >> W2V_SHIFT;
 					lara_item->gravity_status = 1;
 					lara_item->speed = 2;
 					lara_item->fallspeed = 1;

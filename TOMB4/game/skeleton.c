@@ -56,11 +56,11 @@ void TriggerRiseEffect(ITEM_INFO* item) {
 	fx = GetEffect(currentLevel, fx_number);
 
 	room_number = item->room_number;
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
-	fx->pos.x_pos = (GetRandomControl() & 0xFF) + item->pos.x_pos - 128;
-	fx->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject) - 48;
-	fx->pos.z_pos = (GetRandomControl() & 0xFF) + item->pos.z_pos - 128;
+	fx->pos.pos.x = (GetRandomControl() & 0xFF) + item->pos.pos.x - 128;
+	fx->pos.pos.y = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject) - 48;
+	fx->pos.pos.z = (GetRandomControl() & 0xFF) + item->pos.pos.z - 128;
 	fx->room_number = item->room_number;
 	fx->pos.y_rot = (short)(GetRandomControl() << 1);
 	fx->speed = (short)(GetRandomControl() >> 11);
@@ -82,9 +82,9 @@ void TriggerRiseEffect(ITEM_INFO* item) {
 	sptr->ColFadeSpeed = (GetRandomControl() & 3) + 4;
 	sptr->Life = (GetRandomControl() & 7) + 16;
 	sptr->sLife = sptr->Life;
-	sptr->x = fx->pos.x_pos;
-	sptr->y = fx->pos.y_pos;
-	sptr->z = fx->pos.z_pos;
+	sptr->x = fx->pos.pos.x;
+	sptr->y = fx->pos.pos.y;
+	sptr->z = fx->pos.pos.z;
 	sptr->Xvel = phd_sin(fx->pos.y_rot) >> 2;
 	sptr->Yvel = 0;
 	sptr->Zvel = phd_cos(fx->pos.y_rot) >> 2;
@@ -163,9 +163,9 @@ void SkeletonControl(short item_number) {
 	Zoffset = 870 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 
 	room_number = item->room_number;
-	x = item->pos.x_pos + Xoffset;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos + Zoffset;
+	x = item->pos.pos.x + Xoffset;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z + Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
 	nearheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
@@ -216,8 +216,8 @@ void SkeletonControl(short item_number) {
 		larainfo.distance = info.distance;
 		larainfo.angle = info.angle;
 	} else {
-		dx = lara_item->pos.x_pos - item->pos.x_pos;
-		dz = lara_item->pos.z_pos - item->pos.z_pos;
+		dx = lara_item->pos.pos.x - item->pos.pos.x;
+		dz = lara_item->pos.pos.z - item->pos.pos.z;
 		larainfo.angle = (short)(phd_atan(dz, dx) - item->pos.y_rot);
 		larainfo.distance = SQUARE(dx) + SQUARE(dz);
 	}
@@ -242,27 +242,27 @@ void SkeletonControl(short item_number) {
 
 	if(item_number == lara.target_item && larainfo.distance > 870 && larainfo.angle > -0x2800 && larainfo.angle < 0x2800) {
 		room_number = item->room_number;
-		x = item->pos.x_pos + (870 * phd_sin(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
-		z = item->pos.z_pos + (870 * phd_cos(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
+		x = item->pos.pos.x + (870 * phd_sin(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
+		z = item->pos.pos.z + (870 * phd_cos(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
 		floor = GetFloor(x, y, z, &room_number);
 		h1 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		room_number = item->room_number;
-		x = item->pos.x_pos + (870 * phd_sin(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
-		z = item->pos.z_pos + (870 * phd_cos(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
+		x = item->pos.pos.x + (870 * phd_sin(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
+		z = item->pos.pos.z + (870 * phd_cos(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
 		floor = GetFloor(x, y, z, &room_number);
 		h2 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		jump_right = abs(h2 - y) <= 256 && h1 + 512 < y;
 
 		room_number = item->room_number;
-		x = item->pos.x_pos + (870 * phd_sin(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
-		z = item->pos.z_pos + (870 * phd_cos(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
+		x = item->pos.pos.x + (870 * phd_sin(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
+		z = item->pos.pos.z + (870 * phd_cos(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
 		floor = GetFloor(x, y, z, &room_number);
 		h1 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		room_number = item->room_number;
-		x = item->pos.x_pos + (870 * phd_sin(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
-		z = item->pos.z_pos + (870 * phd_cos(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
+		x = item->pos.pos.x + (870 * phd_sin(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
+		z = item->pos.pos.z + (870 * phd_cos(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
 		floor = GetFloor(x, y, z, &room_number);
 		h2 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		jump_left = abs(h2 - y) <= 256 && h1 + 512 < y;
@@ -475,10 +475,10 @@ void SkeletonControl(short item_number) {
 		skelly->maximum_turn = 0;
 
 		room_number = item->room_number;
-		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+		h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(h > item->pos.y_pos + 1024) {
+		if(h > item->pos.pos.y + 1024) {
 			skelly->maximum_turn = 0;
 			item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 47;
 			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
@@ -541,10 +541,10 @@ void SkeletonControl(short item_number) {
 				item->goal_anim_state = 2;
 			} else {
 				skelly->LOT.is_jumping = 1;
-				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+				floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+				h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-				if(h > item->pos.y_pos + 1024) {
+				if(h > item->pos.pos.y + 1024) {
 					skelly->maximum_turn = 0;
 					item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 44;
 					item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
@@ -578,10 +578,10 @@ void SkeletonControl(short item_number) {
 
 		if(item->anim_number == GetObjectInfo(currentLevel, SKELETON)->anim_index + 43) {
 			room_number = item->room_number;
-			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+			h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-			if(h > item->pos.y_pos + 1280) {
+			if(h > item->pos.pos.y + 1280) {
 				skelly->maximum_turn = 0;
 				item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 44;
 				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
@@ -596,10 +596,10 @@ void SkeletonControl(short item_number) {
 	case 23:
 	case 24:
 		room_number = item->room_number;
-		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+		h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(h <= item->pos.y_pos && item->active) {
+		if(h <= item->pos.pos.y && item->active) {
 			ExplodingDeath2(item_number, -1, 929);
 			KillItem(item_number);
 			DisableBaddieAI(item_number);

@@ -212,9 +212,9 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 
 			if(fx_number != NO_ITEM) {
 				fx = GetEffect(currentLevel, fx_number);
-				fx->pos.x_pos = item->pos.x_pos + (long)mMXPtr[M03];
-				fx->pos.y_pos = item->pos.y_pos + (long)mMXPtr[M13];
-				fx->pos.z_pos = item->pos.z_pos + (long)mMXPtr[M23];
+				fx->pos.pos.x = item->pos.pos.x + (long)mMXPtr[M03];
+				fx->pos.pos.y = item->pos.pos.y + (long)mMXPtr[M13];
+				fx->pos.pos.z = item->pos.pos.z + (long)mMXPtr[M23];
 				fx->room_number = item->room_number;
 				fx->pos.y_rot = (short)(GetRandomControl() << 1);
 				fx->pos.x_rot = 0;
@@ -283,9 +283,9 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 
 			if(fx_number != NO_ITEM) {
 				fx = GetEffect(currentLevel, fx_number);
-				fx->pos.x_pos = item->pos.x_pos + (long)mMXPtr[M03];
-				fx->pos.y_pos = item->pos.y_pos + (long)mMXPtr[M13];
-				fx->pos.z_pos = item->pos.z_pos + (long)mMXPtr[M23];
+				fx->pos.pos.x = item->pos.pos.x + (long)mMXPtr[M03];
+				fx->pos.pos.y = item->pos.pos.y + (long)mMXPtr[M13];
+				fx->pos.pos.z = item->pos.pos.z + (long)mMXPtr[M23];
 				fx->room_number = item->room_number;
 				fx->pos.y_rot = (short)(GetRandomControl() << 1);
 				fx->pos.x_rot = 0;
@@ -335,7 +335,7 @@ void DrawGunshells() {
 		if(p->counter) {
 			obj = GetObjectInfo(currentLevel, p->object_number);
 			phd_PushMatrix();
-			phd_TranslateAbs(p->pos.x_pos, p->pos.y_pos, p->pos.z_pos);
+			phd_TranslateAbs(p->pos.pos.x, p->pos.pos.y, p->pos.pos.z);
 			phd_RotYXZ(p->pos.y_rot, p->pos.x_rot, p->pos.z_rot);
 			phd_PutPolygons(GetMesh(currentLevel, obj->mesh_index), -1);
 			phd_PopMatrix();
@@ -912,23 +912,23 @@ void TriggerShatterSmoke(long x, long y, long z) {
 void DrawLensFlares(ITEM_INFO* item) {
 	GAME_VECTOR sun;
 
-	sun.pos.x = item->pos.x_pos;
-	sun.pos.y = item->pos.y_pos;
-	sun.pos.z = item->pos.z_pos;
+	sun.pos.x = item->pos.pos.x;
+	sun.pos.y = item->pos.pos.y;
+	sun.pos.z = item->pos.pos.z;
 	sun.room_number = item->room_number;
 	SetUpLensFlare(0, 0, 0, &sun);
 }
 
 void DrawWeaponMissile(ITEM_INFO* item) {
 	phd_PushMatrix();
-	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 	phd_PutPolygons_train(GetMesh(currentLevel, GetObjectInfo(currentLevel, item->object_number)->mesh_index), 0);
 	phd_PopMatrix();
 
 	if(gfLevelFlags & GF_MIRROR && item->room_number == gfMirrorRoom) {
 		phd_PushMatrix();
-		phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, 2 * gfMirrorZPlane - item->pos.z_pos);
+		phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, 2 * gfMirrorZPlane - item->pos.pos.z);
 		phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 		phd_PutPolygons_train(GetMesh(currentLevel, GetObjectInfo(currentLevel, item->object_number)->mesh_index), 0);
 		phd_PopMatrix();
@@ -1007,9 +1007,9 @@ void TriggerGunShell(short leftright, short objnum, long weapon) {
 	}
 
 	shell = GetFreeGunshell();
-	shell->pos.x_pos = pos.x;
-	shell->pos.y_pos = pos.y;
-	shell->pos.z_pos = pos.z;
+	shell->pos.pos.x = pos.x;
+	shell->pos.pos.y = pos.y;
+	shell->pos.pos.z = pos.z;
 	shell->room_number = lara_item->room_number;
 	shell->pos.x_rot = 0;
 	shell->pos.y_rot = 0;
@@ -1050,9 +1050,9 @@ void UpdateGunShells() {
 			continue;
 		}
 
-		ox = shell->pos.x_pos;
-		oy = shell->pos.y_pos;
-		oz = shell->pos.z_pos;
+		ox = shell->pos.pos.x;
+		oy = shell->pos.pos.y;
+		oz = shell->pos.pos.z;
 		oroom = shell->room_number;
 		shell->counter--;
 
@@ -1073,21 +1073,21 @@ void UpdateGunShells() {
 		shell->pos.x_rot += 182 * ((shell->speed >> 1) + 7);
 		shell->pos.y_rot += 182 * shell->speed;
 		shell->pos.z_rot += 4186;
-		shell->pos.x_pos += shell->speed * phd_sin(shell->DirXrot) >> (W2V_SHIFT + 1);
-		shell->pos.y_pos += shell->fallspeed;
-		shell->pos.z_pos += shell->speed * phd_cos(shell->DirXrot) >> (W2V_SHIFT + 1);
-		floor = GetFloor(shell->pos.x_pos, shell->pos.y_pos, shell->pos.z_pos, &shell->room_number);
+		shell->pos.pos.x += shell->speed * phd_sin(shell->DirXrot) >> (W2V_SHIFT + 1);
+		shell->pos.pos.y += shell->fallspeed;
+		shell->pos.pos.z += shell->speed * phd_cos(shell->DirXrot) >> (W2V_SHIFT + 1);
+		floor = GetFloor(shell->pos.pos.x, shell->pos.pos.y, shell->pos.pos.z, &shell->room_number);
 
 		if(GetRoom(currentLevel, shell->room_number)->flags & ROOM_UNDERWATER && !(GetRoom(currentLevel, oroom)->flags & ROOM_UNDERWATER)) {
-			TriggerSmallSplash(shell->pos.x_pos, GetRoom(currentLevel, shell->room_number)->maxceiling, shell->pos.z_pos, 8);
-			SetupRipple(shell->pos.x_pos, GetRoom(currentLevel, shell->room_number)->maxceiling, shell->pos.z_pos, (GetRandomControl() & 3) + 8, 2);
+			TriggerSmallSplash(shell->pos.pos.x, GetRoom(currentLevel, shell->room_number)->maxceiling, shell->pos.pos.z, 8);
+			SetupRipple(shell->pos.pos.x, GetRoom(currentLevel, shell->room_number)->maxceiling, shell->pos.pos.z, (GetRandomControl() & 3) + 8, 2);
 			shell->fallspeed >>= 5;
 			continue;
 		}
 
-		c = GetCeiling(floor, shell->pos.x_pos, shell->pos.y_pos, shell->pos.z_pos);
+		c = GetCeiling(floor, shell->pos.pos.x, shell->pos.pos.y, shell->pos.pos.z);
 
-		if(shell->pos.y_pos < c) {
+		if(shell->pos.pos.y < c) {
 			SoundEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
 			shell->speed -= 4;
 
@@ -1096,13 +1096,13 @@ void UpdateGunShells() {
 				continue;
 			}
 
-			shell->pos.y_pos = c;
+			shell->pos.pos.y = c;
 			shell->fallspeed = -shell->fallspeed;
 		}
 
-		h = GetHeight(floor, shell->pos.x_pos, shell->pos.y_pos, shell->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		h = GetHeight(floor, shell->pos.pos.x, shell->pos.pos.y, shell->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(shell->pos.y_pos >= h) {
+		if(shell->pos.pos.y >= h) {
 			SoundEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
 			shell->speed -= 8;
 
@@ -1115,11 +1115,11 @@ void UpdateGunShells() {
 				shell->fallspeed = -shell->fallspeed >> 1;
 			} else {
 				shell->DirXrot += 0x8000;
-				shell->pos.x_pos = ox;
-				shell->pos.z_pos = oz;
+				shell->pos.pos.x = ox;
+				shell->pos.pos.z = oz;
 			}
 
-			shell->pos.y_pos = oy;
+			shell->pos.pos.y = oy;
 		}
 	}
 }
@@ -1398,13 +1398,13 @@ BUBBLE_STRUCT* GetFreeBubble() {
 void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long biggest) {
 	BUBBLE_STRUCT* bubble;
 
-	GetFloor(pos->x_pos, pos->y_pos, pos->z_pos, &room_number);
+	GetFloor(pos->pos.x, pos->pos.y, pos->pos.z, &room_number);
 
 	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
 		bubble = GetFreeBubble();
-		bubble->pos.x = pos->x_pos;
-		bubble->pos.y = pos->y_pos;
-		bubble->pos.z = pos->z_pos;
+		bubble->pos.x = pos->pos.x;
+		bubble->pos.y = pos->pos.y;
+		bubble->pos.z = pos->pos.z;
 		bubble->room_number = room_number;
 		bubble->speed = (GetRandomControl() & 0xFF) + 64;
 		bubble->shade = 0;
@@ -1508,11 +1508,11 @@ void TriggerLaraDrips() {
 			drip->R = (GetRandomControl() & 7) + 16;
 			drip->G = (GetRandomControl() & 7) + 24;
 			drip->B = (GetRandomControl() & 7) + 32;
-			drip->Yvel = (GetRandomControl() & 0x1F) + 32;
-			drip->Gravity = (GetRandomControl() & 0x1F) + 32;
+			drip->Yvel = (GetRandomControl() & 0x1F) + 96;
+			drip->Gravity = (GetRandomControl() & 0x1F) + 64;
 			drip->Life = (GetRandomControl() & 0x1F) + 16;
 			drip->RoomNumber = lara_item->room_number;
-			lara.wet[i] -= 4;
+			lara.wet[i] -= 28;
 		}
 	}
 }
@@ -1556,8 +1556,8 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 	SPARKS* sptr;
 	long dx, dz, xvel, zvel;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.z - z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -1639,13 +1639,13 @@ void UpdateShockwaves() {
 
 		if(lara_item->hit_points >= 0 && sw->Flags & 3) {
 			bounds = GetBestFrame(lara_item);
-			dx = lara_item->pos.x_pos - sw->x;
-			dz = lara_item->pos.z_pos - sw->z;
+			dx = lara_item->pos.pos.x - sw->x;
+			dz = lara_item->pos.pos.z - sw->z;
 			dist = phd_sqrt(SQUARE(dx) + SQUARE(dz));
 
-			if(sw->y > lara_item->pos.y_pos + bounds[2] && sw->y < bounds[3] + lara_item->pos.y_pos + 256 && dist > sw->InnerRad && dist < sw->OuterRad) {
+			if(sw->y > lara_item->pos.pos.y + bounds[2] && sw->y < bounds[3] + lara_item->pos.pos.y + 256 && dist > sw->InnerRad && dist < sw->OuterRad) {
 				dir = (short)phd_atan(dz, dx);
-				TriggerShockwaveHitEffect(lara_item->pos.x_pos, sw->y, lara_item->pos.z_pos, *(long*)&sw->r, dir, sw->Speed);
+				TriggerShockwaveHitEffect(lara_item->pos.pos.x, sw->y, lara_item->pos.pos.z, *(long*)&sw->r, dir, sw->Speed);
 				lara_item->hit_points -= sw->Speed >> (((sw->Flags & 2) != 0) + 2);
 			} else {
 				sw->Temp = 0;
@@ -1749,8 +1749,8 @@ void TriggerLightningGlow(long x, long y, long z, long rgb) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.z - z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -1862,7 +1862,7 @@ void S_DrawSparks() {
 	}
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 	XY = (long*)&tsv_buffer[0];
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
@@ -1876,9 +1876,9 @@ void S_DrawSparks() {
 
 		if(sptr->Flags & 0x40) {
 			fx = GetEffect(currentLevel, sptr->FxObj);
-			x = sptr->x + fx->pos.x_pos;
-			y = sptr->y + fx->pos.y_pos;
-			z = sptr->z + fx->pos.z_pos;
+			x = sptr->x + fx->pos.pos.x;
+			y = sptr->y + fx->pos.pos.y;
+			z = sptr->z + fx->pos.pos.z;
 
 			if(sptr->sLife - sptr->Life > (GetRandomDraw() & 7) + 4) {
 				sptr->x = x;
@@ -1922,9 +1922,9 @@ void S_DrawSparks() {
 					sptr->Flags &= ~0x1080;
 				}
 			} else {
-				x = sptr->x + item->pos.x_pos;
-				y = sptr->y + item->pos.y_pos;
-				z = sptr->z + item->pos.z_pos;
+				x = sptr->x + item->pos.pos.x;
+				y = sptr->y + item->pos.pos.y;
+				z = sptr->z + item->pos.pos.z;
 			}
 		} else {
 			x = sptr->x;
@@ -1932,9 +1932,9 @@ void S_DrawSparks() {
 			z = sptr->z;
 		}
 
-		x -= lara_item->pos.x_pos;
-		y -= lara_item->pos.y_pos;
-		z -= lara_item->pos.z_pos;
+		x -= lara_item->pos.pos.x;
+		y -= lara_item->pos.pos.y;
+		z -= lara_item->pos.pos.z;
 
 		if(x < -0x5000 || x > 0x5000 || y < -0x5000 || y > 0x5000 || z < -0x5000 || z > 0x5000) {
 			sptr->On = 0;

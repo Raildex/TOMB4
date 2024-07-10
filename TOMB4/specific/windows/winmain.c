@@ -542,7 +542,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 		free(buf);
 	}
 
-	S_GameMain(NULL);
+	S_GameMain();
 	WinProcMsg();
 
 	if(cutseqpakPtr) {

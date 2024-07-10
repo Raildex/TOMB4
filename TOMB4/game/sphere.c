@@ -36,9 +36,9 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 	}
 
 	if(WorldSpace & 1) {
-		x = item->pos.x_pos;
-		y = item->pos.y_pos;
-		z = item->pos.z_pos;
+		x = item->pos.pos.x;
+		y = item->pos.pos.y;
+		z = item->pos.pos.z;
 		phd_PushUnitMatrix();
 		phd_SetTrans(0, 0, 0);
 	} else {
@@ -46,7 +46,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 		y = 0;
 		x = 0;
 		phd_PushMatrix();
-		phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 	}
 
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
@@ -299,9 +299,9 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 		phd_TranslateRel(pos->x, pos->y, pos->z);
 	}
 
-	pos->x = item->pos.x_pos + (long)mMXPtr[M03];
-	pos->y = item->pos.y_pos + (long)mMXPtr[M13];
-	pos->z = item->pos.z_pos + (long)mMXPtr[M23];
+	pos->x = item->pos.pos.x + (long)mMXPtr[M03];
+	pos->y = item->pos.pos.y + (long)mMXPtr[M13];
+	pos->z = item->pos.pos.z + (long)mMXPtr[M23];
 	mMXPtr = mMx;
 	mIMptr = mIMx;
 	phd_mxptr = iMx;
@@ -375,7 +375,7 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 			bone += 4;
 		}
 
-		phd_TranslateRel_I(vec->x_pos, vec->y_pos, vec->z_pos);
+		phd_TranslateRel_I(vec->pos.x, vec->pos.y, vec->pos.z);
 		phd_RotYXZ_I(vec->y_rot, vec->x_rot, vec->z_rot);
 		mInterpolateMatrix();
 	} else {
@@ -413,15 +413,15 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 
 			bone += 4;
 		}
-		phd_TranslateRel(vec->x_pos, vec->y_pos, vec->z_pos);
+		phd_TranslateRel(vec->pos.x, vec->pos.y, vec->pos.z);
 		phd_RotYXZ(vec->y_rot, vec->x_rot, vec->z_rot);
 	}
 	vec->y_rot = (short)atan2(mMXPtr[M10], mMXPtr[M00]) * 16384;
 	vec->x_rot = (short)asin(-mMXPtr[M20]) * 16384;
 	vec->z_rot = (short)atan2(-mMXPtr[M21], mMXPtr[M22]) * 16384;
-	vec->x_pos = item->pos.x_pos + (long)mMXPtr[M03];
-	vec->y_pos = item->pos.y_pos + (long)mMXPtr[M13];
-	vec->z_pos = item->pos.z_pos + (long)mMXPtr[M23];
+	vec->pos.x = item->pos.pos.x + (long)mMXPtr[M03];
+	vec->pos.y = item->pos.pos.y + (long)mMXPtr[M13];
+	vec->pos.z = item->pos.pos.z + (long)mMXPtr[M23];
 	mMXPtr = mMx;
 	mIMptr = mIMx;
 	phd_mxptr = iMx;

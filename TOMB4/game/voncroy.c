@@ -125,9 +125,9 @@ void SetCutSceneCamera(ITEM_INFO* item) {
 	}
 
 	if(f & 0x20000) {
-		camera.target.pos.x = item->pos.x_pos;
-		camera.target.pos.y = item->pos.y_pos - 256;
-		camera.target.pos.z = item->pos.z_pos;
+		camera.target.pos.x = item->pos.pos.x;
+		camera.target.pos.y = item->pos.pos.y - 256;
+		camera.target.pos.z = item->pos.pos.z;
 	}
 
 	if(IsRoomOutside(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z) == -2) {
@@ -167,17 +167,17 @@ void GetAIEnemy(CREATURE_INFO* info, long tfl) {
 			info->enemy = &info->ai_target;
 			info->ai_target.object_number = ai->object_number;
 			info->ai_target.room_number = ai->room_number;
-			info->ai_target.pos.x_pos = ai->x;
-			info->ai_target.pos.y_pos = ai->y;
-			info->ai_target.pos.z_pos = ai->z;
+			info->ai_target.pos.pos.x = ai->x;
+			info->ai_target.pos.pos.y = ai->y;
+			info->ai_target.pos.pos.z = ai->z;
 			info->ai_target.pos.y_rot = ai->y_rot;
 			info->ai_target.flags = ai->flags;
 			info->ai_target.trigger_flags = ai->trigger_flags;
 			info->ai_target.box_number = ai->box_number;
 
 			if(!(info->ai_target.flags & IFL_TRIGGERED)) {
-				info->ai_target.pos.x_pos += (256 * phd_sin(info->ai_target.pos.y_rot)) >> W2V_SHIFT;
-				info->ai_target.pos.z_pos += (256 * phd_cos(info->ai_target.pos.y_rot)) >> W2V_SHIFT;
+				info->ai_target.pos.pos.x += (256 * phd_sin(info->ai_target.pos.y_rot)) >> W2V_SHIFT;
+				info->ai_target.pos.pos.z += (256 * phd_cos(info->ai_target.pos.y_rot)) >> W2V_SHIFT;
 			}
 		}
 	}
@@ -238,10 +238,10 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 		}
 
 		GetAIEnemy(info, lara.locationPad);
-		item->pos.x_pos = info->enemy->pos.x_pos;
-		item->pos.y_pos = info->enemy->pos.y_pos;
-		item->pos.z_pos = info->enemy->pos.z_pos;
-		ang = (short)phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+		item->pos.pos.x = info->enemy->pos.pos.x;
+		item->pos.pos.y = info->enemy->pos.pos.y;
+		item->pos.pos.z = info->enemy->pos.pos.z;
+		ang = (short)phd_atan(lara_item->pos.pos.z - item->pos.pos.z, lara_item->pos.pos.x - item->pos.pos.x);
 
 		if(item->item_flags[3] == 14 || item->item_flags[3] == 3) {
 			item->pos.y_rot = info->enemy->pos.y_rot;
@@ -255,7 +255,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 		}
 
 		IsRoomOutsideNo = -1;
-		IsRoomOutside(item->pos.x_pos, item->pos.y_pos - 64, item->pos.z_pos);
+		IsRoomOutside(item->pos.pos.x, item->pos.pos.y - 64, item->pos.pos.z);
 
 		if(IsRoomOutsideNo != item->room_number && IsRoomOutsideNo != -1) {
 			ItemNewRoom(GetItemNum(currentLevel, item), IsRoomOutsideNo);
@@ -265,9 +265,9 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 
 		if(lara_item->current_anim_state != AS_SURFTREAD) {
 			room_number = lara_item->room_number;
-			floor = GetFloor(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, &room_number);
-			h = GetHeight(floor, lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-			lara_item->pos.y_pos = h;
+			floor = GetFloor(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z, &room_number);
+			h = GetHeight(floor, lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			lara_item->pos.pos.y = h;
 			lara_item->anim_number = ANIM_STOP;
 			lara_item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 			lara_item->current_anim_state = AS_STOP;
@@ -396,9 +396,9 @@ void VoncroyRaceControl(short item_number) {
 	room_number = item->room_number;
 	Xoffset = 808 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	Zoffset = 808 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
-	x = item->pos.x_pos + Xoffset;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos + Zoffset;
+	x = item->pos.pos.x + Xoffset;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z + Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
 	nearheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	room_number = item->room_number;
@@ -428,10 +428,10 @@ void VoncroyRaceControl(short item_number) {
 	oEnemy = VonCroy->enemy;
 
 	if(item->anim_number == GetObjectInfo(currentLevel, VON_CROY)->anim_index + 36 || item->anim_number == GetObjectInfo(currentLevel, VON_CROY)->anim_index + 52) {
-		item->pos.x_pos += Xoffset;
-		item->pos.z_pos += Zoffset;
+		item->pos.pos.x += Xoffset;
+		item->pos.pos.z += Zoffset;
 		room_number = item->room_number;
-		GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number);
+		GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &item->room_number);
 
 		if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 1) {
 			CreateZone(item);
@@ -439,8 +439,8 @@ void VoncroyRaceControl(short item_number) {
 
 		CreatureAIInfo(item, &info);
 		item->room_number = room_number;
-		item->pos.z_pos -= Zoffset;
-		item->pos.x_pos -= Xoffset;
+		item->pos.pos.z -= Zoffset;
+		item->pos.pos.x -= Xoffset;
 	} else {
 		CreatureAIInfo(item, &info);
 	}
@@ -452,8 +452,8 @@ void VoncroyRaceControl(short item_number) {
 		iAngle = info.angle;
 		distance = info.distance;
 	} else {
-		dx = lara_item->pos.x_pos - item->pos.x_pos;
-		dz = lara_item->pos.z_pos - item->pos.z_pos;
+		dx = lara_item->pos.pos.x - item->pos.pos.x;
+		dz = lara_item->pos.pos.z - item->pos.pos.z;
 		iAngle = phd_atan(dz, dx) - item->pos.y_rot;
 
 		if(iAngle > -0x4000 && iAngle < 0x4000) {
@@ -614,9 +614,9 @@ void VoncroyRaceControl(short item_number) {
 
 			VonCroy->LOT.is_jumping = 1;
 		} else if(VonCroy->monkey_ahead) {
-			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+			h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 			if(c == h - 1536) {
 				item->goal_anim_state = 4;
@@ -709,9 +709,9 @@ void VoncroyRaceControl(short item_number) {
 		VonCroy->maximum_turn = 0;
 
 		if(item->box_number == VonCroy->LOT.target_box || !VonCroy->monkey_ahead) {
-			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+			h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 			if(c == h - 1536) {
 				item->goal_anim_state = 1;
@@ -728,9 +728,9 @@ void VoncroyRaceControl(short item_number) {
 		VonCroy->maximum_turn = 1092;
 
 		if(item->box_number == VonCroy->LOT.target_box || !VonCroy->monkey_ahead) {
-			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+			h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 			if(c == h - 1536) {
 				item->goal_anim_state = 4;
@@ -819,7 +819,7 @@ void VoncroyRaceControl(short item_number) {
 			ifl3 = -1;
 		} else if(!VonCroy->flags && oEnemy) {
 			if(item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 15 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 26) {
-				if(abs(oEnemy->pos.x_pos - item->pos.x_pos) < 512 && abs(oEnemy->pos.y_pos - item->pos.y_pos) <= 512 && abs(oEnemy->pos.z_pos - item->pos.z_pos) < 512) {
+				if(abs(oEnemy->pos.pos.x - item->pos.pos.x) < 512 && abs(oEnemy->pos.pos.y - item->pos.pos.y) <= 512 && abs(oEnemy->pos.pos.z - item->pos.pos.z) < 512) {
 					oEnemy->hit_points -= 20;
 					oEnemy->hit_status = 1;
 					VonCroy->flags = 1;
@@ -853,8 +853,8 @@ void VoncroyRaceControl(short item_number) {
 
 	if(ifl3 == -1 && oEnemy) {
 		room_number = oEnemy->room_number;
-		floor = GetFloor(oEnemy->pos.x_pos, oEnemy->pos.y_pos, oEnemy->pos.z_pos, &room_number);
-		GetHeight(floor, oEnemy->pos.x_pos, oEnemy->pos.y_pos, oEnemy->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		floor = GetFloor(oEnemy->pos.pos.x, oEnemy->pos.pos.y, oEnemy->pos.pos.z, &room_number);
+		GetHeight(floor, oEnemy->pos.pos.x, oEnemy->pos.pos.y, oEnemy->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		TestTriggers(trigger_index, 1, 0);
 		ifl3 = 1;
 	}
@@ -954,9 +954,9 @@ void VoncroyControl(short item_number) {
 	Xoffset = 808 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	Zoffset = 808 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 
-	x = item->pos.x_pos + Xoffset;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos + Zoffset;
+	x = item->pos.pos.x + Xoffset;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z + Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
 	nearheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
@@ -992,8 +992,8 @@ void VoncroyControl(short item_number) {
 			candidate = GetItem(currentLevel, baddie->item_num);
 
 			if(candidate->object_number != VON_CROY) {
-				dx = candidate->pos.x_pos - item->pos.x_pos;
-				dz = candidate->pos.z_pos - item->pos.z_pos;
+				dx = candidate->pos.pos.x - item->pos.pos.x;
+				dz = candidate->pos.pos.z - item->pos.pos.z;
 				dist = SQUARE(dx) + SQUARE(dz);
 
 				if(abs(dx) <= 5120 && abs(dz) <= 5120 && dist < max_dist) {
@@ -1013,10 +1013,10 @@ void VoncroyControl(short item_number) {
 	}
 
 	if(item->anim_number == GetObjectInfo(currentLevel, VON_CROY)->anim_index + 36 || item->anim_number == GetObjectInfo(currentLevel, VON_CROY)->anim_index + 52) {
-		item->pos.x_pos += Xoffset;
-		item->pos.z_pos += Zoffset;
+		item->pos.pos.x += Xoffset;
+		item->pos.pos.z += Zoffset;
 		room_number = item->room_number;
-		GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number);
+		GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &item->room_number);
 
 		if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 1) {
 			CreateZone(item);
@@ -1024,8 +1024,8 @@ void VoncroyControl(short item_number) {
 
 		CreatureAIInfo(item, &VonCroyAI);
 		item->room_number = room_number;
-		item->pos.z_pos -= Zoffset;
-		item->pos.x_pos -= Xoffset;
+		item->pos.pos.z -= Zoffset;
+		item->pos.pos.x -= Xoffset;
 	} else {
 		CreatureAIInfo(item, &VonCroyAI);
 	}
@@ -1036,8 +1036,8 @@ void VoncroyControl(short item_number) {
 	if(VonCroy->enemy == lara_item) {
 		memcpy(&VonCroyLaraAI, &VonCroyAI, sizeof(VonCroyLaraAI));
 	} else {
-		dx = lara_item->pos.x_pos - item->pos.x_pos;
-		dz = lara_item->pos.z_pos - item->pos.z_pos;
+		dx = lara_item->pos.pos.x - item->pos.pos.x;
+		dz = lara_item->pos.pos.z - item->pos.pos.z;
 		VonCroyLaraAI.angle = (short)(phd_atan(dz, dx) - item->pos.y_rot);
 		VonCroyLaraAI.ahead = VonCroyLaraAI.angle > -0x4000 && VonCroyLaraAI.angle < 0x4000;
 		VonCroyLaraAI.enemy_facing = VonCroyLaraAI.angle + 0x8000 - lara_item->pos.y_rot;
@@ -1052,9 +1052,9 @@ void VoncroyControl(short item_number) {
 		dz = abs(dz);
 
 		if(dx > dz) {
-			VonCroyLaraAI.x_angle = (short)phd_atan(dx + (dz >> 1), item->pos.y_pos - lara_item->pos.y_pos);
+			VonCroyLaraAI.x_angle = (short)phd_atan(dx + (dz >> 1), item->pos.pos.y - lara_item->pos.pos.y);
 		} else {
-			VonCroyLaraAI.x_angle = (short)phd_atan(dz + (dx >> 1), item->pos.y_pos - lara_item->pos.y_pos);
+			VonCroyLaraAI.x_angle = (short)phd_atan(dz + (dx >> 1), item->pos.pos.y - lara_item->pos.pos.y);
 		}
 	}
 
@@ -1132,7 +1132,7 @@ void VoncroyControl(short item_number) {
 			if(VonCroyAI.bite) {
 				item->goal_anim_state = 31;
 			} else if(enemy->hit_points > 0 && VonCroyAI.ahead) {
-				if(abs(enemy->pos.y_pos + 512 - item->pos.y_pos) < 512) {
+				if(abs(enemy->pos.pos.y + 512 - item->pos.pos.y) < 512) {
 					item->goal_anim_state = 21;
 				}
 			}
@@ -1266,9 +1266,9 @@ void VoncroyControl(short item_number) {
 		} else if(VonCroyLaraAI.bite) {
 			item->goal_anim_state = 1;
 		} else if(VonCroy->monkey_ahead) {
-			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+			h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 			if(c == h - 1536) {
 				if(item->meshswap_meshbits & 0x40080) {
@@ -1285,7 +1285,7 @@ void VoncroyControl(short item_number) {
 			if(VonCroyAI.bite) {
 				item->goal_anim_state = 31;
 			} else if(enemy->hit_points > 0 && VonCroyAI.ahead) {
-				if(abs(enemy->pos.y_pos + 512 - item->pos.y_pos) < 512) {
+				if(abs(enemy->pos.pos.y + 512 - item->pos.pos.y) < 512) {
 					item->goal_anim_state = 21;
 				}
 			}
@@ -1371,9 +1371,9 @@ void VoncroyControl(short item_number) {
 		VonCroy->maximum_turn = 0;
 
 		if(item->box_number == VonCroy->LOT.target_box || !VonCroy->monkey_ahead) {
-			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+			h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 			if(c == h - 1536) {
 				item->goal_anim_state = 1;
@@ -1390,9 +1390,9 @@ void VoncroyControl(short item_number) {
 		VonCroy->maximum_turn = 1092;
 
 		if(item->box_number == VonCroy->LOT.target_box || !VonCroy->monkey_ahead) {
-			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+			h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 			if(c == h - 1536) {
 				item->goal_anim_state = 4;
@@ -1468,7 +1468,7 @@ void VoncroyControl(short item_number) {
 		CreatureYRot(&item->pos, VonCroyAI.angle, 1092);
 
 		if(!VonCroy->flags && enemy && item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 20 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 45) {
-			if(abs(enemy->pos.x_pos - item->pos.x_pos) < 512 && abs(enemy->pos.y_pos + 768 - item->pos.y_pos) <= 512 && abs(enemy->pos.z_pos - item->pos.z_pos) < 512) {
+			if(abs(enemy->pos.pos.x - item->pos.pos.x) < 512 && abs(enemy->pos.pos.y + 768 - item->pos.pos.y) <= 512 && abs(enemy->pos.pos.z - item->pos.pos.z) < 512) {
 				enemy->hit_points -= 40;
 
 				if(enemy->hit_points <= 0) {
@@ -1528,7 +1528,7 @@ void VoncroyControl(short item_number) {
 			ifl3 = -1;
 			VonCroy->flags = 1;
 		} else if(!VonCroy->flags && enemy && item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 15 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 26) {
-			if(abs(enemy->pos.x_pos - item->pos.x_pos) < 512 && abs(enemy->pos.y_pos - item->pos.y_pos) <= 512 && abs(enemy->pos.z_pos - item->pos.z_pos) < 512) {
+			if(abs(enemy->pos.pos.x - item->pos.pos.x) < 512 && abs(enemy->pos.pos.y - item->pos.pos.y) <= 512 && abs(enemy->pos.pos.z - item->pos.pos.z) < 512) {
 				enemy->hit_points -= 20;
 
 				if(enemy->hit_points <= 0) {
@@ -1589,7 +1589,7 @@ void VoncroyControl(short item_number) {
 
 	if(ifl3 == -1) {
 		enemy = &VonCroy->ai_target;
-		TestTriggersAtXYZ(VonCroy->ai_target.pos.x_pos, VonCroy->ai_target.pos.y_pos, VonCroy->ai_target.pos.z_pos, VonCroy->ai_target.room_number, 1, 0);
+		TestTriggersAtXYZ(VonCroy->ai_target.pos.pos.x, VonCroy->ai_target.pos.pos.y, VonCroy->ai_target.pos.pos.z, VonCroy->ai_target.room_number, 1, 0);
 		ifl3 = 1;
 	}
 

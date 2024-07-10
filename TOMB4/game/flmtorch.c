@@ -127,7 +127,7 @@ void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				l->anim_number = ANIM_LIGHT_TORCH4;
 			} else {
 				l->item_flags[3] = 1;
-				l->anim_number = (short)((abs(l->pos.y_pos - item->pos.y_pos) >> 8) + ANIM_LIGHT_TORCH1);
+				l->anim_number = (short)((abs(l->pos.pos.y - item->pos.pos.y) >> 8) + ANIM_LIGHT_TORCH1);
 			}
 
 			l->current_anim_state = AS_CONTROLLED;
@@ -146,7 +146,7 @@ void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			lara.LitTorch = 0;
 		}
 
-		TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
+		TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 1, item->flags & IFL_CODEBITS);
 		item->flags |= IFL_CODEBITS;
 		item->item_flags[3] = 0;
 		item->status = ITEM_ACTIVE;
@@ -285,13 +285,13 @@ void FlameTorchControl(short item_number) {
 		item->pos.z_rot = 0;
 	}
 
-	x = item->pos.x_pos;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos;
+	x = item->pos.pos.x;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z;
 	xv = item->speed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	zv = item->speed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
-	item->pos.x_pos += xv;
-	item->pos.z_pos += zv;
+	item->pos.pos.x += xv;
+	item->pos.pos.z += zv;
 
 	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 		item->fallspeed += (5 - item->fallspeed) >> 1;
@@ -305,7 +305,7 @@ void FlameTorchControl(short item_number) {
 	}
 
 	yv = item->fallspeed;
-	item->pos.y_pos += yv;
+	item->pos.pos.y += yv;
 	DoProperDetection(item_number, x, y, z, xv, yv, zv);
 
 	if(GetCollidedObjects(item, 0, 1, itemlist, 5, meshlist, 5, 0)) {
@@ -317,9 +317,9 @@ void FlameTorchControl(short item_number) {
 			}
 		} else {
 			sinfo = GetStaticObject(currentLevel, meshlist[0]->static_number);
-			pos.x_pos = meshlist[0]->x;
-			pos.y_pos = meshlist[0]->y;
-			pos.z_pos = meshlist[0]->z;
+			pos.pos.x = meshlist[0]->x;
+			pos.pos.y = meshlist[0]->y;
+			pos.pos.z = meshlist[0]->z;
 			pos.y_rot = meshlist[0]->y_rot;
 			ItemPushLaraStatic(item, (short*)&sinfo->x_minc, &pos, &mycoll);
 		}
@@ -328,7 +328,7 @@ void FlameTorchControl(short item_number) {
 	}
 
 	if(item->item_flags[3]) {
-		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 12 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
+		TriggerDynamic(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 12 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
 
 		if(!(wibble & 7)) {
 			TriggerTorchFlame(item_number, 1);

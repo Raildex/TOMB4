@@ -78,8 +78,8 @@ void DogControl(short item_number) {
 		if(dog->enemy == lara_item) {
 			lara_info.distance = info.distance;
 		} else {
-			lara_dx = lara_item->pos.x_pos - item->pos.x_pos;
-			lara_dz = lara_item->pos.z_pos - item->pos.z_pos;
+			lara_dx = lara_item->pos.pos.x - item->pos.pos.x;
+			lara_dz = lara_item->pos.pos.z - item->pos.pos.z;
 			phd_atan(lara_dz, lara_dx);
 			lara_info.distance = SQUARE(lara_dx) + SQUARE(lara_dz);
 		}

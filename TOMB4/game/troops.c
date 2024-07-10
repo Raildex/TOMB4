@@ -116,8 +116,8 @@ void TroopControl(short item_number) {
 					enemy = GetItem(currentLevel, baddie->item_num);
 
 					if(enemy->object_number != LARA && enemy->object_number != TROOPS && (enemy != lara_item || troop->hurt_by_lara)) {
-						dx = enemy->pos.x_pos - item->pos.x_pos;
-						dz = enemy->pos.z_pos - item->pos.z_pos;
+						dx = enemy->pos.pos.x - item->pos.pos.x;
+						dz = enemy->pos.pos.z - item->pos.pos.z;
 						dist = SQUARE(dx) + SQUARE(dz);
 
 						if(dist < max_dist) {
@@ -139,8 +139,8 @@ void TroopControl(short item_number) {
 			iDistance = info.distance;
 			iAngle = info.angle;
 		} else {
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = lara_item->pos.pos.x - item->pos.pos.x;
+			dz = lara_item->pos.pos.z - item->pos.pos.z;
 			iAngle = (short)(phd_atan(dz, dx) - item->pos.y_rot);
 			iDistance = SQUARE(dx) + SQUARE(dz);
 		}

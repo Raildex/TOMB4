@@ -304,9 +304,9 @@ static void mGenerateW2V(PHD_3DPOS* viewPos) {
 		}
 	}
 
-	mW2V[M03] = (float)viewPos->x_pos;
-	mW2V[M13] = (float)viewPos->y_pos;
-	mW2V[M23] = (float)viewPos->z_pos;
+	mW2V[M03] = (float)viewPos->pos.x;
+	mW2V[M13] = (float)viewPos->pos.y;
+	mW2V[M23] = (float)viewPos->pos.z;
 	mMXPtr[M03] = mW2V[M03];
 	mMXPtr[M13] = mW2V[M13];
 	mMXPtr[M23] = mW2V[M23];
@@ -902,10 +902,10 @@ void phd_GenerateW2V(PHD_3DPOS* viewPos) {
 		}
 	}
 
-	w2v_matrix[M03] = phd_mxptr[M03] = viewPos->x_pos;
+	w2v_matrix[M03] = phd_mxptr[M03] = viewPos->pos.x;
 	;
-	w2v_matrix[M13] = phd_mxptr[M13] = viewPos->y_pos;
-	w2v_matrix[M23] = phd_mxptr[M23] = viewPos->z_pos;
+	w2v_matrix[M13] = phd_mxptr[M13] = viewPos->pos.y;
+	w2v_matrix[M23] = phd_mxptr[M23] = viewPos->pos.z;
 	phd_mxptr[M03] = w2v_matrix[M03];
 	phd_mxptr[M13] = w2v_matrix[M13];
 	phd_mxptr[M23] = w2v_matrix[M23];
@@ -925,9 +925,9 @@ void phd_LookAt(long sx, long sy, long sz, long tx, long ty, long tz, short roll
 	short angles[2];
 
 	phd_GetVectorAngles(tx - sx, ty - sy, tz - sz, angles);
-	viewPos.x_pos = sx;
-	viewPos.y_pos = sy;
-	viewPos.z_pos = sz;
+	viewPos.pos.x = sx;
+	viewPos.pos.y = sy;
+	viewPos.pos.z = sz;
 	viewPos.x_rot = angles[1];
 	viewPos.y_rot = angles[0];
 	viewPos.z_rot = roll;

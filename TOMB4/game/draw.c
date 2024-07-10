@@ -308,15 +308,15 @@ void CalculateObjectLighting(ITEM_INFO* item, short* frame) {
 	long x, y, z;
 
 	if(item->shade >= 0) {
-		S_CalculateStaticMeshLight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->shade & 0x7FFF, GetRoom(currentLevel, item->room_number));
+		S_CalculateStaticMeshLight(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->shade & 0x7FFF, GetRoom(currentLevel, item->room_number));
 	} else {
 		phd_PushUnitMatrix();
 		phd_SetTrans(0, 0, 0);
 		phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 		phd_TranslateRel((frame[0] + frame[1]) >> 1, (frame[2] + frame[3]) >> 1, (frame[4] + frame[5]) >> 1);
-		x = item->pos.x_pos + (long)mMXPtr[M03];
-		y = item->pos.y_pos + (long)mMXPtr[M13];
-		z = item->pos.z_pos + (long)mMXPtr[M23];
+		x = item->pos.pos.x + (long)mMXPtr[M03];
+		y = item->pos.pos.y + (long)mMXPtr[M13];
+		z = item->pos.pos.z + (long)mMXPtr[M23];
 		phd_PopMatrix();
 		current_item = item;
 		item->il.item_pos.x = x;
@@ -339,15 +339,15 @@ void CalculateObjectLightingLara() {
 		pos.z = 0;
 
 		if(lara_item->anim_number == ANIM_DUCKBREATHE || lara_item->anim_number == ANIM_ALL4S || lara_item->anim_number == ANIM_BREATH) {
-			pos.x = lara_item->pos.x_pos;
+			pos.x = lara_item->pos.pos.x;
 
 			if(lara_item->anim_number == ANIM_BREATH) {
-				pos.y = lara_item->pos.y_pos - 512;
+				pos.y = lara_item->pos.pos.y - 512;
 			} else {
-				pos.y = lara_item->pos.y_pos - 192;
+				pos.y = lara_item->pos.pos.y - 192;
 			}
 
-			pos.z = lara_item->pos.z_pos;
+			pos.z = lara_item->pos.pos.z;
 			room_no = lara_item->room_number;
 			GetFloor(pos.x, pos.y, pos.z, &room_no);
 		} else {
@@ -385,7 +385,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 	}
 
 	phd_PushMatrix();
-	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 
 	if(obj->object_mip && (obj + 1)->loaded && mMXPtr[M23] / 4 > obj->object_mip) {
@@ -791,13 +791,13 @@ void DrawRooms(short CurrentRoom) {
 	DrawRopeList();
 	nPolyType = 3;
 	S_DrawSparks();
-	lx = lara_item->pos.x_pos;
-	ly = lara_item->pos.y_pos;
-	lz = lara_item->pos.z_pos;
+	lx = lara_item->pos.pos.x;
+	ly = lara_item->pos.pos.y;
+	lz = lara_item->pos.pos.z;
 	lr = lara_item->room_number;
-	lara_item->pos.x_pos = camera.pos.pos.x;
-	lara_item->pos.y_pos = camera.pos.pos.y;
-	lara_item->pos.z_pos = camera.pos.pos.z;
+	lara_item->pos.pos.x = camera.pos.pos.x;
+	lara_item->pos.pos.y = camera.pos.pos.y;
+	lara_item->pos.pos.z = camera.pos.pos.z;
 	lara_item->room_number = camera.pos.room_number;
 	DoUwEffect();
 	S_DrawFires();
@@ -812,9 +812,9 @@ void DrawRooms(short CurrentRoom) {
 	DrawLocusts();
 	DrawLightning();
 	S_DrawFootPrints();
-	lara_item->pos.x_pos = lx;
-	lara_item->pos.y_pos = ly;
-	lara_item->pos.z_pos = lz;
+	lara_item->pos.pos.x = lx;
+	lara_item->pos.pos.y = ly;
+	lara_item->pos.pos.z = lz;
 	lara_item->room_number = lr;
 
 	if(gfLevelFlags & GF_LENSFLARE) {
@@ -1182,7 +1182,7 @@ void DrawEffect(short fx_num) {
 
 	if(obj->draw_routine && obj->loaded) {
 		phd_PushMatrix();
-		phd_TranslateAbs(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+		phd_TranslateAbs(fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z);
 
 		if(mMXPtr[M23] > f_mznear && mMXPtr[M23] < f_mzfar) {
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
@@ -1504,12 +1504,12 @@ void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds) {
 	mRotBoundingBoxNoPersp(bounds, rotatedBounds);
 	phd_PopMatrix();
 
-	xMin = item->pos.x_pos + rotatedBounds[0];
-	xMax = item->pos.x_pos + rotatedBounds[1];
-	yMin = item->pos.y_pos + rotatedBounds[2];
-	yMax = item->pos.y_pos + rotatedBounds[3];
-	zMin = item->pos.z_pos + rotatedBounds[4];
-	zMax = item->pos.z_pos + rotatedBounds[5];
+	xMin = item->pos.pos.x + rotatedBounds[0];
+	xMax = item->pos.pos.x + rotatedBounds[1];
+	yMin = item->pos.pos.y + rotatedBounds[2];
+	yMax = item->pos.pos.y + rotatedBounds[3];
+	zMin = item->pos.pos.z + rotatedBounds[4];
+	zMax = item->pos.pos.z + rotatedBounds[5];
 
 	xMinR = r->x + 1024;
 	xMaxR = xMinR + ((r->y_size - 2) << 10);

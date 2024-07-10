@@ -194,14 +194,14 @@ void AlignLaraToRope(ITEM_INFO* l) {
 	temp[M22] = v.z;
 	phd_GetMatrixAngles(temp, xyz);
 	memcpy(ropematrix, temp, sizeof(ropematrix));
-	l->pos.x_pos = rope->Position.x + (rope->MeshSegment[i].x >> (W2V_SHIFT + 2));
-	l->pos.y_pos = rope->Position.y + (rope->MeshSegment[i].y >> (W2V_SHIFT + 2)) + lara.RopeOffset;
-	l->pos.z_pos = rope->Position.z + (rope->MeshSegment[i].z >> (W2V_SHIFT + 2));
+	l->pos.pos.x = rope->Position.x + (rope->MeshSegment[i].x >> (W2V_SHIFT + 2));
+	l->pos.pos.y = rope->Position.y + (rope->MeshSegment[i].y >> (W2V_SHIFT + 2)) + lara.RopeOffset;
+	l->pos.pos.z = rope->Position.z + (rope->MeshSegment[i].z >> (W2V_SHIFT + 2));
 	phd_PushUnitMatrix();
 	phd_RotYXZ(xyz[1], xyz[0], xyz[2]);
-	l->pos.x_pos += (long)(-112 * mMXPtr[M02]);
-	l->pos.y_pos += (long)(-112 * mMXPtr[M12]);
-	l->pos.z_pos += (long)(-112 * mMXPtr[M22]);
+	l->pos.pos.x += (long)(-112 * mMXPtr[M02]);
+	l->pos.pos.y += (long)(-112 * mMXPtr[M12]);
+	l->pos.pos.z += (long)(-112 * mMXPtr[M22]);
 	phd_PopMatrix();
 	l->pos.x_rot = xyz[0];
 	l->pos.y_rot = xyz[1];
@@ -478,9 +478,9 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) && l->gravity_status && l->fallspeed > 0 && rope->Active) {
 		bounds = GetBoundsAccurate(l);
-		x = l->pos.x_pos;
-		y = l->pos.y_pos + bounds[2] + 512;
-		z = l->pos.z_pos + (bounds[5] * phd_cos(l->pos.y_rot) >> W2V_SHIFT);
+		x = l->pos.pos.x;
+		y = l->pos.pos.y + bounds[2] + 512;
+		z = l->pos.pos.z + (bounds[5] * phd_cos(l->pos.y_rot) >> W2V_SHIFT);
 		rad = l->current_anim_state == AS_REACH ? 128 : 320;
 		i = RopeNodeCollision(rope, x, y, z, rad);
 

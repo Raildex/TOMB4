@@ -1064,9 +1064,9 @@ void RenderLoadPic(long unused) {
 	camera.pos.pos.y = gfLoadCam.y;
 	camera.pos.pos.x = gfLoadCam.x;
 	camera.pos.pos.z = gfLoadCam.z;
-	lara_item->pos.x_pos = camera.pos.pos.x;
-	lara_item->pos.y_pos = camera.pos.pos.y;
-	lara_item->pos.z_pos = camera.pos.pos.z;
+	lara_item->pos.pos.x = camera.pos.pos.x;
+	lara_item->pos.pos.y = camera.pos.pos.y;
+	lara_item->pos.pos.z = camera.pos.pos.z;
 	camera.target.pos.x = gfLoadTarget.x;
 	camera.target.pos.y = gfLoadTarget.y;
 	camera.target.pos.z = gfLoadTarget.z;

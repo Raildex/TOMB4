@@ -39,8 +39,8 @@ void InitialiseBaboon(short item_number) {
 	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->goal_anim_state = 6;
 	item->current_anim_state = 6;
-	item->item_flags[0] = (short)(item->pos.z_pos >> 2 & 0xFFFFFF00 | item->pos.x_pos >> 10);
-	item->item_flags[1] = (short)(item->pos.y_pos >> 8);
+	item->item_flags[0] = (short)(item->pos.pos.z >> 2 & 0xFFFFFF00 | item->pos.pos.x >> 10);
+	item->item_flags[1] = (short)(item->pos.pos.y >> 8);
 
 	if(item->object_number == BABOON_NORMAL) {
 		item->ai_bits = FOLLOW;
@@ -92,8 +92,8 @@ void BaboonControl(short item_number) {
 			if(baboon->enemy == lara_item) {
 				distance = info.distance;
 			} else {
-				dx = lara_item->pos.x_pos - item->pos.x_pos;
-				dz = lara_item->pos.z_pos - item->pos.z_pos;
+				dx = lara_item->pos.pos.x - item->pos.pos.x;
+				dz = lara_item->pos.pos.z - item->pos.pos.z;
 				phd_atan(dz, dx);
 				distance = SQUARE(dx) + SQUARE(dz);
 			}
@@ -175,7 +175,7 @@ void BaboonControl(short item_number) {
 					}
 				} else if(info.bite) {
 					if(info.distance < 116281) {
-						if(lara_item->pos.y_pos < item->pos.y_pos) {
+						if(lara_item->pos.pos.y < item->pos.pos.y) {
 							item->goal_anim_state = 13;
 						} else {
 							item->goal_anim_state = 12;
@@ -189,10 +189,10 @@ void BaboonControl(short item_number) {
 					} else {
 						item->goal_anim_state = 14;
 					}
-				} else if(info.distance < 465124 && item2 != lara_item && item2 && item2->object_number != AI_PATROL1 && item2->object_number != AI_PATROL2 && abs(item->pos.y_pos - item2->pos.y_pos) < 256) {
-					item->pos.x_pos = item2->pos.x_pos;
-					item->pos.y_pos = item2->pos.y_pos;
-					item->pos.z_pos = item2->pos.z_pos;
+				} else if(info.distance < 465124 && item2 != lara_item && item2 && item2->object_number != AI_PATROL1 && item2->object_number != AI_PATROL2 && abs(item->pos.pos.y - item2->pos.pos.y) < 256) {
+					item->pos.pos.x = item2->pos.pos.x;
+					item->pos.pos.y = item2->pos.pos.y;
+					item->pos.pos.z = item2->pos.pos.z;
 					item->pos.x_rot = item2->pos.x_rot;
 					item->pos.y_rot = item2->pos.y_rot;
 					item->pos.z_rot = item2->pos.z_rot;
@@ -201,7 +201,7 @@ void BaboonControl(short item_number) {
 					item->goal_anim_state = 21;
 					item->current_anim_state = 21;
 					room_number = item->room_number;
-					GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+					GetHeight(GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number), item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 					TestTriggers(trigger_index, 1, 0);
 				} else if(info.bite && info.distance < 1048576) {
 					item->goal_anim_state = 9;
@@ -260,9 +260,9 @@ void BaboonControl(short item_number) {
 					} else if(item2->object_number == AI_AMBUSH && item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 12) {
 						item->ai_bits = 0;
 						item2 = GetItem(currentLevel, item->carried_item);
-						item2->pos.x_pos = item->pos.x_pos;
-						item2->pos.y_pos = item->pos.y_pos;
-						item2->pos.z_pos = item->pos.z_pos;
+						item2->pos.pos.x = item->pos.pos.x;
+						item2->pos.pos.y = item->pos.pos.y;
+						item2->pos.pos.z = item->pos.pos.z;
 						ItemNewRoom(item->carried_item, item->room_number);
 						item->carried_item = -1;
 						item2->ai_bits = GUARD;
@@ -368,7 +368,7 @@ void BaboonControl(short item_number) {
 				item->hit_points = -16384;
 
 				if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 212) {
-					TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos + 1024, item->room_number, 1, 0);
+					TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z + 1024, item->room_number, 1, 0);
 					item->trigger_flags = 1;
 				}
 
@@ -402,10 +402,10 @@ void ReTriggerBaboon(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 	ExplodeBaboon(item);
-	item->pos.x_pos = (item->item_flags[0] & 0xFF) << 10 | 0x200;
-	item->pos.y_pos = item->item_flags[1] << 8;
-	item->pos.z_pos = (item->item_flags[0] & 0xFFFFFF00) << 2 | 0x200;
-	IsRoomOutside(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	item->pos.pos.x = (item->item_flags[0] & 0xFF) << 10 | 0x200;
+	item->pos.pos.y = item->item_flags[1] << 8;
+	item->pos.pos.z = (item->item_flags[0] & 0xFFFFFF00) << 2 | 0x200;
+	IsRoomOutside(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 	if(item->room_number != IsRoomOutsideNo) {
 		ItemNewRoom(item_number, IsRoomOutsideNo);
@@ -432,12 +432,12 @@ void ReTriggerBaboon(short item_number) {
 }
 
 void ExplodeBaboon(ITEM_INFO* item) {
-	item->pos.y_pos -= 128;
+	item->pos.pos.y -= 128;
 	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0);
 	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0x2000);
 	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0x4000);
 	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0x6000);
-	item->pos.y_pos += 128;
+	item->pos.pos.y += 128;
 	FlashFadeR = 255;
 	FlashFadeG = 64;
 	FlashFadeB = 0;

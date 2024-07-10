@@ -36,9 +36,9 @@ ITEM_INFO* TriggerClockworkBeetle(long flag) {
 			item->shade = -0x3DF0;
 			item->object_number = CLOCKWORK_BEETLE;
 			item->room_number = lara_item->room_number;
-			item->pos.x_pos = lara_item->pos.x_pos;
-			item->pos.y_pos = lara_item->pos.y_pos;
-			item->pos.z_pos = lara_item->pos.z_pos;
+			item->pos.pos.x = lara_item->pos.pos.x;
+			item->pos.pos.y = lara_item->pos.pos.y;
+			item->pos.pos.z = lara_item->pos.pos.z;
 			InitialiseItem(item_number);
 			item->pos.z_rot = 0;
 			item->pos.x_rot = 0;
@@ -58,9 +58,9 @@ ITEM_INFO* TriggerClockworkBeetle(long flag) {
 					item2 = GetItem(currentLevel, item_number);
 
 					if(item2->object_number == MAPPER) {
-						dx = item->pos.x_pos - item2->pos.x_pos;
-						dy = item->pos.y_pos - item2->pos.y_pos;
-						dz = item->pos.z_pos - item2->pos.z_pos;
+						dx = item->pos.pos.x - item2->pos.pos.x;
+						dy = item->pos.pos.y - item2->pos.pos.y;
+						dz = item->pos.pos.z - item2->pos.pos.z;
 
 						if(dx > -1024 && dx < 1024 && dz > -1024 && dz < 1024 && dy > -1024 && dy < 1024) {
 							item->item_flags[1] = item2->pos.y_rot + 0x8000;
@@ -113,9 +113,9 @@ void ControlClockworkBeetle(short item_number) {
 			pos.y = 0;
 			pos.z = -32;
 			GetLaraJointPos(&pos, 11);
-			item->pos.x_pos = pos.x;
-			item->pos.y_pos = pos.y;
-			item->pos.z_pos = pos.z;
+			item->pos.pos.x = pos.x;
+			item->pos.pos.y = pos.y;
+			item->pos.pos.z = pos.z;
 			item->pos.y_rot = lara_item->pos.y_rot;
 			item->pos.z_rot = -12740;
 			item->status = ITEM_ACTIVE;
@@ -124,13 +124,13 @@ void ControlClockworkBeetle(short item_number) {
 
 		if(frame == base + 104) {
 			room_number = item->room_number;
-			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+			floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+			h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
-			if(abs(lara_item->pos.y_pos - h) > 64) {
-				item->pos.x_pos = lara_item->pos.x_pos;
-				item->pos.y_pos = lara_item->pos.y_pos;
-				item->pos.z_pos = lara_item->pos.z_pos;
+			if(abs(lara_item->pos.pos.y - h) > 64) {
+				item->pos.pos.x = lara_item->pos.pos.x;
+				item->pos.pos.y = lara_item->pos.pos.y;
+				item->pos.pos.z = lara_item->pos.pos.z;
 			}
 
 			return;
@@ -139,13 +139,13 @@ void ControlClockworkBeetle(short item_number) {
 
 	SoundEffect(SFX_BEETLE_CLK_WHIRR, &item->pos, SFX_DEFAULT);
 	item->fallspeed += 12;
-	item->pos.y_pos += item->fallspeed;
+	item->pos.pos.y += item->fallspeed;
 	room_number = item->room_number;
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+	h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(item->pos.y_pos > h) {
-		item->pos.y_pos = h;
+	if(item->pos.pos.y > h) {
+		item->pos.pos.y = h;
 
 		if(item->fallspeed <= 32) {
 			item->fallspeed = 0;
@@ -167,12 +167,12 @@ void ControlClockworkBeetle(short item_number) {
 
 		switch(item->item_flags[2]) {
 		case 0:
-			x = ((item->pos.x_pos & -512) | 512) - item->pos.x_pos;
-			z = ((item->pos.z_pos & -512) | 512) - item->pos.z_pos;
+			x = ((item->pos.pos.x & -512) | 512) - item->pos.pos.x;
+			z = ((item->pos.pos.z & -512) | 512) - item->pos.pos.z;
 
 			if(x > -8 && z > -8 && x < 8 && z < 8) {
-				item->pos.x_pos &= -512;
-				item->pos.z_pos &= -512;
+				item->pos.pos.x &= -512;
+				item->pos.pos.z &= -512;
 				item->item_flags[2] = 2;
 			} else {
 				angle = (short)phd_atan(z, x);
@@ -196,12 +196,12 @@ void ControlClockworkBeetle(short item_number) {
 
 		case 1:
 		case 4:
-			x = ((item->pos.x_pos & -512) | 512) - item->pos.x_pos;
-			z = ((item->pos.z_pos & -512) | 512) - item->pos.z_pos;
+			x = ((item->pos.pos.x & -512) | 512) - item->pos.pos.x;
+			z = ((item->pos.pos.z & -512) | 512) - item->pos.pos.z;
 
 			if(x > -8 && z > -8 && x < 8 && z < 8) {
-				item->pos.x_pos = (item->pos.x_pos & -512) | 512;
-				item->pos.z_pos = (item->pos.z_pos & -512) | 512;
+				item->pos.pos.x = (item->pos.pos.x & -512) | 512;
+				item->pos.pos.z = (item->pos.pos.z & -512) | 512;
 
 				if(item->item_flags[2] == 1) {
 					item->item_flags[2] = 2;
@@ -213,9 +213,9 @@ void ControlClockworkBeetle(short item_number) {
 						item2 = GetItem(currentLevel, i);
 
 						if(item2->object_number == MAPPER) {
-							dx = item->pos.x_pos - item2->pos.x_pos;
-							dy = item->pos.y_pos - item2->pos.y_pos;
-							dz = item->pos.z_pos - item2->pos.z_pos;
+							dx = item->pos.pos.x - item2->pos.pos.x;
+							dy = item->pos.pos.y - item2->pos.pos.y;
+							dz = item->pos.pos.z - item2->pos.pos.z;
 
 							if(dx > -1024 && dx < 1024 && dz > -1024 && dz < 1024 && dy > -1024 && dy < 1024) {
 								item2->item_flags[0] = 1;
@@ -241,8 +241,8 @@ void ControlClockworkBeetle(short item_number) {
 					item->speed++;
 				}
 
-				item->pos.x_pos += item->speed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
-				item->pos.z_pos += item->speed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
+				item->pos.pos.x += item->speed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
+				item->pos.pos.z += item->speed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 			}
 
 			break;
@@ -271,8 +271,8 @@ void ControlClockworkBeetle(short item_number) {
 				item->speed++;
 			}
 
-			item->pos.x_pos += item->speed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
-			item->pos.z_pos += item->speed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
+			item->pos.pos.x += item->speed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
+			item->pos.pos.z += item->speed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 
 			if(!lara.OnBeetleFloor) {
 				item->item_flags[3] = 1;

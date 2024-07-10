@@ -123,13 +123,13 @@ long GetOnBike(short item_number, COLL_INFO* coll) {
 		return 0;
 	}
 
-	if(abs(item->pos.y_pos - lara_item->pos.y_pos) > 256
+	if(abs(item->pos.pos.y - lara_item->pos.pos.y) > 256
 	   || (!(input & IN_ACTION) && GLOBAL_inventoryitemchosen != PUZZLE_ITEM1)) {
 		return 0;
 	}
 
-	dx = lara_item->pos.x_pos - item->pos.x_pos;
-	dz = lara_item->pos.z_pos - item->pos.z_pos;
+	dx = lara_item->pos.pos.x - item->pos.pos.x;
+	dz = lara_item->pos.pos.z - item->pos.pos.z;
 
 	if(SQUARE(dx) + SQUARE(dz) > 170000) {
 		return 0;
@@ -139,15 +139,15 @@ long GetOnBike(short item_number, COLL_INFO* coll) {
 
 	if(GetHeight(
 		   GetFloor(
-			   item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number),
-		   item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject)
+			   item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number),
+		   item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 	   < -32000) {
 		return 0;
 	}
 
 	rot = (short)(phd_atan(
-					  item->pos.z_pos - lara_item->pos.z_pos,
-					  item->pos.x_pos - lara_item->pos.x_pos)
+					  item->pos.pos.z - lara_item->pos.pos.z,
+					  item->pos.pos.x - lara_item->pos.pos.x)
 				  - item->pos.y_rot);
 
 	if(rot > -8190 && rot < 24570) {
@@ -181,7 +181,7 @@ void DrawBikeBeam(ITEM_INFO* item) {
 
 	frac = GetFrames(item, frm, &rate);
 	phd_PushMatrix();
-	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 	bounds = S_GetObjectInfoBounds(frm[0]);
 
@@ -350,9 +350,9 @@ static long CanGetOff(short num) // always called with num = 1
 
 	item = GetItem(currentLevel, lara.vehicle);
 	yrot = item->pos.y_rot + 16384; // right side
-	x = item->pos.x_pos + (512 * phd_sin(yrot) >> W2V_SHIFT);
-	y = item->pos.y_pos;
-	z = item->pos.z_pos + (512 * phd_cos(yrot) >> W2V_SHIFT);
+	x = item->pos.pos.x + (512 * phd_sin(yrot) >> W2V_SHIFT);
+	y = item->pos.pos.y;
+	z = item->pos.pos.z + (512 * phd_cos(yrot) >> W2V_SHIFT);
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
 	h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
@@ -361,19 +361,19 @@ static long CanGetOff(short num) // always called with num = 1
 		return 0;
 	}
 
-	if(abs(h - item->pos.y_pos) > 272) {
+	if(abs(h - item->pos.pos.y) > 272) {
 		return 0;
 	}
 
 	c = GetCeiling(floor, x, y, z);
 
-	if(c - item->pos.y_pos > -762 || h - c < 762) {
+	if(c - item->pos.pos.y > -762 || h - c < 762) {
 		return 0;
 	}
 
-	x = item->pos.x_pos + (128 * phd_sin(yrot) >> W2V_SHIFT);
-	y = item->pos.y_pos;
-	z = item->pos.z_pos + (128 * phd_sin(yrot) >> W2V_SHIFT);
+	x = item->pos.pos.x + (128 * phd_sin(yrot) >> W2V_SHIFT);
+	y = item->pos.pos.y;
+	z = item->pos.pos.z + (128 * phd_sin(yrot) >> W2V_SHIFT);
 	floor = GetFloor(x, y, z, &room_number);
 	h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
@@ -381,13 +381,13 @@ static long CanGetOff(short num) // always called with num = 1
 		return 0;
 	}
 
-	if(abs(h - item->pos.y_pos) > 80) {
+	if(abs(h - item->pos.pos.y) > 80) {
 		return 0;
 	}
 
 	c = GetCeiling(floor, x, y, z);
 
-	if(c - item->pos.y_pos > -762 || h - c < 762) {
+	if(c - item->pos.pos.y > -762 || h - c < 762) {
 		return 0;
 	}
 
@@ -399,12 +399,12 @@ void BikeExplode(ITEM_INFO* item) {
 		TriggerUnderwaterExplosion(item, 1);
 	} else {
 		TriggerExplosionSparks(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -2, 0,
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 3, -2, 0,
 			item->room_number);
 
 		for(int i = 0; i < 3; i++) {
 			TriggerExplosionSparks(
-				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -1, 0,
+				item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 3, -1, 0,
 				item->room_number);
 		}
 	}
@@ -424,7 +424,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 	bike = (BIKEINFO*)item->data;
 	state = lara_item->current_anim_state;
 
-	if(item->pos.y_pos != item->floor && state != 8 && state != 17
+	if(item->pos.pos.y != item->floor && state != 8 && state != 17
 	   && state != 20 && !killed) {
 		if(bike->velocity < 0) {
 			lara_item->anim_number
@@ -546,7 +546,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 
 		case 8:
 
-			if(item->pos.y_pos == item->floor) {
+			if(item->pos.pos.y == item->floor) {
 				lara_item->goal_anim_state = 17;
 				dmg = (short)(bikefspeed - 140);
 
@@ -645,11 +645,11 @@ long TestHeight(ITEM_INFO* item, long z, long x, PHD_VECTOR* pos) {
 
 	sz = z * phd_sin(item->pos.x_rot) >> W2V_SHIFT;
 	sx = x * phd_sin(item->pos.z_rot) >> W2V_SHIFT;
-	pos->y = item->pos.y_pos + sx - sz;
+	pos->y = item->pos.pos.y + sx - sz;
 	sy = phd_sin(item->pos.y_rot);
 	cy = phd_cos(item->pos.y_rot);
-	pos->z = item->pos.z_pos + ((z * cy - x * sy) >> W2V_SHIFT);
-	pos->x = item->pos.x_pos + ((x * cy + z * sy) >> W2V_SHIFT);
+	pos->z = item->pos.pos.z + ((z * cy - x * sy) >> W2V_SHIFT);
+	pos->x = item->pos.pos.x + ((x * cy + z * sy) >> W2V_SHIFT);
 	room_number = item->room_number;
 	floor = GetFloor(pos->x, pos->y, pos->z, &room_number);
 	c = GetCeiling(floor, pos->x, pos->y, pos->z);
@@ -685,9 +685,9 @@ static long BikeCheckGetOff() {
 		lara_item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 		lara_item->goal_anim_state = AS_STOP;
 		lara_item->current_anim_state = AS_STOP;
-		lara_item->pos.x_pos
+		lara_item->pos.pos.x
 			-= 512 * phd_sin(lara_item->pos.y_rot) >> W2V_SHIFT;
-		lara_item->pos.z_pos
+		lara_item->pos.pos.z
 			-= 512 * phd_cos(lara_item->pos.y_rot) >> W2V_SHIFT;
 		lara_item->pos.z_rot = 0;
 		lara_item->pos.x_rot = 0;
@@ -706,9 +706,9 @@ static long BikeCheckGetOff() {
 			pos.y = 0;
 			pos.z = 0;
 			GetLaraJointPos(&pos, LM_HIPS);
-			lara_item->pos.x_pos = pos.x;
-			lara_item->pos.y_pos = pos.y;
-			lara_item->pos.z_pos = pos.z;
+			lara_item->pos.pos.x = pos.x;
+			lara_item->pos.pos.y = pos.y;
+			lara_item->pos.pos.z = pos.z;
 			lara_item->pos.x_rot = 0;
 			lara_item->pos.z_rot = 0;
 			lara_item->fallspeed = item->fallspeed;
@@ -800,7 +800,7 @@ void BikeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		lara.gun_status = LG_HANDS_BUSY;
 		angle = (short)(phd_atan(
-							item->pos.z_pos - l->pos.z_pos, item->pos.x_pos - l->pos.x_pos)
+							item->pos.pos.z - l->pos.pos.z, item->pos.pos.x - l->pos.pos.x)
 						- item->pos.y_rot);
 
 		if(angle <= -8190 || angle >= 24570) {
@@ -822,9 +822,9 @@ void BikeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		l->frame_number = GetAnim(currentLevel, l->anim_number)->frame_base;
 		item->hit_points = 1;
-		l->pos.x_pos = item->pos.x_pos;
-		l->pos.y_pos = item->pos.y_pos;
-		l->pos.z_pos = item->pos.z_pos;
+		l->pos.pos.x = item->pos.pos.x;
+		l->pos.pos.y = item->pos.pos.y;
+		l->pos.pos.z = item->pos.pos.z;
 		l->pos.y_rot = item->pos.y_rot;
 		lara.head_x_rot = 0;
 		lara.head_y_rot = 0;
@@ -873,9 +873,9 @@ long BikeBaddieCollision(ITEM_INFO* bike) {
 				obj = GetObjectInfo(currentLevel, item->object_number);
 
 				if(obj->collision && obj->intelligent) {
-					dx = bike->pos.x_pos - item->pos.x_pos;
-					dy = bike->pos.y_pos - item->pos.y_pos;
-					dz = bike->pos.z_pos - item->pos.z_pos;
+					dx = bike->pos.pos.x - item->pos.pos.x;
+					dy = bike->pos.pos.y - item->pos.pos.y;
+					dz = bike->pos.pos.z - item->pos.pos.z;
 
 					if(dx > -2048 && dx < 2048 && dz > -2048 && dz < 2048
 					   && dy > -2048 && dy < 2048) {
@@ -891,8 +891,8 @@ long BikeBaddieCollision(ITEM_INFO* bike) {
 							}
 
 							DoLotsOfBlood(
-								item->pos.x_pos, bike->pos.y_pos - 256,
-								item->pos.z_pos, (GetRandomControl() & 3) + 8,
+								item->pos.pos.x, bike->pos.pos.y - 256,
+								item->pos.pos.z, (GetRandomControl() & 3) + 8,
 								bike->pos.y_rot, item->room_number, 3);
 							item->hit_points = 0;
 						}
@@ -1035,7 +1035,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 		bike->flags &= ~0x100;
 	}
 
-	if(item->pos.y_pos >= height - 256) {
+	if(item->pos.pos.y >= height - 256) {
 		if(bike->velocity > 0x4000) {
 			turn = 910;
 		} else {
@@ -1193,9 +1193,9 @@ long BikeDynamics(ITEM_INFO* item) {
 	back_left = TestHeight(item, -500, -350, &blPos);
 	back_right = TestHeight(item, -500, 128, &brPos);
 	front_mid = TestHeight(item, -500, 0, &fmPos);
-	pos.x = item->pos.x_pos;
-	pos.y = item->pos.y_pos;
-	pos.z = item->pos.z_pos;
+	pos.x = item->pos.pos.x;
+	pos.y = item->pos.pos.y;
+	pos.z = item->pos.pos.z;
 
 	if(blPos.y > back_left) {
 		blPos.y = back_left;
@@ -1217,7 +1217,7 @@ long BikeDynamics(ITEM_INFO* item) {
 		fmPos.y = front_mid;
 	}
 
-	if(item->pos.y_pos <= item->floor - 8) {
+	if(item->pos.pos.y <= item->floor - 8) {
 		if(bike->bike_turn < -91) {
 			bike->bike_turn += 91;
 		} else if(bike->bike_turn > 91) {
@@ -1264,19 +1264,19 @@ long BikeDynamics(ITEM_INFO* item) {
 
 	room_number = item->room_number;
 	floor = GetFloor(
-		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+	h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(item->pos.y_pos < h) {
+	if(item->pos.pos.y < h) {
 		speed = item->speed;
 	} else {
 		speed = (item->speed * phd_cos(item->pos.x_rot)) >> W2V_SHIFT;
 	}
 
-	item->pos.x_pos += (speed * phd_sin(bike->move_angle)) >> W2V_SHIFT;
-	item->pos.z_pos += (speed * phd_cos(bike->move_angle)) >> W2V_SHIFT;
+	item->pos.pos.x += (speed * phd_sin(bike->move_angle)) >> W2V_SHIFT;
+	item->pos.pos.z += (speed * phd_cos(bike->move_angle)) >> W2V_SHIFT;
 
-	if(item->pos.y_pos >= h) {
+	if(item->pos.pos.y >= h) {
 		ang = (100 * phd_sin(item->pos.x_rot)) >> W2V_SHIFT;
 
 		if(abs(ang) > 16) {
@@ -1305,8 +1305,8 @@ long BikeDynamics(ITEM_INFO* item) {
 				ang2 = item->pos.y_rot + 0x4000;
 			}
 
-			item->pos.x_pos += ((abs(ang) - 24) * phd_sin(ang2)) >> W2V_SHIFT;
-			item->pos.z_pos += ((abs(ang) - 24) * phd_cos(ang2)) >> W2V_SHIFT;
+			item->pos.pos.x += ((abs(ang) - 24) * phd_sin(ang2)) >> W2V_SHIFT;
+			item->pos.pos.z += ((abs(ang) - 24) * phd_cos(ang2)) >> W2V_SHIFT;
 		}
 	}
 
@@ -1320,8 +1320,8 @@ long BikeDynamics(ITEM_INFO* item) {
 		bike->velocity -= 0x440;
 	}
 
-	newPos.x = item->pos.x_pos;
-	newPos.z = item->pos.z_pos;
+	newPos.x = item->pos.pos.x;
+	newPos.z = item->pos.pos.z;
 
 	if(!(item->flags & 0x100)) {
 		if(BikeBaddieCollision(
@@ -1330,7 +1330,7 @@ long BikeDynamics(ITEM_INFO* item) {
 		}
 
 		BikeCollideStaticObjects(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 			item->room_number, 512);
 	}
 
@@ -1380,10 +1380,10 @@ long BikeDynamics(ITEM_INFO* item) {
 
 	room_number = item->room_number;
 	floor = GetFloor(
-		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+	h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(h < item->pos.y_pos - 256) {
+	if(h < item->pos.pos.y - 256) {
 		DoShift(item, (PHD_VECTOR*)&item->pos, &pos);
 	}
 
@@ -1406,8 +1406,8 @@ long BikeDynamics(ITEM_INFO* item) {
 	anim = GetCollisionAnim(item, &newPos, bike);
 
 	if(anim) {
-		dx = item->pos.x_pos - pos.x;
-		dz = item->pos.z_pos - pos.z;
+		dx = item->pos.pos.x - pos.x;
+		dz = item->pos.pos.z - pos.z;
 		speed
 			= (dx * phd_sin(bike->move_angle) + dz * phd_cos(bike->move_angle))
 			>> W2V_SHIFT;
@@ -1466,16 +1466,16 @@ void BikeControl(short item_number) {
 
 	room_number = item->room_number;
 	floor = GetFloor(
-		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-	GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+	GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 	front_left = TestHeight(item, 500, -350, &flPos);
 	front_right = TestHeight(item, 500, 128, &frPos);
 	front_mid = TestHeight(item, -500, 0, &fmPos);
 	room_number = item->room_number;
 	floor = GetFloor(
-		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+	h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	TestTriggers(trigger_index, 0, 0);
 	TestTriggers(trigger_index, 1, 0);
 
@@ -1529,20 +1529,20 @@ void BikeControl(short item_number) {
 	bike->right_back_wheelrot -= wheelRot;
 	bike->left_wheelrot -= wheelRot;
 	bikefspeed = item->fallspeed;
-	oldY = item->pos.y_pos;
+	oldY = item->pos.pos.y;
 	item->fallspeed
-		= (short)DoDynamics(h, item->fallspeed, &item->pos.y_pos, 0);
+		= (short)DoDynamics(h, item->fallspeed, &item->pos.pos.y, 0);
 	hdiff = (frPos.y + flPos.y) >> 1;
 
 	if(fmPos.y < front_mid) {
 		if(hdiff < (front_left + front_right) >> 1) {
-			xRot = (short)phd_atan(125, oldY - item->pos.y_pos);
+			xRot = (short)phd_atan(125, oldY - item->pos.pos.y);
 		} else {
-			xRot = (short)phd_atan(500, item->pos.y_pos - hdiff);
+			xRot = (short)phd_atan(500, item->pos.pos.y - hdiff);
 		}
 	} else {
 		if(hdiff < (front_left + front_right) >> 1) {
-			xRot = (short)phd_atan(500, front_mid - item->pos.y_pos);
+			xRot = (short)phd_atan(500, front_mid - item->pos.pos.y);
 		} else {
 			xRot = (short)phd_atan(1000, front_mid - hdiff);
 		}
@@ -1558,9 +1558,9 @@ void BikeControl(short item_number) {
 			ItemNewRoom(lara.item_number, room_number);
 		}
 
-		lara_item->pos.x_pos = item->pos.x_pos;
-		lara_item->pos.y_pos = item->pos.y_pos;
-		lara_item->pos.z_pos = item->pos.z_pos;
+		lara_item->pos.pos.x = item->pos.pos.x;
+		lara_item->pos.pos.y = item->pos.pos.y;
+		lara_item->pos.pos.z = item->pos.pos.z;
 		lara_item->pos.x_rot = item->pos.x_rot;
 		lara_item->pos.y_rot = item->pos.y_rot;
 		lara_item->pos.z_rot = item->pos.z_rot;
@@ -1574,7 +1574,7 @@ void BikeControl(short item_number) {
 			- GetAnim(currentLevel, lara_item->anim_number)->frame_base;
 		camera.target_elevation = -5460;
 
-		if(bike->flags & 0x40 && item->pos.y_pos == item->floor) {
+		if(bike->flags & 0x40 && item->pos.pos.y == item->floor) {
 			ExplodingDeath2(lara.item_number, -1, 256);
 			lara_item->hit_points = 0;
 			lara_item->flags |= IFL_INVISIBLE;

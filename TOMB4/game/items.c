@@ -170,7 +170,7 @@ void InitialiseItem(short item_num) {
 	r = GetRoom(currentLevel, item->room_number);
 	item->next_item = r->item_number;
 	r->item_number = item_num;
-	floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+	floor = &r->floor[((item->pos.pos.z - r->z) >> 10) + r->x_size * ((item->pos.pos.x - r->x) >> 10)];
 	item->floor = floor->floor << 8;
 	item->box_number = floor->box;
 

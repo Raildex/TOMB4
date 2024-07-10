@@ -304,27 +304,27 @@ static void TiltHer(ITEM_INFO* item, long rad, long height) {
 	long yT, y, wx, wz, dy;
 	short room_number, rotX, rotZ;
 
-	yT = item->pos.y_pos - height - 162;
+	yT = item->pos.pos.y - height - 162;
 	room_number = item->room_number;
-	floor = GetFloor(item->pos.x_pos, yT, item->pos.z_pos, &room_number);
-	y = GetHeight(floor, item->pos.x_pos, yT, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(item->pos.pos.x, yT, item->pos.pos.z, &room_number);
+	y = GetHeight(floor, item->pos.pos.x, yT, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(!OnObject) {
 		plane.x = -(float)tiltzoff / 4;
 		plane.y = -(float)tiltxoff / 4;
 	} else {
-		wx = item->pos.x_pos & 0xFFFFFC00 | 0xFF;
-		wz = item->pos.z_pos & 0xFFFFFC00 | 0xFF;
+		wx = item->pos.pos.x & 0xFFFFFC00 | 0xFF;
+		wz = item->pos.pos.z & 0xFFFFFC00 | 0xFF;
 		room_number = item->room_number;
 		floor = GetFloor(wx, yT, wz, &room_number);
 		wy[0] = GetHeight(floor, wx, yT, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-		wx = item->pos.x_pos & 0xFFFFFC00 | 0x2FF;
-		wz = item->pos.z_pos & 0xFFFFFC00 | 0xFF;
+		wx = item->pos.pos.x & 0xFFFFFC00 | 0x2FF;
+		wz = item->pos.pos.z & 0xFFFFFC00 | 0xFF;
 		room_number = item->room_number;
 		floor = GetFloor(wx, yT, wz, &room_number);
 		wy[1] = GetHeight(floor, wx, yT, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-		wx = item->pos.x_pos & 0xFFFFFC00 | 0xFF;
-		wz = item->pos.z_pos & 0xFFFFFC00 | 0x2FF;
+		wx = item->pos.pos.x & 0xFFFFFC00 | 0xFF;
+		wz = item->pos.pos.z & 0xFFFFFC00 | 0x2FF;
 		room_number = item->room_number;
 		floor = GetFloor(wx, yT, wz, &room_number);
 		wy[2] = GetHeight(floor, wx, yT, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
@@ -332,11 +332,11 @@ static void TiltHer(ITEM_INFO* item, long rad, long height) {
 		plane.y = (float)(wy[2] - wy[0]) / 512;
 	}
 
-	plane.z = item->pos.y_pos - plane.x * item->pos.x_pos - plane.y * item->pos.z_pos;
+	plane.z = item->pos.pos.y - plane.x * item->pos.pos.x - plane.y * item->pos.pos.z;
 
 	for(int i = 0; i < 4; i++) {
-		wx = item->pos.x_pos + (rad * phd_sin(item->pos.y_rot + 16384 * i) >> W2V_SHIFT);
-		wz = item->pos.z_pos + (rad * phd_cos(item->pos.y_rot + 16384 * i) >> W2V_SHIFT);
+		wx = item->pos.pos.x + (rad * phd_sin(item->pos.y_rot + 16384 * i) >> W2V_SHIFT);
+		wz = item->pos.pos.z + (rad * phd_cos(item->pos.y_rot + 16384 * i) >> W2V_SHIFT);
 		room_number = item->room_number;
 		floor = GetFloor(wx, yT, wz, &room_number);
 		wy[i] = GetHeight(floor, wx, yT, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
@@ -393,9 +393,9 @@ void lara_void_func(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll) {
-	coll->old.x = item->pos.x_pos;
-	coll->old.y = item->pos.y_pos;
-	coll->old.z = item->pos.z_pos;
+	coll->old.x = item->pos.pos.x;
+	coll->old.y = item->pos.pos.y;
+	coll->old.z = item->pos.pos.z;
 	coll->old_anim_state = item->current_anim_state;
 	coll->old_anim_number = item->anim_number;
 	coll->old_frame_number = item->frame_number;
@@ -425,16 +425,16 @@ void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll) {
 		return;
 	}
 
-	if(item->current_anim_state != AS_DEATH && gfLevelFlags & GF_TRAIN && item->pos.y_pos >= 0) {
-		if(item->pos.z_pos <= 51900 || item->pos.z_pos >= 53554) {
+	if(item->current_anim_state != AS_DEATH && gfLevelFlags & GF_TRAIN && item->pos.pos.y >= 0) {
+		if(item->pos.pos.z <= 51900 || item->pos.pos.z >= 53554) {
 			ForcedFixedCamera.pos.y = -1024;
-			ForcedFixedCamera.pos.z = item->pos.z_pos > 51900 ? 55296 : 50176;
+			ForcedFixedCamera.pos.z = item->pos.pos.z > 51900 ? 55296 : 50176;
 		} else {
 			ForcedFixedCamera.pos.y = -384;
 			ForcedFixedCamera.pos.z = 52736;
 		}
 
-		ForcedFixedCamera.pos.x = item->pos.x_pos;
+		ForcedFixedCamera.pos.x = item->pos.pos.x;
 		ForcedFixedCamera.room_number = item->room_number;
 		UseForcedFixedCamera = 1;
 		item->anim_number = ANIM_TRAINDEATH;
@@ -505,9 +505,9 @@ void SetCornerAnim(ITEM_INFO* item, COLL_INFO* coll, short rot, short flip) {
 			}
 
 			coll->old.x = lara.CornerX;
-			item->pos.x_pos = lara.CornerX;
+			item->pos.pos.x = lara.CornerX;
 			coll->old.z = lara.CornerZ;
-			item->pos.z_pos = lara.CornerZ;
+			item->pos.pos.z = lara.CornerZ;
 			item->pos.y_rot += rot;
 		}
 	} else {
@@ -517,7 +517,7 @@ void SetCornerAnim(ITEM_INFO* item, COLL_INFO* coll, short rot, short flip) {
 		item->current_anim_state = AS_FORWARDJUMP;
 		item->gravity_status = 1;
 		item->speed = 2;
-		item->pos.y_pos += 256;
+		item->pos.pos.y += 256;
 		item->fallspeed = 1;
 		lara.gun_status = LG_NO_ARMS;
 		item->pos.y_rot += rot / 2;
@@ -527,10 +527,10 @@ void SetCornerAnim(ITEM_INFO* item, COLL_INFO* coll, short rot, short flip) {
 long CanLaraHangSideways(ITEM_INFO* item, COLL_INFO* coll, short angle) {
 	long oldx, oldz, x, z, res;
 
-	oldx = item->pos.x_pos;
-	oldz = item->pos.z_pos;
-	x = item->pos.x_pos;
-	z = item->pos.z_pos;
+	oldx = item->pos.pos.x;
+	oldz = item->pos.pos.z;
+	x = item->pos.pos.x;
+	z = item->pos.pos.z;
 	lara.move_angle = angle + item->pos.y_rot;
 
 	switch((unsigned short)(lara.move_angle + 0x2000) / 0x4000) {
@@ -551,12 +551,12 @@ long CanLaraHangSideways(ITEM_INFO* item, COLL_INFO* coll, short angle) {
 		break;
 	}
 
-	item->pos.x_pos = x;
-	item->pos.z_pos = z;
-	coll->old.y = item->pos.y_pos;
+	item->pos.pos.x = x;
+	item->pos.pos.z = z;
+	coll->old.y = item->pos.pos.y;
 	res = LaraHangTest(item, coll);
-	item->pos.x_pos = oldx;
-	item->pos.z_pos = oldz;
+	item->pos.pos.x = oldx;
+	item->pos.pos.z = oldz;
 	lara.move_angle = angle + item->pos.y_rot;
 	return !res;
 }
@@ -695,14 +695,14 @@ short LaraCeilingFront(ITEM_INFO* item, short ang, long dist, long h) {
 	long x, y, z, height;
 	short room_num;
 
-	x = item->pos.x_pos + ((dist * phd_sin(ang)) >> W2V_SHIFT);
-	y = item->pos.y_pos - h;
-	z = item->pos.z_pos + ((dist * phd_cos(ang)) >> W2V_SHIFT);
+	x = item->pos.pos.x + ((dist * phd_sin(ang)) >> W2V_SHIFT);
+	y = item->pos.pos.y - h;
+	z = item->pos.pos.z + ((dist * phd_cos(ang)) >> W2V_SHIFT);
 	room_num = item->room_number;
 	height = GetCeiling(GetFloor(x, y, z, &room_num), x, y, z);
 
 	if(height != NO_HEIGHT) {
-		height += h - item->pos.y_pos;
+		height += h - item->pos.pos.y;
 	}
 
 	return (short)height;
@@ -713,13 +713,13 @@ short LaraFloorFront(ITEM_INFO* item, short ang, long dist, height_types* ht, lo
 	short room_num;
 
 	room_num = item->room_number;
-	x = item->pos.x_pos + ((dist * phd_sin(ang)) >> W2V_SHIFT);
-	y = item->pos.y_pos - 762;
-	z = item->pos.z_pos + ((dist * phd_cos(ang)) >> W2V_SHIFT);
+	x = item->pos.pos.x + ((dist * phd_sin(ang)) >> W2V_SHIFT);
+	y = item->pos.pos.y - 762;
+	z = item->pos.pos.z + ((dist * phd_cos(ang)) >> W2V_SHIFT);
 	height = GetHeight(GetFloor(x, y, z, &room_num), x, y, z, ht, tiltxoff, tiltzoff, OnObject);
 
 	if(height != NO_HEIGHT) {
-		height -= item->pos.y_pos;
+		height -= item->pos.pos.y;
 	}
 
 	return (short)height;
@@ -792,9 +792,9 @@ long LaraHitCeiling(ITEM_INFO* item, COLL_INFO* coll) {
 		return 0;
 	}
 
-	item->pos.x_pos = coll->old.x;
-	item->pos.y_pos = coll->old.y;
-	item->pos.z_pos = coll->old.z;
+	item->pos.pos.x = coll->old.x;
+	item->pos.pos.y = coll->old.y;
+	item->pos.pos.z = coll->old.z;
 	item->goal_anim_state = AS_STOP;
 	item->current_anim_state = AS_STOP;
 	item->anim_number = ANIM_STOP;
@@ -836,7 +836,7 @@ void lara_col_ducklr(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->bad_neg = -384;
 	coll->bad_ceiling = 0;
 	coll->slopes_are_walls = 1;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 400);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 400);
 
 	if(LaraFallen(item, coll)) {
 		lara.gun_status = LG_NO_ARMS;
@@ -850,7 +850,7 @@ void lara_col_ducklr(ITEM_INFO* item, COLL_INFO* coll) {
 		ShiftItem(item, coll);
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	}
 }
@@ -895,7 +895,7 @@ void lara_col_duck(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->bad_neg = -384;
 	coll->bad_ceiling = 0;
 	coll->slopes_are_walls = 1;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 400);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 400);
 
 	if(LaraFallen(item, coll)) {
 		lara.gun_status = LG_NO_ARMS;
@@ -909,7 +909,7 @@ void lara_col_duck(ITEM_INFO* item, COLL_INFO* coll) {
 		ShiftItem(item, coll);
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 
 		if(input & IN_DUCK && lara.water_status != LW_WADE || lara.keep_ducked || item->anim_number != ANIM_DUCKBREATHE) {
@@ -969,7 +969,7 @@ void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->bad_ceiling = 400;
 	coll->slopes_are_walls = 1;
 	coll->slopes_are_pits = 1;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 400);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 400);
 	TiltHer(item, 140, 400);
 
 	if(LaraFallen(item, coll)) {
@@ -980,7 +980,7 @@ void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll) {
 		ShiftItem(item, coll);
 
 		if(coll->mid_floor != NO_HEIGHT && coll->mid_floor > -256) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 
 		if((input & IN_DUCK || lara.keep_ducked) && (!(input & (IN_FLARE | IN_DRAW)) || input & IN_FORWARD) && lara.water_status != LW_WADE) {
@@ -1008,34 +1008,34 @@ void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll) {
 						item->goal_anim_state = AS_CRAWLBACK;
 					} else {
 						if(input & IN_ACTION && height > 768 && !slope) {
-							x = item->pos.x_pos;
-							z = item->pos.z_pos;
-							item->pos.x_pos -= 100 * phd_sin(coll->facing) >> W2V_SHIFT;
-							item->pos.z_pos -= 100 * phd_cos(coll->facing) >> W2V_SHIFT;
+							x = item->pos.pos.x;
+							z = item->pos.pos.z;
+							item->pos.pos.x -= 100 * phd_sin(coll->facing) >> W2V_SHIFT;
+							item->pos.pos.z -= 100 * phd_cos(coll->facing) >> W2V_SHIFT;
 							collided = GetCollidedObjects(item, 100, 1, itemlist, 5, meshlist, 5, 0);
-							item->pos.x_pos = x;
-							item->pos.z_pos = z;
+							item->pos.pos.x = x;
+							item->pos.pos.z = z;
 
 							if(!collided) {
 								switch((unsigned short)(item->pos.y_rot + 0x2000) / 0x4000) {
 								case NORTH:
 									item->pos.y_rot = 0;
-									item->pos.z_pos = (item->pos.z_pos & ~0x3FF) + 225;
+									item->pos.pos.z = (item->pos.pos.z & ~0x3FF) + 225;
 									break;
 
 								case EAST:
 									item->pos.y_rot = 16384;
-									item->pos.x_pos = (item->pos.x_pos & ~0x3FF) + 225;
+									item->pos.pos.x = (item->pos.pos.x & ~0x3FF) + 225;
 									break;
 
 								case SOUTH:
 									item->pos.y_rot = -32768;
-									item->pos.z_pos = (item->pos.z_pos | 0x3FF) - 225;
+									item->pos.pos.z = (item->pos.pos.z | 0x3FF) - 225;
 									break;
 
 								case WEST:
 									item->pos.y_rot = -16384;
-									item->pos.x_pos = (item->pos.x_pos | 0x3FF) - 225;
+									item->pos.pos.x = (item->pos.pos.x | 0x3FF) - 225;
 									break;
 								}
 
@@ -1107,7 +1107,7 @@ void lara_col_crawl(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->slopes_are_pits = 1;
 	coll->slopes_are_walls = 1;
 	coll->facing = lara.move_angle;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 400);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 400);
 	TiltHer(item, 140, 400);
 
 	if(LaraDeflectEdgeDuck(item, coll)) {
@@ -1124,7 +1124,7 @@ void lara_col_crawl(ITEM_INFO* item, COLL_INFO* coll) {
 		ShiftItem(item, coll);
 
 		if(coll->mid_floor != NO_HEIGHT && coll->mid_floor > -256) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	}
 }
@@ -1173,11 +1173,11 @@ void lara_as_all4turnr(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_col_all4turnlr(ITEM_INFO* item, COLL_INFO* coll) {
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 400);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 400);
 	TiltHer(item, 140, 400);
 
 	if(!TestLaraSlide(item, coll) && coll->mid_floor != NO_HEIGHT && coll->mid_floor > -256) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -1227,7 +1227,7 @@ void lara_col_crawlb(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->slopes_are_walls = 1;
 	lara.move_angle = item->pos.y_rot + 32768;
 	coll->facing = lara.move_angle;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 400);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 400);
 	TiltHer(item, 140, 400);
 
 	if(LaraDeflectEdgeDuck(item, coll)) {
@@ -1244,7 +1244,7 @@ void lara_col_crawlb(ITEM_INFO* item, COLL_INFO* coll) {
 		ShiftItem(item, coll);
 
 		if(coll->mid_floor != NO_HEIGHT && coll->mid_floor > -256) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 
 		lara.move_angle = item->pos.y_rot;
@@ -1266,13 +1266,13 @@ void lara_col_crawl2hang(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	item->fallspeed = 512;
-	item->pos.y_pos += 255;
+	item->pos.pos.y += 255;
 	coll->bad_pos = -NO_HEIGHT;
 	coll->bad_neg = -384;
 	coll->bad_ceiling = 192;
 	lara.move_angle = item->pos.y_rot;
 	coll->facing = lara.move_angle;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 870);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 870);
 	edge_catch = LaraTestEdgeCatch(item, coll, &edge);
 
 	if(!edge_catch) {
@@ -1318,11 +1318,11 @@ void lara_col_crawl2hang(ITEM_INFO* item, COLL_INFO* coll) {
 	bounds = GetBoundsAccurate(item);
 
 	if(edge_catch <= 0) {
-		item->pos.y_pos = edge - bounds[2];
+		item->pos.pos.y = edge - bounds[2];
 	} else {
-		item->pos.y_pos += coll->front_floor - bounds[2];
-		item->pos.x_pos += coll->shift.x;
-		item->pos.z_pos += coll->shift.z;
+		item->pos.pos.y += coll->front_floor - bounds[2];
+		item->pos.pos.x += coll->shift.x;
+		item->pos.pos.z += coll->shift.z;
 	}
 
 	item->gravity_status = 1;
@@ -1431,16 +1431,16 @@ void lara_col_dash(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(coll->mid_floor < 50) {
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	} else {
-		item->pos.y_pos += 50;
+		item->pos.pos.y += 50;
 	}
 }
 
 void GetLaraCollisionInfo(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->facing = lara.move_angle;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 762);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 762);
 }
 
 void lara_as_dashdive(ITEM_INFO* item, COLL_INFO* coll) {
@@ -1482,7 +1482,7 @@ void lara_col_dashdive(ITEM_INFO* item, COLL_INFO* coll) {
 
 		item->gravity_status = 0;
 		item->fallspeed = 0;
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 		item->speed = 0;
 		AnimateLara(item);
 	}
@@ -1490,7 +1490,7 @@ void lara_col_dashdive(ITEM_INFO* item, COLL_INFO* coll) {
 	ShiftItem(item, coll);
 
 	if(coll->mid_floor != NO_HEIGHT) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -1520,7 +1520,7 @@ void MonkeySwingFall(ITEM_INFO* item) {
 	item->speed = 2;
 	item->gravity_status = 1;
 	item->fallspeed = 1;
-	item->pos.y_pos += 256;
+	item->pos.pos.y += 256;
 	lara.gun_status = LG_NO_ARMS;
 }
 
@@ -1528,7 +1528,7 @@ void MonkeySwingSnap(ITEM_INFO* item, COLL_INFO* coll) {
 	short room_num;
 
 	room_num = item->room_number;
-	item->pos.y_pos = GetCeiling(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_num), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) + 704;
+	item->pos.pos.y = GetCeiling(GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_num), item->pos.pos.x, item->pos.pos.y, item->pos.pos.z) + 704;
 }
 
 void lara_as_hang2(ITEM_INFO* item, COLL_INFO* coll) {
@@ -1569,7 +1569,7 @@ void lara_col_hang2(ITEM_INFO* item, COLL_INFO* coll) {
 		lara.move_angle = item->pos.y_rot;
 		coll->facing = lara.move_angle;
 		coll->radius = 100;
-		GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 600);
+		GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 600);
 
 		if(input & IN_FORWARD && coll->coll_type != CT_FRONT && abs(coll->mid_ceiling - coll->front_ceiling) < 50) {
 			item->goal_anim_state = AS_MONKEYSWING;
@@ -1656,7 +1656,7 @@ void lara_col_monkeyswing(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->enable_baddie_push = 0;
 	coll->facing = lara.move_angle;
 	coll->radius = 100;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 600);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 600);
 
 	if(coll->coll_type == CT_FRONT || abs(coll->mid_ceiling - coll->front_ceiling) > 50) {
 		item->anim_number = ANIM_MONKEYHANG;
@@ -1778,7 +1778,7 @@ void lara_col_hangturnlr(ITEM_INFO* item, COLL_INFO* coll) {
 		coll->facing = item->pos.y_rot;
 		coll->radius = 100;
 		coll->slopes_are_walls = 1;
-		GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 600);
+		GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 600);
 		MonkeySwingSnap(item, coll);
 	} else {
 		MonkeySwingFall(item);
@@ -1886,7 +1886,7 @@ void lara_col_splat(ITEM_INFO* item, COLL_INFO* coll) {
 	ShiftItem(item, coll);
 
 	if(coll->mid_floor >= -256 && coll->mid_floor <= 256) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -1934,13 +1934,13 @@ void lara_col_compress(ITEM_INFO* item, COLL_INFO* coll) {
 		item->speed = 0;
 		item->fallspeed = 0;
 		item->gravity_status = 0;
-		item->pos.x_pos = coll->old.x;
-		item->pos.y_pos = coll->old.y;
-		item->pos.z_pos = coll->old.z;
+		item->pos.pos.x = coll->old.x;
+		item->pos.pos.y = coll->old.y;
+		item->pos.pos.z = coll->old.z;
 	}
 
 	if(coll->mid_floor > -256 && coll->mid_floor < 256) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -2011,9 +2011,9 @@ void lara_col_back(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	if(lara.water_status == LW_WADE && coll->mid_floor >= 50) {
-		item->pos.y_pos += 50;
+		item->pos.pos.y += 50;
 	} else if(coll->mid_floor != NO_HEIGHT) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -2105,9 +2105,9 @@ void lara_col_stepright(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	if(lara.water_status == LW_WADE && coll->mid_floor >= 50) {
-		item->pos.y_pos += 50;
+		item->pos.pos.y += 50;
 	} else if(coll->mid_floor != NO_HEIGHT) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -2239,7 +2239,7 @@ void lara_col_fallback(ITEM_INFO* item, COLL_INFO* coll) {
 		item->gravity_status = 0;
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	}
 }
@@ -2282,7 +2282,7 @@ void lara_col_roll(ITEM_INFO* item, COLL_INFO* coll) {
 	ShiftItem(item, coll);
 
 	if(coll->mid_floor != NO_HEIGHT) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -2315,7 +2315,7 @@ void lara_col_roll2(ITEM_INFO* item, COLL_INFO* coll) {
 		ShiftItem(item, coll);
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	}
 }
@@ -2443,7 +2443,7 @@ void lara_col_swandive(ITEM_INFO* item, COLL_INFO* coll) {
 		item->gravity_status = 0;
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	}
 }
@@ -2477,7 +2477,7 @@ void lara_col_fastdive(ITEM_INFO* item, COLL_INFO* coll) {
 		item->gravity_status = 0;
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	}
 }
@@ -2583,9 +2583,9 @@ void lara_col_wade(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	if(coll->mid_floor >= 50) {
-		item->pos.y_pos += 50;
+		item->pos.pos.y += 50;
 	} else if(coll->mid_floor != NO_HEIGHT) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -2605,7 +2605,7 @@ void lara_as_deathslide(ITEM_INFO* item, COLL_INFO* coll) {
 	long tiltxoff, tiltzoff, OnObject;
 	room_number = item->room_number;
 	camera.target_angle = 12740;
-	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	GetHeight(GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number), item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	coll->trigger = trigger_index;
 
 	if(!(input & IN_ACTION)) {
@@ -2655,7 +2655,7 @@ void lara_as_controlledl(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_col_turnswitch(ITEM_INFO* item, COLL_INFO* coll) {
-	if(coll->old.x != item->pos.x_pos || coll->old.z != item->pos.z_pos) {
+	if(coll->old.x != item->pos.pos.x || coll->old.z != item->pos.pos.z) {
 		if(item->anim_number == ANIM_TURNSWITCHAC) {
 			item->pos.y_rot -= 0x4000;
 			item->anim_number = ANIM_TURNSWITCHAD;
@@ -2821,7 +2821,7 @@ void lara_col_walk(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	if(coll->mid_floor != NO_HEIGHT) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -2960,10 +2960,10 @@ void lara_col_run(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(coll->mid_floor < 50) {
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	} else {
-		item->pos.y_pos += 50;
+		item->pos.pos.y += 50;
 	}
 }
 
@@ -3019,7 +3019,7 @@ void lara_col_fastback(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	if(coll->mid_floor != NO_HEIGHT) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -3077,7 +3077,7 @@ void lara_col_turn_r(ITEM_INFO* item, COLL_INFO* coll) {
 		}
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	} else {
 		item->fallspeed = 0;
@@ -3157,7 +3157,7 @@ void lara_col_death(ITEM_INFO* item, COLL_INFO* coll) {
 	lara.air = -1;
 
 	if(coll->mid_floor != NO_HEIGHT) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -3196,7 +3196,7 @@ void lara_col_fastfall(ITEM_INFO* item, COLL_INFO* coll) {
 		item->gravity_status = 0;
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	}
 }
@@ -3358,7 +3358,7 @@ void lara_col_stop(ITEM_INFO* item, COLL_INFO* coll) {
 	ShiftItem(item, coll);
 
 	if(coll->mid_floor != NO_HEIGHT) {
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 }
 
@@ -3388,7 +3388,7 @@ void lara_col_upjump(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->bad_ceiling = 192;
 	coll->hit_ceiling = 0;
 	coll->facing = item->speed >= 0 ? lara.move_angle : lara.move_angle - 32768;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 870);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 870);
 
 	if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && !coll->hit_static) {
 		if(lara.CanMonkeySwing && coll->coll_type == CT_TOP) {
@@ -3436,13 +3436,13 @@ void lara_col_upjump(ITEM_INFO* item, COLL_INFO* coll) {
 					bounds = GetBoundsAccurate(item);
 
 					if(edge_catch <= 0) {
-						item->pos.y_pos = edge - bounds[2] + 4;
+						item->pos.pos.y = edge - bounds[2] + 4;
 					} else {
-						item->pos.y_pos += coll->front_floor - bounds[2];
+						item->pos.pos.y += coll->front_floor - bounds[2];
 					}
 
-					item->pos.x_pos += coll->shift.x;
-					item->pos.z_pos += coll->shift.z;
+					item->pos.pos.x += coll->shift.x;
+					item->pos.pos.z += coll->shift.z;
 					item->pos.y_rot = angle;
 					item->gravity_status = 0;
 					item->speed = 0;
@@ -3485,7 +3485,7 @@ void lara_col_upjump(ITEM_INFO* item, COLL_INFO* coll) {
 		item->fallspeed = 0;
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	}
 }
@@ -3565,7 +3565,7 @@ void lara_col_forwardjump(ITEM_INFO* item, COLL_INFO* coll) {
 		item->speed = 0;
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 
 		AnimateLara(item);
@@ -3648,29 +3648,29 @@ void lara_col_reach(ITEM_INFO* item, COLL_INFO* coll) {
 					bounds = GetBoundsAccurate(item);
 
 					if(edge_catch <= 0) {
-						item->pos.y_pos = edge - bounds[2] - 22;
+						item->pos.pos.y = edge - bounds[2] - 22;
 					} else {
-						item->pos.y_pos += coll->front_floor - bounds[2];
+						item->pos.pos.y += coll->front_floor - bounds[2];
 
 						switch((unsigned short)(item->pos.y_rot + 0x2000) / 0x4000) {
 						case NORTH:
-							item->pos.z_pos = (item->pos.z_pos | 0x3FF) - 100;
-							item->pos.x_pos += coll->shift.x;
+							item->pos.pos.z = (item->pos.pos.z | 0x3FF) - 100;
+							item->pos.pos.x += coll->shift.x;
 							break;
 
 						case EAST:
-							item->pos.x_pos = (item->pos.x_pos | 0x3FF) - 100;
-							item->pos.z_pos += coll->shift.z;
+							item->pos.pos.x = (item->pos.pos.x | 0x3FF) - 100;
+							item->pos.pos.z += coll->shift.z;
 							break;
 
 						case SOUTH:
-							item->pos.z_pos = (item->pos.z_pos & ~0x3FF) + 100;
-							item->pos.x_pos += coll->shift.x;
+							item->pos.pos.z = (item->pos.pos.z & ~0x3FF) + 100;
+							item->pos.pos.x += coll->shift.x;
 							break;
 
 						case WEST:
-							item->pos.x_pos = (item->pos.x_pos & ~0x3FF) + 100;
-							item->pos.z_pos += coll->shift.z;
+							item->pos.pos.x = (item->pos.pos.x & ~0x3FF) + 100;
+							item->pos.pos.z += coll->shift.z;
 							break;
 						}
 					}
@@ -3699,7 +3699,7 @@ void lara_col_reach(ITEM_INFO* item, COLL_INFO* coll) {
 			item->fallspeed = 0;
 
 			if(coll->mid_floor != NO_HEIGHT) {
-				item->pos.y_pos += coll->mid_floor;
+				item->pos.pos.y += coll->mid_floor;
 			}
 		}
 	}
@@ -3749,7 +3749,7 @@ void lara_col_polestat(ITEM_INFO* item, COLL_INFO* coll) {
 		if(input & IN_FORWARD) {
 			room_num = item->room_number;
 
-			if(item->pos.y_pos - GetCeiling(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_num), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) > 1024) {
+			if(item->pos.pos.y - GetCeiling(GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_num), item->pos.pos.x, item->pos.pos.y, item->pos.pos.z) > 1024) {
 				item->goal_anim_state = AS_POLEUP;
 			}
 		} else if(input & IN_BACK && coll->mid_floor > 0) {
@@ -3764,8 +3764,8 @@ void lara_col_polestat(ITEM_INFO* item, COLL_INFO* coll) {
 		item->goal_anim_state = AS_STOP;
 	} else {
 		item->goal_anim_state = AS_FASTFALL;
-		item->pos.x_pos -= (64 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
-		item->pos.z_pos -= (64 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
+		item->pos.pos.x -= (64 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
+		item->pos.pos.z -= (64 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
 	}
 }
 
@@ -3807,7 +3807,7 @@ void lara_col_poleup(ITEM_INFO* item, COLL_INFO* coll) {
 
 	room_num = item->room_number;
 
-	if(item->pos.y_pos - GetCeiling(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_num), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) < 1024) {
+	if(item->pos.pos.y - GetCeiling(GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_num), item->pos.pos.x, item->pos.pos.y, item->pos.pos.z) < 1024) {
 		item->goal_anim_state = AS_POLESTAT;
 	}
 }
@@ -3839,7 +3839,7 @@ void lara_col_poledown(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(coll->mid_floor < 0) {
 		room_number = item->room_number;
-		item->floor = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos - 762, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		item->floor = GetHeight(GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number), item->pos.pos.x, item->pos.pos.y - 762, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		item->goal_anim_state = AS_POLESTAT;
 		item->item_flags[2] = 0;
 	}
@@ -3866,7 +3866,7 @@ void lara_col_poledown(ITEM_INFO* item, COLL_INFO* coll) {
 		item->item_flags[2] = 16384;
 	}
 
-	item->pos.y_pos += item->item_flags[2] >> 8;
+	item->pos.pos.y += item->item_flags[2] >> 8;
 }
 
 void lara_as_rope(ITEM_INFO* item, COLL_INFO* coll) {
@@ -4053,7 +4053,7 @@ void lara_col_jumper(ITEM_INFO* item, COLL_INFO* coll) {
 		item->gravity_status = 0;
 
 		if(coll->mid_floor != NO_HEIGHT) {
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 		}
 	}
 }
@@ -4069,7 +4069,7 @@ void lara_slide_slope(ITEM_INFO* item, COLL_INFO* coll) {
 
 		if(coll->mid_floor <= 200) {
 			TestLaraSlide(item, coll);
-			item->pos.y_pos += coll->mid_floor;
+			item->pos.pos.y += coll->mid_floor;
 
 			if(abs(coll->tilt_x) <= 2 && abs(coll->tilt_z) <= 2) {
 				item->goal_anim_state = AS_STOP;
@@ -4298,8 +4298,8 @@ void LaraDeflectEdgeJump(ITEM_INFO* item, COLL_INFO* coll) {
 		break;
 
 	case CT_CLAMP:
-		item->pos.z_pos -= (100 * phd_cos(coll->facing)) >> W2V_SHIFT;
-		item->pos.x_pos -= (100 * phd_sin(coll->facing)) >> W2V_SHIFT;
+		item->pos.pos.z -= (100 * phd_cos(coll->facing)) >> W2V_SHIFT;
+		item->pos.pos.x -= (100 * phd_sin(coll->facing)) >> W2V_SHIFT;
 		item->speed = 0;
 		coll->mid_floor = 0;
 
@@ -4329,19 +4329,19 @@ static long IsValidHangPos(ITEM_INFO* item, COLL_INFO* coll) {
 
 		switch(angle) {
 		case NORTH:
-			item->pos.z_pos += 4;
+			item->pos.pos.z += 4;
 			break;
 
 		case EAST:
-			item->pos.x_pos += 4;
+			item->pos.pos.x += 4;
 			break;
 
 		case SOUTH:
-			item->pos.z_pos -= 4;
+			item->pos.pos.z -= 4;
 			break;
 
 		case WEST:
-			item->pos.x_pos -= 4;
+			item->pos.pos.x -= 4;
 			break;
 		}
 
@@ -4373,12 +4373,12 @@ long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll) {
 	switch(angle) {
 	case NORTH:
 	case SOUTH:
-		item->pos.z_pos += coll->shift.z;
+		item->pos.pos.z += coll->shift.z;
 		break;
 
 	case EAST:
 	case WEST:
-		item->pos.x_pos += coll->shift.x;
+		item->pos.pos.x += coll->shift.x;
 		break;
 	}
 
@@ -4404,7 +4404,7 @@ long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	if(result != 1) {
-		item->pos.y_pos += shift;
+		item->pos.pos.y += shift;
 	}
 
 	return 1;
@@ -4420,9 +4420,9 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 		return 0;
 	}
 
-	oldx = item->pos.x_pos;
+	oldx = item->pos.pos.x;
 	oldy = item->pos.y_rot;
-	oldz = item->pos.z_pos;
+	oldz = item->pos.pos.z;
 	front = coll->front_floor;
 	angle = (unsigned short)(item->pos.y_rot + 0x2000) / 0x4000;
 
@@ -4439,8 +4439,8 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 		break;
 	}
 
-	item->pos.x_pos = x;
-	item->pos.z_pos = z;
+	item->pos.pos.x = x;
+	item->pos.pos.z = z;
 	item->pos.y_rot += 0x4000;
 	lara.CornerX = x;
 	lara.CornerZ = z;
@@ -4448,7 +4448,7 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(flag) {
 		if(lara.climb_status) {
-			if(!(GetClimbTrigger(x, item->pos.y_pos, z, item->room_number) & LeftClimbTab[angle])) {
+			if(!(GetClimbTrigger(x, item->pos.pos.y, z, item->room_number) & LeftClimbTab[angle])) {
 				flag = 0;
 			}
 		} else if(abs(front - coll->front_floor) > 60) {
@@ -4457,9 +4457,9 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	if(!flag) {
-		item->pos.x_pos = oldx;
+		item->pos.pos.x = oldx;
 		item->pos.y_rot = oldy;
-		item->pos.z_pos = oldz;
+		item->pos.pos.z = oldz;
 		lara.move_angle = oldy;
 
 		if(LaraFloorFront(item, item->pos.y_rot + 0x4000, 116, &height_type, &tiltxoff, &tiltzoff, &OnObject) < 0) {
@@ -4468,41 +4468,41 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 
 		switch(angle) {
 		case NORTH:
-			x = ((item->pos.x_pos + 1024) & ~1023) - (item->pos.z_pos & 1023) + 1024;
-			z = ((item->pos.z_pos + 1024) & ~1023) - (item->pos.x_pos & 1023) + 1024;
+			x = ((item->pos.pos.x + 1024) & ~1023) - (item->pos.pos.z & 1023) + 1024;
+			z = ((item->pos.pos.z + 1024) & ~1023) - (item->pos.pos.x & 1023) + 1024;
 			break;
 
 		case SOUTH:
-			x = ((item->pos.x_pos - 1024) & ~1023) - (item->pos.z_pos & 1023) + 1024;
-			z = ((item->pos.z_pos - 1024) & ~1023) - (item->pos.x_pos & 1023) + 1024;
+			x = ((item->pos.pos.x - 1024) & ~1023) - (item->pos.pos.z & 1023) + 1024;
+			z = ((item->pos.pos.z - 1024) & ~1023) - (item->pos.pos.x & 1023) + 1024;
 			break;
 
 		case WEST:
-			x = (item->pos.x_pos ^ ((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023) - 1024;
-			z = ((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023 ^ (item->pos.z_pos + 1024);
+			x = (item->pos.pos.x ^ ((unsigned short)item->pos.pos.x ^ (unsigned short)item->pos.pos.z) & 1023) - 1024;
+			z = ((unsigned short)item->pos.pos.x ^ (unsigned short)item->pos.pos.z) & 1023 ^ (item->pos.pos.z + 1024);
 			break;
 
 		default:
-			x = (((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023) ^ (item->pos.x_pos + 1024);
-			z = (item->pos.z_pos ^ (((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023)) - 1024;
+			x = (((unsigned short)item->pos.pos.x ^ (unsigned short)item->pos.pos.z) & 1023) ^ (item->pos.pos.x + 1024);
+			z = (item->pos.pos.z ^ (((unsigned short)item->pos.pos.x ^ (unsigned short)item->pos.pos.z) & 1023)) - 1024;
 			break;
 		}
 
-		item->pos.x_pos = x;
-		item->pos.z_pos = z;
+		item->pos.pos.x = x;
+		item->pos.pos.z = z;
 		item->pos.y_rot -= 0x4000;
 		lara.CornerX = x;
 		lara.CornerZ = z;
 		flag = IsValidHangPos(item, coll);
 
 		if(flag) {
-			item->pos.x_pos = oldx;
+			item->pos.pos.x = oldx;
 			item->pos.y_rot = oldy;
-			item->pos.z_pos = oldz;
+			item->pos.pos.z = oldz;
 			lara.move_angle = oldy;
 
 			if(lara.climb_status) {
-				if(!(GetClimbTrigger(x, item->pos.y_pos, z, item->room_number) & RightClimbTab[angle])) {
+				if(!(GetClimbTrigger(x, item->pos.pos.y, z, item->room_number) & RightClimbTab[angle])) {
 					front = LaraFloorFront(item, item->pos.y_rot, 116, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 					if(abs(coll->front_floor - front) > 60 || front < -768) {
@@ -4553,9 +4553,9 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 		}
 	}
 
-	item->pos.x_pos = oldx;
+	item->pos.pos.x = oldx;
 	item->pos.y_rot = oldy;
-	item->pos.z_pos = oldz;
+	item->pos.pos.z = oldz;
 	lara.move_angle = oldy;
 	return flag;
 }
@@ -4570,9 +4570,9 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 		return 0;
 	}
 
-	oldx = item->pos.x_pos;
+	oldx = item->pos.pos.x;
 	oldy = item->pos.y_rot;
-	oldz = item->pos.z_pos;
+	oldz = item->pos.pos.z;
 	front = coll->front_floor;
 	angle = (unsigned short)(item->pos.y_rot + 0x2000) / 0x4000;
 
@@ -4589,8 +4589,8 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 		break;
 	}
 
-	item->pos.x_pos = x;
-	item->pos.z_pos = z;
+	item->pos.pos.x = x;
+	item->pos.pos.z = z;
 	item->pos.y_rot -= 0x4000;
 	lara.CornerX = x;
 	lara.CornerZ = z;
@@ -4598,7 +4598,7 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(flag) {
 		if(lara.climb_status) {
-			if(!(GetClimbTrigger(x, item->pos.y_pos, z, item->room_number) & RightClimbTab[angle])) {
+			if(!(GetClimbTrigger(x, item->pos.pos.y, z, item->room_number) & RightClimbTab[angle])) {
 				flag = 0;
 			}
 		} else if(abs(front - coll->front_floor) > 60) {
@@ -4607,9 +4607,9 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	if(!flag) {
-		item->pos.x_pos = oldx;
+		item->pos.pos.x = oldx;
 		item->pos.y_rot = oldy;
-		item->pos.z_pos = oldz;
+		item->pos.pos.z = oldz;
 		lara.move_angle = oldy;
 
 		if(LaraFloorFront(item, item->pos.y_rot - 0x4000, 116, &height_type, &tiltxoff, &tiltzoff, &OnObject) < 0) {
@@ -4618,41 +4618,41 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 
 		switch(angle) {
 		case NORTH:
-			x = (item->pos.x_pos ^ ((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023) - 1024;
-			z = ((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023 ^ (item->pos.z_pos + 1024);
+			x = (item->pos.pos.x ^ ((unsigned short)item->pos.pos.x ^ (unsigned short)item->pos.pos.z) & 1023) - 1024;
+			z = ((unsigned short)item->pos.pos.x ^ (unsigned short)item->pos.pos.z) & 1023 ^ (item->pos.pos.z + 1024);
 			break;
 
 		case SOUTH:
-			x = (((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023) ^ (item->pos.x_pos + 1024);
-			z = (((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023) ^ (item->pos.z_pos - 1024);
+			x = (((unsigned short)item->pos.pos.x ^ (unsigned short)item->pos.pos.z) & 1023) ^ (item->pos.pos.x + 1024);
+			z = (((unsigned short)item->pos.pos.x ^ (unsigned short)item->pos.pos.z) & 1023) ^ (item->pos.pos.z - 1024);
 			break;
 
 		case WEST:
-			x = (item->pos.x_pos & ~1023) - (item->pos.z_pos & 1023);
-			z = (item->pos.z_pos & ~1023) - (item->pos.x_pos & 1023);
+			x = (item->pos.pos.x & ~1023) - (item->pos.pos.z & 1023);
+			z = (item->pos.pos.z & ~1023) - (item->pos.pos.x & 1023);
 			break;
 
 		default:
-			x = ((item->pos.x_pos + 1024) & ~1023) - (item->pos.z_pos & 1023) + 1024;
-			z = ((item->pos.z_pos + 1024) & ~1023) - (item->pos.x_pos & 1023) + 1024;
+			x = ((item->pos.pos.x + 1024) & ~1023) - (item->pos.pos.z & 1023) + 1024;
+			z = ((item->pos.pos.z + 1024) & ~1023) - (item->pos.pos.x & 1023) + 1024;
 			break;
 		}
 
-		item->pos.x_pos = x;
-		item->pos.z_pos = z;
+		item->pos.pos.x = x;
+		item->pos.pos.z = z;
 		item->pos.y_rot += 0x4000;
 		lara.CornerX = x;
 		lara.CornerZ = z;
 		flag = IsValidHangPos(item, coll);
 
 		if(flag) {
-			item->pos.x_pos = oldx;
+			item->pos.pos.x = oldx;
 			item->pos.y_rot = oldy;
-			item->pos.z_pos = oldz;
+			item->pos.pos.z = oldz;
 			lara.move_angle = oldy;
 
 			if(lara.climb_status) {
-				if(!(GetClimbTrigger(x, item->pos.y_pos, z, item->room_number) & LeftClimbTab[angle])) {
+				if(!(GetClimbTrigger(x, item->pos.pos.y, z, item->room_number) & LeftClimbTab[angle])) {
 					front = LaraFloorFront(item, item->pos.y_rot, 116, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 					if(abs(coll->front_floor - front) > 60 || front < -768) {
@@ -4703,9 +4703,9 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 		}
 	}
 
-	item->pos.x_pos = oldx;
+	item->pos.pos.x = oldx;
 	item->pos.y_rot = oldy;
-	item->pos.z_pos = oldz;
+	item->pos.pos.z = oldz;
 	lara.move_angle = oldy;
 	return flag;
 }
@@ -4732,8 +4732,8 @@ void LaraSlideEdgeJump(ITEM_INFO* item, COLL_INFO* coll) {
 		break;
 
 	case CT_CLAMP:
-		item->pos.z_pos -= (100 * phd_cos(coll->facing)) >> W2V_SHIFT;
-		item->pos.x_pos -= (100 * phd_sin(coll->facing)) >> W2V_SHIFT;
+		item->pos.pos.z -= (100 * phd_cos(coll->facing)) >> W2V_SHIFT;
+		item->pos.pos.x -= (100 * phd_sin(coll->facing)) >> W2V_SHIFT;
 		item->speed = 0;
 		coll->mid_floor = 0;
 
@@ -4845,7 +4845,7 @@ void FallFromRope(ITEM_INFO* item) {
 	l = abs(CurrentPendulum.Velocity.x >> 16) + abs(CurrentPendulum.Velocity.z >> 16);
 	item->speed = (short)(l >> 1);
 	item->pos.x_rot = 0;
-	item->pos.y_pos += 320;
+	item->pos.pos.y += 320;
 	item->anim_number = ANIM_FALLDOWN;
 	item->frame_number = GetAnim(currentLevel, ANIM_FALLDOWN)->frame_base;
 	item->current_anim_state = AS_FORWARDJUMP;
@@ -4871,7 +4871,7 @@ short TestMonkeyLeft(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->facing = lara.move_angle;
 	coll->radius = 100;
 	coll->slopes_are_walls = 0;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 600);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 600);
 
 	if(abs(coll->mid_ceiling - coll->front_ceiling) > 50) {
 		return 0;
@@ -4902,7 +4902,7 @@ short TestMonkeyRight(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->facing = lara.move_angle;
 	coll->radius = 100;
 	coll->slopes_are_walls = 0;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 600);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 600);
 
 	if(abs(coll->mid_ceiling - coll->front_ceiling) > 50) {
 		return 0;
@@ -4938,7 +4938,7 @@ long LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, long* edge) {
 		return 1;
 	}
 
-	hdif = item->pos.y_pos + bounds[2];
+	hdif = item->pos.pos.y + bounds[2];
 
 	if(hdif >> 8 == (hdif + item->fallspeed) >> 8) {
 		return 0;
@@ -4960,9 +4960,9 @@ long TestHangSwingIn(ITEM_INFO* item, short angle) {
 	long x, y, z, h, c;
 	short room_number;
 
-	x = item->pos.x_pos;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos;
+	x = item->pos.pos.x;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z;
 	room_number = item->room_number;
 
 	switch(angle) {
@@ -5041,7 +5041,7 @@ long TestLaraVault(ITEM_INFO* item, COLL_INFO* coll) {
 			item->frame_number = GetAnim(currentLevel, ANIM_VAULT2)->frame_base;
 			item->current_anim_state = AS_NULL;
 			item->goal_anim_state = AS_STOP;
-			item->pos.y_pos += hdif + 512;
+			item->pos.pos.y += hdif + 512;
 			lara.gun_status = LG_HANDS_BUSY;
 		} else {
 			return 0;
@@ -5052,7 +5052,7 @@ long TestLaraVault(ITEM_INFO* item, COLL_INFO* coll) {
 			item->frame_number = GetAnim(currentLevel, ANIM_VAULT3)->frame_base;
 			item->current_anim_state = AS_NULL;
 			item->goal_anim_state = AS_STOP;
-			item->pos.y_pos += hdif + 768;
+			item->pos.pos.y += hdif + 768;
 			lara.gun_status = LG_HANDS_BUSY;
 		} else {
 			return 0;
@@ -5102,19 +5102,19 @@ long TestLaraVault(ITEM_INFO* item, COLL_INFO* coll) {
 
 	switch(angle) {
 	case NORTH:
-		item->pos.z_pos = (item->pos.z_pos | 0x3FF) - 100;
+		item->pos.pos.z = (item->pos.pos.z | 0x3FF) - 100;
 		break;
 
 	case EAST:
-		item->pos.x_pos = (item->pos.x_pos | 0x3FF) - 100;
+		item->pos.pos.x = (item->pos.pos.x | 0x3FF) - 100;
 		break;
 
 	case SOUTH:
-		item->pos.z_pos = (item->pos.z_pos & ~0x3FF) + 100;
+		item->pos.pos.z = (item->pos.pos.z & ~0x3FF) + 100;
 		break;
 
 	case WEST:
-		item->pos.x_pos = (item->pos.x_pos & ~0x3FF) + 100;
+		item->pos.pos.x = (item->pos.pos.x & ~0x3FF) + 100;
 		break;
 	}
 
@@ -5145,9 +5145,9 @@ long LaraTestClimbStance(ITEM_INFO* item, COLL_INFO* coll) {
 			}
 		}
 
-		item->pos.y_pos += shift_r;
+		item->pos.pos.y += shift_r;
 	} else if(shift_l) {
-		item->pos.y_pos += shift_l;
+		item->pos.pos.y += shift_l;
 	}
 
 	return 1;
@@ -5161,9 +5161,9 @@ long TestWall(ITEM_INFO* item, long front, long right, long down) {
 	short angle, room_num;
 
 	room_num = item->room_number;
-	x = item->pos.x_pos;
-	y = down + item->pos.y_pos;
-	z = item->pos.z_pos;
+	x = item->pos.pos.x;
+	y = down + item->pos.pos.y;
+	z = item->pos.pos.z;
 	angle = (unsigned short)(item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch(angle) {
@@ -5251,37 +5251,37 @@ void SnapLaraToEdgeOfBlock(ITEM_INFO* item, COLL_INFO* coll, short angle) {
 	if(item->current_anim_state == AS_HANGRIGHT) {
 		switch(angle) {
 		case NORTH:
-			item->pos.x_pos = coll->old.x & ~0x3FF | 0x390;
+			item->pos.pos.x = coll->old.x & ~0x3FF | 0x390;
 			break;
 
 		case EAST:
-			item->pos.z_pos = coll->old.z & ~0x3FF | 0x70;
+			item->pos.pos.z = coll->old.z & ~0x3FF | 0x70;
 			break;
 
 		case SOUTH:
-			item->pos.x_pos = coll->old.x & ~0x3FF | 0x70;
+			item->pos.pos.x = coll->old.x & ~0x3FF | 0x70;
 			break;
 
 		default:
-			item->pos.z_pos = coll->old.z & ~0x3FF | 0x390;
+			item->pos.pos.z = coll->old.z & ~0x3FF | 0x390;
 			break;
 		}
 	} else if(item->current_anim_state == AS_HANGLEFT) {
 		switch(angle) {
 		case NORTH:
-			item->pos.x_pos = coll->old.x & ~0x3FF | 0x70;
+			item->pos.pos.x = coll->old.x & ~0x3FF | 0x70;
 			break;
 
 		case EAST:
-			item->pos.z_pos = coll->old.z & ~0x3FF | 0x390;
+			item->pos.pos.z = coll->old.z & ~0x3FF | 0x390;
 			break;
 
 		case SOUTH:
-			item->pos.x_pos = coll->old.x & ~0x3FF | 0x390;
+			item->pos.pos.x = coll->old.x & ~0x3FF | 0x390;
 			break;
 
 		default:
-			item->pos.z_pos = coll->old.z & ~0x3FF | 0x70;
+			item->pos.pos.z = coll->old.z & ~0x3FF | 0x70;
 			break;
 		}
 	}
@@ -5314,19 +5314,19 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 
 	switch(dir) {
 	case NORTH:
-		item->pos.z_pos += 4;
+		item->pos.pos.z += 4;
 		break;
 
 	case EAST:
-		item->pos.x_pos += 4;
+		item->pos.pos.x += 4;
 		break;
 
 	case SOUTH:
-		item->pos.z_pos -= 4;
+		item->pos.pos.z -= 4;
 		break;
 
 	case WEST:
-		item->pos.x_pos -= 4;
+		item->pos.pos.x -= 4;
 		break;
 	}
 
@@ -5343,7 +5343,7 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 			if(!LaraTestHangOnClimbWall(item, coll)) {
 				if(item->anim_number != ANIM_GRABRIGHT && item->anim_number != ANIM_GRABLEFT) {
 					SnapLaraToEdgeOfBlock(item, coll, dir);
-					item->pos.y_pos = coll->old.y;
+					item->pos.pos.y = coll->old.y;
 					item->anim_number = ANIM_GRABLEDGE;
 					item->frame_number = GetAnim(currentLevel, ANIM_GRABLEDGE)->frame_base + 21;
 					item->current_anim_state = AS_HANG;
@@ -5361,7 +5361,7 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 			item->frame_number = GetAnim(currentLevel, ANIM_FALLDOWN)->frame_base;
 			item->current_anim_state = AS_FORWARDJUMP;
 			item->goal_anim_state = AS_FORWARDJUMP;
-			item->pos.y_pos += 256;
+			item->pos.pos.y += 256;
 			item->gravity_status = 1;
 			item->speed = 2;
 			item->fallspeed = 1;
@@ -5376,8 +5376,8 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 		oldfloor = coll->front_floor;
 		hdif = coll->front_floor - bounds[2];
 		wall = 0;
-		x = item->pos.x_pos;
-		z = item->pos.z_pos;
+		x = item->pos.pos.x;
+		z = item->pos.pos.z;
 
 		switch(dir) {
 		case NORTH:
@@ -5399,7 +5399,7 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 
 		lara.move_angle = angle;
 
-		if(256 << dir & GetClimbTrigger(x, item->pos.y_pos, z, item->room_number)) {
+		if(256 << dir & GetClimbTrigger(x, item->pos.pos.y, z, item->room_number)) {
 			if(!LaraTestHangOnClimbWall(item, coll)) {
 				hdif = 0;
 			}
@@ -5413,20 +5413,20 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 			switch(dir) {
 			case NORTH:
 			case SOUTH:
-				item->pos.z_pos += coll->shift.z;
+				item->pos.pos.z += coll->shift.z;
 				break;
 
 			case EAST:
 			case WEST:
-				item->pos.x_pos += coll->shift.x;
+				item->pos.pos.x += coll->shift.x;
 				break;
 			}
 
-			item->pos.y_pos += hdif;
+			item->pos.pos.y += hdif;
 		} else {
-			item->pos.x_pos = coll->old.x;
-			item->pos.y_pos = coll->old.y;
-			item->pos.z_pos = coll->old.z;
+			item->pos.pos.x = coll->old.x;
+			item->pos.pos.y = coll->old.y;
+			item->pos.pos.z = coll->old.z;
 
 			if(item->current_anim_state == AS_HANGLEFT || item->current_anim_state == AS_HANGRIGHT) {
 				item->anim_number = ANIM_GRABLEDGE;
@@ -5443,9 +5443,9 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 		item->anim_number = ANIM_STOPHANG;
 		item->frame_number = GetAnim(currentLevel, ANIM_STOPHANG)->frame_base + 9;
 		bounds = GetBoundsAccurate(item);
-		item->pos.x_pos += coll->shift.x;
-		item->pos.y_pos += bounds[3];
-		item->pos.z_pos += coll->shift.z;
+		item->pos.pos.x += coll->shift.x;
+		item->pos.pos.y += bounds[3];
+		item->pos.pos.z += coll->shift.z;
 		item->gravity_status = 1;
 		item->speed = 2;
 		item->fallspeed = 1;

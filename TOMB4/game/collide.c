@@ -45,9 +45,9 @@ static short StarGateBounds[24] = {
 short GlobalCollisionBounds[6];
 
 void ShiftItem(ITEM_INFO* item, COLL_INFO* coll) {
-	item->pos.x_pos += coll->shift.x;
-	item->pos.y_pos += coll->shift.y;
-	item->pos.z_pos += coll->shift.z;
+	item->pos.pos.x += coll->shift.x;
+	item->pos.pos.y += coll->shift.y;
+	item->pos.pos.z += coll->shift.z;
 	coll->shift.z = 0;
 	coll->shift.y = 0;
 	coll->shift.x = 0;
@@ -95,11 +95,11 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 				if(mesh->Flags & 1) {
 					bounds = GetStaticObjectBounds(currentLevel, mesh->static_number);
 
-					if(item->pos.y_pos + rad + 128 >= mesh->y + bounds[2] && item->pos.y_pos - rad - 128 <= mesh->y + bounds[3]) {
+					if(item->pos.pos.y + rad + 128 >= mesh->y + bounds[2] && item->pos.pos.y - rad - 128 <= mesh->y + bounds[3]) {
 						sy = phd_sin(mesh->y_rot);
 						cy = phd_cos(mesh->y_rot);
-						dx = item->pos.x_pos - mesh->x;
-						dz = item->pos.z_pos - mesh->z;
+						dx = item->pos.pos.x - mesh->x;
+						dz = item->pos.pos.z - mesh->z;
 						num = (dx * cy - sy * dz) >> W2V_SHIFT;
 
 						if(rad + num + 128 >= bounds[0] && num - rad - 128 <= bounds[1]) {
@@ -168,9 +168,9 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 				continue;
 			}
 
-			dx = item->pos.x_pos - item2->pos.x_pos;
-			dy = item->pos.y_pos - item2->pos.y_pos;
-			dz = item->pos.z_pos - item2->pos.z_pos;
+			dx = item->pos.pos.x - item2->pos.pos.x;
+			dy = item->pos.pos.y - item2->pos.pos.y;
+			dz = item->pos.pos.z - item2->pos.pos.z;
 
 			if(dx < -2048 || dx > 2048 || dy < -2048 || dy > 2048 || dz < -2048 || dz > 2048) // further than 2 blocks? bye
 			{
@@ -180,15 +180,15 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 
 			bounds = GetBestFrame(item2);
 
-			if(item->pos.y_pos + rad + 128 < item2->pos.y_pos + bounds[2] || item->pos.y_pos - rad - 128 > item2->pos.y_pos + bounds[3]) {
+			if(item->pos.pos.y + rad + 128 < item2->pos.pos.y + bounds[2] || item->pos.pos.y - rad - 128 > item2->pos.pos.y + bounds[3]) {
 				item_number = next_item;
 				continue;
 			}
 
 			sy = phd_sin(item2->pos.y_rot);
 			cy = phd_cos(item2->pos.y_rot);
-			dx = item->pos.x_pos - item2->pos.x_pos;
-			dz = item->pos.z_pos - item2->pos.z_pos;
+			dx = item->pos.pos.x - item2->pos.pos.x;
+			dz = item->pos.pos.z - item2->pos.pos.z;
 			num = (dx * cy - sy * dz) >> W2V_SHIFT;
 
 			if(item2->object_number == TURN_SWITCH) {
@@ -229,24 +229,24 @@ void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INF
 	item = GetItem(currentLevel, item_number);
 
 	if(item->status != ITEM_INVISIBLE && item->item_flags[3] && TestBoundsCollide(item, l, coll->radius)) {
-		dx = lara_item->pos.x_pos;
-		dy = lara_item->pos.y_pos;
-		dz = lara_item->pos.z_pos;
+		dx = lara_item->pos.pos.x;
+		dy = lara_item->pos.pos.y;
+		dz = lara_item->pos.pos.z;
 
 		if(ItemPushLara(item, l, coll, 1, 1)) {
 			lara_item->hit_points -= item->item_flags[3];
-			dx -= lara_item->pos.x_pos;
-			dy -= lara_item->pos.y_pos;
-			dz -= lara_item->pos.z_pos;
+			dx -= lara_item->pos.pos.x;
+			dy -= lara_item->pos.pos.y;
+			dz -= lara_item->pos.pos.z;
 
 			if((dx || dy || dz) && TriggerActive(item)) {
-				DoBloodSplat(l->pos.x_pos + (GetRandomControl() & 0x3F) - 32, l->pos.y_pos - (GetRandomControl() & 0x1FF) - 256, l->pos.z_pos + (GetRandomControl() & 0x3F) - 32, (item->item_flags[3] >> 5) + (GetRandomControl() & 0x3) + 2, (short)(2 * GetRandomControl()), l->room_number);
+				DoBloodSplat(l->pos.pos.x + (GetRandomControl() & 0x3F) - 32, l->pos.pos.y - (GetRandomControl() & 0x1FF) - 256, l->pos.pos.z + (GetRandomControl() & 0x3F) - 32, (item->item_flags[3] >> 5) + (GetRandomControl() & 0x3) + 2, (short)(2 * GetRandomControl()), l->room_number);
 			}
 
 			if(!coll->enable_baddie_push) {
-				lara_item->pos.x_pos += dx;
-				lara_item->pos.y_pos += dy;
-				lara_item->pos.z_pos += dz;
+				lara_item->pos.pos.x += dx;
+				lara_item->pos.pos.y += dy;
+				lara_item->pos.pos.z += dz;
 			}
 		}
 	}
@@ -279,30 +279,30 @@ void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 				do {
 					if(TouchBits & 0x1) {
-						GlobalCollisionBounds[0] = (short)(sptr->x - item->pos.x_pos - sptr->r);
-						GlobalCollisionBounds[2] = (short)(sptr->y - item->pos.y_pos - sptr->r);
-						GlobalCollisionBounds[4] = (short)(sptr->z - item->pos.z_pos - sptr->r);
-						GlobalCollisionBounds[1] = (short)(sptr->x - item->pos.x_pos + sptr->r);
-						GlobalCollisionBounds[3] = (short)(sptr->y - item->pos.y_pos + sptr->r);
-						GlobalCollisionBounds[5] = (short)(sptr->z - item->pos.z_pos + sptr->r);
-						dx = lara_item->pos.x_pos;
-						dy = lara_item->pos.y_pos;
-						dz = lara_item->pos.z_pos;
+						GlobalCollisionBounds[0] = (short)(sptr->x - item->pos.pos.x - sptr->r);
+						GlobalCollisionBounds[2] = (short)(sptr->y - item->pos.pos.y - sptr->r);
+						GlobalCollisionBounds[4] = (short)(sptr->z - item->pos.pos.z - sptr->r);
+						GlobalCollisionBounds[1] = (short)(sptr->x - item->pos.pos.x + sptr->r);
+						GlobalCollisionBounds[3] = (short)(sptr->y - item->pos.pos.y + sptr->r);
+						GlobalCollisionBounds[5] = (short)(sptr->z - item->pos.pos.z + sptr->r);
+						dx = lara_item->pos.pos.x;
+						dy = lara_item->pos.pos.y;
+						dz = lara_item->pos.pos.z;
 
 						if(ItemPushLara(item, l, coll, DeadlyBits & 0x1, 3) && DeadlyBits & 0x1) {
 							lara_item->hit_points -= item->item_flags[3];
-							dx -= lara_item->pos.x_pos;
-							dy -= lara_item->pos.y_pos;
-							dz -= lara_item->pos.z_pos;
+							dx -= lara_item->pos.pos.x;
+							dy -= lara_item->pos.pos.y;
+							dz -= lara_item->pos.pos.z;
 
 							if((dx || dy || dz) && TriggerActive(item)) {
-								DoBloodSplat(l->pos.x_pos + (GetRandomControl() & 0x3F) - 32, sptr->y + (GetRandomControl() & 0x1F) - 16, l->pos.z_pos + (GetRandomControl() & 0x3F) - 32, (item->item_flags[3] >> 5) + (GetRandomControl() & 0x3) + 2, (short)(2 * GetRandomControl()), l->room_number);
+								DoBloodSplat(l->pos.pos.x + (GetRandomControl() & 0x3F) - 32, sptr->y + (GetRandomControl() & 0x1F) - 16, l->pos.pos.z + (GetRandomControl() & 0x3F) - 32, (item->item_flags[3] >> 5) + (GetRandomControl() & 0x3) + 2, (short)(2 * GetRandomControl()), l->room_number);
 							}
 
 							if(!coll->enable_baddie_push) {
-								lara_item->pos.x_pos += dx;
-								lara_item->pos.y_pos += dy;
-								lara_item->pos.z_pos += dz;
+								lara_item->pos.pos.x += dx;
+								lara_item->pos.pos.y += dy;
+								lara_item->pos.pos.z += dz;
 							}
 						}
 					}
@@ -333,8 +333,8 @@ void CreatureCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				c = phd_cos(l->pos.y_rot);
 				x = (bounds[0] + bounds[1]) >> 1;
 				z = (bounds[3] - bounds[2]) >> 1;
-				rx = (l->pos.x_pos - item->pos.x_pos) - ((c * x + s * z) >> W2V_SHIFT);
-				rz = (l->pos.z_pos - item->pos.z_pos) - ((c * z - s * x) >> W2V_SHIFT);
+				rx = (l->pos.pos.x - item->pos.pos.x) - ((c * x + s * z) >> W2V_SHIFT);
+				rz = (l->pos.pos.z - item->pos.pos.z) - ((c * z - s * x) >> W2V_SHIFT);
 
 				if(bounds[3] - bounds[2] > 256) {
 					lara.hit_direction = (unsigned short)((l->pos.y_rot - phd_atan(rz, rx) - 0x6000)) >> W2V_SHIFT;
@@ -521,9 +521,9 @@ void UpdateLaraRoom(ITEM_INFO* item, long height) {
 	long x, y, z;
 	short room_number;
 
-	x = item->pos.x_pos;
-	y = item->pos.y_pos + height;
-	z = item->pos.z_pos;
+	x = item->pos.pos.x;
+	y = item->pos.pos.y + height;
+	z = item->pos.pos.z;
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
 	item->floor = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
@@ -582,9 +582,9 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 
 			if(item->collidable && item->status != ITEM_INVISIBLE) {
 				if(GetObjectInfo(currentLevel, item->object_number)->collision) {
-					dx = l->pos.x_pos - item->pos.x_pos;
-					dy = l->pos.y_pos - item->pos.y_pos;
-					dz = l->pos.z_pos - item->pos.z_pos;
+					dx = l->pos.pos.x - item->pos.pos.x;
+					dy = l->pos.pos.y - item->pos.pos.y;
+					dz = l->pos.pos.z - item->pos.pos.z;
 
 					if(dx > -3072 && dx < 3072 && dy > -3072 && dy < 3072 && dz > -3072 && dz < 3072) {
 						GetObjectInfo(currentLevel, item->object_number)->collision(item_number, l, coll);
@@ -604,15 +604,15 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 					continue;
 				}
 
-				dx = l->pos.x_pos - mesh->x;
-				dy = l->pos.y_pos - mesh->y;
-				dz = l->pos.z_pos - mesh->z;
+				dx = l->pos.pos.x - mesh->x;
+				dy = l->pos.pos.y - mesh->y;
+				dz = l->pos.pos.z - mesh->z;
 
 				if(dx > -3072 && dx < 3072 && dy > -3072 && dy < 3072 && dz > -3072 && dz < 3072) {
 					bounds = GetStaticObjectBounds(currentLevel, mesh->static_number);
-					pos.x_pos = mesh->x;
-					pos.y_pos = mesh->y;
-					pos.z_pos = mesh->z;
+					pos.pos.x = mesh->x;
+					pos.pos.y = mesh->y;
+					pos.pos.z = mesh->z;
 					pos.y_rot = mesh->y_rot;
 
 					if(TestBoundsCollideStatic(bounds, &pos, coll->radius)) {
@@ -670,8 +670,8 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 	long xmin, xmax, zmin, zmax, left, top, right, bottom;
 	short facing;
 
-	dx = l->pos.x_pos - item->pos.x_pos;
-	dz = l->pos.z_pos - item->pos.z_pos;
+	dx = l->pos.pos.x - item->pos.pos.x;
+	dz = l->pos.pos.z - item->pos.pos.z;
 	s = phd_sin(item->pos.y_rot);
 	c = phd_cos(item->pos.y_rot);
 	x = (dx * c - dz * s) >> W2V_SHIFT;
@@ -714,8 +714,8 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		z -= bottom;
 	}
 
-	l->pos.x_pos = item->pos.x_pos + ((c * x + s * z) >> W2V_SHIFT);
-	l->pos.z_pos = item->pos.z_pos + ((c * z - s * x) >> W2V_SHIFT);
+	l->pos.pos.x = item->pos.pos.x + ((c * x + s * z) >> W2V_SHIFT);
+	l->pos.pos.z = item->pos.pos.z + ((c * z - s * x) >> W2V_SHIFT);
 
 	if(spaz && bounds[3] - bounds[2] > 256 && item->object_number != VON_CROY && item->object_number != GUIDE && item->object_number != ENEMY_JEEP) {
 		x = (bounds[0] + bounds[1]) / 2;
@@ -739,18 +739,18 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 	coll->bad_neg = -384;
 	coll->bad_ceiling = 0;
 	facing = coll->facing;
-	coll->facing = (short)phd_atan(l->pos.z_pos - coll->old.z, l->pos.x_pos - coll->old.x);
-	GetCollisionInfo(coll, l->pos.x_pos, l->pos.y_pos, l->pos.z_pos, l->room_number, 762);
+	coll->facing = (short)phd_atan(l->pos.pos.z - coll->old.z, l->pos.pos.x - coll->old.x);
+	GetCollisionInfo(coll, l->pos.pos.x, l->pos.pos.y, l->pos.pos.z, l->room_number, 762);
 	coll->facing = facing;
 
 	if(coll->coll_type == CT_NONE) {
-		coll->old.x = l->pos.x_pos;
-		coll->old.y = l->pos.y_pos;
-		coll->old.z = l->pos.z_pos;
+		coll->old.x = l->pos.pos.x;
+		coll->old.y = l->pos.pos.y;
+		coll->old.z = l->pos.pos.z;
 		UpdateLaraRoom(l, -10);
 	} else {
-		l->pos.x_pos = coll->old.x;
-		l->pos.z_pos = coll->old.z;
+		l->pos.pos.x = coll->old.x;
+		l->pos.pos.z = coll->old.z;
 	}
 
 	if(lara.IsMoving && lara.MoveCount > 15) {
@@ -769,14 +769,14 @@ long TestBoundsCollide(ITEM_INFO* item, ITEM_INFO* l, long rad) {
 	bounds = GetBestFrame(item);
 	lbounds = GetBestFrame(l);
 
-	if(item->pos.y_pos + bounds[3] <= l->pos.y_pos + lbounds[2] || item->pos.y_pos + bounds[2] >= l->pos.y_pos + lbounds[3]) {
+	if(item->pos.pos.y + bounds[3] <= l->pos.pos.y + lbounds[2] || item->pos.pos.y + bounds[2] >= l->pos.pos.y + lbounds[3]) {
 		return 0;
 	}
 
 	s = phd_sin(item->pos.y_rot);
 	c = phd_cos(item->pos.y_rot);
-	dx = l->pos.x_pos - item->pos.x_pos;
-	dz = l->pos.z_pos - item->pos.z_pos;
+	dx = l->pos.pos.x - item->pos.pos.x;
+	dz = l->pos.pos.z - item->pos.pos.z;
 	x = (dx * c - dz * s) >> W2V_SHIFT;
 	z = (dx * s + dz * c) >> W2V_SHIFT;
 	return x >= bounds[0] - rad && x <= rad + bounds[1] && z >= bounds[4] - rad && z <= rad + bounds[5];
@@ -792,14 +792,14 @@ long TestBoundsCollideStatic(short* bounds, PHD_3DPOS* pos, long rad) {
 
 	lbounds = GetBestFrame(lara_item);
 
-	if(pos->y_pos + bounds[3] <= lara_item->pos.y_pos + lbounds[2] || pos->y_pos + bounds[2] >= lara_item->pos.y_pos + lbounds[3]) {
+	if(pos->pos.y + bounds[3] <= lara_item->pos.pos.y + lbounds[2] || pos->pos.y + bounds[2] >= lara_item->pos.pos.y + lbounds[3]) {
 		return 0;
 	}
 
 	s = phd_sin(pos->y_rot);
 	c = phd_cos(pos->y_rot);
-	dx = lara_item->pos.x_pos - pos->x_pos;
-	dz = lara_item->pos.z_pos - pos->z_pos;
+	dx = lara_item->pos.pos.x - pos->pos.x;
+	dz = lara_item->pos.pos.z - pos->pos.z;
 	x = (dx * c - dz * s) >> W2V_SHIFT;
 	z = (dx * s + dz * c) >> W2V_SHIFT;
 	return x >= bounds[0] - rad && x <= rad + bounds[1] && z >= bounds[4] - rad && z <= rad + bounds[5];
@@ -810,8 +810,8 @@ long ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* 
 	long xmin, xmax, zmin, zmax, left, top, right, bottom;
 	short facing;
 
-	dx = l->pos.x_pos - pos->x_pos;
-	dz = l->pos.z_pos - pos->z_pos;
+	dx = l->pos.pos.x - pos->pos.x;
+	dz = l->pos.pos.z - pos->pos.z;
 	s = phd_sin(pos->y_rot);
 	c = phd_cos(pos->y_rot);
 	x = (dx * c - dz * s) >> W2V_SHIFT;
@@ -840,24 +840,24 @@ long ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* 
 		z -= bottom;
 	}
 
-	l->pos.x_pos = pos->x_pos + ((c * x + s * z) >> W2V_SHIFT);
-	l->pos.z_pos = pos->z_pos + ((c * z - s * x) >> W2V_SHIFT);
+	l->pos.pos.x = pos->pos.x + ((c * x + s * z) >> W2V_SHIFT);
+	l->pos.pos.z = pos->pos.z + ((c * z - s * x) >> W2V_SHIFT);
 	coll->bad_pos = -NO_HEIGHT;
 	coll->bad_neg = -384;
 	coll->bad_ceiling = 0;
 	facing = coll->facing;
-	coll->facing = (short)phd_atan(l->pos.z_pos - coll->old.z, l->pos.x_pos - coll->old.x);
-	GetCollisionInfo(coll, l->pos.x_pos, l->pos.y_pos, l->pos.z_pos, l->room_number, 762);
+	coll->facing = (short)phd_atan(l->pos.pos.z - coll->old.z, l->pos.pos.x - coll->old.x);
+	GetCollisionInfo(coll, l->pos.pos.x, l->pos.pos.y, l->pos.pos.z, l->room_number, 762);
 	coll->facing = facing;
 
 	if(coll->coll_type == CT_NONE) {
-		coll->old.x = l->pos.x_pos;
-		coll->old.y = l->pos.y_pos;
-		coll->old.z = l->pos.z_pos;
+		coll->old.x = l->pos.pos.x;
+		coll->old.y = l->pos.pos.y;
+		coll->old.z = l->pos.pos.z;
 		UpdateLaraRoom(l, -10);
 	} else {
-		l->pos.x_pos = coll->old.x;
-		l->pos.z_pos = coll->old.z;
+		l->pos.pos.x = coll->old.x;
+		l->pos.pos.z = coll->old.z;
 	}
 
 	if(l == lara_item && lara.IsMoving && lara.MoveCount > 15) {
@@ -883,9 +883,9 @@ long TestLaraPosition(short* bounds, ITEM_INFO* item, ITEM_INFO* l) {
 
 	phd_PushUnitMatrix();
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	pos.x = l->pos.x_pos - item->pos.x_pos;
-	pos.y = l->pos.y_pos - item->pos.y_pos;
-	pos.z = l->pos.z_pos - item->pos.z_pos;
+	pos.x = l->pos.pos.x - item->pos.pos.x;
+	pos.y = l->pos.pos.y - item->pos.pos.y;
+	pos.z = l->pos.pos.z - item->pos.pos.z;
 	x = (long)(pos.x * mMXPtr[M00] + pos.y * mMXPtr[M10] + pos.z * mMXPtr[M20]);
 	y = (long)(pos.x * mMXPtr[M01] + pos.y * mMXPtr[M11] + pos.z * mMXPtr[M21]);
 	z = (long)(pos.x * mMXPtr[M02] + pos.y * mMXPtr[M12] + pos.z * mMXPtr[M22]);
@@ -903,38 +903,38 @@ void AlignLaraPosition(PHD_VECTOR* pos, ITEM_INFO* item, ITEM_INFO* l) {
 
 	phd_PushUnitMatrix();
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	x = item->pos.x_pos + (long)(pos->x * mMXPtr[M00] + pos->y * mMXPtr[M01] + pos->z * mMXPtr[M02]);
-	y = item->pos.y_pos + (long)(pos->x * mMXPtr[M10] + pos->y * mMXPtr[M11] + pos->z * mMXPtr[M12]);
-	z = item->pos.z_pos + (long)(pos->x * mMXPtr[M20] + pos->y * mMXPtr[M21] + pos->z * mMXPtr[M22]);
+	x = item->pos.pos.x + (long)(pos->x * mMXPtr[M00] + pos->y * mMXPtr[M01] + pos->z * mMXPtr[M02]);
+	y = item->pos.pos.y + (long)(pos->x * mMXPtr[M10] + pos->y * mMXPtr[M11] + pos->z * mMXPtr[M12]);
+	z = item->pos.pos.z + (long)(pos->x * mMXPtr[M20] + pos->y * mMXPtr[M21] + pos->z * mMXPtr[M22]);
 	phd_PopMatrix();
 
-	l->pos.x_pos = x;
-	l->pos.y_pos = y;
-	l->pos.z_pos = z;
+	l->pos.pos.x = x;
+	l->pos.pos.y = y;
+	l->pos.pos.z = z;
 }
 
 long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotation) {
 	long dx, dy, dz, distance;
 	short adiff;
 
-	dx = dest->x_pos - pos->x_pos;
-	dy = dest->y_pos - pos->y_pos;
-	dz = dest->z_pos - pos->z_pos;
+	dx = dest->pos.x - pos->pos.x;
+	dy = dest->pos.y - pos->pos.y;
+	dz = dest->pos.z - pos->pos.z;
 	distance = phd_sqrt(SQUARE(dx) + SQUARE(dy) + SQUARE(dz));
 
 	if(speed < distance) {
-		pos->x_pos += speed * dx / distance;
-		pos->y_pos += speed * dy / distance;
-		pos->z_pos += speed * dz / distance;
+		pos->pos.x += speed * dx / distance;
+		pos->pos.y += speed * dy / distance;
+		pos->pos.z += speed * dz / distance;
 	} else {
-		pos->x_pos = dest->x_pos;
-		pos->y_pos = dest->y_pos;
-		pos->z_pos = dest->z_pos;
+		pos->pos.x = dest->pos.x;
+		pos->pos.y = dest->pos.y;
+		pos->pos.z = dest->pos.z;
 	}
 
 	if(!lara.IsMoving) {
 		if(lara.water_status != LW_UNDERWATER) {
-			switch((((unsigned long)(mGetAngle(dest->x_pos, dest->z_pos, pos->x_pos, pos->z_pos) + 8192) >> W2V_SHIFT) - ((unsigned short)(dest->y_rot + 8192) >> W2V_SHIFT)) & 3) {
+			switch((((unsigned long)(mGetAngle(dest->pos.x, dest->pos.z, pos->pos.x, pos->pos.z) + 8192) >> W2V_SHIFT) - ((unsigned short)(dest->y_rot + 8192) >> W2V_SHIFT)) & 3) {
 			case 0:
 				lara_item->anim_number = 65;
 				lara_item->frame_number = GetAnim(currentLevel, lara_item->anim_number)->frame_base;
@@ -1001,7 +1001,7 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 		pos->z_rot = dest->z_rot;
 	}
 
-	return pos->x_pos == dest->x_pos && pos->y_pos == dest->y_pos && pos->z_pos == dest->z_pos && pos->x_rot == dest->x_rot && pos->y_rot == dest->y_rot && pos->z_rot == dest->z_rot;
+	return pos->pos.x == dest->pos.x && pos->pos.y == dest->pos.y && pos->pos.z == dest->pos.z && pos->x_rot == dest->x_rot && pos->y_rot == dest->y_rot && pos->z_rot == dest->z_rot;
 }
 
 long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
@@ -1016,22 +1016,22 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
 	pos.z_rot = item->pos.z_rot;
 	phd_PushUnitMatrix();
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	pos.x_pos = item->pos.x_pos + (long)(v->x * mMXPtr[M00] + v->y * mMXPtr[M01] + v->z * mMXPtr[M02]);
-	pos.y_pos = item->pos.y_pos + (long)(v->x * mMXPtr[M10] + v->y * mMXPtr[M11] + v->z * mMXPtr[M12]);
-	pos.z_pos = item->pos.z_pos + (long)(v->x * mMXPtr[M20] + v->y * mMXPtr[M21] + v->z * mMXPtr[M22]);
+	pos.pos.x = item->pos.pos.x + (long)(v->x * mMXPtr[M00] + v->y * mMXPtr[M01] + v->z * mMXPtr[M02]);
+	pos.pos.y = item->pos.pos.y + (long)(v->x * mMXPtr[M10] + v->y * mMXPtr[M11] + v->z * mMXPtr[M12]);
+	pos.pos.z = item->pos.pos.z + (long)(v->x * mMXPtr[M20] + v->y * mMXPtr[M21] + v->z * mMXPtr[M22]);
 	phd_PopMatrix();
 
 	if(item->object_number == FLARE_ITEM || item->object_number == BURNING_TORCH_ITEM || item->object_number == CLOCKWORK_BEETLE) {
 		room_number = l->room_number;
-		height = GetHeight(GetFloor(pos.x_pos, pos.y_pos, pos.z_pos, &room_number), pos.x_pos, pos.y_pos, pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+		height = GetHeight(GetFloor(pos.pos.x, pos.pos.y, pos.pos.z, &room_number), pos.pos.x, pos.pos.y, pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(abs(height - l->pos.y_pos) > 512) {
+		if(abs(height - l->pos.pos.y) > 512) {
 			if(lara.IsMoving) {
 				lara.IsMoving = 0;
 				lara.gun_status = LG_NO_ARMS;
 			}
 
-			if(phd_sqrt(SQUARE(pos.x_pos - l->pos.x_pos) + SQUARE(pos.y_pos - l->pos.y_pos) + SQUARE(pos.z_pos - l->pos.z_pos)) < 192) {
+			if(phd_sqrt(SQUARE(pos.pos.x - l->pos.pos.x) + SQUARE(pos.pos.y - l->pos.pos.y) + SQUARE(pos.pos.z - l->pos.pos.z)) < 192) {
 				return 1;
 			}
 			return 0;
@@ -1047,14 +1047,14 @@ long TestBoundsCollide2(ITEM_INFO* item, ITEM_INFO* l, long rad) {
 
 	bounds = GetBestFrame(l);
 
-	if(item->pos.y_pos + GlobalCollisionBounds[3] <= l->pos.y_pos + bounds[2] || item->pos.y_pos + GlobalCollisionBounds[2] >= l->pos.y_pos + bounds[3]) {
+	if(item->pos.pos.y + GlobalCollisionBounds[3] <= l->pos.pos.y + bounds[2] || item->pos.pos.y + GlobalCollisionBounds[2] >= l->pos.pos.y + bounds[3]) {
 		return 0;
 	}
 
 	s = phd_sin(item->pos.y_rot);
 	c = phd_cos(item->pos.y_rot);
-	dx = l->pos.x_pos - item->pos.x_pos;
-	dz = l->pos.z_pos - item->pos.z_pos;
+	dx = l->pos.pos.x - item->pos.pos.x;
+	dz = l->pos.pos.z - item->pos.pos.z;
 	x = (c * dx - s * dz) >> W2V_SHIFT;
 	z = (c * dz + s * dx) >> W2V_SHIFT;
 	return x >= GlobalCollisionBounds[0] - rad && x <= rad + GlobalCollisionBounds[1] && z >= GlobalCollisionBounds[4] - rad && z <= rad + GlobalCollisionBounds[5];
@@ -1110,22 +1110,22 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	while(hurtfulBits) {
 		if(hurtfulBits & 1) {
-			GlobalCollisionBounds[0] = (short)(sphere->x - sphere->r - item->pos.x_pos);
-			GlobalCollisionBounds[1] = (short)(sphere->x + sphere->r - item->pos.x_pos);
-			GlobalCollisionBounds[2] = (short)(sphere->y - sphere->r - item->pos.y_pos);
-			GlobalCollisionBounds[3] = (short)(sphere->y + sphere->r - item->pos.y_pos);
-			GlobalCollisionBounds[4] = (short)(sphere->z - sphere->r - item->pos.z_pos);
-			GlobalCollisionBounds[5] = (short)(sphere->z + sphere->r - item->pos.z_pos);
-			x = lara_item->pos.x_pos;
-			y = lara_item->pos.y_pos;
-			z = lara_item->pos.z_pos;
+			GlobalCollisionBounds[0] = (short)(sphere->x - sphere->r - item->pos.pos.x);
+			GlobalCollisionBounds[1] = (short)(sphere->x + sphere->r - item->pos.pos.x);
+			GlobalCollisionBounds[2] = (short)(sphere->y - sphere->r - item->pos.pos.y);
+			GlobalCollisionBounds[3] = (short)(sphere->y + sphere->r - item->pos.pos.y);
+			GlobalCollisionBounds[4] = (short)(sphere->z - sphere->r - item->pos.pos.z);
+			GlobalCollisionBounds[5] = (short)(sphere->z + sphere->r - item->pos.pos.z);
+			x = lara_item->pos.pos.x;
+			y = lara_item->pos.pos.y;
+			z = lara_item->pos.pos.z;
 
 			if(ItemPushLara(item, l, coll, touchedBits & 1, 2)) {
-				if(touchedBits & 1 && (x != lara_item->pos.x_pos || y != lara_item->pos.y_pos || z != lara_item->pos.z_pos)) {
+				if(touchedBits & 1 && (x != lara_item->pos.pos.x || y != lara_item->pos.pos.y || z != lara_item->pos.pos.z)) {
 					if(TriggerActive(item)) {
-						x = l->pos.x_pos + (GetRandomControl() & 0x3F) - 32;
+						x = l->pos.pos.x + (GetRandomControl() & 0x3F) - 32;
 						y = (GetRandomControl() & 0x1F) + sphere->y - 16;
-						z = l->pos.z_pos + (GetRandomControl() & 0x3F) - 32;
+						z = l->pos.pos.z + (GetRandomControl() & 0x3F) - 32;
 						DoBloodSplat(x, y, z, (GetRandomControl() & 3) + 2, (short)(GetRandomControl() << 1), l->room_number);
 						lara_item->hit_points -= 100;
 					}
@@ -1154,9 +1154,9 @@ void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	}
 
 	if(TriggerActive(item)) {
-		x = l->pos.x_pos + (GetRandomControl() & 0x3F) - 32;
-		y = item->pos.y_pos + (GetRandomControl() & 0x1F) - 16;
-		z = l->pos.z_pos + (GetRandomControl() & 0x3F) - 32;
+		x = l->pos.pos.x + (GetRandomControl() & 0x3F) - 32;
+		y = item->pos.pos.y + (GetRandomControl() & 0x1F) - 16;
+		z = l->pos.pos.z + (GetRandomControl() & 0x3F) - 32;
 		DoBloodSplat(x, y, z, (GetRandomControl() & 3) + 2, (short)(GetRandomControl() << 1), l->room_number);
 		lara_item->hit_points -= 10;
 	} else if(coll->enable_baddie_push) {
@@ -1206,7 +1206,7 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	coll->mid_ceiling = c;
 	coll->mid_type = height_type;
 	coll->trigger = trigger_index;
-	tilt = GetTiltType(floor, x, lara_item->pos.y_pos, z);
+	tilt = GetTiltType(floor, x, lara_item->pos.pos.y, z);
 	coll->tilt_x = (char)tilt;
 	coll->tilt_z = tilt >> 8;
 

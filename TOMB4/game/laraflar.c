@@ -39,7 +39,7 @@ void DrawFlareInAir(ITEM_INFO* item) {
 	bounds = GetBoundsAccurate(item);
 
 	phd_PushMatrix();
-	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos - bounds[3], item->pos.z_pos);
+	phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y - bounds[3], item->pos.pos.z);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 	phd_PutPolygons_train(GetMesh(currentLevel, GetObjectInfo(currentLevel, FLARE_ITEM)->mesh_index), 0);
 	phd_PopMatrix();
@@ -47,7 +47,7 @@ void DrawFlareInAir(ITEM_INFO* item) {
 	if(gfLevelFlags & GF_MIRROR) {
 		if(item->room_number == gfMirrorRoom) {
 			phd_PushMatrix();
-			phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, 2 * gfMirrorZPlane - item->pos.z_pos);
+			phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, 2 * gfMirrorZPlane - item->pos.pos.z);
 			phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 			phd_PutPolygons_train(GetMesh(currentLevel, GetObjectInfo(currentLevel, FLARE_ITEM)->mesh_index), 0);
 			phd_PopMatrix();
@@ -165,9 +165,9 @@ void CreateFlare(short object, long thrown) {
 		pos.y = 32;
 		pos.z = 42;
 		GetLaraJointPos(&pos, 14);
-		flare->pos.x_pos = pos.x;
-		flare->pos.y_pos = pos.y;
-		flare->pos.z_pos = pos.z;
+		flare->pos.pos.x = pos.x;
+		flare->pos.pos.y = pos.y;
+		flare->pos.pos.z = pos.z;
 
 		room_number = lara_item->room_number;
 		floor = GetFloor(pos.x, pos.y, pos.z, &room_number);
@@ -175,8 +175,8 @@ void CreateFlare(short object, long thrown) {
 		if(GetCollidedObjects(flare, 0, 1, itemlist, 5, meshlist, 5, 0) || pos.y > GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject)) {
 			collided = 1;
 			flare->pos.y_rot = lara_item->pos.y_rot - 0x8000;
-			flare->pos.x_pos = lara_item->pos.x_pos + (80 * phd_sin(flare->pos.y_rot) >> W2V_SHIFT);
-			flare->pos.z_pos = lara_item->pos.z_pos + (80 * phd_cos(flare->pos.y_rot) >> W2V_SHIFT);
+			flare->pos.pos.x = lara_item->pos.pos.x + (80 * phd_sin(flare->pos.y_rot) >> W2V_SHIFT);
+			flare->pos.pos.z = lara_item->pos.pos.z + (80 * phd_cos(flare->pos.y_rot) >> W2V_SHIFT);
 			flare->room_number = lara_item->room_number;
 		} else {
 			if(thrown) {
@@ -395,13 +395,13 @@ void FlareControl(short item_number) {
 		flare->pos.z_rot = 0;
 	}
 
-	x = flare->pos.x_pos;
-	y = flare->pos.y_pos;
-	z = flare->pos.z_pos;
+	x = flare->pos.pos.x;
+	y = flare->pos.pos.y;
+	z = flare->pos.pos.z;
 	xv = flare->speed * phd_sin(flare->pos.y_rot) >> W2V_SHIFT;
 	zv = flare->speed * phd_cos(flare->pos.y_rot) >> W2V_SHIFT;
-	flare->pos.x_pos += xv;
-	flare->pos.z_pos += zv;
+	flare->pos.pos.x += xv;
+	flare->pos.pos.z += zv;
 
 	if(GetRoom(currentLevel, flare->room_number)->flags & ROOM_UNDERWATER) {
 		flare->fallspeed += (5 - flare->fallspeed) >> 1;
@@ -411,7 +411,7 @@ void FlareControl(short item_number) {
 	}
 
 	yv = flare->fallspeed;
-	flare->pos.y_pos += yv;
+	flare->pos.pos.y += yv;
 	DoProperDetection(item_number, x, y, z, xv, yv, zv);
 	flare_age = data->age;
 
@@ -426,9 +426,9 @@ void FlareControl(short item_number) {
 
 	if(DoFlareLight((PHD_VECTOR*)&flare->pos, flare_age)) {
 		if(gfLevelFlags & GF_MIRROR && flare->room_number == gfMirrorRoom) {
-			flare->pos.z_pos = 2 * gfMirrorZPlane - flare->pos.z_pos;
+			flare->pos.pos.z = 2 * gfMirrorZPlane - flare->pos.pos.z;
 			DoFlareLight((PHD_VECTOR*)&flare->pos, flare_age);
-			flare->pos.z_pos = 2 * gfMirrorZPlane - flare->pos.z_pos;
+			flare->pos.pos.z = 2 * gfMirrorZPlane - flare->pos.pos.z;
 		}
 
 		// flare_age |= 0x8000;

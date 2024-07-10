@@ -516,9 +516,9 @@ short GetTrackWord(long off, char* packed, long packmethod) {
 void frigup_lara() {
 	long* bone;
 
-	lara_item->pos.x_pos = GLOBAL_cutme->orgx;
-	lara_item->pos.y_pos = GLOBAL_cutme->orgy;
-	lara_item->pos.z_pos = GLOBAL_cutme->orgz;
+	lara_item->pos.pos.x = GLOBAL_cutme->orgx;
+	lara_item->pos.pos.y = GLOBAL_cutme->orgy;
+	lara_item->pos.pos.z = GLOBAL_cutme->orgz;
 	bone = GetBone(currentLevel, GetObjectInfo(currentLevel, lara_item->object_number)->bone_index);
 	updateAnimFrame(actor_pnodes[0], 16, temp_rotation_buffer);
 	Rich_CalcLaraMatrices_Normal(temp_rotation_buffer, bone, 0);
@@ -654,9 +654,9 @@ void GetJointAbsPositionCutSeq(ITEM_INFO* item, OBJECT_INFO* obj, short* rot, PH
 	pos->x = (long)mMXPtr[M03];
 	pos->y = (long)mMXPtr[M13];
 	pos->z = (long)mMXPtr[M23];
-	pos->x += item->pos.x_pos;
-	pos->y += item->pos.y_pos;
-	pos->z += item->pos.z_pos;
+	pos->x += item->pos.pos.x;
+	pos->y += item->pos.pos.y;
+	pos->z += item->pos.pos.z;
 	phd_PopMatrix();
 }
 
@@ -1463,9 +1463,9 @@ void init_cutseq_actors(char* data, long resident) {
 		item->il.nPrevLights = 0;
 		item->il.pCurrentLights = &item->il.CurrentLights;
 		item->il.pPrevLights = &item->il.PrevLights;
-		item->pos.x_pos = GLOBAL_cutme->orgx;
-		item->pos.y_pos = GLOBAL_cutme->orgy;
-		item->pos.z_pos = GLOBAL_cutme->orgz;
+		item->pos.pos.x = GLOBAL_cutme->orgx;
+		item->pos.pos.y = GLOBAL_cutme->orgy;
+		item->pos.pos.z = GLOBAL_cutme->orgz;
 		item->pos.x_rot = 0;
 		item->pos.y_rot = 0;
 		item->pos.z_rot = 0;
@@ -1485,9 +1485,9 @@ void init_cutseq_actors(char* data, long resident) {
 	GLOBAL_playing_cutseq = 1;
 	GLOBAL_cutseq_frame = 0;
 	DelsHandyTeleportLara(GLOBAL_cutme->orgx, GLOBAL_cutme->orgy, GLOBAL_cutme->orgz, 0);
-	camera.pos.pos.x = lara_item->pos.x_pos;
-	camera.pos.pos.y = lara_item->pos.y_pos;
-	camera.pos.pos.z = lara_item->pos.z_pos;
+	camera.pos.pos.x = lara_item->pos.pos.x;
+	camera.pos.pos.y = lara_item->pos.pos.y;
+	camera.pos.pos.z = lara_item->pos.pos.z;
 	camera.pos.room_number = lara_item->room_number;
 	InitialiseHair();
 }
@@ -1497,9 +1497,9 @@ void init_voncroy_meshbits(long num) {
 }
 
 void DelsHandyTeleportLara(long x, long y, long z, long yrot) {
-	lara_item->pos.x_pos = x;
-	lara_item->pos.y_pos = y;
-	lara_item->pos.z_pos = z;
+	lara_item->pos.pos.x = x;
+	lara_item->pos.pos.y = y;
+	lara_item->pos.pos.z = z;
 	lara.head_x_rot = 0;
 	lara.head_y_rot = 0;
 	lara.torso_x_rot = 0;
@@ -1507,7 +1507,7 @@ void DelsHandyTeleportLara(long x, long y, long z, long yrot) {
 	lara_item->pos.x_rot = 0;
 	lara_item->pos.y_rot = (short)yrot;
 	lara_item->pos.z_rot = 0;
-	IsRoomOutside(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	IsRoomOutside(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 
 	if(IsRoomOutsideNo != lara_item->room_number) {
 		ItemNewRoom(lara.item_number, IsRoomOutsideNo);

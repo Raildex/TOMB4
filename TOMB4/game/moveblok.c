@@ -92,7 +92,7 @@ void InitialiseMovingBlock(short item_number) {
 	ITEM_INFO* item;
 
 	item = GetItem(currentLevel, item_number);
-	ClearMovableBlockSplitters(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
+	ClearMovableBlockSplitters(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number);
 }
 
 static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant) {
@@ -105,9 +105,9 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 	long x, y, z, rx, rz;
 	short room_number;
 
-	x = item->pos.x_pos;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos;
+	x = item->pos.pos.x;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z;
 
 	switch(quadrant) {
 	case NORTH:
@@ -154,13 +154,13 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 		return 0;
 	}
 
-	rx = item->pos.x_pos;
-	rz = item->pos.z_pos;
-	item->pos.x_pos = x;
-	item->pos.z_pos = z;
+	rx = item->pos.pos.x;
+	rz = item->pos.pos.z;
+	item->pos.pos.x = x;
+	item->pos.pos.z = z;
 	GetCollidedObjects(item, 256, 1, itemlist, 5, NULL, 0, 0);
-	item->pos.x_pos = rx;
-	item->pos.z_pos = rz;
+	item->pos.pos.x = rx;
+	item->pos.pos.z = rz;
 
 	if(itemlist[0]) {
 		for(int i = 0; itemlist[i] != 0; i++) {
@@ -207,9 +207,9 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 		break;
 	}
 
-	x = item->pos.x_pos + destx;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos + destz;
+	x = item->pos.pos.x + destx;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z + destz;
 	room_number = item->room_number;
 	floor = GetFloor(x, y - 256, z, &room_number);
 	r = GetRoom(currentLevel, room_number);
@@ -230,13 +230,13 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 		return 0;
 	}
 
-	rx = item->pos.x_pos;
-	rz = item->pos.z_pos;
-	item->pos.x_pos = x;
-	item->pos.z_pos = z;
+	rx = item->pos.pos.x;
+	rz = item->pos.pos.z;
+	item->pos.pos.x = x;
+	item->pos.pos.z = z;
 	GetCollidedObjects(item, 256, 1, itemlist, 4, NULL, 0, 0);
-	item->pos.x_pos = rx;
-	item->pos.z_pos = rz;
+	item->pos.pos.x = rx;
+	item->pos.pos.z = rz;
 
 	if(itemlist[0]) {
 		ignore = 0;
@@ -270,9 +270,9 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 		return 0;
 	}
 
-	x = lara_item->pos.x_pos + destx;
-	y = lara_item->pos.y_pos;
-	z = lara_item->pos.z_pos + destz;
+	x = lara_item->pos.pos.x + destx;
+	y = lara_item->pos.pos.y;
+	z = lara_item->pos.pos.z + destz;
 	room_number = lara_item->room_number;
 	GetFloor(x, y, z, &room_number);
 	r = GetRoom(currentLevel, room_number);
@@ -283,13 +283,13 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 		return 0;
 	}
 
-	rx = lara_item->pos.x_pos;
-	rz = lara_item->pos.z_pos;
-	lara_item->pos.x_pos = x;
-	lara_item->pos.z_pos = z;
+	rx = lara_item->pos.pos.x;
+	rz = lara_item->pos.pos.z;
+	lara_item->pos.pos.x = x;
+	lara_item->pos.pos.z = z;
 	GetCollidedObjects(lara_item, 256, 1, itemlist, 5, NULL, 0, 0);
-	lara_item->pos.x_pos = rx;
-	lara_item->pos.z_pos = rz;
+	lara_item->pos.pos.x = rx;
+	lara_item->pos.pos.z = rz;
 
 	if(itemlist[0]) {
 		for(int i = 0; itemlist[i] != 0; i++) {
@@ -344,8 +344,8 @@ void MovableBlock(short item_number) {
 		case NORTH:
 			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&lara_item->item_flags[2];
 
-			if(abs(item->pos.z_pos - offset) < 512 && item->pos.z_pos < offset) {
-				item->pos.z_pos = offset;
+			if(abs(item->pos.pos.z - offset) < 512 && item->pos.pos.z < offset) {
+				item->pos.pos.z = offset;
 			}
 
 			break;
@@ -353,8 +353,8 @@ void MovableBlock(short item_number) {
 		case EAST:
 			offset = pos.x + *(long*)item->item_flags - *(long*)lara_item->item_flags;
 
-			if(abs(item->pos.x_pos - offset) < 512 && item->pos.x_pos < offset) {
-				item->pos.x_pos = offset;
+			if(abs(item->pos.pos.x - offset) < 512 && item->pos.pos.x < offset) {
+				item->pos.pos.x = offset;
 			}
 
 			break;
@@ -362,8 +362,8 @@ void MovableBlock(short item_number) {
 		case SOUTH:
 			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&lara_item->item_flags[2];
 
-			if(abs(item->pos.z_pos - offset) < 512 && item->pos.z_pos > offset) {
-				item->pos.z_pos = offset;
+			if(abs(item->pos.pos.z - offset) < 512 && item->pos.pos.z > offset) {
+				item->pos.pos.z = offset;
 			}
 
 			break;
@@ -371,8 +371,8 @@ void MovableBlock(short item_number) {
 		case WEST:
 			offset = pos.x + *(long*)item->item_flags - *(long*)lara_item->item_flags;
 
-			if(abs(item->pos.x_pos - offset) < 512 && item->pos.x_pos > offset) {
-				item->pos.x_pos = offset;
+			if(abs(item->pos.pos.x - offset) < 512 && item->pos.pos.x > offset) {
+				item->pos.pos.x = offset;
 			}
 
 			break;
@@ -411,8 +411,8 @@ void MovableBlock(short item_number) {
 		case NORTH:
 			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&lara_item->item_flags[2];
 
-			if(abs(item->pos.z_pos - offset) < 512 && item->pos.z_pos > offset) {
-				item->pos.z_pos = offset;
+			if(abs(item->pos.pos.z - offset) < 512 && item->pos.pos.z > offset) {
+				item->pos.pos.z = offset;
 			}
 
 			break;
@@ -420,8 +420,8 @@ void MovableBlock(short item_number) {
 		case EAST:
 			offset = pos.x + *(long*)item->item_flags - *(long*)lara_item->item_flags;
 
-			if(abs(item->pos.x_pos - offset) < 512 && item->pos.x_pos > offset) {
-				item->pos.x_pos = offset;
+			if(abs(item->pos.pos.x - offset) < 512 && item->pos.pos.x > offset) {
+				item->pos.pos.x = offset;
 			}
 
 			break;
@@ -429,8 +429,8 @@ void MovableBlock(short item_number) {
 		case SOUTH:
 			offset = pos.z + *(long*)&item->item_flags[2] - *(long*)&lara_item->item_flags[2];
 
-			if(abs(item->pos.z_pos - offset) < 512 && item->pos.z_pos < offset) {
-				item->pos.z_pos = offset;
+			if(abs(item->pos.pos.z - offset) < 512 && item->pos.pos.z < offset) {
+				item->pos.pos.z = offset;
 			}
 
 			break;
@@ -438,8 +438,8 @@ void MovableBlock(short item_number) {
 		case WEST:
 			offset = pos.x + *(long*)item->item_flags - *(long*)lara_item->item_flags;
 
-			if(abs(item->pos.x_pos - offset) < 512 && item->pos.x_pos < offset) {
-				item->pos.x_pos = offset;
+			if(abs(item->pos.pos.x - offset) < 512 && item->pos.pos.x < offset) {
+				item->pos.pos.x = offset;
 			}
 
 			break;
@@ -462,15 +462,15 @@ void MovableBlock(short item_number) {
 		frame = lara_item->frame_number;
 
 		if(frame == GetAnim(currentLevel, 417)->frame_base || frame == GetAnim(currentLevel, 418)->frame_base) {
-			item->pos.x_pos = (item->pos.x_pos & -512) | 512;
-			item->pos.z_pos = (item->pos.z_pos & -512) | 512;
+			item->pos.pos.x = (item->pos.pos.x & -512) | 512;
+			item->pos.pos.z = (item->pos.pos.z & -512) | 512;
 		}
 
 		if(frame == GetAnim(currentLevel, lara_item->anim_number)->frame_end) {
 			room_number = item->room_number;
 			GetHeight(
-				GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number), item->pos.x_pos,
-				item->pos.y_pos - 256, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+				GetFloor(item->pos.pos.x, item->pos.pos.y - 256, item->pos.pos.z, &room_number), item->pos.pos.x,
+				item->pos.pos.y - 256, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			TestTriggers(trigger_index, 1, item->flags & IFL_CODEBITS);
 			RemoveActiveItem(item_number);
 			item->status = ITEM_INACTIVE;
@@ -490,9 +490,9 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 
 	item = GetItem(currentLevel, item_number);
 	room_number = item->room_number;
-	item->pos.y_pos = GetHeight(
-		GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number), item->pos.x_pos,
-		item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	item->pos.pos.y = GetHeight(
+		GetFloor(item->pos.pos.x, item->pos.pos.y - 256, item->pos.pos.z, &room_number), item->pos.pos.x,
+		item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->room_number != room_number) {
 		ItemNewRoom(item_number, room_number);
@@ -503,7 +503,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 		   && item->trigger_flags >= 0
 	   || (lara.IsMoving && lara.GeneralPtr == item_number)) {
 		room_number = laraitem->room_number;
-		GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number);
+		GetFloor(item->pos.pos.x, item->pos.pos.y - 256, item->pos.pos.z, &room_number);
 
 		if(room_number == item->room_number) {
 			bounds = GetBoundsAccurate(item);
@@ -573,8 +573,8 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 		GetLaraJointPos(&pos, 14);
 		*(long*)&laraitem->item_flags[0] = pos.x;
 		*(long*)&laraitem->item_flags[2] = pos.z;
-		*(long*)&item->item_flags[0] = item->pos.x_pos;
-		*(long*)&item->item_flags[2] = item->pos.z_pos;
+		*(long*)&item->item_flags[0] = item->pos.pos.x;
+		*(long*)&item->item_flags[2] = item->pos.pos.z;
 	} else {
 		ObjectCollision(item_number, laraitem, coll);
 	}
@@ -710,7 +710,7 @@ void DrawPlanetEffect(ITEM_INFO* item) {
 	GetFrames(item, frm, &poppush);
 
 	phd_PushMatrix();
-	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 	CalculateObjectLighting(item, frm[0]);
 

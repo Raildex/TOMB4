@@ -39,8 +39,8 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - GetEffect(currentLevel, fx_number)->pos.x_pos;
-	dz = lara_item->pos.z_pos - GetEffect(currentLevel, fx_number)->pos.z_pos;
+	dx = lara_item->pos.pos.x - GetEffect(currentLevel, fx_number)->pos.pos.x;
+	dz = lara_item->pos.pos.z - GetEffect(currentLevel, fx_number)->pos.pos.z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -98,9 +98,9 @@ void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type) {
 
 	if(fx_number != NO_ITEM) {
 		fx = GetEffect(currentLevel, fx_number);
-		fx->pos.x_pos = pos->x_pos;
-		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
-		fx->pos.z_pos = pos->z_pos;
+		fx->pos.pos.x = pos->pos.x;
+		fx->pos.pos.y = pos->pos.y - (GetRandomControl() & 0x3F) - 32;
+		fx->pos.pos.z = pos->pos.z;
 		fx->pos.x_rot = pos->x_rot;
 		fx->pos.y_rot = pos->y_rot;
 		fx->pos.z_rot = 0;
@@ -117,8 +117,8 @@ void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.x_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.x - z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -157,8 +157,8 @@ void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - GetItem(currentLevel, item_number)->pos.x_pos;
-	dz = lara_item->pos.z_pos - GetItem(currentLevel, item_number)->pos.z_pos;
+	dx = lara_item->pos.pos.x - GetItem(currentLevel, item_number)->pos.pos.x;
+	dz = lara_item->pos.pos.z - GetItem(currentLevel, item_number)->pos.pos.z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -269,10 +269,10 @@ void DoSethEffects(short item_number) {
 			vec.y = NodeOffsets[3].y << 1;
 			vec.z = NodeOffsets[3].z;
 			GetJointAbsPosition(item, &vec, NodeOffsets[3].mesh_num);
-			pos.x_pos = r.x;
-			pos.y_pos = r.y;
-			pos.z_pos = r.z;
-			phd_GetVectorAngles(vec.x - pos.x_pos, vec.y - pos.y_pos, vec.z - pos.z_pos, angles);
+			pos.pos.x = r.x;
+			pos.pos.y = r.y;
+			pos.pos.z = r.z;
+			phd_GetVectorAngles(vec.x - pos.pos.x, vec.y - pos.pos.y, vec.z - pos.pos.z, angles);
 			pos.x_rot = angles[1];
 			pos.y_rot = angles[0];
 			TriggerSethMissile(&pos, item->room_number, 0);
@@ -283,10 +283,10 @@ void DoSethEffects(short item_number) {
 			vec.y = NodeOffsets[2].y << 1;
 			vec.z = NodeOffsets[2].z;
 			GetJointAbsPosition(item, &vec, NodeOffsets[2].mesh_num);
-			pos.x_pos = l.x;
-			pos.y_pos = l.y;
-			pos.z_pos = l.z;
-			phd_GetVectorAngles(vec.x - pos.x_pos, vec.y - pos.y_pos, vec.z - pos.z_pos, angles);
+			pos.pos.x = l.x;
+			pos.pos.y = l.y;
+			pos.pos.z = l.z;
+			phd_GetVectorAngles(vec.x - pos.pos.x, vec.y - pos.pos.y, vec.z - pos.pos.z, angles);
 			pos.x_rot = angles[1];
 			pos.y_rot = angles[0];
 			TriggerSethMissile(&pos, item->room_number, 0);
@@ -315,10 +315,10 @@ void DoSethEffects(short item_number) {
 			vec.y = NodeOffsets[3].y << 1;
 			vec.z = NodeOffsets[3].z;
 			GetJointAbsPosition(item, &vec, NodeOffsets[3].mesh_num);
-			pos.x_pos = r.x;
-			pos.y_pos = r.y;
-			pos.z_pos = r.z;
-			phd_GetVectorAngles(vec.x - pos.x_pos, vec.y - pos.y_pos, vec.z - pos.z_pos, angles);
+			pos.pos.x = r.x;
+			pos.pos.y = r.y;
+			pos.pos.z = r.z;
+			phd_GetVectorAngles(vec.x - pos.pos.x, vec.y - pos.pos.y, vec.z - pos.pos.z, angles);
 			pos.x_rot = angles[1];
 			pos.y_rot = angles[0];
 			TriggerSethMissile(&pos, item->room_number, 0);
@@ -327,10 +327,10 @@ void DoSethEffects(short item_number) {
 			vec.y = NodeOffsets[2].y << 1;
 			vec.z = NodeOffsets[2].z;
 			GetJointAbsPosition(item, &vec, NodeOffsets[2].mesh_num);
-			pos.x_pos = l.x;
-			pos.y_pos = l.y;
-			pos.z_pos = l.z;
-			phd_GetVectorAngles(vec.x - pos.x_pos, vec.y - pos.y_pos, vec.z - pos.z_pos, angles);
+			pos.pos.x = l.x;
+			pos.pos.y = l.y;
+			pos.pos.z = l.z;
+			phd_GetVectorAngles(vec.x - pos.pos.x, vec.y - pos.pos.y, vec.z - pos.pos.z, angles);
 			pos.x_rot = angles[1];
 			pos.y_rot = angles[0];
 			TriggerSethMissile(&pos, item->room_number, 0);
@@ -381,10 +381,10 @@ void DoSethEffects(short item_number) {
 			vec.y = NodeOffsets[3].y << 1;
 			vec.z = NodeOffsets[3].z;
 			GetJointAbsPosition(item, &vec, NodeOffsets[3].mesh_num);
-			pos.x_pos = r.x;
-			pos.y_pos = r.y;
-			pos.z_pos = r.z;
-			phd_GetVectorAngles(vec.x - pos.x_pos, vec.y - pos.y_pos, vec.z - pos.z_pos, angles);
+			pos.pos.x = r.x;
+			pos.pos.y = r.y;
+			pos.pos.z = r.z;
+			phd_GetVectorAngles(vec.x - pos.pos.x, vec.y - pos.pos.y, vec.z - pos.pos.z, angles);
 			pos.x_rot = angles[1];
 			pos.y_rot = angles[0];
 			TriggerSethMissile(&pos, item->room_number, 1);
@@ -427,15 +427,15 @@ void SethControl(short item_number) {
 	Zoffset = 870 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 
 	room_number = item->room_number;
-	x = item->pos.x_pos;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos;
+	x = item->pos.pos.x;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z;
 	floor = GetFloor(x, y, z, &room_number);
 	c = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	x = item->pos.x_pos + Xoffset;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos + Zoffset;
+	x = item->pos.pos.x + Xoffset;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z + Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
 	nearheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
@@ -452,9 +452,9 @@ void SethControl(short item_number) {
 	farheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	can_jump = (y < nearheight - 384 || y < midheight - 384) && (y < farheight + 256 && y > farheight - 256 || farheight == NO_HEIGHT);
 
-	x = item->pos.x_pos - Xoffset;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos - Zoffset;
+	x = item->pos.pos.x - Xoffset;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z - Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
 	h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	CreatureAIInfo(item, &info);
@@ -482,7 +482,7 @@ void SethControl(short item_number) {
 				item->goal_anim_state = item->required_anim_state;
 			} else if(info.distance < 0x100000 && info.bite) {
 				item->goal_anim_state = 8;
-			} else if(lara_item->pos.y_pos < item->pos.y_pos - 1024) {
+			} else if(lara_item->pos.pos.y < item->pos.pos.y - 1024) {
 				if(seth->reached_goal) {
 					item->goal_anim_state = 14;
 				} else {
@@ -494,7 +494,7 @@ void SethControl(short item_number) {
 				item->item_flags[0] = 0;
 				item->goal_anim_state = 11;
 			} else if(c != NO_HEIGHT && c < y - 1792 && h != NO_HEIGHT && h > y - 1024 && GetRandomControl() & 1) {
-				item->pos.y_pos -= 1536;
+				item->pos.pos.y -= 1536;
 
 				if(Targetable(item, &info)) {
 					item->item_flags[0] = 0;
@@ -503,7 +503,7 @@ void SethControl(short item_number) {
 					item->goal_anim_state = 2;
 				}
 
-				item->pos.y_pos += 1536;
+				item->pos.pos.y += 1536;
 			} else if(info.distance < 0x900000 && info.angle < 0x1800 && info.angle > -0x1800 && info.bite) {
 				if(Targetable(item, &info)) {
 					item->goal_anim_state = 4;
@@ -614,7 +614,7 @@ void SethControl(short item_number) {
 			break;
 
 		case 15:
-			seth->target.y = lara_item->pos.y_pos;
+			seth->target.y = lara_item->pos.pos.y;
 
 		case 11:
 		case 12:
@@ -638,7 +638,7 @@ void SethControl(short item_number) {
 				seth->LOT.fly = 16;
 				item->gravity_status = 0;
 				seth->maximum_turn = 0;
-				seth->target.y = lara_item->pos.y_pos;
+				seth->target.y = lara_item->pos.pos.y;
 
 				if(abs(info.angle) < 546) {
 					item->pos.y_rot += info.angle;
@@ -649,11 +649,11 @@ void SethControl(short item_number) {
 				}
 			}
 
-			if(lara_item->pos.y_pos > item->floor - 512) {
+			if(lara_item->pos.pos.y > item->floor - 512) {
 				seth->LOT.fly = 0;
 				item->gravity_status = 1;
 
-				if(item->pos.y_pos >= item->floor) {
+				if(item->pos.pos.y >= item->floor) {
 					item->goal_anim_state = 1;
 				}
 			} else if(Targetable(item, &info)) {

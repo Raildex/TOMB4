@@ -94,10 +94,10 @@ void DoorControl(short item_number) {
 		if(item->item_flags[0]) {
 			bounds = GetBoundsAccurate(item);
 			item->item_flags[0]--;
-			item->pos.y_pos -= 12;
+			item->pos.pos.y -= 12;
 
-			if(item->pos.y_pos < bounds[2] + *(long*)&item->item_flags[2] - 256) {
-				item->pos.y_pos = bounds[2] + *(long*)&item->item_flags[2] - 256;
+			if(item->pos.pos.y < bounds[2] + *(long*)&item->item_flags[2] - 256) {
+				item->pos.pos.y = bounds[2] + *(long*)&item->item_flags[2] - 256;
 				item->item_flags[0] = 0;
 			}
 
@@ -109,12 +109,12 @@ void DoorControl(short item_number) {
 				door->Opened = 1;
 			}
 		} else {
-			if(item->pos.y_pos < item->item_flags[2]) {
-				item->pos.y_pos += 4;
+			if(item->pos.pos.y < item->item_flags[2]) {
+				item->pos.pos.y += 4;
 			}
 
-			if(item->pos.y_pos >= item->item_flags[2]) {
-				item->pos.y_pos = item->item_flags[2];
+			if(item->pos.pos.y >= item->item_flags[2]) {
+				item->pos.pos.y = item->item_flags[2];
 
 				if(door->Opened) {
 					ShutThatDoor(&door->d1);
@@ -168,10 +168,10 @@ void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 					if(have_i_got_object(CROWBAR_ITEM)) {
 						GLOBAL_enterinventory = CROWBAR_ITEM;
 					} else {
-						if(OldPickupPos.x != l->pos.x_pos || OldPickupPos.y != l->pos.y_pos || OldPickupPos.z != l->pos.z_pos) {
-							OldPickupPos.x = l->pos.x_pos;
-							OldPickupPos.y = l->pos.y_pos;
-							OldPickupPos.z = l->pos.z_pos;
+						if(OldPickupPos.x != l->pos.pos.x || OldPickupPos.y != l->pos.pos.y || OldPickupPos.z != l->pos.pos.z) {
+							OldPickupPos.x = l->pos.pos.x;
+							OldPickupPos.y = l->pos.pos.y;
+							OldPickupPos.z = l->pos.pos.z;
 							SayNo();
 						}
 					}

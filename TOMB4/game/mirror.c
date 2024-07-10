@@ -22,7 +22,7 @@ void Draw_Mirror_Lara() {
 	hair = &hairs[0][0];
 
 	for(int i = 0; i < 6; i++) {
-		hair->pos.z_pos = zplane - hair->pos.z_pos;
+		hair->pos.pos.z = zplane - hair->pos.pos.z;
 		hair->pos.y_rot = 0x8000 - hair->pos.y_rot;
 		hair++;
 	}
@@ -31,11 +31,11 @@ void Draw_Mirror_Lara() {
 		gunshell = &Gunshells[i];
 
 		if(gunshell->counter) {
-			gunshell->pos.z_pos = zplane - gunshell->pos.z_pos;
+			gunshell->pos.pos.z = zplane - gunshell->pos.pos.z;
 		}
 	}
 
-	lara_item->pos.z_pos = zplane - lara_item->pos.z_pos;
+	lara_item->pos.pos.z = zplane - lara_item->pos.pos.z;
 	lara_item->pos.x_rot = -lara_item->pos.x_rot;
 	lara_item->pos.y_rot = -lara_item->pos.y_rot;
 	lara_item->pos.z_rot += 0x8000;
@@ -44,7 +44,7 @@ void Draw_Mirror_Lara() {
 	DrawLara(lara_item, 1);
 	DrawGunshells();
 	SetCullCCW();
-	lara_item->pos.z_pos = zplane - lara_item->pos.z_pos;
+	lara_item->pos.pos.z = zplane - lara_item->pos.pos.z;
 	lara_item->pos.x_rot = -lara_item->pos.x_rot;
 	lara_item->pos.y_rot = -lara_item->pos.y_rot;
 	lara_item->pos.z_rot += 0x8000;
@@ -88,14 +88,14 @@ void Draw_Mirror_Lara() {
 		gunshell = &Gunshells[i];
 
 		if(gunshell->counter) {
-			gunshell->pos.z_pos = zplane - gunshell->pos.z_pos;
+			gunshell->pos.pos.z = zplane - gunshell->pos.pos.z;
 		}
 	}
 
 	hair = &hairs[0][0];
 
 	for(int i = 0; i < 6; i++) {
-		hair->pos.z_pos = zplane - hair->pos.z_pos;
+		hair->pos.pos.z = zplane - hair->pos.pos.z;
 		hair->pos.y_rot = 0x8000 - hair->pos.y_rot;
 		hair++;
 	}

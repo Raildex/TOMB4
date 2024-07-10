@@ -63,8 +63,8 @@ void InitialiseSenet(short item_number) {
 		switch(item->object_number) {
 		case GAME_PIECE1:
 			senet_item[0] = lp;
-			SenetTargetX = item->pos.x_pos + 1024;
-			SenetTargetZ = item->pos.z_pos;
+			SenetTargetX = item->pos.pos.x + 1024;
+			SenetTargetZ = item->pos.pos.z;
 			break;
 
 		case GAME_PIECE2:
@@ -269,30 +269,30 @@ void GameStixControl(short item_number) {
 			z = SenetTargetZ + ((4 - piece_num) << 10);
 		}
 
-		if(abs(x - piece->pos.x_pos) < 128) {
-			piece->pos.x_pos = x;
-		} else if(x > piece->pos.x_pos) {
-			piece->pos.x_pos += 128;
+		if(abs(x - piece->pos.pos.x) < 128) {
+			piece->pos.pos.x = x;
+		} else if(x > piece->pos.pos.x) {
+			piece->pos.pos.x += 128;
 		} else {
-			piece->pos.x_pos -= 128;
+			piece->pos.pos.x -= 128;
 		}
 
-		if(abs(z - piece->pos.z_pos) < 128) {
-			piece->pos.z_pos = z;
-		} else if(z > piece->pos.z_pos) {
-			piece->pos.z_pos += 128;
+		if(abs(z - piece->pos.pos.z) < 128) {
+			piece->pos.pos.z = z;
+		} else if(z > piece->pos.pos.z) {
+			piece->pos.pos.z += 128;
 		} else {
-			piece->pos.z_pos -= 128;
+			piece->pos.pos.z -= 128;
 		}
 
 		room_number = piece->room_number;
-		GetFloor(piece->pos.x_pos, piece->pos.y_pos - 32, piece->pos.z_pos, &room_number);
+		GetFloor(piece->pos.pos.x, piece->pos.pos.y - 32, piece->pos.pos.z, &room_number);
 
 		if(piece->room_number != room_number) {
 			ItemNewRoom(senet_item[piece_moving], room_number);
 		}
 
-		if(x == piece->pos.x_pos && z == piece->pos.z_pos) {
+		if(x == piece->pos.pos.x && z == piece->pos.pos.z) {
 			piece->after_death = 0;
 
 			if(piece_num == 16) {
@@ -323,18 +323,18 @@ void GameStixControl(short item_number) {
 					if(piece_moving != i) {
 						piece = GetItem(currentLevel, senet_item[i]);
 
-						if(x == piece->pos.x_pos && z == piece->pos.z_pos) {
+						if(x == piece->pos.pos.x && z == piece->pos.pos.z) {
 							if(num == 1) {
 								ShockwaveExplosion(piece, 0xFF8020, -64);
 							} else {
 								ShockwaveExplosion(piece, 0x6060E0, -64);
 							}
 
-							piece->pos.x_pos = SenetTargetX + ((2 - num) << 12) - 1024;
-							piece->pos.z_pos = SenetTargetZ + ((i % 3) << 10);
+							piece->pos.pos.x = SenetTargetX + ((2 - num) << 12) - 1024;
+							piece->pos.pos.z = SenetTargetZ + ((i % 3) << 10);
 
 							room_number = piece->room_number;
-							GetFloor(piece->pos.x_pos, piece->pos.y_pos - 32, piece->pos.z_pos, &room_number);
+							GetFloor(piece->pos.pos.x, piece->pos.pos.y - 32, piece->pos.pos.z, &room_number);
 
 							if(piece->room_number != room_number) {
 								ItemNewRoom(senet_item[i], room_number);
@@ -433,7 +433,7 @@ void ShockwaveExplosion(ITEM_INFO* item, unsigned long col, long speed) {
 	PHD_VECTOR pos;
 	long InnerOuter;
 
-	item->pos.y_pos -= 384;
+	item->pos.pos.y -= 384;
 
 	if(speed < 0) {
 		InnerOuter = 0x2000280;
@@ -441,14 +441,14 @@ void ShockwaveExplosion(ITEM_INFO* item, unsigned long col, long speed) {
 		InnerOuter = 0xA00020;
 	}
 
-	pos.x = item->pos.x_pos;
-	pos.y = item->pos.y_pos;
-	pos.z = item->pos.z_pos;
+	pos.x = item->pos.pos.x;
+	pos.y = item->pos.pos.y;
+	pos.z = item->pos.pos.z;
 	TriggerShockwave(&pos, InnerOuter, speed, col | 0x18000000, 0);
 	TriggerShockwave(&pos, InnerOuter, speed, col | 0x18000000, 0x2000);
 	TriggerShockwave(&pos, InnerOuter, speed, col | 0x18000000, 0x4000);
 	TriggerShockwave(&pos, InnerOuter, speed, col | 0x18000000, 0x6000);
-	item->pos.y_pos += 384;
+	item->pos.pos.y += 384;
 }
 
 void ControlGodHead(short item_number) {
@@ -459,19 +459,19 @@ void ControlGodHead(short item_number) {
 	if(TriggerActive(item)) {
 		switch(item->pos.y_rot) {
 		case 0:
-			item->pos.z_pos &= ~1023;
+			item->pos.pos.z &= ~1023;
 			break;
 
 		case 0x4000:
-			item->pos.x_pos &= ~1023;
+			item->pos.pos.x &= ~1023;
 			break;
 
 		case -0x8000:
-			item->pos.z_pos |= 1023;
+			item->pos.pos.z |= 1023;
 			break;
 
 		case -0x4000:
-			item->pos.x_pos |= 1023;
+			item->pos.pos.x |= 1023;
 			break;
 		}
 
@@ -508,7 +508,7 @@ void DrawGodHead(ITEM_INFO* item) {
 	GetFrames(item, frm, &rate);
 
 	phd_PushMatrix();
-	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 	phd_RotX(item->pos.x_rot);
 	phd_RotZ(item->pos.z_rot);
 	phd_RotY(item->pos.y_rot);

@@ -108,9 +108,9 @@ void turn180_effect(ITEM_INFO* item) {
 void floor_shake_effect(ITEM_INFO* item) {
 	long dx, dy, dz, dist;
 
-	dx = item->pos.x_pos - camera.pos.pos.x;
-	dy = item->pos.y_pos - camera.pos.pos.y;
-	dz = item->pos.z_pos - camera.pos.pos.z;
+	dx = item->pos.pos.x - camera.pos.pos.x;
+	dy = item->pos.pos.y - camera.pos.pos.y;
+	dz = item->pos.pos.z - camera.pos.pos.z;
 
 	if(abs(dx) < 0x4000 && abs(dy) < 0x4000 && abs(dz) < 0x4000) {
 		dist = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
@@ -341,9 +341,9 @@ void WaterFall(short item_number) {
 	long dx, dy, dz;
 
 	item = GetItem(currentLevel, item_number);
-	dx = item->pos.x_pos - lara_item->pos.x_pos;
-	dy = item->pos.y_pos - lara_item->pos.y_pos;
-	dz = item->pos.z_pos - lara_item->pos.z_pos;
+	dx = item->pos.pos.x - lara_item->pos.pos.x;
+	dy = item->pos.pos.y - lara_item->pos.pos.y;
+	dz = item->pos.pos.z - lara_item->pos.pos.z;
 
 	if(dx >= -0x4000 && dx <= 0x4000 && dz >= -0x4000 && dz <= 0x4000 && dy >= -0x4000 && dy <= 0x4000) {
 		// empty func call here
@@ -351,7 +351,7 @@ void WaterFall(short item_number) {
 		if(!(wibble & 0xC)) {
 			dx = (136 * phd_sin(item->pos.y_rot)) >> 12;
 			dz = (136 * phd_cos(item->pos.y_rot)) >> 12;
-			TriggerWaterfallMist(item->pos.x_pos + dx, item->pos.y_pos, item->pos.z_pos + dz, item->pos.y_rot >> 4);
+			TriggerWaterfallMist(item->pos.pos.x + dx, item->pos.pos.y, item->pos.pos.z + dz, item->pos.y_rot >> 4);
 		}
 
 		SoundEffect(SFX_WATERFALL_LOOP, &item->pos, 0);
@@ -363,7 +363,7 @@ void WadeSplash(ITEM_INFO* item, long water, long depth) {
 	short room_number;
 
 	room_number = item->room_number;
-	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+	GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
 	if(!(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER)) {
 		return;
@@ -371,14 +371,14 @@ void WadeSplash(ITEM_INFO* item, long water, long depth) {
 
 	bounds = GetBestFrame(item);
 
-	if(item->pos.y_pos + bounds[2] > water || item->pos.y_pos + bounds[3] < water) {
+	if(item->pos.pos.y + bounds[2] > water || item->pos.pos.y + bounds[3] < water) {
 		return;
 	}
 
 	if(item->fallspeed > 0 && depth < 474 && !SplashCount) {
-		splash_setup.pos.x = item->pos.x_pos;
+		splash_setup.pos.x = item->pos.pos.x;
 		splash_setup.pos.y = water;
-		splash_setup.pos.z = item->pos.z_pos;
+		splash_setup.pos.z = item->pos.pos.z;
 		splash_setup.InnerRad = 16;
 		splash_setup.InnerSize = 12;
 		splash_setup.InnerRadVel = 160;
@@ -394,9 +394,9 @@ void WadeSplash(ITEM_INFO* item, long water, long depth) {
 		SplashCount = 16;
 	} else if(!(wibble & 0xF) && (!(GetRandomControl() & 0xF) || item->current_anim_state != AS_STOP)) {
 		if(item->current_anim_state == AS_STOP) {
-			SetupRipple(item->pos.x_pos, water, item->pos.z_pos, (GetRandomControl() & 0xF) + 112, 16);
+			SetupRipple(item->pos.pos.x, water, item->pos.pos.z, (GetRandomControl() & 0xF) + 112, 16);
 		} else {
-			SetupRipple(item->pos.x_pos, water, item->pos.z_pos, (GetRandomControl() & 0xF) + 112, 18);
+			SetupRipple(item->pos.pos.x, water, item->pos.pos.z, (GetRandomControl() & 0xF) + 112, 18);
 		}
 	}
 }
@@ -405,12 +405,12 @@ void Splash(ITEM_INFO* item) {
 	short room_number;
 
 	room_number = item->room_number;
-	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+	GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
 	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
-		splash_setup.pos.x = item->pos.x_pos;
-		splash_setup.pos.y = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, room_number);
-		splash_setup.pos.z = item->pos.z_pos;
+		splash_setup.pos.x = item->pos.pos.x;
+		splash_setup.pos.y = GetWaterHeight(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, room_number);
+		splash_setup.pos.z = item->pos.pos.z;
 		splash_setup.InnerRad = 32;
 		splash_setup.InnerSize = 8;
 		splash_setup.InnerRadVel = 320;
@@ -448,7 +448,7 @@ void DoLotsOfBlood(long x, long y, long z, short speed, short ang, short room_nu
 }
 
 void Richochet(GAME_VECTOR* pos) {
-	TriggerRicochetSpark(pos, mGetAngle(pos->pos.z, pos->pos.x, lara_item->pos.z_pos, lara_item->pos.x_pos) >> 4, 3, 0);
+	TriggerRicochetSpark(pos, mGetAngle(pos->pos.z, pos->pos.x, lara_item->pos.pos.z, lara_item->pos.pos.x) >> 4, 3, 0);
 	SoundEffect(SFX_LARA_RICOCHET, (PHD_3DPOS*)pos, SFX_DEFAULT);
 }
 
@@ -507,9 +507,9 @@ long ItemNearLara(PHD_3DPOS* pos, long rad) {
 	short* bounds;
 	long dx, dy, dz;
 
-	dx = pos->x_pos - lara_item->pos.x_pos;
-	dy = pos->y_pos - lara_item->pos.y_pos;
-	dz = pos->z_pos - lara_item->pos.z_pos;
+	dx = pos->pos.x - lara_item->pos.pos.x;
+	dy = pos->pos.y - lara_item->pos.pos.y;
+	dz = pos->pos.z - lara_item->pos.pos.z;
 
 	if(dx >= -rad && dx <= rad && dz >= -rad && dz <= rad && dy >= -3072 && dy <= 3072 && SQUARE(dx) + SQUARE(dz) <= SQUARE(rad)) {
 		bounds = GetBoundsAccurate(lara_item);

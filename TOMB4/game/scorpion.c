@@ -80,46 +80,46 @@ void ScorpionControl(short item_number) {
 	s = (682 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
 	c = (682 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
 
-	x = item->pos.x_pos + s;
-	z = item->pos.z_pos + c;
+	x = item->pos.pos.x + s;
+	z = item->pos.pos.z + c;
 	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(x, item->pos.pos.y, z, &room_number);
+	h = GetHeight(floor, x, item->pos.pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h) > 512) {
-		h = item->pos.y_pos;
+	if(abs(item->pos.pos.y - h) > 512) {
+		h = item->pos.pos.y;
 	}
 
-	x = item->pos.x_pos - s;
-	z = item->pos.z_pos - c;
+	x = item->pos.pos.x - s;
+	z = item->pos.pos.z - c;
 	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(x, item->pos.pos.y, z, &room_number);
+	h2 = GetHeight(floor, x, item->pos.pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h2) > 512) {
-		h2 = item->pos.y_pos;
+	if(abs(item->pos.pos.y - h2) > 512) {
+		h2 = item->pos.pos.y;
 	}
 
 	xrot = (short)phd_atan(1364, h2 - h);
 
-	x = item->pos.x_pos - c;
-	z = item->pos.z_pos + s;
+	x = item->pos.pos.x - c;
+	z = item->pos.pos.z + s;
 	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(x, item->pos.pos.y, z, &room_number);
+	h = GetHeight(floor, x, item->pos.pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h) > 512) {
-		h = item->pos.y_pos;
+	if(abs(item->pos.pos.y - h) > 512) {
+		h = item->pos.pos.y;
 	}
 
-	x = item->pos.x_pos + c;
-	z = item->pos.z_pos - s;
+	x = item->pos.pos.x + c;
+	z = item->pos.pos.z - s;
 	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(x, item->pos.pos.y, z, &room_number);
+	h2 = GetHeight(floor, x, item->pos.pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h2) > 512) {
-		h2 = item->pos.y_pos;
+	if(abs(item->pos.pos.y - h2) > 512) {
+		h2 = item->pos.pos.y;
 	}
 
 	zrot = (short)phd_atan(1364, h2 - h);
@@ -184,8 +184,8 @@ void ScorpionControl(short item_number) {
 						enemy = GetItem(currentLevel, target_num);
 
 						if(enemy->object_number != LARA && enemy->object_number != SCORPION && (enemy != lara_item || scorpion->hurt_by_lara)) {
-							s = enemy->pos.x_pos - item->pos.x_pos;
-							c = enemy->pos.z_pos - item->pos.z_pos;
+							s = enemy->pos.pos.x - item->pos.pos.x;
+							c = enemy->pos.pos.z - item->pos.pos.z;
 							dist = SQUARE(s) + SQUARE(c);
 
 							if(dist < bestdist) {
@@ -202,7 +202,7 @@ void ScorpionControl(short item_number) {
 		enemy = scorpion->enemy;
 
 		if(enemy != lara_item) {
-			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+			phd_atan(lara_item->pos.pos.z - item->pos.pos.z, lara_item->pos.pos.x - item->pos.pos.x);
 		}
 
 		GetCreatureMood(item, &info, 1);
@@ -377,7 +377,7 @@ void SmlscorpControl(short item_number) {
 		enemy = scorpion->enemy;
 
 		if(enemy != lara_item) {
-			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+			phd_atan(lara_item->pos.pos.z - item->pos.pos.z, lara_item->pos.pos.x - item->pos.pos.x);
 		}
 
 		GetCreatureMood(item, &info, 1);

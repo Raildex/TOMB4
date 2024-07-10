@@ -611,7 +611,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 	}
 
 	if((*data & 0x1F) == LAVA_TYPE) {
-		if(!heavy && (lara_item->pos.y_pos == lara_item->floor || lara.water_status != LW_ABOVE_WATER)) {
+		if(!heavy && (lara_item->pos.pos.y == lara_item->floor || lara.water_status != LW_ABOVE_WATER)) {
 			LavaBurn(lara_item);
 		}
 
@@ -708,7 +708,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 		case PAD:
 		case ANTIPAD:
 
-			if(lara_item->pos.y_pos != lara_item->floor) {
+			if(lara_item->pos.pos.y != lara_item->floor) {
 				return;
 			}
 
@@ -1785,8 +1785,8 @@ void AlterFloorHeight(ITEM_INFO* item, long height) {
 	short room_num;
 
 	room_num = item->room_number;
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_num);
-	ceiling = GetFloor(item->pos.x_pos, item->pos.y_pos + height - 1024, item->pos.z_pos, &room_num);
+	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_num);
+	ceiling = GetFloor(item->pos.pos.x, item->pos.pos.y + height - 1024, item->pos.pos.z, &room_num);
 
 	if(floor->floor == -127) {
 		floor->floor = ceiling->ceiling + (char)(height >> 8);
@@ -1812,9 +1812,9 @@ void TranslateItem(ITEM_INFO* item, short x, short y, short z) {
 
 	c = phd_cos(item->pos.y_rot);
 	s = phd_sin(item->pos.y_rot);
-	item->pos.x_pos += (z * s + x * c) >> W2V_SHIFT;
-	item->pos.y_pos += y;
-	item->pos.z_pos += (z * c - x * s) >> W2V_SHIFT;
+	item->pos.pos.x += (z * s + x * c) >> W2V_SHIFT;
+	item->pos.pos.y += y;
+	item->pos.pos.z += (z * c - x * s) >> W2V_SHIFT;
 }
 
 long GetChange(ITEM_INFO* item, ANIM_STRUCT* anim) {
@@ -2303,9 +2303,9 @@ void FireCrossBowFromLaserSight(GAME_VECTOR* start, GAME_VECTOR* target) {
 	short angles[2];
 
 	phd_GetVectorAngles(target->pos.x - start->pos.x, target->pos.y - start->pos.y, target->pos.z - start->pos.z, angles);
-	pos.x_pos = start->pos.x;
-	pos.y_pos = start->pos.y;
-	pos.z_pos = start->pos.z;
+	pos.pos.x = start->pos.x;
+	pos.pos.y = start->pos.y;
+	pos.pos.z = start->pos.z;
 	pos.x_rot = angles[1];
 	pos.y_rot = angles[0];
 	pos.z_rot = 0;
@@ -2435,9 +2435,9 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 
 			if(item->status != ITEM_DEACTIVATED && item->status != ITEM_INVISIBLE && item->object_number != LARA) {
 				bounds = GetBoundsAccurate(item);
-				ItemPos.x_pos = item->pos.x_pos;
-				ItemPos.y_pos = item->pos.y_pos;
-				ItemPos.z_pos = item->pos.z_pos;
+				ItemPos.pos.x = item->pos.pos.x;
+				ItemPos.pos.y = item->pos.pos.y;
+				ItemPos.pos.z = item->pos.pos.z;
 				ItemPos.y_rot = item->pos.y_rot;
 
 				if(DoRayBox(start, target, bounds, &ItemPos, Coord, item_number)) {
@@ -2450,9 +2450,9 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 			mesh = &r->mesh[j];
 
 			if(mesh->Flags & 1) {
-				ItemPos.x_pos = mesh->x;
-				ItemPos.y_pos = mesh->y;
-				ItemPos.z_pos = mesh->z;
+				ItemPos.pos.x = mesh->x;
+				ItemPos.pos.y = mesh->y;
+				ItemPos.pos.z = mesh->z;
 				ItemPos.y_rot = mesh->y_rot;
 
 				if(DoRayBox(start, target, GetStaticObjectBounds(currentLevel, mesh->static_number), &ItemPos, Coord, -1 - mesh->static_number)) {
@@ -2551,7 +2551,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 
 							if(shotitem->flags & IFL_CODEBITS && (shotitem->flags & IFL_CODEBITS) != IFL_CODEBITS) {
 								room_number = shotitem->room_number;
-								GetHeight(GetFloor(shotitem->pos.x_pos, shotitem->pos.y_pos - 256, shotitem->pos.z_pos, &room_number), shotitem->pos.x_pos, shotitem->pos.y_pos - 256, shotitem->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+								GetHeight(GetFloor(shotitem->pos.pos.x, shotitem->pos.pos.y - 256, shotitem->pos.pos.z, &room_number), shotitem->pos.pos.x, shotitem->pos.pos.y - 256, shotitem->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 								TestTriggers(trigger_index, 1, shotitem->flags & IFL_CODEBITS);
 							} else {
 								NumTrigs = (short)GetSwitchTrigger(shotitem, TriggerItems, 1);
@@ -2697,9 +2697,9 @@ void AnimateItem(ITEM_INFO* item) {
 							SoundEffect(num, &item->pos, SFX_DEFAULT);
 						}
 					} else if(item->room_number == 255) {
-						item->pos.x_pos = lara_item->pos.x_pos;
-						item->pos.y_pos = lara_item->pos.y_pos - 762;
-						item->pos.z_pos = lara_item->pos.z_pos;
+						item->pos.pos.x = lara_item->pos.pos.x;
+						item->pos.pos.y = lara_item->pos.pos.y - 762;
+						item->pos.pos.z = lara_item->pos.pos.z;
 						SoundEffect(num, &item->pos, SFX_DEFAULT);
 					} else if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 						if(type == SFX_LANDANDWATER || type == SFX_WATERONLY) {
@@ -2735,7 +2735,7 @@ void AnimateItem(ITEM_INFO* item) {
 			item->fallspeed++;
 		}
 
-		item->pos.y_pos += item->fallspeed;
+		item->pos.pos.y += item->fallspeed;
 	} else {
 		speed = anim->velocity;
 
@@ -2754,10 +2754,10 @@ void AnimateItem(ITEM_INFO* item) {
 		speed2 >>= 16;
 	}
 
-	item->pos.x_pos += (item->speed * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
-	item->pos.z_pos += (item->speed * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
-	item->pos.x_pos += (speed2 * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT;
-	item->pos.z_pos += (speed2 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT;
+	item->pos.pos.x += (item->speed * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
+	item->pos.pos.z += (item->speed * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
+	item->pos.pos.x += (speed2 * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT;
+	item->pos.pos.z += (speed2 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT;
 }
 
 long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_VECTOR* dir, PHD_VECTOR* Coord) {
@@ -2899,16 +2899,16 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	phd_PushUnitMatrix();
 	phd_RotY(-ItemPos->y_rot);
 
-	x = target->pos.x - ItemPos->x_pos;
-	y = target->pos.y - ItemPos->y_pos;
-	z = target->pos.z - ItemPos->z_pos;
+	x = target->pos.x - ItemPos->pos.x;
+	y = target->pos.y - ItemPos->pos.y;
+	z = target->pos.z - ItemPos->pos.z;
 	tpos.x = (long)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
 	tpos.y = (long)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
 	tpos.z = (long)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
 
-	x = start->pos.x - ItemPos->x_pos;
-	y = start->pos.y - ItemPos->y_pos;
-	z = start->pos.z - ItemPos->z_pos;
+	x = start->pos.x - ItemPos->pos.x;
+	y = start->pos.y - ItemPos->pos.y;
+	z = start->pos.z - ItemPos->pos.z;
 	spos.x = (long)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
 	spos.y = (long)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
 	spos.z = (long)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
@@ -3012,12 +3012,12 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	}
 
 	if(ClosestNode >= -1) {
-		dist = SQUARE(Coord->x + ItemPos->x_pos - start->pos.x) + SQUARE(Coord->y + ItemPos->y_pos - start->pos.y) + SQUARE(Coord->z + ItemPos->z_pos - start->pos.z);
+		dist = SQUARE(Coord->x + ItemPos->pos.x - start->pos.x) + SQUARE(Coord->y + ItemPos->pos.y - start->pos.y) + SQUARE(Coord->z + ItemPos->pos.z - start->pos.z);
 
 		if(dist < ClosestDist) {
-			ClosestCoord.x = Coord->x + ItemPos->x_pos;
-			ClosestCoord.y = Coord->y + ItemPos->y_pos;
-			ClosestCoord.z = Coord->z + ItemPos->z_pos;
+			ClosestCoord.x = Coord->x + ItemPos->pos.x;
+			ClosestCoord.y = Coord->y + ItemPos->pos.y;
+			ClosestCoord.z = Coord->z + ItemPos->pos.z;
 			ClosestItem = item_number;
 			ClosestDist = dist;
 

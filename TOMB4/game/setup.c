@@ -2023,7 +2023,7 @@ void GetAIPickups() {
 			for(aiObjNum = 0; aiObjNum < GetNumAIObjects(currentLevel); aiObjNum++) {
 				aiObj = GetAIObject(currentLevel, aiObjNum);
 
-				if(aiObj->x == item->pos.x_pos && aiObj->z == item->pos.z_pos
+				if(aiObj->x == item->pos.pos.x && aiObj->z == item->pos.pos.z
 				   && aiObj->room_number == item->room_number
 				   && aiObj->object_number < AI_PATROL2) {
 					item->ai_bits |= 1 << (aiObj->object_number - AI_GUARD);
@@ -2051,9 +2051,9 @@ void GetCarriedItems() {
 			while(item_num != NO_ITEM) {
 				pickup = GetItem(currentLevel, item_num);
 
-				if(baddy->pos.x_pos == pickup->pos.x_pos
-				   && abs(baddy->pos.y_pos - pickup->pos.y_pos) < 256
-				   && baddy->pos.z_pos == pickup->pos.z_pos
+				if(baddy->pos.pos.x == pickup->pos.pos.x
+				   && abs(baddy->pos.pos.y - pickup->pos.pos.y) < 256
+				   && baddy->pos.pos.z == pickup->pos.pos.z
 				   && GetObjectInfo(currentLevel, pickup->object_number)
 						   ->collision
 					   == PickUpCollision) {

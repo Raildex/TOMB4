@@ -94,12 +94,12 @@ void HorsemanControl(short item_number) {
 			room_number = item->room_number;
 			c = 341 * phd_cos(item2->pos.y_rot) >> W2V_SHIFT;
 			s = 341 * phd_sin(item2->pos.y_rot) >> W2V_SHIFT;
-			x = item2->pos.x_pos + s;
-			z = item2->pos.z_pos + c;
-			h1 = GetHeight(GetFloor(x, item2->pos.y_pos, z, &room_number), x, item2->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-			x = item2->pos.x_pos - s;
-			z = item2->pos.z_pos - c;
-			h2 = GetHeight(GetFloor(x, item2->pos.y_pos, z, &room_number), x, item2->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			x = item2->pos.pos.x + s;
+			z = item2->pos.pos.z + c;
+			h1 = GetHeight(GetFloor(x, item2->pos.pos.y, z, &room_number), x, item2->pos.pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			x = item2->pos.pos.x - s;
+			z = item2->pos.pos.z - c;
+			h2 = GetHeight(GetFloor(x, item2->pos.pos.y, z, &room_number), x, item2->pos.pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			rot = (short)phd_atan(682, h2 - h1);
 		}
 
@@ -140,8 +140,8 @@ void HorsemanControl(short item_number) {
 				larainfo.angle = info.angle;
 				larainfo.distance = info.distance;
 			} else {
-				z = horseman->enemy->pos.z_pos - item->pos.z_pos;
-				x = horseman->enemy->pos.x_pos - item->pos.x_pos;
+				z = horseman->enemy->pos.pos.z - item->pos.pos.z;
+				x = horseman->enemy->pos.pos.x - item->pos.pos.x;
 				larainfo.angle = (short)(phd_atan(z, x) - item->pos.y_rot);
 				larainfo.distance = SQUARE(x) + SQUARE(z);
 			}

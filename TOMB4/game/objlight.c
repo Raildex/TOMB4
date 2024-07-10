@@ -51,7 +51,7 @@ void ControlPulseLight(short item_number) {
 	}
 
 	item->item_flags[0] -= 2048;
-	sin = abs(phd_sin(item->item_flags[0] + ((item->pos.y_pos & 0x3FFF) << 2)) >> 6);
+	sin = abs(phd_sin(item->item_flags[0] + ((item->pos.pos.y & 0x3FFF) << 2)) >> 6);
 
 	if(sin > 255) {
 		sin = 255;
@@ -60,7 +60,7 @@ void ControlPulseLight(short item_number) {
 	r = (sin * 64) >> 9;
 	g = (sin * 255) >> 9;
 	b = (sin * 255) >> 9;
-	TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 18, r, g, b);
+	TriggerDynamic(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 18, r, g, b);
 }
 
 void ControlElectricalLight(short item_number) {
@@ -104,7 +104,7 @@ void ControlElectricalLight(short item_number) {
 	r = ((shade * (item->trigger_flags & 0x1F)) << 3) >> 8;
 	g = (shade * ((item->trigger_flags >> 2) & 0xF8)) >> 8;
 	b = (shade * ((item->trigger_flags >> 7) & 0xF8)) >> 8;
-	TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 16, r, g, b);
+	TriggerDynamic(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 16, r, g, b);
 }
 
 void ControlBlinker(short item_number) {

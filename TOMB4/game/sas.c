@@ -104,7 +104,7 @@ void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end) {
 				x = (2048 * phd_sin(l->pos.y_rot)) >> W2V_SHIFT;
 				z = (2048 * phd_cos(l->pos.y_rot)) >> W2V_SHIFT;
-				TestTriggersAtXYZ(l->pos.x_pos - x, l->pos.y_pos, l->pos.z_pos - z, l->room_number, 1, 0);
+				TestTriggersAtXYZ(l->pos.pos.x - x, l->pos.pos.y, l->pos.pos.z - z, l->room_number, 1, 0);
 				RemoveActiveItem(item_number);
 				item->status = ITEM_INACTIVE;
 			}
@@ -138,9 +138,9 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 	pos.y = sas_fire.y;
 	pos.z = sas_fire.z;
 	GetJointAbsPosition(sas, &pos, sas_fire.mesh_num);
-	item->pos.x_pos = pos.x;
-	item->pos.y_pos = pos.y;
-	item->pos.z_pos = pos.z;
+	item->pos.pos.x = pos.x;
+	item->pos.pos.y = pos.y;
+	item->pos.pos.z = pos.z;
 	oPos.x = pos.x;
 	oPos.y = pos.y;
 	oPos.z = pos.z;
@@ -148,9 +148,9 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 	h = GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h < pos.y) {
-		item->pos.x_pos = sas->pos.x_pos;
-		item->pos.y_pos = pos.y;
-		item->pos.z_pos = sas->pos.z_pos;
+		item->pos.pos.x = sas->pos.pos.x;
+		item->pos.pos.y = pos.y;
+		item->pos.pos.z = sas->pos.pos.z;
 		item->room_number = sas->room_number;
 	}
 
@@ -241,8 +241,8 @@ void SasControl(short item_number) {
 			iDistance = info.distance;
 			iAngle = info.angle;
 		} else {
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = lara_item->pos.pos.x - item->pos.pos.x;
+			dz = lara_item->pos.pos.z - item->pos.pos.z;
 			iAngle = (short)(phd_atan(dz, dx) - item->pos.y_rot);
 			iDistance = SQUARE(dx) + SQUARE(dz);
 		}

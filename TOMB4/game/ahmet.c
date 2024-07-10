@@ -127,10 +127,10 @@ long ReTriggerAhmet(short item_number) {
 		FlashFadeG = 64;
 		FlashFadeB = 0;
 		FlashFader = 32;
-		item->pos.x_pos = ((item->item_flags[0] & 0xFFFF) << 10) | 512;
-		item->pos.y_pos = (item->item_flags[1] & 0xFFFF) << 8;
-		item->pos.z_pos = ((item->item_flags[2] & 0xFFFF) << 10) | 512;
-		IsRoomOutside(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->pos.pos.x = ((item->item_flags[0] & 0xFFFF) << 10) | 512;
+		item->pos.pos.y = (item->item_flags[1] & 0xFFFF) << 8;
+		item->pos.pos.z = ((item->item_flags[2] & 0xFFFF) << 10) | 512;
+		IsRoomOutside(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 		if(item->room_number != IsRoomOutsideNo) {
 			ItemNewRoom(item_number, IsRoomOutsideNo);
@@ -194,8 +194,8 @@ void ScalesControl(short item_number) {
 			}
 
 			room_number = item->room_number;
-			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+			floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+			GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 			TestTriggers(trigger_index, 1, flags);
 		}
 	}
@@ -214,7 +214,7 @@ void ExplodeAhmet(ITEM_INFO* item) {
 		}
 	}
 
-	TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 13, (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
+	TriggerDynamic(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 13, (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
 	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
 }
 
@@ -227,9 +227,9 @@ void InitialiseAhmet(short item_number) {
 	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
-	item->item_flags[0] = (short)(item->pos.x_pos >> 10);
-	item->item_flags[1] = (short)(item->pos.y_pos >> 8);
-	item->item_flags[2] = (short)(item->pos.z_pos >> 10);
+	item->item_flags[0] = (short)(item->pos.pos.x >> 10);
+	item->item_flags[1] = (short)(item->pos.pos.y >> 8);
+	item->item_flags[2] = (short)(item->pos.pos.z >> 10);
 }
 
 void AhmetControl(short item_number) {
@@ -284,8 +284,8 @@ void AhmetControl(short item_number) {
 			larainfo.angle = info.angle;
 			larainfo.distance = info.distance;
 		} else {
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = lara_item->pos.pos.x - item->pos.pos.x;
+			dz = lara_item->pos.pos.z - item->pos.pos.z;
 			larainfo.angle = (short)(phd_atan(dz, dx) - item->pos.y_rot);
 			larainfo.distance = SQUARE(dx) + SQUARE(dz);
 		}
@@ -437,8 +437,8 @@ void AhmetControl(short item_number) {
 	CreatureTilt(item, 0);
 	CreatureJoint(item, 0, head);
 	room_number = item->room_number;
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+	GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 	TestTriggers(trigger_index, 1, 0);
 	CreatureAnimation(item_number, angle, 0);
 }

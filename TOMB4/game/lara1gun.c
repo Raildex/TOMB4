@@ -105,9 +105,9 @@ void FireCrossbow(PHD_3DPOS* pos) {
 
 		if(pos) {
 			item->room_number = lara_item->room_number;
-			item->pos.x_pos = pos->x_pos;
-			item->pos.y_pos = pos->y_pos;
-			item->pos.z_pos = pos->z_pos;
+			item->pos.pos.x = pos->pos.x;
+			item->pos.pos.y = pos->pos.y;
+			item->pos.pos.z = pos->pos.z;
 			InitialiseItem(item_number);
 			item->pos.x_rot = pos->x_rot;
 			item->pos.y_rot = pos->y_rot;
@@ -126,13 +126,13 @@ void FireCrossbow(PHD_3DPOS* pos) {
 			h = GetHeight(floor, vec.x, vec.y, vec.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 			if(h >= vec.y) {
-				item->pos.x_pos = vec.x;
-				item->pos.y_pos = vec.y;
-				item->pos.z_pos = vec.z;
+				item->pos.pos.x = vec.x;
+				item->pos.pos.y = vec.y;
+				item->pos.pos.z = vec.z;
 			} else {
-				item->pos.x_pos = lara_item->pos.x_pos;
-				item->pos.y_pos = vec.y;
-				item->pos.z_pos = lara_item->pos.z_pos;
+				item->pos.pos.x = lara_item->pos.pos.x;
+				item->pos.pos.y = vec.y;
+				item->pos.pos.z = lara_item->pos.pos.z;
 				item->room_number = lara_item->room_number;
 			}
 
@@ -285,15 +285,15 @@ void FireGrenade() {
 	pos.y = 276;
 	pos.z = 80;
 	GetLaraJointPos(&pos, 11);
-	item->pos.x_pos = pos.x;
-	item->pos.y_pos = pos.y;
-	item->pos.z_pos = pos.z;
+	item->pos.pos.x = pos.x;
+	item->pos.pos.y = pos.y;
+	item->pos.pos.z = pos.z;
 	h = GetHeight(GetFloor(pos.x, pos.y, pos.z, &item->room_number), pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h < pos.y) {
-		item->pos.x_pos = lara_item->pos.x_pos;
-		item->pos.y_pos = pos.y;
-		item->pos.z_pos = lara_item->pos.z_pos;
+		item->pos.pos.x = lara_item->pos.pos.x;
+		item->pos.pos.y = pos.y;
+		item->pos.pos.z = lara_item->pos.pos.z;
 		item->room_number = lara_item->room_number;
 	}
 
@@ -490,9 +490,9 @@ void RifleHandler(long weapon_type) {
 		b = GetRandomControl() & 63;
 
 		if(weapon_type == WEAPON_SHOTGUN) {
-			x = (GetRandomControl() & 0xFF) + (phd_sin(lara_item->pos.y_rot) >> 4) + lara_item->pos.x_pos;
-			y = ((GetRandomControl() & 0x7F) - 575) + lara_item->pos.y_pos;
-			z = (GetRandomControl() & 0xFF) + (phd_cos(lara_item->pos.y_rot) >> 4) + lara_item->pos.z_pos;
+			x = (GetRandomControl() & 0xFF) + (phd_sin(lara_item->pos.y_rot) >> 4) + lara_item->pos.pos.x;
+			y = ((GetRandomControl() & 0x7F) - 575) + lara_item->pos.pos.y;
+			z = (GetRandomControl() & 0xFF) + (phd_cos(lara_item->pos.y_rot) >> 4) + lara_item->pos.pos.z;
 
 			if(gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom) {
 				TriggerDynamic_MIRROR(x, y, z, 12, r, g, b);
@@ -537,15 +537,15 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 		if(target->object_number == SKELETON) {
 			for(int i = 0; i < 8; i++) {
 				speed = item->speed * phd_cos(item->pos.x_rot) >> W2V_SHIFT;
-				item->pos.x_pos += speed * phd_sin(item->pos.y_rot) >> 17;
-				item->pos.y_pos += item->speed * phd_sin(-item->pos.x_rot) >> 17;
-				item->pos.z_pos += speed * phd_cos(item->pos.y_rot) >> 17;
+				item->pos.pos.x += speed * phd_sin(item->pos.y_rot) >> 17;
+				item->pos.pos.y += item->speed * phd_sin(-item->pos.x_rot) >> 17;
+				item->pos.pos.z += speed * phd_cos(item->pos.y_rot) >> 17;
 				ptr1 = Slist;
 
 				for(int j = 0; j < num1; j++) {
-					dx = ptr1->x - item->pos.x_pos;
-					dy = ptr1->y - item->pos.y_pos;
-					dz = ptr1->z - item->pos.z_pos;
+					dx = ptr1->x - item->pos.pos.x;
+					dy = ptr1->y - item->pos.pos.y;
+					dz = ptr1->z - item->pos.pos.z;
 					dy = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
 
 					if(dy < SQUARE(ptr1->r)) {
@@ -564,9 +564,9 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 			ptr1 = Slist;
 
 			for(int i = 0; i < num1; i++) {
-				dx = ptr1->x - item->pos.x_pos;
-				dy = ptr1->y - item->pos.y_pos;
-				dz = ptr1->z - item->pos.z_pos;
+				dx = ptr1->x - item->pos.pos.x;
+				dy = ptr1->y - item->pos.pos.y;
+				dz = ptr1->z - item->pos.pos.z;
 				dy = SQUARE(dx) + SQUARE(dy) + SQUARE(dz) - SQUARE(ptr1->r);
 
 				if(dy < cd) {
@@ -588,7 +588,7 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 		if(cs == num1 - 1) {
 			if(target->flags & IFL_CODEBITS && (target->flags & IFL_CODEBITS) != IFL_CODEBITS) {
 				room_number = target->room_number;
-				GetHeight(GetFloor(target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos, &room_number), target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+				GetHeight(GetFloor(target->pos.pos.x, target->pos.pos.y - 256, target->pos.pos.z, &room_number), target->pos.pos.x, target->pos.pos.y - 256, target->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 				TestTriggers(trigger_index, 1, target->flags & IFL_CODEBITS);
 			} else {
 				NumTrigs = (short)GetSwitchTrigger(target, TriggerItems, 1);
@@ -615,32 +615,32 @@ void TriggerUnderwaterExplosion(ITEM_INFO* item, long vehicle) {
 	long x, y, z, wh;
 
 	if(vehicle) {
-		x = (GetRandomControl() & 0x1FF) + item->pos.x_pos - 256;
-		z = (GetRandomControl() & 0x1FF) + item->pos.z_pos - 256;
-		TriggerExplosionBubble(x, item->pos.y_pos, z, item->room_number);
-		TriggerExplosionSparks(x, item->pos.y_pos, z, 2, -1, 1, item->room_number);
-		wh = GetWaterHeight(x, item->pos.y_pos, z, item->room_number);
+		x = (GetRandomControl() & 0x1FF) + item->pos.pos.x - 256;
+		z = (GetRandomControl() & 0x1FF) + item->pos.pos.z - 256;
+		TriggerExplosionBubble(x, item->pos.pos.y, z, item->room_number);
+		TriggerExplosionSparks(x, item->pos.pos.y, z, 2, -1, 1, item->room_number);
+		wh = GetWaterHeight(x, item->pos.pos.y, z, item->room_number);
 
 		if(wh != NO_HEIGHT) {
 			TriggerSmallSplash(x, wh, z, 8);
 		}
 	} else {
-		TriggerExplosionBubble(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
-		TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, -2, 1, item->room_number);
+		TriggerExplosionBubble(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number);
+		TriggerExplosionSparks(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 2, -2, 1, item->room_number);
 
 		for(int i = 0; i < 3; i++) {
-			TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, -1, 1, item->room_number);
+			TriggerExplosionSparks(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 2, -1, 1, item->room_number);
 		}
 
-		wh = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
+		wh = GetWaterHeight(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number);
 
 		if(wh != NO_HEIGHT) {
-			y = item->pos.y_pos - wh;
+			y = item->pos.pos.y - wh;
 
 			if(y < 2048) {
-				splash_setup.pos.x = item->pos.x_pos;
+				splash_setup.pos.x = item->pos.pos.x;
 				splash_setup.pos.y = wh;
-				splash_setup.pos.z = item->pos.z_pos;
+				splash_setup.pos.z = item->pos.pos.z;
 				wh = 2048 - y;
 				splash_setup.InnerRadVel = 160;
 				splash_setup.MiddleSize = 224;
@@ -755,9 +755,9 @@ void ControlCrossbow(short item_number) {
 	collided = 0;
 	item = GetItem(currentLevel, item_number);
 
-	oldPos.x = item->pos.x_pos;
-	oldPos.y = item->pos.y_pos;
-	oldPos.z = item->pos.z_pos;
+	oldPos.x = item->pos.pos.x;
+	oldPos.y = item->pos.pos.y;
+	oldPos.z = item->pos.pos.z;
 
 	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 		if(item->speed > 64) {
@@ -771,17 +771,17 @@ void ControlCrossbow(short item_number) {
 		abovewater = 1;
 	}
 
-	item->pos.x_pos += (((item->speed * phd_cos(item->pos.x_rot)) >> W2V_SHIFT) * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
-	item->pos.y_pos += (item->speed * phd_sin(-item->pos.x_rot)) >> W2V_SHIFT;
-	item->pos.z_pos += (((item->speed * phd_cos(item->pos.x_rot)) >> W2V_SHIFT) * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
+	item->pos.pos.x += (((item->speed * phd_cos(item->pos.x_rot)) >> W2V_SHIFT) * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
+	item->pos.pos.y += (item->speed * phd_sin(-item->pos.x_rot)) >> W2V_SHIFT;
+	item->pos.pos.z += (((item->speed * phd_cos(item->pos.x_rot)) >> W2V_SHIFT) * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
 
 	room_number = item->room_number;
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
-	if(GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject) < item->pos.y_pos || GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) > item->pos.y_pos) {
-		item->pos.x_pos = oldPos.x;
-		item->pos.y_pos = oldPos.y;
-		item->pos.z_pos = oldPos.z;
+	if(GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject) < item->pos.pos.y || GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z) > item->pos.pos.y) {
+		item->pos.pos.x = oldPos.x;
+		item->pos.pos.y = oldPos.y;
+		item->pos.pos.z = oldPos.z;
 
 		if(item->item_flags[0] == 3) {
 			exploded = 1;
@@ -799,8 +799,8 @@ void ControlCrossbow(short item_number) {
 	r = GetRoom(currentLevel, room_number);
 
 	if(r->flags & ROOM_UNDERWATER && abovewater) {
-		TriggerSmallSplash(item->pos.x_pos, r->maxceiling, item->pos.z_pos, 8);
-		SetupRipple(item->pos.x_pos, r->maxceiling, item->pos.z_pos, (GetRandomControl() & 7) + 8, 0);
+		TriggerSmallSplash(item->pos.pos.x, r->maxceiling, item->pos.pos.z, 8);
+		SetupRipple(item->pos.pos.x, r->maxceiling, item->pos.pos.z, (GetRandomControl() & 7) + 8, 0);
 	}
 
 	if(exploded) {
@@ -826,10 +826,10 @@ void ControlCrossbow(short item_number) {
 			while(target) {
 				if(exploded) {
 					if(target->object_number >= SMASH_OBJECT1 && target->object_number <= SMASH_OBJECT8) {
-						TriggerExplosionSparks(target->pos.x_pos, target->pos.y_pos, target->pos.z_pos, 3, -2, 0, target->room_number);
-						target->pos.y_pos -= 128;
+						TriggerExplosionSparks(target->pos.pos.x, target->pos.pos.y, target->pos.pos.z, 3, -2, 0, target->room_number);
+						target->pos.pos.y -= 128;
 						TriggerShockwave((PHD_VECTOR*)&target->pos, 0x1300030, 96, 0x18806000, 0);
-						target->pos.y_pos += 128;
+						target->pos.pos.y += 128;
 						ExplodeItemNode(target, 0, 0, 128);
 						SmashObject(GetItemNum(currentLevel, target));
 						KillItem(GetItemNum(currentLevel, target));
@@ -886,9 +886,9 @@ void ControlCrossbow(short item_number) {
 		if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 			TriggerUnderwaterExplosion(item, 0);
 		} else {
-			item->pos.y_pos -= 128;
+			item->pos.pos.y -= 128;
 			TriggerShockwave((PHD_VECTOR*)&item->pos, 0x1300030, 96, 0x18806000, 0);
-			item->pos.y_pos += 128;
+			item->pos.pos.y += 128;
 			TriggerExplosionSparks(oldPos.x, oldPos.y, oldPos.z, 3, -2, 0, item->room_number);
 
 			for(int i = 0; i < 2; i++) {
@@ -951,8 +951,8 @@ void ControlGrenade(short item_number) {
 				FlashFader = 0;
 			}
 
-			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
-			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
+			TriggerFlashSmoke(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number);
+			TriggerFlashSmoke(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number);
 		} else {
 			new_num = CreateItem();
 
@@ -961,9 +961,9 @@ void ControlGrenade(short item_number) {
 				item2->shade = -0x3DF0;
 				item2->object_number = GRENADE;
 				item2->room_number = item->room_number;
-				item2->pos.x_pos = (GetRandomControl() & 0x1FF) + item->pos.x_pos - 256;
-				item2->pos.y_pos = item->pos.y_pos - 256;
-				item2->pos.z_pos = (GetRandomControl() & 0x1FF) + item->pos.z_pos - 256;
+				item2->pos.pos.x = (GetRandomControl() & 0x1FF) + item->pos.pos.x - 256;
+				item2->pos.pos.y = item->pos.pos.y - 256;
+				item2->pos.pos.z = (GetRandomControl() & 0x1FF) + item->pos.pos.z - 256;
 				InitialiseItem(new_num);
 				item2->pos.x_rot = (GetRandomControl() & 0x3FFF) + 0x2000;
 				item2->pos.y_rot = (short)(GetRandomControl() * 2);
@@ -989,9 +989,9 @@ void ControlGrenade(short item_number) {
 		return;
 	}
 
-	oldPos.x = item->pos.x_pos;
-	oldPos.y = item->pos.y_pos;
-	oldPos.z = item->pos.z_pos;
+	oldPos.x = item->pos.pos.x;
+	oldPos.y = item->pos.pos.y;
+	oldPos.z = item->pos.pos.z;
 	item->shade = -0x3DF0;
 
 	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
@@ -1033,21 +1033,21 @@ void ControlGrenade(short item_number) {
 		pos.z = (long)mMXPtr[M23];
 		phd_PopMatrix();
 
-		TriggerRocketSmoke(item->pos.x_pos + pos.x, item->pos.y_pos + pos.y, item->pos.z_pos + pos.z, -1);
+		TriggerRocketSmoke(item->pos.pos.x + pos.x, item->pos.pos.y + pos.y, item->pos.pos.z + pos.z, -1);
 	}
 
 	xv = (item->speed * phd_sin(item->goal_anim_state)) >> W2V_SHIFT;
 	yv = item->fallspeed;
 	zv = (item->speed * phd_cos(item->goal_anim_state)) >> W2V_SHIFT;
-	item->pos.x_pos += xv;
-	item->pos.y_pos += yv;
-	item->pos.z_pos += zv;
+	item->pos.pos.x += xv;
+	item->pos.pos.y += yv;
+	item->pos.pos.z += zv;
 
 	if(item->item_flags[0] == 4) {
 		room_number = item->room_number;
-		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+		floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
-		if(GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject) < item->pos.y_pos || GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) > item->pos.y_pos) {
+		if(GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject) < item->pos.pos.y || GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z) > item->pos.pos.y) {
 			item->hit_points = 1;
 		}
 	} else {
@@ -1059,12 +1059,12 @@ void ControlGrenade(short item_number) {
 	}
 
 	room_number = item->room_number;
-	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+	GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
 	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER && abovewater) {
-		splash_setup.pos.x = item->pos.x_pos;
+		splash_setup.pos.x = item->pos.pos.x;
 		splash_setup.pos.y = GetRoom(currentLevel, room_number)->maxceiling;
-		splash_setup.pos.z = item->pos.z_pos;
+		splash_setup.pos.z = item->pos.pos.z;
 		splash_setup.InnerRad = 32;
 		splash_setup.InnerSize = 8;
 		splash_setup.InnerRadVel = 320;
@@ -1084,7 +1084,7 @@ void ControlGrenade(short item_number) {
 	}
 
 	if(item->item_flags[0] == 4) {
-		TriggerFireFlame(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, -1, 1);
+		TriggerFireFlame(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, -1, 1);
 	}
 
 	exploded = 0;
@@ -1111,10 +1111,10 @@ void ControlGrenade(short item_number) {
 
 				while(target) {
 					if(target->object_number >= SMASH_OBJECT1 && target->object_number <= SMASH_OBJECT8) {
-						TriggerExplosionSparks(target->pos.x_pos, target->pos.y_pos, target->pos.z_pos, 3, -2, 0, target->room_number);
-						target->pos.y_pos -= 128;
+						TriggerExplosionSparks(target->pos.pos.x, target->pos.pos.y, target->pos.pos.z, 3, -2, 0, target->room_number);
+						target->pos.pos.y -= 128;
 						TriggerShockwave((PHD_VECTOR*)&target->pos, 0x1300030, 96, 0x18806000, 0);
-						target->pos.y_pos += 128;
+						target->pos.pos.y += 128;
 						ExplodeItemNode(target, 0, 0, 128);
 						SmashObject(GetItemNum(currentLevel, target));
 						KillItem(GetItemNum(currentLevel, target));
@@ -1129,7 +1129,7 @@ void ControlGrenade(short item_number) {
 							}
 						} else {
 							room_number = item->room_number;
-							GetHeight(GetFloor(target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos, &room_number), target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+							GetHeight(GetFloor(target->pos.pos.x, target->pos.pos.y - 256, target->pos.pos.z, &room_number), target->pos.pos.x, target->pos.pos.y - 256, target->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 							TestTriggers(trigger_index, 1, target->flags & IFL_CODEBITS);
 						}
 
@@ -1193,17 +1193,17 @@ void ControlGrenade(short item_number) {
 
 			if(IsVolumetric()) {
 				FlashFader = 0;
-				TriggerFXFogBulb(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 4096, 255, 255, 255, 255, item->room_number);
+				TriggerFXFogBulb(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 4096, 255, 255, 255, 255, item->room_number);
 			}
 
-			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
-			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
+			TriggerFlashSmoke(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number);
+			TriggerFlashSmoke(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number);
 		} else if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 			TriggerUnderwaterExplosion(item, 0);
 		} else {
-			item->pos.y_pos -= 128;
+			item->pos.pos.y -= 128;
 			TriggerShockwave((PHD_VECTOR*)&item->pos, 0x1300030, 96, 0x18806000, 0);
-			item->pos.y_pos += 128;
+			item->pos.pos.y += 128;
 			TriggerExplosionSparks(oldPos.x, oldPos.y, oldPos.z, 3, -2, 0, item->room_number);
 
 			for(int i = 0; i < 2; i++) {

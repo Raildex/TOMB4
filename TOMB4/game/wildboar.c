@@ -62,8 +62,8 @@ void WildboarControl(short item_number) {
 			item->current_anim_state = 5;
 		}
 	} else {
-		dx = lara_item->pos.x_pos - item->pos.x_pos;
-		dz = lara_item->pos.z_pos - item->pos.z_pos;
+		dx = lara_item->pos.pos.x - item->pos.pos.x;
+		dz = lara_item->pos.pos.z - item->pos.pos.z;
 		ldist = SQUARE(dx) + SQUARE(dz);
 
 		if(item->ai_bits) {
@@ -79,8 +79,8 @@ void WildboarControl(short item_number) {
 					target = GetItem(currentLevel, baddie->item_num);
 
 					if(target->object_number != WILD_BOAR) {
-						dx = target->pos.x_pos - item->pos.x_pos;
-						dz = target->pos.z_pos - item->pos.z_pos;
+						dx = target->pos.pos.x - item->pos.pos.x;
+						dz = target->pos.pos.z - item->pos.pos.z;
 						dist = SQUARE(dx) + SQUARE(dz);
 
 						if(dist < max_dist && dist < ldist) {
@@ -103,8 +103,8 @@ void WildboarControl(short item_number) {
 
 		CreatureMood(item, &info, 1);
 		angle = CreatureTurn(item, boar->maximum_turn);
-		dx = abs(item->item_flags[2] - item->pos.x_pos);
-		dz = abs(item->item_flags[3] - item->pos.z_pos);
+		dx = abs(item->item_flags[2] - item->pos.pos.x);
+		dz = abs(item->item_flags[3] - item->pos.pos.z);
 
 		if(info.ahead) {
 			neckY = info.angle >> 1;

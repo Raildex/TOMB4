@@ -81,9 +81,9 @@ void SetSplineData(long num, long cam) {
 		item = GetItem(currentLevel, spotcam->timer);
 
 		if(item) {
-			camera_xtarget[num] = item->pos.x_pos;
-			camera_ytarget[num] = item->pos.y_pos;
-			camera_ztarget[num] = item->pos.z_pos;
+			camera_xtarget[num] = item->pos.pos.x;
+			camera_ytarget[num] = item->pos.pos.y;
+			camera_ztarget[num] = item->pos.pos.z;
 		}
 	}
 
@@ -117,9 +117,9 @@ void InitialiseSpotCam(short Sequence) {
 	InitialCameraPosition.y = camera.pos.pos.y;
 	InitialCameraPosition.z = camera.pos.pos.z;
 	InitialCameraRoom = camera.pos.room_number;
-	LaraFixedPosition.x = lara_item->pos.x_pos;
-	LaraFixedPosition.y = lara_item->pos.y_pos;
-	LaraFixedPosition.z = lara_item->pos.z_pos;
+	LaraFixedPosition.x = lara_item->pos.pos.x;
+	LaraFixedPosition.y = lara_item->pos.pos.y;
+	LaraFixedPosition.z = lara_item->pos.pos.z;
 	current_sequence = Sequence;
 	current_spline_camera = 0;
 
@@ -304,9 +304,9 @@ void CalculateSpotCams() {
 	if(FirstCam->flags & 8) {
 		cp = 0;
 		cs = 0x2000;
-		lx = lara_item->pos.x_pos;
-		ly = lara_item->pos.y_pos;
-		lz = lara_item->pos.z_pos;
+		lx = lara_item->pos.pos.x;
+		ly = lara_item->pos.pos.y;
+		lz = lara_item->pos.pos.z;
 
 		for(int i = 0; i < 8; i++) {
 			tlen = 0x10000;
@@ -368,9 +368,9 @@ void CalculateSpotCams() {
 		camera.pos.pos.z = cpz;
 
 		if(FirstCam->flags & 0x28) {
-			camera.target.pos.x = lara_item->pos.x_pos;
-			camera.target.pos.y = lara_item->pos.y_pos;
-			camera.target.pos.z = lara_item->pos.z_pos;
+			camera.target.pos.x = lara_item->pos.pos.x;
+			camera.target.pos.y = lara_item->pos.pos.y;
+			camera.target.pos.z = lara_item->pos.pos.z;
 		} else {
 			camera.target.pos.x = ctx;
 			camera.target.pos.y = cty;
@@ -381,9 +381,9 @@ void CalculateSpotCams() {
 			item = GetItem(currentLevel, GetSpotCam(currentLevel, current_spline_camera)->timer);
 
 			if(item) {
-				camera.target.pos.x = item->pos.x_pos;
-				camera.target.pos.y = item->pos.y_pos;
-				camera.target.pos.z = item->pos.z_pos;
+				camera.target.pos.x = item->pos.pos.x;
+				camera.target.pos.y = item->pos.pos.y;
+				camera.target.pos.z = item->pos.pos.z;
 			}
 		}
 

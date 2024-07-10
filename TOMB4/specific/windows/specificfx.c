@@ -210,9 +210,9 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item) {
 			y = item->floor;
 		}
 	} else {
-		pos.x = item->pos.x_pos;
+		pos.x = item->pos.pos.x;
 		y = item->floor;
-		pos.z = item->pos.z_pos;
+		pos.z = item->pos.pos.z;
 	}
 
 	y -= 16;
@@ -365,9 +365,9 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item) {
 			pos.y = item->floor;
 		}
 	} else {
-		pos.x = item->pos.x_pos;
+		pos.x = item->pos.pos.x;
 		pos.y = item->floor;
-		pos.z = item->pos.z_pos;
+		pos.z = item->pos.pos.z;
 	}
 
 	pos.y -= 16;
@@ -521,9 +521,9 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item) {
 			y = item->floor;
 		}
 	} else {
-		pos.x = item->pos.x_pos;
+		pos.x = item->pos.pos.x;
 		y = item->floor;
-		pos.z = item->pos.z_pos;
+		pos.z = item->pos.pos.z;
 	}
 
 	y -= 16;
@@ -1265,7 +1265,7 @@ void S_DrawDarts(ITEM_INFO* item) {
 	v = MyVertexBuffer;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 	zv = f_persp / mMXPtr[M23];
 	x1 = (short)(mMXPtr[M03] * zv + f_centerx);
 	y1 = (short)(mMXPtr[M13] * zv + f_centery);
@@ -1882,10 +1882,10 @@ void DrawLaserSightSprite() {
 	Z = (long*)&tsv_buffer[512];
 	pos = (long*)&tsv_buffer[1024];
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
-	pos[0] = LaserSightX - lara_item->pos.x_pos;
-	pos[1] = LaserSightY - lara_item->pos.y_pos;
-	pos[2] = LaserSightZ - lara_item->pos.z_pos;
+	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
+	pos[0] = LaserSightX - lara_item->pos.pos.x;
+	pos[1] = LaserSightY - lara_item->pos.pos.y;
+	pos[2] = LaserSightZ - lara_item->pos.pos.z;
 	vec.x = mMXPtr[M00] * pos[0] + mMXPtr[M01] * pos[1] + mMXPtr[M02] * pos[2] + mMXPtr[M03];
 	vec.y = mMXPtr[M10] * pos[0] + mMXPtr[M11] * pos[1] + mMXPtr[M12] * pos[2] + mMXPtr[M13];
 	vec.z = mMXPtr[M20] * pos[0] + mMXPtr[M21] * pos[1] + mMXPtr[M22] * pos[2] + mMXPtr[M23];
@@ -2077,9 +2077,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 		pos.x = lfobj->pos.x;
 		pos.y = lfobj->pos.y;
 		pos.z = lfobj->pos.z;
-		dx = abs(pos.x - lara_item->pos.x_pos);
-		dy = abs(pos.y - lara_item->pos.y_pos);
-		dz = abs(pos.z - lara_item->pos.z_pos);
+		dx = abs(pos.x - lara_item->pos.pos.x);
+		dy = abs(pos.y - lara_item->pos.pos.y);
+		dz = abs(pos.z - lara_item->pos.pos.z);
 
 		if(dx > 0x8000 || dy > 0x8000 || dz > 0x8000) {
 			return;
@@ -2158,16 +2158,16 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 	Z = (long*)&tsv_buffer[64];
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 
 	if(lfobj) {
-		vec[0] = (long)(pos.x - lara_item->pos.x_pos);
-		vec[1] = (long)(pos.y - lara_item->pos.y_pos);
-		vec[2] = (long)(pos.z - lara_item->pos.z_pos);
+		vec[0] = (long)(pos.x - lara_item->pos.pos.x);
+		vec[1] = (long)(pos.y - lara_item->pos.pos.y);
+		vec[2] = (long)(pos.z - lara_item->pos.pos.z);
 	} else {
-		pos.x = x - lara_item->pos.x_pos;
-		pos.y = y - lara_item->pos.y_pos;
-		pos.z = z - lara_item->pos.z_pos;
+		pos.x = x - lara_item->pos.pos.x;
+		pos.y = y - lara_item->pos.pos.y;
+		pos.z = z - lara_item->pos.pos.z;
 
 		while(pos.x > 0x7F00 || pos.x < -0x7F00 || pos.y > 0x7F00 || pos.y < -0x7F00 || pos.z > 0x7F00 || pos.z < -0x7F00) {
 			pos.x >>= 1;
@@ -2429,7 +2429,7 @@ void DrawWraithTrail(ITEM_INFO* item) {
 	v = MyVertexBuffer;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 	for(int i = 0; i < 5; i++) {
 		if(!i) {
@@ -2448,9 +2448,9 @@ void DrawWraithTrail(ITEM_INFO* item) {
 		wraith = (WRAITH_STRUCT*)item->data;
 
 		for(int j = 0; j < 8; j++, XY += 2, Z += 2, wraith++) {
-			offsets[0] = wraith->pos.x - item->pos.x_pos;
-			offsets[1] = wraith->pos.y - item->pos.y_pos;
-			offsets[2] = wraith->pos.z - item->pos.z_pos;
+			offsets[0] = wraith->pos.x - item->pos.pos.x;
+			offsets[1] = wraith->pos.y - item->pos.pos.y;
+			offsets[2] = wraith->pos.z - item->pos.pos.z;
 			pos.x = offsets[0] * mMXPtr[M00] + offsets[1] * mMXPtr[M01] + offsets[2] * mMXPtr[M02] + mMXPtr[M03];
 			pos.y = offsets[0] * mMXPtr[M10] + offsets[1] * mMXPtr[M11] + offsets[2] * mMXPtr[M12] + mMXPtr[M13];
 			pos.z = offsets[0] * mMXPtr[M20] + offsets[1] * mMXPtr[M21] + offsets[2] * mMXPtr[M22] + mMXPtr[M23];
@@ -2532,7 +2532,7 @@ void DrawDrips() {
 	v = MyVertexBuffer;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 
 	for(int i = 0; i < nDrips; i++) {
 		drip = &Drips[i];
@@ -2544,9 +2544,9 @@ void DrawDrips() {
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
 		pos = (long*)&tsv_buffer[1024];
-		pos[0] = drip->pos.x - lara_item->pos.x_pos;
-		pos[1] = drip->pos.y - lara_item->pos.y_pos;
-		pos[2] = drip->pos.z - lara_item->pos.z_pos;
+		pos[0] = drip->pos.x - lara_item->pos.pos.x;
+		pos[1] = drip->pos.y - lara_item->pos.pos.y;
+		pos[2] = drip->pos.z - lara_item->pos.pos.z;
 
 		if(pos[0] < -20480 || pos[0] > 20480 || pos[1] < -20480 || pos[1] > 20480 || pos[2] < -20480 || pos[2] > 20480) {
 			continue;
@@ -2638,7 +2638,7 @@ void DrawBubbles() {
 	v = MyVertexBuffer;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 	bubble = Bubbles;
 
 	XY = (long*)&tsv_buffer[0];
@@ -2651,9 +2651,9 @@ void DrawBubbles() {
 			continue;
 		}
 
-		dx = bubble->pos.x - lara_item->pos.x_pos;
-		dy = bubble->pos.y - lara_item->pos.y_pos;
-		dz = bubble->pos.z - lara_item->pos.z_pos;
+		dx = bubble->pos.x - lara_item->pos.pos.x;
+		dy = bubble->pos.y - lara_item->pos.pos.y;
+		dz = bubble->pos.z - lara_item->pos.pos.z;
 
 		if(dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000) {
 			bubble->size = 0;
@@ -3628,7 +3628,7 @@ void DrawBlood() {
 	v = MyVertexBuffer;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 15);
 	XY = (long*)&tsv_buffer[0];
 	Z = (long*)&tsv_buffer[512];
@@ -3641,9 +3641,9 @@ void DrawBlood() {
 			continue;
 		}
 
-		dx = bptr->x - lara_item->pos.x_pos;
-		dy = bptr->y - lara_item->pos.y_pos;
-		dz = bptr->z - lara_item->pos.z_pos;
+		dx = bptr->x - lara_item->pos.pos.x;
+		dy = bptr->y - lara_item->pos.pos.y;
+		dz = bptr->z - lara_item->pos.pos.z;
 
 		if(dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000) {
 			continue;
@@ -3735,7 +3735,7 @@ void S_DrawSmokeSparks() {
 	v = MyVertexBuffer;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 	XY = (long*)&tsv_buffer[0];
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
@@ -3753,12 +3753,12 @@ void S_DrawSmokeSparks() {
 			is_mirror = 0;
 		}
 
-		dx = sptr->pos.x - lara_item->pos.x_pos;
-		dy = sptr->pos.y - lara_item->pos.y_pos;
-		dz = sptr->pos.z - lara_item->pos.z_pos;
+		dx = sptr->pos.x - lara_item->pos.pos.x;
+		dy = sptr->pos.y - lara_item->pos.pos.y;
+		dz = sptr->pos.z - lara_item->pos.pos.z;
 
 		if(is_mirror) {
-			dz = 2 * gfMirrorZPlane - lara_item->pos.z_pos - sptr->pos.z;
+			dz = 2 * gfMirrorZPlane - lara_item->pos.pos.z - sptr->pos.z;
 		}
 
 		if(dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000) {
@@ -3895,9 +3895,9 @@ void DoUwEffect() {
 			x = (rad * rcossin_tbl[ang]) >> (W2V_SHIFT - 2);
 			y = (GetRandomDraw() & 0x7FF) - 1024;
 			z = (rad * rcossin_tbl[ang + 1]) >> (W2V_SHIFT - 2);
-			p->pos.x = lara_item->pos.x_pos + x;
-			p->pos.y = lara_item->pos.y_pos + y;
-			p->pos.z = lara_item->pos.z_pos + z;
+			p->pos.x = lara_item->pos.pos.x + x;
+			p->pos.y = lara_item->pos.pos.y + y;
+			p->pos.z = lara_item->pos.pos.z + z;
 
 			if(IsRoomOutside(p->pos.x, p->pos.y, p->pos.z) < 0 || !(GetRoom(currentLevel, IsRoomOutsideNo)->flags & ROOM_UNDERWATER)) {
 				p->pos.x = 0;
@@ -3940,7 +3940,7 @@ void DoUwEffect() {
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 
 	for(int i = 0; i < 256; i++) {
 		p = &uwdust[i];
@@ -3949,9 +3949,9 @@ void DoUwEffect() {
 			continue;
 		}
 
-		x = p->pos.x - lara_item->pos.x_pos;
-		y = p->pos.y - lara_item->pos.y_pos;
-		z = p->pos.z - lara_item->pos.z_pos;
+		x = p->pos.x - lara_item->pos.pos.x;
+		y = p->pos.y - lara_item->pos.pos.y;
+		z = p->pos.z - lara_item->pos.pos.z;
 		offsets[0] = x;
 		offsets[1] = y;
 		offsets[2] = z;
@@ -4039,7 +4039,7 @@ void DrawLightning() {
 	v = MyVertexBuffer;
 
 	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 28);
 
 	for(int i = 0; i < nLightnings; i++) {
@@ -4055,9 +4055,9 @@ void DrawLightning() {
 		memcpy(&vec[5], &pL->Point[3], sizeof(PHD_VECTOR));
 
 		for(int j = 0; j < 6; j++) {
-			vec[j].x -= lara_item->pos.x_pos;
-			vec[j].y -= lara_item->pos.y_pos;
-			vec[j].z -= lara_item->pos.z_pos;
+			vec[j].x -= lara_item->pos.pos.x;
+			vec[j].y -= lara_item->pos.pos.y;
+			vec[j].z -= lara_item->pos.pos.z;
 		}
 
 		offsets = (PHD_VECTOR*)&tsv_buffer[0];

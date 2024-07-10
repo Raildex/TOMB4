@@ -64,12 +64,12 @@ static GAME_VECTOR static_lookcamp;
 static GAME_VECTOR static_lookcamt;
 
 void InitialiseCamera() {
-	last_target.pos.x = lara_item->pos.x_pos;
+	last_target.pos.x = lara_item->pos.pos.x;
 	camera.target.pos.x = last_target.pos.x;
-	camera.shift = lara_item->pos.y_pos - 1024;
+	camera.shift = lara_item->pos.pos.y - 1024;
 	last_target.pos.y = camera.shift;
 	camera.target.pos.y = camera.shift;
-	last_target.pos.z = lara_item->pos.z_pos;
+	last_target.pos.z = lara_item->pos.pos.z;
 	camera.target.pos.z = last_target.pos.z;
 	camera.pos.pos.y = camera.shift;
 	last_target.room_number = lara_item->room_number;
@@ -111,11 +111,11 @@ void MoveCamera(GAME_VECTOR* ideal, long speed) {
 		old_cam.pos.z_rot = lara_item->pos.z_rot;
 		old_cam.pos2.x_rot = lara.head_x_rot;
 		old_cam.pos2.y_rot = lara.head_y_rot;
-		old_cam.pos2.x_pos = lara.torso_x_rot;
-		old_cam.pos2.y_pos = lara.torso_y_rot;
-		old_cam.pos.x_pos = lara_item->pos.x_pos;
-		old_cam.pos.y_pos = lara_item->pos.y_pos;
-		old_cam.pos.z_pos = lara_item->pos.z_pos;
+		old_cam.pos2.pos.x = lara.torso_x_rot;
+		old_cam.pos2.pos.y = lara.torso_y_rot;
+		old_cam.pos.pos.x = lara_item->pos.pos.x;
+		old_cam.pos.pos.y = lara_item->pos.pos.y;
+		old_cam.pos.pos.z = lara_item->pos.pos.z;
 		old_cam.current_anim_state = lara_item->current_anim_state;
 		old_cam.goal_anim_state = lara_item->goal_anim_state;
 		old_cam.target_distance = camera.target_distance;
@@ -211,9 +211,9 @@ void MoveCamera(GAME_VECTOR* ideal, long speed) {
 
 	if(camera.mike_at_lara) {
 		camera.actual_elevation = lara.head_y_rot + lara.torso_y_rot + lara_item->pos.y_rot;
-		camera.mike_pos.x = lara_item->pos.x_pos;
-		camera.mike_pos.y = lara_item->pos.y_pos;
-		camera.mike_pos.z = lara_item->pos.z_pos;
+		camera.mike_pos.x = lara_item->pos.pos.x;
+		camera.mike_pos.y = lara_item->pos.pos.y;
+		camera.mike_pos.z = lara_item->pos.pos.z;
 	} else {
 		dx = camera.target.pos.x - camera.pos.pos.x;
 		dz = camera.target.pos.z - camera.pos.pos.z;
@@ -668,8 +668,8 @@ void CombatCamera(ITEM_INFO* item) {
 	long distance, dx, dz, farthest, farthestnum, h, c, wx, wy, wz;
 	short angle, room_number;
 
-	camera.target.pos.x = item->pos.x_pos;
-	camera.target.pos.z = item->pos.z_pos;
+	camera.target.pos.x = item->pos.pos.x;
+	camera.target.pos.z = item->pos.pos.z;
 
 	if(lara.target_item != NO_ITEM) {
 		camera.target_angle = lara.target_angles[0] + item->pos.y_rot;
@@ -898,7 +898,7 @@ void LookCamera(ITEM_INFO* item) {
 	ideal.pos.z = wz;
 	ideal.room_number = room_number;
 
-	if(old_cam.pos.x_rot == lara.head_x_rot && old_cam.pos.y_rot == lara.head_y_rot && old_cam.pos.x_pos == lara_item->pos.x_pos && old_cam.pos.y_pos == lara_item->pos.y_pos && old_cam.pos.z_pos == lara_item->pos.z_pos && old_cam.current_anim_state == lara_item->current_anim_state && old_cam.goal_anim_state == lara_item->goal_anim_state && camera.old_type == LOOK_CAMERA) {
+	if(old_cam.pos.x_rot == lara.head_x_rot && old_cam.pos.y_rot == lara.head_y_rot && old_cam.pos.pos.x == lara_item->pos.pos.x && old_cam.pos.pos.y == lara_item->pos.pos.y && old_cam.pos.pos.z == lara_item->pos.pos.z && old_cam.current_anim_state == lara_item->current_anim_state && old_cam.goal_anim_state == lara_item->goal_anim_state && camera.old_type == LOOK_CAMERA) {
 		ideal.pos.x = static_lookcamp.pos.x;
 		ideal.pos.y = static_lookcamp.pos.y;
 		ideal.pos.z = static_lookcamp.pos.z;
@@ -909,9 +909,9 @@ void LookCamera(ITEM_INFO* item) {
 	} else {
 		old_cam.pos.x_rot = lara.head_x_rot;
 		old_cam.pos.y_rot = lara.head_y_rot;
-		old_cam.pos.x_pos = lara_item->pos.x_pos;
-		old_cam.pos.y_pos = lara_item->pos.y_pos;
-		old_cam.pos.z_pos = lara_item->pos.z_pos;
+		old_cam.pos.pos.x = lara_item->pos.pos.x;
+		old_cam.pos.pos.y = lara_item->pos.pos.y;
+		old_cam.pos.pos.z = lara_item->pos.pos.z;
 		old_cam.current_anim_state = lara_item->current_anim_state;
 		old_cam.goal_anim_state = lara_item->goal_anim_state;
 		static_lookcamp.room_number = room_number;
@@ -1007,9 +1007,9 @@ void LookCamera(ITEM_INFO* item) {
 
 	if(camera.mike_at_lara) {
 		camera.actual_elevation = lara.head_y_rot + lara.torso_y_rot + lara_item->pos.y_rot;
-		camera.mike_pos.x = lara_item->pos.x_pos;
-		camera.mike_pos.y = lara_item->pos.y_pos;
-		camera.mike_pos.z = lara_item->pos.z_pos;
+		camera.mike_pos.x = lara_item->pos.pos.x;
+		camera.mike_pos.y = lara_item->pos.pos.y;
+		camera.mike_pos.z = lara_item->pos.pos.z;
 	} else {
 		dx = camera.target.pos.x - camera.pos.pos.x;
 		dz = camera.target.pos.z - camera.pos.pos.z;
@@ -1104,9 +1104,9 @@ void BinocularCamera(ITEM_INFO* item) {
 	}
 
 	hyrot += lara_item->pos.y_rot;
-	pos1.x = lara_item->pos.x_pos;
-	pos1.y = lara_item->pos.y_pos;
-	pos1.z = lara_item->pos.z_pos;
+	pos1.x = lara_item->pos.pos.x;
+	pos1.y = lara_item->pos.pos.y;
+	pos1.z = lara_item->pos.pos.z;
 	room_number = lara_item->room_number;
 	floor = GetFloor(pos1.x, pos1.y, pos1.z, &room_number);
 	c = GetCeiling(floor, pos1.x, pos1.y, pos1.z);
@@ -1157,9 +1157,9 @@ void BinocularCamera(ITEM_INFO* item) {
 
 	if(camera.mike_at_lara) {
 		camera.actual_elevation = lara.head_y_rot + lara.torso_y_rot + lara_item->pos.y_rot;
-		camera.mike_pos.x = lara_item->pos.x_pos;
-		camera.mike_pos.y = lara_item->pos.y_pos;
-		camera.mike_pos.z = lara_item->pos.z_pos;
+		camera.mike_pos.x = lara_item->pos.pos.x;
+		camera.mike_pos.y = lara_item->pos.pos.y;
+		camera.mike_pos.z = lara_item->pos.pos.z;
 	} else {
 		dx = camera.target.pos.x - camera.pos.pos.x;
 		dz = camera.target.pos.z - camera.pos.pos.z;
@@ -1243,9 +1243,9 @@ void ConfirmCameraTargetPos() {
 		camera.target.pos.y = pos.y;
 		camera.target.pos.z = pos.z;
 	} else {
-		camera.target.pos.x = lara_item->pos.x_pos;
+		camera.target.pos.x = lara_item->pos.pos.x;
 		camera.target.pos.y = (camera.target.pos.y + pos.y) >> 1;
-		camera.target.pos.z = lara_item->pos.z_pos;
+		camera.target.pos.z = lara_item->pos.pos.z;
 	}
 
 	wx = camera.target.pos.x;
@@ -1325,19 +1325,19 @@ void CalculateCamera() {
 	bounds = GetBoundsAccurate(item);
 
 	if(fixed_camera) {
-		y = item->pos.y_pos + (bounds[2] + bounds[3]) / 2;
+		y = item->pos.pos.y + (bounds[2] + bounds[3]) / 2;
 	} else {
-		y = item->pos.y_pos + bounds[3] + ((3 * (bounds[2] - bounds[3])) >> 2);
+		y = item->pos.pos.y + bounds[3] + ((3 * (bounds[2] - bounds[3])) >> 2);
 	}
 
 	if(camera.item && !fixed_camera) {
-		dx = camera.item->pos.x_pos - item->pos.x_pos;
-		dz = camera.item->pos.z_pos - item->pos.z_pos;
+		dx = camera.item->pos.pos.x - item->pos.pos.x;
+		dz = camera.item->pos.pos.z - item->pos.pos.z;
 		shift = phd_sqrt(SQUARE(dx) + SQUARE(dz));
 		gotit = (short)(phd_atan(dz, dx) - item->pos.y_rot);
 		gotit >>= 1;
 		bounds = GetBoundsAccurate(camera.item);
-		tilt = (short)phd_atan(shift, y - (bounds[2] + bounds[3]) / 2 - camera.item->pos.y_pos) >> 1;
+		tilt = (short)phd_atan(shift, y - (bounds[2] + bounds[3]) / 2 - camera.item->pos.pos.y) >> 1;
 
 		if(gotit > -9100 && gotit < 9100 && tilt > -15470 && tilt < 15470) {
 			change = gotit - lara.head_y_rot;
@@ -1393,8 +1393,8 @@ void CalculateCamera() {
 
 		if(!gotit) {
 			shift = (bounds[0] + bounds[1] + bounds[4] + bounds[5]) >> 2;
-			camera.target.pos.x = item->pos.x_pos + (shift * phd_sin(item->pos.y_rot) >> W2V_SHIFT);
-			camera.target.pos.z = item->pos.z_pos + (shift * phd_cos(item->pos.y_rot) >> W2V_SHIFT);
+			camera.target.pos.x = item->pos.pos.x + (shift * phd_sin(item->pos.y_rot) >> W2V_SHIFT);
+			camera.target.pos.z = item->pos.pos.z + (shift * phd_cos(item->pos.y_rot) >> W2V_SHIFT);
 
 			if(item->object_number == LARA) {
 				ConfirmCameraTargetPos();

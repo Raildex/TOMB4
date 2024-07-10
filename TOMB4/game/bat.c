@@ -57,9 +57,9 @@ void BatControl(short item_number) {
 			item->current_anim_state = 2;
 			item->goal_anim_state = 2;
 		} else {
-			if(item->pos.y_pos >= item->floor) {
+			if(item->pos.pos.y >= item->floor) {
 				item->goal_anim_state = 5;
-				item->pos.y_pos = item->floor;
+				item->pos.pos.y = item->floor;
 				item->gravity_status = 0;
 			} else {
 				item->gravity_status = 1;
@@ -83,8 +83,8 @@ void BatControl(short item_number) {
 					item2 = GetItem(currentLevel, baddie->item_num);
 
 					if(item2->object_number == VON_CROY) {
-						dx = item2->pos.x_pos - item->pos.x_pos;
-						dz = item2->pos.z_pos - item->pos.z_pos;
+						dx = item2->pos.pos.x - item->pos.pos.x;
+						dz = item2->pos.pos.z - item->pos.pos.z;
 						dist = SQUARE(dx) + SQUARE(dz);
 
 						if(dist < max_dist) {
@@ -113,7 +113,7 @@ void BatControl(short item_number) {
 				bat->flags = 0;
 			}
 
-			if(!bat->flags && (item->touch_bits || bat->enemy != lara_item && info.distance < 0x10000 && info.ahead && abs(item->pos.y_pos - bat->enemy->pos.y_pos) < 896)) {
+			if(!bat->flags && (item->touch_bits || bat->enemy != lara_item && info.distance < 0x10000 && info.ahead && abs(item->pos.pos.y - bat->enemy->pos.pos.y) < 896)) {
 				item->goal_anim_state = 3;
 			}
 
@@ -121,7 +121,7 @@ void BatControl(short item_number) {
 
 		case 3:
 
-			if(!bat->flags && item->touch_bits || bat->enemy != lara_item && info.distance < 0x10000 && info.ahead && abs(item->pos.y_pos - bat->enemy->pos.y_pos) < 896) {
+			if(!bat->flags && item->touch_bits || bat->enemy != lara_item && info.distance < 0x10000 && info.ahead && abs(item->pos.pos.y - bat->enemy->pos.pos.y) < 896) {
 				CreatureEffect(item, &bat_bite, DoBloodSplat);
 
 				if(bat->enemy == lara_item) {

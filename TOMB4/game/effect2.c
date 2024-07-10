@@ -76,9 +76,9 @@ void ControlSmokeEmitter(short item_number) {
 	if(item->object_number == STEAM_EMITTER && GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 		if(item->item_flags[0] || !(GetRandomControl() & 0x1F) || item->trigger_flags == 1) {
 			if(!(GetRandomControl() & 3) || item->item_flags[1]) {
-				pos.x_pos = (GetRandomControl() & 0x3F) + item->pos.x_pos - 32;
-				pos.y_pos = item->pos.y_pos - (GetRandomControl() & 0x1F) - 16;
-				pos.z_pos = (GetRandomControl() & 0x3F) + item->pos.z_pos - 32;
+				pos.pos.x = (GetRandomControl() & 0x3F) + item->pos.pos.x - 32;
+				pos.pos.y = item->pos.pos.y - (GetRandomControl() & 0x1F) - 16;
+				pos.pos.z = (GetRandomControl() & 0x3F) + item->pos.pos.z - 32;
 
 				if(item->trigger_flags == 1) {
 					CreateBubble(&pos, item->room_number, 15, 15);
@@ -119,8 +119,8 @@ void ControlSmokeEmitter(short item_number) {
 		}
 
 		if(item->item_flags[2]) {
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = lara_item->pos.pos.x - item->pos.pos.x;
+			dz = lara_item->pos.pos.z - item->pos.pos.z;
 
 			if(dx < -16384 || dx > 16384 || dz < -16384 || dz > 16384) {
 				return;
@@ -139,9 +139,9 @@ void ControlSmokeEmitter(short item_number) {
 			sptr->TransType = 2;
 			sptr->Life = (GetRandomControl() & 7) + 16;
 			sptr->sLife = sptr->Life;
-			sptr->x = (GetRandomControl() & 0x3F) + item->pos.x_pos - 32;
-			sptr->y = (GetRandomControl() & 0x3F) + item->pos.y_pos - 32;
-			sptr->z = (GetRandomControl() & 0x3F) + item->pos.z_pos - 32;
+			sptr->x = (GetRandomControl() & 0x3F) + item->pos.pos.x - 32;
+			sptr->y = (GetRandomControl() & 0x3F) + item->pos.pos.y - 32;
+			sptr->z = (GetRandomControl() & 0x3F) + item->pos.pos.z - 32;
 			size = item->item_flags[2];
 
 			if(item->item_flags[2] == 4096) {
@@ -187,8 +187,8 @@ void ControlSmokeEmitter(short item_number) {
 	}
 
 	if(!(wibble & 0xF) && (item->object_number != STEAM_EMITTER || !(wibble & 0x1F))) {
-		dx = lara_item->pos.x_pos - item->pos.x_pos;
-		dz = lara_item->pos.z_pos - item->pos.z_pos;
+		dx = lara_item->pos.pos.x - item->pos.pos.x;
+		dz = lara_item->pos.pos.z - item->pos.pos.z;
 
 		if(dx < -16384 || dx > 16384 || dz < -16384 || dz > 16384) {
 			return;
@@ -221,9 +221,9 @@ void ControlSmokeEmitter(short item_number) {
 			sptr->TransType = 2;
 		}
 
-		sptr->x = (GetRandomControl() & 0x3F) + item->pos.x_pos - 32;
-		sptr->y = (GetRandomControl() & 0x3F) + item->pos.y_pos - 32;
-		sptr->z = (GetRandomControl() & 0x3F) + item->pos.z_pos - 32;
+		sptr->x = (GetRandomControl() & 0x3F) + item->pos.pos.x - 32;
+		sptr->y = (GetRandomControl() & 0x3F) + item->pos.pos.y - 32;
+		sptr->z = (GetRandomControl() & 0x3F) + item->pos.pos.z - 32;
 		sptr->Xvel = (GetRandomControl() & 0xFF) - 128;
 		sptr->Yvel = -16 - (GetRandomControl() & 0xF);
 		sptr->Zvel = (GetRandomControl() & 0xFF) - 128;
@@ -267,8 +267,8 @@ void TriggerExplosionSmokeEnd(long x, long y, long z, long uw) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.z - z;
 
 	if(dx < -16384 || dx > 16384 || dz < -16384 || dz > 16384) {
 		return;
@@ -347,8 +347,8 @@ void TriggerExplosionSmoke(long x, long y, long z, long uw) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.z - z;
 
 	if(dx < -16384 || dx > 16384 || dz < -16384 || dz > 16384) {
 		return;
@@ -408,8 +408,8 @@ void TriggerFlareSparks(long x, long y, long z, long xvel, long yvel, long zvel,
 	SPARKS* smokeSpark;
 	long dx, dz, rnd;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.z - z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -564,7 +564,7 @@ void ControlEnemyMissile(short fx_number) {
 	short angles[2];
 
 	fx = GetEffect(currentLevel, fx_number);
-	phd_GetVectorAngles(lara_item->pos.x_pos - fx->pos.x_pos, lara_item->pos.y_pos - fx->pos.y_pos - 256, lara_item->pos.z_pos - fx->pos.z_pos, angles);
+	phd_GetVectorAngles(lara_item->pos.pos.x - fx->pos.pos.x, lara_item->pos.pos.y - fx->pos.pos.y - 256, lara_item->pos.pos.z - fx->pos.pos.z, angles);
 
 	if(fx->flag1 == 1) {
 		max_turn = 512;
@@ -628,22 +628,22 @@ void ControlEnemyMissile(short fx_number) {
 		fx->pos.z_rot += fx->speed << 4;
 	}
 
-	ox = fx->pos.x_pos;
-	oy = fx->pos.y_pos;
-	oz = fx->pos.z_pos;
+	ox = fx->pos.pos.x;
+	oy = fx->pos.pos.y;
+	oz = fx->pos.pos.z;
 	speed = fx->speed * phd_cos(fx->pos.x_rot) >> W2V_SHIFT;
-	fx->pos.x_pos += speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
-	fx->pos.y_pos += fx->speed * phd_sin(-fx->pos.x_rot) >> W2V_SHIFT;
-	fx->pos.z_pos += speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
+	fx->pos.pos.x += speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
+	fx->pos.pos.y += fx->speed * phd_sin(-fx->pos.x_rot) >> W2V_SHIFT;
+	fx->pos.pos.z += speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
 	room_number = fx->room_number;
-	floor = GetFloor(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &room_number);
-	h = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
-	c = GetCeiling(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+	floor = GetFloor(fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z, &room_number);
+	h = GetHeight(floor, fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
+	c = GetCeiling(floor, fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z);
 
-	if(fx->pos.y_pos >= h || fx->pos.y_pos <= c) {
-		fx->pos.x_pos = ox;
-		fx->pos.y_pos = oy;
-		fx->pos.z_pos = oz;
+	if(fx->pos.pos.y >= h || fx->pos.pos.y <= c) {
+		fx->pos.pos.x = ox;
+		fx->pos.pos.y = oy;
+		fx->pos.pos.z = oz;
 
 		if(fx->flag1 != 6) {
 			ExplodeFX(fx, 0, -32);
@@ -663,9 +663,9 @@ void ControlEnemyMissile(short fx_number) {
 		} else if(fx->flag1 == 6) {
 			TriggerExplosionSparks(ox, oy, oz, 3, -2, 0, fx->room_number);
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xF00030, 64, 0x18806000, 0x20000);
-			fx->pos.y_pos -= 128;
+			fx->pos.pos.y -= 128;
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xF00030, 48, 0x10807000, 0x20000);
-			fx->pos.y_pos += 256;
+			fx->pos.pos.y += 256;
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xF00030, 48, 0x10807000, 0x20000);
 		}
 
@@ -698,9 +698,9 @@ void ControlEnemyMissile(short fx_number) {
 		} else if(fx->flag1 == 6) {
 			TriggerExplosionSparks(ox, oy, oz, 3, -2, 0, fx->room_number);
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xF00030, 64, 0x18806000, 0);
-			fx->pos.y_pos -= 128;
+			fx->pos.pos.y -= 128;
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xF00030, 48, 0x10807000, 0);
-			fx->pos.y_pos += 256;
+			fx->pos.pos.y += 256;
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xF00030, 48, 0x10807000, 0);
 			LaraBurn();
 		}
@@ -709,9 +709,9 @@ void ControlEnemyMissile(short fx_number) {
 			EffectNewRoom(fx_number, room_number);
 		}
 
-		ox -= fx->pos.x_pos;
-		oy -= fx->pos.y_pos;
-		oz -= fx->pos.z_pos;
+		ox -= fx->pos.pos.x;
+		oy -= fx->pos.pos.y;
+		oz -= fx->pos.pos.z;
 
 		if(wibble & 4 || fx->flag1 == 1 || fx->flag1 == 5 || fx->flag1 == 2) {
 			if(fx->flag1 == 0) {
@@ -849,8 +849,8 @@ void TriggerDartSmoke(long x, long y, long z, long xv, long zv, long hit) {
 	SPARKS* sptr;
 	long dx, dz, rand;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.z - z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -940,8 +940,8 @@ void TriggerExplosionBubble(long x, long y, long z, short room_number) {
 	long dx, dz;
 	unsigned char size;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.z - z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -978,9 +978,9 @@ void TriggerExplosionBubble(long x, long y, long z, short room_number) {
 	sptr->dSize = size << 1;
 
 	for(int i = 0; i < 7; i++) {
-		pos.x_pos = (GetRandomControl() & 0x1FF) + x - 256;
-		pos.y_pos = (GetRandomControl() & 0x7F) + y - 64;
-		pos.z_pos = (GetRandomControl() & 0x1FF) + z - 256;
+		pos.pos.x = (GetRandomControl() & 0x1FF) + x - 256;
+		pos.pos.y = (GetRandomControl() & 0x7F) + y - 64;
+		pos.pos.z = (GetRandomControl() & 0x1FF) + z - 256;
 		CreateBubble(&pos, room_number, 6, 15);
 	}
 }
@@ -1000,7 +1000,7 @@ void ControlColouredLights(short item_number) {
 
 	if(TriggerActive(item)) {
 		objnum = item->object_number - RED_LIGHT;
-		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 24, colours[objnum][0], colours[objnum][1], colours[objnum][2]);
+		TriggerDynamic(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 24, colours[objnum][0], colours[objnum][1], colours[objnum][2]);
 	}
 }
 
@@ -1015,15 +1015,15 @@ void DetatchSpark(long num, long type) {
 
 			if(type == 64) {
 				fx = GetEffect(currentLevel, num);
-				sptr->x += fx->pos.x_pos;
-				sptr->y += fx->pos.y_pos;
-				sptr->z += fx->pos.z_pos;
+				sptr->x += fx->pos.pos.x;
+				sptr->y += fx->pos.pos.y;
+				sptr->z += fx->pos.pos.z;
 				sptr->Flags &= ~64;
 			} else if(type == 128) {
 				item = GetItem(currentLevel, num);
-				sptr->x += item->pos.x_pos;
-				sptr->y += item->pos.y_pos;
-				sptr->z += item->pos.z_pos;
+				sptr->x += item->pos.pos.x;
+				sptr->y += item->pos.pos.y;
+				sptr->z += item->pos.pos.z;
 				sptr->Flags &= ~128;
 			}
 		}
@@ -1058,12 +1058,12 @@ void UpdateSparks() {
 	long fade, uw, rad, rnd, x, y, z, r, g, b, falloff;
 
 	bounds = GetBoundsAccurate(lara_item);
-	DeadlyBounds[0] = lara_item->pos.x_pos + bounds[0];
-	DeadlyBounds[1] = lara_item->pos.x_pos + bounds[1];
-	DeadlyBounds[2] = lara_item->pos.y_pos + bounds[2];
-	DeadlyBounds[3] = lara_item->pos.y_pos + bounds[3];
-	DeadlyBounds[4] = lara_item->pos.z_pos + bounds[4];
-	DeadlyBounds[5] = lara_item->pos.z_pos + bounds[5];
+	DeadlyBounds[0] = lara_item->pos.pos.x + bounds[0];
+	DeadlyBounds[1] = lara_item->pos.pos.x + bounds[1];
+	DeadlyBounds[2] = lara_item->pos.pos.y + bounds[2];
+	DeadlyBounds[3] = lara_item->pos.pos.y + bounds[3];
+	DeadlyBounds[4] = lara_item->pos.pos.z + bounds[4];
+	DeadlyBounds[5] = lara_item->pos.pos.z + bounds[5];
 
 	for(int i = 0; i < nSpark; i++) {
 		sptr = &spark[i];
@@ -1364,8 +1364,8 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 	extras_table[1] = 4;
 	extras_table[2] = 7;
 	extras_table[3] = 10;
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.z - z;
 	scalar = 0;
 	mirror = 0;
 
@@ -1517,8 +1517,8 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type) {
 	SPARKS* sptr;
 	long dx, dz, size;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.z - z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -1669,8 +1669,8 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly) {
 	SPARKS* sptr;
 	long dx, dy, dz;
 
-	dx = lara_item->pos.x_pos - item->pos.x_pos;
-	dz = lara_item->pos.z_pos - item->pos.z_pos;
+	dx = lara_item->pos.pos.x - item->pos.pos.x;
+	dz = lara_item->pos.pos.z - item->pos.pos.z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -1695,9 +1695,9 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly) {
 	sptr->TransType = 2;
 	sptr->Life = (unsigned char)((dy >> 9) + (GetRandomControl() & 7) + 16);
 	sptr->sLife = sptr->Life;
-	sptr->x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
-	sptr->y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 16;
-	sptr->z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
+	sptr->x = (GetRandomControl() & 0x1F) + item->pos.pos.x - 16;
+	sptr->y = (GetRandomControl() & 0x1F) + item->pos.pos.y - 16;
+	sptr->z = (GetRandomControl() & 0x1F) + item->pos.pos.z - 16;
 	sptr->Friction = 51;
 	sptr->MaxYvel = 0;
 

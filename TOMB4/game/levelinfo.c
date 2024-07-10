@@ -536,13 +536,13 @@ char LoadItems(char** data, LEVEL_INFO* lvl) {
 		item->room_number = *(short*)*data;
 		*data += sizeof(short);
 
-		item->pos.x_pos = *(long*)*data;
+		item->pos.pos.x = *(long*)*data;
 		*data += sizeof(long);
 
-		item->pos.y_pos = *(long*)*data;
+		item->pos.pos.y = *(long*)*data;
 		*data += sizeof(long);
 
-		item->pos.z_pos = *(long*)*data;
+		item->pos.pos.z = *(long*)*data;
 		*data += sizeof(long);
 
 		item->pos.y_rot = *(short*)*data;

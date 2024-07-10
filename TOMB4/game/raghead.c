@@ -88,14 +88,14 @@ void InitialiseRaghead(short item_number) {
 		item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 62;
 		item->current_anim_state = 39;
 		item->goal_anim_state = 39;
-		item->pos.x_pos += 256 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
-		item->pos.z_pos += 256 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
+		item->pos.pos.x += 256 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
+		item->pos.pos.z += 256 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 	} else if(flag > 100) {
 		item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 29;
 		item->current_anim_state = 26;
 		item->goal_anim_state = 26;
-		item->pos.x_pos += 256 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
-		item->pos.z_pos += 256 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
+		item->pos.pos.x += 256 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
+		item->pos.pos.z += 256 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 		item->item_flags[3] = flag;
 	}
 
@@ -152,9 +152,9 @@ void RagheadControl(short item_number) {
 	Zoffset = 942 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 
 	room_number = item->room_number;
-	x = item->pos.x_pos + Xoffset;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos + Zoffset;
+	x = item->pos.pos.x + Xoffset;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z + Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
 	nearheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
@@ -210,8 +210,8 @@ void RagheadControl(short item_number) {
 		item->hit_points = 0;
 		raghead->LOT.is_jumping = 0;
 		room_number = item->room_number;
-		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+		item->floor = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		switch(item->current_anim_state) {
 		case 18:
@@ -227,8 +227,8 @@ void RagheadControl(short item_number) {
 			item->gravity_status = 1;
 			raghead->LOT.is_jumping = 1;
 
-			if(item->pos.y_pos >= item->floor) {
-				item->pos.y_pos = item->floor;
+			if(item->pos.pos.y >= item->floor) {
+				item->pos.pos.y = item->floor;
 				item->fallspeed = 0;
 				item->gravity_status = 0;
 			}
@@ -243,8 +243,8 @@ void RagheadControl(short item_number) {
 		case 36:
 			item->gravity_status = 1;
 
-			if(item->pos.y_pos >= item->floor) {
-				item->pos.y_pos = item->floor;
+			if(item->pos.pos.y >= item->floor) {
+				item->pos.pos.y = item->floor;
 				item->fallspeed = 0;
 				item->gravity_status = 0;
 				item->goal_anim_state = 37;
@@ -253,7 +253,7 @@ void RagheadControl(short item_number) {
 			break;
 
 		case 37:
-			item->pos.y_pos = item->floor;
+			item->pos.pos.y = item->floor;
 			break;
 
 		default:
@@ -297,8 +297,8 @@ void RagheadControl(short item_number) {
 			larainfo.ahead = info.ahead;
 			larainfo.distance = info.distance;
 		} else {
-			dx = lara_item->pos.x_pos - item->pos.x_pos;
-			dz = lara_item->pos.z_pos - item->pos.z_pos;
+			dx = lara_item->pos.pos.x - item->pos.pos.x;
+			dz = lara_item->pos.pos.z - item->pos.pos.z;
 			larainfo.angle = (short)(phd_atan(dz, dx) - item->pos.y_rot);
 
 			if(larainfo.angle > -0x4000 && larainfo.angle < 0x4000) {
@@ -320,7 +320,7 @@ void RagheadControl(short item_number) {
 		angle = CreatureTurn(item, raghead->maximum_turn);
 		enemy = raghead->enemy;
 
-		if(item->hit_status || (larainfo.distance < 0x100000 || TargetVisible(item, &larainfo)) && abs(lara_item->pos.y_pos - item->pos.y_pos) < 1024) {
+		if(item->hit_status || (larainfo.distance < 0x100000 || TargetVisible(item, &larainfo)) && abs(lara_item->pos.pos.y - item->pos.pos.y) < 1024) {
 			raghead->alerted = 1;
 		}
 
@@ -328,14 +328,14 @@ void RagheadControl(short item_number) {
 
 		if(item_number == lara.target_item && larainfo.distance > 0x3AE && larainfo.angle > -0x2800 && larainfo.angle < 0x2800) {
 			room_number = item->room_number;
-			x = item->pos.x_pos + (942 * phd_sin(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
-			z = item->pos.z_pos + (942 * phd_cos(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
+			x = item->pos.pos.x + (942 * phd_sin(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
+			z = item->pos.pos.z + (942 * phd_cos(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
 			floor = GetFloor(x, y, z, &room_number);
 			h1 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 			room_number = item->room_number;
-			x = item->pos.x_pos + (942 * phd_sin(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
-			z = item->pos.z_pos + (942 * phd_cos(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
+			x = item->pos.pos.x + (942 * phd_sin(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
+			z = item->pos.pos.z + (942 * phd_cos(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
 			floor = GetFloor(x, y, z, &room_number);
 			h2 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
@@ -346,14 +346,14 @@ void RagheadControl(short item_number) {
 			}
 
 			room_number = item->room_number;
-			x = item->pos.x_pos + (942 * phd_sin(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
-			z = item->pos.z_pos + (942 * phd_cos(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
+			x = item->pos.pos.x + (942 * phd_sin(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
+			z = item->pos.pos.z + (942 * phd_cos(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
 			floor = GetFloor(x, y, z, &room_number);
 			h1 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 			room_number = item->room_number;
-			x = item->pos.x_pos + (942 * phd_sin(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
-			z = item->pos.z_pos + (942 * phd_cos(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
+			x = item->pos.pos.x + (942 * phd_sin(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
+			z = item->pos.pos.z + (942 * phd_cos(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
 			floor = GetFloor(x, y, z, &room_number);
 			h2 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
@@ -396,7 +396,7 @@ void RagheadControl(short item_number) {
 			} else if(item->ai_bits == MODIFY) {
 				item->goal_anim_state = 0;
 
-				if(item->floor > item->pos.y_pos + 768) {
+				if(item->floor > item->pos.pos.y + 768) {
 					item->ai_bits &= ~MODIFY;
 				}
 			} else if(jump_ahead || long_jump_ahead) {
@@ -418,9 +418,9 @@ void RagheadControl(short item_number) {
 			} else if(item->meshswap_meshbits == 0x7FC010 && item->item_flags[2] < 1) {
 				item->goal_anim_state = 11;
 			} else if(raghead->monkey_ahead) {
-				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-				c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+				floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+				h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+				c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 				if(c == h - 1536) {
 					if(item->meshswap_meshbits == 0x7FC800) {
@@ -640,9 +640,9 @@ void RagheadControl(short item_number) {
 			   && (state > AS_DASHDIVE && state < AS_ALL4S || state == AS_HANGTURNL || state == AS_HANGTURNR)) {
 				item->goal_anim_state = 21;
 			} else if(item->box_number == raghead->LOT.target_box || !raghead->monkey_ahead) {
-				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-				c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+				floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+				h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+				c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 				if(c == h - 1536) {
 					item->goal_anim_state = 22;
@@ -666,9 +666,9 @@ void RagheadControl(short item_number) {
 			raghead->maximum_turn = 1274;
 
 			if(item->box_number == raghead->LOT.target_box || !raghead->monkey_ahead) {
-				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-				c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+				floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+				h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+				c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 				if(c == h - 1536) {
 					item->goal_anim_state = 19;
@@ -694,7 +694,7 @@ void RagheadControl(short item_number) {
 				lara_item->gravity_status = 1;
 				lara_item->speed = 2;
 				lara_item->fallspeed = 1;
-				lara_item->pos.y_pos += 192;
+				lara_item->pos.pos.y += 192;
 				lara.gun_status = LG_NO_ARMS;
 				raghead->flags = 1;
 			}
@@ -811,12 +811,12 @@ void RagheadControl(short item_number) {
 	CreatureJoint(item, 1, torso_x);
 	CreatureJoint(item, 2, head);
 
-	if(gfLevelFlags & GF_TRAIN && item->pos.y_pos > -256) {
+	if(gfLevelFlags & GF_TRAIN && item->pos.pos.y > -256) {
 		item->item_flags[0] = 0;
 		item->hit_points = 0;
-		item->pos.x_pos += gfUVRotate << 5;
+		item->pos.pos.x += gfUVRotate << 5;
 	} else if(item->item_flags[0] < 0) {
-		item->pos.x_pos += item->item_flags[0];
+		item->pos.pos.x += item->item_flags[0];
 	}
 
 	state = item->current_anim_state;

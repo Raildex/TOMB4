@@ -116,7 +116,7 @@ void SarcophagusCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		for(pickup_num = GetRoom(currentLevel, item->room_number)->item_number; pickup_num != NO_ITEM; pickup_num = pickup->next_item) {
 			pickup = GetItem(currentLevel, pickup_num);
 
-			if(item != pickup && item->pos.x_pos == pickup->pos.x_pos && item->pos.z_pos == pickup->pos.z_pos) {
+			if(item != pickup && item->pos.pos.x == pickup->pos.pos.x && item->pos.pos.z == pickup->pos.pos.z) {
 				if(GetObjectInfo(currentLevel, pickup->object_number)->collision == PickUpCollision) {
 					AddDisplayPickup(pickup->object_number);
 					pickup->item_flags[3] = 1;
@@ -222,7 +222,7 @@ short* FindPlinth(ITEM_INFO* item) {
 	mesh = r->mesh;
 
 	for(i = r->num_meshes; i > 0; i--) {
-		if(mesh->Flags & 1 && item->pos.x_pos == mesh->x && item->pos.z_pos == mesh->z) {
+		if(mesh->Flags & 1 && item->pos.pos.x == mesh->x && item->pos.pos.z == mesh->z) {
 			p = GetBestFrame(item);
 			o = GetStaticObjectBounds(currentLevel, mesh->static_number);
 
@@ -243,7 +243,7 @@ short* FindPlinth(ITEM_INFO* item) {
 	while(1) {
 		plinth = GetItem(currentLevel, item_num);
 
-		if(item != plinth && GetObjectInfo(currentLevel, plinth->object_number)->collision != PickUpCollision && item->pos.x_pos == plinth->pos.x_pos && item->pos.y_pos <= plinth->pos.y_pos && item->pos.z_pos == plinth->pos.z_pos) {
+		if(item != plinth && GetObjectInfo(currentLevel, plinth->object_number)->collision != PickUpCollision && item->pos.pos.x == plinth->pos.pos.x && item->pos.pos.y <= plinth->pos.pos.y && item->pos.pos.z == plinth->pos.pos.z) {
 			break;
 		}
 
@@ -422,13 +422,13 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 					PlinthPickUpPosition.z = -200 - bounds[5];
 				}
 
-				PlinthPickUpBounds[3] = (short)(l->pos.y_pos - item->pos.y_pos + 100);
+				PlinthPickUpBounds[3] = (short)(l->pos.pos.y - item->pos.pos.y + 100);
 
 				if(TestLaraPosition(PlinthPickUpBounds, item, l) && !lara.IsDucked) {
-					if(item->pos.y_pos == l->pos.y_pos) {
+					if(item->pos.pos.y == l->pos.pos.y) {
 						PlinthPickUpPosition.y = 0;
 					} else {
-						PlinthPickUpPosition.y = l->pos.y_pos - item->pos.y_pos;
+						PlinthPickUpPosition.y = l->pos.pos.y - item->pos.pos.y;
 					}
 
 					if(MoveLaraPosition(&PlinthPickUpPosition, item, l)) {
@@ -453,7 +453,7 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			default:
 
 				if(TestLaraPosition(PickUpBounds, item, l)) {
-					PickUpPosition.y = l->pos.y_pos - item->pos.y_pos;
+					PickUpPosition.y = l->pos.pos.y - item->pos.pos.y;
 
 					if(l->current_anim_state == AS_DUCK) {
 						AlignLaraPosition(&PickUpPosition, item, l);

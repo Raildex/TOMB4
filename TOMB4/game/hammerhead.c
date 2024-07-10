@@ -59,7 +59,7 @@ void HammerheadControl(short item_number) {
 		CreatureAIInfo(item, &info);
 
 		if(shark->enemy != lara_item) {
-			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+			phd_atan(lara_item->pos.pos.z - item->pos.pos.z, lara_item->pos.pos.x - item->pos.pos.x);
 		}
 
 		GetCreatureMood(item, &info, 1);

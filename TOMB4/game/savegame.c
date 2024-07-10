@@ -215,9 +215,9 @@ void sgRestoreLevel() {
 
 	if(gfRequiredStartPos) {
 		lsp = &AIObjects[gfRequiredStartPos - 1];
-		lara_item->pos.x_pos = lsp->x;
-		lara_item->pos.y_pos = lsp->y;
-		lara_item->pos.z_pos = lsp->z;
+		lara_item->pos.pos.x = lsp->x;
+		lara_item->pos.pos.y = lsp->y;
+		lara_item->pos.pos.z = lsp->z;
 		lara_item->pos.y_rot = lsp->y_rot;
 
 		if(lara_item->room_number != lsp->room_number)
@@ -231,16 +231,16 @@ void sgRestoreLevel() {
 			item = GetItem(currentLevel,i);
 
 			if(item->object_number == MOTORBIKE || item->object_number == JEEP) {
-				item->pos.x_pos = lara_item->pos.x_pos;
-				item->pos.y_pos = lara_item->pos.y_pos;
-				item->pos.z_pos = lara_item->pos.z_pos;
+				item->pos.pos.x = lara_item->pos.pos.x;
+				item->pos.pos.y = lara_item->pos.pos.y;
+				item->pos.pos.z = lara_item->pos.pos.z;
 				item->pos.y_rot = lara_item->pos.y_rot;
 
 				if(item->room_number != lara_item->room_number)
 					ItemNewRoom(i, lara_item->room_number);
 
-				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number);
-				item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+				floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &item->room_number);
+				item->floor = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 				lara.vehicle = i;
 
 				if(item->object_number == MOTORBIKE)
@@ -456,13 +456,13 @@ void SaveLevelData(long FullSave) {
 				if(item->pos.z_rot)
 					packed |= 2;
 
-				if(item->pos.x_pos & 1)
+				if(item->pos.pos.x & 1)
 					packed |= 4;
 
-				if(item->pos.y_pos & 1)
+				if(item->pos.pos.y & 1)
 					packed |= 8;
 
-				if(item->pos.z_pos & 1)
+				if(item->pos.pos.z & 1)
 					packed |= 0x10;
 
 				if(item->speed)
@@ -495,13 +495,13 @@ void SaveLevelData(long FullSave) {
 				WriteSG(&packed, sizeof(unsigned short));
 
 				if(obj->save_position) {
-					pos = (short)(item->pos.x_pos >> 1);
+					pos = (short)(item->pos.pos.x >> 1);
 					WriteSG(&pos, sizeof(short));
 
-					pos = (short)(item->pos.y_pos >> 1);
+					pos = (short)(item->pos.pos.y >> 1);
 					WriteSG(&pos, sizeof(short));
 
-					pos = (short)(item->pos.z_pos >> 1);
+					pos = (short)(item->pos.pos.z >> 1);
 					WriteSG(&pos, sizeof(short));
 
 					byte = (unsigned char)item->room_number;
@@ -682,13 +682,13 @@ void SaveLevelData(long FullSave) {
 				if(Scarabs[j].On) {
 					word = Scarabs[j].room_number << 8;
 
-					if(Scarabs[j].pos.x_pos & 1)
+					if(Scarabs[j].pos.pos.x & 1)
 						word |= 1;
 
-					if(Scarabs[j].pos.y_pos & 1)
+					if(Scarabs[j].pos.pos.y & 1)
 						word |= 2;
 
-					if(Scarabs[j].pos.z_pos & 1)
+					if(Scarabs[j].pos.pos.z & 1)
 						word |= 4;
 
 					if(Scarabs[j].pos.x_rot)
@@ -696,13 +696,13 @@ void SaveLevelData(long FullSave) {
 
 					WriteSG(&word, sizeof(short));
 
-					pos = (short)(Scarabs[j].pos.x_pos >> 1);
+					pos = (short)(Scarabs[j].pos.pos.x >> 1);
 					WriteSG(&pos, sizeof(short));
 
-					pos = (short)(Scarabs[j].pos.y_pos >> 1);
+					pos = (short)(Scarabs[j].pos.pos.y >> 1);
 					WriteSG(&pos, sizeof(short));
 
-					pos = (short)(Scarabs[j].pos.z_pos >> 1);
+					pos = (short)(Scarabs[j].pos.pos.z >> 1);
 					WriteSG(&pos, sizeof(short));
 
 					WriteSG(&Scarabs[j].pos.y_rot, sizeof(short));
@@ -858,13 +858,13 @@ void RestoreLevelData(long FullSave) {
 				uroom_number = 0;
 
 				ReadSG(&word, sizeof(unsigned short));
-				item->pos.x_pos = (word << 1) | (packed >> 2) & 1;
+				item->pos.pos.x = (word << 1) | (packed >> 2) & 1;
 
 				ReadSG(&sword, sizeof(short));
-				item->pos.y_pos = (sword << 1) | (packed >> 3) & 1;
+				item->pos.pos.y = (sword << 1) | (packed >> 3) & 1;
 
 				ReadSG(&word, sizeof(unsigned short));
-				item->pos.z_pos = (word << 1) | (packed >> 4) & 1;
+				item->pos.pos.z = (word << 1) | (packed >> 4) & 1;
 
 				ReadSG(&uroom_number, sizeof(unsigned char));
 				ReadSG(&item->pos.y_rot, sizeof(short));
@@ -885,8 +885,8 @@ void RestoreLevelData(long FullSave) {
 					ItemNewRoom(i, uroom_number);
 
 				if(obj->shadow_size) {
-					floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, (short*)&uroom_number);
-					item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+					floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, (short*)&uroom_number);
+					item->floor = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 				}
 			}
 
@@ -1058,16 +1058,16 @@ void RestoreLevelData(long FullSave) {
 				ReadSG(&sword, sizeof(short));
 
 				ReadSG(&uword, sizeof(unsigned short));
-				Scarabs[i].pos.x_pos = uword << 1;
-				Scarabs[i].pos.x_pos |= sword & 1;
+				Scarabs[i].pos.pos.x = uword << 1;
+				Scarabs[i].pos.pos.x |= sword & 1;
 
 				ReadSG(&req, sizeof(short));
-				Scarabs[i].pos.y_pos = req << 1;
-				Scarabs[i].pos.y_pos |= (sword >> 1) & 1;
+				Scarabs[i].pos.pos.y = req << 1;
+				Scarabs[i].pos.pos.y |= (sword >> 1) & 1;
 
 				ReadSG(&uword, sizeof(unsigned short));
-				Scarabs[i].pos.z_pos = uword << 1;
-				Scarabs[i].pos.z_pos |= (sword >> 2) & 1;
+				Scarabs[i].pos.pos.z = uword << 1;
+				Scarabs[i].pos.pos.z |= (sword >> 2) & 1;
 
 				ReadSG(&Scarabs[i].pos.y_rot, sizeof(short));
 

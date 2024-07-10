@@ -73,8 +73,8 @@ void ControlMapper(short item_number) {
 		rg = (GetRandomControl() & 0x1F) + 192;
 		TriggerDynamic(pos.x, pos.y, pos.z, (GetRandomControl() & 3) + 16, rg, rg, 0);
 		room_number = item->room_number;
-		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+		h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		for(int i = 0; i < 2; i++) {
 			sptr = GetFreeSpark();
@@ -154,13 +154,13 @@ void ControlLightningConductor(short item_number) {
 			r = 0;
 		}
 
-		pos.x = (GetRandomControl() & 0x1FF) + item->pos.x_pos - 256;
-		pos.y = item->pos.y_pos;
-		pos.z = (GetRandomControl() & 0x1FF) + item->pos.z_pos - 256;
+		pos.x = (GetRandomControl() & 0x1FF) + item->pos.pos.x - 256;
+		pos.y = item->pos.pos.y;
+		pos.z = (GetRandomControl() & 0x1FF) + item->pos.pos.z - 256;
 		TriggerLightning((PHD_VECTOR*)&item->pos, &pos, (GetRandomControl() & 0xF) + 16, RGBA(r, g, b, 24), 3, 24, 3);
-		pos2.x = item->pos.x_pos + item->item_flags[1];
-		pos2.y = item->pos.y_pos - 4096;
-		pos2.z = item->pos.z_pos + item->item_flags[1];
+		pos2.x = item->pos.pos.x + item->item_flags[1];
+		pos2.y = item->pos.pos.y - 4096;
+		pos2.z = item->pos.pos.z + item->item_flags[1];
 
 		if(GetRandomControl() & 7 && item->item_flags[0]) {
 			TriggerLightning(&pos2, (PHD_VECTOR*)&item->pos, (GetRandomControl() & 0x1F) + 16, RGBA(r, g, b, 32), 0, 48, 3);
@@ -177,7 +177,7 @@ void ControlLightningConductor(short item_number) {
 			FlashFader = 32;
 		}
 
-		TriggerLightningGlow(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, RGBA(r, g, b, 64));
+		TriggerLightningGlow(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, RGBA(r, g, b, 64));
 
 		if(item->trigger_flags == 2 && !item->item_flags[0]) {
 			ExplodeItemNode(GetItem(currentLevel, item->item_flags[2] & 0xFF), 0, 0, -128);
@@ -186,7 +186,7 @@ void ControlLightningConductor(short item_number) {
 			KillItem(item->item_flags[2] >> 8);
 			KillItem(item_number);
 		} else {
-			if(item->trigger_flags == 1 && !lara.burn && !((item->pos.x_pos ^ lara_item->pos.x_pos) & -1024) && !((item->pos.z_pos ^ lara_item->pos.z_pos) & -1024) && lara_item->pos.y_pos <= item->pos.y_pos) {
+			if(item->trigger_flags == 1 && !lara.burn && !((item->pos.pos.x ^ lara_item->pos.pos.x) & -1024) && !((item->pos.pos.z ^ lara_item->pos.pos.z) & -1024) && lara_item->pos.pos.y <= item->pos.pos.y) {
 				LaraBurn();
 				lara_item->hit_points = 0;
 			}
@@ -199,16 +199,16 @@ void ControlLightningConductor(short item_number) {
 }
 
 void BridgeFlatFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
-	if(item->pos.y_pos >= y) {
-		*height = item->pos.y_pos;
+	if(item->pos.pos.y >= y) {
+		*height = item->pos.pos.y;
 		*height_type = WALL;
 		*OnObject = 1;
 	}
 }
 
 void BridgeFlatCeiling(ITEM_INFO* item, long x, long y, long z, long* height) {
-	if(item->pos.y_pos < y) {
-		*height = item->pos.y_pos + 256;
+	if(item->pos.pos.y < y) {
+		*height = item->pos.pos.y + 256;
 	}
 }
 
@@ -227,7 +227,7 @@ long GetOffset(ITEM_INFO* item, long x, long z) {
 void BridgeTilt1Floor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	long level;
 
-	level = item->pos.y_pos + (GetOffset(item, x, z) >> 2);
+	level = item->pos.pos.y + (GetOffset(item, x, z) >> 2);
 
 	if(level >= y) {
 		*height = level;
@@ -239,7 +239,7 @@ void BridgeTilt1Floor(ITEM_INFO* item, long x, long y, long z, long* height, hei
 void BridgeTilt1Ceiling(ITEM_INFO* item, long x, long y, long z, long* height) {
 	long level;
 
-	level = item->pos.y_pos + (GetOffset(item, x, z) >> 2);
+	level = item->pos.pos.y + (GetOffset(item, x, z) >> 2);
 
 	if(level < y) {
 		*height = level + 256;
@@ -249,7 +249,7 @@ void BridgeTilt1Ceiling(ITEM_INFO* item, long x, long y, long z, long* height) {
 void BridgeTilt2Floor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	long level;
 
-	level = item->pos.y_pos + (GetOffset(item, x, z) >> 1);
+	level = item->pos.pos.y + (GetOffset(item, x, z) >> 1);
 
 	if(level >= y) {
 		*height = level;
@@ -261,7 +261,7 @@ void BridgeTilt2Floor(ITEM_INFO* item, long x, long y, long z, long* height, hei
 void BridgeTilt2Ceiling(ITEM_INFO* item, long x, long y, long z, long* height) {
 	long level;
 
-	level = item->pos.y_pos + (GetOffset(item, x, z) >> 1);
+	level = item->pos.pos.y + (GetOffset(item, x, z) >> 1);
 
 	if(level < y) {
 		*height = level + 256;
@@ -320,8 +320,8 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	if(l->anim_number == ANIM_PLINTHHI && l->frame_number == GetAnim(currentLevel, ANIM_PLINTHHI)->frame_base + 45) {
 		room_number = item->room_number;
-		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+		GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		TestTriggers(trigger_index, 1, item->flags & 0x3E00);
 		item->mesh_bits = 255;
 		item->item_flags[0] = 1;
@@ -463,7 +463,7 @@ void ControlBurningRope(short item_number) {
 
 		if(passes == 2) {
 			if(gfCurrentLevel != 27) {
-				TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
+				TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 1, 0);
 			}
 
 			KillItem(item_number);
@@ -486,9 +486,9 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	}
 
 	nSpheres = GetSpheres(item, Slist, 1);
-	dx = item->pos.x_pos - lara_item->pos.x_pos;
-	dy = item->pos.y_pos - lara_item->pos.y_pos;
-	dz = item->pos.z_pos - lara_item->pos.z_pos;
+	dx = item->pos.pos.x - lara_item->pos.pos.x;
+	dy = item->pos.pos.y - lara_item->pos.pos.y;
+	dz = item->pos.pos.z - lara_item->pos.pos.z;
 
 	if(dx > 0x1000 || dx < -0x1000 || dy > 0x800 || dy < -0x800 || dz > 0x1000 || dz < -0x1000) {
 		return;
@@ -508,7 +508,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		if(dx < sphere->r && dy < sphere->r && dz < sphere->r) {
 			if(0 /*gfCurrentLevel == 27)*/) {
 				SoundEffect(SFX_BOULDER_FALL, 0, SFX_DEFAULT);
-				TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
+				TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 1, 0);
 			}
 
 			item->trigger_flags = 1;
@@ -579,7 +579,7 @@ void ControlTriggerTriggerer(short item_number) {
 	short* data;
 
 	item = GetItem(currentLevel, item_number);
-	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	GetHeight(GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &item->room_number), item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	data = trigger_index;
 
 	if(data) {
@@ -651,11 +651,11 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 			item->pos.y_rot = l->pos.y_rot;
 
 			if(l->current_anim_state == AS_REACH) {
-				PolePosR.y = l->pos.y_pos - item->pos.y_pos + 10;
+				PolePosR.y = l->pos.pos.y - item->pos.pos.y + 10;
 				l->anim_number = ANIM_REACH2POLE;
 				l->frame_number = GetAnim(currentLevel, ANIM_REACH2POLE)->frame_base;
 			} else {
-				PolePosR.y = l->pos.y_pos - item->pos.y_pos + 66;
+				PolePosR.y = l->pos.pos.y - item->pos.pos.y + 66;
 				l->anim_number = ANIM_JUMP2POLE;
 				l->frame_number = GetAnim(currentLevel, ANIM_JUMP2POLE)->frame_base;
 			}
@@ -732,7 +732,7 @@ void SmashObject(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 	r = GetRoom(currentLevel, item->room_number);
-	sector = ((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10);
+	sector = ((item->pos.pos.z - r->z) >> 10) + r->x_size * ((item->pos.pos.x - r->x) >> 10);
 	box = GetBox(currentLevel, r->floor[sector].box);
 
 	if(box->overlap_index & 0x8000) {

@@ -21,9 +21,9 @@ long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num) {
 	meshpp = GetMeshPointer(currentLevel, fx->frame_number);
 	ShatterItem.YRot = fx->pos.y_rot;
 	ShatterItem.meshp = *meshpp;
-	ShatterItem.Sphere.x = fx->pos.x_pos;
-	ShatterItem.Sphere.y = fx->pos.y_pos;
-	ShatterItem.Sphere.z = fx->pos.z_pos;
+	ShatterItem.Sphere.x = fx->pos.pos.x;
+	ShatterItem.Sphere.y = fx->pos.pos.y;
+	ShatterItem.Sphere.z = fx->pos.pos.z;
 	ShatterItem.Bit = 0;
 	ShatterItem.Flags = fx->flag2 & 0x400;
 	ShatterObject(&ShatterItem, 0, Num, fx->room_number, NoXZVel);
@@ -39,9 +39,9 @@ void ControlBodyPart(short fx_number) {
 	short room_number;
 
 	fx = GetEffect(currentLevel, fx_number);
-	ox = fx->pos.x_pos;
-	oz = fx->pos.z_pos;
-	oy = fx->pos.y_pos;
+	ox = fx->pos.pos.x;
+	oz = fx->pos.pos.z;
+	oy = fx->pos.pos.y;
 
 	if(fx->speed) {
 		fx->pos.x_rot += fx->fallspeed << 2;
@@ -49,26 +49,26 @@ void ControlBodyPart(short fx_number) {
 
 	fx->fallspeed += 6;
 
-	fx->pos.x_pos += fx->speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
-	fx->pos.y_pos += fx->fallspeed;
-	fx->pos.z_pos += fx->speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
+	fx->pos.pos.x += fx->speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
+	fx->pos.pos.y += fx->fallspeed;
+	fx->pos.pos.z += fx->speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
 	room_number = fx->room_number;
-	floor = GetFloor(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &room_number);
-	ceiling = GetCeiling(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+	floor = GetFloor(fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z, &room_number);
+	ceiling = GetCeiling(floor, fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z);
 
-	if(fx->pos.y_pos < ceiling) {
-		fx->pos.y_pos = ceiling;
+	if(fx->pos.pos.y < ceiling) {
+		fx->pos.pos.y = ceiling;
 		fx->fallspeed = -fx->fallspeed;
 		fx->speed -= fx->speed >> 3;
 	}
 
-	height = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	height = GetHeight(floor, fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(fx->pos.y_pos >= height) {
+	if(fx->pos.pos.y >= height) {
 		if(fx->flag2 & 1) {
-			fx->pos.x_pos = ox;
-			fx->pos.y_pos = oy;
-			fx->pos.z_pos = oz;
+			fx->pos.pos.x = ox;
+			fx->pos.pos.y = oy;
+			fx->pos.pos.z = oz;
 
 			if(fx->flag2 & 0x200) {
 				ExplodeFX(fx, -2, 32);
@@ -93,8 +93,8 @@ void ControlBodyPart(short fx_number) {
 			}
 		} else {
 			fx->pos.y_rot += 32768;
-			fx->pos.x_pos = ox;
-			fx->pos.z_pos = oz;
+			fx->pos.pos.x = ox;
+			fx->pos.pos.z = oz;
 		}
 
 		fx->speed -= fx->speed >> 2;
@@ -103,7 +103,7 @@ void ControlBodyPart(short fx_number) {
 			fx->speed = 0;
 		}
 
-		fx->pos.y_pos = oy;
+		fx->pos.pos.y = oy;
 	}
 
 	if(!fx->speed) {
@@ -116,7 +116,7 @@ void ControlBodyPart(short fx_number) {
 	}
 
 	if(fx->flag2 & 2 && GetRandomControl() & 1) {
-		DoBloodSplat((GetRandomControl() & 0x3F) + fx->pos.x_pos - 32, (GetRandomControl() & 0x1F) + fx->pos.y_pos - 16, (GetRandomControl() & 0x3F) + fx->pos.z_pos - 32, 1, (short)(GetRandomControl() << 1), fx->room_number);
+		DoBloodSplat((GetRandomControl() & 0x3F) + fx->pos.pos.x - 32, (GetRandomControl() & 0x1F) + fx->pos.pos.y - 16, (GetRandomControl() & 0x3F) + fx->pos.pos.z - 32, 1, (short)(GetRandomControl() << 1), fx->room_number);
 	}
 
 	if(room_number != fx->room_number) {

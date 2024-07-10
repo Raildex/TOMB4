@@ -268,9 +268,9 @@ static void find_target_point(ITEM_INFO* item, GAME_VECTOR* target) {
 	z = (bounds[4] + bounds[5]) >> 1;
 	s = phd_sin(item->pos.y_rot);
 	c = phd_cos(item->pos.y_rot);
-	target->pos.x = item->pos.x_pos + ((x * c + z * s) >> W2V_SHIFT);
-	target->pos.y = item->pos.y_pos + y;
-	target->pos.z = item->pos.z_pos + ((z * c - x * s) >> W2V_SHIFT);
+	target->pos.x = item->pos.pos.x + ((x * c + z * s) >> W2V_SHIFT);
+	target->pos.y = item->pos.pos.y + y;
+	target->pos.z = item->pos.pos.z + ((z * c - x * s) >> W2V_SHIFT);
 	target->room_number = item->room_number;
 }
 
@@ -290,8 +290,8 @@ void LaraTargetInfo(WEAPON_INFO* winfo) {
 	src.pos.y = 0;
 	src.pos.z = 0;
 	GetLaraJointPos((PHD_VECTOR*)&src, 11);
-	src.pos.x = lara_item->pos.x_pos;
-	src.pos.z = lara_item->pos.z_pos;
+	src.pos.x = lara_item->pos.pos.x;
+	src.pos.z = lara_item->pos.pos.z;
 	src.room_number = lara_item->room_number;
 	find_target_point(GetItem(currentLevel, lara.target_item), &target);
 	phd_GetVectorAngles(target.pos.x - src.pos.x, target.pos.y - src.pos.y, target.pos.z - src.pos.z, ang);
@@ -391,9 +391,9 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 	long r, nSpheres, bestdist, best;
 	short room_number;
 
-	bum_view.x_pos = 0;
-	bum_view.y_pos = 0;
-	bum_view.z_pos = 0;
+	bum_view.pos.x = 0;
+	bum_view.pos.y = 0;
+	bum_view.pos.z = 0;
 	GetLaraJointPos((PHD_VECTOR*)&bum_view, 11);
 	ammo = get_current_ammo_pointer(weapon_type);
 
@@ -407,8 +407,8 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 
 	winfo = &weapons[weapon_type];
 
-	bum_view.x_pos = src->pos.x_pos;
-	bum_view.z_pos = src->pos.z_pos;
+	bum_view.pos.x = src->pos.pos.x;
+	bum_view.pos.z = src->pos.pos.z;
 	bum_view.x_rot = (short)(winfo->shot_accuracy * (GetRandomControl() - 0x4000) / 0x10000 + angles[1]);
 	bum_view.y_rot = (short)(winfo->shot_accuracy * (GetRandomControl() - 0x4000) / 0x10000 + angles[0]);
 	bum_view.z_rot = 0;
@@ -431,11 +431,11 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 	}
 
 	lara.has_fired = 1;
-	bum_vsrc.pos.x = bum_view.x_pos;
-	bum_vsrc.pos.y = bum_view.y_pos;
-	bum_vsrc.pos.z = bum_view.z_pos;
+	bum_vsrc.pos.x = bum_view.pos.x;
+	bum_vsrc.pos.y = bum_view.pos.y;
+	bum_vsrc.pos.z = bum_view.pos.z;
 	room_number = src->room_number;
-	GetFloor(bum_view.x_pos, bum_view.y_pos, bum_view.z_pos, &room_number);
+	GetFloor(bum_view.pos.x, bum_view.pos.y, bum_view.pos.z, &room_number);
 	bum_vsrc.room_number = room_number;
 
 	if(best < 0) {
@@ -505,9 +505,9 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 	}
 
 	bestitem = NO_ITEM;
-	src.pos.x = lara_item->pos.x_pos;
-	src.pos.y = lara_item->pos.y_pos - 650;
-	src.pos.z = lara_item->pos.z_pos;
+	src.pos.x = lara_item->pos.pos.x;
+	src.pos.y = lara_item->pos.pos.y - 650;
+	src.pos.z = lara_item->pos.pos.z;
 	src.room_number = lara_item->room_number;
 	bestyrot = 0x7FFF;
 	bestdist = infinite_distance;
@@ -521,9 +521,9 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 			item = GetItem(currentLevel, creature->item_num);
 
 			if(item->hit_points > 0) {
-				x = item->pos.x_pos - src.pos.x;
-				y = item->pos.y_pos - src.pos.y;
-				z = item->pos.z_pos - src.pos.z;
+				x = item->pos.pos.x - src.pos.x;
+				y = item->pos.pos.y - src.pos.y;
+				z = item->pos.pos.z - src.pos.z;
 
 				if(abs(x) <= maxdist && abs(y) <= maxdist && abs(z) <= maxdist) {
 					dist = SQUARE(x) + SQUARE(y) + SQUARE(z);
@@ -727,10 +727,10 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 	oldheight = GetHeight(floor, x, y, z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 	room_number = item->room_number;
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	height = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+	height = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(item->pos.y_pos >= height) {
+	if(item->pos.pos.y >= height) {
 		bs = 0;
 		oldtype = ht;
 
@@ -742,12 +742,12 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 			}
 		}
 
-		if(y > height + 32 && !bs && ((item->pos.x_pos ^ x) & ~0x3FF || (item->pos.z_pos ^ z) & ~0x3FF)) {
-			xs = (item->pos.x_pos ^ x) & ~0x3FF && (item->pos.z_pos ^ z) & ~0x3FF ? abs(x - item->pos.x_pos) < abs(z - item->pos.z_pos) : 1;
-			item->pos.y_rot = (item->pos.x_pos ^ x) & ~0x3FF && xs ? -item->pos.y_rot : -32768 - item->pos.y_rot;
-			item->pos.x_pos = x;
-			item->pos.y_pos = y;
-			item->pos.z_pos = z;
+		if(y > height + 32 && !bs && ((item->pos.pos.x ^ x) & ~0x3FF || (item->pos.pos.z ^ z) & ~0x3FF)) {
+			xs = (item->pos.pos.x ^ x) & ~0x3FF && (item->pos.pos.z ^ z) & ~0x3FF ? abs(x - item->pos.pos.x) < abs(z - item->pos.pos.z) : 1;
+			item->pos.y_rot = (item->pos.pos.x ^ x) & ~0x3FF && xs ? -item->pos.y_rot : -32768 - item->pos.y_rot;
+			item->pos.pos.x = x;
+			item->pos.pos.y = y;
+			item->pos.pos.z = z;
 			item->speed >>= 1;
 		} else if(oldtype != BIG_SLOPE && oldtype != DIAGONAL) {
 			if(item->fallspeed > 0) {
@@ -778,7 +778,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				}
 			}
 
-			item->pos.y_pos = height;
+			item->pos.pos.y = height;
 		} else {
 			item->speed -= item->speed >> 2;
 
@@ -1008,23 +1008,23 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				}
 			}
 
-			item->pos.x_pos = x;
-			item->pos.y_pos = y;
-			item->pos.z_pos = z;
+			item->pos.pos.x = x;
+			item->pos.pos.y = y;
+			item->pos.pos.z = z;
 		}
 	} else {
 		if(yv >= 0) {
 			room_number = item->room_number;
-			floor = GetFloor(item->pos.x_pos, y, item->pos.z_pos, &room_number);
-			height = GetHeight(floor, item->pos.x_pos, y, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+			floor = GetFloor(item->pos.pos.x, y, item->pos.pos.z, &room_number);
+			height = GetHeight(floor, item->pos.pos.x, y, item->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 			oldonobj = OnObject;
 
 			room_number = item->room_number;
-			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+			floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+			GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
-			if(item->pos.y_pos >= height && oldonobj) {
+			if(item->pos.pos.y >= height && oldonobj) {
 				if(item->fallspeed > 0) {
 					if(item->fallspeed > 16) {
 						if(item->object_number == GRENADE) {
@@ -1053,20 +1053,20 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 					}
 				}
 
-				item->pos.y_pos = height;
+				item->pos.pos.y = height;
 			}
 		}
 
 		room_number = item->room_number;
-		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		ceiling = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+		ceiling = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
-		if(item->pos.y_pos < ceiling) {
-			if(y < ceiling && ((item->pos.x_pos ^ x) & ~0x3FF || (item->pos.z_pos ^ z) & ~0x3FF)) {
-				item->pos.y_rot = (item->pos.x_pos ^ x) & ~0x3FF ? -item->pos.y_rot : -0x8000 - item->pos.y_rot;
-				item->pos.x_pos = x;
-				item->pos.y_pos = y;
-				item->pos.z_pos = z;
+		if(item->pos.pos.y < ceiling) {
+			if(y < ceiling && ((item->pos.pos.x ^ x) & ~0x3FF || (item->pos.pos.z ^ z) & ~0x3FF)) {
+				item->pos.y_rot = (item->pos.pos.x ^ x) & ~0x3FF ? -item->pos.y_rot : -0x8000 - item->pos.y_rot;
+				item->pos.pos.x = x;
+				item->pos.pos.y = y;
+				item->pos.pos.z = z;
 
 				if(item->object_number == GRENADE) {
 					item->speed -= item->speed >> 3;
@@ -1074,7 +1074,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 					item->speed >>= 1;
 				}
 			} else {
-				item->pos.y_pos = ceiling;
+				item->pos.pos.y = ceiling;
 			}
 
 			if(item->fallspeed < 0) {
@@ -1084,7 +1084,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 	}
 
 	room_number = item->room_number;
-	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+	GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
 	if(room_number != item->room_number) {
 		ItemNewRoom(item_number, room_number);

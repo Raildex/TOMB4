@@ -64,7 +64,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			if(l->frame_number == GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base + 74 && lara_item->item_flags[2] == mesh) {
 				if(!item->trigger_flags) {
 					item->mesh_bits = 48;
-					TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
+					TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 1, item->flags & IFL_CODEBITS);
 					item->item_flags[0] = 1;
 				} else if(item->trigger_flags == 1) {
 					item->mesh_bits = 3;
@@ -72,7 +72,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 					item->item_flags[0] = 1;
 				} else {
 					item->mesh_bits = 12;
-					TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
+					TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 1, item->flags & IFL_CODEBITS);
 					lara.pickupitems &= ~1u;
 					item->item_flags[0] = 1;
 				}
@@ -90,7 +90,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		item->pos.y_rot = l->pos.y_rot;
 
 		if(TestLaraPosition(ElementPuzzleBounds, item, l)) {
-			y = abs(item->pos.y_pos - l->pos.y_pos);
+			y = abs(item->pos.pos.y - l->pos.pos.y);
 			l->anim_number = (short)((y >> 8) + ANIM_LIGHT_TORCH3);
 			l->frame_number = GetAnim(currentLevel, l->anim_number)->frame_base;
 			l->current_anim_state = AS_CONTROLLED;
@@ -101,7 +101,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		item->pos.y_rot = rotY;
 	} else if(l->anim_number == ANIM_LIGHT_TORCH3 && l->frame_number == GetAnim(currentLevel, ANIM_LIGHT_TORCH3)->frame_base + 16 && item->item_flags[0] == 2) {
-		TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
+		TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 1, item->flags & IFL_CODEBITS);
 		AddActiveItem(item_number);
 		item->item_flags[0] = 3;
 		item->flags |= IFL_CODEBITS;
@@ -161,8 +161,8 @@ void ControlElementPuzzle(short item_number) {
 			}
 		}
 
-		AddFire(item->pos.x_pos, item->pos.y_pos - 620, item->pos.z_pos, 1, item->room_number, fade);
-		TriggerDynamic(item->pos.x_pos, item->pos.y_pos - 768, item->pos.z_pos, 12, r, g, 0);
+		AddFire(item->pos.pos.x, item->pos.pos.y - 620, item->pos.pos.z, 1, item->room_number, fade);
+		TriggerDynamic(item->pos.pos.x, item->pos.pos.y - 768, item->pos.pos.z, 12, r, g, 0);
 	} else if(item->trigger_flags == 3) {
 		if(item->item_flags[1] > 90) {
 			SoundEffect(SFX_JOBY_WIND, &item->pos, SFX_DEFAULT);

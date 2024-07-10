@@ -85,7 +85,7 @@ void CreateZone(ITEM_INFO* item) {
 
 	creature = (CREATURE_INFO*)item->data;
 	r = GetRoom(currentLevel, item->room_number);
-	item->box_number = r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)].box;
+	item->box_number = r->floor[((item->pos.pos.z - r->z) >> 10) + r->x_size * ((item->pos.pos.x - r->x) >> 10)].box;
 
 	if(creature->LOT.fly) {
 		creature->LOT.zone_count = 0;
@@ -247,9 +247,9 @@ long EnableBaddieAI(short item_number, long Always) {
 	if(Always) {
 		worstdist = 0;
 	} else {
-		x = (item->pos.x_pos - camera.pos.pos.x) >> 8;
-		y = (item->pos.y_pos - camera.pos.pos.y) >> 8;
-		z = (item->pos.z_pos - camera.pos.pos.z) >> 8;
+		x = (item->pos.pos.x - camera.pos.pos.x) >> 8;
+		y = (item->pos.pos.y - camera.pos.pos.y) >> 8;
+		z = (item->pos.pos.z - camera.pos.pos.z) >> 8;
 		worstdist = SQUARE(x) + SQUARE(y) + SQUARE(z);
 	}
 
@@ -258,9 +258,9 @@ long EnableBaddieAI(short item_number, long Always) {
 	for(slot = 0; slot < 5; slot++) {
 		creature = &baddie_slots[slot];
 		item = GetItem(currentLevel, creature->item_num);
-		x = (item->pos.x_pos - camera.pos.pos.x) >> 8;
-		y = (item->pos.y_pos - camera.pos.pos.y) >> 8;
-		z = (item->pos.z_pos - camera.pos.pos.z) >> 8;
+		x = (item->pos.pos.x - camera.pos.pos.x) >> 8;
+		y = (item->pos.pos.y - camera.pos.pos.y) >> 8;
+		z = (item->pos.pos.z - camera.pos.pos.z) >> 8;
 		dist = SQUARE(x) + SQUARE(y) + SQUARE(z);
 
 		if(dist > worstdist) {

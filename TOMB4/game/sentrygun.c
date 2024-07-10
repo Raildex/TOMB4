@@ -120,10 +120,10 @@ void AutogunControl(short item_number) {
 		item->status = ITEM_DEACTIVATED;
 		item->flags |= IFL_INVISIBLE;
 		untrigger_item_in_room(item->room_number, SMOKE_EMITTER_BLACK);
-		TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos - 768, item->pos.z_pos, 3, -2, 0, item->room_number);
+		TriggerExplosionSparks(item->pos.pos.x, item->pos.pos.y - 768, item->pos.pos.z, 3, -2, 0, item->room_number);
 
 		for(int i = 0; i < 2; i++) {
-			TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos - 768, item->pos.z_pos, 3, -1, 0, item->room_number);
+			TriggerExplosionSparks(item->pos.pos.x, item->pos.pos.y - 768, item->pos.pos.z, 3, -1, 0, item->room_number);
 		}
 
 		SoundEffect(SFX_EXPLOSION1, &item->pos, 0x1800000 | SFX_SETPITCH);
@@ -145,9 +145,9 @@ void AutogunControl(short item_number) {
 		}
 
 		if(!item->trigger_flags) {
-			item->pos.y_pos -= 512;
+			item->pos.pos.y -= 512;
 			CreatureAIInfo(item, &info);
-			item->pos.y_pos += 512;
+			item->pos.pos.y += 512;
 			ahead = info.angle - autogun->joint_rotation[0];
 
 			if(ahead > -0x4000 && ahead < 0x4000) {

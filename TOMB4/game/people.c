@@ -42,9 +42,9 @@ short GunHit(long x, long y, long z, short speed, short yrot, short room_number)
 short GunMiss(long x, long y, long z, short speed, short yrot, short room_number) {
 	GAME_VECTOR pos;
 
-	pos.pos.x = lara_item->pos.x_pos + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
+	pos.pos.x = lara_item->pos.pos.x + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
 	pos.pos.y = lara_item->floor;
-	pos.pos.z = lara_item->pos.z_pos + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
+	pos.pos.z = lara_item->pos.pos.z + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
 	pos.room_number = lara_item->room_number;
 	Richochet(&pos);
 	return GunShot(x, y, z, speed, yrot, room_number);
@@ -66,14 +66,14 @@ long TargetVisible(ITEM_INFO* item, AI_INFO* info) {
 
 	bounds = GetBestFrame(enemy);
 
-	start.pos.x = item->pos.x_pos;
-	start.pos.y = item->pos.y_pos - 768;
-	start.pos.z = item->pos.z_pos;
+	start.pos.x = item->pos.pos.x;
+	start.pos.y = item->pos.pos.y - 768;
+	start.pos.z = item->pos.pos.z;
 	start.room_number = item->room_number;
 
-	target.pos.x = enemy->pos.x_pos;
-	target.pos.y = enemy->pos.y_pos + ((bounds[3] + 3 * bounds[2]) >> 2);
-	target.pos.z = enemy->pos.z_pos;
+	target.pos.x = enemy->pos.pos.x;
+	target.pos.y = enemy->pos.pos.y + ((bounds[3] + 3 * bounds[2]) >> 2);
+	target.pos.z = enemy->pos.pos.z;
 	return LOS(&start, &target);
 }
 
@@ -92,15 +92,15 @@ long Targetable(ITEM_INFO* item, AI_INFO* info) {
 	}
 
 	bounds = GetBestFrame(item);
-	start.pos.x = item->pos.x_pos;
-	start.pos.y = item->pos.y_pos + ((bounds[3] + 3 * bounds[2]) >> 2);
-	start.pos.z = item->pos.z_pos;
+	start.pos.x = item->pos.pos.x;
+	start.pos.y = item->pos.pos.y + ((bounds[3] + 3 * bounds[2]) >> 2);
+	start.pos.z = item->pos.pos.z;
 	start.room_number = item->room_number;
 
 	bounds = GetBestFrame(enemy);
-	target.pos.x = enemy->pos.x_pos;
-	target.pos.y = enemy->pos.y_pos + ((bounds[3] + 3 * bounds[2]) >> 2);
-	target.pos.z = enemy->pos.z_pos;
+	target.pos.x = enemy->pos.pos.x;
+	target.pos.y = enemy->pos.pos.y + ((bounds[3] + 3 * bounds[2]) >> 2);
+	target.pos.z = enemy->pos.pos.z;
 	return LOS(&start, &target);
 }
 

@@ -37,9 +37,9 @@ void InitialiseDeathSlide(short item_number) {
 	item = GetItem(currentLevel, item_number);
 	old = (GAME_VECTOR*)Allocate(currentLevel, sizeof(GAME_VECTOR), 1);
 	item->data = old;
-	old->pos.x = item->pos.x_pos;
-	old->pos.y = item->pos.y_pos;
-	old->pos.z = item->pos.z_pos;
+	old->pos.x = item->pos.pos.x;
+	old->pos.y = item->pos.pos.y;
+	old->pos.z = item->pos.pos.z;
 	old->room_number = item->room_number;
 }
 
@@ -97,25 +97,25 @@ void ControlDeathSlide(short item_number) {
 			item->fallspeed += 5;
 		}
 
-		item->pos.x_pos += item->fallspeed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
-		item->pos.y_pos += item->fallspeed >> 2;
-		item->pos.z_pos += item->fallspeed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
+		item->pos.pos.x += item->fallspeed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
+		item->pos.pos.y += item->fallspeed >> 2;
+		item->pos.pos.z += item->fallspeed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 		room_number = item->room_number;
-		GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+		GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
 		if(room_number != item->room_number) {
 			ItemNewRoom(item_number, room_number);
 		}
 
 		if(lara_item->current_anim_state == AS_DEATHSLIDE) {
-			lara_item->pos.x_pos = item->pos.x_pos;
-			lara_item->pos.y_pos = item->pos.y_pos;
-			lara_item->pos.z_pos = item->pos.z_pos;
+			lara_item->pos.pos.x = item->pos.pos.x;
+			lara_item->pos.pos.y = item->pos.pos.y;
+			lara_item->pos.pos.z = item->pos.pos.z;
 		}
 
-		x = item->pos.x_pos + (phd_sin(item->pos.y_rot) >> 4);
-		y = item->pos.y_pos + 64;
-		z = item->pos.z_pos + (phd_cos(item->pos.y_rot) >> 4);
+		x = item->pos.pos.x + (phd_sin(item->pos.y_rot) >> 4);
+		y = item->pos.pos.y + 64;
+		z = item->pos.pos.z + (phd_cos(item->pos.y_rot) >> 4);
 		floor = GetFloor(x, y, z, &room_number);
 		h = GetHeight(floor, x, y, z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 		c = GetCeiling(floor, x, y, z);
@@ -138,9 +138,9 @@ void ControlDeathSlide(short item_number) {
 		}
 	} else {
 		old = (GAME_VECTOR*)item->data;
-		item->pos.x_pos = old->pos.x;
-		item->pos.y_pos = old->pos.y;
-		item->pos.z_pos = old->pos.z;
+		item->pos.pos.x = old->pos.x;
+		item->pos.pos.y = old->pos.y;
+		item->pos.pos.z = old->pos.z;
 
 		if(old->room_number != item->room_number) {
 			ItemNewRoom(item_number, old->room_number);

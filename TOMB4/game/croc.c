@@ -80,24 +80,24 @@ void CrocControl(short item_number) {
 	rot = 0;
 	s = (1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
 	c = (1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
-	x = item->pos.x_pos + s;
-	z = item->pos.z_pos + c;
+	x = item->pos.pos.x + s;
+	z = item->pos.pos.z + c;
 	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(x, item->pos.pos.y, z, &room_number);
+	h = GetHeight(floor, x, item->pos.pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h) > 512) {
-		h = item->pos.y_pos;
+	if(abs(item->pos.pos.y - h) > 512) {
+		h = item->pos.pos.y;
 	}
 
-	x = item->pos.x_pos - s;
-	z = item->pos.z_pos - c;
+	x = item->pos.pos.x - s;
+	z = item->pos.pos.z - c;
 	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(x, item->pos.pos.y, z, &room_number);
+	h2 = GetHeight(floor, x, item->pos.pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h2) > 512) {
-		h2 = item->pos.y_pos;
+	if(abs(item->pos.pos.y - h2) > 512) {
+		h2 = item->pos.pos.y;
 	}
 
 	roll = (short)phd_atan(2048, h2 - h);
@@ -287,10 +287,10 @@ void CrocControl(short item_number) {
 	}
 
 	c = (1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
-	x = item->pos.x_pos + s;
-	z = item->pos.z_pos + c;
+	x = item->pos.pos.x + s;
+	z = item->pos.pos.z + c;
 	room_number = item->room_number;
-	GetFloor(x, item->pos.y_pos, z, &room_number);
+	GetFloor(x, item->pos.pos.y, z, &room_number);
 
 	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 		if(GetRoom(currentLevel, room_number)->flags & 1) {
@@ -358,9 +358,9 @@ void TriggerLocust(ITEM_INFO* item) {
 	fx = &Locusts[fx_number];
 
 	if(item->object_number == FISH) {
-		vec.x = item->pos.x_pos;
-		vec.y = item->pos.y_pos;
-		vec.z = item->pos.z_pos;
+		vec.x = item->pos.pos.x;
+		vec.y = item->pos.pos.y;
+		vec.z = item->pos.pos.z;
 		*(long*)angles = item->pos.y_rot + 0x8000;
 	} else {
 		vec2.x = 0;
@@ -375,9 +375,9 @@ void TriggerLocust(ITEM_INFO* item) {
 	}
 
 	fx->room_number = item->room_number;
-	fx->pos.x_pos = vec.x;
-	fx->pos.y_pos = vec.y;
-	fx->pos.z_pos = vec.z;
+	fx->pos.pos.x = vec.x;
+	fx->pos.pos.y = vec.y;
+	fx->pos.pos.z = vec.z;
 	fx->pos.x_rot = (GetRandomControl() & 0x3FF) + angles[1] - 512;
 	fx->pos.y_rot = (GetRandomControl() & 0x7FF) + angles[0] - 1024;
 	fx->On = 1;
@@ -393,13 +393,13 @@ void InitialiseLocustEmitter(short item_number) {
 	item = GetItem(currentLevel, item_number);
 
 	if(!item->pos.y_rot) {
-		item->pos.z_pos += 512;
+		item->pos.pos.z += 512;
 	} else if(item->pos.y_rot == 16384) {
-		item->pos.x_pos += 512;
+		item->pos.pos.x += 512;
 	} else if(item->pos.y_rot == -32768) {
-		item->pos.z_pos -= 512;
+		item->pos.pos.z -= 512;
 	} else if(item->pos.y_rot == -16384) {
-		item->pos.x_pos -= 512;
+		item->pos.pos.x -= 512;
 	}
 }
 
@@ -430,7 +430,7 @@ void DrawLocusts() {
 		if(fx->On) {
 			meshpp = GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, AHMET_MIP)->mesh_index + 2 * (-GlobalCounter & 3));
 			phd_PushMatrix();
-			phd_TranslateAbs(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+			phd_TranslateAbs(fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z);
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
 			phd_PutPolygons_train(*meshpp, 0);
 			phd_PopMatrix();
@@ -447,12 +447,12 @@ void UpdateLocusts() {
 	short max_turn;
 
 	lb = GetBoundsAccurate(lara_item);
-	bounds[0] = lb[0] - (lb[0] >> 2) + lara_item->pos.x_pos;
-	bounds[1] = lb[1] - (lb[1] >> 2) + lara_item->pos.x_pos;
-	bounds[2] = lb[2] - (lb[2] >> 2) + lara_item->pos.y_pos;
-	bounds[3] = lb[3] - (lb[3] >> 2) + lara_item->pos.y_pos;
-	bounds[4] = lb[4] - (lb[4] >> 2) + lara_item->pos.z_pos;
-	bounds[5] = lb[5] - (lb[5] >> 2) + lara_item->pos.z_pos;
+	bounds[0] = lb[0] - (lb[0] >> 2) + lara_item->pos.pos.x;
+	bounds[1] = lb[1] - (lb[1] >> 2) + lara_item->pos.pos.x;
+	bounds[2] = lb[2] - (lb[2] >> 2) + lara_item->pos.pos.y;
+	bounds[3] = lb[3] - (lb[3] >> 2) + lara_item->pos.pos.y;
+	bounds[4] = lb[4] - (lb[4] >> 2) + lara_item->pos.pos.z;
+	bounds[5] = lb[5] - (lb[5] >> 2) + lara_item->pos.pos.z;
 	closestdist = 0xFFFFFFF;
 	closestnum = -1;
 
@@ -478,13 +478,13 @@ void UpdateLocusts() {
 			}
 
 			phd_GetVectorAngles(
-				lara_item->pos.x_pos + (fx->XTarget << 3) - fx->pos.x_pos,
-				lara_item->pos.y_pos - fx->LaraTarget - fx->pos.y_pos,
-				lara_item->pos.z_pos + (fx->ZTarget << 3) - fx->pos.z_pos,
+				lara_item->pos.pos.x + (fx->XTarget << 3) - fx->pos.pos.x,
+				lara_item->pos.pos.y - fx->LaraTarget - fx->pos.pos.y,
+				lara_item->pos.pos.z + (fx->ZTarget << 3) - fx->pos.pos.z,
 				angles);
 
-			ox = SQUARE(lara_item->pos.x_pos - fx->pos.x_pos);
-			oz = SQUARE(lara_item->pos.z_pos - fx->pos.z_pos);
+			ox = SQUARE(lara_item->pos.pos.x - fx->pos.pos.x);
+			oz = SQUARE(lara_item->pos.pos.z - fx->pos.pos.z);
 
 			if(ox + oz < closestdist) {
 				closestdist = ox + oz;
@@ -537,17 +537,17 @@ void UpdateLocusts() {
 				fx->pos.x_rot += (short)ox;
 			}
 
-			ox = fx->pos.x_pos;
-			oy = fx->pos.y_pos;
-			oz = fx->pos.z_pos;
+			ox = fx->pos.pos.x;
+			oy = fx->pos.pos.y;
+			oz = fx->pos.pos.z;
 			speed = fx->speed * phd_cos(fx->pos.x_rot) >> W2V_SHIFT;
-			fx->pos.x_pos += speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
-			fx->pos.y_pos += fx->speed * phd_sin(-fx->pos.x_rot) >> W2V_SHIFT;
-			fx->pos.z_pos += speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
+			fx->pos.pos.x += speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
+			fx->pos.pos.y += fx->speed * phd_sin(-fx->pos.x_rot) >> W2V_SHIFT;
+			fx->pos.pos.z += speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
 
 			if(!(i & 1)) {
-				if(fx->pos.x_pos > bounds[0] && fx->pos.x_pos < bounds[1] && fx->pos.y_pos > bounds[2] && fx->pos.y_pos < bounds[3] && fx->pos.z_pos > bounds[4] && fx->pos.z_pos < bounds[5]) {
-					TriggerBlood(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, GetRandomControl() << 1, 2);
+				if(fx->pos.pos.x > bounds[0] && fx->pos.pos.x < bounds[1] && fx->pos.pos.y > bounds[2] && fx->pos.pos.y < bounds[3] && fx->pos.pos.z > bounds[4] && fx->pos.pos.z < bounds[5]) {
+					TriggerBlood(fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z, GetRandomControl() << 1, 2);
 
 					if(lara_item->hit_points > 0) {
 						lara_item->hit_points -= 3;
@@ -571,9 +571,9 @@ void TriggerCrocgodMissile(PHD_3DPOS* pos, short room_number, short num) {
 
 	if(fx_number != NO_ITEM) {
 		fx = GetEffect(currentLevel, fx_number);
-		fx->pos.x_pos = pos->x_pos;
-		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
-		fx->pos.z_pos = pos->z_pos;
+		fx->pos.pos.x = pos->pos.x;
+		fx->pos.pos.y = pos->pos.y - (GetRandomControl() & 0x3F) - 32;
+		fx->pos.pos.z = pos->pos.z;
 		fx->pos.x_rot = pos->x_rot;
 		fx->pos.y_rot = pos->y_rot;
 		fx->pos.z_rot = 0;
@@ -592,8 +592,8 @@ void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	long dx, dz;
 
 	fx = GetEffect(currentLevel, fx_number);
-	dx = lara_item->pos.x_pos - fx->pos.x_pos;
-	dz = lara_item->pos.z_pos - fx->pos.z_pos;
+	dx = lara_item->pos.pos.x - fx->pos.pos.x;
+	dz = lara_item->pos.pos.z - fx->pos.pos.z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -613,9 +613,9 @@ void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	sptr->Dynamic = -1;
 	sptr->Life = (GetRandomControl() & 7) + 32;
 	sptr->sLife = sptr->Life;
-	sptr->x = fx->pos.x_pos + (GetRandomControl() & 0xF) - 8;
-	sptr->y = fx->pos.y_pos;
-	sptr->z = fx->pos.z_pos + (GetRandomControl() & 0xF) - 8;
+	sptr->x = fx->pos.pos.x + (GetRandomControl() & 0xF) - 8;
+	sptr->y = fx->pos.pos.y;
+	sptr->z = fx->pos.pos.z + (GetRandomControl() & 0xF) - 8;
 	sptr->Xvel = (short)xv;
 	sptr->Yvel = (short)yv;
 	sptr->Zvel = (short)zv;
@@ -678,12 +678,12 @@ void CrocgodControl(short item_number) {
 			crocgod->enemy = lara_item;
 		}
 
-		item->pos.y_pos -= 768;
+		item->pos.pos.y -= 768;
 		CreatureAIInfo(item, &info);
-		item->pos.y_pos += 768;
+		item->pos.pos.y += 768;
 
 		if(crocgod->enemy != lara_item) {
-			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+			phd_atan(lara_item->pos.pos.z - item->pos.pos.z, lara_item->pos.pos.x - item->pos.pos.x);
 		}
 
 		GetCreatureMood(item, &info, 1);
@@ -728,9 +728,9 @@ void CrocgodControl(short item_number) {
 				pos2.y = -128;
 				pos2.z = 288;
 				GetJointAbsPosition(item, &pos2, 9);
-				mPos.z_pos = pos2.z;
-				mPos.y_pos = pos2.y;
-				mPos.x_pos = pos2.x;
+				mPos.pos.z = pos2.z;
+				mPos.pos.y = pos2.y;
+				mPos.pos.x = pos2.x;
 				phd_GetVectorAngles(pos2.x - pos.x, pos2.y - pos.y, pos2.z - pos.z, angles);
 				mPos.y_rot = angles[0];
 				mPos.x_rot = angles[1];
@@ -778,9 +778,9 @@ void CrocgodControl(short item_number) {
 				pos2.y = -128;
 				pos2.z = 288;
 				GetJointAbsPosition(item, &pos2, 9);
-				mPos.z_pos = pos2.z;
-				mPos.y_pos = pos2.y;
-				mPos.x_pos = pos2.x;
+				mPos.pos.z = pos2.z;
+				mPos.pos.y = pos2.y;
+				mPos.pos.x = pos2.x;
 				phd_GetVectorAngles(pos2.x - pos.x, pos2.y - pos.y, pos2.z - pos.z, angles);
 				mPos.y_rot = angles[0];
 				mPos.x_rot = angles[1];

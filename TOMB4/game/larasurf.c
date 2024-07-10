@@ -211,9 +211,9 @@ void LaraSurface(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->bad_pos = -NO_HEIGHT;
 	coll->bad_neg = -128;
 	coll->bad_ceiling = 100;
-	coll->old.x = item->pos.x_pos;
-	coll->old.y = item->pos.y_pos;
-	coll->old.z = item->pos.z_pos;
+	coll->old.x = item->pos.pos.x;
+	coll->old.y = item->pos.pos.y;
+	coll->old.z = item->pos.pos.z;
 	coll->radius = 100;
 	coll->trigger = 0;
 	coll->slopes_are_walls = 0;
@@ -244,8 +244,8 @@ void LaraSurface(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	AnimateLara(item);
-	item->pos.x_pos += item->fallspeed * phd_sin(lara.move_angle) >> (W2V_SHIFT + 2);
-	item->pos.z_pos += item->fallspeed * phd_cos(lara.move_angle) >> (W2V_SHIFT + 2);
+	item->pos.pos.x += item->fallspeed * phd_sin(lara.move_angle) >> (W2V_SHIFT + 2);
+	item->pos.pos.z += item->fallspeed * phd_cos(lara.move_angle) >> (W2V_SHIFT + 2);
 	LaraBaddieCollision(item, coll);
 
 	if(lara.vehicle == NO_ITEM) {
@@ -291,24 +291,24 @@ long LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll) {
 		return 0;
 	}
 
-	item->pos.y_pos += coll->front_floor + 695;
+	item->pos.pos.y += coll->front_floor + 695;
 	UpdateLaraRoom(item, -381);
 
 	switch(angle) {
 	case 0:
-		item->pos.z_pos = (item->pos.z_pos & ~0x3FF) + 1124;
+		item->pos.pos.z = (item->pos.pos.z & ~0x3FF) + 1124;
 		break;
 
 	case 0x4000:
-		item->pos.x_pos = (item->pos.x_pos & ~0x3FF) + 1124;
+		item->pos.pos.x = (item->pos.pos.x & ~0x3FF) + 1124;
 		break;
 
 	case -0x8000:
-		item->pos.z_pos = (item->pos.z_pos & ~0x3FF) - 100;
+		item->pos.pos.z = (item->pos.pos.z & ~0x3FF) - 100;
 		break;
 
 	case -0x4000:
-		item->pos.x_pos = (item->pos.x_pos & ~0x3FF) - 100;
+		item->pos.pos.x = (item->pos.pos.x & ~0x3FF) - 100;
 		break;
 	}
 
@@ -357,7 +357,7 @@ long LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll) {
 		item->goal_anim_state = AS_WADE;
 	}
 
-	item->pos.y_pos += coll->front_floor + 695;
+	item->pos.pos.y += coll->front_floor + 695;
 	UpdateLaraRoom(item, -381);
 	item->pos.x_rot = 0;
 	item->pos.z_rot = 0;
@@ -370,22 +370,22 @@ long LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll) {
 
 void LaraSurfaceCollision(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->facing = lara.move_angle;
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos + 700, item->pos.z_pos, item->room_number, 800);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y + 700, item->pos.pos.z, item->room_number, 800);
 	ShiftItem(item, coll);
 
 	if(coll->coll_type & (CT_FRONT | CT_TOP | CT_TOP_FRONT | CT_CLAMP)
 	   || coll->mid_floor < 0 && (coll->mid_type == BIG_SLOPE || coll->mid_type == DIAGONAL)) {
 		item->fallspeed = 0;
-		item->pos.x_pos = coll->old.x;
-		item->pos.y_pos = coll->old.y;
-		item->pos.z_pos = coll->old.z;
+		item->pos.pos.x = coll->old.x;
+		item->pos.pos.y = coll->old.y;
+		item->pos.pos.z = coll->old.z;
 	} else if(coll->coll_type == CT_LEFT) {
 		item->pos.y_rot += 910;
 	} else if(coll->coll_type == CT_RIGHT) {
 		item->pos.y_rot -= 910;
 	}
 
-	if(GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number) - item->pos.y_pos > -100) {
+	if(GetWaterHeight(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number) - item->pos.pos.y > -100) {
 		LaraTestWaterStepOut(item, coll);
 	} else {
 		item->anim_number = ANIM_SURFDIVE;

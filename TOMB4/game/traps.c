@@ -96,7 +96,7 @@ void FlameEmitterControl(short item_number) {
 				item, -256 - (3072 * GlobalCounter & 0x1C00),
 				GlobalCounter & 1);
 			TriggerDynamic(
-				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+				item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 				(GetRandomControl() & 3) + 20,
 				(GetRandomControl() & 0x3F) + 192,
 				(GetRandomControl() & 0x1F) + 96, 0);
@@ -138,7 +138,7 @@ void FlameEmitterControl(short item_number) {
 
 			if(item->item_flags[2]) {
 				AddFire(
-					item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 0,
+					item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 0,
 					item->room_number, item->item_flags[2] & 0xFF);
 			}
 
@@ -155,14 +155,14 @@ void FlameEmitterControl(short item_number) {
 				}
 
 				TriggerDynamic(
-					item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+					item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 					(-item->item_flags[1] >> 10) - (GetRandomControl() & 1)
 						+ 16,
 					(GetRandomControl() & 0x3F) + 192,
 					(GetRandomControl() & 0x1F) + 96, 0);
 			} else {
 				TriggerDynamic(
-					item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+					item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 					10 - (GetRandomControl() & 1),
 					(GetRandomControl() & 0x3F) + 192,
 					(GetRandomControl() & 0x1F) + 96, 0);
@@ -173,17 +173,17 @@ void FlameEmitterControl(short item_number) {
 	} else {
 		LibraryTab[item->trigger_flags] = 1;
 		AddFire(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2,
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 2,
 			item->room_number, 0);
 		TriggerDynamic(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 			16 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192,
 			(GetRandomControl() & 0x1F) + 96, 0);
 		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
 
 		if(!lara.burn && ItemNearLara(&item->pos, 600)) {
-			x = lara_item->pos.x_pos - item->pos.x_pos;
-			z = lara_item->pos.z_pos - item->pos.z_pos;
+			x = lara_item->pos.pos.x - item->pos.pos.x;
+			z = lara_item->pos.pos.z - item->pos.pos.z;
 			distance = SQUARE(x) + SQUARE(z);
 
 			if(distance < 0x40000) {
@@ -202,8 +202,8 @@ static long OnTwoBlockPlatform(ITEM_INFO* item, long x, long z) {
 
 	x >>= 10;
 	z >>= 10;
-	tx = item->pos.x_pos >> 10;
-	tz = item->pos.z_pos >> 10;
+	tx = item->pos.pos.x >> 10;
+	tz = item->pos.pos.z >> 10;
 
 	if(!item->pos.y_rot && (x == tx || x == tx - 1) && (z == tz || z == tz + 1)) {
 		return 1;
@@ -230,8 +230,8 @@ static long OnTwoBlockPlatform(ITEM_INFO* item, long x, long z) {
 void TwoBlockPlatformFloor(
 	ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	if(OnTwoBlockPlatform(item, x, z)) {
-		if(y <= item->pos.y_pos + 32 && item->pos.y_pos < *height) {
-			*height = item->pos.y_pos;
+		if(y <= item->pos.pos.y + 32 && item->pos.pos.y < *height) {
+			*height = item->pos.pos.y;
 			*OnObject = 1;
 			*height_type = WALL;
 		}
@@ -241,8 +241,8 @@ void TwoBlockPlatformFloor(
 void TwoBlockPlatformCeiling(
 	ITEM_INFO* item, long x, long y, long z, long* height) {
 	if(OnTwoBlockPlatform(item, x, z)) {
-		if(y > item->pos.y_pos + 32 && item->pos.y_pos > *height) {
-			*height = item->pos.y_pos + 256;
+		if(y > item->pos.pos.y + 32 && item->pos.pos.y > *height) {
+			*height = item->pos.pos.y + 256;
 		}
 	}
 }
@@ -261,27 +261,27 @@ void ControlTwoBlockPlatform(short item_number) {
 	}
 
 	if(item->trigger_flags) {
-		if(item->pos.y_pos > item->item_flags[0]
+		if(item->pos.pos.y > item->item_flags[0]
 			   - ((long)(item->trigger_flags & 0xFFFFFFF0) << 4)) {
-			item->pos.y_pos -= item->trigger_flags & 0xF;
+			item->pos.pos.y -= item->trigger_flags & 0xF;
 		}
 
 		room_number = item->room_number;
 		item->floor = GetHeight(
 			GetFloor(
-				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+				item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 				&room_number),
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(room_number != item->room_number) {
 			ItemNewRoom(item_number, room_number);
 		}
 	} else {
 		OnObject = 0;
-		height = lara_item->pos.y_pos + 1;
+		height = lara_item->pos.pos.y + 1;
 		TwoBlockPlatformFloor(
-			item, lara_item->pos.x_pos, lara_item->pos.y_pos,
-			lara_item->pos.z_pos, &height, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			item, lara_item->pos.pos.x, lara_item->pos.pos.y,
+			lara_item->pos.pos.z, &height, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(!OnObject || lara_item->anim_number == 89) {
 			item->item_flags[1] = -1;
@@ -290,18 +290,18 @@ void ControlTwoBlockPlatform(short item_number) {
 		}
 
 		if(item->item_flags[1] > 0) {
-			if(item->pos.y_pos >= item->item_flags[0] + 128) {
+			if(item->pos.pos.y >= item->item_flags[0] + 128) {
 				item->item_flags[1] = -1;
 			} else {
 				SoundEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
-				item->pos.y_pos += 4;
+				item->pos.pos.y += 4;
 			}
 		} else if(item->item_flags[1] < 0) {
-			if(item->pos.y_pos <= item->item_flags[0]) {
+			if(item->pos.pos.y <= item->item_flags[0]) {
 				item->item_flags[1] = 1;
 			} else {
 				SoundEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
-				item->pos.y_pos -= 4;
+				item->pos.pos.y -= 4;
 			}
 		}
 	}
@@ -317,16 +317,16 @@ void ControlJobySpike(short item_number) {
 	if(TriggerActive(item)) {
 		SoundEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_DEFAULT);
 		GetFrames(lara_item, frm, &rate);
-		y = lara_item->pos.y_pos + frm[0][2];
-		h = item->pos.y_pos + (3328 * item->item_flags[1] >> 12);
+		y = lara_item->pos.pos.y + frm[0][2];
+		h = item->pos.pos.y + (3328 * item->item_flags[1] >> 12);
 
 		if(lara_item->hit_points > 0 && h > y
-		   && abs(item->pos.x_pos - lara_item->pos.x_pos) < 512
-		   && abs(item->pos.z_pos - lara_item->pos.z_pos) < 512) {
+		   && abs(item->pos.pos.x - lara_item->pos.pos.x) < 512
+		   && abs(item->pos.pos.z - lara_item->pos.pos.z) < 512) {
 			DoBloodSplat(
-				lara_item->pos.x_pos + (GetRandomControl() & 0x7F) - 64,
+				lara_item->pos.pos.x + (GetRandomControl() & 0x7F) - 64,
 				GetRandomControl() % (h - y) + y,
-				lara_item->pos.z_pos + (GetRandomControl() & 0x7F) - 64,
+				lara_item->pos.pos.z + (GetRandomControl() & 0x7F) - 64,
 				(GetRandomControl() & 3) + 2, (short)(2 * GetRandomControl()),
 				item->room_number);
 			lara_item->hit_points -= 8;
@@ -381,7 +381,7 @@ void DrawScaledSpike(ITEM_INFO* item) {
 		phd_bottom = r->bottom;
 		GetFrames(item, frm, &rate);
 		phd_PushMatrix();
-		phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 		phd_RotX(item->pos.x_rot);
 		phd_RotZ(item->pos.z_rot);
 		phd_RotY(item->pos.y_rot);
@@ -430,15 +430,15 @@ void ControlSlicerDicer(short item_number) {
 	SoundEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_DEFAULT);
 	SoundEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_DEFAULT);
 	distance = 4608 * phd_cos(item->trigger_flags) >> W2V_SHIFT;
-	item->pos.x_pos = 256 * item->item_flags[0]
+	item->pos.pos.x = 256 * item->item_flags[0]
 		+ (phd_sin(item->pos.y_rot) * distance >> W2V_SHIFT);
-	item->pos.y_pos = 256 * item->item_flags[1]
+	item->pos.pos.y = 256 * item->item_flags[1]
 		- (4608 * phd_sin(item->trigger_flags) >> W2V_SHIFT);
-	item->pos.z_pos = 256 * item->item_flags[2]
+	item->pos.pos.z = 256 * item->item_flags[2]
 		+ (phd_cos(item->pos.y_rot) * distance >> W2V_SHIFT);
 	item->trigger_flags += 170;
 	room_number = item->room_number;
-	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+	GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
 	if(item->room_number != room_number) {
 		ItemNewRoom(item_number, room_number);
@@ -463,9 +463,9 @@ void ControlSprinkler(short item_number) {
 		   && (item->item_flags[0] <= 600
 			   || GetRandomControl() % (item->item_flags[0] - 600) < 100)) {
 			drip = GetFreeDrip();
-			drip->pos.x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
-			drip->pos.y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
-			drip->pos.z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
+			drip->pos.x = (GetRandomControl() & 0x1F) + item->pos.pos.x - 16;
+			drip->pos.y = (GetRandomControl() & 0x1F) + item->pos.pos.y - 944;
+			drip->pos.z = (GetRandomControl() & 0x1F) + item->pos.pos.z - 16;
 			drip->On = 1;
 			drip->R = 112;
 			drip->G = (GetRandomControl() & 0x1F) + 128;
@@ -500,9 +500,9 @@ void ControlSprinkler(short item_number) {
 			sptr->Yvel = -32 - (GetRandomControl() & 0x1F);
 			sptr->Zvel = rcossin_tbl[(vel << 1) + 1] >> 2;
 			sptr->Zvel = (sptr->Zvel * (GetRandomControl() & 0xFF)) >> 8;
-			sptr->x = item->pos.x_pos + (sptr->Xvel >> 3);
-			sptr->y = (sptr->Yvel >> 5) + item->pos.y_pos - 928;
-			sptr->z = item->pos.z_pos + (sptr->Zvel >> 3);
+			sptr->x = item->pos.pos.x + (sptr->Xvel >> 3);
+			sptr->y = (sptr->Yvel >> 5) + item->pos.pos.y - 928;
+			sptr->z = item->pos.pos.z + (sptr->Zvel >> 3);
 			sptr->Friction = 4;
 			sptr->Flags = GetRandomControl() & 0x20;
 			sptr->Gravity = (GetRandomControl() & 0x3F) + 64;
@@ -519,9 +519,9 @@ void ControlSprinkler(short item_number) {
 			smokeptr->TransType = 2;
 			smokeptr->Life = (GetRandomControl() & 3) + 24;
 			smokeptr->sLife = smokeptr->Life;
-			smokeptr->pos.x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
-			smokeptr->pos.y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
-			smokeptr->pos.z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
+			smokeptr->pos.x = (GetRandomControl() & 0x1F) + item->pos.pos.x - 16;
+			smokeptr->pos.y = (GetRandomControl() & 0x1F) + item->pos.pos.y - 944;
+			smokeptr->pos.z = (GetRandomControl() & 0x1F) + item->pos.pos.z - 16;
 			smokeptr->Xvel = 2 * (GetRandomControl() & 0x1FF) - 512;
 
 			if(i) {
@@ -650,12 +650,12 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			}
 
 			TriggerExplosionSparks(
-				mines->pos.x_pos, mines->pos.y_pos, mines->pos.z_pos, 3, -2, 0,
+				mines->pos.pos.x, mines->pos.pos.y, mines->pos.pos.z, 3, -2, 0,
 				mines->room_number);
 
 			for(int j = 0; j < 2; j++) {
 				TriggerExplosionSparks(
-					mines->pos.x_pos, mines->pos.y_pos, mines->pos.z_pos, 3, -1,
+					mines->pos.pos.x, mines->pos.pos.y, mines->pos.pos.z, 3, -1,
 					0, mines->room_number);
 			}
 
@@ -671,12 +671,12 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 	} else if(TestBoundsCollide(item, l, 512)) {
 		TriggerExplosionSparks(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -2, 0,
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 3, -2, 0,
 			item->room_number);
 
 		for(int i = 0; i < 2; i++) {
 			TriggerExplosionSparks(
-				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -1, 0,
+				item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 3, -1, 0,
 				item->room_number);
 		}
 
@@ -713,7 +713,7 @@ void FallingSquishyBlockCollision(
 
 			for(int i = 0; i < 12; i++) {
 				TriggerBlood(
-					l->pos.x_pos, l->pos.y_pos - 128, l->pos.z_pos,
+					l->pos.pos.x, l->pos.pos.y - 128, l->pos.pos.z,
 					GetRandomControl() << 1, 3);
 			}
 		} else if(l->hit_points > 0) {
@@ -760,8 +760,8 @@ void ControlLRSquishyBlock(short item_number) {
 
 	if(item->touch_bits) {
 		ang = (unsigned short)phd_atan(
-				  item->pos.z_pos - lara_item->pos.z_pos,
-				  item->pos.x_pos - lara_item->pos.x_pos)
+				  item->pos.pos.z - lara_item->pos.pos.z,
+				  item->pos.pos.x - lara_item->pos.pos.x)
 			- item->pos.y_rot;
 
 		if(!frame && ang > 0xA000 && ang < 0xE000) {
@@ -1041,8 +1041,8 @@ void ControlHammer(short item_number) {
 
 					if(item2->object_number >= PUSHABLE_OBJECT1
 					   && item2->object_number <= PUSHABLE_OBJECT4
-					   && item2->pos.x_pos == item->pos.x_pos
-					   && item2->pos.z_pos == item->pos.z_pos) {
+					   && item2->pos.pos.x == item->pos.pos.x
+					   && item2->pos.pos.z == item->pos.pos.z) {
 						ExplodeItemNode(item2, 0, 0, 128);
 						KillItem(target_item);
 						hammered = 1;
@@ -1059,8 +1059,8 @@ void ControlHammer(short item_number) {
 						if(item2->object_number == PUZZLE_ITEM4_COMBO1
 						   || item2->object_number == PUZZLE_ITEM4_COMBO2
 						   || item2->object_number == PUZZLE_ITEM5) {
-							if(item2->pos.x_pos == item->pos.x_pos
-							   && item2->pos.z_pos == item->pos.z_pos) {
+							if(item2->pos.pos.x == item->pos.pos.x
+							   && item2->pos.pos.z == item->pos.pos.z) {
 								item2->status = ITEM_INACTIVE;
 							}
 						}
@@ -1154,9 +1154,9 @@ void ControlBurningFloor(short item_number) {
 
 					for(int i = 0; i < nSpheres; i++) {
 						sphere = &Slist[i];
-						dx = sphere->x - torch->pos.x_pos;
-						dy = sphere->y - torch->pos.y_pos;
-						dz = sphere->z - torch->pos.z_pos;
+						dx = sphere->x - torch->pos.pos.x;
+						dy = sphere->y - torch->pos.pos.y;
+						dz = sphere->z - torch->pos.pos.z;
 
 						if(SQUARE(dx) + SQUARE(dy) + SQUARE(dz)
 						   > SQUARE(sphere->r + 32)) {
@@ -1183,8 +1183,8 @@ void ControlBurningFloor(short item_number) {
 
 		if(item->item_flags[size]) {
 			AddFire(
-				item->pos.x_pos + xoff, item->pos.y_pos - (size << 6) - 64,
-				item->pos.z_pos + zoff, size, item->room_number,
+				item->pos.pos.x + xoff, item->pos.pos.y - (size << 6) - 64,
+				item->pos.pos.z + zoff, size, item->room_number,
 				item->item_flags[size]);
 		}
 	}
@@ -1193,11 +1193,11 @@ void ControlBurningFloor(short item_number) {
 		for(int i = 0; i < 3; i++) {
 			xoff = deadly_floor_fires[(i * 2) + 0];
 			zoff = deadly_floor_fires[(i * 2) + 1];
-			dx = abs(item->pos.x_pos + xoff - lara_item->pos.x_pos);
-			dy = abs(item->pos.y_pos - lara_item->pos.y_pos);
+			dx = abs(item->pos.pos.x + xoff - lara_item->pos.pos.x);
+			dy = abs(item->pos.pos.y - lara_item->pos.pos.y);
 			dz = abs(
-				item->pos.z_pos + xoff
-				- lara_item->pos.z_pos); // ORIGINAL BUG uses xoff instead of
+				item->pos.pos.z + xoff
+				- lara_item->pos.pos.z); // ORIGINAL BUG uses xoff instead of
 										 // zoff, only affects last test
 
 			if(dx < 200 && dy < 200 && dz < 200) {
@@ -1291,9 +1291,9 @@ void ControlRaisingBlock(short item_number) {
 			item->item_flags[1] += 64;
 
 			if(item->trigger_flags
-			   && abs(item->pos.x_pos - lara_item->pos.x_pos) < 10240
-			   && abs(item->pos.y_pos - lara_item->pos.y_pos) < 10240
-			   && abs(item->pos.z_pos - lara_item->pos.z_pos) < 10240) {
+			   && abs(item->pos.pos.x - lara_item->pos.pos.x) < 10240
+			   && abs(item->pos.pos.y - lara_item->pos.pos.y) < 10240
+			   && abs(item->pos.pos.z - lara_item->pos.pos.z) < 10240) {
 				if(item->item_flags[1] == 64 || item->item_flags[1] == 4096) {
 					camera.bounce = -32;
 				} else {
@@ -1305,9 +1305,9 @@ void ControlRaisingBlock(short item_number) {
 		SoundEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
 
 		if(item->trigger_flags
-		   && abs(item->pos.x_pos - lara_item->pos.x_pos) < 10240
-		   && abs(item->pos.y_pos - lara_item->pos.y_pos) < 10240
-		   && abs(item->pos.z_pos - lara_item->pos.z_pos) < 10240) {
+		   && abs(item->pos.pos.x - lara_item->pos.pos.x) < 10240
+		   && abs(item->pos.pos.y - lara_item->pos.pos.y) < 10240
+		   && abs(item->pos.pos.z - lara_item->pos.pos.z) < 10240) {
 			if(item->item_flags[1] == 64 || item->item_flags[1] == 4096) {
 				camera.bounce = -32;
 			} else {
@@ -1390,8 +1390,8 @@ void ControlScaledSpike(short item_number) {
 				num = (GetRandomControl() & 3) + 2;
 			}
 
-			yt = (short)(item->pos.y_pos + larabounds[2]);
-			yb = (short)(item->pos.y_pos + larabounds[3]);
+			yt = (short)(item->pos.pos.y + larabounds[2]);
+			yb = (short)(item->pos.pos.y + larabounds[3]);
 
 			if((item->trigger_flags & 0xF) == 8
 			   || !(item->trigger_flags & 0xF)) {
@@ -1402,12 +1402,12 @@ void ControlScaledSpike(short item_number) {
 				iyb2 = bounds[3];
 			}
 
-			if(yt < item->pos.y_pos + iyb1) {
-				yt = (short)(iyb1 + item->pos.y_pos);
+			if(yt < item->pos.pos.y + iyb1) {
+				yt = (short)(iyb1 + item->pos.pos.y);
 			}
 
-			if(yb > item->pos.y_pos + iyb2) {
-				yb = (short)(iyb2 + item->pos.y_pos);
+			if(yb > item->pos.pos.y + iyb2) {
+				yb = (short)(iyb2 + item->pos.pos.y);
 			}
 
 			dy = abs(yt - yb) + 1;
@@ -1417,8 +1417,8 @@ void ControlScaledSpike(short item_number) {
 			}
 
 			while(num--) {
-				dx = (GetRandomControl() & 0x7F) + lara_item->pos.x_pos - 64;
-				dz = (GetRandomControl() & 0x7F) + lara_item->pos.z_pos - 64;
+				dx = (GetRandomControl() & 0x7F) + lara_item->pos.pos.x - 64;
+				dz = (GetRandomControl() & 0x7F) + lara_item->pos.pos.z - 64;
 				TriggerBlood(
 					dx, yb - GetRandomControl() % dy, dz,
 					GetRandomControl() << 1, 1);
@@ -1428,13 +1428,13 @@ void ControlScaledSpike(short item_number) {
 				room_number = lara_item->room_number;
 				dy = GetHeight(
 					GetFloor(
-						lara_item->pos.x_pos, lara_item->pos.y_pos,
-						lara_item->pos.z_pos, &room_number),
-					lara_item->pos.x_pos, lara_item->pos.y_pos,
-					lara_item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+						lara_item->pos.pos.x, lara_item->pos.pos.y,
+						lara_item->pos.pos.z, &room_number),
+					lara_item->pos.pos.x, lara_item->pos.pos.y,
+					lara_item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-				if(item->pos.y_pos >= lara_item->pos.y_pos
-				   && dy - lara_item->pos.y_pos < 50) {
+				if(item->pos.pos.y >= lara_item->pos.pos.y
+				   && dy - lara_item->pos.pos.y < 50) {
 					lara_item->anim_number = ANIM_SPIKED;
 					lara_item->frame_number
 						= GetAnim(currentLevel, ANIM_SPIKED)->frame_base;
@@ -1480,16 +1480,16 @@ void FlameEmitter3Control(short item_number) {
 		SoundEffect(SFX_ELEC_ARCING_LOOP, &item->pos, SFX_DEFAULT);
 		g = (GetRandomControl() & 0x3F) + 192;
 		b = (GetRandomControl() & 0x3F) + 192;
-		s.x = item->pos.x_pos;
-		s.y = item->pos.y_pos;
-		s.z = item->pos.z_pos;
+		s.x = item->pos.pos.x;
+		s.y = item->pos.pos.y;
+		s.z = item->pos.pos.z;
 
 		if(!(GlobalCounter & 3)
 		   && (item->trigger_flags == 2 || item->trigger_flags == 4)) {
-			d.x = item->pos.x_pos
+			d.x = item->pos.pos.x
 				+ (2048 * phd_sin(item->pos.y_rot - 0x8000) >> W2V_SHIFT);
-			d.y = item->pos.y_pos;
-			d.z = item->pos.z_pos
+			d.y = item->pos.pos.y;
+			d.z = item->pos.pos.z
 				+ (2048 * phd_cos(item->pos.y_rot - 0x8000) >> W2V_SHIFT);
 
 			if(GetRandomControl() & 3) {
@@ -1529,9 +1529,9 @@ void FlameEmitter3Control(short item_number) {
 		}
 
 		if((GlobalCounter & 3) == 2) {
-			s.x = item->pos.x_pos;
-			s.y = item->pos.y_pos;
-			s.z = item->pos.z_pos;
+			s.x = item->pos.pos.x;
+			s.y = item->pos.pos.y;
+			s.z = item->pos.pos.z;
 			d.x = s.x + (GetRandomControl() & 0x1FF) - 256;
 			d.y = s.y + (GetRandomControl() & 0x1FF) - 256;
 			d.z = s.z + (GetRandomControl() & 0x1FF) - 256;
@@ -1554,7 +1554,7 @@ void FlameEmitter3Control(short item_number) {
 			x = 16 * (Flame3xzoffs[item->item_flags[1] & 7][0] - 32);
 			z = 16 * (Flame3xzoffs[item->item_flags[1] & 7][1] - 32);
 			TriggerFireFlame(
-				item->pos.x_pos + x, item->pos.y_pos, item->pos.z_pos + z, -1,
+				item->pos.pos.x + x, item->pos.pos.y, item->pos.pos.z + z, -1,
 				2);
 		}
 
@@ -1562,7 +1562,7 @@ void FlameEmitter3Control(short item_number) {
 			x = 16 * (Flame3xzoffs[(item->item_flags[1] >> 3) + 8][0] - 32);
 			z = 16 * (Flame3xzoffs[(item->item_flags[1] >> 3) + 8][1] - 32);
 			TriggerFireFlame(
-				item->pos.x_pos + x, item->pos.y_pos, item->pos.z_pos + z, -1,
+				item->pos.pos.x + x, item->pos.pos.y, item->pos.pos.z + z, -1,
 				2);
 		}
 
@@ -1570,16 +1570,16 @@ void FlameEmitter3Control(short item_number) {
 		distance = GetRandomControl();
 		r = (distance & 0x3F) + 192;
 		g = (distance >> 4 & 0x1F) + 96;
-		TriggerDynamic(x, item->pos.y_pos, z, 12, r, g, 0);
-		pos.x_pos = item->pos.x_pos;
-		pos.y_pos = item->pos.y_pos;
-		pos.z_pos = item->pos.z_pos;
+		TriggerDynamic(x, item->pos.pos.y, z, 12, r, g, 0);
+		pos.pos.x = item->pos.pos.x;
+		pos.pos.y = item->pos.pos.y;
+		pos.pos.z = item->pos.pos.z;
 
 		if(ItemNearLara(&pos, 600) && !lara.burn) {
 			lara_item->hit_points -= 5;
 			lara_item->hit_status = 1;
-			x = lara_item->pos.x_pos - pos.x_pos;
-			z = lara_item->pos.z_pos - pos.z_pos;
+			x = lara_item->pos.pos.x - pos.pos.x;
+			z = lara_item->pos.pos.z - pos.pos.z;
 			distance = SQUARE(x) + SQUARE(z);
 
 			if(distance < 202500) {
@@ -1603,12 +1603,12 @@ void FlameControl(short fx_number) {
 
 	for(int i = 14; i > 0; i--) {
 		if(!(wibble & 0xC)) {
-			fx->pos.x_pos = 0;
-			fx->pos.y_pos = 0;
-			fx->pos.z_pos = 0;
+			fx->pos.pos.x = 0;
+			fx->pos.pos.y = 0;
+			fx->pos.pos.z = 0;
 			GetLaraJointPos((PHD_VECTOR*)&fx->pos, i);
 			TriggerFireFlame(
-				fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, -1,
+				fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z, -1,
 				255 - lara.BurnGreen);
 		}
 	}
@@ -1618,13 +1618,13 @@ void FlameControl(short fx_number) {
 		g = (GetRandomControl() & 0x3F) + 192;
 		b = (GetRandomControl() & 0x1F) + 96;
 		TriggerDynamic(
-			lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos,
+			lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z,
 			13, r, g, b);
 	} else {
 		r = (GetRandomControl() & 0x3F) + 192;
 		g = (GetRandomControl() & 0x1F) + 96;
 		TriggerDynamic(
-			lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos,
+			lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z,
 			13, r, g, 0);
 	}
 
@@ -1633,9 +1633,9 @@ void FlameControl(short fx_number) {
 	}
 
 	wh = GetWaterHeight(
-		fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->room_number);
+		fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z, fx->room_number);
 
-	if(wh != NO_HEIGHT && fx->pos.y_pos > wh) {
+	if(wh != NO_HEIGHT && fx->pos.pos.y > wh) {
 		KillEffect(fx_number);
 		lara.burn = 0;
 		return;
@@ -1673,11 +1673,11 @@ void FlameEmitter2Control(short item_number) {
 	if(item->trigger_flags != 2) {
 		if(item->trigger_flags == 123) {
 			AddFire(
-				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 1,
+				item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 1,
 				item->room_number, item->item_flags[3]);
 		} else {
 			AddFire(
-				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+				item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 				1 - item->trigger_flags, item->room_number,
 				item->item_flags[3]);
 		}
@@ -1693,15 +1693,15 @@ void FlameEmitter2Control(short item_number) {
 		}
 
 		TriggerDynamic(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 10, r, g, 0);
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 10, r, g, 0);
 	}
 
 	if(item->trigger_flags == 2) {
-		item->pos.x_pos += phd_sin(item->pos.y_rot + 0x8000) >> 11;
-		item->pos.z_pos += phd_cos(item->pos.y_rot + 0x8000) >> 11;
+		item->pos.pos.x += phd_sin(item->pos.y_rot + 0x8000) >> 11;
+		item->pos.pos.z += phd_cos(item->pos.y_rot + 0x8000) >> 11;
 		room_number = item->room_number;
 		floor = GetFloor(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
 		if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
 			FlashFadeR = 255;
@@ -1716,12 +1716,12 @@ void FlameEmitter2Control(short item_number) {
 			ItemNewRoom(item_number, room_number);
 		}
 
-		item->pos.y_pos = GetHeight(
-			floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		item->pos.pos.y = GetHeight(
+			floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(wibble & 7) {
 			TriggerFireFlame(
-				item->pos.x_pos, item->pos.y_pos - 32, item->pos.z_pos, -1, 1);
+				item->pos.pos.x, item->pos.pos.y - 32, item->pos.pos.z, -1, 1);
 		}
 	}
 
@@ -1749,10 +1749,10 @@ void LavaBurn(ITEM_INFO* item) {
 
 	if(item->hit_points >= 0 && lara.water_status != LW_FLYCHEAT) {
 		room_number = item->room_number;
-		floor = GetFloor(item->pos.x_pos, 32000, item->pos.z_pos, &room_number);
+		floor = GetFloor(item->pos.pos.x, 32000, item->pos.pos.z, &room_number);
 
 		if(item->floor
-		   == GetHeight(floor, item->pos.x_pos, 32000, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject)) {
+		   == GetHeight(floor, item->pos.pos.x, 32000, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject)) {
 			item->hit_status = 1;
 			item->hit_points = -1;
 			LaraBurn();
@@ -1765,13 +1765,13 @@ long TestBoundsCollideTeethSpikes(ITEM_INFO* item) {
 	long x, y, z, rad, xMin, xMax, zMin, zMax;
 
 	if(item->trigger_flags & 8) {
-		x = item->pos.x_pos & ~0x3FF | 0x200;
-		z = (item->pos.z_pos + SPxzoffs[item->trigger_flags & 7]) & ~0x3FF
+		x = item->pos.pos.x & ~0x3FF | 0x200;
+		z = (item->pos.pos.z + SPxzoffs[item->trigger_flags & 7]) & ~0x3FF
 			| 0x200;
 	} else {
-		x = (item->pos.x_pos - SPxzoffs[item->trigger_flags & 7]) & ~0x3FF
+		x = (item->pos.pos.x - SPxzoffs[item->trigger_flags & 7]) & ~0x3FF
 			| 0x200;
-		z = item->pos.z_pos & ~0x3FF | 0x200;
+		z = item->pos.pos.z & ~0x3FF | 0x200;
 	}
 
 	if(item->trigger_flags & 1) {
@@ -1780,18 +1780,18 @@ long TestBoundsCollideTeethSpikes(ITEM_INFO* item) {
 		rad = 480;
 	}
 
-	y = item->pos.y_pos + SPDETyoffs[item->trigger_flags & 7];
+	y = item->pos.pos.y + SPDETyoffs[item->trigger_flags & 7];
 	bounds = GetBestFrame(lara_item);
 
-	if(lara_item->pos.y_pos + bounds[2] > y
-	   || lara_item->pos.y_pos + bounds[3] < y - 900) {
+	if(lara_item->pos.pos.y + bounds[2] > y
+	   || lara_item->pos.pos.y + bounds[3] < y - 900) {
 		return 0;
 	}
 
-	xMin = lara_item->pos.x_pos + bounds[0];
-	xMax = lara_item->pos.x_pos + bounds[1];
-	zMin = lara_item->pos.z_pos + bounds[4];
-	zMax = lara_item->pos.z_pos + bounds[5];
+	xMin = lara_item->pos.pos.x + bounds[0];
+	xMax = lara_item->pos.pos.x + bounds[1];
+	zMin = lara_item->pos.pos.z + bounds[4];
+	zMax = lara_item->pos.pos.z + bounds[5];
 	return xMin <= x + rad && xMax >= x - rad && zMin <= z + rad
 		&& zMax >= z - rad;
 }
@@ -1811,23 +1811,23 @@ void ControlRollingBall(short item_number) {
 	}
 
 	item->fallspeed += 6;
-	item->pos.x_pos += item->item_flags[0] >> 5;
-	item->pos.y_pos += item->fallspeed;
-	item->pos.z_pos += item->item_flags[1] >> 5;
+	item->pos.pos.x += item->item_flags[0] >> 5;
+	item->pos.pos.y += item->fallspeed;
+	item->pos.pos.z += item->item_flags[1] >> 5;
 	room_number = item->room_number;
 	h = GetHeight(
 			GetFloor(
-				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+				item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 				&room_number),
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject)
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 
-	if(item->pos.y_pos > h) {
+	if(item->pos.pos.y > h) {
 		if(abs(item->fallspeed) > 16) {
 			fz = phd_sqrt(
-				SQUARE(camera.pos.pos.x - item->pos.x_pos)
-				+ SQUARE(camera.pos.pos.y - item->pos.y_pos)
-				+ SQUARE(camera.pos.pos.z - item->pos.z_pos));
+				SQUARE(camera.pos.pos.x - item->pos.pos.x)
+				+ SQUARE(camera.pos.pos.y - item->pos.pos.y)
+				+ SQUARE(camera.pos.pos.z - item->pos.pos.z));
 
 			if(fz < 0x4000) {
 				camera.bounce
@@ -1837,8 +1837,8 @@ void ControlRollingBall(short item_number) {
 			SoundEffect(SFX_BOULDER_FALL, &item->pos, SFX_DEFAULT);
 		}
 
-		if(item->pos.y_pos - h < 512) {
-			item->pos.y_pos = h;
+		if(item->pos.pos.y - h < 512) {
+			item->pos.pos.y = h;
 		}
 
 		if(item->fallspeed > 64) {
@@ -1852,63 +1852,63 @@ void ControlRollingBall(short item_number) {
 		}
 	}
 
-	fx = item->pos.x_pos;
-	fz = item->pos.z_pos + 128;
-	bz = item->pos.z_pos - 128;
-	rx = item->pos.x_pos + 128;
-	lx = item->pos.x_pos - 128;
+	fx = item->pos.pos.x;
+	fz = item->pos.pos.z + 128;
+	bz = item->pos.pos.z - 128;
+	rx = item->pos.pos.x + 128;
+	lx = item->pos.pos.x - 128;
 	fh = GetHeight(
-			 GetFloor(fx, item->pos.y_pos, fz, &room_number), fx,
-			 item->pos.y_pos, fz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
+			 GetFloor(fx, item->pos.pos.y, fz, &room_number), fx,
+			 item->pos.pos.y, fz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	bh = GetHeight(
-			 GetFloor(fx, item->pos.y_pos, bz, &room_number), fx,
-			 item->pos.y_pos, bz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
+			 GetFloor(fx, item->pos.pos.y, bz, &room_number), fx,
+			 item->pos.pos.y, bz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	rh = GetHeight(
-			 GetFloor(rx, item->pos.y_pos, bz + 128, &room_number), rx,
-			 item->pos.y_pos, bz + 128, &height_type, &tiltxoff, &tiltzoff, &OnObject)
+			 GetFloor(rx, item->pos.pos.y, bz + 128, &room_number), rx,
+			 item->pos.pos.y, bz + 128, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	lh = GetHeight(
-			 GetFloor(lx, item->pos.y_pos, bz + 128, &room_number), lx,
-			 item->pos.y_pos, bz + 128, &height_type, &tiltxoff, &tiltzoff, &OnObject)
+			 GetFloor(lx, item->pos.pos.y, bz + 128, &room_number), lx,
+			 item->pos.pos.y, bz + 128, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
-	fx = item->pos.x_pos;
-	fz = item->pos.z_pos + 512;
-	bz = item->pos.z_pos - 512;
-	rx = item->pos.x_pos + 512;
-	lx = item->pos.x_pos - 512;
+	fx = item->pos.pos.x;
+	fz = item->pos.pos.z + 512;
+	bz = item->pos.pos.z - 512;
+	rx = item->pos.pos.x + 512;
+	lx = item->pos.pos.x - 512;
 	fhf = GetHeight(
-			  GetFloor(fx, item->pos.y_pos, fz, &room_number), fx,
-			  item->pos.y_pos, fz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
+			  GetFloor(fx, item->pos.pos.y, fz, &room_number), fx,
+			  item->pos.pos.y, fz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	bhf = GetHeight(
-			  GetFloor(fx, item->pos.y_pos, bz, &room_number), fx,
-			  item->pos.y_pos, bz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
+			  GetFloor(fx, item->pos.pos.y, bz, &room_number), fx,
+			  item->pos.pos.y, bz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	rhf = GetHeight(
-			  GetFloor(rx, item->pos.y_pos, bz + 512, &room_number), rx,
-			  item->pos.y_pos, bz + 512, &height_type, &tiltxoff, &tiltzoff, &OnObject)
+			  GetFloor(rx, item->pos.pos.y, bz + 512, &room_number), rx,
+			  item->pos.pos.y, bz + 512, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	lhf = GetHeight(
-			  GetFloor(lx, item->pos.y_pos, bz + 512, &room_number), lx,
-			  item->pos.y_pos, bz + 512, &height_type, &tiltxoff, &tiltzoff, &OnObject)
+			  GetFloor(lx, item->pos.pos.y, bz + 512, &room_number), lx,
+			  item->pos.pos.y, bz + 512, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 
-	if(item->pos.y_pos - h > -256 || item->pos.y_pos - fhf >= 512
-	   || item->pos.y_pos - rhf >= 512 || item->pos.y_pos - bhf >= 512
-	   || item->pos.y_pos - lhf >= 512) {
+	if(item->pos.pos.y - h > -256 || item->pos.pos.y - fhf >= 512
+	   || item->pos.pos.y - rhf >= 512 || item->pos.pos.y - bhf >= 512
+	   || item->pos.pos.y - lhf >= 512) {
 		velnotadjusted = 0;
 
 		if(fh - h <= 256) {
 			if(fhf - h < -1024 || fh - h < -256) {
 				if(item->item_flags[1] <= 0) {
 					if(!item->item_flags[1] && item->item_flags[0]) {
-						item->pos.z_pos = (item->pos.z_pos & -512) | 512;
+						item->pos.pos.z = (item->pos.pos.z & -512) | 512;
 					}
 				} else {
 					item->item_flags[1] = -item->item_flags[1] >> 1;
-					item->pos.z_pos = (item->pos.z_pos & -512) | 512;
+					item->pos.pos.z = (item->pos.pos.z & -512) | 512;
 				}
 			} else if(fh == h) {
 				velnotadjusted++;
@@ -1922,11 +1922,11 @@ void ControlRollingBall(short item_number) {
 		} else if(bhf - h < -1024 || bh - h < -256) {
 			if(item->item_flags[1] >= 0) {
 				if(!item->item_flags[1] && item->item_flags[0]) {
-					item->pos.z_pos = (item->pos.z_pos & -512) | 512;
+					item->pos.pos.z = (item->pos.pos.z & -512) | 512;
 				}
 			} else {
 				item->item_flags[1] = -item->item_flags[1] >> 1;
-				item->pos.z_pos = (item->pos.z_pos & -512) | 512;
+				item->pos.pos.z = (item->pos.pos.z & -512) | 512;
 			}
 		} else if(bh == h) {
 			velnotadjusted++;
@@ -1948,11 +1948,11 @@ void ControlRollingBall(short item_number) {
 			if(lhf - h < -1024 || lh - h < -256) {
 				if(item->item_flags[0] >= 0) {
 					if(!item->item_flags[0] && item->item_flags[1]) {
-						item->pos.x_pos = (item->pos.x_pos & -512) | 512;
+						item->pos.pos.x = (item->pos.pos.x & -512) | 512;
 					}
 				} else {
 					item->item_flags[0] = -item->item_flags[0] >> 1;
-					item->pos.x_pos = (item->pos.x_pos & -512) | 512;
+					item->pos.pos.x = (item->pos.pos.x & -512) | 512;
 				}
 			} else if(lh == h) {
 				velnotadjusted++;
@@ -1965,11 +1965,11 @@ void ControlRollingBall(short item_number) {
 			if(rhf - h < -1024 || rh - h < -256) {
 				if(item->item_flags[0] <= 0) {
 					if(!item->item_flags[0] && item->item_flags[1]) {
-						item->pos.x_pos = (item->pos.x_pos & -512) | 512;
+						item->pos.pos.x = (item->pos.pos.x & -512) | 512;
 					}
 				} else {
 					item->item_flags[0] = -item->item_flags[0] >> 1;
-					item->pos.x_pos = (item->pos.x_pos & -512) | 512;
+					item->pos.pos.x = (item->pos.pos.x & -512) | 512;
 				}
 			} else if(rh == h) {
 				velnotadjusted++;
@@ -1987,7 +1987,7 @@ void ControlRollingBall(short item_number) {
 		}
 	}
 
-	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+	GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
 
 	if(item->room_number != room_number) {
 		ItemNewRoom(item_number, room_number);
@@ -2030,8 +2030,8 @@ void ControlRollingBall(short item_number) {
 		-= (abs(item->item_flags[0]) + abs(item->item_flags[1])) >> 1;
 	GetHeight(
 		GetFloor(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number),
-		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number),
+		item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	TestTriggers(trigger_index, 1, 0);
 }
 
@@ -2071,32 +2071,32 @@ void DartsControl(short item_number) {
 		lara_item->hit_status = 1;
 		lara.poisoned += 160;
 		DoBloodSplat(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 			(GetRandomControl() & 3) + 4, lara_item->pos.y_rot,
 			lara_item->room_number);
 		KillItem(item_number);
 	} else {
-		x = item->pos.x_pos;
-		z = item->pos.z_pos;
+		x = item->pos.pos.x;
+		z = item->pos.pos.z;
 		speed = (item->speed * phd_cos(item->pos.x_rot)) >> W2V_SHIFT;
-		item->pos.x_pos += (speed * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
-		item->pos.y_pos
+		item->pos.pos.x += (speed * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
+		item->pos.pos.y
 			-= (item->speed * phd_sin(item->pos.x_rot)) >> W2V_SHIFT;
-		item->pos.z_pos += (speed * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
+		item->pos.pos.z += (speed * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
 		room_num = item->room_number;
 		floor = GetFloor(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_num);
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_num);
 
 		if(item->room_number != room_num) {
 			ItemNewRoom(item_number, room_num);
 		}
 
 		item->floor = GetHeight(
-			floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(item->pos.y_pos >= item->floor) {
+		if(item->pos.pos.y >= item->floor) {
 			for(int i = 0; i < 4; i++) {
-				TriggerDartSmoke(x, item->pos.y_pos, z, 0, 0, 1);
+				TriggerDartSmoke(x, item->pos.pos.y, z, 0, 0, 1);
 			}
 
 			KillItem(item_number);
@@ -2140,9 +2140,9 @@ void DartEmitterControl(short item_number) {
 			z = -512;
 		}
 
-		dart->pos.x_pos = x + item->pos.x_pos;
-		dart->pos.y_pos = item->pos.y_pos - 512;
-		dart->pos.z_pos = z + item->pos.z_pos;
+		dart->pos.pos.x = x + item->pos.pos.x;
+		dart->pos.pos.y = item->pos.pos.y - 512;
+		dart->pos.pos.z = z + item->pos.pos.z;
 		InitialiseItem(num);
 		dart->pos.x_rot = 0;
 		dart->pos.y_rot = item->pos.y_rot + 0x8000;
@@ -2172,7 +2172,7 @@ void DartEmitterControl(short item_number) {
 			}
 
 			TriggerDartSmoke(
-				dart->pos.x_pos, dart->pos.y_pos, dart->pos.z_pos, xv, zv, 0);
+				dart->pos.pos.x, dart->pos.pos.y, dart->pos.pos.z, xv, zv, 0);
 		}
 
 		AddActiveItem(num);
@@ -2205,16 +2205,16 @@ void FallingCeiling(short item_number) {
 		room_number = item->room_number;
 		item->floor = GetHeight(
 			GetFloor(
-				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+				item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 				&room_number),
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(room_number != item->room_number) {
 			ItemNewRoom(item_number, room_number);
 		}
 
-		if(item->current_anim_state == 1 && item->pos.y_pos >= item->floor) {
-			item->pos.y_pos = item->floor;
+		if(item->current_anim_state == 1 && item->pos.pos.y >= item->floor) {
+			item->pos.pos.y = item->floor;
 			item->goal_anim_state = 2;
 			item->gravity_status = 0;
 			item->fallspeed = 0;
@@ -2237,7 +2237,7 @@ void ControlSmashableBikeWall(short item_number) {
 		ExplodingDeath2(item_number, -1, 2305);
 		item->mesh_bits = 0;
 		TestTriggersAtXYZ(
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
+			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
 			item->room_number, 1, 0);
 		KillItem(item_number);
 	}
@@ -2252,8 +2252,8 @@ void ControlFallingBlock2(short item_number) {
 		return;
 	}
 
-	if(item->pos.y_pos == lara_item->pos.y_pos
-	   && OnTwoBlockPlatform(item, lara_item->pos.x_pos, lara_item->pos.z_pos)
+	if(item->pos.pos.y == lara_item->pos.pos.y
+	   && OnTwoBlockPlatform(item, lara_item->pos.pos.x, lara_item->pos.pos.z)
 	   && lara.vehicle != NO_ITEM) {
 		SoundEffect(SFX_BIKE_HIT_OBJECTS, &item->pos, SFX_DEFAULT);
 		item->mesh_bits = -2;
@@ -2266,30 +2266,30 @@ void FallingBlockCeiling(
 	ITEM_INFO* item, long x, long y, long z, long* height) {
 	long tx, tz;
 
-	tx = x ^ item->pos.x_pos;
-	tz = z ^ item->pos.z_pos;
+	tx = x ^ item->pos.pos.x;
+	tz = z ^ item->pos.pos.z;
 
 	if(tx & ~1023 || tz & ~1023) {
 		return;
 	}
 
-	if(y > item->pos.y_pos) {
-		*height = item->pos.y_pos + 256;
+	if(y > item->pos.pos.y) {
+		*height = item->pos.pos.y + 256;
 	}
 }
 
 void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	long tx, tz;
 
-	tx = x ^ item->pos.x_pos;
-	tz = z ^ item->pos.z_pos;
+	tx = x ^ item->pos.pos.x;
+	tz = z ^ item->pos.pos.z;
 
 	if(tx & ~1023 || tz & ~1023) {
 		return;
 	}
 
-	if(y <= item->pos.y_pos) {
-		*height = item->pos.y_pos;
+	if(y <= item->pos.pos.y) {
+		*height = item->pos.pos.y;
 		*height_type = WALL;
 		*OnObject = 1;
 	}
@@ -2316,13 +2316,13 @@ void FallingBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	long x, z, tx, tz;
 
 	item = GetItem(currentLevel, item_number);
-	x = l->pos.x_pos;
-	z = l->pos.z_pos;
-	tx = item->pos.x_pos;
-	tz = item->pos.z_pos;
+	x = l->pos.pos.x;
+	z = l->pos.pos.z;
+	tx = item->pos.pos.x;
+	tz = item->pos.pos.z;
 
 	if(!item->item_flags[0] && !item->trigger_flags
-	   && item->pos.y_pos == l->pos.y_pos && !((tx ^ x) & ~1023)
+	   && item->pos.pos.y == l->pos.pos.y && !((tx ^ x) & ~1023)
 	   && !((z ^ tz) & ~1023)) {
 		SoundEffect(SFX_ROCK_FALL_CRUMBLE, &item->pos, SFX_DEFAULT);
 		AddActiveItem(item_number);
@@ -2357,10 +2357,10 @@ void CeilingTrapDoorCollision(
 		item->status = ITEM_ACTIVE;
 		item->goal_anim_state = 1;
 		UseForcedFixedCamera = 1;
-		ForcedFixedCamera.pos.x = item->pos.x_pos
+		ForcedFixedCamera.pos.x = item->pos.pos.x
 			- ((1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
-		ForcedFixedCamera.pos.y = item->pos.y_pos + 1024;
-		ForcedFixedCamera.pos.z = item->pos.z_pos
+		ForcedFixedCamera.pos.y = item->pos.pos.y + 1024;
+		ForcedFixedCamera.pos.z = item->pos.pos.z
 			- ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
 		ForcedFixedCamera.room_number = item->room_number;
 	} else if(item->current_anim_state == 1) {
@@ -2394,11 +2394,11 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				item->goal_anim_state = 1;
 				item->status = ITEM_ACTIVE;
 				UseForcedFixedCamera = 1;
-				ForcedFixedCamera.pos.x = item->pos.x_pos
+				ForcedFixedCamera.pos.x = item->pos.pos.x
 					- ((2048 * phd_sin(item->pos.y_rot) >> W2V_SHIFT));
-				ForcedFixedCamera.pos.z = item->pos.z_pos
+				ForcedFixedCamera.pos.z = item->pos.pos.z
 					- ((2048 * phd_cos(item->pos.y_rot) >> W2V_SHIFT));
-				y = item->pos.y_pos - 2048;
+				y = item->pos.pos.y - 2048;
 
 				if(y < GetRoom(currentLevel, item->room_number)->maxceiling) {
 					y = GetRoom(currentLevel, item->room_number)->maxceiling;
@@ -2423,22 +2423,22 @@ void OpenTrapDoor(ITEM_INFO* item) {
 	pitsky = item->item_flags[3];
 	r = GetRoom(currentLevel, item->room_number);
 	floor = &r->floor
-				 [((item->pos.z_pos - r->z) >> 10)
-				  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+				 [((item->pos.pos.z - r->z) >> 10)
+				  + r->x_size * ((item->pos.pos.x - r->x) >> 10)];
 
-	if(item->pos.y_pos == r->minfloor) {
+	if(item->pos.pos.y == r->minfloor) {
 		floor->pit_room = pitsky & 0xFF;
 		r = GetRoom(currentLevel, floor->pit_room);
 		floor = &r->floor
-					 [((item->pos.z_pos - r->z) >> 10)
-					  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+					 [((item->pos.pos.z - r->z) >> 10)
+					  + r->x_size * ((item->pos.pos.x - r->x) >> 10)];
 		floor->sky_room = pitsky >> 8;
 	} else {
 		floor->sky_room = pitsky >> 8;
 		r = GetRoom(currentLevel, floor->sky_room);
 		floor = &r->floor
-					 [((item->pos.z_pos - r->z) >> 10)
-					  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+					 [((item->pos.pos.z - r->z) >> 10)
+					  + r->x_size * ((item->pos.pos.x - r->x) >> 10)];
 		floor->pit_room = pitsky & 0xFF;
 	}
 
@@ -2452,27 +2452,27 @@ void CloseTrapDoor(ITEM_INFO* item) {
 
 	r = GetRoom(currentLevel, item->room_number);
 	floor = &r->floor
-				 [((item->pos.z_pos - r->z) >> 10)
-				  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+				 [((item->pos.pos.z - r->z) >> 10)
+				  + r->x_size * ((item->pos.pos.x - r->x) >> 10)];
 
-	if(item->pos.y_pos == r->minfloor) {
+	if(item->pos.pos.y == r->minfloor) {
 		pitsky = floor->pit_room;
 		floor->pit_room = 255;
 		r = GetRoom(currentLevel, pitsky);
 		floor = &r->floor
-					 [((item->pos.z_pos - r->z) >> 10)
-					  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+					 [((item->pos.pos.z - r->z) >> 10)
+					  + r->x_size * ((item->pos.pos.x - r->x) >> 10)];
 		pitsky |= floor->sky_room << 8;
 		floor->sky_room = 255;
 		item->item_flags[2] = 1;
 		item->item_flags[3] = pitsky;
-	} else if(item->pos.y_pos == r->maxceiling) {
+	} else if(item->pos.pos.y == r->maxceiling) {
 		pitsky = floor->sky_room;
 		floor->sky_room = 255;
 		r = GetRoom(currentLevel, pitsky);
 		floor = &r->floor
-					 [((item->pos.z_pos - r->z) >> 10)
-					  + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
+					 [((item->pos.pos.z - r->z) >> 10)
+					  + r->x_size * ((item->pos.pos.x - r->x) >> 10)];
 		pitsky <<= 8;
 		pitsky |= floor->pit_room;
 		floor->pit_room = 255;
@@ -2537,24 +2537,24 @@ void ControlObelisk(short item_number) {
 					rad = (GetRandomControl() & 0xFFF) + 3456;
 				}
 
-				s.x = item->pos.x_pos
+				s.x = item->pos.pos.x
 					+ ((3456 * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
-				s.y = item->pos.y_pos - 256;
-				s.z = item->pos.z_pos
+				s.y = item->pos.pos.y - 256;
+				s.z = item->pos.pos.z
 					+ ((3456 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 
-				d.x = item->pos.x_pos
+				d.x = item->pos.pos.x
 					+ ((rad * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
-				d.y = item->pos.y_pos;
-				d.z = item->pos.z_pos
+				d.y = item->pos.pos.y;
+				d.z = item->pos.pos.z
 					+ ((rad * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 
-				if(abs(s.x - lara_item->pos.x_pos) < 20480
-				   && abs(s.y - lara_item->pos.y_pos) < 20480
-				   && abs(s.z - lara_item->pos.z_pos) < 20480
-				   && abs(d.x - lara_item->pos.x_pos) < 20480
-				   && abs(d.y - lara_item->pos.y_pos) < 20480
-				   && abs(d.z - lara_item->pos.z_pos) < 20480) {
+				if(abs(s.x - lara_item->pos.pos.x) < 20480
+				   && abs(s.y - lara_item->pos.pos.y) < 20480
+				   && abs(s.z - lara_item->pos.pos.z) < 20480
+				   && abs(d.x - lara_item->pos.pos.x) < 20480
+				   && abs(d.y - lara_item->pos.pos.y) < 20480
+				   && abs(d.z - lara_item->pos.pos.z) < 20480) {
 					if(!(GlobalCounter & 3)) {
 						TriggerLightning(
 							&s, &d, (GetRandomControl() & 0x1F) + 32,
@@ -2567,10 +2567,10 @@ void ControlObelisk(short item_number) {
 		}
 
 		if(item->item_flags[3] >= 256 && item->trigger_flags == 2) {
-			s.x = item->pos.x_pos
+			s.x = item->pos.pos.x
 				+ ((0x2000 * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
-			s.y = item->pos.y_pos;
-			s.z = item->pos.z_pos
+			s.y = item->pos.pos.y;
+			s.z = item->pos.pos.z
 				+ ((0x2000 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 			SoundEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&s, SFX_DEFAULT);
 
@@ -2579,12 +2579,12 @@ void ControlObelisk(short item_number) {
 				d.y = (GetRandomControl() & 0x3FF) + s.y - 512;
 				d.z = (GetRandomControl() & 0x3FF) + s.z - 512;
 
-				if(abs(s.x - lara_item->pos.x_pos) < 20480
-				   && abs(s.y - lara_item->pos.y_pos) < 20480
-				   && abs(s.z - lara_item->pos.z_pos) < 20480
-				   && abs(d.x - lara_item->pos.x_pos) < 20480
-				   && abs(d.y - lara_item->pos.y_pos) < 20480
-				   && abs(d.z - lara_item->pos.z_pos) < 20480) {
+				if(abs(s.x - lara_item->pos.pos.x) < 20480
+				   && abs(s.y - lara_item->pos.pos.y) < 20480
+				   && abs(s.z - lara_item->pos.pos.z) < 20480
+				   && abs(d.x - lara_item->pos.pos.x) < 20480
+				   && abs(d.y - lara_item->pos.pos.y) < 20480
+				   && abs(d.z - lara_item->pos.pos.z) < 20480) {
 					if(item->item_flags[2] != NO_ITEM) {
 						pyramid = GetItem(currentLevel, item->item_flags[2]);
 						ExplodeItemNode(pyramid, 0, 0, 128);

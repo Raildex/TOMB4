@@ -96,7 +96,7 @@ void LaraCheatyBits() {
 			return;
 		}
 
-		lara_item->pos.y_pos -= 128;
+		lara_item->pos.pos.y -= 128;
 
 		if(lara.water_status != LW_FLYCHEAT) {
 			lara.water_status = LW_FLYCHEAT;
@@ -298,7 +298,7 @@ void AnimateLara(ITEM_INFO* item) {
 		speed += anim->acceleration;
 		item->speed += speed >> 16;
 		item->fallspeed += item->fallspeed < 128 ? 6 : 1;
-		item->pos.y_pos += item->fallspeed;
+		item->pos.pos.y += item->fallspeed;
 	} else {
 		speed = anim->velocity;
 
@@ -314,8 +314,8 @@ void AnimateLara(ITEM_INFO* item) {
 	}
 
 	if(!lara.IsMoving) {
-		item->pos.x_pos += item->speed * phd_sin(lara.move_angle) >> W2V_SHIFT;
-		item->pos.z_pos += item->speed * phd_cos(lara.move_angle) >> W2V_SHIFT;
+		item->pos.pos.x += item->speed * phd_sin(lara.move_angle) >> W2V_SHIFT;
+		item->pos.pos.z += item->speed * phd_cos(lara.move_angle) >> W2V_SHIFT;
 	}
 }
 
@@ -337,9 +337,9 @@ void LaraControl(short item_number) {
 		lara.locationPad = -128;
 	}
 
-	oldx = l->pos.x_pos;
-	oldy = l->pos.y_pos;
-	oldz = l->pos.z_pos;
+	oldx = l->pos.pos.x;
+	oldy = l->pos.pos.y;
+	oldz = l->pos.pos.z;
 
 	if(lara.gun_status == LG_HANDS_BUSY && l->current_anim_state == AS_STOP && l->goal_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status) {
 		lara.gun_status = LG_NO_ARMS;
@@ -351,11 +351,11 @@ void LaraControl(short item_number) {
 
 	lara.IsDucked = 0;
 	room_water_state = GetRoom(currentLevel, l->room_number)->flags & ROOM_UNDERWATER;
-	wd = GetWaterDepth(l->pos.x_pos, l->pos.y_pos, l->pos.z_pos, l->room_number);
-	wh = GetWaterHeight(l->pos.x_pos, l->pos.y_pos, l->pos.z_pos, l->room_number);
+	wd = GetWaterDepth(l->pos.pos.x, l->pos.pos.y, l->pos.pos.z, l->room_number);
+	wh = GetWaterHeight(l->pos.pos.x, l->pos.pos.y, l->pos.pos.z, l->room_number);
 
 	if(wh != NO_HEIGHT) {
-		hfw = l->pos.y_pos - wh;
+		hfw = l->pos.pos.y - wh;
 	} else {
 		hfw = NO_HEIGHT;
 	}
@@ -381,7 +381,7 @@ void LaraControl(short item_number) {
 					lara.air = 1800;
 					lara.water_status = LW_UNDERWATER;
 					l->gravity_status = 0;
-					l->pos.y_pos += 100;
+					l->pos.pos.y += 100;
 					UpdateLaraRoom(l, 0);
 					StopSoundEffect(SFX_LARA_FALL);
 
@@ -425,7 +425,7 @@ void LaraControl(short item_number) {
 				}
 			} else if(hfw > 730) {
 				lara.water_status = LW_SURFACE;
-				l->pos.y_pos += 1 - hfw;
+				l->pos.pos.y += 1 - hfw;
 
 				switch(l->current_anim_state) {
 				case AS_BACK:
@@ -476,7 +476,7 @@ void LaraControl(short item_number) {
 			if(!room_water_state) {
 				if(wd != NO_HEIGHT && abs(hfw) < 256) {
 					lara.water_status = LW_SURFACE;
-					l->pos.y_pos = wh;
+					l->pos.pos.y = wh;
 					l->anim_number = 114;
 					l->frame_number = GetAnim(currentLevel, 114)->frame_base;
 					l->current_anim_state = AS_SURFTREAD;
@@ -603,5 +603,5 @@ void LaraControl(short item_number) {
 		break;
 	}
 
-	savegame.Game.Distance += phd_sqrt(SQUARE(l->pos.x_pos - oldx) + SQUARE(l->pos.y_pos - oldy) + SQUARE(l->pos.z_pos - oldz));
+	savegame.Game.Distance += phd_sqrt(SQUARE(l->pos.pos.x - oldx) + SQUARE(l->pos.pos.y - oldy) + SQUARE(l->pos.pos.z - oldz));
 }

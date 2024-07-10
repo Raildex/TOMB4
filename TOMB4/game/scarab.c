@@ -61,15 +61,15 @@ void ScarabControl(short item_number) {
 	if(item->hit_points <= 0) {
 		if(item->current_anim_state != 6) {
 			if(item->current_anim_state == 7) {
-				if(item->pos.y_pos >= item->floor) {
-					item->pos.y_pos = item->floor;
+				if(item->pos.pos.y >= item->floor) {
+					item->pos.pos.y = item->floor;
 					item->gravity_status = 0;
 					item->fallspeed = 0;
 					item->goal_anim_state = 8;
 				}
 			} else if(item->current_anim_state == 8) {
 				item->pos.x_rot = 0;
-				item->pos.y_pos = item->floor;
+				item->pos.pos.y = item->floor;
 			} else {
 				item->anim_number = GetObjectInfo(currentLevel, BIG_BEETLE)->anim_index + 5;
 				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
@@ -98,7 +98,7 @@ void ScarabControl(short item_number) {
 
 		switch(item->current_anim_state) {
 		case 1:
-			item->pos.y_pos = item->floor;
+			item->pos.pos.y = item->floor;
 			beetle->maximum_turn = 182;
 
 			if(item->hit_status || info.distance < 0x900000 || beetle->hurt_by_lara || item->ai_bits == MODIFY) {
@@ -148,10 +148,10 @@ void ScarabControl(short item_number) {
 
 		case 5:
 			beetle->flags = 0;
-			item->pos.y_pos += 51;
+			item->pos.pos.y += 51;
 
-			if(item->pos.y_pos > item->floor) {
-				item->pos.y_pos = item->floor;
+			if(item->pos.pos.y > item->floor) {
+				item->pos.pos.y = item->floor;
 			}
 
 			break;
@@ -230,9 +230,9 @@ void TriggerScarab(short item_number) {
 
 		if(fx_num != -1) {
 			fx = &Scarabs[fx_num];
-			fx->pos.x_pos = item->pos.x_pos;
-			fx->pos.y_pos = item->pos.y_pos;
-			fx->pos.z_pos = item->pos.z_pos;
+			fx->pos.pos.x = item->pos.pos.x;
+			fx->pos.pos.y = item->pos.pos.y;
+			fx->pos.pos.z = item->pos.pos.z;
 			fx->room_number = item->room_number;
 
 			if(item->item_flags[0]) {
@@ -267,16 +267,16 @@ void UpdateScarabs() {
 		}
 
 
-		oldx = fx->pos.x_pos;
-		oldy = fx->pos.y_pos;
-		oldz = fx->pos.z_pos;
-		fx->pos.x_pos += fx->speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
-		fx->pos.y_pos += fx->fallspeed;
-		fx->pos.z_pos += fx->speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
+		oldx = fx->pos.pos.x;
+		oldy = fx->pos.pos.y;
+		oldz = fx->pos.pos.z;
+		fx->pos.pos.x += fx->speed * phd_sin(fx->pos.y_rot) >> W2V_SHIFT;
+		fx->pos.pos.y += fx->fallspeed;
+		fx->pos.pos.z += fx->speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
 		fx->fallspeed += 6;
-		dx = lara_item->pos.x_pos - fx->pos.x_pos;
-		dy = lara_item->pos.y_pos - fx->pos.y_pos;
-		dz = lara_item->pos.z_pos - fx->pos.z_pos;
+		dx = lara_item->pos.pos.x - fx->pos.pos.x;
+		dy = lara_item->pos.pos.y - fx->pos.pos.y;
+		dz = lara_item->pos.pos.z - fx->pos.pos.z;
 		angle = (short)phd_atan(dz, dx) - fx->pos.y_rot;
 
 		if(abs(dz) < 85 && abs(dy) < 85 && abs(dx) < 85) {
@@ -307,10 +307,10 @@ void UpdateScarabs() {
 			}
 		}
 		old_room = fx->room_number;
-		floor = GetFloor(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &fx->room_number);
-		h = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		floor = GetFloor(fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z, &fx->room_number);
+		h = GetHeight(floor, fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(h < fx->pos.y_pos - 1280 || h == NO_HEIGHT) {
+		if(h < fx->pos.pos.y - 1280 || h == NO_HEIGHT) {
 
 			if(angle <= 0) {
 				fx->pos.y_rot -= 0x4000;
@@ -318,18 +318,18 @@ void UpdateScarabs() {
 				fx->pos.y_rot += 0x4000;
 			}
 
-			fx->pos.x_pos = oldx;
-			fx->pos.y_pos = oldy;
-			fx->pos.z_pos = oldz;
+			fx->pos.pos.x = oldx;
+			fx->pos.pos.y = oldy;
+			fx->pos.pos.z = oldz;
 			fx->fallspeed = 0;
-		} else if(h < fx->pos.y_pos - 64) {
+		} else if(h < fx->pos.pos.y - 64) {
 			fx->pos.x_rot = 0x3800;
-			fx->pos.x_pos = oldx;
-			fx->pos.y_pos = oldy - 24;
-			fx->pos.z_pos = oldz;
+			fx->pos.pos.x = oldx;
+			fx->pos.pos.y = oldy - 24;
+			fx->pos.pos.z = oldz;
 			fx->fallspeed = 0;
-		} else if(fx->pos.y_pos > h) {
-			fx->pos.y_pos = h;
+		} else if(fx->pos.pos.y > h) {
+			fx->pos.pos.y = h;
 			fx->fallspeed = 0;
 			fx->flags |= 1;
 		} else if(fx->fallspeed < 500 && fx->flags < 200) {
@@ -340,14 +340,14 @@ void UpdateScarabs() {
 		if(GetRoom(currentLevel, fx->room_number)->flags & ROOM_UNDERWATER) {
 			fx->fallspeed = 0;
 			fx->speed = 16;
-			fx->pos.y_pos = GetRoom(currentLevel, fx->room_number)->maxceiling + 50;
+			fx->pos.pos.y = GetRoom(currentLevel, fx->room_number)->maxceiling + 50;
 
 			if(!(GetRoom(currentLevel, old_room)->flags & ROOM_UNDERWATER)) {
-				// TriggerSmallSplash(fx->pos.x_pos, room[fx->room_number].maxceiling, fx->pos.z_pos, 16);
-				SetupRipple(fx->pos.x_pos, GetRoom(currentLevel, fx->room_number)->maxceiling, fx->pos.z_pos, (GetRandomControl() & 3) + 48, 2);
+				// TriggerSmallSplash(fx->pos.pos.x, room[fx->room_number].maxceiling, fx->pos.pos.z, 16);
+				SetupRipple(fx->pos.pos.x, GetRoom(currentLevel, fx->room_number)->maxceiling, fx->pos.pos.z, (GetRandomControl() & 3) + 48, 2);
 				// SoundEffect(SFX_RATSPLASH, &fx->pos, 0);
 			} else if(!(GetRandomControl() & 0xF)) {
-				SetupRipple(fx->pos.x_pos, GetRoom(currentLevel, fx->room_number)->maxceiling, fx->pos.z_pos, (GetRandomControl() & 3) + 48, 2);
+				SetupRipple(fx->pos.pos.x, GetRoom(currentLevel, fx->room_number)->maxceiling, fx->pos.pos.z, (GetRandomControl() & 3) + 48, 2);
 			}
 		}
 	}
@@ -364,7 +364,7 @@ void DrawScarabs() {
 
 		if(fx->On) {
 			phd_PushMatrix();
-			phd_TranslateAbs(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+			phd_TranslateAbs(fx->pos.pos.x, fx->pos.pos.y, fx->pos.pos.z);
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
 			phd_PutPolygons_train(*meshpp, 0);
 			phd_PopMatrix();
@@ -386,15 +386,15 @@ void InitialiseScarabGenerator(short item_number) {
 
 	if(!item->item_flags[0]) {
 		if(item->pos.y_rot > 4096 && item->pos.y_rot < 28672) {
-			item->pos.x_pos -= 512;
+			item->pos.pos.x -= 512;
 		} else if(item->pos.y_rot < -4096 && item->pos.y_rot > -28672) {
-			item->pos.x_pos += 512;
+			item->pos.pos.x += 512;
 		}
 
 		if(item->pos.y_rot > -8192 && item->pos.y_rot < 8192) {
-			item->pos.z_pos -= 512;
+			item->pos.pos.z -= 512;
 		} else if(item->pos.y_rot < -20480 || item->pos.y_rot > 20480) {
-			item->pos.z_pos += 512;
+			item->pos.pos.z += 512;
 		}
 	}
 }

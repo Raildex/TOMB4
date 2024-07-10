@@ -17,6 +17,7 @@
 #include "game/larafire.h"
 #include "game/laragunstatus.h"
 #include "game/larainfo.h"
+#include "game/laramesh.h"
 #include "game/laramisc.h"
 #include "game/larawaterstatus.h"
 #include "game/levelinfo.h"
@@ -50,7 +51,7 @@ static void lara_as_swimcheat(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	if(input & IN_ACTION) {
-		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 31, 255, 255, 255);
+		TriggerDynamic(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 31, 255, 255, 255);
 	}
 
 	if(input & IN_ROLL) {
@@ -100,9 +101,9 @@ void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->bad_pos = -NO_HEIGHT;
 	coll->bad_neg = -400;
 	coll->bad_ceiling = 400;
-	coll->old.x = item->pos.x_pos;
-	coll->old.y = item->pos.y_pos;
-	coll->old.z = item->pos.z_pos;
+	coll->old.x = item->pos.pos.x;
+	coll->old.y = item->pos.pos.y;
+	coll->old.z = item->pos.pos.z;
 	coll->radius = lara.water_status == LW_FLYCHEAT ? 100 : 300;
 	coll->trigger = 0;
 	coll->slopes_are_walls = 0;
@@ -155,9 +156,9 @@ void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 
 	AnimateLara(item);
-	item->pos.x_pos += (((phd_sin(item->pos.y_rot) * item->fallspeed) >> 16) * phd_cos(item->pos.x_rot)) >> W2V_SHIFT;
-	item->pos.y_pos -= (phd_sin(item->pos.x_rot) * item->fallspeed) >> 16;
-	item->pos.z_pos += (((phd_cos(item->pos.y_rot) * item->fallspeed) >> 16) * phd_cos(item->pos.x_rot)) >> W2V_SHIFT;
+	item->pos.pos.x += (((phd_sin(item->pos.y_rot) * item->fallspeed) >> 16) * phd_cos(item->pos.x_rot)) >> W2V_SHIFT;
+	item->pos.pos.y -= (phd_sin(item->pos.x_rot) * item->fallspeed) >> 16;
+	item->pos.pos.z += (((phd_cos(item->pos.y_rot) * item->fallspeed) >> 16) * phd_cos(item->pos.x_rot)) >> W2V_SHIFT;
 	LaraBaddieCollision(item, coll);
 
 	if(lara.vehicle == NO_ITEM) {
@@ -285,6 +286,7 @@ void lara_as_uwdeath(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_as_waterroll(ITEM_INFO* item, COLL_INFO* coll) {
+	camera.node = LM_HEAD;
 	if(lara.water_status == LW_FLYCHEAT) {
 		item->current_anim_state = AS_GLIDE;
 	} else {
@@ -298,10 +300,10 @@ void lara_col_uwdeath(ITEM_INFO* item, COLL_INFO* coll) {
 	item->hit_points = -1;
 	lara.air = -1;
 	lara.gun_status = LG_HANDS_BUSY;
-	wh = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
+	wh = GetWaterHeight(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number);
 
-	if(wh != NO_HEIGHT && wh < item->pos.y_pos - 100) {
-		item->pos.y_pos -= 5;
+	if(wh != NO_HEIGHT && wh < item->pos.pos.y - 100) {
+		item->pos.pos.y -= 5;
 	}
 
 	LaraSwimCollision(item, coll);
@@ -418,13 +420,13 @@ void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll) {
 	short room_number;
 
 	room_number = item->room_number;
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	wd = GetWaterDepth(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, room_number);
+	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+	wd = GetWaterDepth(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, room_number);
 
 	if(wd == NO_HEIGHT) {
-		item->pos.x_pos = coll->old.x;
-		item->pos.y_pos = coll->old.y;
-		item->pos.z_pos = coll->old.z;
+		item->pos.pos.x = coll->old.x;
+		item->pos.pos.y = coll->old.y;
+		item->pos.pos.z = coll->old.z;
 		item->fallspeed = 0;
 	} else if(wd <= 512) {
 		item->anim_number = ANIM_SWIM2QSTND;
@@ -437,7 +439,7 @@ void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll) {
 		item->speed = 0;
 		item->fallspeed = 0;
 		lara.water_status = LW_WADE;
-		item->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+		item->pos.pos.y = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 	}
 }
 
@@ -468,13 +470,13 @@ void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll) {
 	coll2 = *coll;
 	coll3 = *coll;
 
-	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos + height / 2, item->pos.z_pos, item->room_number, height);
+	GetCollisionInfo(coll, item->pos.pos.x, item->pos.pos.y + height / 2, item->pos.pos.z, item->room_number, height);
 
 	coll2.facing += 0x2000;
-	GetCollisionInfo(&coll2, item->pos.x_pos, item->pos.y_pos + height / 2, item->pos.z_pos, item->room_number, height);
+	GetCollisionInfo(&coll2, item->pos.pos.x, item->pos.pos.y + height / 2, item->pos.pos.z, item->room_number, height);
 
 	coll3.facing -= 0x2000;
-	GetCollisionInfo(&coll3, item->pos.x_pos, item->pos.y_pos + height / 2, item->pos.z_pos, item->room_number, height);
+	GetCollisionInfo(&coll3, item->pos.pos.x, item->pos.pos.y + height / 2, item->pos.pos.z, item->room_number, height);
 
 	ShiftItem(item, coll);
 
@@ -538,9 +540,9 @@ void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll) {
 
 	case CT_CLAMP:
 		hit = 2;
-		item->pos.x_pos = coll->old.x;
-		item->pos.y_pos = coll->old.y;
-		item->pos.z_pos = coll->old.z;
+		item->pos.pos.x = coll->old.x;
+		item->pos.pos.y = coll->old.y;
+		item->pos.pos.z = coll->old.z;
 		item->fallspeed = 0;
 		break;
 	}
@@ -548,7 +550,7 @@ void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll) {
 	if(coll->mid_floor < 0 && coll->mid_floor != NO_HEIGHT) {
 		hit = 1;
 		item->pos.x_rot += 182;
-		item->pos.y_pos += coll->mid_floor;
+		item->pos.pos.y += coll->mid_floor;
 	}
 
 	if(hit != 2 && lara.water_status != LW_FLYCHEAT) {
@@ -562,10 +564,10 @@ void LaraWaterCurrent(COLL_INFO* coll) {
 	if(lara.current_active) {
 		sinkval = lara.current_active - 1;
 		speed = GetFixedCamera(currentLevel, sinkval)->data;
-		angle = ((mGetAngle(GetFixedCamera(currentLevel, sinkval)->x, GetFixedCamera(currentLevel, sinkval)->z, lara_item->pos.x_pos, lara_item->pos.z_pos) - 0x4000) >> 4) & 0xFFF;
+		angle = ((mGetAngle(GetFixedCamera(currentLevel, sinkval)->x, GetFixedCamera(currentLevel, sinkval)->z, lara_item->pos.pos.x, lara_item->pos.pos.z) - 0x4000) >> 4) & 0xFFF;
 		lara.current_xvel += (short)((((speed * rcossin_tbl[2 * angle]) >> 2) - lara.current_xvel) >> 4);
 		lara.current_zvel += (short)((((speed * rcossin_tbl[2 * angle + 1]) >> 2) - lara.current_zvel) >> 4);
-		lara_item->pos.y_pos += (GetFixedCamera(currentLevel, sinkval)->y - lara_item->pos.y_pos) >> 4;
+		lara_item->pos.pos.y += (GetFixedCamera(currentLevel, sinkval)->y - lara_item->pos.pos.y) >> 4;
 	} else {
 		absvel = abs(lara.current_xvel);
 
@@ -604,11 +606,11 @@ void LaraWaterCurrent(COLL_INFO* coll) {
 		}
 	}
 
-	lara_item->pos.x_pos += lara.current_xvel >> 8;
-	lara_item->pos.z_pos += lara.current_zvel >> 8;
+	lara_item->pos.pos.x += lara.current_xvel >> 8;
+	lara_item->pos.pos.z += lara.current_zvel >> 8;
 	lara.current_active = 0;
-	coll->facing = (short)phd_atan(lara_item->pos.z_pos - coll->old.z, lara_item->pos.x_pos - coll->old.x);
-	GetCollisionInfo(coll, lara_item->pos.x_pos, lara_item->pos.y_pos + 200, lara_item->pos.z_pos, lara_item->room_number, 400);
+	coll->facing = (short)phd_atan(lara_item->pos.pos.z - coll->old.z, lara_item->pos.pos.x - coll->old.x);
+	GetCollisionInfo(coll, lara_item->pos.pos.x, lara_item->pos.pos.y + 200, lara_item->pos.pos.z, lara_item->room_number, 400);
 
 	switch(coll->coll_type) {
 	case CT_FRONT:
@@ -641,11 +643,11 @@ void LaraWaterCurrent(COLL_INFO* coll) {
 	}
 
 	if(coll->mid_floor < 0 && coll->mid_floor != NO_HEIGHT) {
-		lara_item->pos.y_pos += coll->mid_floor;
+		lara_item->pos.pos.y += coll->mid_floor;
 	}
 
 	ShiftItem(lara_item, coll);
-	coll->old.x = lara_item->pos.x_pos;
-	coll->old.y = lara_item->pos.y_pos;
-	coll->old.z = lara_item->pos.z_pos;
+	coll->old.x = lara_item->pos.pos.x;
+	coll->old.y = lara_item->pos.pos.y;
+	coll->old.z = lara_item->pos.pos.z;
 }

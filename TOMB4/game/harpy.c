@@ -36,8 +36,8 @@ void TriggerHarpyMissileFlame(short fx_number, long xv, long yv, long zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - GetEffect(currentLevel, fx_number)->pos.x_pos;
-	dz = lara_item->pos.z_pos - GetEffect(currentLevel, fx_number)->pos.z_pos;
+	dx = lara_item->pos.pos.x - GetEffect(currentLevel, fx_number)->pos.pos.x;
+	dz = lara_item->pos.pos.z - GetEffect(currentLevel, fx_number)->pos.pos.z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -89,9 +89,9 @@ void TriggerHarpyMissile(PHD_3DPOS* pos, short room_number, short mesh) {
 
 	if(fx_num != NO_ITEM) {
 		fx = GetEffect(currentLevel, fx_num);
-		fx->pos.x_pos = pos->x_pos;
-		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
-		fx->pos.z_pos = pos->z_pos;
+		fx->pos.pos.x = pos->pos.x;
+		fx->pos.pos.y = pos->pos.y - (GetRandomControl() & 0x3F) - 32;
+		fx->pos.pos.z = pos->pos.z;
 		fx->pos.x_rot = pos->x_rot;
 		fx->pos.y_rot = pos->y_rot;
 		fx->pos.z_rot = 0;
@@ -108,8 +108,8 @@ void TriggerHarpySparks(long x, long y, long z, short xv, short yv, short zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.z_pos - z;
+	dx = lara_item->pos.pos.x - x;
+	dz = lara_item->pos.pos.z - z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -148,8 +148,8 @@ void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size) 
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - GetItem(currentLevel, item_number)->pos.x_pos;
-	dz = lara_item->pos.z_pos - GetItem(currentLevel, item_number)->pos.z_pos;
+	dx = lara_item->pos.pos.x - GetItem(currentLevel, item_number)->pos.pos.x;
+	dz = lara_item->pos.pos.z - GetItem(currentLevel, item_number)->pos.pos.z;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
@@ -251,10 +251,10 @@ void DoHarpyEffects(ITEM_INFO* item, short item_number) {
 		pos.y = right_hand.y << 1;
 		pos.z = right_hand.z;
 		GetJointAbsPosition(item, &pos, right_hand.mesh_num);
-		mPos.x_pos = rh.x;
-		mPos.y_pos = rh.y;
-		mPos.z_pos = rh.z;
-		phd_GetVectorAngles(pos.x - mPos.x_pos, pos.y - mPos.y_pos, pos.z - mPos.z_pos, angles);
+		mPos.pos.x = rh.x;
+		mPos.pos.y = rh.y;
+		mPos.pos.z = rh.z;
+		phd_GetVectorAngles(pos.x - mPos.pos.x, pos.y - mPos.pos.y, pos.z - mPos.pos.z, angles);
 		mPos.x_rot = angles[1];
 		mPos.y_rot = angles[0];
 		TriggerHarpyMissile(&mPos, item->room_number, 2);
@@ -263,10 +263,10 @@ void DoHarpyEffects(ITEM_INFO* item, short item_number) {
 		pos.y = left_hand.y << 1;
 		pos.z = left_hand.z;
 		GetJointAbsPosition(item, &pos, left_hand.mesh_num);
-		mPos.x_pos = lh.x;
-		mPos.y_pos = lh.y;
-		mPos.z_pos = lh.z;
-		phd_GetVectorAngles(pos.x - mPos.x_pos, pos.y - mPos.y_pos, pos.z - mPos.z_pos, angles);
+		mPos.pos.x = lh.x;
+		mPos.pos.y = lh.y;
+		mPos.pos.z = lh.z;
+		phd_GetVectorAngles(pos.x - mPos.pos.x, pos.y - mPos.pos.y, pos.z - mPos.pos.z, angles);
 		mPos.x_rot = angles[1];
 		mPos.y_rot = angles[0];
 		TriggerHarpyMissile(&mPos, item->room_number, 2);
@@ -311,7 +311,7 @@ void HarpyControl(short item_number) {
 			if(item->current_anim_state != 10) {
 				if(item->current_anim_state == 11) {
 					item->pos.x_rot = 0;
-					item->pos.y_pos = item->floor;
+					item->pos.pos.y = item->floor;
 				} else {
 					item->anim_number = GetObjectInfo(currentLevel, HARPY)->anim_index + 5;
 					item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
@@ -326,8 +326,8 @@ void HarpyControl(short item_number) {
 		}
 
 		if(item->current_anim_state == 10) {
-			if(item->pos.y_pos >= item->floor) {
-				item->pos.y_pos = item->floor;
+			if(item->pos.pos.y >= item->floor) {
+				item->pos.pos.y = item->floor;
 				item->fallspeed = 0;
 				item->goal_anim_state = 11;
 				item->gravity_status = 0;
@@ -350,8 +350,8 @@ void HarpyControl(short item_number) {
 				enemy = GetItem(currentLevel, baddie->item_num);
 
 				if(enemy->object_number == LARA_DOUBLE) {
-					dx = enemy->pos.x_pos - item->pos.x_pos;
-					dz = enemy->pos.z_pos - item->pos.z_pos;
+					dx = enemy->pos.pos.x - item->pos.pos.x;
+					dz = enemy->pos.pos.z - item->pos.pos.z;
 					dist = SQUARE(dx) + SQUARE(dz);
 
 					if(dist < max_dist) {
@@ -366,7 +366,7 @@ void HarpyControl(short item_number) {
 		enemy = harpy->enemy;
 
 		if(enemy != lara_item) {
-			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+			phd_atan(lara_item->pos.pos.z - item->pos.pos.z, lara_item->pos.pos.x - item->pos.pos.x);
 		}
 
 		GetCreatureMood(item, &info, 1);
@@ -385,16 +385,16 @@ void HarpyControl(short item_number) {
 			harpy->maximum_turn = 1274;
 
 			if(enemy) {
-				dy = item->pos.y_pos + 2048;
+				dy = item->pos.pos.y + 2048;
 
-				if(enemy->pos.y_pos > dy && item->floor > dy) {
+				if(enemy->pos.pos.y > dy && item->floor > dy) {
 					item->goal_anim_state = 3;
 					break;
 				}
 			}
 
 			if(info.ahead) {
-				dy = abs(enemy->pos.y_pos - item->pos.y_pos);
+				dy = abs(enemy->pos.pos.y - item->pos.pos.y);
 
 				if(dy <= 1024 && info.distance < 0x1C639) {
 					item->goal_anim_state = 6;
@@ -446,9 +446,9 @@ void HarpyControl(short item_number) {
 			break;
 
 		case 3:
-			dy = item->pos.y_pos + 2048;
+			dy = item->pos.pos.y + 2048;
 
-			if(!enemy || enemy->pos.y_pos < dy || item->floor < dy) {
+			if(!enemy || enemy->pos.pos.y < dy || item->floor < dy) {
 				item->goal_anim_state = 1;
 			}
 
@@ -468,7 +468,7 @@ void HarpyControl(short item_number) {
 		case 5:
 			harpy->maximum_turn = 364;
 			item->goal_anim_state = 2;
-			dy = abs(enemy->pos.y_pos - item->pos.y_pos);
+			dy = abs(enemy->pos.pos.y - item->pos.pos.y);
 
 			if(item->touch_bits & 0x14 || enemy && enemy != lara_item && dy <= 1024 && info.distance < 0x40000) {
 				lara_item->hit_points -= 10;
@@ -487,7 +487,7 @@ void HarpyControl(short item_number) {
 			harpy->maximum_turn = 364;
 
 			if(!harpy->flags) {
-				dy = abs(enemy->pos.y_pos - item->pos.y_pos);
+				dy = abs(enemy->pos.pos.y - item->pos.pos.y);
 
 				if(item->touch_bits & 0x300000 || enemy && enemy != lara_item && dy <= 1024 && info.distance < 0x40000) {
 					lara_item->hit_points -= 100;

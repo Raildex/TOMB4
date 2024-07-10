@@ -57,11 +57,11 @@ void SphinxControl(short item_number) {
 	sphinx = (CREATURE_INFO*)item->data;
 	s = 614 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	c = 614 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
-	x = item->pos.x_pos + s;
-	z = item->pos.z_pos + c;
+	x = item->pos.pos.x + s;
+	z = item->pos.pos.z + c;
 	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h1 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(x, item->pos.pos.y, z, &room_number);
+	h1 = GetHeight(floor, x, item->pos.pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->current_anim_state == 5 && floor->stopper) {
 		r = GetRoom(currentLevel, item->room_number);
@@ -79,10 +79,10 @@ void SphinxControl(short item_number) {
 		}
 	}
 
-	x = item->pos.x_pos - s;
-	z = item->pos.z_pos - c;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	x = item->pos.pos.x - s;
+	z = item->pos.pos.z - c;
+	floor = GetFloor(x, item->pos.pos.y, z, &room_number);
+	h2 = GetHeight(floor, x, item->pos.pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	phd_atan(1228, h2 - h1);
 
 	if(item->ai_bits) {
@@ -94,14 +94,14 @@ void SphinxControl(short item_number) {
 	CreatureAIInfo(item, &info);
 
 	if(sphinx->enemy != lara_item) {
-		phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+		phd_atan(lara_item->pos.pos.z - item->pos.pos.z, lara_item->pos.pos.x - item->pos.pos.x);
 	}
 
 	GetCreatureMood(item, &info, 1);
 	CreatureMood(item, &info, 1);
 	angle = CreatureTurn(item, sphinx->maximum_turn);
-	x = abs(item->item_flags[2] - (short)item->pos.x_pos);
-	z = abs(item->item_flags[3] - (short)item->pos.z_pos);
+	x = abs(item->item_flags[2] - (short)item->pos.pos.x);
+	z = abs(item->item_flags[3] - (short)item->pos.pos.z);
 
 	switch(item->current_anim_state) {
 	case 1:
@@ -131,7 +131,7 @@ void SphinxControl(short item_number) {
 
 		if(info.distance > 0x400000 && abs(info.angle) <= 512 || item->required_anim_state == 5) {
 			item->goal_anim_state = 5;
-		} else if(info.distance < 0x400000 && item->goal_anim_state != 5 && h2 <= item->pos.y_pos + 256 && h2 >= item->pos.y_pos - 256) {
+		} else if(info.distance < 0x400000 && item->goal_anim_state != 5 && h2 <= item->pos.pos.y + 256 && h2 >= item->pos.pos.y - 256) {
 			item->goal_anim_state = 9;
 			item->required_anim_state = 6;
 		}
@@ -160,7 +160,7 @@ void SphinxControl(short item_number) {
 	case 6:
 		sphinx->maximum_turn = 546;
 
-		if(info.distance > 0x400000 || h2 > item->pos.y_pos + 256 || h2 < item->pos.y_pos - 256) {
+		if(info.distance > 0x400000 || h2 > item->pos.pos.y + 256 || h2 < item->pos.pos.y - 256) {
 			item->goal_anim_state = 9;
 			item->required_anim_state = 5;
 		}
@@ -169,8 +169,8 @@ void SphinxControl(short item_number) {
 
 	case 7:
 		room_number = item->room_number;
-		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+		GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
 			TestTriggers(trigger_index, 1, 0);
@@ -195,7 +195,7 @@ void SphinxControl(short item_number) {
 		break;
 	}
 
-	item->item_flags[2] = (short)item->pos.x_pos;
-	item->item_flags[3] = (short)item->pos.z_pos;
+	item->item_flags[2] = (short)item->pos.pos.x;
+	item->item_flags[3] = (short)item->pos.pos.z;
 	CreatureAnimation(item_number, angle, 0);
 }

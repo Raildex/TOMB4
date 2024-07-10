@@ -143,8 +143,8 @@ long GetSwitchTrigger(ITEM_INFO* item, short* ItemNos, long AttatchedToSwitch) {
 	short* data;
 	long num;
 
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number);
-	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &item->room_number);
+	GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(!trigger_index) {
 		return 0;
@@ -356,9 +356,9 @@ void UnderwaterSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			item->goal_anim_state = 1;
 			item->status = ITEM_ACTIVE;
 			AddActiveItem(item_number);
-			ForcedFixedCamera.pos.x = item->pos.x_pos - ((1024 * phd_sin(item->pos.y_rot + 16380)) >> W2V_SHIFT);
-			ForcedFixedCamera.pos.y = item->pos.y_pos - 1024;
-			ForcedFixedCamera.pos.z = item->pos.z_pos - ((1024 * phd_cos(item->pos.y_rot + 16380)) >> W2V_SHIFT);
+			ForcedFixedCamera.pos.x = item->pos.pos.x - ((1024 * phd_sin(item->pos.y_rot + 16380)) >> W2V_SHIFT);
+			ForcedFixedCamera.pos.y = item->pos.pos.y - 1024;
+			ForcedFixedCamera.pos.z = item->pos.pos.z - ((1024 * phd_cos(item->pos.y_rot + 16380)) >> W2V_SHIFT);
 			ForcedFixedCamera.room_number = item->room_number;
 		}
 	}
@@ -376,10 +376,10 @@ void PulleyCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		if(TestLaraPosition(PulleyBounds, item, l)) {
 			if(item->item_flags[1]) {
-				if(OldPickupPos.x != l->pos.x_pos || OldPickupPos.y != l->pos.y_pos || OldPickupPos.z != l->pos.z_pos) {
-					OldPickupPos.x = l->pos.x_pos;
-					OldPickupPos.y = l->pos.y_pos;
-					OldPickupPos.z = l->pos.z_pos;
+				if(OldPickupPos.x != l->pos.pos.x || OldPickupPos.y != l->pos.pos.y || OldPickupPos.z != l->pos.pos.z) {
+					OldPickupPos.x = l->pos.pos.x;
+					OldPickupPos.y = l->pos.pos.y;
+					OldPickupPos.z = l->pos.pos.z;
 					SayNo();
 				}
 			} else {
@@ -494,8 +494,8 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->item_flags[0] = 1;
 				flag = -1;
-				ForcedFixedCamera.pos.x = item->pos.x_pos - ((1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
-				ForcedFixedCamera.pos.z = item->pos.z_pos - ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
+				ForcedFixedCamera.pos.x = item->pos.pos.x - ((1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
+				ForcedFixedCamera.pos.z = item->pos.pos.z - ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
 			} else {
 				lara.GeneralPtr = item_number;
 			}
@@ -508,8 +508,8 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 					l->anim_number = ANIM_TURNSWITCHC;
 					l->frame_number = GetAnim(currentLevel, ANIM_TURNSWITCHC)->frame_base;
 					item->item_flags[0] = 2;
-					ForcedFixedCamera.pos.x = item->pos.x_pos + ((1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
-					ForcedFixedCamera.pos.z = item->pos.z_pos + ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
+					ForcedFixedCamera.pos.x = item->pos.pos.x + ((1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT);
+					ForcedFixedCamera.pos.z = item->pos.pos.z + ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT);
 				} else {
 					lara.GeneralPtr = item_number;
 				}
@@ -544,7 +544,7 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		lara.gun_status = LG_HANDS_BUSY;
 		l->current_anim_state = AS_TURNSWITCH;
 		UseForcedFixedCamera = 1;
-		ForcedFixedCamera.pos.y = item->pos.y_pos - 2048;
+		ForcedFixedCamera.pos.y = item->pos.pos.y - 2048;
 		ForcedFixedCamera.room_number = item->room_number;
 		AddActiveItem(item_number);
 		item->status = ITEM_ACTIVE;
@@ -721,10 +721,10 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		} else {
 			if(lara.crowbar) {
 				GLOBAL_enterinventory = CROWBAR_ITEM;
-			} else if(OldPickupPos.x != l->pos.x_pos || OldPickupPos.y != l->pos.y_pos || OldPickupPos.z != l->pos.z_pos) {
-				OldPickupPos.x = l->pos.x_pos;
-				OldPickupPos.y = l->pos.y_pos;
-				OldPickupPos.z = l->pos.z_pos;
+			} else if(OldPickupPos.x != l->pos.pos.x || OldPickupPos.y != l->pos.pos.y || OldPickupPos.z != l->pos.pos.z) {
+				OldPickupPos.x = l->pos.pos.x;
+				OldPickupPos.y = l->pos.pos.y;
+				OldPickupPos.z = l->pos.pos.z;
 				SayNo();
 			}
 		}
@@ -797,7 +797,7 @@ void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	short* data;
 
 	item = GetItem(currentLevel, item_number);
-	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	GetHeight(GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &item->room_number), item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	data = trigger_index;
 
 	while((*data & 0x1F) != TRIGGER_TYPE && !(*data & 0x8000)) {
@@ -832,7 +832,7 @@ void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				if(!door->Opened) {
 					AddActiveItem(GetItemNum(currentLevel, door_item));
 					door_item->status = ITEM_ACTIVE;
-					*(long*)&door_item->item_flags[2] = door_item->pos.y_pos;
+					*(long*)&door_item->item_flags[2] = door_item->pos.pos.y;
 				}
 			} else {
 				lara.GeneralPtr = item_number;

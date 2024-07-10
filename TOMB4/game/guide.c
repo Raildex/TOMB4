@@ -102,8 +102,8 @@ void GuideControl(short item_number) {
 
 	item->ai_bits = FOLLOW;
 	GetAITarget(guide);
-	x = lara_item->pos.x_pos - item->pos.x_pos;
-	z = lara_item->pos.z_pos - item->pos.z_pos;
+	x = lara_item->pos.pos.x - item->pos.pos.x;
+	z = lara_item->pos.pos.z - item->pos.pos.z;
 	iAngle = (short)(phd_atan(z, x) - item->pos.y_rot);
 
 	if(iAngle > -0x4000 && iAngle < 0x4000) {
@@ -122,9 +122,9 @@ void GuideControl(short item_number) {
 	z = abs(z);
 
 	if(x > z) {
-		xAngle = (short)phd_atan(x + (z >> 1), item->pos.y_pos - lara_item->pos.y_pos);
+		xAngle = (short)phd_atan(x + (z >> 1), item->pos.pos.y - lara_item->pos.pos.y);
 	} else {
-		xAngle = (short)phd_atan(z + (x >> 1), item->pos.y_pos - lara_item->pos.y_pos);
+		xAngle = (short)phd_atan(z + (x >> 1), item->pos.pos.y - lara_item->pos.pos.y);
 	}
 
 	target = 0;
@@ -135,9 +135,9 @@ void GuideControl(short item_number) {
 			if(baddie_slots[i].item_num != NO_ITEM && baddie_slots[i].item_num != item_number) {
 				candidate = GetItem(currentLevel, baddie_slots[i].item_num);
 
-				if(candidate->object_number != GUIDE && abs(candidate->pos.y_pos - item->pos.y_pos) <= 512) {
-					x = candidate->pos.x_pos - item->pos.x_pos;
-					z = candidate->pos.z_pos - item->pos.z_pos;
+				if(candidate->object_number != GUIDE && abs(candidate->pos.pos.y - item->pos.pos.y) <= 512) {
+					x = candidate->pos.pos.x - item->pos.pos.x;
+					z = candidate->pos.pos.z - item->pos.pos.z;
 
 					if(z > 32000 || z < -32000 || x > 32000 || x < -32000) {
 						dist = infinite_distance;
@@ -145,7 +145,7 @@ void GuideControl(short item_number) {
 						dist = SQUARE(x) + SQUARE(z);
 					}
 
-					if(dist < bestdist && dist < 0x400000 && (abs(item->pos.y_pos - candidate->pos.y_pos) < 256 || iDistance < 0x400000 || candidate->object_number == FUCKED_UP_DOG)) {
+					if(dist < bestdist && dist < 0x400000 && (abs(item->pos.pos.y - candidate->pos.pos.y) < 256 || iDistance < 0x400000 || candidate->object_number == FUCKED_UP_DOG)) {
 						target = candidate;
 						bestdist = dist;
 					}
@@ -422,9 +422,9 @@ void GuideControl(short item_number) {
 		}
 
 		if(item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 15 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 26) {
-			x = abs(enemy->pos.x_pos - item->pos.x_pos);
-			y = abs(enemy->pos.y_pos - item->pos.y_pos);
-			z = abs(enemy->pos.z_pos - item->pos.z_pos);
+			x = abs(enemy->pos.pos.x - item->pos.pos.x);
+			y = abs(enemy->pos.pos.y - item->pos.pos.y);
+			z = abs(enemy->pos.pos.z - item->pos.pos.z);
 
 			if(x < 512 && y <= 512 && z < 512) {
 				enemy->hit_points -= 20;
@@ -467,7 +467,7 @@ void GuideControl(short item_number) {
 			item->goal_anim_state = 43;
 		} else if(item->anim_number != GetObjectInfo(currentLevel, GUIDE)->anim_index + 57 && item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end - 20) {
 			item->goal_anim_state = 1;
-			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
+			TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 1, 0);
 			guide->reached_goal = 0;
 			guide->enemy = NULL;
 			item->ai_bits = FOLLOW;
@@ -480,9 +480,9 @@ void GuideControl(short item_number) {
 
 		if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
 			got_torch = 1;
-			item->pos.x_pos = enemy->pos.x_pos;
-			item->pos.y_pos = enemy->pos.y_pos;
-			item->pos.z_pos = enemy->pos.z_pos;
+			item->pos.pos.x = enemy->pos.pos.x;
+			item->pos.pos.y = enemy->pos.pos.y;
+			item->pos.pos.z = enemy->pos.pos.z;
 			item->pos.x_rot = enemy->pos.x_rot;
 			item->pos.y_rot = enemy->pos.y_rot;
 			item->pos.z_rot = enemy->pos.z_rot;
@@ -492,7 +492,7 @@ void GuideControl(short item_number) {
 			for(candidate_num = GetRoom(currentLevel, item->room_number)->item_number; candidate_num != NO_ITEM; candidate_num = candidate->next_item) {
 				candidate = GetItem(currentLevel, candidate_num);
 
-				if(candidate->object_number >= ANIMATING1 && candidate->object_number <= ANIMATING15 && !((item->pos.z_pos ^ candidate->pos.z_pos) & ~0x3FF) && !((item->pos.x_pos ^ candidate->pos.x_pos) & ~0x3FF)) {
+				if(candidate->object_number >= ANIMATING1 && candidate->object_number <= ANIMATING15 && !((item->pos.pos.z ^ candidate->pos.pos.z) & ~0x3FF) && !((item->pos.pos.x ^ candidate->pos.pos.x) & ~0x3FF)) {
 					candidate->mesh_bits = 0xFFFFFFFD;
 					break;
 				}
@@ -513,11 +513,11 @@ void GuideControl(short item_number) {
 	case 38:
 
 		if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
-			item->pos.x_pos = enemy->pos.x_pos;
-			item->pos.y_pos = enemy->pos.y_pos;
-			item->pos.z_pos = enemy->pos.z_pos;
+			item->pos.pos.x = enemy->pos.pos.x;
+			item->pos.pos.y = enemy->pos.pos.y;
+			item->pos.pos.z = enemy->pos.pos.z;
 		} else if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 42) {
-			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
+			TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 1, 0);
 			item->pos.y_rot = enemy->pos.y_rot;
 			guide->reached_goal = 0;
 			guide->enemy = NULL;
@@ -547,7 +547,7 @@ void GuideControl(short item_number) {
 			}
 		} else if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 20) {
 			item->goal_anim_state = 1;
-			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
+			TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 1, 0);
 			guide->reached_goal = 0;
 			guide->enemy = NULL;
 			item->ai_bits = FOLLOW;
@@ -580,7 +580,7 @@ void GuideControl(short item_number) {
 			}
 
 			if(enemy->flags == 42) {
-				TestTriggersAtXYZ(enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, enemy->room_number, 1, 0);
+				TestTriggersAtXYZ(enemy->pos.pos.x, enemy->pos.pos.y, enemy->pos.pos.z, enemy->room_number, 1, 0);
 				guide->reached_goal = 0;
 				guide->enemy = NULL;
 				item->ai_bits = FOLLOW;

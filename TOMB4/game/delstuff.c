@@ -132,9 +132,9 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 
 	if(1) {
 		if(input & IN_LOOK) {
-			dx = lara_item->pos.x_pos - CamPos.x;
-			dy = lara_item->pos.y_pos - CamPos.y - 512;
-			dz = lara_item->pos.z_pos - CamPos.z;
+			dx = lara_item->pos.pos.x - CamPos.x;
+			dy = lara_item->pos.pos.y - CamPos.y - 512;
+			dz = lara_item->pos.pos.z - CamPos.z;
 			dist = phd_sqrt(SQUARE(dx) + SQUARE(dy) + SQUARE(dz));
 			a = dist >> 2;
 
@@ -338,9 +338,9 @@ void GetLaraJointPos(PHD_VECTOR* pos, long node) {
 	pos->x = (long)mMXPtr[M03];
 	pos->y = (long)mMXPtr[M13];
 	pos->z = (long)mMXPtr[M23];
-	pos->x += lara_item->pos.x_pos;
-	pos->y += lara_item->pos.y_pos;
-	pos->z += lara_item->pos.z_pos;
+	pos->x += lara_item->pos.pos.x;
+	pos->y += lara_item->pos.pos.y;
+	pos->z += lara_item->pos.pos.z;
 	phd_PopMatrix();
 }
 
@@ -349,9 +349,9 @@ void SetLaraUnderwaterNodes() {
 	long bit;
 	short room_num;
 
-	pos.x = lara_item->pos.x_pos;
-	pos.y = lara_item->pos.y_pos;
-	pos.z = lara_item->pos.z_pos;
+	pos.x = lara_item->pos.pos.x;
+	pos.y = lara_item->pos.pos.y;
+	pos.z = lara_item->pos.pos.z;
 	room_num = lara_item->room_number;
 	GetFloor(pos.x, pos.y, pos.z, &room_num);
 	bLaraInWater = GetRoom(currentLevel, room_num)->flags & ROOM_UNDERWATER ? 1 : 0;
@@ -405,7 +405,7 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag) {
 	phd_PushMatrix();
 
 	if(!flag || flag == 2) {
-		phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+		phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 	} else {
 		phd_SetTrans(0, 0, 0);
 	}
@@ -714,7 +714,7 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	phd_PushMatrix();
 
 	if(!flag || flag == 2) {
-		phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+		phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 	} else {
 		phd_SetTrans(0, 0, 0);
 	}

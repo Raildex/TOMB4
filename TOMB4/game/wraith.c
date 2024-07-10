@@ -35,9 +35,9 @@ void InitialiseWraith(short item_number) {
 	item->speed = WraithSpeed;
 
 	for(int i = 0; i < 8; i++) {
-		data->pos.x = item->pos.x_pos;
-		data->pos.y = item->pos.y_pos;
-		data->pos.z = item->pos.z_pos;
+		data->pos.x = item->pos.pos.x;
+		data->pos.y = item->pos.pos.y;
+		data->pos.z = item->pos.pos.z;
 		data->xv = 0;
 		data->yv = 0;
 		data->zv = 0;
@@ -183,14 +183,14 @@ void WraithControl(short item_number) {
 	}
 
 	if(target == lara_item || target->object_number == ANIMATING10) {
-		dx = target->pos.x_pos - item->pos.x_pos;
-		dz = target->pos.z_pos - item->pos.z_pos;
+		dx = target->pos.pos.x - item->pos.pos.x;
+		dz = target->pos.pos.z - item->pos.pos.z;
 		dist = SQUARE(dx) + SQUARE(dz);
-		dy = (target->pos.y_pos - item->pos.y_pos - 128) - abs((dist >> 13) - 512);
+		dy = (target->pos.pos.y - item->pos.pos.y - 128) - abs((dist >> 13) - 512);
 	} else {
 		r = GetRoom(currentLevel, lara_item->room_number);
-		dx = r->x + (r->y_size << 9) - item->pos.x_pos;
-		dz = r->z + (r->x_size << 9) - item->pos.z_pos;
+		dx = r->x + (r->y_size << 9) - item->pos.pos.x;
+		dz = r->z + (r->x_size << 9) - item->pos.pos.z;
 		dist = SQUARE(dx) + SQUARE(dz);
 		y = r->y + ((r->minfloor - r->maxceiling) >> 1);
 		dy = y - abs((dist >> 13) - 768);
@@ -241,22 +241,22 @@ void WraithControl(short item_number) {
 
 	oob = 0;
 	room_number = item->room_number;
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-	c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+	h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
-	if(h < item->pos.y_pos || c > item->pos.y_pos) {
+	if(h < item->pos.pos.y || c > item->pos.pos.y) {
 		oob = 1;
 	}
 
-	x = item->pos.x_pos;
-	y = item->pos.y_pos;
-	z = item->pos.z_pos;
-	item->pos.x_pos += (item->speed * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
-	item->pos.y_pos += (item->speed * phd_sin(item->pos.x_rot)) >> W2V_SHIFT;
-	item->pos.z_pos += (item->speed * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
+	x = item->pos.pos.x;
+	y = item->pos.pos.y;
+	z = item->pos.pos.z;
+	item->pos.pos.x += (item->speed * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
+	item->pos.pos.y += (item->speed * phd_sin(item->pos.x_rot)) >> W2V_SHIFT;
+	item->pos.pos.z += (item->speed * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
 	IsRoomOutsideNo = 255;
-	IsRoomOutside(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	IsRoomOutside(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
 	if(item->room_number != IsRoomOutsideNo && IsRoomOutsideNo != 255) {
 		ItemNewRoom(item_number, IsRoomOutsideNo);
@@ -279,7 +279,7 @@ void WraithControl(short item_number) {
 
 	if(item->object_number != WRAITH3) {
 		if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
-			TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, -2, 1, item->room_number);
+			TriggerExplosionSparks(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 2, -2, 1, item->room_number);
 			item->item_flags[1]--;
 
 			if(item->item_flags[1] <= -2) {
@@ -303,7 +303,7 @@ void WraithControl(short item_number) {
 		}
 	}
 
-	if(dist < 28900 && abs(item->pos.y_pos - (target->pos.y_pos - 384)) < 256) {
+	if(dist < 28900 && abs(item->pos.pos.y - (target->pos.pos.y - 384)) < 256) {
 		if(item->speed > 32) {
 			item->speed -= 12;
 		}
@@ -322,9 +322,9 @@ void WraithControl(short item_number) {
 			item->ai_bits++;
 
 			if(item->ai_bits > 25) {
-				item->pos.x_pos = target->pos.x_pos;
-				item->pos.y_pos = target->pos.y_pos - 384;
-				item->pos.z_pos = target->pos.z_pos;
+				item->pos.pos.x = target->pos.pos.x;
+				item->pos.pos.y = target->pos.pos.y - 384;
+				item->pos.pos.z = target->pos.pos.z;
 				ShockwaveExplosion(item, 0x606060, -32);
 				ShockwaveExplosion(item, 0x303030, 48);
 				target->hit_points = 0;
@@ -340,7 +340,7 @@ void WraithControl(short item_number) {
 			target->ai_bits = 10;
 
 			if(item->ai_bits) {
-				TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, -2, 1, item->room_number);
+				TriggerExplosionSparks(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 2, -2, 1, item->room_number);
 				target->hit_points = 0;
 				KillItem(item->hit_points);
 				KillItem(item_number);
@@ -359,13 +359,13 @@ void WraithControl(short item_number) {
 	}
 
 	room_number = item->room_number;
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-	c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number);
+	h = GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	c = GetCeiling(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
 
-	if(h >= item->pos.y_pos && c <= item->pos.y_pos) {
+	if(h >= item->pos.pos.y && c <= item->pos.pos.y) {
 		if(oob) {
-			TriggerWraithEffect(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->pos.y_rot, item->object_number);
+			TriggerWraithEffect(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->pos.y_rot, item->object_number);
 		}
 	} else if(!oob) {
 		TriggerWraithEffect(x, y, z, item->pos.y_rot + 0x8000, item->object_number);
@@ -405,16 +405,16 @@ void WraithControl(short item_number) {
 		wraith--;
 	}
 
-	wraith->pos.x = item->pos.x_pos;
-	wraith->pos.y = item->pos.y_pos;
-	wraith->pos.z = item->pos.z_pos;
-	wraith->xv = (short)((item->pos.x_pos - x) << 2);
-	wraith->yv = (short)((item->pos.y_pos - y) << 2);
-	wraith->zv = (short)((item->pos.z_pos - z) << 2);
-	TriggerWraithFlame(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, wraith->xv, wraith->yv, wraith->zv, item->object_number);
-	dx = (item->pos.x_pos + x) >> 1;
-	dy = (item->pos.y_pos + y) >> 1;
-	dz = (item->pos.z_pos + z) >> 1;
+	wraith->pos.x = item->pos.pos.x;
+	wraith->pos.y = item->pos.pos.y;
+	wraith->pos.z = item->pos.pos.z;
+	wraith->xv = (short)((item->pos.pos.x - x) << 2);
+	wraith->yv = (short)((item->pos.pos.y - y) << 2);
+	wraith->zv = (short)((item->pos.pos.z - z) << 2);
+	TriggerWraithFlame(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, wraith->xv, wraith->yv, wraith->zv, item->object_number);
+	dx = (item->pos.pos.x + x) >> 1;
+	dy = (item->pos.pos.y + y) >> 1;
+	dz = (item->pos.pos.z + z) >> 1;
 	TriggerWraithFlame(dx, dy, dz, wraith->xv, wraith->yv, wraith->zv, item->object_number);
 
 	if(item->object_number == WRAITH3) {

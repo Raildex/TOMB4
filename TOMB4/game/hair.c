@@ -49,9 +49,9 @@ void InitialiseHair() {
 		first_hair[i] = 1;
 
 		for(int j = 1; j < 7; j++, bone += 4) {
-			hptr->pos.x_pos = bone[3];
-			hptr->pos.y_pos = bone[2];
-			hptr->pos.z_pos = bone[1];
+			hptr->pos.pos.x = bone[3];
+			hptr->pos.pos.y = bone[2];
+			hptr->pos.pos.z = bone[1];
 			hptr->pos.x_rot = -16384;
 			hptr->pos.y_rot = 0;
 			hptr->pos.z_rot = 0;
@@ -109,7 +109,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 	}
 
 	phd_PushUnitMatrix();
-	phd_SetTrans(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+	phd_SetTrans(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 	phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
 
 	if(frac) {
@@ -311,18 +311,18 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 
 	if(first_hair[pigtail]) {
 		first_hair[pigtail] = 0;
-		hair->pos.x_pos = pos.x;
-		hair->pos.y_pos = pos.y;
-		hair->pos.z_pos = pos.z;
+		hair->pos.pos.x = pos.x;
+		hair->pos.pos.y = pos.y;
+		hair->pos.pos.z = pos.z;
 
 		for(int i = 0; i < 6; i++, bone += 4) {
 			phd_PushUnitMatrix();
-			phd_SetTrans(hair->pos.x_pos, hair->pos.y_pos, hair->pos.z_pos);
+			phd_SetTrans(hair->pos.pos.x, hair->pos.pos.y, hair->pos.pos.z);
 			phd_RotYXZ(hair->pos.y_rot, hair->pos.x_rot, 0);
 			phd_TranslateRel(bone[1], bone[2], bone[3]);
-			(hair + 1)->pos.x_pos = (long)mMXPtr[M03];
-			(hair + 1)->pos.y_pos = (long)mMXPtr[M13];
-			(hair + 1)->pos.z_pos = (long)mMXPtr[M23];
+			(hair + 1)->pos.pos.x = (long)mMXPtr[M03];
+			(hair + 1)->pos.pos.y = (long)mMXPtr[M13];
+			(hair + 1)->pos.pos.z = (long)mMXPtr[M23];
 			phd_PopMatrix();
 			hair++;
 		}
@@ -333,17 +333,17 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		hair_dwind_angle = 2048;
 		hair_wind_angle = 2048;
 	} else {
-		hair->pos.x_pos = pos.x;
-		hair->pos.y_pos = pos.y;
-		hair->pos.z_pos = pos.z;
+		hair->pos.pos.x = pos.x;
+		hair->pos.pos.y = pos.y;
+		hair->pos.pos.z = pos.z;
 		room_num = lara_item->room_number;
 
 		if(in_cutscene) {
 			water = NO_HEIGHT;
 		} else {
-			x = lara_item->pos.x_pos + (frame[0] + frame[1]) / 2;
-			y = lara_item->pos.y_pos + (frame[2] + frame[3]) / 2;
-			z = lara_item->pos.z_pos + (frame[4] + frame[5]) / 2;
+			x = lara_item->pos.pos.x + (frame[0] + frame[1]) / 2;
+			y = lara_item->pos.pos.y + (frame[2] + frame[3]) / 2;
+			z = lara_item->pos.pos.z + (frame[4] + frame[5]) / 2;
 			water = GetWaterHeight(x, y, z, room_num);
 		}
 
@@ -369,49 +369,49 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		hair++;
 
 		for(int i = 1; i < 7; i++, bone += 4) {
-			pos.x = hair->pos.x_pos;
-			pos.y = hair->pos.y_pos;
-			pos.z = hair->pos.z_pos;
+			pos.x = hair->pos.pos.x;
+			pos.y = hair->pos.pos.y;
+			pos.z = hair->pos.pos.z;
 
 			if(in_cutscene) {
 				height = 32767;
 			} else {
-				floor = GetFloor(hair->pos.x_pos, hair->pos.y_pos, hair->pos.z_pos, &room_num);
-				height = GetHeight(floor, hair->pos.x_pos, hair->pos.y_pos, hair->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
+				floor = GetFloor(hair->pos.pos.x, hair->pos.pos.y, hair->pos.pos.z, &room_num);
+				height = GetHeight(floor, hair->pos.pos.x, hair->pos.pos.y, hair->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 			}
 
-			hair->pos.x_pos += 3 * hair->vel.x / 6;
-			hair->pos.y_pos += 3 * hair->vel.y / 6;
-			hair->pos.z_pos += 3 * hair->vel.z / 6;
+			hair->pos.pos.x += 3 * hair->vel.x / 6;
+			hair->pos.pos.y += 3 * hair->vel.y / 6;
+			hair->pos.pos.z += 3 * hair->vel.z / 6;
 
 			if(lara.water_status == LW_ABOVE_WATER && GetRoom(currentLevel, room_num)->flags & ROOM_NOT_INSIDE) {
-				hair->pos.x_pos += SmokeWindX;
-				hair->pos.z_pos += SmokeWindZ;
+				hair->pos.pos.x += SmokeWindX;
+				hair->pos.pos.z += SmokeWindZ;
 			}
 
-			if(water == NO_HEIGHT || hair->pos.y_pos < water) {
-				hair->pos.y_pos += 10;
+			if(water == NO_HEIGHT || hair->pos.pos.y < water) {
+				hair->pos.pos.y += 10;
 
-				if(water != NO_HEIGHT && hair->pos.y_pos > water) {
-					hair->pos.y_pos = water;
+				if(water != NO_HEIGHT && hair->pos.pos.y > water) {
+					hair->pos.pos.y = water;
 				}
 			}
 
-			if(hair->pos.y_pos > height) {
-				hair->pos.x_pos = pos.x;
+			if(hair->pos.pos.y > height) {
+				hair->pos.pos.x = pos.x;
 
-				if(hair->pos.y_pos - height <= 256) { // snap to floor if it goes below, no more than 1 click to avoid hairection when going through corners
-					hair->pos.y_pos = height;
+				if(hair->pos.pos.y - height <= 256) { // snap to floor if it goes below, no more than 1 click to avoid hairection when going through corners
+					hair->pos.pos.y = height;
 				}
 
-				hair->pos.z_pos = pos.z;
+				hair->pos.pos.z = pos.z;
 			}
 
 			for(int j = 0; j < 6; j++) // 6 instead of 5 for new sphere
 			{
-				x = hair->pos.x_pos - sphere[j].x;
-				y = hair->pos.y_pos - sphere[j].y;
-				z = hair->pos.z_pos - sphere[j].z;
+				x = hair->pos.pos.x - sphere[j].x;
+				y = hair->pos.pos.y - sphere[j].y;
+				z = hair->pos.pos.z - sphere[j].z;
 				dist = SQUARE(x) + SQUARE(y) + SQUARE(z);
 
 				if(dist < SQUARE(sphere[j].r)) {
@@ -421,21 +421,21 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 						dist = 1;
 					}
 
-					hair->pos.x_pos = sphere[j].x + x * sphere[j].r / dist;
-					hair->pos.y_pos = sphere[j].y + y * sphere[j].r / dist;
-					hair->pos.z_pos = sphere[j].z + z * sphere[j].r / dist;
+					hair->pos.pos.x = sphere[j].x + x * sphere[j].r / dist;
+					hair->pos.pos.y = sphere[j].y + y * sphere[j].r / dist;
+					hair->pos.pos.z = sphere[j].z + z * sphere[j].r / dist;
 				}
 			}
 
-			dx = (hair->pos.x_pos - (hair - 1)->pos.x_pos);
-			dy = (hair->pos.y_pos - (hair - 1)->pos.y_pos);
-			dz = (hair->pos.z_pos - (hair - 1)->pos.z_pos);
+			dx = (hair->pos.pos.x - (hair - 1)->pos.pos.x);
+			dy = (hair->pos.pos.y - (hair - 1)->pos.pos.y);
+			dz = (hair->pos.pos.z - (hair - 1)->pos.pos.z);
 			dist = phd_sqrt(SQUARE(dz) + SQUARE(dx));
 			(hair - 1)->pos.y_rot = (short)phd_atan(dz, dx);
 			(hair - 1)->pos.x_rot = (short)-phd_atan(dist, dy);
 
 			phd_PushUnitMatrix();
-			phd_SetTrans((hair - 1)->pos.x_pos, (hair - 1)->pos.y_pos, (hair - 1)->pos.z_pos);
+			phd_SetTrans((hair - 1)->pos.pos.x, (hair - 1)->pos.pos.y, (hair - 1)->pos.pos.z);
 			phd_RotYXZ((hair - 1)->pos.y_rot, (hair - 1)->pos.x_rot, 0);
 
 			if(i == 6) {
@@ -444,12 +444,12 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 				phd_TranslateRel(bone[1], bone[2], bone[3]);
 			}
 
-			hair->pos.x_pos = (long)mMXPtr[M03];
-			hair->pos.y_pos = (long)mMXPtr[M13];
-			hair->pos.z_pos = (long)mMXPtr[M23];
-			hair->vel.x = hair->pos.x_pos - pos.x;
-			hair->vel.y = hair->pos.y_pos - pos.y;
-			hair->vel.z = hair->pos.z_pos - pos.z;
+			hair->pos.pos.x = (long)mMXPtr[M03];
+			hair->pos.pos.y = (long)mMXPtr[M13];
+			hair->pos.pos.z = (long)mMXPtr[M23];
+			hair->vel.x = hair->pos.pos.x - pos.x;
+			hair->vel.y = hair->pos.pos.y - pos.y;
+			hair->vel.z = hair->pos.pos.z - pos.z;
 			phd_PopMatrix();
 			hair++;
 		}
@@ -495,7 +495,7 @@ void DrawHair() {
 
 		for(int j = 1; j < 6; j += 2, meshpp += 4, hair += 2) {
 			phd_PushMatrix();
-			phd_TranslateAbs(hair->pos.x_pos, hair->pos.y_pos, hair->pos.z_pos);
+			phd_TranslateAbs(hair->pos.pos.x, hair->pos.pos.y, hair->pos.pos.z);
 			phd_RotY(hair->pos.y_rot);
 			phd_RotX(hair->pos.x_rot);
 			phd_PutPolygons(meshpp[0], -1);
