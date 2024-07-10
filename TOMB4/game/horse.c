@@ -9,6 +9,7 @@
 #include "game/creatureinfo.h"
 #include "game/effect2.h"
 #include "game/effects.h"
+#include "game/heighttypes.h"
 #include "game/itemflags.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
@@ -52,6 +53,8 @@ void InitialiseHorseman(short item_number) {
 void HorsemanControl(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	CREATURE_INFO* horseman;
 	AI_INFO info, larainfo;
 	PHD_VECTOR v;
@@ -91,10 +94,10 @@ void HorsemanControl(short item_number) {
 			s = 341 * phd_sin(item2->pos.y_rot) >> W2V_SHIFT;
 			x = item2->pos.x_pos + s;
 			z = item2->pos.z_pos + c;
-			h1 = GetHeight(GetFloor(x, item2->pos.y_pos, z, &room_number), x, item2->pos.y_pos, z);
+			h1 = GetHeight(GetFloor(x, item2->pos.y_pos, z, &room_number), x, item2->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			x = item2->pos.x_pos - s;
 			z = item2->pos.z_pos - c;
-			h2 = GetHeight(GetFloor(x, item2->pos.y_pos, z, &room_number), x, item2->pos.y_pos, z);
+			h2 = GetHeight(GetFloor(x, item2->pos.y_pos, z, &room_number), x, item2->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			rot = (short)phd_atan(682, h2 - h1);
 		}
 

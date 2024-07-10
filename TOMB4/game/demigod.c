@@ -12,6 +12,7 @@
 #include "game/floorinfo.h"
 #include "game/fxinfo.h"
 #include "game/gameflow.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
 #include "game/itemstatus.h"
@@ -258,6 +259,8 @@ void DemigodControl(short item_number) {
 	CREATURE_INFO* god;
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	AI_INFO info;
 	PHD_VECTOR pos;
 	short* zone;
@@ -559,7 +562,7 @@ void DemigodControl(short item_number) {
 				GetJointAbsPosition(item, &pos, 17);
 				room_number = item->room_number;
 				floor = GetFloor(pos.x, pos.y, pos.z, &room_number);
-				h = GetHeight(floor, pos.x, pos.y, pos.z);
+				h = GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 				if(h == NO_HEIGHT)
 					pos.y -= 128;

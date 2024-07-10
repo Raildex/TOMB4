@@ -7,6 +7,7 @@
 #include "game/doordata.h"
 #include "game/draw.h"
 #include "game/floortypes.h"
+#include "game/heighttypes.h"
 #include "game/inputbuttons.h"
 #include "game/itemflags.h"
 #include "game/iteminfo.h"
@@ -133,11 +134,13 @@ long SwitchTrigger(short item_number, short timer) {
 
 long GetSwitchTrigger(ITEM_INFO* item, short* ItemNos, long AttatchedToSwitch) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	short* data;
 	long num;
 
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number);
-	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(!trigger_index)
 		return 0;
@@ -169,7 +172,9 @@ long GetSwitchTrigger(ITEM_INFO* item, short* ItemNos, long AttatchedToSwitch) {
 }
 
 void TestTriggersAtXYZ(long x, long y, long z, short room_number, short heavy, short flags) {
-	GetHeight(GetFloor(x, y, z, &room_number), x, y, z);
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
+	GetHeight(GetFloor(x, y, z, &room_number), x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	TestTriggers(trigger_index, heavy, flags);
 }
 
@@ -753,11 +758,13 @@ void CogSwitchControl(short item_number) {
 void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	ITEM_INFO* door_item;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	DOOR_DATA* door;
 	short* data;
 
 	item = GetItem(currentLevel, item_number);
-	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	data = trigger_index;
 
 	while((*data & 0x1F) != TRIGGER_TYPE && !(*data & 0x8000))

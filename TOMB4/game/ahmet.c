@@ -12,6 +12,7 @@
 #include "game/dripstruct.h"
 #include "game/effect2.h"
 #include "game/effects.h"
+#include "game/heighttypes.h"
 #include "game/itemflags.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
@@ -155,6 +156,8 @@ void ScalesControl(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long flags, numTriggers;
 	short itemNos[8];
 	short room_number;
@@ -189,7 +192,7 @@ void ScalesControl(short item_number) {
 
 			room_number = item->room_number;
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 			TestTriggers(trigger_index, 1, flags);
 		}
 	}
@@ -231,6 +234,8 @@ void AhmetControl(short item_number) {
 	ITEM_INFO* enemy;
 	CREATURE_INFO* ahmet;
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	AI_INFO info;
 	AI_INFO larainfo;
 	long dx, dz;
@@ -419,7 +424,7 @@ void AhmetControl(short item_number) {
 	CreatureJoint(item, 0, head);
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 	TestTriggers(trigger_index, 1, 0);
 	CreatureAnimation(item_number, angle, 0);
 }

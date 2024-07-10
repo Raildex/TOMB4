@@ -11,6 +11,7 @@
 #include "game/effects.h"
 #include "game/gameflow.h"
 #include "game/gfleveloptions.h"
+#include "game/heighttypes.h"
 #include "game/itemflags.h"
 #include "game/items.h"
 #include "game/itemstatus.h"
@@ -106,6 +107,8 @@ void RagheadControl(short item_number) {
 	ITEM_INFO* enemy;
 	CREATURE_INFO* raghead;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	AI_INFO info;
 	AI_INFO larainfo;
@@ -150,19 +153,19 @@ void RagheadControl(short item_number) {
 	y = item->pos.y_pos;
 	z = item->pos.z_pos + Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	nearheight = GetHeight(floor, x, y, z);
+	nearheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	room_number = item->room_number;
 	x += Xoffset;
 	z += Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	midheight = GetHeight(floor, x, y, z);
+	midheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	room_number = item->room_number;
 	x += Xoffset;
 	z += Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	farheight = GetHeight(floor, x, y, z);
+	farheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if((raghead->enemy && item->box_number == raghead->enemy->box_number) || y >= nearheight - 384 || y >= midheight + 256 || y <= midheight - 256)
 		jump_ahead = 0;
@@ -203,7 +206,7 @@ void RagheadControl(short item_number) {
 		raghead->LOT.is_jumping = 0;
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		switch(item->current_anim_state) {
 		case 18:
@@ -318,13 +321,13 @@ void RagheadControl(short item_number) {
 			x = item->pos.x_pos + (942 * phd_sin(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
 			z = item->pos.z_pos + (942 * phd_cos(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
 			floor = GetFloor(x, y, z, &room_number);
-			h1 = GetHeight(floor, x, y, z);
+			h1 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 			room_number = item->room_number;
 			x = item->pos.x_pos + (942 * phd_sin(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
 			z = item->pos.z_pos + (942 * phd_cos(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
 			floor = GetFloor(x, y, z, &room_number);
-			h2 = GetHeight(floor, x, y, z);
+			h2 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 			if(abs(h2 - y) > 256 || h1 + 512 >= y)
 				can_jump = 0;
@@ -335,13 +338,13 @@ void RagheadControl(short item_number) {
 			x = item->pos.x_pos + (942 * phd_sin(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
 			z = item->pos.z_pos + (942 * phd_cos(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
 			floor = GetFloor(x, y, z, &room_number);
-			h1 = GetHeight(floor, x, y, z);
+			h1 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 			room_number = item->room_number;
 			x = item->pos.x_pos + (942 * phd_sin(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
 			z = item->pos.z_pos + (942 * phd_cos(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
 			floor = GetFloor(x, y, z, &room_number);
-			h2 = GetHeight(floor, x, y, z);
+			h2 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 			if(abs(h2 - y) > 256 || h1 + 512 >= y)
 				can_roll = 0;
@@ -401,7 +404,7 @@ void RagheadControl(short item_number) {
 				item->goal_anim_state = 11;
 			else if(raghead->monkey_ahead) {
 				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 				c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 				if(c == h - 1536) {
@@ -604,7 +607,7 @@ void RagheadControl(short item_number) {
 				item->goal_anim_state = 21;
 			else if(item->box_number == raghead->LOT.target_box || !raghead->monkey_ahead) {
 				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 				c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 				if(c == h - 1536) {
@@ -628,7 +631,7 @@ void RagheadControl(short item_number) {
 
 			if(item->box_number == raghead->LOT.target_box || !raghead->monkey_ahead) {
 				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 				c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 				if(c == h - 1536)

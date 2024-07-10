@@ -12,6 +12,7 @@
 #include "game/effect2.h"
 #include "game/gameflow.h"
 #include "game/gfleveloptions.h"
+#include "game/heighttypes.h"
 #include "game/inputbuttons.h"
 #include "game/itemflags.h"
 #include "game/iteminfo.h"
@@ -78,6 +79,8 @@ void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item) {
 void FireCrossbow(PHD_3DPOS* pos) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR vec;
 	short* ammo;
 	long h;
@@ -115,7 +118,7 @@ void FireCrossbow(PHD_3DPOS* pos) {
 			GetLaraJointPos(&vec, 11);
 			item->room_number = lara_item->room_number;
 			floor = GetFloor(vec.x, vec.y, vec.z, &item->room_number);
-			h = GetHeight(floor, vec.x, vec.y, vec.z);
+			h = GetHeight(floor, vec.x, vec.y, vec.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 			if(h >= vec.y) {
 				item->pos.x_pos = vec.x;
@@ -245,6 +248,8 @@ void FireGrenade() {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 	PHD_VECTOR pos2;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	short* ammo;
 	long h;
 	short item_number;
@@ -272,7 +277,7 @@ void FireGrenade() {
 	item->pos.x_pos = pos.x;
 	item->pos.y_pos = pos.y;
 	item->pos.z_pos = pos.z;
-	h = GetHeight(GetFloor(pos.x, pos.y, pos.z, &item->room_number), pos.x, pos.y, pos.z);
+	h = GetHeight(GetFloor(pos.x, pos.y, pos.z, &item->room_number), pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h < pos.y) {
 		item->pos.x_pos = lara_item->pos.x_pos;
@@ -486,6 +491,8 @@ void RifleHandler(long weapon_type) {
 
 void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLastNode) {
 	SPHERE* ptr1;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long dx, dy, dz, num1, cs, cd, speed;
 	short TriggerItems[8];
 	short NumTrigs, room_number;
@@ -554,7 +561,7 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 		if(cs == num1 - 1) {
 			if(target->flags & IFL_CODEBITS && (target->flags & IFL_CODEBITS) != IFL_CODEBITS) {
 				room_number = target->room_number;
-				GetHeight(GetFloor(target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos, &room_number), target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos);
+				GetHeight(GetFloor(target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos, &room_number), target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 				TestTriggers(trigger_index, 1, target->flags & IFL_CODEBITS);
 			} else {
 				NumTrigs = (short)GetSwitchTrigger(target, TriggerItems, 1);
@@ -700,6 +707,8 @@ void ControlCrossbow(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* target;
 	MESH_INFO* mesh;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	FLOOR_INFO* floor;
 	ROOM_INFO* r;
 	PHD_VECTOR oldPos;
@@ -731,7 +740,7 @@ void ControlCrossbow(short item_number) {
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if(GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) < item->pos.y_pos || GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) > item->pos.y_pos) {
+	if(GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject) < item->pos.y_pos || GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) > item->pos.y_pos) {
 		item->pos.x_pos = oldPos.x;
 		item->pos.y_pos = oldPos.y;
 		item->pos.z_pos = oldPos.z;
@@ -862,6 +871,8 @@ void ControlGrenade(short item_number) {
 	ITEM_INFO* target;
 	MESH_INFO* mesh;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR oldPos;
 	PHD_VECTOR pos;
 	long abovewater, xv, yv, zv, exploded, rad, j;
@@ -988,7 +999,7 @@ void ControlGrenade(short item_number) {
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-		if(GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) < item->pos.y_pos || GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) > item->pos.y_pos)
+		if(GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject) < item->pos.y_pos || GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) > item->pos.y_pos)
 			item->hit_points = 1;
 	} else {
 		yrot = item->pos.y_rot;
@@ -1066,7 +1077,7 @@ void ControlGrenade(short item_number) {
 							}
 						} else {
 							room_number = item->room_number;
-							GetHeight(GetFloor(target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos, &room_number), target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos);
+							GetHeight(GetFloor(target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos, &room_number), target->pos.x_pos, target->pos.y_pos - 256, target->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 							TestTriggers(trigger_index, 1, target->flags & IFL_CODEBITS);
 						}
 

@@ -13,6 +13,7 @@
 #include "game/floorinfo.h"
 #include "game/fxinfo.h"
 #include "game/gameflow.h"
+#include "game/heighttypes.h"
 #include "game/itemflags.h"
 #include "game/items.h"
 #include "game/itemstatus.h"
@@ -62,6 +63,8 @@ void ScorpionControl(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* enemy;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	CREATURE_INFO* scorpion;
 	AI_INFO info;
 	long s, c, x, z, h, h2, dist, bestdist;
@@ -80,7 +83,7 @@ void ScorpionControl(short item_number) {
 	z = item->pos.z_pos + c;
 	room_number = item->room_number;
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h = GetHeight(floor, x, item->pos.y_pos, z);
+	h = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(abs(item->pos.y_pos - h) > 512)
 		h = item->pos.y_pos;
@@ -89,7 +92,7 @@ void ScorpionControl(short item_number) {
 	z = item->pos.z_pos - c;
 	room_number = item->room_number;
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h2 = GetHeight(floor, x, item->pos.y_pos, z);
+	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(abs(item->pos.y_pos - h2) > 512)
 		h2 = item->pos.y_pos;
@@ -100,7 +103,7 @@ void ScorpionControl(short item_number) {
 	z = item->pos.z_pos + s;
 	room_number = item->room_number;
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h = GetHeight(floor, x, item->pos.y_pos, z);
+	h = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(abs(item->pos.y_pos - h) > 512)
 		h = item->pos.y_pos;
@@ -109,7 +112,7 @@ void ScorpionControl(short item_number) {
 	z = item->pos.z_pos - s;
 	room_number = item->room_number;
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h2 = GetHeight(floor, x, item->pos.y_pos, z);
+	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(abs(item->pos.y_pos - h2) > 512)
 		h2 = item->pos.y_pos;
@@ -415,8 +418,7 @@ void SmlscorpControl(short item_number) {
 					lara_item->hit_status = 1;
 
 					if(item->current_anim_state == 5) {
-						if(gfCurrentLevel > 3)
-							lara.dpoisoned += 512;
+						lara.dpoisoned += 512;
 
 						CreatureEffectT(item, &s_stinger, 3, item->pos.y_rot + 0x8000, DoBloodSplat);
 					} else

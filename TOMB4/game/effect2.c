@@ -11,6 +11,7 @@
 #include "game/gamevector.h"
 #include "game/gfleveloptions.h"
 #include "game/harpy.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
 #include "game/lara.h"
@@ -527,6 +528,8 @@ void ClearDynamics() {
 void ControlEnemyMissile(short fx_number) {
 	FX_INFO* fx;
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long speed, ox, oy, oz, h, c;
 	short room_number, max_speed, max_turn;
 	short angles[2];
@@ -597,7 +600,7 @@ void ControlEnemyMissile(short fx_number) {
 	fx->pos.z_pos += speed * phd_cos(fx->pos.y_rot) >> W2V_SHIFT;
 	room_number = fx->room_number;
 	floor = GetFloor(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &room_number);
-	h = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+	h = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos,&ht, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
 
 	if(fx->pos.y_pos >= h || fx->pos.y_pos <= c) {

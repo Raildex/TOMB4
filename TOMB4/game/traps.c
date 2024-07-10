@@ -212,12 +212,12 @@ static long OnTwoBlockPlatform(ITEM_INFO* item, long x, long z) {
 }
 
 void TwoBlockPlatformFloor(
-	ITEM_INFO* item, long x, long y, long z, long* height) {
+	ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	if(OnTwoBlockPlatform(item, x, z)) {
 		if(y <= item->pos.y_pos + 32 && item->pos.y_pos < *height) {
 			*height = item->pos.y_pos;
-			OnObject = 1;
-			height_type = 0;
+			*OnObject = 1;
+			*height_type = WALL;
 		}
 	}
 }
@@ -232,6 +232,8 @@ void TwoBlockPlatformCeiling(
 
 void ControlTwoBlockPlatform(short item_number) {
 	ITEM_INFO* item;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long height;
 	short room_number;
 
@@ -250,7 +252,7 @@ void ControlTwoBlockPlatform(short item_number) {
 			GetFloor(
 				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
 				&room_number),
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(room_number != item->room_number)
 			ItemNewRoom(item_number, room_number);
@@ -259,7 +261,7 @@ void ControlTwoBlockPlatform(short item_number) {
 		height = lara_item->pos.y_pos + 1;
 		TwoBlockPlatformFloor(
 			item, lara_item->pos.x_pos, lara_item->pos.y_pos,
-			lara_item->pos.z_pos, &height);
+			lara_item->pos.z_pos, &height, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(!OnObject || lara_item->anim_number == 89)
 			item->item_flags[1] = -1;
@@ -1253,7 +1255,8 @@ void ControlRaisingBlock(short item_number) {
 
 void ControlScaledSpike(short item_number) {
 	ITEM_INFO* item;
-
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	short* bounds;
 	short* larabounds;
 	long dx, dy, dz, num;
@@ -1348,7 +1351,7 @@ void ControlScaledSpike(short item_number) {
 						lara_item->pos.x_pos, lara_item->pos.y_pos,
 						lara_item->pos.z_pos, &room_number),
 					lara_item->pos.x_pos, lara_item->pos.y_pos,
-					lara_item->pos.z_pos);
+					lara_item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 				if(item->pos.y_pos >= lara_item->pos.y_pos
 				   && dy - lara_item->pos.y_pos < 50) {
@@ -1557,6 +1560,8 @@ void FlameControl(short fx_number) {
 void FlameEmitter2Control(short item_number) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long r, g;
 	short room_number;
 
@@ -1620,7 +1625,7 @@ void FlameEmitter2Control(short item_number) {
 			ItemNewRoom(item_number, room_number);
 
 		item->pos.y_pos = GetHeight(
-			floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(wibble & 7)
 			TriggerFireFlame(
@@ -1646,13 +1651,15 @@ void LaraBurn() {
 void LavaBurn(ITEM_INFO* item) {
 	FLOOR_INFO* floor;
 	short room_number;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 
 	if(item->hit_points >= 0 && lara.water_status != LW_FLYCHEAT) {
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, 32000, item->pos.z_pos, &room_number);
 
 		if(item->floor
-		   == GetHeight(floor, item->pos.x_pos, 32000, item->pos.z_pos)) {
+		   == GetHeight(floor, item->pos.x_pos, 32000, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject)) {
 			item->hit_status = 1;
 			item->hit_points = -1;
 			LaraBurn();
@@ -1696,6 +1703,8 @@ long TestBoundsCollideTeethSpikes(ITEM_INFO* item) {
 
 void ControlRollingBall(short item_number) {
 	ITEM_INFO* item;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	unsigned short tyrot, destyrot;
 	short room_number, velnotadjusted;
 	long h, fx, fz, fh, fhf, bz, bh, bhf, rx, rh, rhf, lx, lh, lhf;
@@ -1714,7 +1723,7 @@ void ControlRollingBall(short item_number) {
 			GetFloor(
 				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
 				&room_number),
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos)
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 
 	if(item->pos.y_pos > h) {
@@ -1751,19 +1760,19 @@ void ControlRollingBall(short item_number) {
 	lx = item->pos.x_pos - 128;
 	fh = GetHeight(
 			 GetFloor(fx, item->pos.y_pos, fz, &room_number), fx,
-			 item->pos.y_pos, fz)
+			 item->pos.y_pos, fz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	bh = GetHeight(
 			 GetFloor(fx, item->pos.y_pos, bz, &room_number), fx,
-			 item->pos.y_pos, bz)
+			 item->pos.y_pos, bz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	rh = GetHeight(
 			 GetFloor(rx, item->pos.y_pos, bz + 128, &room_number), rx,
-			 item->pos.y_pos, bz + 128)
+			 item->pos.y_pos, bz + 128, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	lh = GetHeight(
 			 GetFloor(lx, item->pos.y_pos, bz + 128, &room_number), lx,
-			 item->pos.y_pos, bz + 128)
+			 item->pos.y_pos, bz + 128, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	fx = item->pos.x_pos;
 	fz = item->pos.z_pos + 512;
@@ -1772,19 +1781,19 @@ void ControlRollingBall(short item_number) {
 	lx = item->pos.x_pos - 512;
 	fhf = GetHeight(
 			  GetFloor(fx, item->pos.y_pos, fz, &room_number), fx,
-			  item->pos.y_pos, fz)
+			  item->pos.y_pos, fz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	bhf = GetHeight(
 			  GetFloor(fx, item->pos.y_pos, bz, &room_number), fx,
-			  item->pos.y_pos, bz)
+			  item->pos.y_pos, bz, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	rhf = GetHeight(
 			  GetFloor(rx, item->pos.y_pos, bz + 512, &room_number), rx,
-			  item->pos.y_pos, bz + 512)
+			  item->pos.y_pos, bz + 512, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 	lhf = GetHeight(
 			  GetFloor(lx, item->pos.y_pos, bz + 512, &room_number), lx,
-			  item->pos.y_pos, bz + 512)
+			  item->pos.y_pos, bz + 512, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 		- 512;
 
 	if(item->pos.y_pos - h > -256 || item->pos.y_pos - fhf >= 512
@@ -1907,7 +1916,7 @@ void ControlRollingBall(short item_number) {
 	GetHeight(
 		GetFloor(
 			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number),
-		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	TestTriggers(trigger_index, 1, 0);
 }
 
@@ -1933,6 +1942,8 @@ void RollingBallCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void DartsControl(short item_number) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long x, z, speed;
 	short room_num;
 
@@ -1963,7 +1974,7 @@ void DartsControl(short item_number) {
 			ItemNewRoom(item_number, room_num);
 
 		item->floor = GetHeight(
-			floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(item->pos.y_pos >= item->floor) {
 			for(int i = 0; i < 4; i++)
@@ -2049,6 +2060,8 @@ void DartEmitterControl(short item_number) {
 
 void FallingCeiling(short item_number) {
 	ITEM_INFO* item;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -2071,7 +2084,7 @@ void FallingCeiling(short item_number) {
 			GetFloor(
 				item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
 				&room_number),
-			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(room_number != item->room_number)
 			ItemNewRoom(item_number, room_number);
@@ -2137,7 +2150,7 @@ void FallingBlockCeiling(
 		*height = item->pos.y_pos + 256;
 }
 
-void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height) {
+void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	long tx, tz;
 
 	tx = x ^ item->pos.x_pos;
@@ -2148,8 +2161,8 @@ void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height) {
 
 	if(y <= item->pos.y_pos) {
 		*height = item->pos.y_pos;
-		height_type = WALL;
-		OnObject = 1;
+		*height_type = WALL;
+		*OnObject = 1;
 	}
 }
 

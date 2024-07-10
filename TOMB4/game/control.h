@@ -1,5 +1,6 @@
 #ifndef TOMB4_GAME_CONTROL_H
 #define TOMB4_GAME_CONTROL_H
+#include "game/heighttypes.h"
 typedef struct ROOM_INFO ROOM_INFO;
 typedef struct FLOOR_INFO FLOOR_INFO;
 typedef struct ITEM_INFO ITEM_INFO;
@@ -21,7 +22,7 @@ long CheckNoColFloorTriangle(FLOOR_INFO* floor, long x, long z);
 long CheckNoColCeilingTriangle(FLOOR_INFO* floor, long x, long z);
 FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number);
 long GetWaterHeight(long x, long y, long z, short room_number);
-long GetHeight(FLOOR_INFO* floor, long x, long y, long z);
+long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject);
 long GetCeiling(FLOOR_INFO* floor, long x, long y, long z);
 void AlterFloorHeight(ITEM_INFO* item, long height);
 void TranslateItem(ITEM_INFO* item, short x, short y, short z);
@@ -63,10 +64,6 @@ extern long flipeffect;
 extern long fliptimer;
 
 extern short* trigger_index;
-extern long tiltxoff;
-extern long tiltyoff;
-extern long OnObject;
-extern long height_type;
 
 extern long InItemControlLoop;
 extern short ItemNewRooms[256][2];

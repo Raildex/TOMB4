@@ -3,6 +3,7 @@
 #include "game/animstruct.h"
 #include "game/control.h"
 #include "game/effect2.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
 #include "game/lara.h"
@@ -166,6 +167,8 @@ void WraithControl(short item_number) {
 	ITEM_INFO* target;
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	WRAITH_STRUCT* wraith;
 	long x, y, z, dx, dy, dz, dist, oob, h, c;
 	short rotY, rotX, speed, room_number;
@@ -235,7 +238,7 @@ void WraithControl(short item_number) {
 	oob = 0;
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 	if(h < item->pos.y_pos || c > item->pos.y_pos)
@@ -345,7 +348,7 @@ void WraithControl(short item_number) {
 
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 	if(h >= item->pos.y_pos && c <= item->pos.y_pos) {

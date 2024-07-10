@@ -3,6 +3,7 @@
 #include "game/delstuff.h"
 #include "game/floorinfo.h"
 #include "game/footprint.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/lara.h"
 #include "game/laramesh.h"
@@ -36,6 +37,8 @@ long FootPrintNum;
 void AddFootPrint(ITEM_INFO* item) {
 	FOOTPRINT* print;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	short room_num;
 
@@ -54,10 +57,11 @@ void AddFootPrint(ITEM_INFO* item) {
 	if(floor->fx != 6 && floor->fx != 5 && floor->fx != 11)
 		SoundEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, &lara_item->pos, SFX_DEFAULT);
 
+	long h = GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	if(floor->fx < 3 && !OnObject) {
 		print = &FootPrint[FootPrintNum];
 		print->pos.x = pos.x;
-		print->pos.y = GetHeight(floor, pos.x, pos.y, pos.z);
+		print->pos.y = h;
 		print->pos.z = pos.z;
 		print->YRot = item->pos.y_rot;
 		print->Active = 512;
@@ -67,6 +71,8 @@ void AddFootPrint(ITEM_INFO* item) {
 
 void S_DrawFootPrints() {
 	FOOTPRINT* print;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	SPRITESTRUCT* sprite;
 	_D3DTLVERTEX* v;
 	PHD_VECTOR pos[3];
@@ -104,7 +110,7 @@ void S_DrawFootPrints() {
 				x = (long)(pos[j].x * mMXPtr[M00] + pos[j].z * mMXPtr[M02] + mMXPtr[M03]);
 				z = (long)(pos[j].x * mMXPtr[M20] + pos[j].z * mMXPtr[M22] + mMXPtr[M23]);
 				room_number = lara_item->room_number;
-				pos[j].y = GetHeight(GetFloor(x, print->pos.y, z, &room_number), x, print->pos.y, z) - print->pos.y;
+				pos[j].y = GetHeight(GetFloor(x, print->pos.y, z, &room_number), x, print->pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) - print->pos.y;
 
 				if(abs(pos[j].y) > PRINT_HEIGHT_CORRECTION)
 					pos[j].y = 0;

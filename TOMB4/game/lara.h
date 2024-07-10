@@ -1,5 +1,6 @@
 #ifndef TOMB4_GAME_LARA_H
 #define TOMB4_GAME_LARA_H
+#include "game/heighttypes.h"
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
 typedef struct LARA_INFO LARA_INFO;
@@ -10,7 +11,7 @@ long CanLaraHangSideways(ITEM_INFO* item, COLL_INFO* coll, short angle);
 void lara_as_hang(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_hang(ITEM_INFO* item, COLL_INFO* coll);
 short LaraCeilingFront(ITEM_INFO* item, short ang, long dist, long h);
-short LaraFloorFront(ITEM_INFO* item, short ang, long dist);
+short LaraFloorFront(ITEM_INFO* item, short ang, long dist, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject);
 long LaraFallen(ITEM_INFO* item, COLL_INFO* coll);
 long TestLaraSlide(ITEM_INFO* item, COLL_INFO* coll);
 long LaraHitCeiling(ITEM_INFO* item, COLL_INFO* coll);

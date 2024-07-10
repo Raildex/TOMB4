@@ -5,6 +5,7 @@
 #include "game/draw.h"
 #include "game/floorinfo.h"
 #include "game/gamevector.h"
+#include "game/heighttypes.h"
 #include "game/levelinfo.h"
 #include "game/meshdata.h"
 #include "game/meshinfo.h"
@@ -33,6 +34,8 @@ static long DebrisMeshFlags;
 
 void UpdateDebris() {
 	DEBRIS_STRUCT* dptr;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	FLOOR_INFO* floor;
 	long height, ceiling;
 
@@ -50,7 +53,7 @@ void UpdateDebris() {
 			dptr->y += dptr->Yvel >> 4;
 			dptr->z += dptr->Speed * phd_cos(dptr->Dir) >> W2V_SHIFT;
 			floor = GetFloor(dptr->x, dptr->y, dptr->z, &dptr->RoomNumber);
-			height = GetHeight(floor, dptr->x, dptr->y, dptr->z);
+			height = GetHeight(floor, dptr->x, dptr->y, dptr->z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			ceiling = GetCeiling(floor, dptr->x, dptr->y, dptr->z);
 
 			if(dptr->y >= height || dptr->y < ceiling) {

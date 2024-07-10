@@ -8,6 +8,7 @@
 #include "game/control.h"
 #include "game/effect2.h"
 #include "game/floorinfo.h"
+#include "game/heighttypes.h"
 #include "game/inputbuttons.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
@@ -281,6 +282,8 @@ void lara_col_uwdeath(ITEM_INFO* item, COLL_INFO* coll) {
 long GetWaterDepth(long x, long y, long z, short room_number) {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long x_floor, y_floor, h;
 	short door;
 
@@ -326,7 +329,7 @@ long GetWaterDepth(long x, long y, long z, short room_number) {
 			if(!(r->flags & ROOM_UNDERWATER)) {
 				h = GetMinimumCeiling(floor, x, z);
 				floor = GetFloor(x, y, z, &room_number);
-				return GetHeight(floor, x, y, z) - h;
+				return GetHeight(floor, x, y, z, &ht, &tiltxoff, &tiltzoff, &OnObject) - h;
 			}
 
 			floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
@@ -340,7 +343,7 @@ long GetWaterDepth(long x, long y, long z, short room_number) {
 			if(r->flags & ROOM_UNDERWATER) {
 				h = GetMaximumFloor(floor, x, z);
 				floor = GetFloor(x, y, z, &room_number);
-				return GetHeight(floor, x, y, z) - h;
+				return GetHeight(floor, x, y, z, &ht, &tiltxoff, &tiltzoff, &OnObject) - h;
 			}
 
 			floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
@@ -375,6 +378,8 @@ void SwimTurn(ITEM_INFO* item) {
 
 void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll) {
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long wd;
 	short room_number;
 
@@ -398,7 +403,7 @@ void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll) {
 		item->speed = 0;
 		item->fallspeed = 0;
 		lara.water_status = LW_WADE;
-		item->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 	}
 }
 

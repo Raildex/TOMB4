@@ -11,6 +11,7 @@
 #include "game/draw.h"
 #include "game/effect2.h"
 #include "game/floorinfo.h"
+#include "game/heighttypes.h"
 #include "game/itemflags.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
@@ -246,6 +247,8 @@ void InitialiseFlameEmitter3(short item_number) {
 void InitialiseJobySpike(short item_number) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long h, c;
 	short room_number;
 
@@ -254,7 +257,7 @@ void InitialiseJobySpike(short item_number) {
 	item->item_flags[2] = GetRandomControl() & 1;
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	item->item_flags[3] = (short)((4096 * (h - c)) / 3328);
 }

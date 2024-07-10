@@ -8,6 +8,7 @@
 #include "game/control.h"
 #include "game/creatureinfo.h"
 #include "game/effects.h"
+#include "game/heighttypes.h"
 #include "game/itemflags.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
@@ -46,6 +47,8 @@ void InitialiseBaboon(short item_number) {
 }
 
 void BaboonControl(short item_number) {
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 	CREATURE_INFO* baboon;
@@ -184,7 +187,7 @@ void BaboonControl(short item_number) {
 					item->goal_anim_state = 21;
 					item->current_anim_state = 21;
 					room_number = item->room_number;
-					GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+					GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 					TestTriggers(trigger_index, 1, 0);
 				} else if(info.bite && info.distance < 1048576)
 					item->goal_anim_state = 9;

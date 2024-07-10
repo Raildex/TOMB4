@@ -8,6 +8,7 @@
 #include "game/gameflow.h"
 #include "game/gfleveloptions.h"
 #include "game/hairstruct.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/lara.h"
 #include "game/lara_states.h"
@@ -66,6 +67,8 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 	OBJECT_INFO* obj;
 	HAIR_STRUCT* hair;
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	SPHERE sphere[6];
 	long* bone;
@@ -367,7 +370,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 				height = 32767;
 			else {
 				floor = GetFloor(hair->pos.x_pos, hair->pos.y_pos, hair->pos.z_pos, &room_num);
-				height = GetHeight(floor, hair->pos.x_pos, hair->pos.y_pos, hair->pos.z_pos);
+				height = GetHeight(floor, hair->pos.x_pos, hair->pos.y_pos, hair->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 			}
 
 			hair->pos.x_pos += 3 * hair->vel.x / 6;

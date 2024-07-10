@@ -10,6 +10,7 @@
 #include "game/effect2.h"
 #include "game/effects.h"
 #include "game/fxinfo.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
 #include "game/lara.h"
@@ -393,6 +394,8 @@ void SethControl(short item_number) {
 	ITEM_INFO* item;
 	CREATURE_INFO* seth;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	AI_INFO info;
 	long x, y, z, Xoffset, Zoffset, c, h, nearheight, midheight, farheight, can_jump;
 	short angle, room_number, hp;
@@ -412,32 +415,32 @@ void SethControl(short item_number) {
 	y = item->pos.y_pos;
 	z = item->pos.z_pos;
 	floor = GetFloor(x, y, z, &room_number);
-	c = GetHeight(floor, x, y, z);
+	c = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	x = item->pos.x_pos + Xoffset;
 	y = item->pos.y_pos;
 	z = item->pos.z_pos + Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	nearheight = GetHeight(floor, x, y, z);
+	nearheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	room_number = item->room_number;
 	x += Xoffset;
 	z += Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	midheight = GetHeight(floor, x, y, z);
+	midheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	room_number = item->room_number;
 	x += Xoffset;
 	z += Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	farheight = GetHeight(floor, x, y, z);
+	farheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	can_jump = (y < nearheight - 384 || y < midheight - 384) && (y < farheight + 256 && y > farheight - 256 || farheight == NO_HEIGHT);
 
 	x = item->pos.x_pos - Xoffset;
 	y = item->pos.y_pos;
 	z = item->pos.z_pos - Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	h = GetHeight(floor, x, y, z);
+	h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	CreatureAIInfo(item, &info);
 
 	if(item->hit_points <= 0)

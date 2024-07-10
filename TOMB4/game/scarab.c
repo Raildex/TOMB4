@@ -9,6 +9,7 @@
 #include "game/creatureinfo.h"
 #include "game/effect2.h"
 #include "game/effects.h"
+#include "game/heighttypes.h"
 #include "game/itemstatus.h"
 #include "game/lara.h"
 #include "game/larainfo.h"
@@ -244,6 +245,8 @@ void TriggerScarab(short item_number) {
 void UpdateScarabs() {
 	SCARAB_STRUCT* fx;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long h, dx, dy, dz, oldx, oldy, oldz;
 	short angle, old_room;
 
@@ -292,7 +295,7 @@ void UpdateScarabs() {
 		}
 		old_room = fx->room_number;
 		floor = GetFloor(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &fx->room_number);
-		h = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+		h = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(h < fx->pos.y_pos - 1280 || h == NO_HEIGHT) {
 

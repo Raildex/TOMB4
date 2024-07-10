@@ -1,5 +1,6 @@
 #ifndef OBJECT_INFO_INCLUDED
 #define OBJECT_INFO_INCLUDED
+#include "game/heighttypes.h"
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
 typedef struct OBJECT_INFO {
@@ -9,7 +10,7 @@ typedef struct OBJECT_INFO {
 	short* frame_base;
 	void (*initialise)(short item_number);
 	void (*control)(short item_number);
-	void (*floor)(ITEM_INFO* item, long x, long y, long z, long* height);
+	void (*floor)(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject);
 	void (*ceiling)(ITEM_INFO* item, long x, long y, long z, long* height);
 	void (*draw_routine)(ITEM_INFO* item);
 	void (*collision)(short item_num, ITEM_INFO* laraitem, COLL_INFO* coll);

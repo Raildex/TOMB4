@@ -13,6 +13,7 @@
 #include "game/firesparks.h"
 #include "game/fvector.h"
 #include "game/gameflow.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/lara.h"
 #include "game/lara_states.h"
@@ -164,6 +165,8 @@ static long FadeCnt;
 static long FadeEnd;
 
 static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item) {
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	_D3DTLVERTEX* v;
 	TEXTURESTRUCT Tex;
 	PHD_VECTOR pos;
@@ -201,7 +204,7 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item) {
 		pos.z = 0;
 		GetLaraJointPos(&pos, LM_HIPS);
 		s = lara_item->room_number;
-		y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &s), pos.x, pos.y, pos.z);
+		y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &s), pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(y == NO_HEIGHT)
 			y = item->floor;
@@ -228,14 +231,14 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item) {
 
 	for(int i = 0; i < CIRCUMFERENCE_POINTS; i++) {
 		s = item->room_number;
-		cp[i].y = (float)GetHeight(GetFloor((long)cp[i].x, item->floor, (long)cp[i].z, &s), (long)cp[i].x, item->floor, (long)cp[i].z);
+		cp[i].y = (float)GetHeight(GetFloor((long)cp[i].x, item->floor, (long)cp[i].z, &s), (long)cp[i].x, item->floor, (long)cp[i].z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(fabsf(cp[i].y - item->floor) > POINT_HEIGHT_CORRECTION)
 			cp[i].y = (float)item->floor;
 	}
 
 	s = item->room_number;
-	ccp.y = (float)GetHeight(GetFloor((long)ccp.x, item->floor, (long)ccp.z, &s), (long)ccp.x, item->floor, (long)ccp.z);
+	ccp.y = (float)GetHeight(GetFloor((long)ccp.x, item->floor, (long)ccp.z, &s), (long)ccp.x, item->floor, (long)ccp.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(fabsf(ccp.y - item->floor) > POINT_HEIGHT_CORRECTION)
 		ccp.y = (float)item->floor;
@@ -307,6 +310,8 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item) {
 	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	PHD_VECTOR pos;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long* sXYZ;
 	long* hXZ;
 	long* hY;
@@ -351,7 +356,7 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item) {
 		pos.z = 0;
 		GetLaraJointPos(&pos, LM_HIPS);
 		s = lara_item->room_number;
-		pos.y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &s), pos.x, pos.y, pos.z);
+		pos.y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &s), pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(pos.y == NO_HEIGHT)
 			pos.y = item->floor;
@@ -380,7 +385,7 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item) {
 
 	for(int i = 0; i < GRID_POINTS; i++, hXZ += 2, hY++) {
 		s = item->room_number;
-		*hY = GetHeight(GetFloor(hXZ[0], item->floor, hXZ[1], &s), hXZ[0], item->floor, hXZ[1]);
+		*hY = GetHeight(GetFloor(hXZ[0], item->floor, hXZ[1], &s), hXZ[0], item->floor, hXZ[1], &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(abs(*hY - item->floor) > POINT_HEIGHT_CORRECTION)
 			*hY = item->floor;
@@ -455,6 +460,8 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item) {
 	_D3DTLVERTEX* v;
 	TEXTURESTRUCT Tex;
 	PHD_VECTOR pos;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long* sXYZ;
 	long* hXZ;
 	long* hY;
@@ -503,7 +510,7 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item) {
 		pos.z = 0;
 		GetLaraJointPos(&pos, LM_HIPS);
 		s = lara_item->room_number;
-		y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &s), pos.x, pos.y, pos.z);
+		y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &s), pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(y == NO_HEIGHT)
 			y = item->floor;
@@ -533,7 +540,7 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item) {
 	for(int i = 0; i < GRID_POINTS; i++, hXZ += 2, hY++) // Get height on each grid point and store it in hy array
 	{
 		s = item->room_number;
-		*hY = GetHeight(GetFloor(hXZ[0], item->floor, hXZ[1], &s), hXZ[0], item->floor, hXZ[1]);
+		*hY = GetHeight(GetFloor(hXZ[0], item->floor, hXZ[1], &s), hXZ[0], item->floor, hXZ[1], &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(abs(*hY - item->floor) > POINT_HEIGHT_CORRECTION)
 			*hY = item->floor;

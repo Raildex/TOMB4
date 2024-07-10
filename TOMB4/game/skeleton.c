@@ -12,6 +12,7 @@
 #include "game/effects.h"
 #include "game/floorinfo.h"
 #include "game/fxinfo.h"
+#include "game/heighttypes.h"
 #include "game/items.h"
 #include "game/itemstatus.h"
 #include "game/lara.h"
@@ -41,6 +42,8 @@ static BITE_INFO skelly_hit = { 180, 0, 0, 16 };
 void TriggerRiseEffect(ITEM_INFO* item) {
 	FX_INFO* fx;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	SPARKS* sptr;
 	short fx_number, room_number;
 
@@ -55,7 +58,7 @@ void TriggerRiseEffect(ITEM_INFO* item) {
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
 	fx->pos.x_pos = (GetRandomControl() & 0xFF) + item->pos.x_pos - 128;
-	fx->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) - 48;
+	fx->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject) - 48;
 	fx->pos.z_pos = (GetRandomControl() & 0xFF) + item->pos.z_pos - 128;
 	fx->room_number = item->room_number;
 	fx->pos.y_rot = (short)(GetRandomControl() << 1);
@@ -135,6 +138,8 @@ void SkeletonControl(short item_number) {
 	ITEM_INFO* enemy;
 	CREATURE_INFO* skelly;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
 	AI_INFO info;
@@ -159,19 +164,19 @@ void SkeletonControl(short item_number) {
 	y = item->pos.y_pos;
 	z = item->pos.z_pos + Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	nearheight = GetHeight(floor, x, y, z);
+	nearheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	room_number = item->room_number;
 	x += Xoffset;
 	z += Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	midheight = GetHeight(floor, x, y, z);
+	midheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	room_number = item->room_number;
 	x += Xoffset;
 	z += Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	farheight = GetHeight(floor, x, y, z);
+	farheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	jump_ahead = (item->box_number != lara_item->box_number || !(item->mesh_bits & 0x200)) && y < nearheight - 384 && y < midheight + 256 && y > midheight - 256;
 
@@ -234,26 +239,26 @@ void SkeletonControl(short item_number) {
 		x = item->pos.x_pos + (870 * phd_sin(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
 		z = item->pos.z_pos + (870 * phd_cos(item->pos.y_rot + 0x2000) >> W2V_SHIFT);
 		floor = GetFloor(x, y, z, &room_number);
-		h1 = GetHeight(floor, x, y, z);
+		h1 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		room_number = item->room_number;
 		x = item->pos.x_pos + (870 * phd_sin(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
 		z = item->pos.z_pos + (870 * phd_cos(item->pos.y_rot + 0x3800) >> W2V_SHIFT);
 		floor = GetFloor(x, y, z, &room_number);
-		h2 = GetHeight(floor, x, y, z);
+		h2 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		jump_right = abs(h2 - y) <= 256 && h1 + 512 < y;
 
 		room_number = item->room_number;
 		x = item->pos.x_pos + (870 * phd_sin(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
 		z = item->pos.z_pos + (870 * phd_cos(item->pos.y_rot - 0x2000) >> W2V_SHIFT);
 		floor = GetFloor(x, y, z, &room_number);
-		h1 = GetHeight(floor, x, y, z);
+		h1 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		room_number = item->room_number;
 		x = item->pos.x_pos + (870 * phd_sin(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
 		z = item->pos.z_pos + (870 * phd_cos(item->pos.y_rot - 0x3800) >> W2V_SHIFT);
 		floor = GetFloor(x, y, z, &room_number);
-		h2 = GetHeight(floor, x, y, z);
+		h2 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		jump_left = abs(h2 - y) <= 256 && h1 + 512 < y;
 	} else {
 		jump_left = 0;
@@ -390,7 +395,7 @@ void SkeletonControl(short item_number) {
 						SoundEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
 						mesh->Flags &= ~1;
 						floor->stopper = 0;
-						GetHeight(floor, pos.x, pos.y, pos.z);
+						GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 						TestTriggers(trigger_index, 1, 0);
 					}
 				}
@@ -450,7 +455,7 @@ void SkeletonControl(short item_number) {
 
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(h > item->pos.y_pos + 1024) {
 			skelly->maximum_turn = 0;
@@ -511,7 +516,7 @@ void SkeletonControl(short item_number) {
 			} else {
 				skelly->LOT.is_jumping = 1;
 				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 				if(h > item->pos.y_pos + 1024) {
 					skelly->maximum_turn = 0;
@@ -546,7 +551,7 @@ void SkeletonControl(short item_number) {
 		if(item->anim_number == GetObjectInfo(currentLevel, SKELETON)->anim_index + 43) {
 			room_number = item->room_number;
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 			if(h > item->pos.y_pos + 1280) {
 				skelly->maximum_turn = 0;
@@ -564,7 +569,7 @@ void SkeletonControl(short item_number) {
 	case 24:
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(h <= item->pos.y_pos && item->active) {
 			ExplodingDeath2(item_number, -1, 929);

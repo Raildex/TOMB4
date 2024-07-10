@@ -5,6 +5,7 @@
 #include "game/collinfo.h"
 #include "game/control.h"
 #include "game/floortypes.h"
+#include "game/heighttypes.h"
 #include "game/inputbuttons.h"
 #include "game/iteminfo.h"
 #include "game/lara.h"
@@ -269,10 +270,12 @@ void lara_col_climbdown(ITEM_INFO* item, COLL_INFO* coll) {
 
 short GetClimbTrigger(long x, long y, long z, short room_number) {
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	short* data;
 
 	floor = GetFloor(x, y, z, &room_number);
-	GetHeight(floor, x, y, z);
+	GetHeight(floor, x, y, z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(!trigger_index)
 		return 0;
@@ -294,6 +297,8 @@ short GetClimbTrigger(long x, long y, long z, short room_number) {
 
 long LaraTestClimb(long x, long y, long z, long xfront, long zfront, long item_height, short item_room, long* shift) {
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long hang, h, c;
 	short room_number;
 
@@ -305,7 +310,7 @@ long LaraTestClimb(long x, long y, long z, long xfront, long zfront, long item_h
 
 	room_number = item_room;
 	floor = GetFloor(x, y - 128, z, &room_number);
-	h = GetHeight(floor, x, y, z);
+	h = GetHeight(floor, x, y, z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h == NO_HEIGHT)
 		return 0;
@@ -334,7 +339,7 @@ long LaraTestClimb(long x, long y, long z, long xfront, long zfront, long item_h
 		hang = 0;
 
 	floor = GetFloor(xfront + x, y, zfront + z, &room_number);
-	h = GetHeight(floor, xfront + x, y, zfront + z);
+	h = GetHeight(floor, xfront + x, y, zfront + z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h != NO_HEIGHT)
 		h -= y;
@@ -450,6 +455,8 @@ long LaraTestClimbPos(ITEM_INFO* item, long front, long right, long origin, long
 
 long LaraTestClimbUpPos(ITEM_INFO* item, long front, long right, long* shift, long* ledge) {
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long angle, x, y, z, xfront, zfront, h, c;
 	short room_number;
 
@@ -496,7 +503,7 @@ long LaraTestClimbUpPos(ITEM_INFO* item, long front, long right, long* shift, lo
 		*shift = c;
 
 	floor = GetFloor(x + xfront, y, z + zfront, &room_number);
-	h = GetHeight(floor, x + xfront, y, z + zfront);
+	h = GetHeight(floor, x + xfront, y, z + zfront, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h == NO_HEIGHT) {
 		*ledge = NO_HEIGHT;
@@ -534,13 +541,15 @@ long LaraTestClimbUpPos(ITEM_INFO* item, long front, long right, long* shift, lo
 
 long LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll) {
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	short room_number;
 
 	item->fallspeed = 0;
 	item->gravity_status = 0;
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 	coll->trigger = trigger_index;
 
 	if(!(input & IN_ACTION) || item->hit_points <= 0) {

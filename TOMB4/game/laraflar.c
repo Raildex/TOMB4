@@ -9,6 +9,7 @@
 #include "game/effect2.h"
 #include "game/gameflow.h"
 #include "game/gfleveloptions.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
 #include "game/itemstatus.h"
@@ -143,6 +144,8 @@ void CreateFlare(short object, long thrown) {
 	MESH_INFO* meshlist[6] = { 0 };
 	ITEM_INFO* flare;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	long collided;
 	short flare_item, room_number;
@@ -166,7 +169,7 @@ void CreateFlare(short object, long thrown) {
 		room_number = lara_item->room_number;
 		floor = GetFloor(pos.x, pos.y, pos.z, &room_number);
 
-		if(GetCollidedObjects(flare, 0, 1, itemlist, 5, meshlist, 5, 0) || pos.y > GetHeight(floor, pos.x, pos.y, pos.z)) {
+		if(GetCollidedObjects(flare, 0, 1, itemlist, 5, meshlist, 5, 0) || pos.y > GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject)) {
 			collided = 1;
 			flare->pos.y_rot = lara_item->pos.y_rot - 0x8000;
 			flare->pos.x_pos = lara_item->pos.x_pos + (80 * phd_sin(flare->pos.y_rot) >> W2V_SHIFT);

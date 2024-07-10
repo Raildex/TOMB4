@@ -96,10 +96,6 @@ long flipeffect = -1;
 long fliptimer = 0;
 
 short* trigger_index;
-long tiltxoff;
-long tiltyoff;
-long OnObject;
-long height_type;
 
 long InItemControlLoop = 0;
 short ItemNewRooms[256][2];
@@ -220,6 +216,8 @@ long ControlPhase(long nframes, long demo_mode) {
 	ITEM_INFO* item;
 	FX_INFO* fx;
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	MESH_INFO* mesh;
 	short item_num, nex, fx_num;
 
@@ -428,7 +426,7 @@ long ControlPhase(long nframes, long demo_mode) {
 			SmashedMeshCount--;
 			mesh = SmashedMesh[SmashedMeshCount];
 			floor = GetFloor(mesh->x, mesh->y, mesh->z, &SmashedMeshRoom[SmashedMeshCount]);
-			GetHeight(floor, mesh->x, mesh->y, mesh->z);
+			GetHeight(floor, mesh->x, mesh->y, mesh->z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 			TestTriggers(trigger_index, 1, 0);
 			floor->stopper = 0;
 			SmashedMesh[SmashedMeshCount] = NULL;
@@ -1259,7 +1257,7 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 	return NO_HEIGHT;
 }
 
-long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
+long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	ITEM_INFO* item;
 	ROOM_INFO* r;
 	short* data;
@@ -1267,10 +1265,10 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 	unsigned short trigger;
 	short type, dx, dz, xoff, yoff, tilt, hadj, tilt0, tilt1, tilt2, tilt3;
 
-	tiltxoff = 0;
-	tiltyoff = 0;
-	OnObject = 0;
-	height_type = WALL;
+	*tiltxoff = 0;
+	*tiltzoff = 0;
+	*OnObject = 0;
+	*ht = WALL;
 
 	while(floor->pit_room != 255) {
 		if(CheckNoColFloorTriangle(floor, x, z) == 1)
@@ -1310,13 +1308,13 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 		case TILT_TYPE:
 			xoff = *data >> 8;
 			yoff = *(char*)data;
-			tiltxoff = xoff;
-			tiltyoff = yoff;
+			*tiltxoff = xoff;
+			*tiltzoff = yoff;
 
 			if(abs(xoff) > 2 || abs(yoff) > 2)
-				height_type = BIG_SLOPE;
+				*ht = BIG_SLOPE;
 			else
-				height_type = SMALL_SLOPE;
+				*ht = SMALL_SLOPE;
 
 			if(xoff < 0)
 				height -= xoff * (z & 1023) >> 2;
@@ -1351,7 +1349,7 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 				item = GetItem(currentLevel, trigger & 0x3FF);
 
 				if(GetObjectInfo(currentLevel, item->object_number)->floor && !(item->flags & 0x8000))
-					GetObjectInfo(currentLevel, item->object_number)->floor(item, x, y, z, &height);
+					GetObjectInfo(currentLevel, item->object_number)->floor(item, x, y, z, &height, ht, tiltxoff, tiltzoff, OnObject);
 
 			} while(!(trigger & 0x8000));
 
@@ -1384,7 +1382,7 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 			tilt3 = (tilt >> 12) & 0xF;
 			dx = x & 1023;
 			dz = z & 1023;
-			height_type = SPLIT_TRI;
+			*ht = SPLIT_TRI;
 
 			if((type & 0x1F) == SPLIT1 || (type & 0x1F) == NOCOLF1T || (type & 0x1F) == NOCOLF1B) {
 				if(dx > (1024 - dz)) {
@@ -1429,11 +1427,11 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 				}
 			}
 
-			tiltxoff = xoff;
-			tiltyoff = yoff;
+			*tiltxoff = xoff;
+			*tiltzoff = yoff;
 
 			if(abs(xoff) > 2 || abs(yoff) > 2)
-				height_type = DIAGONAL;
+				*ht = DIAGONAL;
 
 			if(xoff >= 0)
 				height += xoff * ((-1 - z) & 1023) >> 2;
@@ -1841,12 +1839,14 @@ void TriggerCDTrack(short value, short flags, short type) {
 
 long ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {
 	GAME_VECTOR src;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long dx, dy, dz;
 	short room_no;
 
 	room_no = target->room_number;
 
-	if(target->pos.y > GetHeight(GetFloor(target->pos.x, target->pos.y, target->pos.z, &room_no), target->pos.x, target->pos.y, target->pos.z)) {
+	if(target->pos.y > GetHeight(GetFloor(target->pos.x, target->pos.y, target->pos.z, &room_no), target->pos.x, target->pos.y, target->pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject)) {
 		src.pos.x = (7 * (target->pos.x - start->pos.x) >> 3) + start->pos.x;
 		src.pos.y = (7 * (target->pos.y - start->pos.y) >> 3) + start->pos.y;
 		src.pos.z = (7 * (target->pos.z - start->pos.z) >> 3) + start->pos.z;
@@ -1856,7 +1856,7 @@ long ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {
 			dy = ((target->pos.y - src.pos.y) * i >> 2) + src.pos.y;
 			dz = ((target->pos.z - src.pos.z) * i >> 2) + src.pos.z;
 
-			if(dy < GetHeight(GetFloor(dx, dy, dz, &room_no), dx, dy, dz))
+			if(dy < GetHeight(GetFloor(dx, dy, dz, &room_no), dx, dy, dz, &ht, &tiltxoff, &tiltzoff, &OnObject))
 				break;
 		}
 
@@ -1895,6 +1895,8 @@ long ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {
 
 long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long dx, dy, dz, x, y, z;
 	short room_number, last_room;
 
@@ -1924,7 +1926,7 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 				number_los_rooms++;
 			}
 
-			if(y > GetHeight(floor, x, y, z) || y < GetCeiling(floor, x, y, z)) {
+			if(y > GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) || y < GetCeiling(floor, x, y, z)) {
 				target->pos.x = x;
 				target->pos.y = y;
 				target->pos.z = z;
@@ -1940,7 +1942,7 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 				number_los_rooms++;
 			}
 
-			if(y > GetHeight(floor, x - 1, y, z) || y < GetCeiling(floor, x - 1, y, z)) {
+			if(y > GetHeight(floor, x - 1, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) || y < GetCeiling(floor, x - 1, y, z)) {
 				target->pos.x = x;
 				target->pos.y = y;
 				target->pos.z = z;
@@ -1966,7 +1968,7 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 				number_los_rooms++;
 			}
 
-			if(y > GetHeight(floor, x, y, z) || y < GetCeiling(floor, x, y, z)) {
+			if(y > GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) || y < GetCeiling(floor, x, y, z)) {
 				target->pos.x = x;
 				target->pos.y = y;
 				target->pos.z = z;
@@ -1982,7 +1984,7 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 				number_los_rooms++;
 			}
 
-			if(y > GetHeight(floor, x + 1, y, z) || y < GetCeiling(floor, x + 1, y, z)) {
+			if(y > GetHeight(floor, x + 1, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) || y < GetCeiling(floor, x + 1, y, z)) {
 				target->pos.x = x;
 				target->pos.y = y;
 				target->pos.z = z;
@@ -2001,6 +2003,8 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 }
 
 long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	FLOOR_INFO* floor;
 	long dx, dy, dz, x, y, z;
 	short room_number, last_room;
@@ -2031,7 +2035,7 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 				number_los_rooms++;
 			}
 
-			if(y > GetHeight(floor, x, y, z) || y < GetCeiling(floor, x, y, z)) {
+			if(y > GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) || y < GetCeiling(floor, x, y, z)) {
 				target->pos.x = x;
 				target->pos.y = y;
 				target->pos.z = z;
@@ -2047,7 +2051,7 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 				number_los_rooms++;
 			}
 
-			if(y > GetHeight(floor, x, y, z - 1) || y < GetCeiling(floor, x, y, z - 1)) {
+			if(y > GetHeight(floor, x, y, z - 1, &height_type, &tiltxoff, &tiltzoff, &OnObject) || y < GetCeiling(floor, x, y, z - 1)) {
 				target->pos.x = x;
 				target->pos.y = y;
 				target->pos.z = z;
@@ -2073,7 +2077,7 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 				number_los_rooms++;
 			}
 
-			if(y > GetHeight(floor, x, y, z) || y < GetCeiling(floor, x, y, z)) {
+			if(y > GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) || y < GetCeiling(floor, x, y, z)) {
 				target->pos.x = x;
 				target->pos.y = y;
 				target->pos.z = z;
@@ -2089,7 +2093,7 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 				number_los_rooms++;
 			}
 
-			if(y > GetHeight(floor, x, y, z + 1) || y < GetCeiling(floor, x, y, z + 1)) {
+			if(y > GetHeight(floor, x, y, z + 1, &height_type, &tiltxoff, &tiltzoff, &OnObject) || y < GetCeiling(floor, x, y, z + 1)) {
 				target->pos.x = x;
 				target->pos.y = y;
 				target->pos.z = z;
@@ -2174,6 +2178,8 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits) {
 
 long IsRoomOutside(long x, long y, long z) {
 	ROOM_INFO* r;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	FLOOR_INFO* floor;
 	unsigned char* pTable;
 	long h, c;
@@ -2194,7 +2200,7 @@ long IsRoomOutside(long x, long y, long z) {
 			IsRoomOutsideNo = offset & 0x7FFF;
 			room_no = IsRoomOutsideNo;
 			floor = GetFloor(x, y, z, &room_no);
-			h = GetHeight(floor, x, y, z);
+			h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			c = GetCeiling(floor, x, y, z);
 
 			if(h == NO_HEIGHT || y > h || y < c)
@@ -2215,7 +2221,7 @@ long IsRoomOutside(long x, long y, long z) {
 				IsRoomOutsideNo = *pTable;
 				room_no = IsRoomOutsideNo;
 				floor = GetFloor(x, y, z, &room_no);
-				h = GetHeight(floor, x, y, z);
+				h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 				c = GetCeiling(floor, x, y, z);
 
 				if(h == NO_HEIGHT || y > h || y < c)
@@ -2294,6 +2300,8 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 	ITEM_INFO* shotitem;
 	MESH_INFO* Mesh;
 	GAME_VECTOR target;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR v;
 	short item_no, hit, ricochet, room_number, TriggerItems[8], NumTrigs;
 
@@ -2364,7 +2372,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 
 							if(shotitem->flags & IFL_CODEBITS && (shotitem->flags & IFL_CODEBITS) != IFL_CODEBITS) {
 								room_number = shotitem->room_number;
-								GetHeight(GetFloor(shotitem->pos.x_pos, shotitem->pos.y_pos - 256, shotitem->pos.z_pos, &room_number), shotitem->pos.x_pos, shotitem->pos.y_pos - 256, shotitem->pos.z_pos);
+								GetHeight(GetFloor(shotitem->pos.x_pos, shotitem->pos.y_pos - 256, shotitem->pos.z_pos, &room_number), shotitem->pos.x_pos, shotitem->pos.y_pos - 256, shotitem->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 								TestTriggers(trigger_index, 1, shotitem->flags & IFL_CODEBITS);
 							} else {
 								NumTrigs = (short)GetSwitchTrigger(shotitem, TriggerItems, 1);

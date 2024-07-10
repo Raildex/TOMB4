@@ -501,6 +501,8 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 
 void UpdateLaraRoom(ITEM_INFO* item, long height) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long x, y, z;
 	short room_number;
 
@@ -509,7 +511,7 @@ void UpdateLaraRoom(ITEM_INFO* item, long height) {
 	z = item->pos.z_pos;
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
-	item->floor = GetHeight(floor, x, y, z);
+	item->floor = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->room_number != room_number)
 		ItemNewRoom(lara.item_number, room_number);
@@ -965,6 +967,8 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
 	PHD_3DPOS pos;
 	long height;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	short room_number;
 
 	pos.x_rot = item->pos.x_rot;
@@ -979,7 +983,7 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
 
 	if(item->object_number == FLARE_ITEM || item->object_number == BURNING_TORCH_ITEM || item->object_number == CLOCKWORK_BEETLE) {
 		room_number = l->room_number;
-		height = GetHeight(GetFloor(pos.x_pos, pos.y_pos, pos.z_pos, &room_number), pos.x_pos, pos.y_pos, pos.z_pos);
+		height = GetHeight(GetFloor(pos.x_pos, pos.y_pos, pos.z_pos, &room_number), pos.x_pos, pos.y_pos, pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(abs(height - l->pos.y_pos) > 512) {
 			if(lara.IsMoving) {
@@ -1112,7 +1116,9 @@ void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number, long hite) {
 	FLOOR_INFO* floor;
-	static long xfront, zfront;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
+	long xfront, zfront;
 	long yT, h, c, tx, tz;
 	long fspeed, ang, xright, xleft, zright, zleft, xright2, xleft2, zright2, zleft2;
 	short room_num, room_num2, tilt;
@@ -1134,7 +1140,7 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 
 	room_num = room_number;
 	floor = GetFloor(x, yT, z, &room_num);
-	h = GetHeight(floor, x, yT, z);
+	h = GetHeight(floor, x, yT, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h != NO_HEIGHT)
 		h -= y;
@@ -1203,7 +1209,7 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	tx = x + xfront;
 	tz = z + zfront;
 	floor = GetFloor(tx, yT, tz, &room_num);
-	h = GetHeight(floor, tx, yT, tz);
+	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h != NO_HEIGHT)
 		h -= y;
@@ -1220,7 +1226,7 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	tx += xfront;
 	tz += zfront;
 	floor = GetFloor(tx, yT, tz, &room_num);
-	h = GetHeight(floor, tx, yT, tz);
+	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h != NO_HEIGHT)
 		h -= y;
@@ -1237,7 +1243,7 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	tx = x + xleft;
 	tz = z + zleft;
 	floor = GetFloor(tx, yT, tz, &room_num2);
-	h = GetHeight(floor, tx, yT, tz);
+	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h != NO_HEIGHT)
 		h -= y;
@@ -1259,7 +1265,7 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 		coll->left_floor = 512;
 
 	floor = GetFloor(tx, yT, tz, &room_num);
-	h = GetHeight(floor, tx, yT, tz);
+	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h != NO_HEIGHT)
 		h -= y;
@@ -1285,7 +1291,7 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	tx = x + xright;
 	tz = z + zright;
 	floor = GetFloor(tx, yT, tz, &room_num2);
-	h = GetHeight(floor, tx, yT, tz);
+	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h != NO_HEIGHT)
 		h -= y;
@@ -1307,7 +1313,7 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 		coll->right_floor = 512;
 
 	floor = GetFloor(tx, yT, tz, &room_num);
-	h = GetHeight(floor, tx, yT, tz);
+	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h != NO_HEIGHT)
 		h -= y;
@@ -1332,14 +1338,14 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	tx = x + xleft2;
 	tz = z + zleft2;
 	floor = GetFloor(tx, yT, tz, &room_num2);
-	GetHeight(floor, tx, yT, tz);
+	GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	GetCeiling(floor, tx, yT, tz);
 
 	room_num2 = room_number;
 	tx = x + xright2;
 	tz = z + zright2;
 	floor = GetFloor(tx, yT, tz, &room_num2);
-	GetHeight(floor, tx, yT, tz);
+	GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	GetCeiling(floor, tx, yT, tz);
 
 	CollideStaticObjects(coll, x, y, z, room_number, hite);

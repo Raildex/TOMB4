@@ -2,13 +2,14 @@
 #define TOMB4_GAME_TRAPS_H
 
 
+#include "game/heighttypes.h"
 extern short SPxzoffs[8];
 extern short SPyoffs[8];
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
 
 void FlameEmitterControl(short item_number);
-void TwoBlockPlatformFloor(ITEM_INFO* item, long x, long y, long z, long* height);
+void TwoBlockPlatformFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* ht, long* xoff, long* zoff, long* onObject);
 void TwoBlockPlatformCeiling(ITEM_INFO* item, long x, long y, long z, long* height);
 void ControlTwoBlockPlatform(short item_number);
 void ControlJobySpike(short item_number);
@@ -48,7 +49,7 @@ void FallingCeiling(short item_number);
 void ControlSmashableBikeWall(short item_number);
 void ControlFallingBlock2(short item_number);
 void FallingBlockCeiling(ITEM_INFO* item, long x, long y, long z, long* height);
-void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height);
+void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* ht, long* xoff, long* zoff, long* onObject);
 void FallingBlock(short item_number);
 void FallingBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void CeilingTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);

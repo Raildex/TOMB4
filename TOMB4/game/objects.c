@@ -50,6 +50,8 @@ static PHD_VECTOR PolePosR = { 0, 0, 0 };
 void ControlMapper(short item_number) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	SPARKS* sptr;
 	PHD_VECTOR pos;
 	long rg, h;
@@ -71,7 +73,7 @@ void ControlMapper(short item_number) {
 		TriggerDynamic(pos.x, pos.y, pos.z, (GetRandomControl() & 3) + 16, rg, rg, 0);
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		for(int i = 0; i < 2; i++) {
 			sptr = GetFreeSpark();
@@ -191,11 +193,11 @@ void ControlLightningConductor(short item_number) {
 	}
 }
 
-void BridgeFlatFloor(ITEM_INFO* item, long x, long y, long z, long* height) {
+void BridgeFlatFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	if(item->pos.y_pos >= y) {
 		*height = item->pos.y_pos;
-		height_type = WALL;
-		OnObject = 1;
+		*height_type = WALL;
+		*OnObject = 1;
 	}
 }
 
@@ -215,15 +217,15 @@ long GetOffset(ITEM_INFO* item, long x, long z) {
 		return ~z & 0x3FF;
 }
 
-void BridgeTilt1Floor(ITEM_INFO* item, long x, long y, long z, long* height) {
+void BridgeTilt1Floor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	long level;
 
 	level = item->pos.y_pos + (GetOffset(item, x, z) >> 2);
 
 	if(level >= y) {
 		*height = level;
-		height_type = WALL;
-		OnObject = 1;
+		*height_type = WALL;
+		*OnObject = 1;
 	}
 }
 
@@ -236,15 +238,15 @@ void BridgeTilt1Ceiling(ITEM_INFO* item, long x, long y, long z, long* height) {
 		*height = level + 256;
 }
 
-void BridgeTilt2Floor(ITEM_INFO* item, long x, long y, long z, long* height) {
+void BridgeTilt2Floor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	long level;
 
 	level = item->pos.y_pos + (GetOffset(item, x, z) >> 1);
 
 	if(level >= y) {
 		*height = level;
-		height_type = WALL;
-		OnObject = 1;
+		*height_type = WALL;
+		*OnObject = 1;
 	}
 }
 
@@ -260,6 +262,8 @@ void BridgeTilt2Ceiling(ITEM_INFO* item, long x, long y, long z, long* height) {
 void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	short* bounds;
 	short room_number, y_rot;
 
@@ -308,7 +312,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	if(l->anim_number == ANIM_PLINTHHI && l->frame_number == GetAnim(currentLevel, ANIM_PLINTHHI)->frame_base + 45) {
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		TestTriggers(trigger_index, 1, item->flags & 0x3E00);
 		item->mesh_bits = 255;
 		item->item_flags[0] = 1;
@@ -548,10 +552,12 @@ void AnimateWaterfalls() {
 
 void ControlTriggerTriggerer(short item_number) {
 	ITEM_INFO* item;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	short* data;
 
 	item = GetItem(currentLevel, item_number);
-	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	data = trigger_index;
 
 	if(data) {

@@ -297,6 +297,8 @@ static short RightClimbTab[4] = { 2048, 256, 512, 1024 };
 
 static void TiltHer(ITEM_INFO* item, long rad, long height) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	FVECTOR plane;
 	long wy[4];
 	long yT, y, wx, wz, dy;
@@ -305,27 +307,27 @@ static void TiltHer(ITEM_INFO* item, long rad, long height) {
 	yT = item->pos.y_pos - height - 162;
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, yT, item->pos.z_pos, &room_number);
-	y = GetHeight(floor, item->pos.x_pos, yT, item->pos.z_pos);
+	y = GetHeight(floor, item->pos.x_pos, yT, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(!OnObject) {
-		plane.x = -(float)tiltyoff / 4;
+		plane.x = -(float)tiltzoff / 4;
 		plane.y = -(float)tiltxoff / 4;
 	} else {
 		wx = item->pos.x_pos & 0xFFFFFC00 | 0xFF;
 		wz = item->pos.z_pos & 0xFFFFFC00 | 0xFF;
 		room_number = item->room_number;
 		floor = GetFloor(wx, yT, wz, &room_number);
-		wy[0] = GetHeight(floor, wx, yT, wz);
+		wy[0] = GetHeight(floor, wx, yT, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		wx = item->pos.x_pos & 0xFFFFFC00 | 0x2FF;
 		wz = item->pos.z_pos & 0xFFFFFC00 | 0xFF;
 		room_number = item->room_number;
 		floor = GetFloor(wx, yT, wz, &room_number);
-		wy[1] = GetHeight(floor, wx, yT, wz);
+		wy[1] = GetHeight(floor, wx, yT, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		wx = item->pos.x_pos & 0xFFFFFC00 | 0xFF;
 		wz = item->pos.z_pos & 0xFFFFFC00 | 0x2FF;
 		room_number = item->room_number;
 		floor = GetFloor(wx, yT, wz, &room_number);
-		wy[2] = GetHeight(floor, wx, yT, wz);
+		wy[2] = GetHeight(floor, wx, yT, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		plane.x = (float)(wy[1] - wy[0]) / 512;
 		plane.y = (float)(wy[2] - wy[0]) / 512;
 	}
@@ -337,7 +339,7 @@ static void TiltHer(ITEM_INFO* item, long rad, long height) {
 		wz = item->pos.z_pos + (rad * phd_cos(item->pos.y_rot + 16384 * i) >> W2V_SHIFT);
 		room_number = item->room_number;
 		floor = GetFloor(wx, yT, wz, &room_number);
-		wy[i] = GetHeight(floor, wx, yT, wz);
+		wy[i] = GetHeight(floor, wx, yT, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(abs(y - wy[i]) > rad / 2)
 			wy[i] = (long)(plane.x * wx + plane.y * wz + plane.z);
@@ -688,7 +690,7 @@ short LaraCeilingFront(ITEM_INFO* item, short ang, long dist, long h) {
 	return (short)height;
 }
 
-short LaraFloorFront(ITEM_INFO* item, short ang, long dist) {
+short LaraFloorFront(ITEM_INFO* item, short ang, long dist, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	long x, y, z, height;
 	short room_num;
 
@@ -696,7 +698,7 @@ short LaraFloorFront(ITEM_INFO* item, short ang, long dist) {
 	x = item->pos.x_pos + ((dist * phd_sin(ang)) >> W2V_SHIFT);
 	y = item->pos.y_pos - 762;
 	z = item->pos.z_pos + ((dist * phd_cos(ang)) >> W2V_SHIFT);
-	height = GetHeight(GetFloor(x, y, z, &room_num), x, y, z);
+	height = GetHeight(GetFloor(x, y, z, &room_num), x, y, z, ht, tiltxoff, tiltzoff, OnObject);
 
 	if(height != NO_HEIGHT)
 		height -= item->pos.y_pos;
@@ -911,6 +913,8 @@ void lara_as_all4s(ITEM_INFO* item, COLL_INFO* coll) {
 void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll) {
 	ITEM_INFO* itemlist[6] = { 0 };
 	MESH_INFO* meshlist[6] = { 0 };
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long slope, x, z, collided;
 	short height;
 
@@ -948,7 +952,7 @@ void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll) {
 
 			if(collided) {
 				if(input & IN_FORWARD) {
-					height = LaraFloorFront(item, item->pos.y_rot, 256);
+					height = LaraFloorFront(item, item->pos.y_rot, 256, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 					if(height < 255 && height > -255 && height_type != BIG_SLOPE)
 						item->goal_anim_state = AS_CRAWL;
@@ -958,7 +962,7 @@ void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll) {
 					if(height == NO_HEIGHT || height > 256)
 						return;
 
-					height = LaraFloorFront(item, item->pos.y_rot, -300);
+					height = LaraFloorFront(item, item->pos.y_rot, -300, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 					if(height < 255 && height > -255 && height_type != BIG_SLOPE)
 						item->goal_anim_state = AS_CRAWLBACK;
@@ -1790,17 +1794,19 @@ void lara_col_splat(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_as_compress(ITEM_INFO* item, COLL_INFO* coll) {
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	if(lara.water_status != LW_WADE) {
-		if(input & IN_FORWARD && LaraFloorFront(item, item->pos.y_rot, 256) >= -384) {
+		if(input & IN_FORWARD && LaraFloorFront(item, item->pos.y_rot, 256, &height_type, &tiltxoff, &tiltzoff, &OnObject) >= -384) {
 			item->goal_anim_state = AS_FORWARDJUMP;
 			lara.move_angle = item->pos.y_rot;
-		} else if(input & IN_LEFT && LaraFloorFront(item, item->pos.y_rot - 16384, 256) >= -384) {
+		} else if(input & IN_LEFT && LaraFloorFront(item, item->pos.y_rot - 16384, 256, &height_type, &tiltxoff, &tiltzoff, &OnObject) >= -384) {
 			item->goal_anim_state = AS_LEFTJUMP;
 			lara.move_angle = item->pos.y_rot - 16384;
-		} else if(input & IN_RIGHT && LaraFloorFront(item, item->pos.y_rot + 16384, 256) >= -384) {
+		} else if(input & IN_RIGHT && LaraFloorFront(item, item->pos.y_rot + 16384, 256, &height_type, &tiltxoff, &tiltzoff, &OnObject) >= -384) {
 			item->goal_anim_state = AS_RIGHTJUMP;
 			lara.move_angle = item->pos.y_rot + 16384;
-		} else if(input & IN_BACK && LaraFloorFront(item, item->pos.y_rot - 32768, 256) >= -384) {
+		} else if(input & IN_BACK && LaraFloorFront(item, item->pos.y_rot - 32768, 256, &height_type, &tiltxoff, &tiltzoff, &OnObject) >= -384) {
 			item->goal_anim_state = AS_BACKJUMP;
 			lara.move_angle = item->pos.y_rot + 32768;
 		}
@@ -2436,10 +2442,11 @@ void lara_default_col(ITEM_INFO* item, COLL_INFO* coll) {
 
 void lara_as_deathslide(ITEM_INFO* item, COLL_INFO* coll) {
 	short room_number;
-
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	room_number = item->room_number;
 	camera.target_angle = 12740;
-	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	coll->trigger = trigger_index;
 
 	if(!(input & IN_ACTION)) {
@@ -2986,7 +2993,8 @@ void lara_col_fastfall(ITEM_INFO* item, COLL_INFO* coll) {
 
 void lara_as_stop(ITEM_INFO* item, COLL_INFO* coll) {
 	short height, ceiling, fheight, rheight;
-
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	fheight = NO_HEIGHT;
 	rheight = NO_HEIGHT;
 
@@ -3020,18 +3028,18 @@ void lara_as_stop(ITEM_INFO* item, COLL_INFO* coll) {
 		LookUpDown();
 
 	if(input & IN_FORWARD)
-		fheight = LaraFloorFront(item, item->pos.y_rot, 104);
+		fheight = LaraFloorFront(item, item->pos.y_rot, 104, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	else if(input & IN_BACK)
-		rheight = LaraFloorFront(item, item->pos.y_rot + 32768, 104);
+		rheight = LaraFloorFront(item, item->pos.y_rot + 32768, 104, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(input & IN_LSTEP) {
-		height = LaraFloorFront(item, item->pos.y_rot - 16384, 116);
+		height = LaraFloorFront(item, item->pos.y_rot - 16384, 116, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		ceiling = LaraCeilingFront(item, item->pos.y_rot - 16384, 116, 762);
 
 		if(height < 128 && height > -128 && height_type != BIG_SLOPE && ceiling <= 0)
 			item->goal_anim_state = AS_STEPLEFT;
 	} else if(input & IN_RSTEP) {
-		height = LaraFloorFront(item, item->pos.y_rot + 16384, 116);
+		height = LaraFloorFront(item, item->pos.y_rot + 16384, 116, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		ceiling = LaraCeilingFront(item, item->pos.y_rot + 16384, 116, 762);
 
 		if(height < 128 && height > -128 && height_type != BIG_SLOPE && ceiling <= 0)
@@ -3065,7 +3073,7 @@ void lara_as_stop(ITEM_INFO* item, COLL_INFO* coll) {
 		item->goal_anim_state = AS_COMPRESS;
 	else if(input & IN_FORWARD) {
 		ceiling = LaraCeilingFront(item, item->pos.y_rot, 104, 762);
-		height = LaraFloorFront(item, item->pos.y_rot, 104);
+		height = LaraFloorFront(item, item->pos.y_rot, 104, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if((height_type == BIG_SLOPE || height_type == DIAGONAL) && height < 0 || ceiling > 0) {
 			item->goal_anim_state = AS_STOP;
@@ -3544,6 +3552,8 @@ void lara_col_poleup(ITEM_INFO* item, COLL_INFO* coll) {
 
 void lara_col_poledown(ITEM_INFO* item, COLL_INFO* coll) {
 	short room_number;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 
 	coll->enable_spaz = 0;
 	coll->enable_baddie_push = 0;
@@ -3565,7 +3575,7 @@ void lara_col_poledown(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(coll->mid_floor < 0) {
 		room_number = item->room_number;
-		item->floor = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos - 762, item->pos.z_pos);
+		item->floor = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos - 762, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		item->goal_anim_state = AS_POLESTAT;
 		item->item_flags[2] = 0;
 	}
@@ -4012,8 +4022,10 @@ void ApplyVelocityToRope(long node, unsigned short angle, unsigned short n) {
 
 static long IsValidHangPos(ITEM_INFO* item, COLL_INFO* coll) {
 	short angle;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 
-	if(LaraFloorFront(item, lara.move_angle, 100) >= 200) {
+	if(LaraFloorFront(item, lara.move_angle, 100, &height_type, &tiltxoff, &tiltzoff, &OnObject) >= 200) {
 		angle = (unsigned short)(item->pos.y_rot + 0x2000) / 0x4000;
 
 		switch(angle) {
@@ -4096,6 +4108,8 @@ long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll) {
 long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 	long oldx, oldz, front, x, z, flag;
 	short oldy, angle;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 
 	if(item->anim_number != ANIM_GRABLEDGE || coll->hit_static)
 		return 0;
@@ -4140,7 +4154,7 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 		item->pos.z_pos = oldz;
 		lara.move_angle = oldy;
 
-		if(LaraFloorFront(item, item->pos.y_rot + 0x4000, 116) < 0)
+		if(LaraFloorFront(item, item->pos.y_rot + 0x4000, 116, &height_type, &tiltxoff, &tiltzoff, &OnObject) < 0)
 			return 0;
 
 		switch(angle) {
@@ -4180,7 +4194,7 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 
 			if(lara.climb_status) {
 				if(!(GetClimbTrigger(x, item->pos.y_pos, z, item->room_number) & RightClimbTab[angle])) {
-					front = LaraFloorFront(item, item->pos.y_rot, 116);
+					front = LaraFloorFront(item, item->pos.y_rot, 116, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 					if(abs(coll->front_floor - front) > 60 || front < -768)
 						flag = 0;
@@ -4234,6 +4248,8 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 	long oldx, oldz, front, x, z, flag;
 	short oldy, angle;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 
 	if(item->anim_number != ANIM_GRABLEDGE || coll->hit_static)
 		return 0;
@@ -4278,7 +4294,7 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 		item->pos.z_pos = oldz;
 		lara.move_angle = oldy;
 
-		if(LaraFloorFront(item, item->pos.y_rot - 0x4000, 116) < 0)
+		if(LaraFloorFront(item, item->pos.y_rot - 0x4000, 116, &height_type, &tiltxoff, &tiltzoff, &OnObject) < 0)
 			return 0;
 
 		switch(angle) {
@@ -4318,7 +4334,7 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 
 			if(lara.climb_status) {
 				if(!(GetClimbTrigger(x, item->pos.y_pos, z, item->room_number) & LeftClimbTab[angle])) {
-					front = LaraFloorFront(item, item->pos.y_rot, 116);
+					front = LaraFloorFront(item, item->pos.y_rot, 116, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 					if(abs(coll->front_floor - front) > 60 || front < -768)
 						flag = 0;
@@ -4594,6 +4610,8 @@ long LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, long* edge) {
 
 long TestHangSwingIn(ITEM_INFO* item, short angle) {
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long x, y, z, h, c;
 	short room_number;
 
@@ -4621,7 +4639,7 @@ long TestHangSwingIn(ITEM_INFO* item, short angle) {
 	}
 
 	floor = GetFloor(x, y, z, &room_number);
-	h = GetHeight(floor, x, y, z);
+	h = GetHeight(floor, x, y, z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, x, y, z);
 	return h != NO_HEIGHT && h - y > 0 && c - y < -400 && y - c - 819 > -72;
 }
@@ -4780,6 +4798,8 @@ long LaraTestClimbStance(ITEM_INFO* item, COLL_INFO* coll) {
 
 long TestWall(ITEM_INFO* item, long front, long right, long down) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long x, y, z, h, c;
 	short angle, room_num;
 
@@ -4828,7 +4848,7 @@ long TestWall(ITEM_INFO* item, long front, long right, long down) {
 	}
 
 	floor = GetFloor(x, y, z, &room_num);
-	h = GetHeight(floor, x, y, z);
+	h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, x, y, z);
 
 	if(h == NO_HEIGHT)
@@ -4911,7 +4931,8 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 	short* bounds;
 	long x, z, oldfloor, hdif, flag;
 	short angle, move, wall, ceiling, dir;
-
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	move = 0;
 	flag = 0;
 	angle = lara.move_angle;
@@ -4921,7 +4942,7 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 	else if(angle == (short)(item->pos.y_rot + 0x4000))
 		move = 100;
 
-	wall = LaraFloorFront(item, angle, 100);
+	wall = LaraFloorFront(item, angle, 100, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(wall < 200)
 		flag = 1;

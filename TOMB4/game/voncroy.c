@@ -11,6 +11,7 @@
 #include "game/control.h"
 #include "game/creatureinfo.h"
 #include "game/effects.h"
+#include "game/heighttypes.h"
 #include "game/inputbuttons.h"
 #include "game/itemflags.h"
 #include "game/iteminfo.h"
@@ -182,6 +183,8 @@ void GetAIEnemy(CREATURE_INFO* info, long tfl) {
 
 void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long h;
 	short ang, room_number;
 
@@ -257,7 +260,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 		if(lara_item->current_anim_state != AS_SURFTREAD) {
 			room_number = lara_item->room_number;
 			floor = GetFloor(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, &room_number);
-			h = GetHeight(floor, lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
+			h = GetHeight(floor, lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			lara_item->pos.y_pos = h;
 			lara_item->anim_number = ANIM_STOP;
 			lara_item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
@@ -358,6 +361,8 @@ void VoncroyRaceControl(short item_number) {
 	ITEM_INFO* oEnemy;
 	CREATURE_INFO* VonCroy;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	AI_INFO info;
 	long Xoffset, Zoffset, x, y, z, nearheight, midheight, farheight, dx, dz, distance, ahead, iAngle, h, c;
 	short tilt, angle, torso_x, torso_y, head, room_number, jump_ahead, long_jump_ahead, ifl3;
@@ -382,17 +387,17 @@ void VoncroyRaceControl(short item_number) {
 	y = item->pos.y_pos;
 	z = item->pos.z_pos + Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	nearheight = GetHeight(floor, x, y, z);
+	nearheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	room_number = item->room_number;
 	x += Xoffset;
 	z += Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	midheight = GetHeight(floor, x, y, z);
+	midheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	room_number = item->room_number;
 	x += Xoffset;
 	z += Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	farheight = GetHeight(floor, x, y, z);
+	farheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(y >= nearheight - 384 || y >= midheight + 256 || y <= midheight - 256)
 		jump_ahead = 0;
@@ -582,7 +587,7 @@ void VoncroyRaceControl(short item_number) {
 			VonCroy->LOT.is_jumping = 1;
 		} else if(VonCroy->monkey_ahead) {
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 			if(c == h - 1536)
@@ -669,7 +674,7 @@ void VoncroyRaceControl(short item_number) {
 
 		if(item->box_number == VonCroy->LOT.target_box || !VonCroy->monkey_ahead) {
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 			if(c == h - 1536)
@@ -686,7 +691,7 @@ void VoncroyRaceControl(short item_number) {
 
 		if(item->box_number == VonCroy->LOT.target_box || !VonCroy->monkey_ahead) {
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 			if(c == h - 1536)
@@ -802,7 +807,7 @@ void VoncroyRaceControl(short item_number) {
 	if(ifl3 == -1 && oEnemy) {
 		room_number = oEnemy->room_number;
 		floor = GetFloor(oEnemy->pos.x_pos, oEnemy->pos.y_pos, oEnemy->pos.z_pos, &room_number);
-		GetHeight(floor, oEnemy->pos.x_pos, oEnemy->pos.y_pos, oEnemy->pos.z_pos);
+		GetHeight(floor, oEnemy->pos.x_pos, oEnemy->pos.y_pos, oEnemy->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		TestTriggers(trigger_index, 1, 0);
 		ifl3 = 1;
 	}
@@ -877,6 +882,8 @@ void VoncroyControl(short item_number) {
 	CREATURE_INFO* VonCroy;
 	CREATURE_INFO* baddie;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	static AI_INFO VonCroyAI;
 	static AI_INFO VonCroyLaraAI;
 	long Xoffset, Zoffset, x, y, z, nearheight, midheight, farheight, dx, dz, dist, max_dist, h, c;
@@ -903,19 +910,19 @@ void VoncroyControl(short item_number) {
 	y = item->pos.y_pos;
 	z = item->pos.z_pos + Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	nearheight = GetHeight(floor, x, y, z);
+	nearheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	room_number = item->room_number;
 	x += Xoffset;
 	z += Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	midheight = GetHeight(floor, x, y, z);
+	midheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	room_number = item->room_number;
 	x += Xoffset;
 	z += Zoffset;
 	floor = GetFloor(x, y, z, &room_number);
-	farheight = GetHeight(floor, x, y, z);
+	farheight = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	jump_ahead = y < nearheight - 384 && y < midheight + 256 && y > midheight - 256;
 	long_jump_ahead = y < nearheight - 384 && y < midheight - 384 && y < farheight + 256 && y > farheight - 256;
@@ -1197,7 +1204,7 @@ void VoncroyControl(short item_number) {
 			item->goal_anim_state = 1;
 		else if(VonCroy->monkey_ahead) {
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 			if(c == h - 1536) {
@@ -1292,7 +1299,7 @@ void VoncroyControl(short item_number) {
 
 		if(item->box_number == VonCroy->LOT.target_box || !VonCroy->monkey_ahead) {
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 			if(c == h - 1536)
@@ -1309,7 +1316,7 @@ void VoncroyControl(short item_number) {
 
 		if(item->box_number == VonCroy->LOT.target_box || !VonCroy->monkey_ahead) {
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 			if(c == h - 1536)

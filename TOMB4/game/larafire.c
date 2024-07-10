@@ -692,6 +692,8 @@ long WeaponObjectMesh(long weapon_type) {
 void DoProperDetection(short item_number, long x, long y, long z, long xv, long yv, long zv) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long ceiling, height, oldtype, oldonobj, oldheight, bs, yang, xs;
 	short room_number;
 
@@ -699,20 +701,20 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
-	oldheight = GetHeight(floor, x, y, z);
+	oldheight = GetHeight(floor, x, y, z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	height = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	height = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->pos.y_pos >= height) {
 		bs = 0;
-		oldtype = height_type;
+		oldtype = ht;
 
 		if((oldtype == BIG_SLOPE || oldtype == DIAGONAL) && oldheight < height) {
 			yang = (unsigned short)item->pos.y_rot;
 
-			if(tiltyoff < 0 && yang >= 32768 || tiltyoff > 0 && yang <= 32768 || tiltxoff < 0 && yang >= 16384 && yang <= 49152 || tiltxoff > 0 && (yang <= 16384 || yang >= 49152))
+			if(tiltzoff < 0 && yang >= 32768 || tiltzoff > 0 && yang <= 32768 || tiltxoff < 0 && yang >= 16384 && yang <= 49152 || tiltxoff > 0 && (yang <= 16384 || yang >= 49152))
 				bs = 1;
 		}
 
@@ -753,7 +755,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 		} else {
 			item->speed -= item->speed >> 2;
 
-			if(tiltyoff < 0 && abs(tiltyoff) - abs(tiltxoff) >= 2) {
+			if(tiltzoff < 0 && abs(tiltzoff) - abs(tiltxoff) >= 2) {
 				if((unsigned short)item->pos.y_rot > 32768) {
 					item->pos.y_rot = -1 - item->pos.y_rot;
 
@@ -761,7 +763,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						item->fallspeed = -(item->fallspeed >> 1);
 				} else {
 					if(item->speed < 32) {
-						item->speed -= (short)(2 * tiltyoff);
+						item->speed -= (short)(2 * tiltzoff);
 
 						if((unsigned short)item->pos.y_rot > 16384 && (unsigned short)item->pos.y_rot < 49152) {
 							item->pos.y_rot -= 4096;
@@ -778,7 +780,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 
 					item->fallspeed = item->fallspeed > 0 ? -(item->fallspeed >> 1) : 0;
 				}
-			} else if(tiltyoff > 0 && abs(tiltyoff) - abs(tiltxoff) >= 2) {
+			} else if(tiltzoff > 0 && abs(tiltzoff) - abs(tiltxoff) >= 2) {
 				if((unsigned short)item->pos.y_rot < 32768) {
 					item->pos.y_rot = -1 - item->pos.y_rot;
 
@@ -786,7 +788,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						item->fallspeed = -(item->fallspeed >> 1);
 				} else {
 					if(item->speed < 32) {
-						item->speed += (short)(2 * tiltyoff);
+						item->speed += (short)(2 * tiltzoff);
 
 						if((unsigned short)item->pos.y_rot > 49152 || (unsigned short)item->pos.y_rot < 16384) {
 							item->pos.y_rot -= 4096;
@@ -803,7 +805,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 
 					item->fallspeed = item->fallspeed > 0 ? -(item->fallspeed >> 1) : 0;
 				}
-			} else if(tiltxoff < 0 && abs(tiltxoff) - abs(tiltyoff) >= 2) {
+			} else if(tiltxoff < 0 && abs(tiltxoff) - abs(tiltzoff) >= 2) {
 				if((unsigned short)item->pos.y_rot > 16384 && (unsigned short)item->pos.y_rot < 49152) {
 					item->pos.y_rot = 32767 - item->pos.y_rot;
 
@@ -828,7 +830,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 
 					item->fallspeed = item->fallspeed > 0 ? -(item->fallspeed >> 1) : 0;
 				}
-			} else if(tiltxoff > 0 && abs(tiltxoff) - abs(tiltyoff) >= 2) {
+			} else if(tiltxoff > 0 && abs(tiltxoff) - abs(tiltzoff) >= 2) {
 				if((unsigned short)item->pos.y_rot > 49152 || (unsigned short)item->pos.y_rot < 16384) {
 					item->pos.y_rot = 32767 - item->pos.y_rot;
 
@@ -853,7 +855,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 
 					item->fallspeed = item->fallspeed > 0 ? -(item->fallspeed >> 1) : 0;
 				}
-			} else if(tiltyoff < 0 && tiltxoff < 0) {
+			} else if(tiltzoff < 0 && tiltxoff < 0) {
 				if((unsigned short)item->pos.y_rot > 24576 && (unsigned short)item->pos.y_rot < 57344) {
 					item->pos.y_rot = -16385 - item->pos.y_rot;
 
@@ -861,7 +863,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						item->fallspeed = -(item->fallspeed >> 1);
 				} else {
 					if(item->speed < 32) {
-						item->speed -= (short)(tiltxoff + tiltyoff);
+						item->speed -= (short)(tiltxoff + tiltzoff);
 
 						if((unsigned short)item->pos.y_rot > 8192 && (unsigned short)item->pos.y_rot < 40960) {
 							item->pos.y_rot -= 4096;
@@ -878,7 +880,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 
 					item->fallspeed = item->fallspeed > 0 ? -(item->fallspeed >> 1) : 0;
 				}
-			} else if(tiltyoff < 0 && tiltxoff > 0) {
+			} else if(tiltzoff < 0 && tiltxoff > 0) {
 				if((unsigned short)item->pos.y_rot > 40960 || (unsigned short)item->pos.y_rot < 8192) {
 					item->pos.y_rot = 16383 - item->pos.y_rot;
 
@@ -886,7 +888,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						item->fallspeed = -(item->fallspeed >> 1);
 				} else {
 					if(item->speed < 32) {
-						item->speed += (short)(tiltxoff - tiltyoff);
+						item->speed += (short)(tiltxoff - tiltzoff);
 
 						if((unsigned short)item->pos.y_rot < 57344 && (unsigned short)item->pos.y_rot > 24576) {
 							item->pos.y_rot -= 4096;
@@ -903,7 +905,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 
 					item->fallspeed = item->fallspeed > 0 ? -(item->fallspeed >> 1) : 0;
 				}
-			} else if(tiltyoff > 0 && tiltxoff > 0) {
+			} else if(tiltzoff > 0 && tiltxoff > 0) {
 				if((unsigned short)item->pos.y_rot > 57344 || (unsigned short)item->pos.y_rot < 24576) {
 					item->pos.y_rot = -16385 - item->pos.y_rot;
 
@@ -911,7 +913,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						item->fallspeed = -(item->fallspeed >> 1);
 				} else {
 					if(item->speed < 32) {
-						item->speed += (short)(tiltxoff + tiltyoff);
+						item->speed += (short)(tiltxoff + tiltzoff);
 
 						if((unsigned short)item->pos.y_rot < 8192 || (unsigned short)item->pos.y_rot > 40960) {
 							item->pos.y_rot -= 4096;
@@ -928,7 +930,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 
 					item->fallspeed = item->fallspeed > 0 ? -(item->fallspeed >> 1) : 0;
 				}
-			} else if(tiltyoff > 0 && tiltxoff < 0) {
+			} else if(tiltzoff > 0 && tiltxoff < 0) {
 				if((unsigned short)item->pos.y_rot > 8192 && (unsigned short)item->pos.y_rot < 40960) {
 					item->pos.y_rot = 16383 - item->pos.y_rot;
 
@@ -936,7 +938,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						item->fallspeed = -(item->fallspeed >> 1);
 				} else {
 					if(item->speed < 32) {
-						item->speed += (short)(tiltyoff - tiltxoff);
+						item->speed += (short)(tiltzoff - tiltxoff);
 
 						if((unsigned short)item->pos.y_rot < 24576 || (unsigned short)item->pos.y_rot > 57344) {
 							item->pos.y_rot -= 4096;
@@ -963,13 +965,13 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 		if(yv >= 0) {
 			room_number = item->room_number;
 			floor = GetFloor(item->pos.x_pos, y, item->pos.z_pos, &room_number);
-			height = GetHeight(floor, item->pos.x_pos, y, item->pos.z_pos);
+			height = GetHeight(floor, item->pos.x_pos, y, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 			oldonobj = OnObject;
 
 			room_number = item->room_number;
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 			if(item->pos.y_pos >= height && oldonobj) {
 				if(item->fallspeed > 0) {

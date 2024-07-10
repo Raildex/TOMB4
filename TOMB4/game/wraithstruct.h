@@ -9,6 +9,5 @@ typedef struct WRAITH_STRUCT {
 	unsigned char r;
 	unsigned char g;
 	unsigned char b;
-	unsigned char pad[3];
 } WRAITH_STRUCT;
 #endif // TOMB4_GAME_WRAITHSTRUCT_H

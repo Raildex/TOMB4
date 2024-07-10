@@ -1,25 +1,26 @@
 #ifndef TOMB4_GAME_COLLINFO_H
 #define TOMB4_GAME_COLLINFO_H
+#include "game/heighttypes.h"
 #include "game/phdvector.h"
 typedef struct COLL_INFO {
 	long mid_floor;
 	long mid_ceiling;
-	long mid_type;
+	height_types mid_type;
 	long front_floor;
 	long front_ceiling;
-	long front_type;
+	height_types front_type;
 	long left_floor;
 	long left_ceiling;
-	long left_type;
+	height_types left_type;
 	long right_floor;
 	long right_ceiling;
-	long right_type;
+	height_types right_type;
 	long left_floor2;
 	long left_ceiling2;
-	long left_type2;
+	height_types left_type2;
 	long right_floor2;
 	long right_ceiling2;
-	long right_type2;
+	height_types right_type2;
 	long radius;
 	long bad_pos;
 	long bad_neg;
@@ -44,4 +45,4 @@ typedef struct COLL_INFO {
 	unsigned short enable_spaz : 1;
 	unsigned short hit_ceiling : 1;
 } COLL_INFO;
-#endif // TOMB4_GAME_COLLINFO_H
+#endif// TOMB4_GAME_COLLINFO_H

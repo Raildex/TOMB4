@@ -9,6 +9,7 @@
 #include "game/debris.h"
 #include "game/effects.h"
 #include "game/floorinfo.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/lara.h"
 #include "game/levelinfo.h"
@@ -40,6 +41,8 @@ void SphinxControl(short item_number) {
 	ITEM_INFO* item;
 	CREATURE_INFO* sphinx;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
 	AI_INFO info;
@@ -57,7 +60,7 @@ void SphinxControl(short item_number) {
 	z = item->pos.z_pos + c;
 	room_number = item->room_number;
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h1 = GetHeight(floor, x, item->pos.y_pos, z);
+	h1 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->current_anim_state == 5 && floor->stopper) {
 		r = GetRoom(currentLevel, item->room_number);
@@ -78,7 +81,7 @@ void SphinxControl(short item_number) {
 	x = item->pos.x_pos - s;
 	z = item->pos.z_pos - c;
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h2 = GetHeight(floor, x, item->pos.y_pos, z);
+	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	phd_atan(1228, h2 - h1);
 
 	if(item->ai_bits)
@@ -161,7 +164,7 @@ void SphinxControl(short item_number) {
 	case 7:
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
 			TestTriggers(trigger_index, 1, 0);

@@ -1,17 +1,18 @@
 #ifndef TOMB4_GAME_OBJECTS_H
 #define TOMB4_GAME_OBJECTS_H
+#include "game/heighttypes.h"
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
 typedef struct PHD_VECTOR PHD_VECTOR;
 typedef struct OBJECT_INFO OBJECT_INFO;
 void ControlMapper(short item_number);
 void ControlLightningConductor(short item_number);
-void BridgeFlatFloor(ITEM_INFO* item, long x, long y, long z, long* height);
+void BridgeFlatFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject);
 void BridgeFlatCeiling(ITEM_INFO* item, long x, long y, long z, long* height);
 long GetOffset(ITEM_INFO* item, long x, long z);
-void BridgeTilt1Floor(ITEM_INFO* item, long x, long y, long z, long* height);
+void BridgeTilt1Floor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject);
 void BridgeTilt1Ceiling(ITEM_INFO* item, long x, long y, long z, long* height);
-void BridgeTilt2Floor(ITEM_INFO* item, long x, long y, long z, long* height);
+void BridgeTilt2Floor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject);
 void BridgeTilt2Ceiling(ITEM_INFO* item, long x, long y, long z, long* height);
 void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void TriggerRopeFlame(PHD_VECTOR* pos);

@@ -4,6 +4,7 @@
 #include "game/collide.h"
 #include "game/control.h"
 #include "game/gamevector.h"
+#include "game/heighttypes.h"
 #include "game/inputbuttons.h"
 #include "game/itemflags.h"
 #include "game/iteminfo.h"
@@ -72,6 +73,8 @@ void ControlDeathSlide(short item_number) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	GAME_VECTOR* old;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	long x, y, z, h, c;
 	short room_number;
 
@@ -110,7 +113,7 @@ void ControlDeathSlide(short item_number) {
 		y = item->pos.y_pos + 64;
 		z = item->pos.z_pos + (phd_cos(item->pos.y_rot) >> 4);
 		floor = GetFloor(x, y, z, &room_number);
-		h = GetHeight(floor, x, y, z);
+		h = GetHeight(floor, x, y, z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 		c = GetCeiling(floor, x, y, z);
 
 		if(h <= y + 256 || c >= y - 256) {

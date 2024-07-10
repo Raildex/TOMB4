@@ -11,6 +11,7 @@
 #include "game/effect2.h"
 #include "game/effects.h"
 #include "game/fxinfo.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
 #include "game/lara.h"
@@ -63,6 +64,8 @@ void CrocControl(short item_number) {
 	ITEM_INFO* item;
 	CREATURE_INFO* croc;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	AI_INFO info;
 	long s, c, x, z, h, h2;
 	short room_number, angle, rot, roll;
@@ -80,7 +83,7 @@ void CrocControl(short item_number) {
 	z = item->pos.z_pos + c;
 	room_number = item->room_number;
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h = GetHeight(floor, x, item->pos.y_pos, z);
+	h = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(abs(item->pos.y_pos - h) > 512)
 		h = item->pos.y_pos;
@@ -89,7 +92,7 @@ void CrocControl(short item_number) {
 	z = item->pos.z_pos - c;
 	room_number = item->room_number;
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h2 = GetHeight(floor, x, item->pos.y_pos, z);
+	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(abs(item->pos.y_pos - h2) > 512)
 		h2 = item->pos.y_pos;

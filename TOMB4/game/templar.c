@@ -11,6 +11,7 @@
 #include "game/effect2.h"
 #include "game/effects.h"
 #include "game/floorinfo.h"
+#include "game/heighttypes.h"
 #include "game/lara.h"
 #include "game/larainfo.h"
 #include "game/levelinfo.h"
@@ -44,6 +45,8 @@ void TemplarControl(short item_number) {
 	CREATURE_INFO* knight;
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	FLOOR_INFO* floor;
 	PHD_VECTOR pos;
 	AI_INFO info;
@@ -148,7 +151,7 @@ void TemplarControl(short item_number) {
 						SoundEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
 						mesh->Flags &= ~1;
 						floor->stopper = 0;
-						GetHeight(floor, pos.x, pos.y, pos.z);
+						GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 						TestTriggers(trigger_index, 1, 0);
 					}
 				}

@@ -28,6 +28,7 @@
 #include "game/sound.h"
 #include "game/weapontypes.h"
 #include "global/types.h"
+#include "heighttypes.h"
 #include "specific/3dmath.h"
 #include "specific/function_stubs.h"
 #include "specific/input.h"
@@ -94,6 +95,8 @@ void MoveCamera(GAME_VECTOR* ideal, long speed) {
 	FLOOR_INFO* floor;
 	GAME_VECTOR temp1;
 	GAME_VECTOR temp2;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long height, ceiling, shake, rndval, wx, wy, wz, dx, dy, dz;
 	short room_number;
 
@@ -149,7 +152,7 @@ void MoveCamera(GAME_VECTOR* ideal, long speed) {
 	wx = camera.pos.pos.x;
 	room_number = camera.pos.room_number;
 	floor = GetFloor(wx, wy, wz, &room_number);
-	height = GetHeight(floor, wx, wy, wz);
+	height = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	ceiling = GetCeiling(floor, wx, wy, wz);
 
 	if(wy < ceiling || wy > height) {
@@ -187,7 +190,7 @@ void MoveCamera(GAME_VECTOR* ideal, long speed) {
 	wx = camera.pos.pos.x;
 	room_number = camera.pos.room_number;
 	floor = GetFloor(wx, wy, wz, &room_number);
-	height = GetHeight(floor, wx, wy, wz);
+	height = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	ceiling = GetCeiling(floor, wx, wy, wz);
 
 	if(wy - 255 < ceiling && height < wy + 255 && ceiling < height && ceiling != NO_HEIGHT && height != NO_HEIGHT)
@@ -226,6 +229,8 @@ void MoveCamera(GAME_VECTOR* ideal, long speed) {
 
 long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long x, y, z, h, c, cdiff, hdiff, dx, dy, dz, clipped, nc, i;
 	short room_number, room_number2;
 
@@ -243,7 +248,7 @@ long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push) {
 	for(i = 0; i < 8; i++) {
 		room_number = room_number2;
 		floor = GetFloor(x, y, z, &room_number2);
-		h = GetHeight(floor, x, y, z);
+		h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		c = GetCeiling(floor, x, y, z);
 
 		if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h) {
@@ -302,6 +307,8 @@ long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push) {
 
 long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long wx, wy, wz, h, c;
 	short room_number;
 
@@ -312,7 +319,7 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 	if(yfirst) {
 		room_number = ideal->room_number;
 		floor = GetFloor(wx, wy, wz, &room_number);
-		h = GetHeight(floor, wx, wy, wz);
+		h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		c = GetCeiling(floor, wx, wy, wz);
 
 		if(c > wy - 255 && h < wy + 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT)
@@ -325,7 +332,7 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 
 	room_number = ideal->room_number;
 	floor = GetFloor(wx - push, wy, wz, &room_number);
-	h = GetHeight(floor, wx - push, wy, wz);
+	h = GetHeight(floor, wx - push, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx - push, wy, wz);
 
 	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c)
@@ -333,7 +340,7 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 
 	room_number = ideal->room_number;
 	floor = GetFloor(wx, wy, wz - push, &room_number);
-	h = GetHeight(floor, wx, wy, wz - push);
+	h = GetHeight(floor, wx, wy, wz - push, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz - push);
 
 	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c)
@@ -341,7 +348,7 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 
 	room_number = ideal->room_number;
 	floor = GetFloor(wx + push, wy, wz, &room_number);
-	h = GetHeight(floor, wx + push, wy, wz);
+	h = GetHeight(floor, wx + push, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx + push, wy, wz);
 
 	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c)
@@ -349,7 +356,7 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 
 	room_number = ideal->room_number;
 	floor = GetFloor(wx, wy, wz + push, &room_number);
-	h = GetHeight(floor, wx, wy, wz + push);
+	h = GetHeight(floor, wx, wy, wz + push, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz + push);
 
 	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c)
@@ -358,7 +365,7 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 	if(!yfirst) {
 		room_number = ideal->room_number;
 		floor = GetFloor(wx, wy, wz, &room_number);
-		h = GetHeight(floor, wx, wy, wz);
+		h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		c = GetCeiling(floor, wx, wy, wz);
 
 		if(c > wy - 255 && h < wy + 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT)
@@ -371,7 +378,7 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 
 	room_number = ideal->room_number;
 	floor = GetFloor(wx, wy, wz, &room_number);
-	h = GetHeight(floor, wx, wy, wz);
+	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
 	if(h < wy || wy < c || h == NO_HEIGHT || c == NO_HEIGHT || c >= h)
@@ -386,6 +393,8 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 
 void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long brightness) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long x, y, z, sx, sy, sz, dx, dy, dz, falloff, counter, h, c, j;
 	long offs[5];
 	short room_number;
@@ -440,7 +449,7 @@ void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long bright
 
 			room_number = lara_item->room_number;
 			floor = GetFloor(x, y, z, &room_number);
-			h = GetHeight(floor, x, y, z);
+			h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			c = GetCeiling(floor, x, y, z);
 
 			if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h || y < c || h < y)
@@ -503,6 +512,8 @@ void UpdateCameraElevation() {
 
 void ChaseCamera(ITEM_INFO* item) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	GAME_VECTOR ideal;
 	GAME_VECTOR ideals[5];
 	GAME_VECTOR temp[2];
@@ -524,7 +535,7 @@ void ChaseCamera(ITEM_INFO* item) {
 	wy = camera.target.pos.y;
 	wz = camera.target.pos.z;
 	floor = GetFloor(wx, wy, wz, &camera.target.room_number);
-	h = GetHeight(floor, wx, wy, wz);
+	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
 	if(c + 16 > h - 16 && h != NO_HEIGHT && c != NO_HEIGHT) {
@@ -544,7 +555,7 @@ void ChaseCamera(ITEM_INFO* item) {
 	GetFloor(wx, wy, wz, &camera.target.room_number);
 	room_number = camera.target.room_number;
 	floor = GetFloor(wx, wy, wz, &room_number);
-	h = GetHeight(floor, wx, wy, wz);
+	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
 	if(wy < c || wy > h || c >= h || h == NO_HEIGHT || c == NO_HEIGHT) {
@@ -629,6 +640,8 @@ void ChaseCamera(ITEM_INFO* item) {
 
 void CombatCamera(ITEM_INFO* item) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	GAME_VECTOR ideal;
 	GAME_VECTOR ideals[9];
 	GAME_VECTOR temp[2];
@@ -650,7 +663,7 @@ void CombatCamera(ITEM_INFO* item) {
 	wy = camera.target.pos.y;
 	wz = camera.target.pos.z;
 	floor = GetFloor(wx, wy, wz, &camera.target.room_number);
-	h = GetHeight(floor, wx, wy, wz);
+	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
 	if(c + 64 > h - 64 && h != NO_HEIGHT && c != NO_HEIGHT) {
@@ -670,7 +683,7 @@ void CombatCamera(ITEM_INFO* item) {
 	GetFloor(wx, wy, wz, &camera.target.room_number);
 	room_number = camera.target.room_number;
 	floor = GetFloor(wx, wy, wz, &room_number);
-	h = GetHeight(floor, wx, wy, wz);
+	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
 	if(wy < c || wy > h || c >= h || h == NO_HEIGHT || c == NO_HEIGHT) {
@@ -764,6 +777,8 @@ void CombatCamera(ITEM_INFO* item) {
 
 void LookCamera(ITEM_INFO* item) {
 	GAME_VECTOR ideal;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos1;
 	PHD_VECTOR pos2;
 	PHD_VECTOR pos3;
@@ -796,7 +811,7 @@ void LookCamera(ITEM_INFO* item) {
 	GetLaraJointPos(&pos1, 8);
 	room_number = lara_item->room_number;
 	floor = GetFloor(pos1.x, pos1.y, pos1.z, &room_number);
-	h = GetHeight(floor, pos1.x, pos1.y, pos1.z);
+	h = GetHeight(floor, pos1.x, pos1.y, pos1.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, pos1.x, pos1.y, pos1.z);
 
 	if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h || pos1.y > h || pos1.y < c) {
@@ -805,7 +820,7 @@ void LookCamera(ITEM_INFO* item) {
 		pos1.z = 0;
 		GetLaraJointPos(&pos1, 8);
 		floor = GetFloor(pos1.x, pos1.y, pos1.z, &room_number);
-		h = GetHeight(floor, pos1.x, pos1.y, pos1.z);
+		h = GetHeight(floor, pos1.x, pos1.y, pos1.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		c = GetCeiling(floor, pos1.x, pos1.y, pos1.z);
 
 		if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h || pos1.y > h || pos1.y < c) {
@@ -835,7 +850,7 @@ void LookCamera(ITEM_INFO* item) {
 	for(lp = 0; lp < 8; lp++) {
 		room_number = room_number2;
 		floor = GetFloor(wx, wy, wz, &room_number2);
-		h = GetHeight(floor, wx, wy, wz);
+		h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		c = GetCeiling(floor, wx, wy, wz);
 
 		if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy > h || wy < c)
@@ -923,7 +938,7 @@ void LookCamera(ITEM_INFO* item) {
 	wz = camera.pos.pos.z;
 	room_number = camera.pos.room_number;
 	floor = GetFloor(wx, wy, wz, &room_number);
-	h = GetHeight(floor, wx, wy, wz);
+	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
 	if(c > wy - 255 && h < wy + 255 && h > c && c != NO_HEIGHT && h != NO_HEIGHT)
@@ -938,7 +953,7 @@ void LookCamera(ITEM_INFO* item) {
 	wz = camera.pos.pos.z;
 	room_number = camera.pos.room_number;
 	floor = GetFloor(wx, wy, wz, &room_number);
-	h = GetHeight(floor, wx, wy, wz);
+	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
 	if(wy < c || wy > h || c >= h || h == NO_HEIGHT || c == NO_HEIGHT)
@@ -949,7 +964,7 @@ void LookCamera(ITEM_INFO* item) {
 	wz = camera.pos.pos.z;
 	room_number = camera.pos.room_number;
 	floor = GetFloor(wx, wy, wz, &room_number);
-	h = GetHeight(floor, wx, wy, wz);
+	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
 	if(wy < c || wy > h || c >= h || h == NO_HEIGHT || c == NO_HEIGHT) {
@@ -1172,6 +1187,8 @@ void BinocularCamera(ITEM_INFO* item) {
 
 void ConfirmCameraTargetPos() {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	long wx, wy, wz, c, h;
 	short room_number;
@@ -1198,7 +1215,7 @@ void ConfirmCameraTargetPos() {
 	wz = camera.target.pos.z;
 	room_number = camera.target.room_number;
 	floor = GetFloor(wx, wy, wz, &room_number);
-	h = GetHeight(floor, wx, wy, wz);
+	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
 	if(wy < c || h < wy || h <= c || h == NO_HEIGHT || c == NO_HEIGHT) {

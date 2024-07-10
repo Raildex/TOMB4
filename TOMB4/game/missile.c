@@ -5,6 +5,7 @@
 #include "game/debris.h"
 #include "game/effects.h"
 #include "game/fxinfo.h"
+#include "game/heighttypes.h"
 #include "game/items.h"
 #include "game/levelinfo.h"
 #include "game/shatteritem.h"
@@ -32,6 +33,8 @@ long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num) {
 void ControlBodyPart(short fx_number) {
 	FX_INFO* fx;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long height, ceiling, ox, oy, oz;
 	short room_number;
 
@@ -58,7 +61,7 @@ void ControlBodyPart(short fx_number) {
 		fx->speed -= fx->speed >> 3;
 	}
 
-	height = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+	height = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(fx->pos.y_pos >= height) {
 		if(fx->flag2 & 1) {

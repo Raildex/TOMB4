@@ -85,6 +85,8 @@ void InitialiseJeep(short item_number) {
 static long GetOnJeep(short item_number, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long h;
 	short room_number, ang;
 
@@ -95,7 +97,7 @@ static long GetOnJeep(short item_number, COLL_INFO* coll) {
 			if(abs(item->pos.y_pos - lara_item->pos.y_pos) < 256 && TestBoundsCollide(item, lara_item, 100)) {
 				room_number = item->room_number;
 				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 				if(h >= NO_HEIGHT + 512) // mmmm
 				{
@@ -280,6 +282,8 @@ static long DoDynamics(long height, long fallspeed, long* ypos, long zero) {
 static long CanGetOff(short num) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long x, y, z, h, c;
 	short yrot, room_number;
 
@@ -290,7 +294,7 @@ static long CanGetOff(short num) {
 	z = item->pos.z_pos - (512 * phd_cos(yrot) >> W2V_SHIFT);
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
-	h = GetHeight(floor, x, y, z);
+	h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(height_type != BIG_SLOPE && height_type != DIAGONAL && h != NO_HEIGHT) {
 		if(abs(h - item->pos.y_pos) <= 512) {
@@ -399,6 +403,8 @@ long GetCollisionAnim(ITEM_INFO* item, PHD_VECTOR* pos, BIKEINFO* vehicle) {
 
 long DoShift(ITEM_INFO* item, PHD_VECTOR* newPos, PHD_VECTOR* oldPos) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long x, z, nX, nZ, oX, oZ, sX, sZ, h;
 	short room_number;
 
@@ -437,7 +443,7 @@ long DoShift(ITEM_INFO* item, PHD_VECTOR* newPos, PHD_VECTOR* oldPos) {
 	z = 0;
 	room_number = item->room_number;
 	floor = GetFloor(oldPos->x, newPos->y, newPos->z, &room_number);
-	h = GetHeight(floor, oldPos->x, newPos->y, newPos->z);
+	h = GetHeight(floor, oldPos->x, newPos->y, newPos->z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h < oldPos->y - 256) {
 		if(newPos->z > oldPos->z)
@@ -448,7 +454,7 @@ long DoShift(ITEM_INFO* item, PHD_VECTOR* newPos, PHD_VECTOR* oldPos) {
 
 	room_number = item->room_number;
 	floor = GetFloor(newPos->x, newPos->y, oldPos->z, &room_number);
-	h = GetHeight(floor, newPos->x, newPos->y, oldPos->z);
+	h = GetHeight(floor, newPos->x, newPos->y, oldPos->z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h < oldPos->y - 256) {
 		if(newPos->x > oldPos->x)
@@ -1087,6 +1093,8 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 long JeepDynamics(ITEM_INFO* item) {
 	JEEPINFO* jeep;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos, newPos;
 	PHD_VECTOR flPos, frPos, blPos, brPos, fmPos, flPos2, frPos2, blPos2, brPos2, fmPos2;
 	long front_left, front_right, back_left, back_right, front_mid, front_left2, front_right2, back_left2, back_right2, front_mid2;
@@ -1174,7 +1182,7 @@ long JeepDynamics(ITEM_INFO* item) {
 
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->pos.y_pos < h)
 		speed = item->speed;
@@ -1264,7 +1272,7 @@ long JeepDynamics(ITEM_INFO* item) {
 
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h < item->pos.y_pos - 256)
 		DoShift(item, (PHD_VECTOR*)&item->pos, &pos);
@@ -1311,6 +1319,8 @@ void JeepControl(short item_number) {
 	ITEM_INFO* item;
 	JEEPINFO* jeep;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR flPos, frPos, fmPos;
 	PHD_VECTOR pos;
 	long front_left, front_right, front_mid;
@@ -1326,14 +1336,14 @@ void JeepControl(short item_number) {
 	hitWall = JeepDynamics(item);
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	front_left = TestHeight(item, 550, -256, &flPos);
 	front_right = TestHeight(item, 550, 256, &frPos);
 	front_mid = TestHeight(item, -600, 0, &fmPos);
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	TestTriggers(trigger_index, 1, 0);
 	TestTriggers(trigger_index, 0, 0);
 
@@ -1534,6 +1544,8 @@ void EnemyJeepControl(short item_number) {
 	ITEM_INFO* item;
 	CREATURE_INFO* jeep;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	AIOBJECT* aiobj;
 	AI_INFO info;
 	PHD_VECTOR pos;
@@ -1552,7 +1564,7 @@ void EnemyJeepControl(short item_number) {
 	z = item->pos.z_pos + Xoffset;
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
-	h1 = GetHeight(floor, x, y, z);
+	h1 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(abs(y - h1) > 768) {
 		item->pos.x_pos += Zoffset >> 6;
@@ -1565,7 +1577,7 @@ void EnemyJeepControl(short item_number) {
 	z = item->pos.z_pos - Xoffset;
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
-	h2 = GetHeight(floor, x, y, z);
+	h2 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(abs(y - h2) > 768) {
 		item->pos.x_pos -= Zoffset >> 6;
@@ -1580,7 +1592,7 @@ void EnemyJeepControl(short item_number) {
 	z = item->pos.z_pos + Zoffset;
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
-	h1 = GetHeight(floor, x, y, z);
+	h1 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	_h1 = h1;
 
 	if(abs(y - h1) > 768)
@@ -1590,7 +1602,7 @@ void EnemyJeepControl(short item_number) {
 	z = item->pos.z_pos - Zoffset;
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
-	h2 = GetHeight(floor, x, y, z);
+	h2 = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	_h2 = h2;
 
 	if(abs(y - h2) > 768)
@@ -1805,7 +1817,7 @@ void EnemyJeepControl(short item_number) {
 	jeep->maximum_turn = 0;
 	AnimateItem(item);
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->room_number != room_number)
 		ItemNewRoom(item_number, room_number);

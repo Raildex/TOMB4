@@ -95,6 +95,8 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 	ITEM_INFO* itemlist[6] = { 0 };
 	ITEM_INFO* collided;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	ROOM_INFO* r;
 	long x, y, z, rx, rz;
 	short room_number;
@@ -130,10 +132,10 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 	if(r->floor[rx * r->x_size + rz].stopper)
 		return 0;
 
-	if(GetHeight(floor, x, y - 256, z) != y)
+	if(GetHeight(floor, x, y - 256, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) != y)
 		return 0;
 
-	GetHeight(floor, x, y, z);
+	GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(height_type != WALL)
 		return 0;
@@ -169,6 +171,8 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant) {
 	ITEM_INFO* collided;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	ROOM_INFO* r;
 	long x, y, z, destx, destz, rx, rz, ignore;
 	short room_number;
@@ -206,7 +210,7 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 	if(r->floor[rx * r->x_size + rz].stopper)
 		return 0;
 
-	if(GetHeight(floor, x, y - 256, z) != y)
+	if(GetHeight(floor, x, y - 256, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) != y)
 		return 0;
 
 	floor = GetFloor(x, y - height, z, &room_number);
@@ -243,7 +247,7 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 	room_number = item->room_number;
 	floor = GetFloor(x, y - 256, z, &room_number);
 
-	if(GetHeight(floor, x, y - 256, z) != y)
+	if(GetHeight(floor, x, y - 256, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) != y)
 		return 0;
 
 	floor = GetFloor(x, y - 762, z, &room_number);
@@ -288,6 +292,8 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 void MovableBlock(short item_number) {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long offset;
 	unsigned short quadrant;
 	short frame, base, room_number;
@@ -435,7 +441,7 @@ void MovableBlock(short item_number) {
 			room_number = item->room_number;
 			GetHeight(
 				GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number), item->pos.x_pos,
-				item->pos.y_pos - 256, item->pos.z_pos);
+				item->pos.y_pos - 256, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			TestTriggers(trigger_index, 1, item->flags & IFL_CODEBITS);
 			RemoveActiveItem(item_number);
 			item->status = ITEM_INACTIVE;
@@ -448,6 +454,8 @@ void MovableBlock(short item_number) {
 void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	short* bounds;
 	short room_number, yrot, quadrant;
 
@@ -455,7 +463,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 	room_number = item->room_number;
 	item->pos.y_pos = GetHeight(
 		GetFloor(item->pos.x_pos, item->pos.y_pos - 256, item->pos.z_pos, &room_number), item->pos.x_pos,
-		item->pos.y_pos, item->pos.z_pos);
+		item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->room_number != room_number)
 		ItemNewRoom(item_number, room_number);

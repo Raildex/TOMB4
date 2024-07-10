@@ -9,6 +9,7 @@
 #include "game/control.h"
 #include "game/creatureinfo.h"
 #include "game/effect2.h"
+#include "game/heighttypes.h"
 #include "game/inputbuttons.h"
 #include "game/itemflags.h"
 #include "game/items.h"
@@ -113,6 +114,8 @@ void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	PHD_VECTOR oPos;
 	long h;
@@ -138,7 +141,7 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 	oPos.y = pos.y;
 	oPos.z = pos.z;
 	floor = GetFloor(pos.x, pos.y, pos.z, &item->room_number);
-	h = GetHeight(floor, pos.x, pos.y, pos.z);
+	h = GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h < pos.y) {
 		item->pos.x_pos = sas->pos.x_pos;

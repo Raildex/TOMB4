@@ -14,6 +14,7 @@
 #include "game/draw.h"
 #include "game/effect2.h"
 #include "game/floorinfo.h"
+#include "game/heighttypes.h"
 #include "game/itemflags.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
@@ -45,6 +46,8 @@
 void CreatureDie(short item_number, long explode) {
 	ITEM_INFO* item;
 	ITEM_INFO* pickup;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	short pickup_number, room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -80,7 +83,7 @@ void CreatureDie(short item_number, long explode) {
 		}
 
 		room_number = item->room_number;
-		pickup->pos.y_pos = GetHeight(GetFloor(pickup->pos.x_pos, item->pos.y_pos, pickup->pos.z_pos, &room_number), pickup->pos.x_pos, item->pos.y_pos, pickup->pos.z_pos);
+		pickup->pos.y_pos = GetHeight(GetFloor(pickup->pos.x_pos, item->pos.y_pos, pickup->pos.z_pos, &room_number), pickup->pos.x_pos, item->pos.y_pos, pickup->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		pickup->pos.y_pos -= GetBoundsAccurate(pickup)[3];
 		ItemNewRoom(pickup_number, item->room_number);
 		pickup->flags |= IFL_TRIGGERED;
@@ -834,6 +837,8 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 	CREATURE_INFO* creature;
 	LOT_INFO* LOT;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR oldPos;
 	short* zone;
 	short* bounds;
@@ -997,7 +1002,7 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 		else if(dy < -LOT->fly)
 			dy = -LOT->fly;
 
-		height = GetHeight(floor, item->pos.x_pos, y, item->pos.z_pos);
+		height = GetHeight(floor, item->pos.x_pos, y, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(item->pos.y_pos + dy > height) {
 			if(item->pos.y_pos > height) {
@@ -1028,7 +1033,7 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 
 		item->pos.y_pos += dy;
 		floor = GetFloor(item->pos.x_pos, y, item->pos.z_pos, &room_number);
-		item->floor = GetHeight(floor, item->pos.x_pos, y, item->pos.z_pos);
+		item->floor = GetHeight(floor, item->pos.x_pos, y, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(item->speed) {
 			angle = (short)phd_atan(item->speed, -dy);
@@ -1048,7 +1053,7 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 			item->pos.x_rot = angle;
 	} else if(LOT->is_jumping) {
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(LOT->is_monkeying)
 			item->pos.y_pos = GetCeiling(floor, item->pos.x_pos, y, item->pos.z_pos) - bounds[2];
@@ -1071,7 +1076,7 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 		}
 
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-		item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(item->pos.y_pos > item->floor)
 			item->pos.y_pos = item->floor;
@@ -1181,6 +1186,8 @@ void CreatureJoint(ITEM_INFO* item, short joint, short required) {
 
 void CreatureFloat(short item_number) {
 	ITEM_INFO* item;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long water_level;
 	short room_number;
 
@@ -1197,7 +1204,7 @@ void CreatureFloat(short item_number) {
 
 	AnimateItem(item);
 	room_number = item->room_number;
-	item->floor = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	item->floor = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->room_number != room_number)
 		ItemNewRoom(item_number, room_number);
@@ -1215,12 +1222,14 @@ void CreatureFloat(short item_number) {
 void CreatureUnderwater(ITEM_INFO* item, long depth) {
 	long water_level, floorheight;
 	short room_number;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 
 	water_level = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 
 	if(item->pos.y_pos < water_level + depth) {
 		room_number = item->room_number;
-		floorheight = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+		floorheight = GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		item->pos.y_pos = water_level + depth;
 
 		if(item->pos.y_pos > floorheight)
@@ -1480,6 +1489,8 @@ void FindAITarGetObjectInfo(CREATURE_INFO* creature, short obj_num) {
 void GetAITarget(CREATURE_INFO* creature) {
 	ITEM_INFO* item;
 	ITEM_INFO* enemy;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	short enemy_object;
 	char ai_bits;
 
@@ -1513,7 +1524,7 @@ void GetAITarget(CREATURE_INFO* creature) {
 			if(enemy_object != AI_PATROL2)
 				FindAITarGetObjectInfo(creature, AI_PATROL2);
 		} else if(abs(enemy->pos.x_pos - item->pos.x_pos) < 640 && abs(enemy->pos.y_pos - item->pos.y_pos) < 640 && abs(enemy->pos.z_pos - item->pos.z_pos) < 640) {
-			GetHeight(GetFloor(enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, &enemy->room_number), enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos);
+			GetHeight(GetFloor(enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, &enemy->room_number), enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			TestTriggers(trigger_index, 1, 0);
 			creature->patrol2 = ~creature->patrol2;
 		}
@@ -1521,7 +1532,7 @@ void GetAITarget(CREATURE_INFO* creature) {
 		if(enemy_object != AI_AMBUSH)
 			FindAITarGetObjectInfo(creature, AI_AMBUSH);
 		else if(abs(enemy->pos.x_pos - item->pos.x_pos) < 640 && abs(enemy->pos.y_pos - item->pos.y_pos) < 640 && abs(enemy->pos.z_pos - item->pos.z_pos) < 640) {
-			GetHeight(GetFloor(enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, &enemy->room_number), enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos);
+			GetHeight(GetFloor(enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, &enemy->room_number), enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			TestTriggers(trigger_index, 1, 0);
 			creature->reached_goal = 1;
 			creature->enemy = lara_item;

@@ -17,6 +17,7 @@
 #include "game/gfleveloptions.h"
 #include "game/gunflashstruct.h"
 #include "game/gunshellstruct.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
 #include "game/lara.h"
@@ -425,6 +426,8 @@ void LaraBubbles(ITEM_INFO* item) {
 void UpdateDrips() {
 	DRIP_STRUCT* drip;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long h;
 
 	for(int i = 0; i < nDrips; i++) {
@@ -455,7 +458,7 @@ void UpdateDrips() {
 
 		drip->pos.y += drip->Yvel >> 5;
 		floor = GetFloor(drip->pos.x, drip->pos.y, drip->pos.z, &drip->RoomNumber);
-		h = GetHeight(floor, drip->pos.x, drip->pos.y, drip->pos.z);
+		h = GetHeight(floor, drip->pos.x, drip->pos.y, drip->pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(GetRoom(currentLevel, drip->RoomNumber)->flags & ROOM_UNDERWATER || drip->pos.y > h)
 			drip->On = 0;
@@ -996,6 +999,8 @@ void TriggerGunShell(short leftright, short objnum, long weapon) {
 void UpdateGunShells() {
 	GUNSHELL_STRUCT* shell;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long ox, oy, oz, c, h;
 	short oroom;
 
@@ -1053,7 +1058,7 @@ void UpdateGunShells() {
 			shell->fallspeed = -shell->fallspeed;
 		}
 
-		h = GetHeight(floor, shell->pos.x_pos, shell->pos.y_pos, shell->pos.z_pos);
+		h = GetHeight(floor, shell->pos.x_pos, shell->pos.y_pos, shell->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(shell->pos.y_pos >= h) {
 			SoundEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
@@ -1365,6 +1370,8 @@ void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long biggest) {
 void UpdateBubbles() {
 	BUBBLE_STRUCT* bubble;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long h, c;
 	short room_number;
 
@@ -1382,7 +1389,7 @@ void UpdateBubbles() {
 
 		room_number = bubble->room_number;
 		floor = GetFloor(bubble->pos.x, bubble->pos.y, bubble->pos.z, &room_number);
-		h = GetHeight(floor, bubble->pos.x, bubble->pos.y, bubble->pos.z);
+		h = GetHeight(floor, bubble->pos.x, bubble->pos.y, bubble->pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(bubble->pos.y > h || !floor) {
 			bubble->size = 0;

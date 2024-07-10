@@ -109,6 +109,8 @@ void TriggerBikeBeam(ITEM_INFO* item) {
 
 long GetOnBike(short item_number, COLL_INFO* coll) {
 	ITEM_INFO* item;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long dx, dz;
 	short room_number, rot;
 
@@ -133,7 +135,7 @@ long GetOnBike(short item_number, COLL_INFO* coll) {
 	if(GetHeight(
 		   GetFloor(
 			   item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number),
-		   item->pos.x_pos, item->pos.y_pos, item->pos.z_pos)
+		   item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject)
 	   < -32000)
 		return 0;
 
@@ -326,6 +328,8 @@ static long CanGetOff(short num) // always called with num = 1
 {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long x, y, z, h, c;
 	short yrot, room_number;
 
@@ -336,7 +340,7 @@ static long CanGetOff(short num) // always called with num = 1
 	z = item->pos.z_pos + (512 * phd_cos(yrot) >> W2V_SHIFT);
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
-	h = GetHeight(floor, x, y, z);
+	h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(height_type == BIG_SLOPE || height_type == DIAGONAL || h == NO_HEIGHT)
 		return 0;
@@ -353,7 +357,7 @@ static long CanGetOff(short num) // always called with num = 1
 	y = item->pos.y_pos;
 	z = item->pos.z_pos + (128 * phd_sin(yrot) >> W2V_SHIFT);
 	floor = GetFloor(x, y, z, &room_number);
-	h = GetHeight(floor, x, y, z);
+	h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(height_type == BIG_SLOPE || height_type == DIAGONAL || h == NO_HEIGHT)
 		return 0;
@@ -595,6 +599,8 @@ void BikeStart(ITEM_INFO* item, ITEM_INFO* l) {
 
 long TestHeight(ITEM_INFO* item, long z, long x, PHD_VECTOR* pos) {
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	long sx, sz, sy, cy, c, h;
 	short room_number;
 
@@ -612,7 +618,7 @@ long TestHeight(ITEM_INFO* item, long z, long x, PHD_VECTOR* pos) {
 	if(pos->y < c || c == NO_HEIGHT)
 		return NO_HEIGHT;
 
-	h = GetHeight(floor, pos->x, pos->y, pos->z);
+	h = GetHeight(floor, pos->x, pos->y, pos->z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(pos->y > h)
 		pos->y = h;
@@ -1097,6 +1103,8 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 long BikeDynamics(ITEM_INFO* item) {
 	BIKEINFO* bike;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos, newPos;
 	PHD_VECTOR flPos, frPos, blPos, brPos, fmPos, flPos2, frPos2, blPos2,
 		brPos2, fmPos2;
@@ -1173,7 +1181,7 @@ long BikeDynamics(ITEM_INFO* item) {
 	room_number = item->room_number;
 	floor = GetFloor(
 		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->pos.y_pos < h)
 		speed = item->speed;
@@ -1276,7 +1284,7 @@ long BikeDynamics(ITEM_INFO* item) {
 	room_number = item->room_number;
 	floor = GetFloor(
 		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(h < item->pos.y_pos - 256)
 		DoShift(item, (PHD_VECTOR*)&item->pos, &pos);
@@ -1328,6 +1336,8 @@ void BikeControl(short item_number) {
 	ITEM_INFO* item;
 	BIKEINFO* bike;
 	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR flPos, frPos, fmPos;
 	PHD_VECTOR pos;
 	long front_left, front_right, front_mid;
@@ -1354,7 +1364,7 @@ void BikeControl(short item_number) {
 	room_number = item->room_number;
 	floor = GetFloor(
 		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	front_left = TestHeight(item, 500, -350, &flPos);
 	front_right = TestHeight(item, 500, 128, &frPos);
@@ -1362,7 +1372,7 @@ void BikeControl(short item_number) {
 	room_number = item->room_number;
 	floor = GetFloor(
 		item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	TestTriggers(trigger_index, 0, 0);
 	TestTriggers(trigger_index, 1, 0);
 

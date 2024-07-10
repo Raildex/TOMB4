@@ -384,9 +384,9 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 		phd_TranslateRel(vec->x_pos, vec->y_pos, vec->z_pos);
 		phd_RotYXZ(vec->y_rot, vec->x_rot, vec->z_rot);
 	}
-	vec->y_rot = atan2(mMXPtr[M10], mMXPtr[M00]) * 16384;
-	vec->x_rot = asin(-mMXPtr[M20]) * 16384;
-	vec->z_rot = atan2(-mMXPtr[M21], mMXPtr[M22]) * 16384;
+	vec->y_rot = (short)atan2(mMXPtr[M10], mMXPtr[M00]) * 16384;
+	vec->x_rot = (short)asin(-mMXPtr[M20]) * 16384;
+	vec->z_rot = (short)atan2(-mMXPtr[M21], mMXPtr[M22]) * 16384;
 	vec->x_pos = item->pos.x_pos + (long)mMXPtr[M03];
 	vec->y_pos = item->pos.y_pos + (long)mMXPtr[M13];
 	vec->z_pos = item->pos.z_pos + (long)mMXPtr[M23];

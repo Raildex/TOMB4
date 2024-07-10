@@ -3,6 +3,7 @@
 #include "game/animstruct.h"
 #include "game/control.h"
 #include "game/delstuff.h"
+#include "game/heighttypes.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
 #include "game/itemstatus.h"
@@ -86,6 +87,8 @@ void ControlClockworkBeetle(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 	FLOOR_INFO* floor;
+	height_types ht;
+	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	long bounce, h, x, z, dx, dy, dz;
 	short frame, base, room_number, rotY, angle;
@@ -119,7 +122,7 @@ void ControlClockworkBeetle(short item_number) {
 		if(frame == base + 104) {
 			room_number = item->room_number;
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 			if(abs(lara_item->pos.y_pos - h) > 64) {
 				item->pos.x_pos = lara_item->pos.x_pos;
@@ -136,7 +139,7 @@ void ControlClockworkBeetle(short item_number) {
 	item->pos.y_pos += item->fallspeed;
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
-	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 
 	if(item->pos.y_pos > h) {
 		item->pos.y_pos = h;
