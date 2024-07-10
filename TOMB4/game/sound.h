@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_SOUND_H
+#define TOMB4_GAME_SOUND_H
 #include "game/soundslot.h"
 typedef struct SoundSlot SoundSlot;
 typedef struct PHD_3DPOS PHD_3DPOS;
@@ -396,3 +397,6 @@ enum sound_effect_names {
 
 	NumSamples
 };
+
+
+#endif// TOMB4_GAME_SOUND_H

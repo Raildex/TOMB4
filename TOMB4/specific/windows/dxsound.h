@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPECIFIC_WINDOWS_DXSOUND_H
+#define SPECIFIC_WINDOWS_DXSOUND_H
 #include <stdbool.h> 
 typedef struct SAMPLE_BUFFER SAMPLE_BUFFER;
 bool DXChangeOutputFormat(long nSamplesPerSec, bool force);
@@ -25,3 +26,6 @@ void S_SetReverbType(long reverb);
 void DXDSClose();
 
 extern char* samples_buffer;
+
+
+#endif// SPECIFIC_WINDOWS_DXSOUND_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_SPOTCAM_H
+#define TOMB4_GAME_SPOTCAM_H
 #pragma pack(push, 1)
 typedef struct SPOTCAM {
 	long x;
@@ -48,3 +49,6 @@ typedef enum spotcam_flags {
 	SP_TESTTRIGGER = (1 << 14), // test heavy triggers
 	SP_FLYBYONESHOT = (1 << 15) // used in TestTriggers to force the flyby trigger to be one shot
 } spotcam_flags;
+
+
+#endif// TOMB4_GAME_SPOTCAM_H

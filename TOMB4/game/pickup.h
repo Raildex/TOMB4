@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_PICKUP_H
+#define TOMB4_GAME_PICKUP_H
 
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
@@ -19,3 +20,6 @@ void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll);
 extern unsigned char NumRPickups;
 extern unsigned char RPickups[16];
 extern char KeyTriggerActive;
+
+
+#endif// TOMB4_GAME_PICKUP_H

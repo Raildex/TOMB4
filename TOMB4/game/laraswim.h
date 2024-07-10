@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_LARASWIM_H
+#define TOMB4_GAME_LARASWIM_H
 
 typedef struct COLL_INFO COLL_INFO;
 typedef struct ITEM_INFO ITEM_INFO;
@@ -22,3 +23,6 @@ void SwimTurn(ITEM_INFO* item);
 void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll);
 void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll);
 void LaraWaterCurrent(COLL_INFO* coll);
+
+
+#endif// TOMB4_GAME_LARASWIM_H

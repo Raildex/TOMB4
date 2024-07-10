@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_LOAD_SAVE_H
+#define TOMB4_SPECIFIC_LOAD_SAVE_H
 
 void DoOptions();
 void DisplayStatsUCunt();
@@ -19,3 +20,6 @@ extern long MusicVolume;
 extern long SFXVolume;
 extern long ControlMethod;
 extern char MonoScreenOn;
+
+
+#endif// TOMB4_SPECIFIC_LOAD_SAVE_H

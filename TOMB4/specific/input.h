@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_INPUT_H
+#define TOMB4_SPECIFIC_INPUT_H
 
 
 long Key(long number);
@@ -16,3 +17,6 @@ extern long dbinput;
 extern long inputBusy;
 extern short ammo_change_timer;
 extern char ammo_change_buf[12];
+
+
+#endif// TOMB4_SPECIFIC_INPUT_H

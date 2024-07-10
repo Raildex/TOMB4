@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_SWITCH_H
+#define TOMB4_GAME_SWITCH_H
 #include "game/phdvector.h"
 
 typedef struct ITEM_INFO ITEM_INFO;
@@ -29,3 +30,6 @@ extern unsigned char CurrentSequence;
 extern unsigned char Sequences[3];
 extern unsigned char SequenceUsed[6];
 extern unsigned char SequenceResults[3][3][3];
+
+
+#endif// TOMB4_GAME_SWITCH_H

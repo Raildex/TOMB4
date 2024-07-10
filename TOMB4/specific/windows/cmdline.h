@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPECIFIC_WINDOWS_CMDLINE_H
+#define SPECIFIC_WINDOWS_CMDLINE_H
 #include <windows.h>
 #include "stdbool.h"
 void CLSetup(char* cmd);
@@ -14,3 +15,6 @@ long DXSetupDialog();
 
 extern long start_setup;
 extern long fmvs_disabled;
+
+
+#endif// SPECIFIC_WINDOWS_CMDLINE_H

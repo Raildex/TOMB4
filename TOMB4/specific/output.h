@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_OUTPUT_H
+#define TOMB4_SPECIFIC_OUTPUT_H
 typedef struct MESH_DATA MESH_DATA;
 typedef struct ROOM_INFO ROOM_INFO;
 void ProcessObjectMeshVertices(MESH_DATA* mesh);
@@ -25,3 +26,6 @@ long GetFixedScale(long unit);
 
 extern long GlobalAlpha;
 extern long GlobalAmbient;
+
+
+#endif// TOMB4_SPECIFIC_OUTPUT_H

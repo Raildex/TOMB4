@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_3DMATH_H
+#define TOMB4_SPECIFIC_3DMATH_H
 #include "game/matrixindices.h"
 #include "global/math_tbls.h"
 typedef struct PHD_VECTOR PHD_VECTOR;
@@ -101,3 +102,6 @@ __inline void phd_PopMatrix() {
 	phd_mxptr -= indices_count;
 	mPopMatrix();
 }
+
+
+#endif// TOMB4_SPECIFIC_3DMATH_H

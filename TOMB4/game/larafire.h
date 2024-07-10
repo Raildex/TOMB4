@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_LARAFIRE_H
+#define TOMB4_GAME_LARAFIRE_H
 
 
 typedef struct WEAPON_INFO WEAPON_INFO;
@@ -19,3 +20,6 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 void LaraGun();
 
 extern WEAPON_INFO weapons[];
+
+
+#endif// TOMB4_GAME_LARAFIRE_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_FUNCTION_TABLE_H
+#define TOMB4_SPECIFIC_FUNCTION_TABLE_H
 #include <windows.h>
 #include <stdbool.h>
 #include <d3dtypes.h>
@@ -26,3 +27,6 @@ extern HRESULT (*_EndScene)();
 
 extern _D3DTLVERTEX MyVertexBuffer[];
 extern long CurrentFog;
+
+
+#endif// TOMB4_SPECIFIC_FUNCTION_TABLE_H

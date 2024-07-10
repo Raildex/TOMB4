@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_TEXTURE_H
+#define TOMB4_SPECIFIC_TEXTURE_H
 #include "specific/haltexture.h"
 typedef struct IDirect3DTexture2 IDirect3DTexture2;
 typedef struct IDirectDrawSurface4 IDirectDrawSurface4;
@@ -21,3 +22,6 @@ typedef void(__cdecl* rgbfunc)(unsigned char*, unsigned char*, unsigned char*);
 char CreateTexturePage(long w, long h,TEXTURE_FORMAT tfmt,TEXTURE_FORMAT sfmt, long MipMapCount, void* pSrc, rgbfunc RGBM, HAL_TEXTURE* dst);
 long CalcMipMapCount(long w, long h);
 void FreeTextures();
+
+
+#endif// TOMB4_SPECIFIC_TEXTURE_H

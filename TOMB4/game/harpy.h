@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_HARPY_H
+#define TOMB4_GAME_HARPY_H
 
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct PHD_3DPOS PHD_3DPOS;
@@ -11,3 +12,6 @@ void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size);
 void DoHarpyEffects(ITEM_INFO* item, short item_number);
 void InitialiseHarpy(short item_number);
 void HarpyControl(short item_number);
+
+
+#endif// TOMB4_GAME_HARPY_H

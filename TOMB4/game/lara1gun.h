@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_LARA1GUN_H
+#define TOMB4_GAME_LARA1GUN_H
 
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct PHD_3DPOS PHD_3DPOS;
@@ -19,3 +20,6 @@ void draw_shotgun(long weapon_type);
 void undraw_shotgun(long weapon_type);
 void ControlCrossbow(short item_number);
 void ControlGrenade(short item_number);
+
+
+#endif// TOMB4_GAME_LARA1GUN_H

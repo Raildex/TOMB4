@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_TRAPS_H
+#define TOMB4_GAME_TRAPS_H
 
 
 extern short SPxzoffs[8];
@@ -58,3 +59,6 @@ void TrapDoorControl(short item_number);
 void ControlObelisk(short item_number);
 
 extern char LibraryTab[8];
+
+
+#endif// TOMB4_GAME_TRAPS_H

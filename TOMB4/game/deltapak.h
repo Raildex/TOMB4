@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_DELTAPAK_H
+#define TOMB4_GAME_DELTAPAK_H
 typedef struct NODELOADHEADER NODELOADHEADER;
 typedef struct PACKNODE PACKNODE;
 typedef struct RTDECODE RTDECODE;
@@ -108,3 +109,6 @@ extern long cutseq_trig;
 extern long cutseq_num;
 extern long GLOBAL_playing_cutseq;
 extern long GLOBAL_cutseq_frame;
+
+
+#endif// TOMB4_GAME_DELTAPAK_H

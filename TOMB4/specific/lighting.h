@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_LIGHTING_H
+#define TOMB4_SPECIFIC_LIGHTING_H
 #include "game/pointlightstruct.h"
 #include "game/sunlightstruct.h"
 
@@ -30,3 +31,6 @@ extern SUNLIGHT_STRUCT SunLights[64];
 extern POINTLIGHT_STRUCT PointLights[64];
 extern POINTLIGHT_STRUCT SpotLights[64];
 extern long nSunLights, nPointLights, nSpotLights, nShadowLights, nTotalLights;
+
+
+#endif// TOMB4_SPECIFIC_LIGHTING_H

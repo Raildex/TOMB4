@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_AUDIO_H
+#define TOMB4_SPECIFIC_AUDIO_H
 #include <windows.h>
 #include <mmreg.h>
 #include <mmiscapi.h>
@@ -25,3 +26,6 @@ extern bool acm_ready;
 
 extern long XATrack;
 extern long XAFlag;
+
+
+#endif// TOMB4_SPECIFIC_AUDIO_H

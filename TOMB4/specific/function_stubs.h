@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_FUNCTION_STUBS_H
+#define TOMB4_SPECIFIC_FUNCTION_STUBS_H
 
 #include <stdio.h>
 #include "game/phdvector.h"
@@ -15,3 +16,6 @@ extern FILE* logF;
 extern PHD_VECTOR CamPos;
 extern PHD_VECTOR CamRot;
 extern long nPolyType;
+
+
+#endif// TOMB4_SPECIFIC_FUNCTION_STUBS_H

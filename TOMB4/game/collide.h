@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_COLLIDE_H
+#define TOMB4_GAME_COLLIDE_H
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
 typedef struct FLOOR_INFO FLOOR_INFO;
@@ -32,3 +33,6 @@ void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number, long hite);
 
 extern short GlobalCollisionBounds[6];
+
+
+#endif// TOMB4_GAME_COLLIDE_H

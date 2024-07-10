@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_EFFECTS_H
+#define TOMB4_GAME_EFFECTS_H
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct FX_INFO FX_INFO;
 typedef struct OBJECT_VECTOR OBJECT_VECTOR;
@@ -18,3 +19,6 @@ extern long GlobalFogOff;
 extern long FogTableColor[28];
 extern void (*effect_routines[47])(ITEM_INFO* item);
 
+
+
+#endif// TOMB4_GAME_EFFECTS_H

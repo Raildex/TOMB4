@@ -30,12 +30,12 @@ void InitialiseDog(short item_number) {
 	item->current_anim_state = 1;
 
 	if(item->trigger_flags) {
-		item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 1;
+		item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 1;
 		item->status -= ITEM_INVISIBLE;
 	} else
-		item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 8;
+		item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 8;
 
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 }
 
 void DogControl(short item_number) {
@@ -56,11 +56,11 @@ void DogControl(short item_number) {
 	dog = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0) {
-		if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index + 1)
-			item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;
+		if(item->anim_number == GetObjectInfo(currentLevel, item->object_number)->anim_index + 1)
+			item->hit_points = GetObjectInfo(currentLevel, item->object_number)->hit_points;
 		else if(item->current_anim_state != 11) {
-			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + DeathAnims[GetRandomControl() & 3];
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + DeathAnims[GetRandomControl() & 3];
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 11;
 		}
 	} else {
@@ -94,13 +94,13 @@ void DogControl(short item_number) {
 		angle = CreatureTurn(item, dog->maximum_turn);
 		torso_y = angle << 2;
 
-		if(dog->hurt_by_lara || lara_info.distance < 0x900000 && !(item->ai_bits & MODIFY)) {
+		if(dog->hurt_by_lara || (lara_info.distance < 0x900000 && !(item->ai_bits & MODIFY))) {
 			AlertAllGuards(item_number);
 			item->ai_bits &= ~MODIFY;
 		}
 
 		random = (short)GetRandomControl();
-		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+		frame = item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base;
 
 		switch(item->current_anim_state) {
 		case 0:

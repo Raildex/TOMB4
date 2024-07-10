@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_BIKE_H
+#define TOMB4_GAME_BIKE_H
 
 typedef struct COLL_INFO COLL_INFO;
 typedef struct ITEM_INFO ITEM_INFO;
@@ -18,3 +19,6 @@ long BikeBaddieCollision(ITEM_INFO* bike);
 void BikeCollideStaticObjects(long x, long y, long z, short room_number, long height);
 long BikeDynamics(ITEM_INFO* item);
 void BikeControl(short item_number);
+
+
+#endif// TOMB4_GAME_BIKE_H

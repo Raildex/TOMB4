@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_BOX_H
+#define TOMB4_GAME_BOX_H
 #include "game/targettype.h"
 enum no_box {
 	NO_BOX = 2047
@@ -45,3 +46,6 @@ short SameZone(CREATURE_INFO* creature, ITEM_INFO* target_item);
 void CreatureYRot(PHD_3DPOS* srcpos, short angle, short angadd);
 long MoveCreature3DPos(PHD_3DPOS* srcpos, PHD_3DPOS* destpos, long velocity, short angdif, long angadd);
 
+
+
+#endif// TOMB4_GAME_BOX_H

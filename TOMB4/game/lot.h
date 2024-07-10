@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_LOT_H
+#define TOMB4_GAME_LOT_H
 typedef struct LOT_INFO LOT_INFO;
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct CREATURE_INFO CREATURE_INFO;
@@ -10,3 +11,6 @@ void InitialiseSlot(short item_number, long slot);
 long EnableBaddieAI(short item_number, long Always);
 
 extern CREATURE_INFO* baddie_slots;
+
+
+#endif// TOMB4_GAME_LOT_H

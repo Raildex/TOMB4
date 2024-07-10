@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_CROC_H
+#define TOMB4_GAME_CROC_H
 #include "game/locuststruct.h"
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct PHD_3DPOS PHD_3DPOS;
@@ -16,3 +17,6 @@ void InitialiseCrocgod(short item_number);
 void CrocgodControl(short item_number);
 
 extern LOCUST_STRUCT Locusts[];
+
+
+#endif// TOMB4_GAME_CROC_H

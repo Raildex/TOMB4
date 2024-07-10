@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_CAMERA_H
+#define TOMB4_GAME_CAMERA_H
 #include "game/camerainfo.h"
 #include "game/cameratype.h"
 #include "game/phdvector.h"
@@ -39,3 +40,6 @@ extern long ExittingBinos;
 extern long LaserSight;
 
 extern SHATTER_ITEM ShatterItem;
+
+
+#endif// TOMB4_GAME_CAMERA_H

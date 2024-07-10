@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_LARAFLAR_H
+#define TOMB4_GAME_LARAFLAR_H
 
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct PHD_VECTOR PHD_VECTOR;
@@ -15,3 +16,6 @@ void ready_flare();
 void draw_flare();
 void undraw_flare();
 void FlareControl(short item_number);
+
+
+#endif// TOMB4_GAME_LARAFLAR_H

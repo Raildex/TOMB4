@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_CONTROL_H
+#define TOMB4_GAME_CONTROL_H
 typedef struct ROOM_INFO ROOM_INFO;
 typedef struct FLOOR_INFO FLOOR_INFO;
 typedef struct ITEM_INFO ITEM_INFO;
@@ -96,3 +97,6 @@ extern char PoisonFlag;
 extern char TriggerTimer;
 extern char LaserSightActive;
 extern char DeathMenuActive;
+
+
+#endif// TOMB4_GAME_CONTROL_H

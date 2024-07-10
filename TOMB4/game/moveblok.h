@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_MOVEBLOK_H
+#define TOMB4_GAME_MOVEBLOK_H
 
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
@@ -10,3 +11,6 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 void InitialisePlanetEffect(short item_number);
 void ControlPlanetEffect(short item_number);
 void DrawPlanetEffect(ITEM_INFO* item);
+
+
+#endif// TOMB4_GAME_MOVEBLOK_H

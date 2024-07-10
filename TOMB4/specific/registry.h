@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_REGISTRY_H
+#define TOMB4_SPECIFIC_REGISTRY_H
 #include <windows.h>
 
 char REG_OpenKey(LPCSTR lpSubKey);
@@ -15,3 +16,6 @@ char LoadSettings();
 void SaveSettings();
 char SaveSetup(HWND hDlg);
 char REG_KeyWasCreated();
+
+
+#endif// TOMB4_SPECIFIC_REGISTRY_H

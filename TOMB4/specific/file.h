@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_FILE_H
+#define TOMB4_SPECIFIC_FILE_H
 #include "specific/thread.h"
 #include "texture.h"
 #include <stdio.h>
@@ -33,3 +34,6 @@ void S_GetUVRotateTextures(LEVEL_INFO* lvl);
 char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size);
 
 extern THREAD* LevelLoadingThread;
+
+
+#endif// TOMB4_SPECIFIC_FILE_H

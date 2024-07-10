@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_HEALTH_H
+#define TOMB4_GAME_HEALTH_H
 typedef struct DISPLAYPU DISPLAYPU;
 
 long FlashIt();
@@ -14,3 +15,6 @@ extern long PickupX;
 extern short CurrentPickup;
 
 extern long health_bar_timer;
+
+
+#endif// TOMB4_GAME_HEALTH_H

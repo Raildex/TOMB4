@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_TEXT_H
+#define TOMB4_GAME_TEXT_H
 
 typedef struct CHARDEF CHARDEF;
 
@@ -14,3 +15,6 @@ extern long smol_font_height;
 extern long small_font;
 extern long font_height;
 extern long GnFrameCounter;
+
+
+#endif// TOMB4_GAME_TEXT_H

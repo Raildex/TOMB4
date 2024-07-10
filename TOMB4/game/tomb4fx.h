@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_TOMB4FX_H
+#define TOMB4_GAME_TOMB4FX_H
 typedef struct LIGHTNING_STRUCT LIGHTNING_STRUCT;
 typedef struct PHD_VECTOR PHD_VECTOR;
 typedef struct ITEM_INFO ITEM_INFO;
@@ -97,3 +98,6 @@ extern short DestFadeScreenHeight;
 extern short FadeClipSpeed;
 extern short ScreenFadeSpeed;
 extern char tsv_buffer[16384];
+
+
+#endif// TOMB4_GAME_TOMB4FX_H

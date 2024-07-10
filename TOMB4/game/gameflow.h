@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_GAMEFLOW_H
+#define TOMB4_GAME_GAMEFLOW_H
 
 #include "game/cvector.h"
 #include "game/phdvector.h"
@@ -527,3 +528,6 @@ typedef enum gf_strings // auto generated from the script compiler
 	TXT_THE_LAST_STRING_ENTRY,
 	TXT_NUM_STRINGS
 } gf_strings;
+
+
+#endif// TOMB4_GAME_GAMEFLOW_H

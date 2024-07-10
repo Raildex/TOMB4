@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_ROPE_H
+#define TOMB4_GAME_ROPE_H
 #include "game/pendulum.h"
 
 typedef struct PHD_VECTOR PHD_VECTOR;
@@ -28,3 +29,6 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 extern ROPE_STRUCT RopeList[64];
 extern PENDULUM CurrentPendulum;
 extern long nRope;
+
+
+#endif// TOMB4_GAME_ROPE_H

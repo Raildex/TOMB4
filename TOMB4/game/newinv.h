@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_NEWINV_H
+#define TOMB4_GAME_NEWINV_H
 #include "game/invobj.h"
 typedef struct INVDRAWITEM INVDRAWITEM;
 long LoadGame();
@@ -212,3 +213,6 @@ enum invobj_types {
 
 	NUM_INVOBJ
 };
+
+
+#endif// TOMB4_GAME_NEWINV_H

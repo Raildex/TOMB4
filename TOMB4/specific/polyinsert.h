@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_SPECIFIC_POLYINSERT_H
+#define TOMB4_SPECIFIC_POLYINSERT_H
 #include <d3d.h>
 typedef struct D3DTLBUMPVERTEX D3DTLBUMPVERTEX;
 typedef struct FOGBULB_STRUCT FOGBULB_STRUCT;
@@ -46,3 +47,6 @@ extern long DrawPrimitiveCnt;
 
 extern SORTLIST* SortList[];
 extern long SortCount;
+
+
+#endif// TOMB4_SPECIFIC_POLYINSERT_H

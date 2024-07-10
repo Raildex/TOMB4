@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_JEEP_H
+#define TOMB4_GAME_JEEP_H
 
 typedef struct BIKEINFO BIKEINFO;
 typedef struct PHD_VECTOR PHD_VECTOR;
@@ -20,3 +21,6 @@ void JeepStart(ITEM_INFO* item, ITEM_INFO* l);
 void JeepFireGrenade(ITEM_INFO* item);
 void InitialiseEnemyJeep(short item_number);
 void EnemyJeepControl(short item_number);
+
+
+#endif// TOMB4_GAME_JEEP_H

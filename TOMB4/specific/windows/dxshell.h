@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPECIFIC_WINDOWS_DXSHELL_H
+#define SPECIFIC_WINDOWS_DXSHELL_H
 #include "global/types.h"
 #include <guiddef.h>
 #include <windows.h>
@@ -42,3 +43,6 @@ extern IDirectDraw4* G_ddraw;
 extern IDirect3D3* G_d3d;
 extern HWND G_hwnd;
 extern char keymap[256];
+
+
+#endif// SPECIFIC_WINDOWS_DXSHELL_H

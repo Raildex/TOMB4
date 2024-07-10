@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_LARACLMB_H
+#define TOMB4_GAME_LARACLMB_H
 
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
@@ -23,3 +24,6 @@ long LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll);
 long LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll);
 long LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll);
 void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, long result, long shift);
+
+
+#endif// TOMB4_GAME_LARACLMB_H

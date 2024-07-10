@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_DEMIGOD_H
+#define TOMB4_GAME_DEMIGOD_H
 
 typedef struct PHD_3DPOS PHD_3DPOS;
 
@@ -8,3 +9,6 @@ void TriggerHammerSmoke(long x, long y, long z, long num);
 void DoDemigodEffects(short item_number);
 void InitialiseDemigod(short item_number);
 void DemigodControl(short item_number);
+
+
+#endif// TOMB4_GAME_DEMIGOD_H

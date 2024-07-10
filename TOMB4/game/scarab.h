@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_SCARAB_H
+#define TOMB4_GAME_SCARAB_H
 #include "game/scarabstruct.h"
 
 
@@ -12,3 +13,6 @@ void DrawScarabs();
 void InitialiseScarabGenerator(short item_number);
 
 extern SCARAB_STRUCT Scarabs[128];
+
+
+#endif// TOMB4_GAME_SCARAB_H

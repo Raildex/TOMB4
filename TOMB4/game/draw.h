@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_DRAW_H
+#define TOMB4_GAME_DRAW_H
 
 #include "game/matrixindices.h"
 
@@ -57,3 +58,6 @@ extern unsigned short LightningRGB[3];
 extern unsigned short LightningRGBs[3];
 extern short LightningCount;
 extern short dLightningRand;
+
+
+#endif// TOMB4_GAME_DRAW_H

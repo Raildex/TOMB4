@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_OBJECTS_H
+#define TOMB4_GAME_OBJECTS_H
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
 typedef struct PHD_VECTOR PHD_VECTOR;
@@ -583,3 +584,6 @@ enum static_types {
 	SHATTER9,
 	NUMBER_STATIC_OBJECTS
 };
+
+
+#endif// TOMB4_GAME_OBJECTS_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_LARA_STATES_H
+#define TOMB4_GAME_LARA_STATES_H
 
 typedef enum lara_anim_state {
 	AS_WALK = 0,
@@ -285,3 +286,6 @@ typedef enum lara_anim {
 	ANIM_USEBEETLE = 444,
 	NUM_LARA_ANIMS
 } lara_anim;
+
+
+#endif// TOMB4_GAME_LARA_STATES_H

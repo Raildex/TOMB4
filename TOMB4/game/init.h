@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_INIT_H
+#define TOMB4_GAME_INIT_H
 
 typedef struct PHD_VECTOR PHD_VECTOR;
 typedef struct ROPE_STRUCT ROPE_STRUCT;
@@ -31,3 +32,6 @@ void CreateRope(ROPE_STRUCT* rope, PHD_VECTOR* pos, PHD_VECTOR* dir, long slengt
 void InitialiseRope(short item_number);
 void init_all_ropes();
 void InitialiseEffects();
+
+
+#endif// TOMB4_GAME_INIT_H

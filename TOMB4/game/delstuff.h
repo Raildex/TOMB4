@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_DELSTUFF_H
+#define TOMB4_GAME_DELSTUFF_H
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct PHD_VECTOR PHD_VECTOR;
 void DrawLara(ITEM_INFO* item, long mirror);
@@ -18,3 +19,6 @@ extern char SkinVertNums[40][12];
 extern char ScratchVertNums[40][12];
 extern char HairRotScratchVertNums[5][12];
 extern char bLaraInWater;
+
+
+#endif// TOMB4_GAME_DELSTUFF_H

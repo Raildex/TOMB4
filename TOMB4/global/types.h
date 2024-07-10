@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GLOBAL_TYPES_H
+#define TOMB4_GLOBAL_TYPES_H
 #include "global/math_tbls.h"
 
 #pragma pack(push, 1)
@@ -39,3 +40,6 @@
 
 
 #pragma pack(pop)
+
+
+#endif// TOMB4_GLOBAL_TYPES_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_SAVEGAME_H
+#define TOMB4_GAME_SAVEGAME_H
 typedef struct SAVEGAME_INFO SAVEGAME_INFO;
 long CheckSumValid(char* buffer);
 void sgInitialiseHub(long dont_save_lara);
@@ -17,3 +18,6 @@ void SaveLevelData(long FullSave);
 void RestoreLevelData(long FullSave);
 
 extern SAVEGAME_INFO savegame;
+
+
+#endif// TOMB4_GAME_SAVEGAME_H

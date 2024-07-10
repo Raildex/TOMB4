@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_SETUP_H
+#define TOMB4_GAME_SETUP_H
 
 
 #include "game/levelinfo.h"
@@ -15,3 +16,6 @@ void GetAIPickups();
 void GetCarriedItems();
 void InitTarget();
 void SetupGame();
+
+
+#endif// TOMB4_GAME_SETUP_H

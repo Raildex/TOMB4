@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_EFFECT2_H
+#define TOMB4_GAME_EFFECT2_H
 #include "game/dynamic.h"
 #include "game/splashstruct.h"
 #include "game/ripplestruct.h"
@@ -49,3 +50,6 @@ extern long SmokeCountR;
 extern long SmokeWeapon;
 extern long SmokeWindX;
 extern long SmokeWindZ;
+
+
+#endif// TOMB4_GAME_EFFECT2_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOMB4_GAME_ITEMS_H
+#define TOMB4_GAME_ITEMS_H
 enum no_item {
 	NO_ITEM = -1,
 };
@@ -18,3 +19,6 @@ void EffectNewRoom(short fx_num, short room_num);
 
 extern short next_fx_active;
 extern short next_item_active;
+
+
+#endif// TOMB4_GAME_ITEMS_H
