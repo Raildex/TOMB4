@@ -12,7 +12,6 @@
 #include "game/gameflow.h"
 #include "specific/windows/dxshell.h"
 #include "game/savegame.h"
-#include "game/watertab.h"
 #include "game/savegameinfo.h"
 #include "specific/timing.h"
 #include <process.h>
@@ -25,8 +24,6 @@ void GameClose() {
 	Log(__func__, "GameClose");
 	ACMClose();
 	FreeLevel();
-
-	free(clipflags);
 
 	if(wav_file_buffer)
 		free(wav_file_buffer);
