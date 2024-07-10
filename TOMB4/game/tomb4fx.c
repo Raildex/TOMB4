@@ -112,7 +112,7 @@ SMOKE_SPARKS* GetFreeSmokeSpark() {
 	smoke_spark = realloc(smoke_spark, nSmokeSparks * sizeof(SMOKE_SPARKS));
 	for(int i = idx; i < nSmokeSparks; ++i) {
 		SMOKE_SPARKS* sptr = &smoke_spark[i];
-		memset(sptr, 0, sizeof(SMOKE_SPARKS));
+		*sptr = (SMOKE_SPARKS){0};
 	}
 	return &smoke_spark[idx];
 }
@@ -128,7 +128,7 @@ LIGHTNING_STRUCT* GetFreeLightning() {
 	Lightning = realloc(Lightning, nLightnings * sizeof(LIGHTNING_STRUCT));
 	for(int i = idx; i < nLightnings; ++i) {
 		LIGHTNING_STRUCT* bptr = &Lightning[i];
-		memset(bptr, 0, sizeof(LIGHTNING_STRUCT));
+		*bptr = (LIGHTNING_STRUCT){0};
 	}
 	return &Lightning[idx];
 }
@@ -472,7 +472,7 @@ FIRE_SPARKS* GetFreeFireSpark() {
 	fire_spark = realloc(fire_spark, nFireSparks * sizeof(FIRE_SPARKS));
 	for(int i = idx; i < nFireSparks; ++i) {
 		FIRE_SPARKS* bptr = &fire_spark[i];
-		memset(bptr, 0, sizeof(FIRE_SPARKS));
+		*bptr = (FIRE_SPARKS){0};
 	}
 	return &fire_spark[idx];
 }
@@ -687,7 +687,7 @@ FIRE_LIST* GetFreeFire() {
 	fires = realloc(fires, nFires * sizeof(FIRE_LIST));
 	for(int i = idx; i < nFires; ++i) {
 		FIRE_LIST* bptr = &fires[i];
-		memset(bptr, 0, sizeof(FIRE_LIST));
+		*bptr = (FIRE_LIST){0};
 	}
 	return &fires[idx];
 }
@@ -907,7 +907,7 @@ GUNSHELL_STRUCT* GetFreeGunshell() {
 	Gunshells = realloc(Gunshells, nGunshells * sizeof(GUNSHELL_STRUCT));
 	for(int i = idx; i < nGunshells; ++i) {
 		GUNSHELL_STRUCT* bptr = &Gunshells[i];
-		memset(bptr, 0, sizeof(GUNSHELL_STRUCT));
+		*bptr = (GUNSHELL_STRUCT){0};
 	}
 	return &Gunshells[idx];
 }
@@ -1119,7 +1119,7 @@ GUNFLASH_STRUCT* GetFreeGunflash() {
 	Gunflashes = realloc(Gunflashes, nGunflashes * sizeof(GUNFLASH_STRUCT));
 	for(int i = idx; i < nGunflashes; ++i) {
 		GUNFLASH_STRUCT* bptr = &Gunflashes[i];
-		memset(bptr, 0, sizeof(GUNFLASH_STRUCT));
+		*bptr = (GUNFLASH_STRUCT){0};
 	}
 	return &Gunflashes[idx];
 }
@@ -1228,7 +1228,7 @@ BLOOD_STRUCT* GetFreeBlood() {
 	blood = realloc(blood, nBlood * sizeof(BLOOD_STRUCT));
 	for(int i = idx; i < nBlood; ++i) {
 		BLOOD_STRUCT* bptr = &blood[i];
-		memset(bptr, 0, sizeof(BLOOD_STRUCT));
+		*bptr = (BLOOD_STRUCT){0};
 	}
 	return &blood[idx];
 }
@@ -1337,7 +1337,7 @@ BUBBLE_STRUCT* GetFreeBubble() {
 	Bubbles = realloc(Bubbles, nBubbles * sizeof(BUBBLE_STRUCT));
 	for(int i = idx; i < nBubbles; ++i) {
 		BUBBLE_STRUCT* bptr = &Bubbles[i];
-		memset(bptr, 0, sizeof(BUBBLE_STRUCT));
+		*bptr = (BUBBLE_STRUCT){0};
 	}
 	return &Bubbles[idx];
 }
@@ -1422,7 +1422,7 @@ DRIP_STRUCT* GetFreeDrip() {
 	Drips = realloc(Drips, nDrips * sizeof(DRIP_STRUCT));
 	for(int i = idx; i < nDrips; ++i) {
 		DRIP_STRUCT* bptr = &Drips[i];
-		memset(bptr, 0, sizeof(DRIP_STRUCT));
+		*bptr = (DRIP_STRUCT){0};
 	}
 	return &Drips[idx];
 }
@@ -1469,7 +1469,7 @@ SHOCKWAVE_STRUCT* GetFreeShockwave() {
 	ShockWaves = realloc(ShockWaves, nShockWaves * sizeof(BLOOD_STRUCT));
 	for(int i = idx; i < nShockWaves; ++i) {
 		SHOCKWAVE_STRUCT* bptr = &ShockWaves[i];
-		memset(bptr, 0, sizeof(SHOCKWAVE_STRUCT));
+		*bptr = (SHOCKWAVE_STRUCT){0};
 	}
 	return &ShockWaves[idx];
 }

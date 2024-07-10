@@ -82,9 +82,8 @@ void FreeBinkStuff() {
 }
 
 void ShowBinkFrame() {
-	DDSURFACEDESC2 surf;
+	DDSURFACEDESC2 surf = {0};
 
-	memset(&surf, 0, sizeof(surf));
 	surf.dwSize = sizeof(DDSURFACEDESC2);
 	DXAttempt(IDirectDrawSurface4_Lock(BinkSurface,0, &surf, DDLOCK_NOSYSLOCK, 0));
 	BinkCopyToBuffer(Bink, surf.lpSurface, surf.lPitch, Bink->num, 0, 0, BinkSurfaceType);

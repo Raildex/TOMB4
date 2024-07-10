@@ -695,14 +695,13 @@ RIPPLE_STRUCT* GetFreeRipple() {
 	ripples = realloc(ripples, nRipples * sizeof(RIPPLE_STRUCT));
 	for(int i = idx; i < nRipples; ++i) {
 		RIPPLE_STRUCT* bptr = &ripples[i];
-		memset(bptr, 0, sizeof(RIPPLE_STRUCT));
+		*bptr = (RIPPLE_STRUCT){0};
 	}
 	return &ripples[idx];
 }
 
 void SetupRipple(long x, long y, long z, long size, long flags) {
 	RIPPLE_STRUCT* ripple;
-	
 
 	ripple = GetFreeRipple();
 	ripple->flags = (char)flags | 1;
@@ -981,8 +980,7 @@ void DetatchSpark(long num, long type) {
 SPARKS* GetFreeSpark() {
 	for(int i =0; i < nSpark; ++i) {
 		if(!spark[i].On) {
-			memset(&spark[i],0,sizeof(SPARKS));
-			spark[i].extras = 0;
+			spark[i] = (SPARKS){0};
 			spark[i].Dynamic = -1;
 			spark[i].Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
 			return &spark[i];
@@ -993,7 +991,7 @@ SPARKS* GetFreeSpark() {
 	spark = realloc(spark, nSpark * sizeof(SPARKS));
 	for(int i = idx; i < nSpark; ++i) {
 		SPARKS* sptr = &spark[i];
-		memset(sptr, 0, sizeof(SPARKS));
+		*sptr = (SPARKS){0};
 		sptr->Dynamic = -1;
 		sptr->Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
 	}
@@ -1709,7 +1707,7 @@ SPLASH_STRUCT* GetFreeSplash() {
 	splashes = realloc(splashes, nSplashes * sizeof(SPLASH_STRUCT));
 	for(int i = idx; i < nSplashes; ++i) {
 		SPLASH_STRUCT* bptr = &splashes[i];
-		memset(bptr, 0, sizeof(SPLASH_STRUCT));
+		*bptr = (SPLASH_STRUCT){0};
 	}
 	return &splashes[idx];
 }

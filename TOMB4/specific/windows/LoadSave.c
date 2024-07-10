@@ -819,18 +819,16 @@ static void CustomBlt(DDSURFACEDESC2* dst, unsigned long dstX, unsigned long dst
 }
 
 void ConvertSurfaceToTextures(IDirectDrawSurface4* surface) {
-	DDSURFACEDESC2 tSurf;
-	DDSURFACEDESC2 uSurf;
+	DDSURFACEDESC2 tSurf = {0};
+	DDSURFACEDESC2 uSurf = {0};
 	RECT r;
 	unsigned short* pSrc;
 
-	memset(&tSurf, 0, sizeof(tSurf));
 	tSurf.dwSize = sizeof(DDSURFACEDESC2);
 	IDirectDrawSurface4_Lock(surface, 0, &tSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
 	pSrc = (unsigned short*)tSurf.lpSurface;
 	CreateTexturePage(tSurf.dwWidth, tSurf.dwHeight, b8g8r8a8, b8g8r8a8, 0, pSrc, RGBM_Mono, &MonoScreen.hal);
 
-	memset(&uSurf, 0, sizeof(uSurf));
 	uSurf.dwSize = sizeof(DDSURFACEDESC2);
 	IDirectDrawSurface4_Lock(MonoScreen.hal.surface, 0, &uSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
 

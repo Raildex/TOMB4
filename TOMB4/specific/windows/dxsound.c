@@ -121,10 +121,9 @@ void DSAdjustPan(long num, long pan) {
 }
 
 bool DXSetOutputFormat() {
-	DSBUFFERDESC desc;
+	DSBUFFERDESC desc = {0};
 
 	Log(__func__, "DXSetOutputFormat");
-	memset(&desc, 0, sizeof(desc));
 	desc.dwSize = sizeof(desc);
 	desc.dwFlags = DSBCAPS_PRIMARYBUFFER;
 
@@ -174,7 +173,7 @@ bool DXDSCreate() {
 
 long S_ConvertSamples(unsigned char* data, long comp_size, long uncomp_size, long num, SAMPLE_BUFFER* buffers) {
 	HACMSTREAM hACMStream;
-	ACMSTREAMHEADER ACMStreamHeader;
+	ACMSTREAMHEADER ACMStreamHeader = {0};
 	mmresult = acmStreamOpen(&hACMStream, hACMDriver, (LPWAVEFORMATEX)source_pcm_format, &pcm_format, 0, 0, 0, 0);
 	if(mmresult != DS_OK)
 		Log(__func__, "Stream Open %d", mmresult);
@@ -182,7 +181,6 @@ long S_ConvertSamples(unsigned char* data, long comp_size, long uncomp_size, lon
 	char* decompressed_samples_buffer = (char*)calloc(0xF0000,1);
 	char* samples_buffer = (char*)calloc(0xF005A,1);
 	memcpy(samples_buffer, data, comp_size);
-	memset(&ACMStreamHeader, 0, sizeof(ACMStreamHeader));
 	ACMStreamHeader.pbSrc = (unsigned char*)(samples_buffer + 90);
 	ACMStreamHeader.cbStruct = 84;
 	ACMStreamHeader.cbSrcLength = 0xF0000;
@@ -282,8 +280,7 @@ long S_StartSample(SAMPLE_BUFFER* data, long volume, long pitch, long pan, unsig
 	DSChangeVolume(channel, volume);
 	DSAdjustPitch(channel, pitch);
 	DSAdjustPan(channel, pan);
-	XAUDIO2_BUFFER buf;
-	memset(&buf,0,sizeof(buf));
+	XAUDIO2_BUFFER buf = {0};
 	buf.AudioBytes = data->dataSize;
 	buf.pAudioData = data->data;
 	buffer = &buf;

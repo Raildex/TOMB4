@@ -194,7 +194,7 @@ BOOL WINAPI DXEnumDirectDraw(GUID FAR* lpGUID, LPSTR lpDriverDescription, LPSTR 
 			HIWORD(DDInfo->DDIdentifier.liDriverVersion.LowPart),
 			LOWORD(DDInfo->DDIdentifier.liDriverVersion.LowPart));
 
-		memset(&DDInfo->DDCaps, 0, sizeof(DDInfo->DDCaps));
+		DDInfo->DDCaps = (DDCAPS){0};
 		DDInfo->DDCaps.dwSize = sizeof(DDCAPS);
 
 		Log(__func__, "Getting Device Capabilities");
@@ -446,7 +446,7 @@ long DXCreateD3DDevice(IDirect3D3* d3d, GUID guid, IDirectDrawSurface4* surf, ID
 }
 
 long DXCreateViewport(IDirect3D3* d3d, IDirect3DDevice3* device, long w, long h, IDirect3DViewport3** viewport) {
-	D3DVIEWPORT2 vp2;
+	D3DVIEWPORT2 vp2 = {0};
 
 	Log(__func__, "DXCreateViewport");
 
@@ -457,7 +457,6 @@ long DXCreateViewport(IDirect3D3* d3d, IDirect3DDevice3* device, long w, long h,
 	if(DXAttempt(IDirect3DDevice3_AddViewport(device,*viewport)) != DD_OK)
 		return 0;
 
-	memset(&vp2, 0, sizeof(D3DVIEWPORT2));
 	vp2.dwSize = sizeof(D3DVIEWPORT2);
 	vp2.dvClipWidth = (float)w;
 	vp2.dvClipHeight = (float)h;
@@ -535,7 +534,7 @@ void DXInitKeyboard(HWND hwnd, HINSTANCE hinstance) {
 
 void DXSaveScreen(IDirectDrawSurface4* surf, const char* name) {
 	FILE* file;
-	DDSURFACEDESC2 desc;
+	DDSURFACEDESC2 desc = {0};
 	short* pSurf;
 	short* pDest;
 	char* pM;
@@ -544,7 +543,6 @@ void DXSaveScreen(IDirectDrawSurface4* surf, const char* name) {
 	long r, g, b;
 	char buf[16];
 
-	memset(&desc, 0, sizeof(DDSURFACEDESC2));
 	desc.dwSize = sizeof(DDSURFACEDESC2);
 	DXAttempt(IDirectDrawSurface4_GetSurfaceDesc(surf,&desc));
 	DXAttempt(IDirectDrawSurface4_Lock(surf,0, &desc, DDLOCK_WAIT, 0));
@@ -647,7 +645,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 	HWND desktop;
 	DEVMODE dev;
 	HDC hDC;
-	DDSURFACEDESC2 desc;
+	DDSURFACEDESC2 desc = {0};
 	RECT r;
 	long flag, CoopLevel;
 
@@ -698,7 +696,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 		ChangeDisplaySettings(&dev, 0);
 	}
 
-	memset(&desc, 0, sizeof(DDSURFACEDESC2));
+	desc = (DDSURFACEDESC2){0};
 	desc.dwSize = sizeof(DDSURFACEDESC2);
 
 	if(Flags & DXF_FULLSCREEN) {
@@ -784,7 +782,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 
 	if(Flags & DXF_ZBUFFER && Flags & DXF_HWR) {
 		Log(__func__, "Creating ZBuffer");
-		memset(&desc, 0, sizeof(DDSURFACEDESC2));
+		desc = (DDSURFACEDESC2){0};
 		desc.dwSize = sizeof(DDSURFACEDESC2);
 		desc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
 		desc.ddsCaps.dwCaps = DDSCAPS_ZBUFFER | DDSCAPS_VIDEOMEMORY;
@@ -908,7 +906,7 @@ HRESULT WINAPI DXEnumDirect3D(LPGUID lpGuid, LPSTR lpDeviceDescription, LPSTR lp
 	}
 
 	Log(__func__, "Enumerate Texture Formats");
-	memset(&desc, 0, sizeof(DDSURFACEDESC2));
+	desc = (DDSURFACEDESC2){0};
 	desc.dwSize = sizeof(DDSURFACEDESC2);
 	desc.dwFlags = DDSD_CAPS;
 	desc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_3DDEVICE;

@@ -38,7 +38,7 @@ int LoadLevel(void* name) {
 	FreeLevel();
 	currentLevel = CreateLevel();
 
-	memset(&lara, 0, sizeof(LARA_INFO));
+	lara = (LARA_INFO){0};
 
 	S_InitLoadBar(20);
 	//S_LoadBar();
@@ -247,10 +247,9 @@ char LoadCinematic(char** data, LEVEL_INFO* lvl) {
 }
 
 char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size) {
-	z_stream stream;
+	z_stream stream = {0};
 
 	Log(__func__, "Decompress");
-	memset(&stream, 0, sizeof(z_stream));
 	stream.avail_in = compressedSize;
 	stream.avail_out = size;
 	stream.next_out = (Bytef*)pDest;

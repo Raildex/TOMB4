@@ -255,9 +255,8 @@ void ACMEmulateCDPlay(long track, long mode) {
 }
 
 BOOL WINAPI ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwSupport) {
-	ACMDRIVERDETAILS driver;
+	ACMDRIVERDETAILS driver = {0};
 
-	memset(&driver, 0, sizeof(driver));
 	driver.cbStruct = sizeof(ACMDRIVERDETAILS);
 	acmDriverDetails(hadid, &driver, 0);
 
@@ -441,7 +440,7 @@ bool ACMInit() {
 	audio_buffer_size = 0x577C0;
 	NotifySize = 0x15DF0;
 
-	memset(&desc, 0, sizeof(desc));
+	desc = (DSBUFFERDESC){0};
 	desc.dwBufferBytes = 0x577C0;
 	desc.dwReserved = 0;
 	desc.dwSize = 20;
@@ -457,7 +456,7 @@ bool ACMInit() {
 	memset(pAudioWrite, 0, audio_buffer_size);
 
 	for(int i = 0; i < 4; i++) {
-		memset(&StreamHeaders[i], 0, sizeof(ACMSTREAMHEADER));
+		StreamHeaders[i] = (ACMSTREAMHEADER){0};
 		StreamHeaders[i].cbStruct = sizeof(ACMSTREAMHEADER);
 		StreamHeaders[i].pbSrc = ADPCMBuffer;
 		StreamHeaders[i].cbSrcLength = 0x5800;

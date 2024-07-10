@@ -1893,7 +1893,7 @@ void InitialiseLara() {
 	lara_item->data = &lara;
 	lara_item->collidable = 0;
 	item_num = lara.item_number;
-	memset(&lara, 0, sizeof(LARA_INFO));
+	lara = (LARA_INFO){0};
 	lara.look = 1;
 	lara.item_number = item_num;
 	lara.hit_direction = -1;

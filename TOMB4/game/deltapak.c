@@ -1404,7 +1404,7 @@ void init_cutseq_actors(char* data, long resident) {
 			actor_pnodes[i] = (PACKNODE*)cutseq_malloc((pda_nodes + 1) * sizeof(PACKNODE));
 
 		InitPackNodes((NODELOADHEADER*)packed, actor_pnodes[i], packed, pda_nodes + 1);
-		memset(item, 0, sizeof(ITEM_INFO));
+		*item = (ITEM_INFO){0};
 		item->il.ambient = lara_item->il.ambient;
 		item->il.fcnt = -1;
 		item->il.room_number = -1;
