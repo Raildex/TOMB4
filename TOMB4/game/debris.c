@@ -277,7 +277,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 
 	face_data = (unsigned short*)mesh->gt3;
 
-	while(nTris && Num) {
+	while(nTris && Num--) {
 		v1 = *face_data++;
 		v2 = *face_data++;
 		v3 = *face_data++;
@@ -341,7 +341,6 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 				c = -rgb;
 
 			TriggerDebris(&vec, tex, offsets, Vels, c);
-			Num--;
 		}
 
 		nTris--;
@@ -349,7 +348,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 
 	face_data = (unsigned short*)mesh->gt4;
 
-	while(nQuads && Num) {
+	while(nQuads && Num--) {
 		v1 = *face_data++;
 		v2 = *face_data++;
 		face_data++;
@@ -414,7 +413,6 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 				c = -rgb;
 
 			TriggerDebris(&vec, tex, offsets, Vels, c);
-			Num--;
 		}
 
 		nQuads--;

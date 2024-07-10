@@ -1334,13 +1334,12 @@ void ControlScaledSpike(short item_number) {
 			if((item->trigger_flags & 7) == 2 || (item->trigger_flags & 7) == 6)
 				num >>= 1;
 
-			while(num > 0) {
+			while(num--) {
 				dx = (GetRandomControl() & 0x7F) + lara_item->pos.x_pos - 64;
 				dz = (GetRandomControl() & 0x7F) + lara_item->pos.z_pos - 64;
 				TriggerBlood(
 					dx, yb - GetRandomControl() % dy, dz,
 					GetRandomControl() << 1, 1);
-				num--;
 			}
 
 			if(lara_item->hit_points <= 0) {

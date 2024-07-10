@@ -1080,7 +1080,7 @@ void TriggerSmallSplash(long x, long y, long z, long num) {
 	SPARKS* sptr;
 	short ang;
 
-	while(num) {
+	while(num--) {
 		sptr = GetFreeSpark();
 		sptr->On = 1;
 		sptr->sR = 112;
@@ -1105,7 +1105,6 @@ void TriggerSmallSplash(long x, long y, long z, long num) {
 		sptr->Flags = 0;
 		sptr->MaxYvel = 0;
 		sptr->Gravity = (GetRandomControl() & 0xF) + 64;
-		num--;
 	}
 }
 
