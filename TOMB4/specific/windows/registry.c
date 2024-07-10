@@ -1,5 +1,5 @@
 
-#include "specific/registry.h"
+#include "specific/windows/registry.h"
 #include "specific/loadsave.h"
 #include "specific/windows/cmdline.h"
 #include "specific/input.h"
