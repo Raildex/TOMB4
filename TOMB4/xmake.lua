@@ -11,7 +11,7 @@ add_packages("zlib")
 	add_headerfiles("specific/*.h")
 	set_warnings("all","error")
 	set_warnings("extra","error")
-	set_warnings("all","pedantic")
+	set_warnings("pedantic", "error")
 	if(is_plat("windows")) then
 		add_files("specific/windows/*.c")
 		add_packages("xaudio2redist")
