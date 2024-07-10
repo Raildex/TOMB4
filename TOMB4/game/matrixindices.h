@@ -13,7 +13,10 @@ typedef enum matrix_indices {
 	M21,
 	M22,
 	M23,
-
+	M30,
+	M31,
+	M32,
+	M33,
 	indices_count
 } matrix_indices;
 #endif // TOMB4_GAME_MATRIXINDICES_H

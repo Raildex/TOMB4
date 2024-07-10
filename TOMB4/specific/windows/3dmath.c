@@ -92,6 +92,10 @@ static void mPushMatrix() {
 	mMXPtr[indices_count + M21] = mMXPtr[M21];
 	mMXPtr[indices_count + M22] = mMXPtr[M22];
 	mMXPtr[indices_count + M23] = mMXPtr[M23];
+	mMXPtr[indices_count + M30] = mMXPtr[M30];
+	mMXPtr[indices_count + M31] = mMXPtr[M31];
+	mMXPtr[indices_count + M32] = mMXPtr[M32];
+	mMXPtr[indices_count + M33] = mMXPtr[M33];
 	mMXPtr += indices_count;
 }
 
@@ -378,6 +382,10 @@ void phd_PushUnitMatrix() {
 	phd_mxptr[M21] = 0;
 	phd_mxptr[M22] = 1 << W2V_SHIFT;
 	phd_mxptr[M23] = 0;
+	phd_mxptr[M30] = 0;
+	phd_mxptr[M31] = 0;
+	phd_mxptr[M32] = 0;
+	phd_mxptr[M33] = 1 << W2V_SHIFT;
 
 	mPushUnitMatrix();
 }
