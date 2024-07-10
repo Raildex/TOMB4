@@ -18,6 +18,7 @@
 #include "game/spotcam.h"
 #include "game/camera.h"
 #include "game/newinv.h"
+#include "specific/sound.h"
 #include "specific/windows/dxshell.h"
 #include "specific/input.h"
 #include "game/savegame.h"

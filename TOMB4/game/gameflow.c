@@ -3,6 +3,7 @@
 #include "specific/fmv.h"
 #include "specific/output.h"
 #include "game/savegame.h"
+#include "specific/sound.h"
 #include "specific/specificfx.h"
 #include "specific/file.h"
 #include "specific/function_table.h"

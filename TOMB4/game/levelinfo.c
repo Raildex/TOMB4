@@ -37,6 +37,7 @@
 #include "game/lightinfo.h"
 #include "game/meshinfo.h"
 #include "global/types.h"
+#include "specific/sound.h"
 #include "specific/texture.h"
 #include "specific/windows/winmain.h"
 #include "game/boxinfo.h"

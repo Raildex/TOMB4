@@ -1,6 +1,7 @@
 
 #include "game/sound.h"
 #include "specific/3dmath.h"
+#include "specific/sound.h"
 #include "specific/windows/dxsound.h"
 #include "specific/function_stubs.h"
 #include "game/camera.h"

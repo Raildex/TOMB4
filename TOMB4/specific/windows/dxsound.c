@@ -15,6 +15,8 @@
 #include "game/samplebuffer.h"
 #include <xaudio2redist.h>
 #include <dsound.h>
+#include "specific/sound.h"
+
 #pragma warning(push)
 #pragma warning(disable : 4838)
 #pragma warning(disable : 4309)
@@ -170,7 +172,7 @@ bool DXDSCreate() {
 	return 1;
 }
 
-bool S_ConvertSamples(unsigned char* data, long comp_size, long uncomp_size, long num, SAMPLE_BUFFER* buffers) {
+long S_ConvertSamples(unsigned char* data, long comp_size, long uncomp_size, long num, SAMPLE_BUFFER* buffers) {
 	HACMSTREAM hACMStream;
 	ACMSTREAMHEADER ACMStreamHeader;
 	mmresult = acmStreamOpen(&hACMStream, hACMDriver, (LPWAVEFORMATEX)source_pcm_format, &pcm_format, 0, 0, 0, 0);

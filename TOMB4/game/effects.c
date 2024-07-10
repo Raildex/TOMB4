@@ -19,6 +19,7 @@
 #include "game/lara_states.h"
 #include "specific/function_stubs.h"
 #include "specific/3dmath.h"
+#include "specific/sound.h"
 #include "specific/windows/dxsound.h"
 #include "game/camera.h"
 #include "game/lara.h"

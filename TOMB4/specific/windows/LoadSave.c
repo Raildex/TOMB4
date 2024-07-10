@@ -14,15 +14,11 @@
 #include "game/savegame.h"
 #include "specific/gamemain.h"
 #include "specific/specificfx.h"
-#include <time.h>
 #include "specific/windows/dxshell.h"
-#include "specific/function_stubs.h"
 #include "specific/texture.h"
 #include "game/newinv.h"
-#include "game/camera.h"
 #include "specific/3dmath.h"
 #include "game/control.h"
-#include "game/lara.h"
 #include "specific/drawbars.h"
 #include "game/fontflags.h"
 #include "game/inputbuttons.h"
@@ -38,6 +34,9 @@
 #include "specific/texture.h"
 #include <dinput.h>
 #include <joystickapi.h>
+#include <stdio.h>
+#include "specific/sound.h"
+
 long sfx_frequencies[3] = { 11025, 22050, 44100 };
 long SoundQuality = 1;
 long MusicVolume = 40;
@@ -678,16 +677,16 @@ static void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, lon
 	v[3].color = c2;
 	v[3].specular = 0xFF000000;
 
-	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_MAGFILTER, D3DTFG_POINT);
-	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_MINFILTER, D3DTFG_POINT);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_TEXTUREPERSPECTIVE, 0);
-	DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, t));
-	IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLEFAN, FVF, v, 4, D3DDP_DONOTCLIP | D3DDP_DONOTUPDATEEXTENTS);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_TEXTUREPERSPECTIVE, 1);
+	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MAGFILTER, D3DTFG_POINT);
+	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MINFILTER, D3DTFG_POINT);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_TEXTUREPERSPECTIVE, 0);
+	DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, t));
+	IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLEFAN, FVF, v, 4, D3DDP_DONOTCLIP | D3DDP_DONOTUPDATEEXTENTS);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_TEXTUREPERSPECTIVE, 1);
 
 	if(App.Filtering) {
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_MAGFILTER, D3DTFG_LINEAR);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_MINFILTER, D3DTFG_LINEAR);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MAGFILTER, D3DTFG_LINEAR);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MINFILTER, D3DTFG_LINEAR);
 	}
 }
 
@@ -827,13 +826,13 @@ void ConvertSurfaceToTextures(IDirectDrawSurface4* surface) {
 
 	memset(&tSurf, 0, sizeof(tSurf));
 	tSurf.dwSize = sizeof(DDSURFACEDESC2);
-	IDirectDrawSurface4_Lock(surface,0, &tSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
+	IDirectDrawSurface4_Lock(surface, 0, &tSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
 	pSrc = (unsigned short*)tSurf.lpSurface;
-	CreateTexturePage(tSurf.dwWidth, tSurf.dwHeight,b8g8r8a8, b8g8r8a8, 0, pSrc, RGBM_Mono, &MonoScreen.hal);
+	CreateTexturePage(tSurf.dwWidth, tSurf.dwHeight, b8g8r8a8, b8g8r8a8, 0, pSrc, RGBM_Mono, &MonoScreen.hal);
 
 	memset(&uSurf, 0, sizeof(uSurf));
 	uSurf.dwSize = sizeof(DDSURFACEDESC2);
-	IDirectDrawSurface4_Lock(MonoScreen.hal.surface,0, &uSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
+	IDirectDrawSurface4_Lock(MonoScreen.hal.surface, 0, &uSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
 
 	r.left = 0;
 	r.top = 0;
@@ -841,9 +840,9 @@ void ConvertSurfaceToTextures(IDirectDrawSurface4* surface) {
 	r.bottom = tSurf.dwHeight;
 	CustomBlt(&uSurf, 0, 0, &tSurf, &r);
 
-	IDirectDrawSurface4_Unlock(MonoScreen.hal.surface,0);
-	DXAttempt(IDirectDrawSurface4_QueryInterface(MonoScreen.hal.surface,&TEXGUID, (void**)&MonoScreen.hal.dxTex));
-	IDirectDrawSurface4_Unlock(surface,0);
+	IDirectDrawSurface4_Unlock(MonoScreen.hal.surface, 0);
+	DXAttempt(IDirectDrawSurface4_QueryInterface(MonoScreen.hal.surface, &TEXGUID, (void**)&MonoScreen.hal.dxTex));
+	IDirectDrawSurface4_Unlock(surface, 0);
 }
 
 void CheckKeyConflicts() {

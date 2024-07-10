@@ -5,6 +5,7 @@
 #include "game/objects.h"
 #include "game/draw.h"
 #include "specific/output.h"
+#include "specific/sound.h"
 #include "specific/windows/d3dmatrix.h"
 #include "game/lara2gun.h"
 #include "game/lara1gun.h"
