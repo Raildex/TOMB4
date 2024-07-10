@@ -1,21 +1,22 @@
 
 #include "game/train.h"
+#include "game/camera.h"
+#include "game/control.h"
+#include "game/draw.h"
+#include "game/gameflow.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
+#include "game/levelinfo.h"
+#include "game/objects.h"
+#include "game/sound.h"
+#include "game/staticinfo.h"
+#include "game/trainstatic.h"
+#include "global/types.h"
 #include "specific/3dmath.h"
 #include "specific/output.h"
 #include "specific/specificfx.h"
-#include "game/levelinfo.h"
-#include "game/sound.h"
-#include "game/control.h"
-#include "game/items.h"
-#include "game/camera.h"
-#include "game/draw.h"
-#include "game/lara.h"
-#include "game/gameflow.h"
-#include "game/objects.h"
-#include "game/iteminfo.h"
-#include "global/types.h"
-#include "game/staticinfo.h"
-#include "game/trainstatic.h"
+
 
 static short dels_handy_train_map[128] = {
 	// 36: ARCHITECTURE6
@@ -52,7 +53,7 @@ void DrawTrainObjects() {
 	phd_TranslateAbs(lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, 47168);
 
 	for(int i = 0; i < 8; i++) {
-		phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,obj[0])->mesh_number), x);
+		phd_PutPolygons_train(GetMesh(currentLevel, GetStaticObject(currentLevel, obj[0])->mesh_number), x);
 		obj++;
 		x += 6144;
 	}
@@ -61,7 +62,7 @@ void DrawTrainObjects() {
 
 	phd_PushMatrix();
 	phd_TranslateAbs(x + lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, 47168);
-	phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,obj[0])->mesh_number), 0);
+	phd_PutPolygons_train(GetMesh(currentLevel, GetStaticObject(currentLevel, obj[0])->mesh_number), 0);
 	phd_PopMatrix();
 
 	obj = &dels_handy_train_map[32 - ((trainmappos / 6144 - lara_item->pos.x_pos / 6144 + 8) & 0x1F)];
@@ -72,7 +73,7 @@ void DrawTrainObjects() {
 	x2 = x + 49152;
 
 	for(int i = 0; i < 8; i++) {
-		phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,obj[0])->mesh_number), -x);
+		phd_PutPolygons_train(GetMesh(currentLevel, GetStaticObject(currentLevel, obj[0])->mesh_number), -x);
 		obj++;
 		x += 6144;
 	}
@@ -82,7 +83,7 @@ void DrawTrainObjects() {
 	phd_PushMatrix();
 	phd_TranslateAbs(x2 + lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, 58304);
 	phd_RotY(32760);
-	phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,obj[0])->mesh_number), 0);
+	phd_PutPolygons_train(GetMesh(currentLevel, GetStaticObject(currentLevel, obj[0])->mesh_number), 0);
 	phd_PopMatrix();
 
 	p = &dels_handy_train_map2[32 - ((trainmappos / 6144 - lara_item->pos.x_pos / 6144 + 8) & 0x1F)];
@@ -92,7 +93,7 @@ void DrawTrainObjects() {
 	for(int i = 0; i < 8; i++) {
 		if(p->type != NO_ITEM) {
 			phd_TranslateAbs(lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, p->zoff + 52224);
-			phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,p->type)->mesh_number), x);
+			phd_PutPolygons_train(GetMesh(currentLevel, GetStaticObject(currentLevel, p->type)->mesh_number), x);
 		}
 
 		p++;
@@ -101,7 +102,7 @@ void DrawTrainObjects() {
 
 	if(p->type != NO_ITEM) {
 		phd_TranslateAbs(x + lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, p->zoff + 52224);
-		phd_PutPolygons_train(GetMesh(currentLevel,GetStaticObject(currentLevel,p->type)->mesh_number), 0);
+		phd_PutPolygons_train(GetMesh(currentLevel, GetStaticObject(currentLevel, p->type)->mesh_number), 0);
 	}
 
 	phd_PopMatrix();
@@ -125,12 +126,12 @@ void InitialiseTrainJeep(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	item->item_flags[0] = -80;
 
 	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) // find your raghead
 	{
-		item2 = GetItem(currentLevel,i);
+		item2 = GetItem(currentLevel, i);
 
 		if(item != item2 && item2->trigger_flags == item->trigger_flags) {
 			item->item_flags[1] = i;
@@ -146,8 +147,8 @@ void TrainJeepControl(short item_number) {
 	ITEM_INFO* item2;
 	short room_number;
 
-	item = GetItem(currentLevel,item_number);
-	item2 = GetItem(currentLevel,item->item_flags[1]);
+	item = GetItem(currentLevel, item_number);
+	item2 = GetItem(currentLevel, item->item_flags[1]);
 
 	if(item->item_flags[0] == -80) {
 		if(item->item_flags[2] < 0x4000)

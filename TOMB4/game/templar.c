@@ -1,38 +1,39 @@
 
 #include "game/templar.h"
-#include "game/box.h"
-#include "game/objects.h"
-#include "specific/function_stubs.h"
-#include "game/sphere.h"
-#include "game/effect2.h"
-#include "specific/3dmath.h"
-#include "game/effects.h"
-#include "game/debris.h"
-#include "game/sound.h"
-#include "game/control.h"
-#include "game/lara.h"
-#include "game/aiinfo.h"
-#include "game/creatureinfo.h"
-#include "game/objectinfo.h"
 #include "game/aibits.h"
-#include "global/types.h"
+#include "game/aiinfo.h"
 #include "game/animstruct.h"
 #include "game/biteinfo.h"
-#include "game/larainfo.h"
-#include "game/roominfo.h"
-#include "game/meshinfo.h"
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/debris.h"
+#include "game/effect2.h"
+#include "game/effects.h"
 #include "game/floorinfo.h"
-#include <stdlib.h>
+#include "game/lara.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/meshinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roominfo.h"
+#include "game/sound.h"
+#include "game/sphere.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 static BITE_INFO templar_hit = { 0, 0, 0, 11 };
 
 void InitialiseTemplar(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->anim_index + 2;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, KNIGHTS_TEMPLAR)->anim_index + 2;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 	item->mesh_bits &= ~0x800;
@@ -51,8 +52,8 @@ void TemplarControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = GetItem(currentLevel,item_number);
-	anim = item->anim_number - GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->anim_index;
+	item = GetItem(currentLevel, item_number);
+	anim = item->anim_number - GetObjectInfo(currentLevel, KNIGHTS_TEMPLAR)->anim_index;
 
 	if((!anim || anim == 1 || anim == 11 || anim == 12) && (GetRandomControl() & 1) != 0) {
 		pos.x = 0;
@@ -67,8 +68,8 @@ void TemplarControl(short item_number) {
 	torso_x = 0;
 	torso_y = 0;
 
-	if(item->hit_points < GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->hit_points)
-		item->hit_points = GetObjectInfo(currentLevel,KNIGHTS_TEMPLAR)->hit_points;
+	if(item->hit_points < GetObjectInfo(currentLevel, KNIGHTS_TEMPLAR)->hit_points)
+		item->hit_points = GetObjectInfo(currentLevel, KNIGHTS_TEMPLAR)->hit_points;
 
 	if(item->ai_bits)
 		GetAITarget(knight);
@@ -129,8 +130,8 @@ void TemplarControl(short item_number) {
 		else
 			item->pos.y_rot += 182;
 
-		if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 42 && item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 51) {
-			r = GetRoom(currentLevel,item->room_number);
+		if(item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 42 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 51) {
+			r = GetRoom(currentLevel, item->room_number);
 			pos.x = 0;
 			pos.y = 0;
 			pos.z = 0;

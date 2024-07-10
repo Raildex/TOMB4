@@ -1,24 +1,25 @@
 
-#include "game/levelinfo.h"
-#include "specific/loadsave.h"
-#include "specific/function_table.h"
-#include "specific/3dmath.h"
-#include "specific/function_stubs.h"
-#include "specific/gamemain.h"
-#include "specific/output.h"
 #include "game/camera.h"
-#include "game/lara.h"
 #include "game/gameflow.h"
-#include "specific/windows/winmain.h"
+#include "game/gouraudbarcolourset.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
+#include "game/levelinfo.h"
+#include "game/texturestruct.h"
+#include "specific/3dmath.h"
 #include "specific/drawroom.h"
+#include "specific/function_stubs.h"
+#include "specific/function_table.h"
+#include "specific/gamemain.h"
+#include "specific/loadsave.h"
+#include "specific/output.h"
 #include "specific/polyinsert.h"
 #include "specific/texture.h"
-#include "game/gouraudbarcolourset.h"
-#include "game/texturestruct.h"
-#include <d3dtypes.h>
 #include "specific/windows/dxflags.h"
-#include "game/larainfo.h"
+#include "specific/windows/winmain.h"
 #include <d3d.h>
+#include <d3dtypes.h>
+
 
 static float loadbar_pos;
 static long loadbar_maxpos;
@@ -441,9 +442,9 @@ void S_LoadBar() {
 		_BeginScene();
 		InitBuckets();
 		InitialiseSortList();
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
 		loadbar_pos += 100 / loadbar_maxpos;
 
 		{

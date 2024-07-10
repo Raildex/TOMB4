@@ -1,16 +1,17 @@
 
 #include "game/mirror.h"
 #include "game/delstuff.h"
-#include "specific/function_table.h"
-#include "game/tomb4fx.h"
-#include "specific/3dmath.h"
-#include "game/hair.h"
-#include "game/lara.h"
 #include "game/gameflow.h"
 #include "game/gunshellstruct.h"
-#include "game/iteminfo.h"
+#include "game/hair.h"
 #include "game/hairstruct.h"
+#include "game/iteminfo.h"
+#include "game/lara.h"
 #include "game/larainfo.h"
+#include "game/tomb4fx.h"
+#include "specific/3dmath.h"
+#include "specific/function_table.h"
+
 
 void Draw_Mirror_Lara() {
 	HAIR_STRUCT* hair;

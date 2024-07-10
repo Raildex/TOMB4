@@ -1,56 +1,57 @@
 
 #include "specific/specificfx.h"
-#include "specific/3dmath.h"
-#include "game/delstuff.h"
-#include "game/control.h"
-#include "specific/function_table.h"
-#include "game/objects.h"
-#include "specific/polyinsert.h"
-#include "specific/function_stubs.h"
-#include "specific/drawroom.h"
-#include "specific/windows/winmain.h"
-#include "game/debris.h"
-#include "game/rope.h"
-#include "game/tomb4fx.h"
-#include "game/camera.h"
-#include "game/effect2.h"
-#include "specific/gamemain.h"
-#include "specific/texture.h"
-#include "specific/file.h"
-#include "game/lara.h"
-#include "game/gameflow.h"
-#include "specific/output.h"
-#include "game/lara_states.h"
-#include "game/deltapak.h"
-#include "game/spritestruct.h"
-#include "game/iteminfo.h"
-#include "game/texturestruct.h"
-#include "game/fvector.h"
-#include "game/laramesh.h"
-#include "game/waterdust.h"
-#include "game/sparks.h"
-#include "game/bubblestruct.h"
-#include "game/objectinfo.h"
-#include "game/shockwavestruct.h"
-#include "game/splashstruct.h"
-#include "game/ripplestruct.h"
-#include "game/firesparks.h"
-#include "game/ropestruct.h"
 #include "game/bloodstruct.h"
-#include "game/smokesparks.h"
-#include "game/roominfo.h"
-#include "game/roomflags.h"
-#include "game/lightningstruct.h"
-#include "game/dripstruct.h"
-#include "game/wraithstruct.h"
-#include "game/meshdata.h"
-#include "global/types.h"
+#include "game/bubblestruct.h"
+#include "game/camera.h"
+#include "game/control.h"
+#include "game/debris.h"
 #include "game/debrisstruct.h"
+#include "game/delstuff.h"
+#include "game/deltapak.h"
+#include "game/dripstruct.h"
+#include "game/effect2.h"
+#include "game/firesparks.h"
+#include "game/fvector.h"
+#include "game/gameflow.h"
+#include "game/iteminfo.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/laramesh.h"
+#include "game/levelinfo.h"
+#include "game/lightningstruct.h"
+#include "game/meshdata.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/ripplestruct.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/rope.h"
+#include "game/ropestruct.h"
+#include "game/shockwavestruct.h"
+#include "game/smokesparks.h"
+#include "game/sparks.h"
+#include "game/splashstruct.h"
+#include "game/spritestruct.h"
+#include "game/texturestruct.h"
+#include "game/tomb4fx.h"
+#include "game/waterdust.h"
+#include "game/wraithstruct.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/drawroom.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
+#include "specific/function_table.h"
+#include "specific/gamemain.h"
+#include "specific/output.h"
+#include "specific/polyinsert.h"
+#include "specific/texture.h"
+#include "specific/windows/winmain.h"
+#include "stdbool.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "game/levelinfo.h"
-#include "stdbool.h"
+
 #define CIRCUMFERENCE_POINTS 32 // Number of points in the circumference
 #define LINE_POINTS 4 // number of points in each grid line
 #define POINT_HEIGHT_CORRECTION 196 // if the difference between the floor below Lara and the floor height below the point is greater than this value, point height is corrected to lara's floor level.
@@ -317,7 +318,7 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item) {
 	short s;
 
 	v = MyVertexBuffer;
-	sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 14);
+	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 14);
 	uStep = (sprite->x2 - sprite->x1) / (LINE_POINTS - 1);
 	vStep = (sprite->y2 - sprite->y1) / (LINE_POINTS - 1);
 
@@ -601,13 +602,13 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item) {
 
 void DrawTrainStrips() {
 
-	DrawTrainFloorStrip(-20480, -5120, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,7)), 0x1101010);
-	DrawTrainFloorStrip(-20480, 3072, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,7)), 0x1101010);
-	DrawTrainFloorStrip(-20480, -2048, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,5)), 0x100800);
-	DrawTrainFloorStrip(-20480, 2048, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,6)), 0x810);
-	DrawTrainFloorStrip(-20480, -1024, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,3)), 0);
-	DrawTrainFloorStrip(-20480, 1024, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,4)), 0);
-	DrawTrainFloorStrip(-20480, 0, GetTextInfo(currentLevel,*GetAnimTextureRange(currentLevel,3)), 0);
+	DrawTrainFloorStrip(-20480, -5120, GetTextInfo(currentLevel, *GetAnimTextureRange(currentLevel, 7)), 0x1101010);
+	DrawTrainFloorStrip(-20480, 3072, GetTextInfo(currentLevel, *GetAnimTextureRange(currentLevel, 7)), 0x1101010);
+	DrawTrainFloorStrip(-20480, -2048, GetTextInfo(currentLevel, *GetAnimTextureRange(currentLevel, 5)), 0x100800);
+	DrawTrainFloorStrip(-20480, 2048, GetTextInfo(currentLevel, *GetAnimTextureRange(currentLevel, 6)), 0x810);
+	DrawTrainFloorStrip(-20480, -1024, GetTextInfo(currentLevel, *GetAnimTextureRange(currentLevel, 3)), 0);
+	DrawTrainFloorStrip(-20480, 1024, GetTextInfo(currentLevel, *GetAnimTextureRange(currentLevel, 4)), 0);
+	DrawTrainFloorStrip(-20480, 0, GetTextInfo(currentLevel, *GetAnimTextureRange(currentLevel, 3)), 0);
 }
 
 void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr) {
@@ -684,7 +685,7 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 				setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, z1, clipflags);
 			}
 
-			sprite = GetSpriteInfo(currentLevel,sptr->Def);
+			sprite = GetSpriteInfo(currentLevel, sptr->Def);
 
 			if(z1 <= 0x3000) {
 				cR = sptr->R;
@@ -848,7 +849,7 @@ void Draw2DSprite(long x, long y, long slot, long unused, long unused2) {
 	v = MyVertexBuffer;
 
 	p = GetFixedScale(1);
-	sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + slot);
+	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + slot);
 	x0 = (long)(x + (sprite->width >> 8) * p);
 	y0 = (long)(y + 1 + (sprite->height >> 8) * p);
 	setXY4(v, x, y, x0, y, x0, y0, x, y0, (long)f_mznear, clipflags);
@@ -1076,7 +1077,7 @@ void DrawDebris() {
 		v[1].specular |= 0xFF000000;
 		v[2].specular |= 0xFF000000;
 
-		tex = GetTextInfo(currentLevel,(uintptr_t)dptr->TextInfo & 0x7FFF);
+		tex = GetTextInfo(currentLevel, (uintptr_t)dptr->TextInfo & 0x7FFF);
 		drawbak = tex->drawtype;
 
 		if(dptr->flags & 1)
@@ -1403,14 +1404,14 @@ void DrawFlatSky(unsigned long color, long zpos, long ypos, long drawtype) {
 }
 
 void OutputSky() {
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 0);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZENABLE, 0);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 0);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZENABLE, 0);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 0);
 	DrawBuckets();
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZENABLE, 1);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 1);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZENABLE, 1);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 1);
 	SortPolyList(SortCount, SortList);
 	DrawSortList();
 	InitBuckets();
@@ -1832,7 +1833,7 @@ void DrawLaserSightSprite() {
 	Z[0] = (long)vec.z;
 	phd_PopMatrix();
 
-	sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 14);
+	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 14);
 	s = GetFixedScale(3);
 	setXY4(v, XY[0] - s, XY[1] - s, XY[0] + s, XY[1] - s, XY[0] + s, XY[1] + s, XY[0] - s, XY[1] + s, (long)f_mznear, clipflags);
 	v[0].color = 0xFFFF0000;
@@ -1873,7 +1874,7 @@ void DrawSprite(long x, long y, long slot, long col, long size, long z) {
 	else
 		setXY4(v, x - s, y - s, x + s, y - s, x - s, y + s, x + s, y + s, (long)f_mzfar, clipflags);
 
-	sprite = GetSpriteInfo(currentLevel,slot + GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index);
+	sprite = GetSpriteInfo(currentLevel, slot + GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index);
 	v[0].specular = 0xFF000000;
 	v[1].specular = 0xFF000000;
 	v[2].specular = 0xFF000000;
@@ -2025,7 +2026,7 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 		b = 255;
 		rn = lfobj->room_number;
 	} else {
-		if(GetRoom(currentLevel,camera.pos.room_number)->flags & ROOM_NO_LENSFLARE)
+		if(GetRoom(currentLevel, camera.pos.room_number)->flags & ROOM_NO_LENSFLARE)
 			return;
 
 		r = (unsigned char)gfLensFlareColour.r;
@@ -2070,7 +2071,7 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 	}
 
 	if(rn != 255) {
-		if(GetRoom(currentLevel,rn)->flags & ROOM_NOT_INSIDE || lfobj) {
+		if(GetRoom(currentLevel, rn)->flags & ROOM_NOT_INSIDE || lfobj) {
 			start.pos.y = camera.pos.pos.y;
 			start.pos.z = camera.pos.pos.z;
 			start.pos.x = camera.pos.pos.x;
@@ -2181,13 +2182,13 @@ void InitTarget_2() {
 	OBJECT_INFO* obj;
 	_D3DTLVERTEX* v;
 
-	obj = GetObjectInfo(currentLevel,TARGET_GRAPHICS);
+	obj = GetObjectInfo(currentLevel, TARGET_GRAPHICS);
 
 	if(!obj->loaded)
 		return;
 
-	targetMeshP = (MESH_DATA*)GetMesh(currentLevel,obj->mesh_index);
-	IDirect3DVertexBuffer_Lock(targetMeshP->SourceVB,DDLOCK_READONLY, (void**)&v, 0);
+	targetMeshP = (MESH_DATA*)GetMesh(currentLevel, obj->mesh_index);
+	IDirect3DVertexBuffer_Lock(targetMeshP->SourceVB, DDLOCK_READONLY, (void**)&v, 0);
 
 	for(int i = 0; i < targetMeshP->nVerts; i++) {
 		v[i].sx = (v[i].sx * 80) / 96;
@@ -2205,13 +2206,13 @@ void InitBinoculars() {
 	OBJECT_INFO* obj;
 	_D3DTLVERTEX* v;
 
-	obj = GetObjectInfo(currentLevel,BINOCULAR_GRAPHICS);
+	obj = GetObjectInfo(currentLevel, BINOCULAR_GRAPHICS);
 
 	if(!obj->loaded)
 		return;
 
-	binocsMeshP = (MESH_DATA*)GetMesh(currentLevel,obj->mesh_index);
-	IDirect3DVertexBuffer_Lock(binocsMeshP->SourceVB,DDLOCK_READONLY, (void**)&v, 0);
+	binocsMeshP = (MESH_DATA*)GetMesh(currentLevel, obj->mesh_index);
+	IDirect3DVertexBuffer_Lock(binocsMeshP->SourceVB, DDLOCK_READONLY, (void**)&v, 0);
 
 	for(int i = 0; i < binocsMeshP->nVerts; i++) {
 		v[i].sx = (v[i].sx * 32) / 96;
@@ -2271,7 +2272,7 @@ void DrawBinoculars() {
 
 	if(LaserSight) {
 		for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-			tex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
+			tex = GetTextInfo(currentLevel, quad[4] & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
@@ -2288,7 +2289,7 @@ void DrawBinoculars() {
 		}
 
 		for(int i = 0, j = 0; i < mesh->ngt3; i++, tri += 5) {
-			tex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
+			tex = GetTextInfo(currentLevel, tri[3] & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
@@ -2305,7 +2306,7 @@ void DrawBinoculars() {
 		}
 	} else {
 		for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-			tex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
+			tex = GetTextInfo(currentLevel, quad[4] & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
@@ -2322,7 +2323,7 @@ void DrawBinoculars() {
 		}
 
 		for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-			tex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
+			tex = GetTextInfo(currentLevel, tri[3] & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
@@ -2482,7 +2483,7 @@ void DrawDrips() {
 
 		pos[1] -= drip->Yvel >> 6;
 
-		if(GetRoom(currentLevel,drip->RoomNumber)->flags & ROOM_NOT_INSIDE) {
+		if(GetRoom(currentLevel, drip->RoomNumber)->flags & ROOM_NOT_INSIDE) {
 			pos[0] -= SmokeWindX >> 1;
 			pos[1] -= SmokeWindZ >> 1;
 		}
@@ -2623,7 +2624,7 @@ void DrawBubbles() {
 			continue;
 		}
 
-		sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 13);
+		sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 13);
 		setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, Z[0], clipflags);
 		v[0].color = RGBA(bubble->shade, bubble->shade, bubble->shade, 0xFF);
 		v[1].color = RGBA(bubble->shade, bubble->shade, bubble->shade, 0xFF);
@@ -2665,7 +2666,7 @@ void DrawShockwaves() {
 
 	vtx = MyVertexBuffer;
 
-	sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 8);
+	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 8);
 	offsets = (long*)&tsv_buffer[1024];
 
 	for(int i = 0; i < nShockWaves; i++) {
@@ -2965,9 +2966,9 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 
 		for(int j = 0; j < 3; j++) {
 			if(j == 2 || (!j && splash->flags & 4) || (j == 1 && splash->flags & 8))
-				sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 4 + ((wibble >> 4) & 3));
+				sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 4 + ((wibble >> 4) & 3));
 			else
-				sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 8);
+				sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 8);
 
 			links = SplashLinks;
 			linkNum = j << 5;
@@ -3099,9 +3100,9 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 		Z = (long*)&tsv_buffer[512];
 
 		if(ripple->flags & 0x20)
-			sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index);
+			sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index);
 		else
-			sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 9);
+			sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 9);
 
 		x1 = *XY++;
 		y1 = *XY++;
@@ -3341,7 +3342,7 @@ void S_DrawFireSparks(long size, long life) {
 			setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, Z[0], clipflags);
 		}
 
-		sprite = GetSpriteInfo(currentLevel,sptr->Def);
+		sprite = GetSpriteInfo(currentLevel, sptr->Def);
 
 		if(Z[0] <= 0x3000) {
 			r = sptr->R;
@@ -3477,7 +3478,7 @@ void DrawRope(ROPE_STRUCT* rope) {
 			v[1].specular = spec << 24;
 			v[2].specular = spec << 24;
 			v[3].specular = spec << 24;
-			sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 16);
+			sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 16);
 			tex.drawtype = 1;
 			tex.flag = 0;
 			tex.tpage = sprite->tpage;
@@ -3519,7 +3520,7 @@ void DrawBlood() {
 
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
-	sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 15);
+	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 15);
 	XY = (long*)&tsv_buffer[0];
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
@@ -3713,7 +3714,7 @@ void S_DrawSmokeSparks() {
 			setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, Z[0], clipflags);
 		}
 
-		sprite = GetSpriteInfo(currentLevel,sptr->Def);
+		sprite = GetSpriteInfo(currentLevel, sptr->Def);
 
 		if(Z[0] <= 0x3000)
 			col = sptr->Shade;
@@ -3777,7 +3778,7 @@ void DoUwEffect() {
 			p->pos.y = lara_item->pos.y_pos + y;
 			p->pos.z = lara_item->pos.z_pos + z;
 
-			if(IsRoomOutside(p->pos.x, p->pos.y, p->pos.z) < 0 || !(GetRoom(currentLevel,IsRoomOutsideNo)->flags & ROOM_UNDERWATER)) {
+			if(IsRoomOutside(p->pos.x, p->pos.y, p->pos.z) < 0 || !(GetRoom(currentLevel, IsRoomOutsideNo)->flags & ROOM_UNDERWATER)) {
 				p->pos.x = 0;
 				continue;
 			}
@@ -3810,7 +3811,7 @@ void DoUwEffect() {
 			p->yvel++;
 	}
 
-	sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 10);
+	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 10);
 	XY = (long*)&tsv_buffer[0];
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
@@ -3909,7 +3910,7 @@ void DrawLightning() {
 
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
-	sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 28);
+	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 28);
 
 	for(int i = 0; i < nLightnings; i++) {
 		pL = &Lightning[i];

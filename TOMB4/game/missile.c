@@ -1,22 +1,23 @@
 
 #include "game/missile.h"
-#include "game/debris.h"
-#include "game/control.h"
-#include "game/items.h"
-#include "game/sound.h"
-#include "specific/function_stubs.h"
-#include "game/effects.h"
-#include "specific/3dmath.h"
 #include "game/camera.h"
-#include "game/shatteritem.h"
+#include "game/control.h"
+#include "game/debris.h"
+#include "game/effects.h"
 #include "game/fxinfo.h"
-#include "global/types.h"
-#include <stdlib.h>
+#include "game/items.h"
 #include "game/levelinfo.h"
+#include "game/shatteritem.h"
+#include "game/sound.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num) {
 	short** meshpp;
 
-	meshpp = GetMeshPointer(currentLevel,fx->frame_number);
+	meshpp = GetMeshPointer(currentLevel, fx->frame_number);
 	ShatterItem.YRot = fx->pos.y_rot;
 	ShatterItem.meshp = *meshpp;
 	ShatterItem.Sphere.x = fx->pos.x_pos;
@@ -34,7 +35,7 @@ void ControlBodyPart(short fx_number) {
 	long height, ceiling, ox, oy, oz;
 	short room_number;
 
-	fx = GetEffect(currentLevel,fx_number);
+	fx = GetEffect(currentLevel, fx_number);
 	ox = fx->pos.x_pos;
 	oz = fx->pos.z_pos;
 	oy = fx->pos.y_pos;

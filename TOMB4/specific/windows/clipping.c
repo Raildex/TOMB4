@@ -1,10 +1,11 @@
 
 #include "specific/windows/clipping.h"
+#include "global/types.h"
 #include "specific/3dmath.h"
 #include "specific/windows/d3dtlbumpvertex.h"
-#include "global/types.h"
-#include <d3dtypes.h>
 #include <d3d.h>
+#include <d3dtypes.h>
+
 
 #define VertClip(result, v1, v2)                              \
 	{                                                         \

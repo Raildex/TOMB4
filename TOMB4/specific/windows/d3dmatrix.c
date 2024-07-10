@@ -1,9 +1,10 @@
 #include "specific/windows/d3dmatrix.h"
-#include "specific/windows/dxshell.h"
 #include "specific/3dmath.h"
+#include "specific/windows/dxshell.h"
 #include "specific/windows/winmain.h"
 #include <d3dtypes.h>
 #include <math.h>
+
 
 _D3DMATRIX D3DMView;
 _D3DMATRIX D3DLightMatrix;

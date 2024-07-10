@@ -1,38 +1,39 @@
 
 #include "game/init.h"
-#include "game/objects.h"
-#include "specific/function_stubs.h"
-#include "game/control.h"
-#include "game/door.h"
-#include "game/items.h"
-#include "game/traps.h"
-#include "game/draw.h"
-#include "game/rope.h"
-#include "game/scarab.h"
-#include "specific/3dmath.h"
-#include "game/debris.h"
-#include "game/box.h"
-#include "game/croc.h"
-#include "game/effect2.h"
-#include "game/tomb4fx.h"
-#include "game/pickup.h"
-#include "game/doordata.h"
-#include "game/iteminfo.h"
-#include "game/roominfo.h"
-#include "game/floorinfo.h"
-#include "game/boxinfo.h"
-#include "global/types.h"
-#include "game/objectinfo.h"
-#include "game/itemstatus.h"
 #include "game/animstruct.h"
-#include "game/ropestruct.h"
+#include "game/box.h"
+#include "game/boxinfo.h"
+#include "game/control.h"
+#include "game/croc.h"
+#include "game/debris.h"
+#include "game/door.h"
+#include "game/doordata.h"
+#include "game/draw.h"
+#include "game/effect2.h"
+#include "game/floorinfo.h"
 #include "game/itemflags.h"
-#include "game/sparks.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/levelinfo.h"
 #include "game/locuststruct.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/pickup.h"
 #include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/rope.h"
+#include "game/ropestruct.h"
+#include "game/scarab.h"
+#include "game/sparks.h"
+#include "game/tomb4fx.h"
+#include "game/traps.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
 #include <stdlib.h>
 #include <windows.h>
-#include "game/levelinfo.h"
+
 
 void InitialiseMapper(short item_number) {
 	GetItem(currentLevel, item_number)->mesh_bits = 0xFFFFFFFD; // hide laser
@@ -65,7 +66,7 @@ void InitialiseDoor(short item_number) {
 	short two_room, box_number, room_number;
 
 	item = GetItem(currentLevel, item_number);
-	door = (DOOR_DATA*)Allocate(currentLevel,sizeof(DOOR_DATA),1);
+	door = (DOOR_DATA*)Allocate(currentLevel, sizeof(DOOR_DATA), 1);
 	item->data = door;
 	door->Opened = 0;
 	dx = 0;
@@ -80,35 +81,35 @@ void InitialiseDoor(short item_number) {
 	else
 		dy = 1;
 
-	r = GetRoom(currentLevel,item->room_number);
+	r = GetRoom(currentLevel, item->room_number);
 	door->d1.floor = &r->floor[(((item->pos.z_pos - r->z) >> 10) + dx) + (((item->pos.x_pos - r->x) >> 10) + dy) * r->x_size];
 	room_number = GetDoor(door->d1.floor);
 
 	if(room_number == 255)
 		box_number = door->d1.floor->box;
 	else {
-		b = GetRoom(currentLevel,room_number);
+		b = GetRoom(currentLevel, room_number);
 		box_number = b->floor[(((item->pos.z_pos - b->z) >> 10) + dx) + (((item->pos.x_pos - b->x) >> 10) + dy) * b->x_size].box;
 	}
 
-	door->d1.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
+	door->d1.block = (GetBox(currentLevel, box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
 	memcpy(&door->d1.data, door->d1.floor, sizeof(FLOOR_INFO));
 
 	if(r->flipped_room == -1)
 		door->d1flip.floor = NULL;
 	else {
-		r = GetRoom(currentLevel,r->flipped_room);
+		r = GetRoom(currentLevel, r->flipped_room);
 		door->d1flip.floor = &r->floor[(((item->pos.z_pos - r->z) >> 10) + dx) + (((item->pos.x_pos - r->x) >> 10) + dy) * r->x_size];
 		room_number = GetDoor(door->d1flip.floor);
 
 		if(room_number == 255)
 			box_number = door->d1flip.floor->box;
 		else {
-			b = GetRoom(currentLevel,room_number);
+			b = GetRoom(currentLevel, room_number);
 			box_number = b->floor[(((item->pos.z_pos - b->z) >> 10) + dx) + (((item->pos.x_pos - b->x) >> 10) + dy) * b->x_size].box;
 		}
 
-		door->d1flip.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
+		door->d1flip.block = (GetBox(currentLevel, box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
 		memcpy(&door->d1flip.data, door->d1flip.floor, sizeof(FLOOR_INFO));
 	}
 
@@ -120,35 +121,35 @@ void InitialiseDoor(short item_number) {
 		door->d2.floor = NULL;
 		door->d2flip.floor = NULL;
 	} else {
-		r = GetRoom(currentLevel,two_room);
+		r = GetRoom(currentLevel, two_room);
 		door->d2.floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + ((item->pos.x_pos - r->x) >> 10) * r->x_size];
 		room_number = GetDoor(door->d2.floor);
 
 		if(room_number == 255)
 			box_number = door->d2.floor->box;
 		else {
-			b = GetRoom(currentLevel,room_number);
+			b = GetRoom(currentLevel, room_number);
 			box_number = b->floor[((item->pos.z_pos - b->z) >> 10) + ((item->pos.x_pos - b->x) >> 10) * b->x_size].box;
 		}
 
-		door->d2.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
+		door->d2.block = (GetBox(currentLevel, box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
 		memcpy(&door->d2.data, door->d2.floor, sizeof(FLOOR_INFO));
 
 		if(r->flipped_room == -1)
 			door->d2flip.floor = NULL;
 		else {
-			r = GetRoom(currentLevel,r->flipped_room);
+			r = GetRoom(currentLevel, r->flipped_room);
 			door->d2flip.floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + ((item->pos.x_pos - r->x) >> 10) * r->x_size];
 			room_number = GetDoor(door->d2flip.floor);
 
 			if(room_number == 255)
 				box_number = door->d2flip.floor->box;
 			else {
-				b = GetRoom(currentLevel,room_number);
+				b = GetRoom(currentLevel, room_number);
 				box_number = b->floor[((item->pos.z_pos - b->z) >> 10) + ((item->pos.x_pos - b->x) >> 10) * b->x_size].box;
 			}
 
-			door->d2flip.block = (GetBox(currentLevel,box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
+			door->d2flip.block = (GetBox(currentLevel, box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
 			memcpy(&door->d2flip.data, door->d2flip.floor, sizeof(FLOOR_INFO));
 		}
 
@@ -315,7 +316,7 @@ void InitialiseRaisingBlock(short item_number) {
 	item = GetItem(currentLevel, item_number);
 	room_num = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_num);
-	GetBox(currentLevel,floor->box)->overlap_index &= 0xBFFF;
+	GetBox(currentLevel, floor->box)->overlap_index &= 0xBFFF;
 
 	if(item->object_number == EXPANDING_PLATFORM) {
 		if(!item->pos.y_rot)
@@ -343,8 +344,8 @@ void InitialiseSethBlade(short item_number) {
 	ITEM_INFO* item;
 
 	item = GetItem(currentLevel, item_number);
-	item->anim_number = GetObjectInfo(currentLevel,SETH_BLADE)->anim_index + 1;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, SETH_BLADE)->anim_index + 1;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 2;
 	item->goal_anim_state = 2;
 	item->item_flags[2] = abs(item->trigger_flags);
@@ -356,8 +357,8 @@ void InitialiseObelisk(short item_number) {
 	short* ifl;
 
 	item = GetItem(currentLevel, item_number);
-	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 3;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 3;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	AddActiveItem(item_number);
 	item->status = ITEM_ACTIVE;
 
@@ -393,11 +394,11 @@ void InitialiseSmashObject(short item_number) {
 	item = GetItem(currentLevel, item_number);
 	item->flags = 0;
 	item->mesh_bits = 1;
-	rinfo = GetRoom(currentLevel,item->room_number);
+	rinfo = GetRoom(currentLevel, item->room_number);
 	floor = &rinfo->floor[((item->pos.z_pos - rinfo->z) >> 10) + ((item->pos.x_pos - rinfo->x) >> 10) * rinfo->x_size];
 
-	if(GetBox(currentLevel,floor->box)->overlap_index & 0x8000)
-		GetBox(currentLevel,floor->box)->overlap_index |= 0x4000;
+	if(GetBox(currentLevel, floor->box)->overlap_index & 0x8000)
+		GetBox(currentLevel, floor->box)->overlap_index |= 0x4000;
 }
 
 void InitialiseStatuePlinth(short item_number) {
@@ -428,7 +429,7 @@ void InitialiseSmokeEmitter(short item_number) {
 			item->pos.x_pos -= 320;
 		else if(item->pos.y_rot == -0x8000)
 			item->pos.z_pos -= 320;
-	} else if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER && item->trigger_flags == 1) {
+	} else if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER && item->trigger_flags == 1) {
 		item->item_flags[0] = 20;
 		item->item_flags[1] = 1;
 	}

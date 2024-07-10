@@ -1,20 +1,23 @@
-#include <ddraw.h>
-#include <windows.h>
 #include "specific/windows/dxshell.h"
 #include "specific/function_stubs.h"
-#include "specific/windows/winmain.h"
-#include "specific/windows/dxdirectdrawinfo.h"
-#include "specific/windows/dxinfo.h"
-#include "specific/windows/dxdirectsoundinfo.h"
-#include "specific/windows/dxtextureinfo.h"
 #include "specific/windows/dxd3ddevice.h"
-#include "specific/windows/dxzbufferinfo.h"
-#include "specific/windows/dxflags.h"
+#include "specific/windows/dxdirectdrawinfo.h"
+#include "specific/windows/dxdirectsoundinfo.h"
 #include "specific/windows/dxdisplaymode.h"
+#include "specific/windows/dxflags.h"
+#include "specific/windows/dxinfo.h"
 #include "specific/windows/dxptr.h"
+#include "specific/windows/dxtextureinfo.h"
+#include "specific/windows/dxzbufferinfo.h"
+#include "specific/windows/winmain.h"
+#include <ddraw.h>
+#include <dinput.h>
+// clang-format off
 #include <mmeapi.h>
 #include <dsound.h>
-#include <dinput.h>
+// clang-format on
+#include <windows.h>
+
 long DDSCL_FLAGS[11] = // for DXSetCooperativeLevel logging
 	{
 		DDSCL_ALLOWMODEX,
@@ -71,7 +74,7 @@ void DXBitMask2ShiftCnt(unsigned long mask, unsigned char* shift, unsigned char*
 
 void DXReadKeyboard(char* KeyMap) {
 	HRESULT state;
-	
+
 	state = IDirectInputDevice8_GetDeviceState(G_dxptr->Keyboard, 256, KeyMap);
 
 	if(FAILED(state)) {
@@ -128,7 +131,7 @@ long DXDDCreate(LPGUID pGuid, void** pDD4) {
 long DXD3DCreate(IDirectDraw4* pDD4, void** pD3D) {
 	Log(__func__, "DXD3DCreate");
 
-	if(DXAttempt(IUnknown_QueryInterface(pDD4,&D3DGUID,pD3D)) != DD_OK) {
+	if(DXAttempt(IUnknown_QueryInterface(pDD4, &D3DGUID, pD3D)) != DD_OK) {
 		Log(__func__, "DXD3DCreate Failed");
 		return 0;
 	}
@@ -156,7 +159,7 @@ long DXSetCooperativeLevel(IDirectDraw4* pDD4, HWND hwnd, long flags) {
 	*(ptr - 1) = '\0';
 	Log(__func__, buf);
 
-	if(DXAttempt(IDirectDraw4_SetCooperativeLevel(pDD4,hwnd,flags)) != DD_OK)
+	if(DXAttempt(IDirectDraw4_SetCooperativeLevel(pDD4, hwnd, flags)) != DD_OK)
 		return 0;
 
 	return 1;
@@ -184,7 +187,7 @@ BOOL WINAPI DXEnumDirectDraw(GUID FAR* lpGUID, LPSTR lpDriverDescription, LPSTR 
 	Log(__func__, "Obtaining Information For %s", lpDriverDescription);
 
 	if(DXDDCreate(lpGUID, (void**)&G_ddraw)) {
-		DXAttempt(IDirectDraw4_GetDeviceIdentifier(G_ddraw,&DDInfo->DDIdentifier, 0));
+		DXAttempt(IDirectDraw4_GetDeviceIdentifier(G_ddraw, &DDInfo->DDIdentifier, 0));
 
 		Log(__func__, "Found - %s\nDriver %s Version %d.%d.%d.%d",
 			DDInfo->DDIdentifier.szDescription,
@@ -194,17 +197,17 @@ BOOL WINAPI DXEnumDirectDraw(GUID FAR* lpGUID, LPSTR lpDriverDescription, LPSTR 
 			HIWORD(DDInfo->DDIdentifier.liDriverVersion.LowPart),
 			LOWORD(DDInfo->DDIdentifier.liDriverVersion.LowPart));
 
-		DDInfo->DDCaps = (DDCAPS){0};
+		DDInfo->DDCaps = (DDCAPS){ 0 };
 		DDInfo->DDCaps.dwSize = sizeof(DDCAPS);
 
 		Log(__func__, "Getting Device Capabilities");
-		DXAttempt(IDirectDraw4_GetCaps(G_ddraw,&DDInfo->DDCaps, 0));
+		DXAttempt(IDirectDraw4_GetCaps(G_ddraw, &DDInfo->DDCaps, 0));
 
 		Log(__func__, "Enumerating Display Modes");
 		DXSetCooperativeLevel(G_ddraw, 0, DDSCL_FULLSCREEN | DDSCL_NOWINDOWCHANGES | DDSCL_NORMAL | DDSCL_ALLOWMODEX);
 
 		Log(__func__, "DXEnumDisplayModes");
-		DXAttempt(IDirectDraw4_EnumDisplayModes(G_ddraw,0, 0, (void*)DDInfo, &DXEnumDisplayModes));
+		DXAttempt(IDirectDraw4_EnumDisplayModes(G_ddraw, 0, 0, (void*)DDInfo, &DXEnumDisplayModes));
 
 		if(DXD3DCreate(G_ddraw, (void**)&G_d3d)) {
 			Log(__func__, "DXEnumDirect3D");
@@ -416,7 +419,7 @@ HRESULT WINAPI DXEnumZBufferFormats(LPDDPIXELFORMAT lpDDPixFmt, LPVOID lpContext
 long DXCreateSurface(IDirectDraw4* dd, DDSURFACEDESC2* desc, IDirectDrawSurface4** surf) {
 	Log(__func__, "DXCreateSurface");
 
-	if(DXAttempt(IDirectDraw4_CreateSurface(dd,desc, surf, 0)) == DD_OK)
+	if(DXAttempt(IDirectDraw4_CreateSurface(dd, desc, surf, 0)) == DD_OK)
 		return 1;
 
 	Log(__func__, "DXCreateSurface Failed");
@@ -427,7 +430,7 @@ long DXSetVideoMode(IDirectDraw4* dd, long dwWidth, long dwHeight, long dwBPP) {
 	Log(__func__, "DXSetVideoMode");
 	Log(__func__, "SetDisplayMode - %dx%dx%d", dwWidth, dwHeight, dwBPP);
 
-	if(DXAttempt(IDirectDraw4_SetDisplayMode(dd,dwWidth, dwHeight, dwBPP, 0, 0)) != DD_OK)
+	if(DXAttempt(IDirectDraw4_SetDisplayMode(dd, dwWidth, dwHeight, dwBPP, 0, 0)) != DD_OK)
 		return 0;
 
 	return 1;
@@ -436,7 +439,7 @@ long DXSetVideoMode(IDirectDraw4* dd, long dwWidth, long dwHeight, long dwBPP) {
 long DXCreateD3DDevice(IDirect3D3* d3d, GUID guid, IDirectDrawSurface4* surf, IDirect3DDevice3** device) {
 	Log(__func__, "DXCreateD3DDevice");
 
-	if(DXAttempt(IDirect3D3_CreateDevice(d3d,&guid, surf, device, 0)) != DD_OK) {
+	if(DXAttempt(IDirect3D3_CreateDevice(d3d, &guid, surf, device, 0)) != DD_OK) {
 		Log(__func__, "DXCreateD3DDevice Failed");
 		return 0;
 	} else {
@@ -446,15 +449,15 @@ long DXCreateD3DDevice(IDirect3D3* d3d, GUID guid, IDirectDrawSurface4* surf, ID
 }
 
 long DXCreateViewport(IDirect3D3* d3d, IDirect3DDevice3* device, long w, long h, IDirect3DViewport3** viewport) {
-	D3DVIEWPORT2 vp2 = {0};
+	D3DVIEWPORT2 vp2 = { 0 };
 
 	Log(__func__, "DXCreateViewport");
 
 
-	if(DXAttempt(IDirect3D3_CreateViewport(d3d,viewport, 0)) != DD_OK)
+	if(DXAttempt(IDirect3D3_CreateViewport(d3d, viewport, 0)) != DD_OK)
 		return 0;
 
-	if(DXAttempt(IDirect3DDevice3_AddViewport(device,*viewport)) != DD_OK)
+	if(DXAttempt(IDirect3DDevice3_AddViewport(device, *viewport)) != DD_OK)
 		return 0;
 
 	vp2.dwSize = sizeof(D3DVIEWPORT2);
@@ -469,10 +472,10 @@ long DXCreateViewport(IDirect3D3* d3d, IDirect3DDevice3* device, long w, long h,
 	vp2.dwWidth = w;
 	vp2.dwHeight = h;
 
-	if(DXAttempt(IDirect3DViewport3_SetViewport2(*viewport,&vp2)) != DD_OK)
+	if(DXAttempt(IDirect3DViewport3_SetViewport2(*viewport, &vp2)) != DD_OK)
 		return 0;
 
-	DXAttempt(IDirect3DDevice3_SetCurrentViewport(device,*viewport));
+	DXAttempt(IDirect3DDevice3_SetCurrentViewport(device, *viewport));
 	return 1;
 }
 
@@ -491,9 +494,9 @@ HRESULT DXShowFrame() {
 		return 0;
 
 	if(G_dxptr->Flags & DXF_WINDOWED)
-		return DXAttempt(IDirectDrawSurface4_Blt(G_dxptr->lpPrimaryBuffer,&G_dxptr->rScreen, G_dxptr->lpBackBuffer, &G_dxptr->rViewport, DDBLT_WAIT, 0));
+		return DXAttempt(IDirectDrawSurface4_Blt(G_dxptr->lpPrimaryBuffer, &G_dxptr->rScreen, G_dxptr->lpBackBuffer, &G_dxptr->rViewport, DDBLT_WAIT, 0));
 	else
-		return DXAttempt(IDirectDrawSurface4_Flip(G_dxptr->lpPrimaryBuffer,0, DDFLIP_WAIT));
+		return DXAttempt(IDirectDrawSurface4_Flip(G_dxptr->lpPrimaryBuffer, 0, DDFLIP_WAIT));
 }
 
 void DXMove(long x, long y) {
@@ -508,7 +511,7 @@ void DXInitKeyboard(HWND hwnd, HINSTANCE hinstance) {
 	IDirectInputDevice* Keyboard;
 
 	DXAttempt(DirectInput8Create(hinstance, DIRECTINPUT_VERSION, &IID_IDirectInput8, (LPVOID*)&dinput, 0));
-	IUnknown_QueryInterface(dinput,&DIGUID, (void**)&G_dxptr->lpDirectInput);
+	IUnknown_QueryInterface(dinput, &DIGUID, (void**)&G_dxptr->lpDirectInput);
 
 	if(dinput) {
 		Log(__func__, "Released %s @ %x - RefCnt = %d", "DirectInput", dinput, IUnknown_Release(dinput));
@@ -516,8 +519,8 @@ void DXInitKeyboard(HWND hwnd, HINSTANCE hinstance) {
 	} else
 		Log(__func__, "%s Attempt To Release NULL Ptr", "DirectInput");
 
-	DXAttempt(IDirectInput2_CreateDevice(G_dxptr->lpDirectInput,&GUID_SysKeyboard, &Keyboard, 0));
-	IUnknown_QueryInterface(Keyboard,&DIDGUID, (void**)&G_dxptr->Keyboard);
+	DXAttempt(IDirectInput2_CreateDevice(G_dxptr->lpDirectInput, &GUID_SysKeyboard, &Keyboard, 0));
+	IUnknown_QueryInterface(Keyboard, &DIDGUID, (void**)&G_dxptr->Keyboard);
 
 	if(Keyboard) {
 		Log(__func__, "Released %s @ %x - RefCnt = %d", "Keyboard", Keyboard, IUnknown_Release(Keyboard));
@@ -525,8 +528,8 @@ void DXInitKeyboard(HWND hwnd, HINSTANCE hinstance) {
 	} else
 		Log(__func__, "%s Attempt To Release NULL Ptr", "Keyboard");
 
-	DXAttempt(IDirectInputDevice_SetCooperativeLevel(G_dxptr->Keyboard,hwnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND));
-	DXAttempt(IDirectInputDevice_SetDataFormat(G_dxptr->Keyboard,&c_dfDIKeyboard));
+	DXAttempt(IDirectInputDevice_SetCooperativeLevel(G_dxptr->Keyboard, hwnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND));
+	DXAttempt(IDirectInputDevice_SetDataFormat(G_dxptr->Keyboard, &c_dfDIKeyboard));
 	DXAttempt(IDirectInputDevice_Acquire(G_dxptr->Keyboard));
 	memset(keymap, 0, sizeof(keymap));
 	memset(keymap2, 0, sizeof(keymap2));
@@ -534,7 +537,7 @@ void DXInitKeyboard(HWND hwnd, HINSTANCE hinstance) {
 
 void DXSaveScreen(IDirectDrawSurface4* surf, const char* name) {
 	FILE* file;
-	DDSURFACEDESC2 desc = {0};
+	DDSURFACEDESC2 desc = { 0 };
 	short* pSurf;
 	short* pDest;
 	char* pM;
@@ -544,8 +547,8 @@ void DXSaveScreen(IDirectDrawSurface4* surf, const char* name) {
 	char buf[16];
 
 	desc.dwSize = sizeof(DDSURFACEDESC2);
-	DXAttempt(IDirectDrawSurface4_GetSurfaceDesc(surf,&desc));
-	DXAttempt(IDirectDrawSurface4_Lock(surf,0, &desc, DDLOCK_WAIT, 0));
+	DXAttempt(IDirectDrawSurface4_GetSurfaceDesc(surf, &desc));
+	DXAttempt(IDirectDrawSurface4_Lock(surf, 0, &desc, DDLOCK_WAIT, 0));
 	pSurf = (short*)desc.lpSurface;
 	sprintf(buf, "%s%04ld.tga", name, num);
 	num++;
@@ -555,7 +558,7 @@ void DXSaveScreen(IDirectDrawSurface4* surf, const char* name) {
 		*(short*)&tga_header[12] = (short)desc.dwWidth;
 		*(short*)&tga_header[14] = (short)desc.dwHeight;
 		fwrite(tga_header, sizeof(tga_header), 1, file);
-		pM = (char*)calloc(2 * desc.dwWidth * desc.dwHeight,1);
+		pM = (char*)calloc(2 * desc.dwWidth * desc.dwHeight, 1);
 		pDest = (short*)pM;
 		pSurf += desc.dwHeight * (desc.lPitch / 2);
 
@@ -586,7 +589,7 @@ void DXSaveScreen(IDirectDrawSurface4* surf, const char* name) {
 		}
 	}
 
-	DXAttempt(IDirectDrawSurface4_Unlock(surf,0));
+	DXAttempt(IDirectDrawSurface4_Unlock(surf, 0));
 }
 
 void DXClose() {
@@ -645,7 +648,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 	HWND desktop;
 	DEVMODE dev;
 	HDC hDC;
-	DDSURFACEDESC2 desc = {0};
+	DDSURFACEDESC2 desc = { 0 };
 	RECT r;
 	long flag, CoopLevel;
 
@@ -696,7 +699,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 		ChangeDisplaySettings(&dev, 0);
 	}
 
-	desc = (DDSURFACEDESC2){0};
+	desc = (DDSURFACEDESC2){ 0 };
 	desc.dwSize = sizeof(DDSURFACEDESC2);
 
 	if(Flags & DXF_FULLSCREEN) {
@@ -720,7 +723,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 		if(Flags & DXF_HWR) {
 			Log(__func__, "Get Attached Back Buffer");
 			desc.ddsCaps.dwCaps = DDSCAPS_BACKBUFFER;
-			IDirectDrawSurface4_GetAttachedSurface(G_dxptr->lpPrimaryBuffer,&desc.ddsCaps, &G_dxptr->lpBackBuffer);
+			IDirectDrawSurface4_GetAttachedSurface(G_dxptr->lpPrimaryBuffer, &desc.ddsCaps, &G_dxptr->lpBackBuffer);
 		} else
 			G_dxptr->lpBackBuffer = G_dxptr->lpPrimaryBuffer;
 
@@ -755,13 +758,13 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 			return 0;
 		}
 
-		if(DXAttempt(IDirectDraw4_CreateClipper(G_dxptr->lpDD,0, &clipper, 0)) != DD_OK) {
+		if(DXAttempt(IDirectDraw4_CreateClipper(G_dxptr->lpDD, 0, &clipper, 0)) != DD_OK) {
 			DXClose();
 			return 0;
 		}
 
-		DXAttempt(IDirectDrawClipper_SetHWnd(clipper,0, hWnd));
-		DXAttempt(IDirectDrawSurface4_SetClipper(G_dxptr->lpPrimaryBuffer,clipper));
+		DXAttempt(IDirectDrawClipper_SetHWnd(clipper, 0, hWnd));
+		DXAttempt(IDirectDrawSurface4_SetClipper(G_dxptr->lpPrimaryBuffer, clipper));
 
 		if(clipper) {
 			Log(__func__, "Released %s @ %x - RefCnt = %d", "Clipper", clipper, IUnknown_Release(clipper));
@@ -774,7 +777,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 		desc.dwHeight = G_dxptr->dwRenderHeight;
 		desc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_3DDEVICE;
 
-		if(DXAttempt(IDirectDraw4_CreateSurface(G_dxptr->lpDD,&desc, &G_dxptr->lpBackBuffer, 0)) != DD_OK) {
+		if(DXAttempt(IDirectDraw4_CreateSurface(G_dxptr->lpDD, &desc, &G_dxptr->lpBackBuffer, 0)) != DD_OK) {
 			DXClose();
 			return 0;
 		}
@@ -782,7 +785,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 
 	if(Flags & DXF_ZBUFFER && Flags & DXF_HWR) {
 		Log(__func__, "Creating ZBuffer");
-		desc = (DDSURFACEDESC2){0};
+		desc = (DDSURFACEDESC2){ 0 };
 		desc.dwSize = sizeof(DDSURFACEDESC2);
 		desc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
 		desc.ddsCaps.dwCaps = DDSCAPS_ZBUFFER | DDSCAPS_VIDEOMEMORY;
@@ -790,12 +793,12 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 		desc.dwHeight = G_dxptr->dwRenderHeight;
 		memcpy(&desc.ddpfPixelFormat, &G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].ZBufferInfos->ddpf, sizeof(DDPIXELFORMAT));
 
-		if(DXAttempt(IDirectDraw4_CreateSurface(G_dxptr->lpDD,&desc, &G_dxptr->lpZBuffer, 0)) != DD_OK) {
+		if(DXAttempt(IDirectDraw4_CreateSurface(G_dxptr->lpDD, &desc, &G_dxptr->lpZBuffer, 0)) != DD_OK) {
 			DXClose();
 			return 0;
 		}
 
-		DXAttempt(IDirectDrawSurface4_AddAttachedSurface(G_dxptr->lpBackBuffer,G_dxptr->lpZBuffer));
+		DXAttempt(IDirectDrawSurface4_AddAttachedSurface(G_dxptr->lpBackBuffer, G_dxptr->lpZBuffer));
 		Log(__func__, "ZBuffer Created %x", G_dxptr->lpZBuffer);
 	}
 
@@ -811,7 +814,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 		return 0;
 	}
 
-	DXAttempt(IDirect3DDevice3_SetRenderTarget(G_dxptr->lpD3DDevice,G_dxptr->lpBackBuffer, 0));
+	DXAttempt(IDirect3DDevice3_SetRenderTarget(G_dxptr->lpD3DDevice, G_dxptr->lpBackBuffer, 0));
 	return 1;
 }
 
@@ -906,7 +909,7 @@ HRESULT WINAPI DXEnumDirect3D(LPGUID lpGuid, LPSTR lpDeviceDescription, LPSTR lp
 	}
 
 	Log(__func__, "Enumerate Texture Formats");
-	desc = (DDSURFACEDESC2){0};
+	desc = (DDSURFACEDESC2){ 0 };
 	desc.dwSize = sizeof(DDSURFACEDESC2);
 	desc.dwFlags = DDSD_CAPS;
 	desc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_3DDEVICE;
@@ -939,7 +942,7 @@ HRESULT WINAPI DXEnumDirect3D(LPGUID lpGuid, LPSTR lpDeviceDescription, LPSTR lp
 		{
 			device->nTextureInfos = 0;
 			Log(__func__, "DXEnumTextureFormats");
-			DXAttempt(IDirect3DDevice3_EnumTextureFormats(d3dDevice,&DXEnumTextureFormats, (void*)device));
+			DXAttempt(IDirect3DDevice3_EnumTextureFormats(d3dDevice, &DXEnumTextureFormats, (void*)device));
 
 			if(d3dDevice) {
 				Log(__func__, "Released %s @ %x - RefCnt = %d", "D3DDevice", d3dDevice, IUnknown_Release(d3dDevice));
@@ -958,7 +961,7 @@ HRESULT WINAPI DXEnumDirect3D(LPGUID lpGuid, LPSTR lpDeviceDescription, LPSTR lp
 	DXSetCooperativeLevel(G_ddraw, G_hwnd, DDSCL_NORMAL);
 	Log(__func__, "Enumerating ZBuffer Formats");
 	Log(__func__, "DXEnumZBufferFormats");
-	DXAttempt(IDirect3D3_EnumZBufferFormats(G_d3d,&device->Guid, &DXEnumZBufferFormats, (void*)device));
+	DXAttempt(IDirect3D3_EnumZBufferFormats(G_d3d, &device->Guid, &DXEnumZBufferFormats, (void*)device));
 	ddi->nD3DDevices++;
 	return D3DENUMRET_OK;
 }

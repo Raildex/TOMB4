@@ -1,53 +1,54 @@
 
 #include "specific/output.h"
-#include "specific/windows/d3dmatrix.h"
-#include "game/objects.h"
-#include "specific/function_table.h"
-#include "specific/lighting.h"
-#include "specific/windows/dxshell.h"
-#include "specific/drawroom.h"
-#include "specific/3dmath.h"
-#include "specific/polyinsert.h"
-#include "game/effects.h"
-#include "game/draw.h"
-#include "specific/specificfx.h"
-#include "specific/function_stubs.h"
-#include "game/newinv.h"
-#include <time.h>
-#include "specific/windows/winmain.h"
-#include "game/tomb4fx.h"
-#include "game/delstuff.h"
 #include "game/camera.h"
-#include "specific/gamemain.h"
-#include "specific/loadsave.h"
-#include "specific/file.h"
-#include "game/lara.h"
-#include "game/deltapak.h"
-#include "game/health.h"
 #include "game/control.h"
-#include "game/text.h"
-#include "game/gameflow.h"
-#include "game/spotcam.h"
-#include "game/effect2.h"
-#include "game/meshdata.h"
-#include "game/texturestruct.h"
-#include "game/spritestruct.h"
-#include <d3dtypes.h>
-#include "game/gfleveloptions.h"
-#include "game/roominfo.h"
-#include "game/roomflags.h"
-#include "game/iteminfo.h"
-#include "game/dynamic.h"
-#include "game/objectinfo.h"
-#include "game/fontflags.h"
-#include "specific/windows/dxflags.h"
-#include "game/larainfo.h"
-#include "game/languages.h"
-#include "specific/timing.h"
+#include "game/delstuff.h"
+#include "game/deltapak.h"
 #include "game/displaypu.h"
-#include <math.h>
-#include <wingdi.h>
+#include "game/draw.h"
+#include "game/dynamic.h"
+#include "game/effect2.h"
+#include "game/effects.h"
+#include "game/fontflags.h"
+#include "game/gameflow.h"
+#include "game/gfleveloptions.h"
+#include "game/health.h"
+#include "game/iteminfo.h"
+#include "game/languages.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/meshdata.h"
+#include "game/newinv.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/spotcam.h"
+#include "game/spritestruct.h"
+#include "game/text.h"
+#include "game/texturestruct.h"
+#include "game/tomb4fx.h"
+#include "specific/3dmath.h"
+#include "specific/drawroom.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
+#include "specific/function_table.h"
+#include "specific/gamemain.h"
+#include "specific/lighting.h"
+#include "specific/loadsave.h"
+#include "specific/polyinsert.h"
+#include "specific/specificfx.h"
+#include "specific/timing.h"
+#include "specific/windows/d3dmatrix.h"
+#include "specific/windows/dxflags.h"
+#include "specific/windows/dxshell.h"
+#include "specific/windows/winmain.h"
+#include <d3dtypes.h>
+#include <math.h>
+#include <time.h>
+#include <wingdi.h>
+
 
 _D3DTLVERTEX SkinVerts[40][12];
 short SkinClip[40][12];
@@ -111,10 +112,10 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 				val = point->vec.x * n.x + point->vec.y * n.y + point->vec.z * n.z;
 
 				if(val > 0) {
-					#if defined(HALF_LAMBERT)
+#if defined(HALF_LAMBERT)
 					val = val * 0.5 + 0.5;
 					val *= val;
-					#endif
+#endif
 					val *= point->rad;
 					fR += val * point->r;
 					fG += val * point->g;
@@ -127,10 +128,10 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 				val = point->vec.x * n.x + point->vec.y * n.y + point->vec.z * n.z;
 
 				if(val > 0) {
-					#if defined(HALF_LAMBERT)
+#if defined(HALF_LAMBERT)
 					val = val * 0.5 + 0.5;
 					val *= val;
-					#endif
+#endif
 					val *= point->rad;
 					fR += val * point->r;
 					fG += val * point->g;
@@ -143,10 +144,10 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 				val = sun->vec.x * n.x + sun->vec.y * n.y + sun->vec.z * n.z;
 
 				if(val > 0) {
-					#if defined(HALF_LAMBERT)
+#if defined(HALF_LAMBERT)
 					val = val * 0.5 + 0.5;
 					val *= val;
-					#endif
+#endif
 					if(!InventoryActive)
 						val *= 0.75F;
 					else
@@ -245,7 +246,7 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 		MyVertexBuffer[i].sz = vPos.z;
 
 		if(current_item) {
-			if(!(GetRoom(currentLevel,current_item->room_number)->flags & ROOM_UNDERWATER) && camera.underwater) {
+			if(!(GetRoom(currentLevel, current_item->room_number)->flags & ROOM_UNDERWATER) && camera.underwater) {
 				cR = (cR * water_color_R) >> 8;
 				cG = (cG * water_color_G) >> 8;
 				cB = (cB * water_color_B) >> 8;
@@ -434,7 +435,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 		MyVertexBuffer[i].sy = vPos.y;
 		MyVertexBuffer[i].sz = vPos.z;
 
-		if(!(GetRoom(currentLevel,current_item->room_number)->flags & ROOM_UNDERWATER) && camera.underwater) {
+		if(!(GetRoom(currentLevel, current_item->room_number)->flags & ROOM_UNDERWATER) && camera.underwater) {
 			cR = (cR * water_color_R) >> 8;
 			cG = (cG * water_color_G) >> 8;
 			cB = (cB * water_color_B) >> 8;
@@ -755,10 +756,10 @@ void phd_PutPolygons(short* objptr, long clip) {
 	if(!objptr)
 		return;
 
-	if(objptr == GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_DOUBLE)->mesh_index) || objptr == GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_DOUBLE)->mesh_index + 2))
-		envmap_sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,SKY_GRAPHICS)->mesh_index);
+	if(objptr == GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_DOUBLE)->mesh_index) || objptr == GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_DOUBLE)->mesh_index + 2))
+		envmap_sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, SKY_GRAPHICS)->mesh_index);
 	else
-		envmap_sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11);
+		envmap_sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 11);
 
 	ResetLighting();
 
@@ -787,7 +788,7 @@ void phd_PutPolygons(short* objptr, long clip) {
 	quad = mesh->gt4;
 
 	for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-		pTex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
+		pTex = GetTextInfo(currentLevel, quad[4] & 0x7FFF);
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
@@ -870,7 +871,7 @@ void phd_PutPolygons(short* objptr, long clip) {
 	tri = mesh->gt3;
 
 	for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-		pTex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
+		pTex = GetTextInfo(currentLevel, tri[3] & 0x7FFF);
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
@@ -971,7 +972,7 @@ void phd_PutPolygons_train(short* objptr, long x) {
 	quad = mesh->gt4;
 
 	for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-		pTex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
+		pTex = GetTextInfo(currentLevel, quad[4] & 0x7FFF);
 		drawbak = pTex->drawtype;
 
 		if(quad[5] & 1)
@@ -988,7 +989,7 @@ void phd_PutPolygons_train(short* objptr, long x) {
 	tri = mesh->gt3;
 
 	for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-		pTex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
+		pTex = GetTextInfo(currentLevel, tri[3] & 0x7FFF);
 
 		drawbak = pTex->drawtype;
 
@@ -1015,7 +1016,7 @@ void RenderLoadPic(long unused) {
 	camera.target.pos.y = gfLoadTarget.y;
 	camera.target.pos.z = gfLoadTarget.z;
 	camera.pos.room_number = gfLoadRoom;
-	camera.underwater = GetRoom(currentLevel,gfLoadRoom)->flags & ROOM_UNDERWATER;
+	camera.underwater = GetRoom(currentLevel, gfLoadRoom)->flags & ROOM_UNDERWATER;
 
 	if(gfLoadRoom == 255)
 		return;
@@ -1077,7 +1078,7 @@ void S_InitialisePolyList() {
 		col = 0;
 
 	if(App.dx.Flags & DXF_HWR)
-		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport,1, &rect, D3DCLEAR_TARGET, col, 1.0F, 0));
+		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport, 1, &rect, D3DCLEAR_TARGET, col, 1.0F, 0));
 
 	_BeginScene();
 	InitBuckets();
@@ -1102,7 +1103,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	bWaterEffect = 0;
 	SetD3DViewMatrix();
 	mesh = (MESH_DATA*)objptr;
-	envmap_sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11);
+	envmap_sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 11);
 
 	ResetLighting();
 	ambientR = CLRR(color);
@@ -1125,7 +1126,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	quad = mesh->gt4;
 
 	for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-		pTex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
+		pTex = GetTextInfo(currentLevel, quad[4] & 0x7FFF);
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
@@ -1203,7 +1204,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	tri = mesh->gt3;
 
 	for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-		pTex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
+		pTex = GetTextInfo(currentLevel, tri[3] & 0x7FFF);
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
@@ -1291,7 +1292,7 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus) {
 	quad = mesh->gt4;
 
 	for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-		pTex = GetTextInfo(currentLevel,quad[4] & 0x7FFF);
+		pTex = GetTextInfo(currentLevel, quad[4] & 0x7FFF);
 		drawbak = pTex->drawtype;
 
 		if(quad[5] & 1) {
@@ -1336,7 +1337,7 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus) {
 	tri = mesh->gt3;
 
 	for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-		pTex = GetTextInfo(currentLevel,tri[3] & 0x7FFF);
+		pTex = GetTextInfo(currentLevel, tri[3] & 0x7FFF);
 		drawbak = pTex->drawtype;
 		pTex->drawtype = 4;
 		AddTriSorted(MyVertexBuffer, tri[0], tri[1], tri[2], pTex, 0);
@@ -1478,7 +1479,7 @@ HRESULT DDCopyBitmap(IDirectDrawSurface4* surf, HBITMAP hbm, long x, long y, lon
 
 	desc.dwSize = sizeof(DDSURFACEDESC2);
 	desc.dwFlags = DDSD_WIDTH | DDSD_HEIGHT;
-	IDirectDrawSurface4_GetSurfaceDesc(surf,&desc);
+	IDirectDrawSurface4_GetSurfaceDesc(surf, &desc);
 	l = 0;
 	t = 0;
 
@@ -1491,11 +1492,11 @@ HRESULT DDCopyBitmap(IDirectDrawSurface4* surf, HBITMAP hbm, long x, long y, lon
 		}
 	}
 
-	result = IDirectDrawSurface4_GetDC(surf,&hdc2);
+	result = IDirectDrawSurface4_GetDC(surf, &hdc2);
 
 	if(!result) {
 		StretchBlt(hdc2, l, t, desc.dwWidth, desc.dwHeight, hdc, x, y, dx, dy, SRCCOPY);
-		IDirectDrawSurface4_ReleaseDC(surf,hdc2);
+		IDirectDrawSurface4_ReleaseDC(surf, hdc2);
 	}
 
 	DeleteDC(hdc);
@@ -1588,7 +1589,7 @@ void S_AnimateTextures(long n) {
 
 	for(comp += n; comp > 5; comp -= 5) {
 		nRanges = *GetAnimTextureRange(currentLevel, 0);
-		range = GetAnimTextureRange(currentLevel,1);
+		range = GetAnimTextureRange(currentLevel, 1);
 
 		for(int i = 0; i < nRanges; i++) {
 			nRangeFrames = *range++;
@@ -1597,15 +1598,16 @@ void S_AnimateTextures(long n) {
 				if(nRangeFrames > 0)
 					range += nRangeFrames;
 			} else {
-				tex2 = *GetTextInfo(currentLevel,*range);;
+				tex2 = *GetTextInfo(currentLevel, *range);
+				;
 
 				while(nRangeFrames > 0) {
-					*GetTextInfo(currentLevel,range[0]) = *GetTextInfo(currentLevel,range[1]);
+					*GetTextInfo(currentLevel, range[0]) = *GetTextInfo(currentLevel, range[1]);
 					range++;
 					nRangeFrames--;
 				}
 
-				*GetTextInfo(currentLevel,*range) = tex2;
+				*GetTextInfo(currentLevel, *range) = tex2;
 			}
 
 			range++;
@@ -1613,14 +1615,14 @@ void S_AnimateTextures(long n) {
 	}
 
 	if(gfUVRotate) {
-		range = GetAnimTextureRange(currentLevel,*GetAnimTextureRange(currentLevel,1) );
+		range = GetAnimTextureRange(currentLevel, *GetAnimTextureRange(currentLevel, 1));
 		AnimatingTexturesVOffset = (AnimatingTexturesVOffset - gfUVRotate * (n >> 1)) & 0x1F;
 
 		for(int i = 0; i < GetNumAnimUVRanges(currentLevel); i++) {
 			nRangeFrames = *range++;
 
 			while(nRangeFrames >= 0) {
-				tex = GetTextInfo(currentLevel,range[0]);
+				tex = GetTextInfo(currentLevel, range[0]);
 				voff = AnimatingTexturesVOffset * (1.0F / 256.0F);
 				tex->v1 = voff + AnimatingTexturesV[i][nRangeFrames][0];
 				tex->v2 = voff + AnimatingTexturesV[i][nRangeFrames][0];
@@ -1659,9 +1661,9 @@ void S_OutputPolyList() {
 	nPolys = 0;
 	nClippedPolys = 0;
 	DrawPrimitiveCnt = 0;
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
 
 	if(resChangeCounter) {
 		WinDisplayString(8, App.dx.dwRenderHeight - 8, (char*)"%dx%d", App.dx.dwRenderWidth, App.dx.dwRenderHeight);
@@ -1689,7 +1691,7 @@ void S_OutputPolyList() {
 		r.y1 = App.dx.rViewport.top;
 		r.x2 = App.dx.rViewport.left + App.dx.rViewport.right;
 		r.y2 = App.dx.rViewport.top + App.dx.rViewport.bottom;
-		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport,1, &r, D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
+		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport, 1, &r, D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
 	}
 
 	if(BinocularRange && !MonoScreenOn) {

@@ -1,32 +1,33 @@
 
 #include "specific/polyinsert.h"
-#include "game/levelinfo.h"
-#include "specific/windows/dxshell.h"
-#include "specific/drawroom.h"
-#include "specific/haltexture.h"
-#include "specific/output.h"
-#include "specific/windows/d3dmatrix.h"
-#include "specific/function_stubs.h"
-#include "game/tomb4fx.h"
-#include "specific/function_table.h"
-#include "specific/windows/clipping.h"
-#include "game/newinv.h"
 #include "game/camera.h"
 #include "game/effects.h"
-#include "specific/3dmath.h"
-#include "specific/windows/winmain.h"
-#include "specific/gamemain.h"
-#include "game/gameflow.h"
 #include "game/fogbulbstruct.h"
-#include "game/sortlist.h"
-#include "specific/windows/d3dtlbumpvertex.h"
-#include "global/types.h"
 #include "game/fvector.h"
+#include "game/gameflow.h"
 #include "game/gfleveloptions.h"
+#include "game/levelinfo.h"
+#include "game/newinv.h"
+#include "game/sortlist.h"
 #include "game/texturestruct.h"
+#include "game/tomb4fx.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/drawroom.h"
+#include "specific/function_stubs.h"
+#include "specific/function_table.h"
+#include "specific/gamemain.h"
+#include "specific/haltexture.h"
+#include "specific/output.h"
+#include "specific/windows/clipping.h"
+#include "specific/windows/d3dmatrix.h"
+#include "specific/windows/d3dtlbumpvertex.h"
+#include "specific/windows/dxshell.h"
+#include "specific/windows/texturebucket.h"
+#include "specific/windows/winmain.h"
 #include <d3dtypes.h>
 #include <math.h>
-#include "specific/windows/texturebucket.h"
+
 
 extern TEXTUREBUCKET Bucket[20];
 D3DTLBUMPVERTEX XYUVClipperBuffer[20];
@@ -57,11 +58,11 @@ static long rgbmask = 0xFFFFFFFF;
 static long zero = 0;
 
 void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, short type) {
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_TEXTUREMAG, D3DFILTER_LINEARMIPLINEAR);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_TEXTUREMIN, D3DFILTER_LINEARMIPLINEAR);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ANISOTROPY, 16);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_TEXTUREMAG, D3DFILTER_LINEARMIPLINEAR);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_TEXTUREMIN, D3DFILTER_LINEARMIPLINEAR);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ANISOTROPY, 16);
 	D3DVALUE bias = 1.0f;
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_MIPMAPLODBIAS, *(DWORD*)&bias);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_MIPMAPLODBIAS, *(DWORD*)&bias);
 	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MAXANISOTROPY, 8);
 	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MIPFILTER, D3DTFP_LINEAR);
 	IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_MAGFILTER, D3DTFG_LINEAR);
@@ -70,70 +71,70 @@ void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, sho
 	case 0:
 
 		if(App.dx.lpZBuffer)
-			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 1);
+			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 1);
 
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHATESTENABLE, 0);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 0);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel,texture)->dxTex));
-		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHATESTENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, texture)->dxTex));
+		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 1);
 		break;
 
 	case 1:
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHATESTENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel,texture)->dxTex));
-		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, texture)->dxTex));
+		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
 		break;
 
 	case 2:
 
 		if(App.dx.lpZBuffer)
-			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 0);
+			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 0);
 
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHATESTENABLE, 0);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_ONE);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SPECULARENABLE, 0);
-		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel,texture)->dxTex));
-		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SPECULARENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_ONE);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SPECULARENABLE, 0);
+		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, texture)->dxTex));
+		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SPECULARENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		break;
 
 	case 3:
 
 		if(App.dx.lpZBuffer)
-			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 0);
+			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 0);
 
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHATESTENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel,texture)->dxTex));
-		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, texture)->dxTex));
+		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 		break;
 
 	case 4:
-		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel,texture)->dxTex));
+		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, texture)->dxTex));
 
 		if(App.dx.lpZBuffer) {
-			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZENABLE, 0);
-			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 0);
+			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZENABLE, 0);
+			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 0);
 		}
 
-		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
 
 		if(App.dx.lpZBuffer) {
-			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 1);
-			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZENABLE, 1);
+			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 1);
+			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZENABLE, 1);
 		}
 
 		break;
@@ -141,43 +142,43 @@ void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, sho
 	case 5:
 
 		if(App.dx.lpZBuffer)
-			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 0);
+			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 0);
 
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHATESTENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_ZERO);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCCOLOR);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLOROP, D3DTOP_MODULATE4X);
-		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel,texture)->dxTex));
-		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_ZERO);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCCOLOR);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLOROP, D3DTOP_MODULATE4X);
+		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, texture)->dxTex));
+		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		break;
 
 	case 6:
 
 		if(App.dx.lpZBuffer)
-			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 0);
+			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 0);
 
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHATESTENABLE, 0);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_ONE);
-		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, NULL));
-		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_LINELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_ONE);
+		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, NULL));
+		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_LINELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
 		break;
 
 	case 7:
 
 		if(App.dx.lpZBuffer)
-			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 1);
+			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 1);
 
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHATESTENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel,texture)->dxTex));
-		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, texture)->dxTex));
+		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, info, num_verts, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 		break;
 	}
 
@@ -197,10 +198,10 @@ void DrawSortList() {
 	if(!SortCount)
 		return;
 
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHATESTENABLE, 1);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 1);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 1);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 1);
 
 	if(!App.dx.lpZBuffer) {
 		for(int i = 0; i < SortCount; i++) {
@@ -208,12 +209,12 @@ void DrawSortList() {
 			vtx = (D3DTLBUMPVERTEX*)(pSort + 1);
 
 			if(pSort->polytype == 4)
-				IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_TEXTUREPERSPECTIVE, 0);
+				IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_TEXTUREPERSPECTIVE, 0);
 
 			HWR_DrawSortList(vtx, pSort->nVtx, pSort->tpage, pSort->drawtype);
 
 			if(pSort->polytype == 4)
-				IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_TEXTUREPERSPECTIVE, 1);
+				IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_TEXTUREPERSPECTIVE, 1);
 		}
 	} else {
 		pSort = SortList[0];
@@ -307,9 +308,9 @@ void DrawSortList() {
 			HWR_DrawSortList(bVtxbak, nVtx, tpage, drawtype);
 	}
 
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ZWRITEENABLE, 1);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHATESTENABLE, 0);
-	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 1);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 0);
+	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
 	InitBuckets();
 }
 

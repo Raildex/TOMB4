@@ -1,22 +1,23 @@
 
 #include "game/laraclmb.h"
-#include "game/lara.h"
-#include "game/lara_states.h"
-#include "game/laramisc.h"
-#include "game/control.h"
+#include "game/animstruct.h"
 #include "game/camera.h"
-#include "specific/input.h"
+#include "game/collinfo.h"
+#include "game/control.h"
+#include "game/floortypes.h"
 #include "game/inputbuttons.h"
 #include "game/iteminfo.h"
-#include "game/larainfo.h"
-#include "game/collinfo.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
 #include "game/laragunstatus.h"
-#include "game/animstruct.h"
-#include "game/floortypes.h"
+#include "game/larainfo.h"
+#include "game/laramisc.h"
+#include "game/levelinfo.h"
 #include "game/quadrantnames.h"
 #include "global/types.h"
+#include "specific/input.h"
 #include <stdlib.h>
-#include "game/levelinfo.h"
+
 
 static short LeftIntRightExtTab[4] = { 2048, 256, 512, 1024 };
 static short LeftExtRightIntTab[4] = { 512, 1024, 2048, 256 };
@@ -182,7 +183,7 @@ void lara_col_climbing(ITEM_INFO* item, COLL_INFO* coll) {
 	if(item->anim_number != ANIM_CLIMBING)
 		return;
 
-	frame = item->frame_number - GetAnim(currentLevel,ANIM_CLIMBING)->frame_base;
+	frame = item->frame_number - GetAnim(currentLevel, ANIM_CLIMBING)->frame_base;
 
 	if(!frame)
 		yshift = 0;
@@ -228,7 +229,7 @@ void lara_col_climbdown(ITEM_INFO* item, COLL_INFO* coll) {
 	if(item->anim_number != ANIM_CLIMBDOWN)
 		return;
 
-	frame = item->frame_number - GetAnim(currentLevel,ANIM_CLIMBDOWN)->frame_base;
+	frame = item->frame_number - GetAnim(currentLevel, ANIM_CLIMBDOWN)->frame_base;
 
 	if(!frame)
 		yshift = 0;
@@ -250,7 +251,7 @@ void lara_col_climbdown(ITEM_INFO* item, COLL_INFO* coll) {
 			AnimateLara(item);
 		} else if(result_r == -1 || result_l == -1) {
 			item->anim_number = ANIM_CLIMBSTNC;
-			item->frame_number = GetAnim(currentLevel,ANIM_CLIMBSTNC)->frame_base;
+			item->frame_number = GetAnim(currentLevel, ANIM_CLIMBSTNC)->frame_base;
 			item->current_anim_state = AS_CLIMBSTNC;
 			item->goal_anim_state = AS_HANG;
 			AnimateLara(item);
@@ -548,7 +549,7 @@ long LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll) {
 		lara.head_x_rot = 0;
 		lara.head_y_rot = 0;
 		item->anim_number = ANIM_FALLDOWN;
-		item->frame_number = GetAnim(currentLevel,ANIM_FALLDOWN)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_FALLDOWN)->frame_base;
 		item->current_anim_state = AS_FORWARDJUMP;
 		item->goal_anim_state = AS_FORWARDJUMP;
 		item->speed = 2;
@@ -762,7 +763,7 @@ void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, long result, long sh
 
 		if(coll->old_anim_state != AS_CLIMBSTNC) {
 			item->anim_number = ANIM_CLIMBSTNC;
-			item->frame_number = GetAnim(currentLevel,ANIM_CLIMBSTNC)->frame_base;
+			item->frame_number = GetAnim(currentLevel, ANIM_CLIMBSTNC)->frame_base;
 			return;
 		}
 
@@ -772,12 +773,12 @@ void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, long result, long sh
 			if(flag) {
 				if(flag > 0) {
 					item->anim_number = ANIM_EXTCLIMBL;
-					item->frame_number = GetAnim(currentLevel,ANIM_EXTCLIMBL)->frame_base;
+					item->frame_number = GetAnim(currentLevel, ANIM_EXTCLIMBL)->frame_base;
 					item->current_anim_state = AS_CORNEREXTL;
 					item->goal_anim_state = AS_CORNEREXTL;
 				} else {
 					item->anim_number = ANIM_INTCLIMBL;
-					item->frame_number = GetAnim(currentLevel,ANIM_INTCLIMBL)->frame_base;
+					item->frame_number = GetAnim(currentLevel, ANIM_INTCLIMBL)->frame_base;
 					item->current_anim_state = AS_CORNERINTL;
 					item->goal_anim_state = AS_CORNERINTL;
 				}
@@ -790,12 +791,12 @@ void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, long result, long sh
 			if(flag) {
 				if(flag > 0) {
 					item->anim_number = ANIM_EXTCLIMBR;
-					item->frame_number = GetAnim(currentLevel,ANIM_EXTCLIMBR)->frame_base;
+					item->frame_number = GetAnim(currentLevel, ANIM_EXTCLIMBR)->frame_base;
 					item->current_anim_state = AS_CORNEREXTR;
 					item->goal_anim_state = AS_CORNEREXTR;
 				} else {
 					item->anim_number = ANIM_INTCLIMBR;
-					item->frame_number = GetAnim(currentLevel,ANIM_INTCLIMBR)->frame_base;
+					item->frame_number = GetAnim(currentLevel, ANIM_INTCLIMBR)->frame_base;
 					item->current_anim_state = AS_CORNERINTR;
 					item->goal_anim_state = AS_CORNERINTR;
 				}

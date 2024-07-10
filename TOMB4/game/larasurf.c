@@ -1,28 +1,29 @@
 
 #include "game/larasurf.h"
-#include "game/lara_states.h"
-#include "game/lara.h"
-#include "game/laraswim.h"
-#include "game/laramisc.h"
-#include "game/collide.h"
-#include "game/larafire.h"
-#include "game/control.h"
-#include "specific/3dmath.h"
+#include "game/animstruct.h"
 #include "game/camera.h"
-#include "specific/input.h"
+#include "game/collide.h"
+#include "game/collisiontypes.h"
+#include "game/control.h"
+#include "game/heighttypes.h"
 #include "game/inputbuttons.h"
 #include "game/iteminfo.h"
-#include "game/larainfo.h"
-#include "game/larawaterstatus.h"
-#include "game/animstruct.h"
-#include "global/types.h"
-#include "game/laragunstatus.h"
-#include "game/weapontypes.h"
-#include "game/heighttypes.h"
-#include "game/collisiontypes.h"
-#include <stdlib.h>
-#include "game/levelinfo.h"
 #include "game/items.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/larafire.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
+#include "game/laramisc.h"
+#include "game/laraswim.h"
+#include "game/larawaterstatus.h"
+#include "game/levelinfo.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/input.h"
+#include <stdlib.h>
+
 void lara_as_surfswim(ITEM_INFO* item, COLL_INFO* coll) {
 	if(item->hit_points <= 0) {
 		item->goal_anim_state = AS_UWDEATH;
@@ -178,7 +179,7 @@ void lara_col_surftread(ITEM_INFO* item, COLL_INFO* coll) {
 		item->current_anim_state = AS_DIVE;
 		item->anim_number = ANIM_SURFDIVE;
 		item->pos.x_rot = -8190;
-		item->frame_number = GetAnim(currentLevel,ANIM_SURFDIVE)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_SURFDIVE)->frame_base;
 		item->fallspeed = 80;
 		lara.water_status = LW_UNDERWATER;
 	}
@@ -286,13 +287,13 @@ long LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(hdif < -128) {
 		item->anim_number = ANIM_SURFCLIMB;
-		item->frame_number = GetAnim(currentLevel,ANIM_SURFCLIMB)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_SURFCLIMB)->frame_base;
 	} else if(hdif < 128) {
 		item->anim_number = ANIM_SURF2STND;
-		item->frame_number = GetAnim(currentLevel,ANIM_SURF2STND)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_SURF2STND)->frame_base;
 	} else {
 		item->anim_number = ANIM_SURF2QSTND;
-		item->frame_number = GetAnim(currentLevel,ANIM_SURF2QSTND)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_SURF2QSTND)->frame_base;
 	}
 
 	item->current_anim_state = AS_WATEROUT;
@@ -314,7 +315,7 @@ long LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(coll->mid_floor < -128) {
 		item->anim_number = ANIM_SURF2WADE1;
-		item->frame_number = GetAnim(currentLevel,ANIM_SURF2WADE1)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_SURF2WADE1)->frame_base;
 		item->current_anim_state = AS_WATEROUT;
 		item->goal_anim_state = AS_STOP;
 	} else if(item->goal_anim_state == AS_SURFLEFT)
@@ -323,7 +324,7 @@ long LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll) {
 		item->goal_anim_state = AS_STEPRIGHT;
 	else {
 		item->anim_number = ANIM_WADE;
-		item->frame_number = GetAnim(currentLevel,ANIM_WADE)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_WADE)->frame_base;
 		item->current_anim_state = AS_WADE;
 		item->goal_anim_state = AS_WADE;
 	}
@@ -359,7 +360,7 @@ void LaraSurfaceCollision(ITEM_INFO* item, COLL_INFO* coll) {
 		LaraTestWaterStepOut(item, coll);
 	else {
 		item->anim_number = ANIM_SURFDIVE;
-		item->frame_number = GetAnim(currentLevel,ANIM_SURFDIVE)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_SURFDIVE)->frame_base;
 		item->current_anim_state = AS_DIVE;
 		item->goal_anim_state = AS_SWIM;
 		item->pos.x_rot = -8190;

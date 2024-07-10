@@ -1,27 +1,28 @@
 
 #include "game/deltapak.h"
-#include "game/tomb4fx.h"
-#include "game/lara_states.h"
-#include "game/items.h"
-#include "specific/audio.h"
-#include "specific/3dmath.h"
+#include "game/camera.h"
 #include "game/control.h"
-#include "game/hair.h"
 #include "game/delstuff.h"
-#include "specific/function_stubs.h"
 #include "game/draw.h"
-#include "specific/output.h"
-#include "specific/lighting.h"
-#include "game/objects.h"
-#include "game/lara2gun.h"
 #include "game/effect2.h"
 #include "game/effects.h"
-#include "game/lot.h"
-#include "game/spotcam.h"
-#include "game/camera.h"
-#include "specific/windows/winmain.h"
-#include "game/lara.h"
 #include "game/gameflow.h"
+#include "game/hair.h"
+#include "game/items.h"
+#include "game/lara.h"
+#include "game/lara2gun.h"
+#include "game/lara_states.h"
+#include "game/lot.h"
+#include "game/objects.h"
+#include "game/spotcam.h"
+#include "game/tomb4fx.h"
+#include "specific/3dmath.h"
+#include "specific/audio.h"
+#include "specific/function_stubs.h"
+#include "specific/lighting.h"
+#include "specific/output.h"
+#include "specific/windows/winmain.h"
+
 #ifdef TIMES_LEVEL
 #include "specific/function_table.h"
 #endif
@@ -35,6 +36,7 @@
 #include "game/laragunstatus.h"
 #include "game/larainfo.h"
 #include "game/laramesh.h"
+#include "game/levelinfo.h"
 #include "game/newcutscene.h"
 #include "game/nodeloadheader.h"
 #include "game/objectinfo.h"
@@ -42,7 +44,7 @@
 #include "game/roominfo.h"
 #include "game/rtdecode.h"
 #include "game/weapontypes.h"
-#include "game/levelinfo.h"
+
 
 static short frig_shadow_bbox[6] = { -165, 150, -777, 1, -87, 78 };
 static short frig_jeep_shadow_bbox[6] = { -600, 600, -777, 1, -600, 600 };
@@ -184,8 +186,8 @@ void handle_cutseq_triggering(long name) {
 					lara.request_gun_type = WEAPON_NONE;
 					lara.gun_status = LG_NO_ARMS;
 					lara.last_gun_type = WEAPON_PISTOLS;
-					lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,0)->mesh_index + 2 * LM_LHAND);
-					lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,0)->mesh_index + 2 * LM_RHAND);
+					lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, 0)->mesh_index + 2 * LM_LHAND);
+					lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, 0)->mesh_index + 2 * LM_RHAND);
 					lara.left_arm.frame_number = 0;
 					lara.right_arm.frame_number = 0;
 					lara.target_item = NO_ITEM;
@@ -193,7 +195,7 @@ void handle_cutseq_triggering(long name) {
 					lara.left_arm.lock = 0;
 					lara_item->goal_anim_state = AS_STOP;
 					lara_item->current_anim_state = AS_STOP;
-					lara_item->frame_number = GetAnim(currentLevel,ANIM_STOP)->frame_base;
+					lara_item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 					lara_item->anim_number = ANIM_STOP;
 					lara_item->speed = 0;
 					lara_item->fallspeed = 0;
@@ -494,7 +496,7 @@ void frigup_lara() {
 	lara_item->pos.x_pos = GLOBAL_cutme->orgx;
 	lara_item->pos.y_pos = GLOBAL_cutme->orgy;
 	lara_item->pos.z_pos = GLOBAL_cutme->orgz;
-	bone = GetBone(currentLevel,GetObjectInfo(currentLevel,lara_item->object_number)->bone_index);
+	bone = GetBone(currentLevel, GetObjectInfo(currentLevel, lara_item->object_number)->bone_index);
 	updateAnimFrame(actor_pnodes[0], 16, temp_rotation_buffer);
 	Rich_CalcLaraMatrices_Normal(temp_rotation_buffer, bone, 0);
 	phd_PushUnitMatrix();
@@ -526,7 +528,7 @@ void updateAnimFrame(PACKNODE* node, int flags, short* frame) {
 }
 
 void* cutseq_malloc(long size) {
-	return Allocate(currentLevel,size,1);
+	return Allocate(currentLevel, size, 1);
 }
 
 void finish_cutseq() {
@@ -550,9 +552,9 @@ void DrawCutSeqActors() {
 			n = 1;
 			updateAnimFrame(actor_pnodes[i], GLOBAL_cutme->actor_data[i].nodes + 1, temp_rotation_buffer);
 			phd_TranslateAbs(GLOBAL_cutme->orgx, GLOBAL_cutme->orgy, GLOBAL_cutme->orgz);
-			obj = GetObjectInfo(currentLevel,GLOBAL_cutme->actor_data[i].objslot);
-			bone = GetBone(currentLevel,obj->bone_index);
-			mesh = GetMeshPointer(currentLevel,obj->mesh_index);
+			obj = GetObjectInfo(currentLevel, GLOBAL_cutme->actor_data[i].objslot);
+			bone = GetBone(currentLevel, obj->bone_index);
+			mesh = GetMeshPointer(currentLevel, obj->mesh_index);
 			CalcActorLighting(&duff_item[i - 1], obj, temp_rotation_buffer);
 			phd_TranslateRel(temp_rotation_buffer[6], temp_rotation_buffer[7], temp_rotation_buffer[8]);
 			rot = &temp_rotation_buffer[9];
@@ -708,8 +710,8 @@ void do_backpack_meshswap() // optimized out, in Mac symbols.
 	short* temp;
 
 	temp = lara.mesh_ptrs[LM_TORSO];
-	lara.mesh_ptrs[LM_TORSO] = GetMesh(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_TORSO * 2);
-	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_TORSO * 2) = temp;
+	lara.mesh_ptrs[LM_TORSO] = GetMesh(currentLevel, GetObjectInfo(currentLevel, PISTOLS_ANIM)->mesh_index + LM_TORSO * 2);
+	*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, PISTOLS_ANIM)->mesh_index + LM_TORSO * 2) = temp;
 }
 
 void fifth_cutseq_control() {
@@ -1257,16 +1259,16 @@ void do_spade_meshswap() {
 	short* temp;
 
 	temp = lara.mesh_ptrs[LM_LHAND];
-	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + LM_LHAND * 2);
-	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + LM_LHAND * 2) = temp;
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, MESHSWAP1)->mesh_index + LM_LHAND * 2);
+	*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, MESHSWAP1)->mesh_index + LM_LHAND * 2) = temp;
 }
 
 void do_key_meshswap() {
 	short* temp;
 
 	temp = lara.mesh_ptrs[LM_RHAND];
-	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + LM_RHAND * 2);
-	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + LM_RHAND * 2) = temp;
+	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, MESHSWAP1)->mesh_index + LM_RHAND * 2);
+	*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, MESHSWAP1)->mesh_index + LM_RHAND * 2) = temp;
 }
 
 void cutseq_shoot_pistols(long left_or_right) {
@@ -1404,7 +1406,7 @@ void init_cutseq_actors(char* data, long resident) {
 			actor_pnodes[i] = (PACKNODE*)cutseq_malloc((pda_nodes + 1) * sizeof(PACKNODE));
 
 		InitPackNodes((NODELOADHEADER*)packed, actor_pnodes[i], packed, pda_nodes + 1);
-		*item = (ITEM_INFO){0};
+		*item = (ITEM_INFO){ 0 };
 		item->il.ambient = lara_item->il.ambient;
 		item->il.fcnt = -1;
 		item->il.room_number = -1;
@@ -1463,7 +1465,7 @@ void DelsHandyTeleportLara(long x, long y, long z, long yrot) {
 	lara_item->current_anim_state = AS_STOP;
 	lara_item->goal_anim_state = AS_STOP;
 	lara_item->anim_number = ANIM_STOP;
-	lara_item->frame_number = GetAnim(currentLevel,ANIM_STOP)->frame_base;
+	lara_item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 	lara_item->speed = 0;
 	lara_item->fallspeed = 0;
 	lara_item->gravity_status = 0;
@@ -1496,7 +1498,7 @@ void handle_lara_chatting(short* _ranges) {
 		r2 = _ranges[1];
 
 		if(r1 == -1) {
-			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + 2 * LM_HEAD);
+			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_SKIN)->mesh_index + 2 * LM_HEAD);
 			return;
 		}
 
@@ -1507,7 +1509,7 @@ void handle_lara_chatting(short* _ranges) {
 	}
 
 	if(!lara_chat_cnt)
-		lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel,GetObjectInfo(currentLevel,(GetRandomControl() & 3) + LARA_SPEECH_HEAD1)->mesh_index + 2 * LM_HEAD);
+		lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel, GetObjectInfo(currentLevel, (GetRandomControl() & 3) + LARA_SPEECH_HEAD1)->mesh_index + 2 * LM_HEAD);
 }
 
 void handle_actor_chatting(long speechslot, long node, long slot, long objslot, short* _ranges) {
@@ -1533,7 +1535,7 @@ void handle_actor_chatting(long speechslot, long node, long slot, long objslot, 
 
 	if(!actor_chat_cnt) {
 		cutseq_meshswapbits[slot] |= (1 << node);
-		*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,objslot)->mesh_index + (2 * node) + 1) = GetMesh(currentLevel,GetObjectInfo(currentLevel,speechslot + rnd)->mesh_index + 2 * node);
+		*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, objslot)->mesh_index + (2 * node) + 1) = GetMesh(currentLevel, GetObjectInfo(currentLevel, speechslot + rnd)->mesh_index + 2 * node);
 
 		if((GetRandomControl() & 7) >= 6)
 			cutseq_meshswapbits[slot] &= ~(1 << node);
@@ -1544,7 +1546,7 @@ void trigger_item_in_room(long room_number, long object_number) {
 	ITEM_INFO* item;
 	short item_number;
 
-	for(item_number = GetRoom(currentLevel,room_number)->item_number; item_number != NO_ITEM; item_number = item->next_item) {
+	for(item_number = GetRoom(currentLevel, room_number)->item_number; item_number != NO_ITEM; item_number = item->next_item) {
 		item = GetItem(currentLevel, item_number);
 
 		if(item->object_number == object_number) {
@@ -1562,7 +1564,7 @@ void untrigger_item_in_room(long room_number, long object_number) {
 	ITEM_INFO* item;
 	short item_number;
 
-	for(item_number = GetRoom(currentLevel,room_number)->item_number; item_number != NO_ITEM; item_number = item->next_item) {
+	for(item_number = GetRoom(currentLevel, room_number)->item_number; item_number != NO_ITEM; item_number = item->next_item) {
 		item = GetItem(currentLevel, item_number);
 
 		if(item->object_number == object_number) {
@@ -1624,8 +1626,8 @@ void special1_init() {
 		item = GetItem(currentLevel, i);
 
 		if(item->object_number == ANIMATING6) {
-			item->anim_number = GetObjectInfo(currentLevel,ANIMATING6)->anim_index;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, ANIMATING6)->anim_index;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->flags &= ~IFL_CODEBITS;
 		}
 	}

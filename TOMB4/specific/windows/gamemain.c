@@ -1,20 +1,21 @@
 
 #include "specific/gamemain.h"
+#include "game/gameflow.h"
+#include "game/savegame.h"
+#include "game/savegameinfo.h"
+#include "game/sound.h"
+#include "game/text.h"
+#include "specific/3dmath.h"
 #include "specific/audio.h"
 #include "specific/drawroom.h"
 #include "specific/file.h"
 #include "specific/function_stubs.h"
 #include "specific/function_table.h"
-#include "specific/3dmath.h"
-#include "game/text.h"
-#include "specific/windows/winmain.h"
-#include "game/sound.h"
-#include "game/gameflow.h"
-#include "specific/windows/dxshell.h"
-#include "game/savegame.h"
-#include "game/savegameinfo.h"
 #include "specific/timing.h"
+#include "specific/windows/dxshell.h"
+#include "specific/windows/winmain.h"
 #include <process.h>
+
 
 long SaveCounter;
 

@@ -1,32 +1,33 @@
 
 #include "game/wildboar.h"
 #include "distances.h"
-#include "game/box.h"
-#include "game/objects.h"
-#include "game/effects.h"
-#include "specific/function_stubs.h"
-#include "game/lara.h"
-#include "game/control.h"
-#include "game/lot.h"
-#include "game/iteminfo.h"
-#include "game/creatureinfo.h"
 #include "game/aiinfo.h"
 #include "game/animstruct.h"
-#include "game/objectinfo.h"
 #include "game/biteinfo.h"
-#include "global/types.h"
-#include <stdlib.h>
-#include "game/levelinfo.h"
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/effects.h"
+#include "game/iteminfo.h"
 #include "game/items.h"
+#include "game/lara.h"
+#include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "global/types.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 static BITE_INFO wildboar_bite = { 0, 0, 0, 14 };
 
 void InitialiseWildboar(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,WILD_BOAR)->anim_index + 6;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, WILD_BOAR)->anim_index + 6;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -48,15 +49,15 @@ void WildboarControl(short item_number) {
 	neckY = 0;
 	headX = 0;
 	headY = 0;
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	boar = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0) {
 		item->hit_points = 0;
 
 		if(item->current_anim_state != 5) {
-			item->anim_number = GetObjectInfo(currentLevel,WILD_BOAR)->anim_index + 5;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, WILD_BOAR)->anim_index + 5;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 5;
 		}
 	} else {
@@ -74,7 +75,7 @@ void WildboarControl(short item_number) {
 				baddie = &baddie_slots[i];
 
 				if(baddie->item_num != NO_ITEM && baddie->item_num != item_number) {
-					target = GetItem(currentLevel,baddie->item_num);
+					target = GetItem(currentLevel, baddie->item_num);
 
 					if(target->object_number != WILD_BOAR) {
 						dx = target->pos.x_pos - item->pos.x_pos;

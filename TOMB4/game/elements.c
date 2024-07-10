@@ -1,30 +1,31 @@
 
 #include "game/elements.h"
-#include "game/objects.h"
-#include "game/lara_states.h"
-#include "game/collide.h"
-#include "game/draw.h"
-#include "game/switch.h"
-#include "game/items.h"
-#include "game/control.h"
-#include "game/sound.h"
-#include "specific/function_stubs.h"
-#include "game/tomb4fx.h"
-#include "game/effect2.h"
-#include "specific/input.h"
-#include "game/lara.h"
-#include "game/iteminfo.h"
-#include "game/larainfo.h"
 #include "game/animstruct.h"
-#include "game/laragunstatus.h"
-#include "game/weapontypes.h"
-#include "game/itemflags.h"
-#include "game/itemstatus.h"
+#include "game/collide.h"
+#include "game/control.h"
+#include "game/draw.h"
+#include "game/effect2.h"
 #include "game/inputbuttons.h"
-#include "game/roominfo.h"
-#include "global/types.h"
-#include <stdlib.h>
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/objects.h"
+#include "game/roominfo.h"
+#include "game/sound.h"
+#include "game/switch.h"
+#include "game/tomb4fx.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
+#include <stdlib.h>
+
 short ElementPuzzleBounds[12] = { 0, 0, -64, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 
 void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
@@ -56,10 +57,10 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(ElementPuzzleBounds, item, l)) {
 			if(l->anim_number == ANIM_POURWATERSKIN && lara_item->item_flags[2] == mesh) {
 				l->anim_number = ANIM_FILLSCALE;
-				l->frame_number = GetAnim(currentLevel,ANIM_FILLSCALE)->frame_base;
+				l->frame_number = GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base;
 			}
 
-			if(l->frame_number == GetAnim(currentLevel,ANIM_FILLSCALE)->frame_base + 74 && lara_item->item_flags[2] == mesh) {
+			if(l->frame_number == GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base + 74 && lara_item->item_flags[2] == mesh) {
 				if(!item->trigger_flags) {
 					item->mesh_bits = 48;
 					TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
@@ -90,7 +91,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(ElementPuzzleBounds, item, l)) {
 			y = abs(item->pos.y_pos - l->pos.y_pos);
 			l->anim_number = (short)((y >> 8) + ANIM_LIGHT_TORCH3);
-			l->frame_number = GetAnim(currentLevel,l->anim_number)->frame_base;
+			l->frame_number = GetAnim(currentLevel, l->anim_number)->frame_base;
 			l->current_anim_state = AS_CONTROLLED;
 			lara.flare_control_left = 0;
 			lara.left_arm.lock = 3;
@@ -98,7 +99,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 
 		item->pos.y_rot = rotY;
-	} else if(l->anim_number == ANIM_LIGHT_TORCH3 && l->frame_number == GetAnim(currentLevel,ANIM_LIGHT_TORCH3)->frame_base + 16 && item->item_flags[0] == 2) {
+	} else if(l->anim_number == ANIM_LIGHT_TORCH3 && l->frame_number == GetAnim(currentLevel, ANIM_LIGHT_TORCH3)->frame_base + 16 && item->item_flags[0] == 2) {
 		TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
 		AddActiveItem(item_number);
 		item->item_flags[0] = 3;
@@ -179,7 +180,7 @@ void ControlElementPuzzle(short item_number) {
 
 			KillItem(item_number);
 		} else {
-			for(itemNum = GetRoom(currentLevel,item->room_number)->item_number; itemNum != NO_ITEM; itemNum = item2->next_item) {
+			for(itemNum = GetRoom(currentLevel, item->room_number)->item_number; itemNum != NO_ITEM; itemNum = item2->next_item) {
 				item2 = GetItem(currentLevel, itemNum);
 
 				if(item2->object_number == FLAME_EMITTER2) {

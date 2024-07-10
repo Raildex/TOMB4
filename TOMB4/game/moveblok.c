@@ -1,39 +1,40 @@
 
 #include "game/moveblok.h"
-#include "game/control.h"
-#include "game/collide.h"
-#include "game/objects.h"
-#include "game/lara_states.h"
-#include "game/sound.h"
-#include "game/delstuff.h"
-#include "game/items.h"
-#include "game/draw.h"
-#include "game/sphere.h"
-#include "game/deltapak.h"
-#include "specific/function_stubs.h"
-#include "game/tomb4fx.h"
-#include "specific/3dmath.h"
-#include "specific/output.h"
-#include "game/box.h"
-#include "specific/input.h"
-#include "game/lara.h"
-#include "game/iteminfo.h"
-#include "game/floorinfo.h"
-#include "game/boxinfo.h"
-#include "game/quadrantnames.h"
-#include "game/roominfo.h"
-#include "game/heighttypes.h"
 #include "game/animstruct.h"
+#include "game/box.h"
+#include "game/boxinfo.h"
+#include "game/collide.h"
+#include "game/control.h"
+#include "game/delstuff.h"
+#include "game/deltapak.h"
+#include "game/draw.h"
+#include "game/floorinfo.h"
+#include "game/heighttypes.h"
 #include "game/inputbuttons.h"
 #include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
 #include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
 #include "game/laragunstatus.h"
 #include "game/larainfo.h"
-#include "global/types.h"
+#include "game/levelinfo.h"
 #include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/quadrantnames.h"
+#include "game/roominfo.h"
+#include "game/sound.h"
+#include "game/sphere.h"
+#include "game/tomb4fx.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
+#include "specific/output.h"
 #include <stdlib.h>
 #include <windows.h>
-#include "game/levelinfo.h"
+
 
 static short MovingBlockBounds[12] = { 0, 0, -256, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 
@@ -50,8 +51,8 @@ static void ClearMovableBlockSplitters(long x, long y, long z, short room_number
 	floor = GetFloor(x + 1024, y, z, &room_number);
 
 	if(floor->box != 0x7FF) {
-		if(GetBox(currentLevel,floor->box)->height == height && GetBox(currentLevel,floor->box)->overlap_index & 0x8000
-		   && GetBox(currentLevel,floor->box)->overlap_index & 0x4000)
+		if(GetBox(currentLevel, floor->box)->height == height && GetBox(currentLevel, floor->box)->overlap_index & 0x8000
+		   && GetBox(currentLevel, floor->box)->overlap_index & 0x4000)
 			ClearMovableBlockSplitters(x + 1024, y, z, room_number);
 	}
 
@@ -59,8 +60,8 @@ static void ClearMovableBlockSplitters(long x, long y, long z, short room_number
 	floor = GetFloor(x - 1024, y, z, &room_number);
 
 	if(floor->box != 0x7FF) {
-		if(GetBox(currentLevel,floor->box)->height == height && GetBox(currentLevel,floor->box)->overlap_index & 0x8000
-		   && GetBox(currentLevel,floor->box)->overlap_index & 0x4000)
+		if(GetBox(currentLevel, floor->box)->height == height && GetBox(currentLevel, floor->box)->overlap_index & 0x8000
+		   && GetBox(currentLevel, floor->box)->overlap_index & 0x4000)
 			ClearMovableBlockSplitters(x - 1024, y, z, room_number);
 	}
 
@@ -68,8 +69,8 @@ static void ClearMovableBlockSplitters(long x, long y, long z, short room_number
 	floor = GetFloor(x, y, z + 1024, &room_number);
 
 	if(floor->box != 0x7FF) {
-		if(GetBox(currentLevel,floor->box)->height == height && GetBox(currentLevel,floor->box)->overlap_index & 0x8000
-		   && GetBox(currentLevel,floor->box)->overlap_index & 0x4000)
+		if(GetBox(currentLevel, floor->box)->height == height && GetBox(currentLevel, floor->box)->overlap_index & 0x8000
+		   && GetBox(currentLevel, floor->box)->overlap_index & 0x4000)
 			ClearMovableBlockSplitters(x, y, z + 1024, room_number);
 	}
 
@@ -77,8 +78,8 @@ static void ClearMovableBlockSplitters(long x, long y, long z, short room_number
 	floor = GetFloor(x, y, z - 1024, &room_number);
 
 	if(floor->box != 0x7FF) {
-		if(GetBox(currentLevel,floor->box)->height == height && GetBox(currentLevel,floor->box)->overlap_index & 0x8000
-		   && GetBox(currentLevel,floor->box)->overlap_index & 0x4000)
+		if(GetBox(currentLevel, floor->box)->height == height && GetBox(currentLevel, floor->box)->overlap_index & 0x8000
+		   && GetBox(currentLevel, floor->box)->overlap_index & 0x4000)
 			ClearMovableBlockSplitters(x, y, z - 1024, room_number);
 	}
 }
@@ -91,7 +92,7 @@ void InitialiseMovingBlock(short item_number) {
 }
 
 static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant) {
-	ITEM_INFO* itemlist[6] = {0};
+	ITEM_INFO* itemlist[6] = { 0 };
 	ITEM_INFO* collided;
 	FLOOR_INFO* floor;
 	ROOM_INFO* r;
@@ -171,7 +172,7 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 	ROOM_INFO* r;
 	long x, y, z, destx, destz, rx, rz, ignore;
 	short room_number;
-	ITEM_INFO* itemlist[6] = {0};
+	ITEM_INFO* itemlist[6] = { 0 };
 	destx = 0;
 	destz = 0;
 

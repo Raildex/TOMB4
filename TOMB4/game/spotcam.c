@@ -1,19 +1,20 @@
 
 #include "game/spotcam.h"
+#include "game/camera.h"
+#include "game/control.h"
+#include "game/gameflow.h"
+#include "game/inputbuttons.h"
+#include "game/iteminfo.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/switch.h"
 #include "game/tomb4fx.h"
 #include "specific/3dmath.h"
-#include "game/control.h"
-#include "game/camera.h"
-#include "game/switch.h"
-#include "specific/windows/dxshell.h"
 #include "specific/input.h"
-#include "game/lara.h"
-#include "game/gameflow.h"
-#include "game/iteminfo.h"
-#include "game/inputbuttons.h"
-#include "game/larainfo.h"
+#include "specific/windows/dxshell.h"
 #include <dinput.h>
+
 
 long bTrackCamInit = 0;
 long bUseSpotCam = 0;
@@ -57,7 +58,7 @@ void SetSplineData(long num, long cam) {
 	SPOTCAM* spotcam;
 	ITEM_INFO* item;
 
-	spotcam = GetSpotCam(currentLevel,cam);
+	spotcam = GetSpotCam(currentLevel, cam);
 
 	camera_xposition[num] = spotcam->x;
 	camera_yposition[num] = spotcam->y;
@@ -77,7 +78,7 @@ void SetSplineData(long num, long cam) {
 	}
 
 	if(spotcam->flags & 2) {
-		item = GetItem(currentLevel,spotcam->timer);
+		item = GetItem(currentLevel, spotcam->timer);
 
 		if(item) {
 			camera_xtarget[num] = item->pos.x_pos;
@@ -130,7 +131,7 @@ void InitialiseSpotCam(short Sequence) {
 	last_camera = first_camera + current_camera_cnt - 1;
 	current_spline_position = 0;
 	spline_to_camera = 0;
-	s = GetSpotCam(currentLevel,current_spline_camera);
+	s = GetSpotCam(currentLevel, current_spline_camera);
 
 	if(s->flags & 0x400 || gfGameMode == 1) {
 		bDisableLaraControl = 1;
@@ -213,16 +214,16 @@ void InitSpotCamSequences() {
 
 	if(GetNumSpotcams(currentLevel)) {
 		ce = 0;
-		s = GetSpotCam(currentLevel,0)->sequence;
+		s = GetSpotCam(currentLevel, 0)->sequence;
 		cc = 1;
 
 		for(int i = 1; i < GetNumSpotcams(currentLevel); i++) {
-			if(GetSpotCam(currentLevel,i)->sequence == s)
+			if(GetSpotCam(currentLevel, i)->sequence == s)
 				cc++;
 			else {
 				CameraCnt[ce] = cc;
 				SpotRemap[s] = ce;
-				s = GetSpotCam(currentLevel,i)->sequence;
+				s = GetSpotCam(currentLevel, i)->sequence;
 				cc = 1;
 				ce++;
 			}
@@ -265,7 +266,7 @@ void CalculateSpotCams() {
 		lara.air = (short)LaraAir;
 	}
 
-	FirstCam = GetSpotCam(currentLevel,first_camera);
+	FirstCam = GetSpotCam(currentLevel, first_camera);
 	sp = 0;
 
 	if(FirstCam->flags & 8)
@@ -282,7 +283,7 @@ void CalculateSpotCams() {
 	cspeed = Spline(current_spline_position, camera_speed, spline_cnt);
 	croll = Spline(current_spline_position, camera_roll, spline_cnt);
 	cfov = Spline(current_spline_position, camera_fov, spline_cnt);
-	CurrentCam = GetSpotCam(currentLevel,current_spline_camera);
+	CurrentCam = GetSpotCam(currentLevel, current_spline_camera);
 
 	if(CurrentCam->flags & 0x1000 && CameraFade != current_spline_camera)
 		CameraFade = current_spline_camera;
@@ -360,7 +361,7 @@ void CalculateSpotCams() {
 		}
 
 		if(CurrentCam->flags & 2) {
-			item = GetItem(currentLevel,GetSpotCam(currentLevel,current_spline_camera)->timer);
+			item = GetItem(currentLevel, GetSpotCam(currentLevel, current_spline_camera)->timer);
 
 			if(item) {
 				camera.target.pos.x = item->pos.x_pos;
@@ -370,7 +371,7 @@ void CalculateSpotCams() {
 		}
 
 		if(IsRoomOutside(cpx, cpy, cpz) == -2) {
-			camera.pos.room_number = GetSpotCam(currentLevel,current_spline_camera)->room_number;
+			camera.pos.room_number = GetSpotCam(currentLevel, current_spline_camera)->room_number;
 			GetFloor(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, &camera.pos.room_number);
 		} else
 			camera.pos.room_number = IsRoomOutsideNo;
@@ -403,7 +404,7 @@ void CalculateSpotCams() {
 				if(spotcam_timer)
 					spotcam_timer--;
 				else
-					spotcam_timer = GetSpotCam(currentLevel,current_spline_camera)->timer >> 4;
+					spotcam_timer = GetSpotCam(currentLevel, current_spline_camera)->timer >> 4;
 			}
 
 			if(!spotcam_timer) {
@@ -431,7 +432,7 @@ void CalculateSpotCams() {
 					cunt = 0;
 
 					if(CurrentCam->flags & 0x80) {
-						next_spline_camera = first_camera + (GetSpotCam(currentLevel,current_spline_camera)->timer & 0xF);
+						next_spline_camera = first_camera + (GetSpotCam(currentLevel, current_spline_camera)->timer & 0xF);
 						current_spline_camera = (short)next_spline_camera;
 						SetSplineData(cunt, next_spline_camera); // INLINED
 						cunt = 1;

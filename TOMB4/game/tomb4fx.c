@@ -1,47 +1,48 @@
 
 #include "game/tomb4fx.h"
-#include "specific/function_stubs.h"
-#include "game/draw.h"
-#include "specific/3dmath.h"
-#include "game/items.h"
-#include "game/objects.h"
-#include "specific/output.h"
-#include "game/sound.h"
-#include "game/delstuff.h"
-#include "game/control.h"
-#include "specific/specificfx.h"
-#include "game/effect2.h"
-#include "game/sphere.h"
-#include "game/effects.h"
-#include "game/lara.h"
-#include "game/gameflow.h"
-#include "game/fxinfo.h"
-#include "game/iteminfo.h"
-#include "global/types.h"
-#include "game/objectinfo.h"
-#include "game/gunshellstruct.h"
-#include "game/smokesparks.h"
-#include "game/dripstruct.h"
-#include "game/roomflags.h"
-#include "game/firesparks.h"
-#include "game/roominfo.h"
-#include "game/gfleveloptions.h"
-#include "game/weapontypes.h"
-#include "game/firelist.h"
-#include "game/gamevector.h"
-#include "game/larainfo.h"
-#include "game/sparks.h"
-#include "game/gunflashstruct.h"
 #include "game/bloodstruct.h"
 #include "game/bubblestruct.h"
-#include "game/shockwavestruct.h"
+#include "game/control.h"
+#include "game/delstuff.h"
+#include "game/draw.h"
+#include "game/dripstruct.h"
+#include "game/effect2.h"
+#include "game/effects.h"
+#include "game/firelist.h"
+#include "game/firesparks.h"
+#include "game/fvector.h"
+#include "game/fxinfo.h"
+#include "game/gameflow.h"
+#include "game/gamevector.h"
+#include "game/gfleveloptions.h"
+#include "game/gunflashstruct.h"
+#include "game/gunshellstruct.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
+#include "game/levelinfo.h"
 #include "game/lightningstruct.h"
 #include "game/nodeoffsetinfo.h"
-#include "game/fvector.h"
-#include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/shockwavestruct.h"
+#include "game/smokesparks.h"
+#include "game/sound.h"
+#include "game/sparks.h"
+#include "game/sphere.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/output.h"
+#include "specific/specificfx.h"
 #include "tomb4fx.h"
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+
 
 
 NODEOFFSET_INFO NodeOffsets[16] = {
@@ -102,7 +103,7 @@ char tsv_buffer[16384];
 static PHD_VECTOR NodeVectors[16];
 
 SMOKE_SPARKS* GetFreeSmokeSpark() {
-	for(int i =0; i < nSmokeSparks; ++i) {
+	for(int i = 0; i < nSmokeSparks; ++i) {
 		if(!smoke_spark[i].On) {
 			return &smoke_spark[i];
 		}
@@ -112,13 +113,13 @@ SMOKE_SPARKS* GetFreeSmokeSpark() {
 	smoke_spark = realloc(smoke_spark, nSmokeSparks * sizeof(SMOKE_SPARKS));
 	for(int i = idx; i < nSmokeSparks; ++i) {
 		SMOKE_SPARKS* sptr = &smoke_spark[i];
-		*sptr = (SMOKE_SPARKS){0};
+		*sptr = (SMOKE_SPARKS){ 0 };
 	}
 	return &smoke_spark[idx];
 }
 
 LIGHTNING_STRUCT* GetFreeLightning() {
-	for(int i =0; i < nLightnings; ++i) {
+	for(int i = 0; i < nLightnings; ++i) {
 		if(!Lightning[i].Life) {
 			return &Lightning[i];
 		}
@@ -128,7 +129,7 @@ LIGHTNING_STRUCT* GetFreeLightning() {
 	Lightning = realloc(Lightning, nLightnings * sizeof(LIGHTNING_STRUCT));
 	for(int i = idx; i < nLightnings; ++i) {
 		LIGHTNING_STRUCT* bptr = &Lightning[i];
-		*bptr = (LIGHTNING_STRUCT){0};
+		*bptr = (LIGHTNING_STRUCT){ 0 };
 	}
 	return &Lightning[idx];
 }
@@ -184,8 +185,8 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 	long bit, poppush;
 	short fx_number;
 
-	item = GetItem(currentLevel,item_number);
-	obj = GetObjectInfo(currentLevel,item->object_number);
+	item = GetItem(currentLevel, item_number);
+	obj = GetObjectInfo(currentLevel, item->object_number);
 	frame = GetBestFrame(item);
 	phd_PushUnitMatrix();
 	phd_SetTrans(0, 0, 0);
@@ -199,7 +200,7 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 	else
 		extra_rotation = (short*)item->data;
 
-	bone = GetBone(currentLevel,obj->bone_index);
+	bone = GetBone(currentLevel, obj->bone_index);
 	bit = 1;
 
 	if(mesh_bits & 1 && item->mesh_bits & 1) {
@@ -207,7 +208,7 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 			fx_number = CreateEffect(item->room_number);
 
 			if(fx_number != NO_ITEM) {
-				fx = GetEffect(currentLevel,fx_number);
+				fx = GetEffect(currentLevel, fx_number);
 				fx->pos.x_pos = item->pos.x_pos + (long)mMXPtr[M03];
 				fx->pos.y_pos = item->pos.y_pos + (long)mMXPtr[M13];
 				fx->pos.z_pos = item->pos.z_pos + (long)mMXPtr[M23];
@@ -274,7 +275,7 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 			fx_number = CreateEffect(item->room_number);
 
 			if(fx_number != NO_ITEM) {
-				fx = GetEffect(currentLevel,fx_number);
+				fx = GetEffect(currentLevel, fx_number);
 				fx->pos.x_pos = item->pos.x_pos + (long)mMXPtr[M03];
 				fx->pos.y_pos = item->pos.y_pos + (long)mMXPtr[M13];
 				fx->pos.z_pos = item->pos.z_pos + (long)mMXPtr[M23];
@@ -323,11 +324,11 @@ void DrawGunshells() {
 		p = &Gunshells[i];
 
 		if(p->counter) {
-			obj = GetObjectInfo(currentLevel,p->object_number);
+			obj = GetObjectInfo(currentLevel, p->object_number);
 			phd_PushMatrix();
 			phd_TranslateAbs(p->pos.x_pos, p->pos.y_pos, p->pos.z_pos);
 			phd_RotYXZ(p->pos.y_rot, p->pos.x_rot, p->pos.z_rot);
-			phd_PutPolygons(GetMesh(currentLevel,obj->mesh_index), -1);
+			phd_PutPolygons(GetMesh(currentLevel, obj->mesh_index), -1);
 			phd_PopMatrix();
 		}
 	}
@@ -367,7 +368,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	sptr->Friction = 4;
 
 	if(GetRandomControl() & 1) {
-		if(GetRoom(currentLevel,lara_item->room_number)->flags & ROOM_NOT_INSIDE)
+		if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE)
 			sptr->Flags = 272;
 
 		else
@@ -379,7 +380,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 			sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
 		else
 			sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
-	} else if(GetRoom(currentLevel,lara_item->room_number)->flags & ROOM_NOT_INSIDE)
+	} else if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE)
 		sptr->Flags = 256;
 	else
 		sptr->Flags = 0;
@@ -447,7 +448,7 @@ void UpdateDrips() {
 
 		drip->Yvel += drip->Gravity;
 
-		if(GetRoom(currentLevel,drip->RoomNumber)->flags & ROOM_NOT_INSIDE) {
+		if(GetRoom(currentLevel, drip->RoomNumber)->flags & ROOM_NOT_INSIDE) {
 			drip->pos.x += SmokeWindX >> 1;
 			drip->pos.z += SmokeWindZ >> 1;
 		}
@@ -456,13 +457,13 @@ void UpdateDrips() {
 		floor = GetFloor(drip->pos.x, drip->pos.y, drip->pos.z, &drip->RoomNumber);
 		h = GetHeight(floor, drip->pos.x, drip->pos.y, drip->pos.z);
 
-		if(GetRoom(currentLevel,drip->RoomNumber)->flags & ROOM_UNDERWATER || drip->pos.y > h)
+		if(GetRoom(currentLevel, drip->RoomNumber)->flags & ROOM_UNDERWATER || drip->pos.y > h)
 			drip->On = 0;
 	}
 }
 
 FIRE_SPARKS* GetFreeFireSpark() {
-	for(int i =0; i < nFireSparks; ++i) {
+	for(int i = 0; i < nFireSparks; ++i) {
 		if(!fire_spark[i].On) {
 			return &fire_spark[i];
 		}
@@ -472,7 +473,7 @@ FIRE_SPARKS* GetFreeFireSpark() {
 	fire_spark = realloc(fire_spark, nFireSparks * sizeof(FIRE_SPARKS));
 	for(int i = idx; i < nFireSparks; ++i) {
 		FIRE_SPARKS* bptr = &fire_spark[i];
-		*bptr = (FIRE_SPARKS){0};
+		*bptr = (FIRE_SPARKS){ 0 };
 	}
 	return &fire_spark[idx];
 }
@@ -641,11 +642,11 @@ void UpdateFireSparks() {
 			sptr->RotAng = (sptr->RotAng + sptr->RotAdd) & 0xFFF;
 
 		if(sptr->R < 24 && sptr->G < 24 && sptr->B < 24)
-			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 2);
+			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 2);
 		else if(sptr->R < 80 && sptr->G < 80 && sptr->B < 80)
-			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 1);
+			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 1);
 		else
-			sptr->Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
+			sptr->Def = (unsigned char)GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index;
 
 		fade = ((sptr->sLife - sptr->Life) << 16) / sptr->sLife;
 		sptr->Yvel += sptr->Gravity;
@@ -677,7 +678,7 @@ void ClearFires() {
 }
 
 FIRE_LIST* GetFreeFire() {
-	for(int i =0; i < nFires; ++i) {
+	for(int i = 0; i < nFires; ++i) {
 		if(!fires[i].on) {
 			return &fires[i];
 		}
@@ -687,7 +688,7 @@ FIRE_LIST* GetFreeFire() {
 	fires = realloc(fires, nFires * sizeof(FIRE_LIST));
 	for(int i = idx; i < nFires; ++i) {
 		FIRE_LIST* bptr = &fires[i];
-		*bptr = (FIRE_LIST){0};
+		*bptr = (FIRE_LIST){ 0 };
 	}
 	return &fires[idx];
 }
@@ -735,7 +736,7 @@ void S_DrawFires() {
 		bounds[4] = -size;
 		bounds[5] = size;
 
-		r = GetRoom(currentLevel,fire->room_number);
+		r = GetRoom(currentLevel, fire->room_number);
 		phd_left = r->left;
 		phd_right = r->right;
 		phd_top = r->top;
@@ -792,11 +793,11 @@ void UpdateSmokeSparks() {
 			sptr->Shade = sptr->dShade;
 
 		if(sptr->Shade < 24)
-			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 2);
+			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 2);
 		else if(sptr->Shade < 80)
-			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 1);
+			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 1);
 		else
-			sptr->Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
+			sptr->Def = (unsigned char)GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index;
 
 		if(sptr->Flags & 0x10)
 			sptr->RotAng = (sptr->RotAng + sptr->RotAdd) & 0xFFF;
@@ -858,7 +859,7 @@ void TriggerShatterSmoke(long x, long y, long z) {
 			sptr->RotAdd = -64 - (GetRandomControl() & 0x3F);
 		else
 			sptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
-	} else if(GetRoom(currentLevel,lara_item->room_number)->flags & ROOM_NOT_INSIDE)
+	} else if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE)
 		sptr->Flags = 256;
 	else
 		sptr->Flags = 0;
@@ -884,20 +885,20 @@ void DrawWeaponMissile(ITEM_INFO* item) {
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	phd_PutPolygons_train(GetMesh(currentLevel,GetObjectInfo(currentLevel,item->object_number)->mesh_index), 0);
+	phd_PutPolygons_train(GetMesh(currentLevel, GetObjectInfo(currentLevel, item->object_number)->mesh_index), 0);
 	phd_PopMatrix();
 
 	if(gfLevelFlags & GF_MIRROR && item->room_number == gfMirrorRoom) {
 		phd_PushMatrix();
 		phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, 2 * gfMirrorZPlane - item->pos.z_pos);
 		phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-		phd_PutPolygons_train(GetMesh(currentLevel,GetObjectInfo(currentLevel,item->object_number)->mesh_index), 0);
+		phd_PutPolygons_train(GetMesh(currentLevel, GetObjectInfo(currentLevel, item->object_number)->mesh_index), 0);
 		phd_PopMatrix();
 	}
 }
 
 GUNSHELL_STRUCT* GetFreeGunshell() {
-	for(int i =0; i < nGunshells; ++i) {
+	for(int i = 0; i < nGunshells; ++i) {
 		if(!Gunshells[i].counter) {
 			return &Gunshells[i];
 		}
@@ -907,7 +908,7 @@ GUNSHELL_STRUCT* GetFreeGunshell() {
 	Gunshells = realloc(Gunshells, nGunshells * sizeof(GUNSHELL_STRUCT));
 	for(int i = idx; i < nGunshells; ++i) {
 		GUNSHELL_STRUCT* bptr = &Gunshells[i];
-		*bptr = (GUNSHELL_STRUCT){0};
+		*bptr = (GUNSHELL_STRUCT){ 0 };
 	}
 	return &Gunshells[idx];
 }
@@ -1010,7 +1011,7 @@ void UpdateGunShells() {
 		oroom = shell->room_number;
 		shell->counter--;
 
-		if(GetRoom(currentLevel,oroom)->flags & ROOM_UNDERWATER) {
+		if(GetRoom(currentLevel, oroom)->flags & ROOM_UNDERWATER) {
 			shell->fallspeed++;
 
 			if(shell->fallspeed > 8)
@@ -1030,9 +1031,9 @@ void UpdateGunShells() {
 		shell->pos.z_pos += shell->speed * phd_cos(shell->DirXrot) >> (W2V_SHIFT + 1);
 		floor = GetFloor(shell->pos.x_pos, shell->pos.y_pos, shell->pos.z_pos, &shell->room_number);
 
-		if(GetRoom(currentLevel,shell->room_number)->flags & ROOM_UNDERWATER && !(GetRoom(currentLevel,oroom)->flags & ROOM_UNDERWATER)) {
-			TriggerSmallSplash(shell->pos.x_pos, GetRoom(currentLevel,shell->room_number)->maxceiling, shell->pos.z_pos, 8);
-			SetupRipple(shell->pos.x_pos, GetRoom(currentLevel,shell->room_number)->maxceiling, shell->pos.z_pos, (GetRandomControl() & 3) + 8, 2);
+		if(GetRoom(currentLevel, shell->room_number)->flags & ROOM_UNDERWATER && !(GetRoom(currentLevel, oroom)->flags & ROOM_UNDERWATER)) {
+			TriggerSmallSplash(shell->pos.x_pos, GetRoom(currentLevel, shell->room_number)->maxceiling, shell->pos.z_pos, 8);
+			SetupRipple(shell->pos.x_pos, GetRoom(currentLevel, shell->room_number)->maxceiling, shell->pos.z_pos, (GetRandomControl() & 3) + 8, 2);
 			shell->fallspeed >>= 5;
 			continue;
 		}
@@ -1109,7 +1110,7 @@ void TriggerSmallSplash(long x, long y, long z, long num) {
 }
 
 GUNFLASH_STRUCT* GetFreeGunflash() {
-	for(int i =0; i < nGunflashes; ++i) {
+	for(int i = 0; i < nGunflashes; ++i) {
 		if(!Gunflashes[i].on) {
 			return &Gunflashes[i];
 		}
@@ -1119,7 +1120,7 @@ GUNFLASH_STRUCT* GetFreeGunflash() {
 	Gunflashes = realloc(Gunflashes, nGunflashes * sizeof(GUNFLASH_STRUCT));
 	for(int i = idx; i < nGunflashes; ++i) {
 		GUNFLASH_STRUCT* bptr = &Gunflashes[i];
-		*bptr = (GUNFLASH_STRUCT){0};
+		*bptr = (GUNFLASH_STRUCT){ 0 };
 	}
 	return &Gunflashes[idx];
 }
@@ -1210,7 +1211,7 @@ void DrawGunflashes() {
 		mMXPtr[M23] = flash->mx[M23];
 		phd_RotZ((short)(GetRandomDraw() << 1));
 		GlobalAmbient = 0xFF2F2F00;
-		phd_PutPolygons(GetMesh(currentLevel,GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index), -1);
+		phd_PutPolygons(GetMesh(currentLevel, GetObjectInfo(currentLevel, GUN_FLASH)->mesh_index), -1);
 		flash->on = 0;
 	}
 
@@ -1218,7 +1219,7 @@ void DrawGunflashes() {
 }
 
 BLOOD_STRUCT* GetFreeBlood() {
-	for(int i =0; i < nBlood; ++i) {
+	for(int i = 0; i < nBlood; ++i) {
 		if(!blood[i].On) {
 			return &blood[i];
 		}
@@ -1228,7 +1229,7 @@ BLOOD_STRUCT* GetFreeBlood() {
 	blood = realloc(blood, nBlood * sizeof(BLOOD_STRUCT));
 	for(int i = idx; i < nBlood; ++i) {
 		BLOOD_STRUCT* bptr = &blood[i];
-		*bptr = (BLOOD_STRUCT){0};
+		*bptr = (BLOOD_STRUCT){ 0 };
 	}
 	return &blood[idx];
 }
@@ -1327,7 +1328,7 @@ void TriggerBlood(long x, long y, long z, long angle, long num) {
 }
 
 BUBBLE_STRUCT* GetFreeBubble() {
-	for(int i =0; i < nBubbles; ++i) {
+	for(int i = 0; i < nBubbles; ++i) {
 		if(!Bubbles[i].size) {
 			return &Bubbles[i];
 		}
@@ -1337,7 +1338,7 @@ BUBBLE_STRUCT* GetFreeBubble() {
 	Bubbles = realloc(Bubbles, nBubbles * sizeof(BUBBLE_STRUCT));
 	for(int i = idx; i < nBubbles; ++i) {
 		BUBBLE_STRUCT* bptr = &Bubbles[i];
-		*bptr = (BUBBLE_STRUCT){0};
+		*bptr = (BUBBLE_STRUCT){ 0 };
 	}
 	return &Bubbles[idx];
 }
@@ -1347,7 +1348,7 @@ void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long biggest) {
 
 	GetFloor(pos->x_pos, pos->y_pos, pos->z_pos, &room_number);
 
-	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
 		bubble = GetFreeBubble();
 		bubble->pos.x = pos->x_pos;
 		bubble->pos.y = pos->y_pos;
@@ -1388,8 +1389,8 @@ void UpdateBubbles() {
 			continue;
 		}
 
-		if(!(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER)) {
-			SetupRipple(bubble->pos.x, GetRoom(currentLevel,bubble->room_number)->maxceiling, bubble->pos.z, (GetRandomControl() & 0xF) + 48, 2);
+		if(!(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER)) {
+			SetupRipple(bubble->pos.x, GetRoom(currentLevel, bubble->room_number)->maxceiling, bubble->pos.z, (GetRandomControl() & 0xF) + 48, 2);
 			bubble->size = 0;
 			continue;
 		}
@@ -1412,7 +1413,7 @@ void UpdateBubbles() {
 }
 
 DRIP_STRUCT* GetFreeDrip() {
-	for(int i =0; i < nDrips; ++i) {
+	for(int i = 0; i < nDrips; ++i) {
 		if(!Drips[i].On) {
 			return &Drips[i];
 		}
@@ -1422,7 +1423,7 @@ DRIP_STRUCT* GetFreeDrip() {
 	Drips = realloc(Drips, nDrips * sizeof(DRIP_STRUCT));
 	for(int i = idx; i < nDrips; ++i) {
 		DRIP_STRUCT* bptr = &Drips[i];
-		*bptr = (DRIP_STRUCT){0};
+		*bptr = (DRIP_STRUCT){ 0 };
 	}
 	return &Drips[idx];
 }
@@ -1459,7 +1460,7 @@ void TriggerLaraDrips() {
 }
 
 SHOCKWAVE_STRUCT* GetFreeShockwave() {
-	for(int i =0; i < nShockWaves; ++i) {
+	for(int i = 0; i < nShockWaves; ++i) {
 		if(!ShockWaves[i].life) {
 			return &ShockWaves[i];
 		}
@@ -1469,7 +1470,7 @@ SHOCKWAVE_STRUCT* GetFreeShockwave() {
 	ShockWaves = realloc(ShockWaves, nShockWaves * sizeof(BLOOD_STRUCT));
 	for(int i = idx; i < nShockWaves; ++i) {
 		SHOCKWAVE_STRUCT* bptr = &ShockWaves[i];
-		*bptr = (SHOCKWAVE_STRUCT){0};
+		*bptr = (SHOCKWAVE_STRUCT){ 0 };
 	}
 	return &ShockWaves[idx];
 }
@@ -1491,7 +1492,6 @@ void TriggerShockwave(PHD_VECTOR* pos, long InnerOuterRads, long speed, long bgr
 	sw->b = CLRR(bgrl);
 	sw->life = CLRA(bgrl);
 	SoundEffect(SFX_DEMI_SIREN_SWAVE, (PHD_3DPOS*)pos, SFX_DEFAULT);
-	
 }
 
 void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long speed) {
@@ -1545,7 +1545,7 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 		sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
 
 	sptr->Scalar = 1;
-	sptr->Def = (unsigned char)(GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 14);
+	sptr->Def = (unsigned char)(GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 14);
 	sptr->MaxYvel = 0;
 	sptr->Gravity = (GetRandomControl() & 0x3F) + 64;
 	sptr->Size = (GetRandomControl() & 0x1F) + 32;
@@ -1711,7 +1711,7 @@ void TriggerLightningGlow(long x, long y, long z, long rgb) {
 	sptr->Flags = 10;
 	sptr->Scalar = 3;
 	sptr->MaxYvel = 0;
-	sptr->Def = GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 11;
+	sptr->Def = GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 11;
 	sptr->Gravity = 0;
 	sptr->Size = (rgb >> 24) + (GetRandomControl() & 3);
 	sptr->dSize = sptr->Size;
@@ -1722,7 +1722,7 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number) {
 	SMOKE_SPARKS* sptr;
 	long uw;
 
-	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
 		TriggerExplosionBubble(x, y, z, (short)room_number);
 		uw = 1;
 	} else
@@ -1753,7 +1753,7 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number) {
 		sptr->Friction = 85;
 	}
 
-	if(GetRoom(currentLevel,room_number)->flags & ROOM_NOT_INSIDE)
+	if(GetRoom(currentLevel, room_number)->flags & ROOM_NOT_INSIDE)
 		sptr->Flags = 272;
 	else
 		sptr->Flags = 16;
@@ -1803,7 +1803,7 @@ void S_DrawSparks() {
 			continue;
 
 		if(sptr->Flags & 0x40) {
-			fx = GetEffect(currentLevel,sptr->FxObj);
+			fx = GetEffect(currentLevel, sptr->FxObj);
 			x = sptr->x + fx->pos.x_pos;
 			y = sptr->y + fx->pos.y_pos;
 			z = sptr->z + fx->pos.z_pos;
@@ -1815,7 +1815,7 @@ void S_DrawSparks() {
 				sptr->Flags &= ~0x40;
 			}
 		} else if(sptr->Flags & 0x80) {
-			item = GetItem(currentLevel,sptr->FxObj);
+			item = GetItem(currentLevel, sptr->FxObj);
 
 			if(sptr->Flags & 0x1000) {
 				if(NodeOffsets[sptr->NodeNumber].GotIt) {

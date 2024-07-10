@@ -1,24 +1,25 @@
 
 #include "game/lot.h"
-#include "specific/function_stubs.h"
-#include "game/objects.h"
 #include "game/box.h"
-#include "game/camera.h"
-#include "game/lara.h"
-#include "game/control.h"
-#include "game/zonetype.h"
-#include "game/creatureinfo.h"
-#include "game/lotinfo.h"
 #include "game/boxnode.h"
-#include "game/roominfo.h"
-#include "game/phd3dpos.h"
-#include "global/types.h"
-#include "game/iteminfo.h"
-#include "game/larainfo.h"
-#include "game/itemstatus.h"
+#include "game/camera.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
 #include "game/floorinfo.h"
-#include "game/levelinfo.h"
+#include "game/iteminfo.h"
 #include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
+#include "game/levelinfo.h"
+#include "game/lotinfo.h"
+#include "game/objects.h"
+#include "game/phd3dpos.h"
+#include "game/roominfo.h"
+#include "game/zonetype.h"
+#include "global/types.h"
+#include "specific/function_stubs.h"
+
 CREATURE_INFO* baddie_slots;
 
 static long slots_used = 0;
@@ -27,14 +28,14 @@ void InitialiseLOTarray(long allocmem) {
 	CREATURE_INFO* creature;
 
 	if(allocmem)
-		baddie_slots = (CREATURE_INFO*)Allocate(currentLevel,sizeof(CREATURE_INFO),5);
+		baddie_slots = (CREATURE_INFO*)Allocate(currentLevel, sizeof(CREATURE_INFO), 5);
 
 	for(int i = 0; i < 5; i++) {
 		creature = &baddie_slots[i];
 		creature->item_num = NO_ITEM;
 
 		if(allocmem)
-			creature->LOT.node = (BOX_NODE*)Allocate(currentLevel,sizeof(BOX_NODE),GetNumBoxes(currentLevel));
+			creature->LOT.node = (BOX_NODE*)Allocate(currentLevel, sizeof(BOX_NODE), GetNumBoxes(currentLevel));
 	}
 
 	slots_used = 0;
@@ -44,7 +45,7 @@ void DisableBaddieAI(short item_number) {
 	ITEM_INFO* item;
 	CREATURE_INFO* creature;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	creature = (CREATURE_INFO*)item->data;
 	item->data = NULL;
 
@@ -81,7 +82,7 @@ void CreateZone(ITEM_INFO* item) {
 	short zone_number, flip_number;
 
 	creature = (CREATURE_INFO*)item->data;
-	r = GetRoom(currentLevel,item->room_number);
+	r = GetRoom(currentLevel, item->room_number);
 	item->box_number = r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)].box;
 
 	if(creature->LOT.fly) {
@@ -94,8 +95,8 @@ void CreateZone(ITEM_INFO* item) {
 			creature->LOT.zone_count++;
 		}
 	} else {
-		zone = GetZone(currentLevel,creature->LOT.zone,0);
-		flip = GetZone(currentLevel,creature->LOT.zone,1);
+		zone = GetZone(currentLevel, creature->LOT.zone, 0);
+		flip = GetZone(currentLevel, creature->LOT.zone, 1);
 		zone_number = zone[item->box_number];
 		flip_number = flip[item->box_number];
 		creature->LOT.zone_count = 0;
@@ -119,7 +120,7 @@ void InitialiseSlot(short item_number, long slot) {
 	CREATURE_INFO* creature;
 
 	creature = &baddie_slots[slot];
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	item->data = creature;
 	creature->item_num = item_number;
 	creature->mood = BORED_MOOD;
@@ -223,7 +224,7 @@ long EnableBaddieAI(short item_number, long Always) {
 	CREATURE_INFO* creature;
 	long x, y, z, slot, worstslot, dist, worstdist;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(item->data)
 		return 1;
@@ -265,7 +266,7 @@ long EnableBaddieAI(short item_number, long Always) {
 	}
 
 	if(worstslot >= 0) {
-		GetItem(currentLevel,baddie_slots[worstslot].item_num)->status = ITEM_INVISIBLE;
+		GetItem(currentLevel, baddie_slots[worstslot].item_num)->status = ITEM_INVISIBLE;
 		DisableBaddieAI(baddie_slots[worstslot].item_num);
 		InitialiseSlot(item_number, worstslot);
 		return 1;

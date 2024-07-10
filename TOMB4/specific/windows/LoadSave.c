@@ -1,41 +1,41 @@
 
 #include "specific/loadsave.h"
-#include "game/text.h"
-#include "game/sound.h"
-#include "specific/audio.h"
-#include "specific/windows/dxsound.h"
-#include "specific/input.h"
-#include "specific/function_table.h"
-#include "specific/drawroom.h"
-#include "specific/polyinsert.h"
-#include "specific/windows/winmain.h"
-#include "specific/output.h"
-#include "game/gameflow.h"
-#include "game/savegame.h"
-#include "specific/gamemain.h"
-#include "specific/specificfx.h"
-#include "specific/windows/dxshell.h"
-#include "specific/texture.h"
-#include "game/newinv.h"
-#include "specific/3dmath.h"
-#include "game/control.h"
-#include "specific/drawbars.h"
-#include "game/fontflags.h"
-#include "game/inputbuttons.h"
-#include "game/savegameinfo.h"
-#include "game/savefileinfo.h"
 #include "game/colorbitmasks.h"
-#include <ddraw.h>
-#include "specific/windows/dxflags.h"
-#include "specific/timing.h"
-#include "game/monoscreenstruct.h"
-#include "specific/windows/d3dtlbumpvertex.h"
+#include "game/control.h"
+#include "game/fontflags.h"
+#include "game/gameflow.h"
+#include "game/inputbuttons.h"
 #include "game/languages.h"
+#include "game/monoscreenstruct.h"
+#include "game/newinv.h"
+#include "game/savefileinfo.h"
+#include "game/savegame.h"
+#include "game/savegameinfo.h"
+#include "game/sound.h"
+#include "game/text.h"
+#include "specific/3dmath.h"
+#include "specific/audio.h"
+#include "specific/drawbars.h"
+#include "specific/drawroom.h"
+#include "specific/function_table.h"
+#include "specific/gamemain.h"
+#include "specific/input.h"
+#include "specific/output.h"
+#include "specific/polyinsert.h"
+#include "specific/sound.h"
+#include "specific/specificfx.h"
 #include "specific/texture.h"
+#include "specific/timing.h"
+#include "specific/windows/d3dtlbumpvertex.h"
+#include "specific/windows/dxflags.h"
+#include "specific/windows/dxshell.h"
+#include "specific/windows/dxsound.h"
+#include "specific/windows/winmain.h"
+#include <ddraw.h>
 #include <dinput.h>
 #include <joystickapi.h>
 #include <stdio.h>
-#include "specific/sound.h"
+
 
 long sfx_frequencies[3] = { 11025, 22050, 44100 };
 long SoundQuality = 1;
@@ -819,8 +819,8 @@ static void CustomBlt(DDSURFACEDESC2* dst, unsigned long dstX, unsigned long dst
 }
 
 void ConvertSurfaceToTextures(IDirectDrawSurface4* surface) {
-	DDSURFACEDESC2 tSurf = {0};
-	DDSURFACEDESC2 uSurf = {0};
+	DDSURFACEDESC2 tSurf = { 0 };
+	DDSURFACEDESC2 uSurf = { 0 };
 	RECT r;
 	unsigned short* pSrc;
 

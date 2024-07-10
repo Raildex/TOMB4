@@ -1,12 +1,13 @@
 
 #include "specific/windows/registry.h"
+#include "specific/input.h"
 #include "specific/loadsave.h"
 #include "specific/windows/cmdline.h"
-#include "specific/input.h"
-#include "specific/windows/winmain.h"
 #include "specific/windows/dxflags.h"
-#include <string.h>
+#include "specific/windows/winmain.h"
 #include <stdio.h>
+#include <string.h>
+
 
 static HKEY phkResult;
 static DWORD dwDisposition;

@@ -1,36 +1,37 @@
 
 #include "game/sphinx.h"
+#include "game/aiinfo.h"
+#include "game/animstruct.h"
+#include "game/biteinfo.h"
 #include "game/box.h"
-#include "game/objects.h"
 #include "game/control.h"
+#include "game/creatureinfo.h"
 #include "game/debris.h"
+#include "game/effects.h"
+#include "game/floorinfo.h"
+#include "game/iteminfo.h"
+#include "game/lara.h"
+#include "game/levelinfo.h"
+#include "game/meshinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roominfo.h"
 #include "game/sound.h"
+#include "global/types.h"
 #include "specific/3dmath.h"
 #include "specific/function_stubs.h"
-#include "game/effects.h"
-#include "game/lara.h"
-#include "game/iteminfo.h"
-#include "game/aiinfo.h"
-#include "game/objectinfo.h"
-#include "game/creatureinfo.h"
-#include "game/animstruct.h"
-#include "game/meshinfo.h"
-#include "game/floorinfo.h"
-#include "game/roominfo.h"
-#include "global/types.h"
-#include "game/biteinfo.h"
 #include <stdlib.h>
-#include "game/levelinfo.h"
+
 
 static BITE_INFO sphinx_bite = { 0, 0, 0, 6 };
 
 void InitialiseSphinx(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,SPHINX)->anim_index + 1;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, SPHINX)->anim_index + 1;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -48,7 +49,7 @@ void SphinxControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	sphinx = (CREATURE_INFO*)item->data;
 	s = 614 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	c = 614 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
@@ -59,7 +60,7 @@ void SphinxControl(short item_number) {
 	h1 = GetHeight(floor, x, item->pos.y_pos, z);
 
 	if(item->current_anim_state == 5 && floor->stopper) {
-		r = GetRoom(currentLevel,item->room_number);
+		r = GetRoom(currentLevel, item->room_number);
 
 		for(int i = 0; i < r->num_meshes; i++) {
 			mesh = &r->mesh[i];
@@ -138,7 +139,7 @@ void SphinxControl(short item_number) {
 			sphinx->flags = 1;
 		}
 
-		if(x < 50 && z < 50 && item->anim_number == GetObjectInfo(currentLevel,SPHINX)->anim_index) {
+		if(x < 50 && z < 50 && item->anim_number == GetObjectInfo(currentLevel, SPHINX)->anim_index) {
 			item->goal_anim_state = 7;
 			item->required_anim_state = 6;
 			sphinx->maximum_turn = 0;
@@ -162,7 +163,7 @@ void SphinxControl(short item_number) {
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 		GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
-		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
+		if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
 			TestTriggers(trigger_index, 1, 0);
 
 			if(item->touch_bits & 0x40) {

@@ -1,28 +1,29 @@
 #include "game/footprnt.h"
-#include "game/delstuff.h"
 #include "game/control.h"
-#include "game/sound.h"
-#include "game/objects.h"
-#include "specific/drawroom.h"
-#include "specific/specificfx.h"
-#include "specific/function_table.h"
-#include "specific/3dmath.h"
-#include "specific/function_stubs.h"
-#include "specific/gamemain.h"
-#include "specific/file.h"
-#include "game/lara.h"
-#include "game/footprint.h"
-#include "game/phdvector.h"
-#include "game/iteminfo.h"
-#include "game/texturestruct.h"
-#include "game/sfxtypes.h"
-#include "game/laramesh.h"
+#include "game/delstuff.h"
 #include "game/floorinfo.h"
-#include "game/spritestruct.h"
-#include "global/types.h"
-#include "game/objectinfo.h"
-#include <d3dtypes.h>
+#include "game/footprint.h"
+#include "game/iteminfo.h"
+#include "game/lara.h"
+#include "game/laramesh.h"
 #include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/phdvector.h"
+#include "game/sfxtypes.h"
+#include "game/sound.h"
+#include "game/spritestruct.h"
+#include "game/texturestruct.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/drawroom.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
+#include "specific/function_table.h"
+#include "specific/gamemain.h"
+#include "specific/specificfx.h"
+#include <d3dtypes.h>
+
 
 #define PRINT_HEIGHT_CORRECTION 128 // The maximum difference between the footprint and the floor
 
@@ -127,7 +128,7 @@ void S_DrawFootPrints() {
 				v[j].specular = 0xFF000000;
 			}
 
-			sprite = GetSpriteInfo(currentLevel,GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 10);
+			sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 10);
 			tex.drawtype = 5;
 			tex.flag = 0;
 			tex.tpage = sprite->tpage;

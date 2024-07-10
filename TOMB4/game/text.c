@@ -1,20 +1,21 @@
 
 #include "game/text.h"
+#include "game/chardef.h"
+#include "game/cvector.h"
+#include "game/fontflags.h"
 #include "game/levelinfo.h"
+#include "game/texturestruct.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
 #include "specific/drawroom.h"
+#include "specific/function_stubs.h"
+#include "specific/function_table.h"
+#include "specific/gamemain.h"
 #include "specific/polyinsert.h"
 #include "specific/specificfx.h"
 #include "specific/texture.h"
-#include "specific/3dmath.h"
-#include "specific/function_stubs.h"
-#include "specific/gamemain.h"
-#include "specific/function_table.h"
-#include "game/cvector.h"
-#include "game/chardef.h"
 #include <d3dtypes.h>
-#include "global/types.h"
-#include "game/fontflags.h"
-#include "game/texturestruct.h"
+
 
 long stash_font_height;
 long smol_font_height;

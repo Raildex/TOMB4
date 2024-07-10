@@ -1,35 +1,36 @@
 
 #include "game/laraflar.h"
 #include "flareinfo.h"
-#include "specific/3dmath.h"
-#include "game/objects.h"
-#include "specific/output.h"
-#include "specific/function_stubs.h"
-#include "game/effect2.h"
-#include "game/delstuff.h"
-#include "game/items.h"
-#include "game/control.h"
-#include "game/collide.h"
-#include "game/lara_states.h"
-#include "game/sound.h"
-#include "game/larafire.h"
-#include "game/lara.h"
-#include "game/gameflow.h"
-#include "game/draw.h"
-#include "game/tomb4fx.h"
-#include "game/iteminfo.h"
-#include "game/larainfo.h"
-#include "game/itemstatus.h"
-#include "game/objectinfo.h"
-#include "game/roomflags.h"
-#include "game/laragunstatus.h"
 #include "game/animstruct.h"
-#include "global/types.h"
-#include "game/roominfo.h"
+#include "game/collide.h"
+#include "game/control.h"
+#include "game/delstuff.h"
+#include "game/draw.h"
+#include "game/effect2.h"
+#include "game/gameflow.h"
 #include "game/gfleveloptions.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/larafire.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
 #include "game/laramesh.h"
 #include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/sound.h"
+#include "game/tomb4fx.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/output.h"
 #include <stdlib.h>
+
 
 void DrawFlareInAir(ITEM_INFO* item) {
 	short* bounds;
@@ -39,7 +40,7 @@ void DrawFlareInAir(ITEM_INFO* item) {
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos - bounds[3], item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	phd_PutPolygons_train(GetMesh(currentLevel,GetObjectInfo(currentLevel,FLARE_ITEM)->mesh_index), 0);
+	phd_PutPolygons_train(GetMesh(currentLevel, GetObjectInfo(currentLevel, FLARE_ITEM)->mesh_index), 0);
 	phd_PopMatrix();
 
 	if(gfLevelFlags & GF_MIRROR) {
@@ -47,18 +48,18 @@ void DrawFlareInAir(ITEM_INFO* item) {
 			phd_PushMatrix();
 			phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, 2 * gfMirrorZPlane - item->pos.z_pos);
 			phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-			phd_PutPolygons_train(GetMesh(currentLevel,GetObjectInfo(currentLevel,FLARE_ITEM)->mesh_index), 0);
+			phd_PutPolygons_train(GetMesh(currentLevel, GetObjectInfo(currentLevel, FLARE_ITEM)->mesh_index), 0);
 			phd_PopMatrix();
 		}
 	}
 }
 
 void draw_flare_meshes() {
-	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,FLARE_ANIM)->mesh_index + LM_LHAND * 2);
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, FLARE_ANIM)->mesh_index + LM_LHAND * 2);
 }
 
 void undraw_flare_meshes() {
-	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2);
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_LHAND * 2);
 }
 
 long DoFlareLight(PHD_VECTOR* pos, long flare_age) {
@@ -138,8 +139,8 @@ void DoFlareInHand(long flare_age) {
 }
 
 void CreateFlare(short object, long thrown) {
-	ITEM_INFO* itemlist[6] = {0};
-	MESH_INFO* meshlist[6] = {0};
+	ITEM_INFO* itemlist[6] = { 0 };
+	MESH_INFO* meshlist[6] = { 0 };
 	ITEM_INFO* flare;
 	FLOOR_INFO* floor;
 	PHD_VECTOR pos;
@@ -165,7 +166,7 @@ void CreateFlare(short object, long thrown) {
 		room_number = lara_item->room_number;
 		floor = GetFloor(pos.x, pos.y, pos.z, &room_number);
 
-		if(GetCollidedObjects(flare, 0, 1, itemlist,5, meshlist,5, 0) || pos.y > GetHeight(floor, pos.x, pos.y, pos.z)) {
+		if(GetCollidedObjects(flare, 0, 1, itemlist, 5, meshlist, 5, 0) || pos.y > GetHeight(floor, pos.x, pos.y, pos.z)) {
 			collided = 1;
 			flare->pos.y_rot = lara_item->pos.y_rot - 0x8000;
 			flare->pos.x_pos = lara_item->pos.x_pos + (80 * phd_sin(flare->pos.y_rot) >> W2V_SHIFT);
@@ -197,7 +198,7 @@ void CreateFlare(short object, long thrown) {
 			flare->speed >>= 1;
 
 		if(object == FLARE_ITEM) {
-			FLARE_INFO* info = (FLARE_INFO*)calloc(1,sizeof(FLARE_INFO));
+			FLARE_INFO* info = (FLARE_INFO*)calloc(1, sizeof(FLARE_INFO));
 			DoFlareLight((PHD_VECTOR*)&flare->pos, lara.flare_age);
 			info->age = (lara.flare_age & 0x7FFF);
 			flare->data = info;
@@ -212,7 +213,7 @@ void CreateFlare(short object, long thrown) {
 void set_flare_arm(long frame) {
 	short anim_base;
 
-	anim_base = GetObjectInfo(currentLevel,FLARE_ANIM)->anim_index;
+	anim_base = GetObjectInfo(currentLevel, FLARE_ANIM)->anim_index;
 
 	if(frame >= 1) {
 		if(frame < 33)
@@ -226,7 +227,7 @@ void set_flare_arm(long frame) {
 	}
 
 	lara.left_arm.anim_number = anim_base;
-	lara.left_arm.frame_base = GetAnim(currentLevel,anim_base)->frame_ptr;
+	lara.left_arm.frame_base = GetAnim(currentLevel, anim_base)->frame_ptr;
 }
 
 void ready_flare() {
@@ -259,7 +260,7 @@ void draw_flare() {
 			draw_flare_meshes();
 		else if(ani >= 72 && ani <= 93) {
 			if(ani == 72) {
-				if(GetRoom(currentLevel,lara_item->room_number)->flags & ROOM_UNDERWATER)
+				if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_UNDERWATER)
 					SoundEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_WATER);
 				else
 					SoundEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_DEFAULT);
@@ -289,7 +290,7 @@ void undraw_flare() {
 	if(lara_item->goal_anim_state == AS_STOP && lara.vehicle == NO_ITEM) {
 		if(lara_item->anim_number == ANIM_BREATH) {
 			lara_item->anim_number = ANIM_THROWFLARE;
-			ani2 = ani + GetAnim(currentLevel,ANIM_THROWFLARE)->frame_base;
+			ani2 = ani + GetAnim(currentLevel, ANIM_THROWFLARE)->frame_base;
 			lara.flare_frame = ani2;
 			lara_item->frame_number = ani2;
 		}
@@ -297,7 +298,7 @@ void undraw_flare() {
 		if(lara_item->anim_number == ANIM_THROWFLARE) {
 			lara.flare_control_left = 0;
 
-			if(ani2 >= GetAnim(currentLevel,ANIM_THROWFLARE)->frame_base + 31) {
+			if(ani2 >= GetAnim(currentLevel, ANIM_THROWFLARE)->frame_base + 31) {
 				lara.request_gun_type = lara.last_gun_type;
 				lara.gun_type = lara.last_gun_type;
 				lara.gun_status = LG_NO_ARMS;
@@ -306,10 +307,10 @@ void undraw_flare() {
 				lara.right_arm.lock = 0;
 				lara.left_arm.lock = 0;
 				lara_item->anim_number = ANIM_STOP;
-				lara_item->frame_number = GetAnim(currentLevel,ANIM_STOP)->frame_base;
+				lara_item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 				lara_item->current_anim_state = AS_STOP;
 				lara_item->goal_anim_state = AS_STOP;
-				lara.flare_frame = GetAnim(currentLevel,ANIM_STOP)->frame_base;
+				lara.flare_frame = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 				return;
 			}
 
@@ -318,7 +319,7 @@ void undraw_flare() {
 		}
 	} else if(lara_item->current_anim_state == AS_STOP && lara.vehicle == NO_ITEM) {
 		lara_item->anim_number = ANIM_STOP;
-		lara_item->frame_number = GetAnim(currentLevel,ANIM_STOP)->frame_base;
+		lara_item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 	}
 
 	if(ani >= 33 && ani < 72)
@@ -387,7 +388,7 @@ void FlareControl(short item_number) {
 	flare->pos.x_pos += xv;
 	flare->pos.z_pos += zv;
 
-	if(GetRoom(currentLevel,flare->room_number)->flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel, flare->room_number)->flags & ROOM_UNDERWATER) {
 		flare->fallspeed += (5 - flare->fallspeed) >> 1;
 		flare->speed += (5 - flare->speed) >> 1;
 	} else
@@ -413,7 +414,7 @@ void FlareControl(short item_number) {
 			flare->pos.z_pos = 2 * gfMirrorZPlane - flare->pos.z_pos;
 		}
 
-		//flare_age |= 0x8000;
+		// flare_age |= 0x8000;
 	}
 
 	data->age = flare_age;

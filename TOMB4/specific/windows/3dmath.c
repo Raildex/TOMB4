@@ -1,17 +1,17 @@
 
 #include "specific/3dmath.h"
-#include "specific/windows/d3dmatrix.h"
-#include "game/spotcam.h"
 #include "game/control.h"
-#include "specific/function_stubs.h"
 #include "game/lara.h"
-#include "game/phdvector.h"
 #include "game/larainfo.h"
 #include "game/phd3dpos.h"
+#include "game/phdvector.h"
 #include "game/spotcam.h"
 #include "global/types.h"
+#include "specific/function_stubs.h"
+#include "specific/windows/d3dmatrix.h"
 #include <d3dtypes.h>
 #include <math.h>
+
 float one = 33554432.0F;
 float mone = 2048.0F;
 float FogStart = (float)(1024 * 12);

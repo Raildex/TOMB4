@@ -1,46 +1,47 @@
 
 #include "game/objects.h"
-#include "game/control.h"
-#include "game/sound.h"
-#include "game/sphere.h"
-#include "game/effect2.h"
-#include "specific/function_stubs.h"
-#include "game/items.h"
-#include "game/tomb4fx.h"
-#include "game/traps.h"
-#include "game/lara_states.h"
-#include "game/collide.h"
-#include "game/draw.h"
-#include "game/newinv.h"
-#include "game/switch.h"
-#include "game/delstuff.h"
-#include "game/effects.h"
-#include "specific/3dmath.h"
-#include "game/debris.h"
-#include "game/camera.h"
-#include "game/box.h"
-#include "specific/input.h"
-#include "game/lara.h"
-#include "specific/file.h"
-#include "game/gameflow.h"
-#include "game/sparks.h"
-#include "game/iteminfo.h"
-#include "game/larainfo.h"
-#include "game/itemflags.h"
-#include "game/floortypes.h"
-#include "game/laragunstatus.h"
 #include "game/animstruct.h"
+#include "game/box.h"
+#include "game/boxinfo.h"
+#include "game/camera.h"
+#include "game/collide.h"
+#include "game/control.h"
+#include "game/debris.h"
+#include "game/delstuff.h"
+#include "game/draw.h"
+#include "game/effect2.h"
+#include "game/effects.h"
+#include "game/floorinfo.h"
+#include "game/floortypes.h"
+#include "game/gameflow.h"
 #include "game/heighttypes.h"
 #include "game/inputbuttons.h"
-#include "game/objectinfo.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
 #include "game/itemstatus.h"
-#include "game/texturestruct.h"
-#include "game/boxinfo.h"
-#include "game/roominfo.h"
-#include "global/types.h"
-#include "game/floorinfo.h"
-#include <stdlib.h>
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/newinv.h"
+#include "game/objectinfo.h"
+#include "game/roominfo.h"
+#include "game/sound.h"
+#include "game/sparks.h"
+#include "game/sphere.h"
+#include "game/switch.h"
+#include "game/texturestruct.h"
+#include "game/tomb4fx.h"
+#include "game/traps.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
+#include <stdlib.h>
+
 static short StatuePlinthBounds[12] = { 0, 0, -64, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 static short PoleBounds[12] = { -256, 256, 0, 0, -512, 512, -1820, 1820, -5460, 5460, -1820, 1820 };
 static PHD_VECTOR PolePos = { 0, 0, -208 };
@@ -54,12 +55,12 @@ void ControlMapper(short item_number) {
 	long rg, h;
 	short room_number;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
 
-	if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base >= 200) {
+	if(item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base >= 200) {
 		SoundEffect(SFX_MAPPER_LAZER, &item->pos, SFX_DEFAULT);
 		item->mesh_bits |= 2;
 		pos.x = 0;
@@ -113,7 +114,7 @@ void ControlLightningConductor(short item_number) {
 	PHD_VECTOR pos2;
 	short r, g, b, room_number;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -172,7 +173,7 @@ void ControlLightningConductor(short item_number) {
 		TriggerLightningGlow(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, RGBA(r, g, b, 64));
 
 		if(item->trigger_flags == 2 && !item->item_flags[0]) {
-			ExplodeItemNode(GetItem(currentLevel,item->item_flags[2] & 0xFF), 0, 0, -128);
+			ExplodeItemNode(GetItem(currentLevel, item->item_flags[2] & 0xFF), 0, 0, -128);
 			KillItem(item->item_flags[2] & 0xFF);
 			ExplodeItemNode(GetItem(currentLevel, item->item_flags[2] >> 8), 0, 0, -128);
 			KillItem(item->item_flags[2] >> 8);
@@ -262,7 +263,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	short* bounds;
 	short room_number, y_rot;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status && lara.gun_status == LG_NO_ARMS && !item->trigger_flags && !item->item_flags[0]) {
 		if(!item->item_flags[1]) {
@@ -287,7 +288,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		if(GLOBAL_inventoryitemchosen == PUZZLE_ITEM5) {
 			l->anim_number = ANIM_PLINTHHI;
-			l->frame_number = GetAnim(currentLevel,ANIM_PLINTHHI)->frame_base;
+			l->frame_number = GetAnim(currentLevel, ANIM_PLINTHHI)->frame_base;
 			l->current_anim_state = AS_CONTROLLED;
 			lara.gun_status = LG_HANDS_BUSY;
 			GLOBAL_inventoryitemchosen = NO_ITEM;
@@ -296,7 +297,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	} else if(item->item_flags[1]) {
 		if(GLOBAL_inventoryitemchosen == PUZZLE_ITEM5) {
 			l->anim_number = ANIM_PLINTHHI;
-			l->frame_number = GetAnim(currentLevel,ANIM_PLINTHHI)->frame_base;
+			l->frame_number = GetAnim(currentLevel, ANIM_PLINTHHI)->frame_base;
 			l->current_anim_state = AS_CONTROLLED;
 			lara.gun_status = LG_HANDS_BUSY;
 			GLOBAL_inventoryitemchosen = NO_ITEM;
@@ -304,7 +305,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 	}
 
-	if(l->anim_number == ANIM_PLINTHHI && l->frame_number == GetAnim(currentLevel,ANIM_PLINTHHI)->frame_base + 45) {
+	if(l->anim_number == ANIM_PLINTHHI && l->frame_number == GetAnim(currentLevel, ANIM_PLINTHHI)->frame_base + 45) {
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 		GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
@@ -375,12 +376,12 @@ void ControlBurningRope(short item_number) {
 	long passes;
 	short nmeshes;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
 
-	nmeshes = GetObjectInfo(currentLevel,item->object_number)->nmeshes - 1;
+	nmeshes = GetObjectInfo(currentLevel, item->object_number)->nmeshes - 1;
 
 	if(!(GlobalCounter & 3)) {
 		GetSpheres(item, Slist, 1);
@@ -456,7 +457,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	PHD_VECTOR pos;
 	long nSpheres, dx, dy, dz;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags || !lara.LitTorch)
 		return;
@@ -501,7 +502,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void ControlWaterfall(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
 		item->status = ITEM_ACTIVE;
@@ -527,7 +528,7 @@ void AnimateWaterfalls() {
 	off = (float)vOff * (float)(1.0F / 256.0F);
 
 	for(int i = 0; i < 3; i++) {
-		obj = GetObjectInfo(currentLevel,WATERFALL1 + i);
+		obj = GetObjectInfo(currentLevel, WATERFALL1 + i);
 
 		if(obj->loaded) {
 			tex = GetWaterfallTextInfos(currentLevel, i);
@@ -549,7 +550,7 @@ void ControlTriggerTriggerer(short item_number) {
 	ITEM_INFO* item;
 	short* data;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &item->room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	data = trigger_index;
 
@@ -588,7 +589,7 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	short roty;
 
-	item = GetItem(currentLevel,item_num);
+	item = GetItem(currentLevel, item_num);
 
 	if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == item_num) {
 		roty = item->pos.y_rot;
@@ -597,7 +598,7 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(PoleBounds, item, l)) {
 			if(MoveLaraPosition(&PolePos, item, l)) {
 				l->anim_number = ANIM_STAT2POLE;
-				l->frame_number = GetAnim(currentLevel,ANIM_STAT2POLE)->frame_base;
+				l->frame_number = GetAnim(currentLevel, ANIM_STAT2POLE)->frame_base;
 				l->current_anim_state = AS_POLESTAT;
 				lara.IsMoving = 0;
 				lara.gun_status = LG_HANDS_BUSY;
@@ -619,11 +620,11 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 			if(l->current_anim_state == AS_REACH) {
 				PolePosR.y = l->pos.y_pos - item->pos.y_pos + 10;
 				l->anim_number = ANIM_REACH2POLE;
-				l->frame_number = GetAnim(currentLevel,ANIM_REACH2POLE)->frame_base;
+				l->frame_number = GetAnim(currentLevel, ANIM_REACH2POLE)->frame_base;
 			} else {
 				PolePosR.y = l->pos.y_pos - item->pos.y_pos + 66;
 				l->anim_number = ANIM_JUMP2POLE;
-				l->frame_number = GetAnim(currentLevel,ANIM_JUMP2POLE)->frame_base;
+				l->frame_number = GetAnim(currentLevel, ANIM_JUMP2POLE)->frame_base;
 			}
 
 			AlignLaraPosition(&PolePosR, item, l);
@@ -643,7 +644,7 @@ void ControlAnimatingSlots(short item_number) {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
 		item->status = ITEM_ACTIVE;
@@ -656,7 +657,7 @@ void ControlAnimatingSlots(short item_number) {
 			GetJointAbsPosition(item, &pos, 0);
 			SoundEffect(SFX_HELICOPTER_LOOP, (PHD_3DPOS*)&pos, SFX_DEFAULT);
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end)
 				item->flags &= ~IFL_CODEBITS;
 		}
 	} else if(item->trigger_flags == 2)
@@ -667,7 +668,7 @@ void SmashObjectControl(short item_number) {
 	ITEM_INFO* item;
 	long speed;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(item->flags & IFL_INVISIBLE)
 		return;
@@ -690,10 +691,10 @@ void SmashObject(short item_number) {
 	BOX_INFO* box;
 	long sector;
 
-	item = GetItem(currentLevel,item_number);
-	r = GetRoom(currentLevel,item->room_number);
+	item = GetItem(currentLevel, item_number);
+	r = GetRoom(currentLevel, item->room_number);
 	sector = ((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10);
-	box = GetBox(currentLevel,r->floor[sector].box);
+	box = GetBox(currentLevel, r->floor[sector].box);
 
 	if(box->overlap_index & 0x8000)
 		box->overlap_index &= ~0x4000;
@@ -716,7 +717,7 @@ void EarthQuake(short item_number) {
 	long pitch;
 	short earth_item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -766,8 +767,8 @@ void EarthQuake(short item_number) {
 		camera.bounce = -item->item_flags[0];
 
 		if(GetRandomControl() < 1024) {
-			for(earth_item = GetRoom(currentLevel,item->room_number)->item_number; earth_item != NO_ITEM; earth_item = item->next_item) {
-				item = GetItem(currentLevel,earth_item);
+			for(earth_item = GetRoom(currentLevel, item->room_number)->item_number; earth_item != NO_ITEM; earth_item = item->next_item) {
+				item = GetItem(currentLevel, earth_item);
 
 				if(item->object_number == FLAME_EMITTER && item->status != ITEM_ACTIVE && item->status != ITEM_DEACTIVATED) {
 					AddActiveItem(earth_item);

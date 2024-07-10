@@ -1,35 +1,36 @@
 
 #include "game/sas.h"
-#include "game/objects.h"
-#include "specific/function_stubs.h"
-#include "game/control.h"
-#include "game/lara_states.h"
-#include "game/switch.h"
-#include "game/items.h"
-#include "game/collide.h"
-#include "game/sphere.h"
-#include "game/tomb4fx.h"
-#include "game/box.h"
-#include "game/effect2.h"
-#include "specific/3dmath.h"
-#include "game/people.h"
-#include "specific/input.h"
-#include "game/lara.h"
-#include "game/creatureinfo.h"
+#include "game/aibits.h"
 #include "game/aiinfo.h"
 #include "game/animstruct.h"
-#include "game/larainfo.h"
-#include "game/objectinfo.h"
-#include "game/itemstatus.h"
 #include "game/biteinfo.h"
-#include "game/weapontypes.h"
-#include "game/itemflags.h"
-#include "game/laragunstatus.h"
-#include "global/types.h"
+#include "game/box.h"
+#include "game/collide.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/effect2.h"
 #include "game/inputbuttons.h"
-#include "game/aibits.h"
-#include <stdlib.h>
+#include "game/itemflags.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/people.h"
+#include "game/sphere.h"
+#include "game/switch.h"
+#include "game/tomb4fx.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
+#include <stdlib.h>
+
 
 static short DragSASBounds[12] = { -256, 256, -100, 100, -512, -460, -1820, 1820, -5460, 5460, 0, 0 };
 static PHD_VECTOR DragSASPos = { 0, 0, -460 };
@@ -38,25 +39,25 @@ static BITE_INFO sas_fire = { 0, 300, 64, 7 };
 void InitialiseInjuredSas(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags) {
-		item->anim_number = GetObjectInfo(currentLevel,SAS_DYING)->anim_index;
+		item->anim_number = GetObjectInfo(currentLevel, SAS_DYING)->anim_index;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 	} else {
-		item->anim_number = GetObjectInfo(currentLevel,SAS_DYING)->anim_index + 3;
+		item->anim_number = GetObjectInfo(currentLevel, SAS_DYING)->anim_index + 3;
 		item->current_anim_state = 4;
 		item->goal_anim_state = 4;
 	}
 
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 }
 
 void InjuredSasControl(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(item->current_anim_state == 1) {
 		if(!(GetRandomControl() & 0x7F))
@@ -73,13 +74,13 @@ void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	long x, z;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS && !l->gravity_status && !(item->flags & IFL_CODEBITS) || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(TestLaraPosition(DragSASBounds, item, l)) {
 			if(MoveLaraPosition(&DragSASPos, item, l)) {
 				l->anim_number = ANIM_DRAGSAS;
-				l->frame_number = GetAnim(currentLevel,ANIM_DRAGSAS)->frame_base;
+				l->frame_number = GetAnim(currentLevel, ANIM_DRAGSAS)->frame_base;
 				l->current_anim_state = AS_CONTROLLED;
 				l->pos.y_rot = item->pos.y_rot;
 				lara.IsMoving = 0;
@@ -96,7 +97,7 @@ void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 	} else {
 		if(item->status == ITEM_ACTIVE) {
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end) {
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end) {
 				x = (2048 * phd_sin(l->pos.y_rot)) >> W2V_SHIFT;
 				z = (2048 * phd_cos(l->pos.y_rot)) >> W2V_SHIFT;
 				TestTriggersAtXYZ(l->pos.x_pos - x, l->pos.y_pos, l->pos.z_pos - z, l->room_number, 1, 0);
@@ -122,7 +123,7 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 	if(item_number == NO_ITEM)
 		return;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	item->shade = -0x3DF0;
 	item->object_number = GRENADE;
 	item->room_number = sas->room_number;
@@ -175,10 +176,10 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 void InitialiseSas(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,SAS)->anim_index + 12;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, SAS)->anim_index + 12;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -194,7 +195,7 @@ void SasControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	sas = (CREATURE_INFO*)item->data;
 	angle = 0;
 	tilt = 0;
@@ -213,8 +214,8 @@ void SasControl(short item_number) {
 
 	if(item->hit_points <= 0) {
 		if(item->current_anim_state != 7) {
-			item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 19;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 19;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 7;
 		}
 	} else {
@@ -259,7 +260,7 @@ void SasControl(short item_number) {
 			sas->flags = 0;
 			sas->maximum_turn = 0;
 
-			if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index + 17) {
+			if(item->anim_number == GetObjectInfo(currentLevel, item->object_number)->anim_index + 17) {
 				if(abs(info.angle) < 1820)
 					item->pos.y_rot += info.angle;
 				else if(info.angle < 0)
@@ -467,7 +468,7 @@ void SasControl(short item_number) {
 				yrot = 0;
 			}
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 20) {
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 20) {
 				if(!sas->enemy->speed) {
 					xrot = xrot + (GetRandomControl() & 0x1FF) - 256;
 					yrot = yrot + (GetRandomControl() & 0x1FF) - 256;
@@ -493,8 +494,8 @@ void SasControl(short item_number) {
 
 		if(lara.blindTimer > 100 && item->current_anim_state != 17) {
 			sas->maximum_turn = 0;
-			item->anim_number = GetObjectInfo(currentLevel,SAS)->anim_index + 28;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base + (GetRandomControl() & 7);
+			item->anim_number = GetObjectInfo(currentLevel, SAS)->anim_index + 28;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base + (GetRandomControl() & 7);
 			item->current_anim_state = 17;
 		}
 	}

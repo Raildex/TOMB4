@@ -1,33 +1,34 @@
 
 #include "game/health.h"
-#include "specific/drawbars.h"
-#include "game/text.h"
-#include "game/newinv.h"
-#include "game/spotcam.h"
-#include "game/control.h"
-#include "specific/3dmath.h"
-#include "game/objects.h"
-#include "game/larafire.h"
 #include "game/camera.h"
-#include "specific/input.h"
-#include "game/lara.h"
+#include "game/control.h"
 #include "game/deltapak.h"
-#include "game/savegame.h"
-#include "game/gameflow.h"
-#include "specific/output.h"
-#include "game/savegameinfo.h"
-#include "game/larainfo.h"
-#include "game/iteminfo.h"
-#include "game/objectinfo.h"
-#include "game/laragunstatus.h"
-#include "game/larawaterstatus.h"
 #include "game/displaypu.h"
-#include "global/types.h"
-#include "game/weapontypes.h"
+#include "game/gameflow.h"
 #include "game/gfleveloptions.h"
-#include <stdio.h>
-#include "game/levelinfo.h"
+#include "game/iteminfo.h"
 #include "game/items.h"
+#include "game/lara.h"
+#include "game/larafire.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
+#include "game/larawaterstatus.h"
+#include "game/levelinfo.h"
+#include "game/newinv.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/savegame.h"
+#include "game/savegameinfo.h"
+#include "game/spotcam.h"
+#include "game/text.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/drawbars.h"
+#include "specific/input.h"
+#include "specific/output.h"
+#include <stdio.h>
+
 DISPLAYPU pickups[8];
 long PickupX;
 short CurrentPickup;
@@ -66,18 +67,18 @@ void DrawGameInfo(long timed) {
 			S_DrawDashBar(100 * DashTimer / 120);
 
 		if(lara.target_item != NO_ITEM) {
-			if(/*tomb4.enemy_bars &&*/ GetItem(currentLevel,lara.target_item)->hit_points > 0) {
-				if(GetItem(currentLevel,lara.target_item)->object_number == LARA_DOUBLE)
+			if(/*tomb4.enemy_bars &&*/ GetItem(currentLevel, lara.target_item)->hit_points > 0) {
+				if(GetItem(currentLevel, lara.target_item)->object_number == LARA_DOUBLE)
 					S_DrawEnemyBar(lara_item->hit_points / 10);
-				else if(GetItem(currentLevel,lara.target_item)->object_number == SKELETON)
+				else if(GetItem(currentLevel, lara.target_item)->object_number == SKELETON)
 					S_DrawEnemyBar(100);
-				else if(GetItem(currentLevel,lara.target_item)->object_number == HORSEMAN) {
-					if(GetItem(currentLevel,lara.target_item)->dynamic_light)
-						S_DrawEnemyBar(100 * GetItem(currentLevel,lara.target_item)->hit_points / 100);
+				else if(GetItem(currentLevel, lara.target_item)->object_number == HORSEMAN) {
+					if(GetItem(currentLevel, lara.target_item)->dynamic_light)
+						S_DrawEnemyBar(100 * GetItem(currentLevel, lara.target_item)->hit_points / 100);
 					else
-						S_DrawEnemyBar(100 * GetItem(currentLevel,lara.target_item)->hit_points / GetObjectInfo(currentLevel,GetItem(currentLevel,lara.target_item)->object_number)->hit_points);
+						S_DrawEnemyBar(100 * GetItem(currentLevel, lara.target_item)->hit_points / GetObjectInfo(currentLevel, GetItem(currentLevel, lara.target_item)->object_number)->hit_points);
 				} else
-					S_DrawEnemyBar(100 * GetItem(currentLevel,lara.target_item)->hit_points / GetObjectInfo(currentLevel, GetItem(currentLevel,lara.target_item)->object_number)->hit_points);
+					S_DrawEnemyBar(100 * GetItem(currentLevel, lara.target_item)->hit_points / GetObjectInfo(currentLevel, GetItem(currentLevel, lara.target_item)->object_number)->hit_points);
 			}
 		}
 

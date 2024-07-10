@@ -1,50 +1,51 @@
 
 #include "game/newinv.h"
-#include "specific/LoadSave.h"
-#include "specific/3dmath.h"
-#include "game/objects.h"
+#include "game/ammolist.h"
+#include "game/animstruct.h"
+#include "game/camera.h"
+#include "game/carriedweaponflags.h"
+#include "game/combinelist.h"
+#include "game/control.h"
 #include "game/draw.h"
+#include "game/fontflags.h"
+#include "game/gameflow.h"
+#include "game/gfleveloptions.h"
+#include "game/health.h"
+#include "game/inputbuttons.h"
+#include "game/invdrawitem.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
+#include "game/lara1gun.h"
+#include "game/lara2gun.h"
+#include "game/lara_states.h"
+#include "game/larafire.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
+#include "game/larawaterstatus.h"
+#include "game/levelinfo.h"
+#include "game/menuthang.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/ringme.h"
+#include "game/savegame.h"
+#include "game/savegameinfo.h"
+#include "game/sound.h"
+#include "game/text.h"
+#include "game/weapontypes.h"
+#include "specific/3dmath.h"
+#include "specific/LoadSave.h"
+#include "specific/drawbars.h"
+#include "specific/gamemain.h"
+#include "specific/input.h"
 #include "specific/output.h"
 #include "specific/sound.h"
 #include "specific/windows/d3dmatrix.h"
-#include "game/lara2gun.h"
-#include "game/lara1gun.h"
-#include "game/text.h"
-#include "game/sound.h"
-#include "game/lara_states.h"
-#include "game/larafire.h"
-#include "specific/input.h"
-#include "game/health.h"
-#include "game/gameflow.h"
-#include "game/control.h"
-#include "game/camera.h"
 #include "specific/windows/dxshell.h"
-#include "specific/gamemain.h"
-#include "game/lara.h"
-#include "game/savegame.h"
 #include "specific/windows/dxsound.h"
-#include "specific/drawbars.h"
-#include "game/inputbuttons.h"
-#include "game/invdrawitem.h"
-#include "game/larainfo.h"
-#include "game/iteminfo.h"
-#include "game/carriedweaponflags.h"
-#include "game/gfleveloptions.h"
-#include "game/weapontypes.h"
-#include "game/laragunstatus.h"
-#include "game/savegameinfo.h"
-#include "game/larawaterstatus.h"
-#include "game/objectinfo.h"
-#include "game/fontflags.h"
-#include "game/ringme.h"
-#include "game/menuthang.h"
-#include "game/ammolist.h"
-#include "game/animstruct.h"
-#include "game/combinelist.h"
 #include <dinput.h>
 #include <stdio.h>
-#include "game/levelinfo.h"
-#include "game/items.h"
+
 
 enum meshbits {
 	ALL_MESHBITS = 0xFFFFFFFF
@@ -610,9 +611,9 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 	unsigned long bit;
 	long poppush, alpha, compass;
 
-	anim = GetAnim(currentLevel,GetObjectInfo(currentLevel,item->object_number)->anim_index);
+	anim = GetAnim(currentLevel, GetObjectInfo(currentLevel, item->object_number)->anim_index);
 	frmptr = anim->frame_ptr;
-	object = GetObjectInfo(currentLevel,item->object_number);
+	object = GetObjectInfo(currentLevel, item->object_number);
 	phd_PushMatrix();
 	phd_RotYXZ(item->yrot, item->xrot, item->zrot);
 
@@ -631,8 +632,8 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 	}
 
 	bit = 1;
-	meshpp = GetMeshPointer(currentLevel,object->mesh_index);
-	bone = GetBone(currentLevel,object->bone_index);
+	meshpp = GetMeshPointer(currentLevel, object->mesh_index);
+	bone = GetBone(currentLevel, object->bone_index);
 
 	if(!shagflag)
 		phd_TranslateRel(frmptr[6], frmptr[7], frmptr[8]);
@@ -1534,36 +1535,36 @@ void do_examine_mode() {
 void dels_give_lara_items_cheat() {
 	long piss;
 
-	if(GetObjectInfo(currentLevel,CROWBAR_ITEM)->loaded)
+	if(GetObjectInfo(currentLevel, CROWBAR_ITEM)->loaded)
 		lara.crowbar = 1;
 
-	if(GetObjectInfo(currentLevel,CLOCKWORK_BEETLE)->loaded)
+	if(GetObjectInfo(currentLevel, CLOCKWORK_BEETLE)->loaded)
 		lara.mechanical_scarab = 1;
 
 	for(piss = 0; piss < 12; piss++) {
-		if(GetObjectInfo(currentLevel,PUZZLE_ITEM1 + piss)->loaded)
+		if(GetObjectInfo(currentLevel, PUZZLE_ITEM1 + piss)->loaded)
 			lara.puzzleitems[piss] = 1;
 	}
 
 	for(piss = 0; piss < 12; piss++) {
-		if(GetObjectInfo(currentLevel,KEY_ITEM1 + piss)->loaded)
+		if(GetObjectInfo(currentLevel, KEY_ITEM1 + piss)->loaded)
 			lara.keyitems |= 1 << piss;
 	}
 
 	for(piss = 0; piss < 4; piss++) {
-		if(GetObjectInfo(currentLevel,PICKUP_ITEM1 + piss)->loaded)
+		if(GetObjectInfo(currentLevel, PICKUP_ITEM1 + piss)->loaded)
 			lara.pickupitems |= 1 << piss;
 	}
 
 	for(piss = 0; piss < 6; piss++) {
-		if(GetObjectInfo(currentLevel,QUEST_ITEM1 + piss)->loaded)
+		if(GetObjectInfo(currentLevel, QUEST_ITEM1 + piss)->loaded)
 			lara.questitems |= 1 << piss;
 	}
 
-	if(GetObjectInfo(currentLevel,WATERSKIN1_EMPTY)->loaded)
+	if(GetObjectInfo(currentLevel, WATERSKIN1_EMPTY)->loaded)
 		lara.small_water_skin = 1;
 
-	if(GetObjectInfo(currentLevel,WATERSKIN2_EMPTY)->loaded)
+	if(GetObjectInfo(currentLevel, WATERSKIN2_EMPTY)->loaded)
 		lara.big_water_skin = 1;
 
 	lara.pickupitemscombo = 0;
@@ -2481,7 +2482,7 @@ void draw_current_object_list(long ringnum) {
 				else
 					sprintf(textbufme, "%ld x %s", nummeup, SCRIPT_TEXT(objme->objname));
 			} else
-				sprintf(textbufme, "%s",SCRIPT_TEXT(objme->objname));
+				sprintf(textbufme, "%s", SCRIPT_TEXT(objme->objname));
 
 			if(ringnum == RING_INVENTORY)
 				objmeup = (long)(phd_centery - (float)(phd_winymax + 1) / 16.0F * 3.0F);

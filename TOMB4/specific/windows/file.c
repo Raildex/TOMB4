@@ -1,30 +1,28 @@
-#include <zlib.h>
 #include "specific/file.h"
-#include "specific/function_stubs.h"
-#include "specific/texture.h"
-#include "specific/drawbars.h"
-#include "specific/drawroom.h"
-#include "game/setup.h"
+#include "game/gameflow.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
+#include "game/levelinfo.h"
+#include "game/meshdata.h"
+#include "game/objectinfo.h"
 #include "game/objects.h"
-#include "specific/specificfx.h"
+#include "game/setup.h"
+#include "game/texturestruct.h"
 #include "game/tomb4fx.h"
 #include "specific/audio.h"
+#include "specific/drawbars.h"
+#include "specific/drawroom.h"
+#include "specific/function_stubs.h"
+#include "specific/output.h"
 #include "specific/polyinsert.h"
+#include "specific/specificfx.h"
+#include "specific/texture.h"
 #include "specific/thread.h"
 #include "specific/windows/winmain.h"
-#include "game/lara.h"
-#include "specific/output.h"
-#include "game/gameflow.h"
-#include "specific/texture.h"
-#include "game/objectinfo.h"
-#include "game/meshdata.h"
-#include "game/texturestruct.h"
 #include <d3dtypes.h>
-#include "specific/texture.h"
-#include "game/larainfo.h"
 #include <process.h>
-#include "game/levelinfo.h"
-#include "specific/texture.h"
+#include <zlib.h>
+
 
 THREAD* LevelLoadingThread;
 
@@ -38,10 +36,10 @@ int LoadLevel(void* name) {
 	FreeLevel();
 	currentLevel = CreateLevel();
 
-	lara = (LARA_INFO){0};
+	lara = (LARA_INFO){ 0 };
 
 	S_InitLoadBar(20);
-	//S_LoadBar();
+	// S_LoadBar();
 
 	CompressedData = NULL;
 	char* FileData = NULL;
@@ -51,16 +49,16 @@ int LoadLevel(void* name) {
 	if(level_fp) {
 		fread(&version, 4, 1, level_fp);
 		Log(__func__, "Process Level Data");
-		LoadTextures(b8g8r8a8,level_fp,currentLevel);
+		LoadTextures(b8g8r8a8, level_fp, currentLevel);
 		char geoMarker[3];
 		fread(&geoMarker[0], 1, 3, level_fp);
 		if(!(geoMarker[0] == 'G' && geoMarker[1] == 'E' && geoMarker[2] == 'O')) {
-			Log(__func__, "Invalid Marker %c %c %c!",geoMarker[0],geoMarker[1],geoMarker[2]);
+			Log(__func__, "Invalid Marker %c %c %c!", geoMarker[0], geoMarker[1], geoMarker[2]);
 		}
 		fread(&size, 1, 4, level_fp);
 		fread(&compressedSize, 1, 4, level_fp);
-		CompressedData = (char*)calloc(1 ,compressedSize);
-		FileData = (char*)calloc(1,size);
+		CompressedData = (char*)calloc(1, compressedSize);
+		FileData = (char*)calloc(1, size);
 		fread(CompressedData, compressedSize, 1u, level_fp);
 		S_Decompress(FileData, CompressedData, compressedSize, size);
 		free(CompressedData);
@@ -68,10 +66,10 @@ int LoadLevel(void* name) {
 		pData = FileData;
 		S_LoadBar();
 
-		LoadRooms(&FileData,currentLevel);
+		LoadRooms(&FileData, currentLevel);
 		S_LoadBar();
 
-		LoadObjects(&FileData,currentLevel);
+		LoadObjects(&FileData, currentLevel);
 		S_LoadBar();
 
 		LoadSprites(&FileData, currentLevel);
@@ -83,7 +81,7 @@ int LoadLevel(void* name) {
 		LoadSoundEffects(&FileData, currentLevel);
 		S_LoadBar();
 
-		LoadBoxes(&FileData,currentLevel);
+		LoadBoxes(&FileData, currentLevel);
 		S_LoadBar();
 
 		LoadAnimatedTextures(&FileData, currentLevel);
@@ -92,7 +90,7 @@ int LoadLevel(void* name) {
 		LoadTextureInfos(&FileData, currentLevel);
 		S_LoadBar();
 
-		LoadItems(&FileData,currentLevel);
+		LoadItems(&FileData, currentLevel);
 		S_LoadBar();
 
 		LoadAIInfo(&FileData, currentLevel);
@@ -103,7 +101,7 @@ int LoadLevel(void* name) {
 		char sfxMarker[3];
 		fread(&sfxMarker[0], 1, 3, level_fp);
 		if(!(sfxMarker[0] == 'S' && sfxMarker[1] == 'F' && sfxMarker[2] == 'X')) {
-			Log(__func__, "Invalid Marker %c %c %c!",sfxMarker[0],sfxMarker[1],sfxMarker[2]);
+			Log(__func__, "Invalid Marker %c %c %c!", sfxMarker[0], sfxMarker[1], sfxMarker[2]);
 		}
 		if(acm_ready && !App.SoundDisabled)
 			LoadSamples(level_fp, &FileData, currentLevel);
@@ -123,7 +121,7 @@ int LoadLevel(void* name) {
 		SetFadeClip(0, 1);
 		reset_cutseq_vars();
 		FileClose(level_fp);
-	}else {
+	} else {
 		Log(__func__, "Could not open Level file!");
 		return 0;
 	}
@@ -224,7 +222,7 @@ long LoadFile(const char* name, char** dest) {
 	size = FileSize(file);
 
 	if(!*dest)
-		*dest = (char*)calloc(size,1);
+		*dest = (char*)calloc(size, 1);
 
 	count = fread(*dest, 1, size, file);
 	Log(__func__, "Read - %d FileSize - %d", count, size);
@@ -247,7 +245,7 @@ char LoadCinematic(char** data, LEVEL_INFO* lvl) {
 }
 
 char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size) {
-	z_stream stream = {0};
+	z_stream stream = { 0 };
 
 	Log(__func__, "Decompress");
 	stream.avail_in = compressedSize;

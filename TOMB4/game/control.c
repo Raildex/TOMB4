@@ -1,85 +1,85 @@
 
 #include "game/control.h"
 #include "distances.h"
-#include "game/pickup.h"
-#include "specific/function_stubs.h"
-#include "specific/input.h"
-#include "game/newinv.h"
-#include "specific/LoadSave.h"
-#include "specific/3dmath.h"
-#include "game/effect2.h"
-#include "game/tomb4fx.h"
-#include "game/items.h"
-#include "game/box.h"
-#include "game/laramisc.h"
-#include "game/sound.h"
-#include "game/hair.h"
-#include "game/debris.h"
-#include "game/text.h"
-#include "game/effects.h"
-#include "game/spotcam.h"
-#include "game/camera.h"
-#include "game/objects.h"
-#include "game/scarab.h"
-#include "game/croc.h"
-#include "game/traps.h"
-#include "game/switch.h"
-#include "game/lara_states.h"
-#include "specific/audio.h"
-#include "game/lot.h"
-#include "specific/output.h"
-#include "game/gameflow.h"
-#include "game/lara1gun.h"
-#include "game/sphere.h"
-#include "game/draw.h"
-#include "game/larafire.h"
-#include "game/rope.h"
-#include "game/voncroy.h"
-#include "specific/gamemain.h"
-#include "game/lara.h"
-#include "game/deltapak.h"
-#include "game/health.h"
-#include "specific/windows/dxshell.h"
-#include "game/savegame.h"
-#include "specific/file.h"
-#include "game/iteminfo.h"
+#include "game/animcommands.h"
 #include "game/animstruct.h"
-#include "game/roominfo.h"
-#include "game/meshinfo.h"
-#include "game/gameflow.h"
-#include "game/inputbuttons.h"
+#include "game/box.h"
+#include "game/boxinfo.h"
+#include "game/camera.h"
+#include "game/camerainfo.h"
+#include "game/carriedweaponflags.h"
+#include "game/changestruct.h"
+#include "game/creatureinfo.h"
+#include "game/croc.h"
+#include "game/debris.h"
+#include "game/deltapak.h"
+#include "game/draw.h"
+#include "game/effect2.h"
+#include "game/effects.h"
 #include "game/floorinfo.h"
 #include "game/floortypes.h"
-#include "game/trigobjtypes.h"
-#include "game/larainfo.h"
-#include "game/itemflags.h"
-#include "game/objectinfo.h"
-#include "game/triggertypes.h"
-#include "game/larawaterstatus.h"
-#include "game/creatureinfo.h"
-#include "game/savegameinfo.h"
-#include "game/fxinfo.h"
-#include "game/weapontypes.h"
 #include "game/fontflags.h"
-#include "game/carriedweaponflags.h"
+#include "game/fxinfo.h"
+#include "game/gameflow.h"
 #include "game/gfleveloptions.h"
-#include "game/laragunstatus.h"
-#include "game/itemstatus.h"
-#include "game/camerainfo.h"
-#include "game/objectvector.h"
-#include "game/roomflags.h"
+#include "game/hair.h"
+#include "game/health.h"
 #include "game/heighttypes.h"
-#include "game/boxinfo.h"
-#include "game/rangestruct.h"
-#include "game/changestruct.h"
-#include "game/shatteritem.h"
-#include "game/phd3dpos.h"
-#include "game/staticinfo.h"
-#include "game/weaponinfo.h"
-#include "game/animcommands.h"
-#include "game/sfxtypes.h"
-#include <dinput.h>
+#include "game/inputbuttons.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara1gun.h"
+#include "game/lara_states.h"
+#include "game/larafire.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
+#include "game/laramisc.h"
+#include "game/larawaterstatus.h"
 #include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/meshinfo.h"
+#include "game/newinv.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/objectvector.h"
+#include "game/phd3dpos.h"
+#include "game/pickup.h"
+#include "game/rangestruct.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/rope.h"
+#include "game/savegame.h"
+#include "game/savegameinfo.h"
+#include "game/scarab.h"
+#include "game/sfxtypes.h"
+#include "game/shatteritem.h"
+#include "game/sound.h"
+#include "game/sphere.h"
+#include "game/spotcam.h"
+#include "game/staticinfo.h"
+#include "game/switch.h"
+#include "game/text.h"
+#include "game/tomb4fx.h"
+#include "game/traps.h"
+#include "game/triggertypes.h"
+#include "game/trigobjtypes.h"
+#include "game/voncroy.h"
+#include "game/weaponinfo.h"
+#include "game/weapontypes.h"
+#include "specific/3dmath.h"
+#include "specific/LoadSave.h"
+#include "specific/audio.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
+#include "specific/gamemain.h"
+#include "specific/input.h"
+#include "specific/output.h"
+#include "specific/windows/dxshell.h"
+#include <dinput.h>
+
 
 short* OutsideRoomOffsets;
 char* OutsideRoomTable;
@@ -349,8 +349,8 @@ long ControlPhase(long nframes, long demo_mode) {
 			nex = item->next_active;
 
 			if(item->after_death < 128) {
-				if(GetObjectInfo(currentLevel,item->object_number)->control)
-					GetObjectInfo(currentLevel,item->object_number)->control(item_num);
+				if(GetObjectInfo(currentLevel, item->object_number)->control)
+					GetObjectInfo(currentLevel, item->object_number)->control(item_num);
 			} else
 				KillItem(item_num);
 
@@ -363,11 +363,11 @@ long ControlPhase(long nframes, long demo_mode) {
 		fx_num = next_fx_active;
 
 		while(fx_num != -1) {
-			fx = GetEffect(currentLevel,fx_num);
+			fx = GetEffect(currentLevel, fx_num);
 			nex = fx->next_active;
 
-			if(GetObjectInfo(currentLevel,fx->object_number)->control)
-				GetObjectInfo(currentLevel,fx->object_number)->control(fx_num);
+			if(GetObjectInfo(currentLevel, fx->object_number)->control)
+				GetObjectInfo(currentLevel, fx->object_number)->control(fx_num);
 
 			fx_num = nex;
 		}
@@ -499,14 +499,14 @@ void FlipMap(long FlipNumber) {
 	ROOM_INFO temp;
 
 	for(int i = 0; i < GetNumRooms(currentLevel); i++) {
-		r = GetRoom(currentLevel,i);
+		r = GetRoom(currentLevel, i);
 
 		if(r->flipped_room >= 0 && r->FlipNumber == FlipNumber) {
 			for(int j = r->item_number; j != NO_ITEM; j = GetItem(currentLevel, j)->next_item)
 				GetItem(currentLevel, j)->il.room_number = 255;
 
 			RemoveRoomFlipItems(r);
-			flipped = GetRoom(currentLevel,r->flipped_room);
+			flipped = GetRoom(currentLevel, r->flipped_room);
 			memcpy(&temp, r, sizeof(temp));
 			memcpy(r, flipped, sizeof(ROOM_INFO));
 			memcpy(flipped, &temp, sizeof(ROOM_INFO));
@@ -533,7 +533,7 @@ void RemoveRoomFlipItems(ROOM_INFO* r) {
 	for(short item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item) {
 		item = GetItem(currentLevel, item_num);
 
-		if(item->flags & IFL_INVISIBLE && GetObjectInfo(currentLevel,item->object_number)->intelligent) {
+		if(item->flags & IFL_INVISIBLE && GetObjectInfo(currentLevel, item->object_number)->intelligent) {
 			if(item->hit_points <= 0 && item->hit_points != -16384)
 				KillItem(item_num);
 		}
@@ -674,12 +674,12 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 			value = *data++ & 0x3FF;
 
 			if(flags & IFL_INVISIBLE)
-				GetItem(currentLevel,value)->item_flags[0] = 1;
+				GetItem(currentLevel, value)->item_flags[0] = 1;
 
 			if(!SwitchTrigger(value, timer))
 				return;
 
-			switch_off = GetItem(currentLevel,value)->current_anim_state == 1;
+			switch_off = GetItem(currentLevel, value)->current_anim_state == 1;
 			break;
 
 		case KEY:
@@ -730,7 +730,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 
 		switch((trigger & 0x3FFF) >> 10) {
 		case TO_OBJECT:
-			item = GetItem(currentLevel,value);
+			item = GetItem(currentLevel, value);
 
 			if(key >= 2 || ((type == ANTIPAD || type == ANTITRIGGER || type == HEAVYANTITRIGGER) && item->flags & IFL_ANTITRIGGER_ONESHOT) || (type == SWITCH && item->flags & IFL_SWITCH_ONESHOT) || (type != SWITCH && type != ANTIPAD && type != ANTITRIGGER && type != HEAVYANTITRIGGER && item->flags & IFL_INVISIBLE) || ((type != ANTIPAD && type != ANTITRIGGER && type != HEAVYANTITRIGGER) && (item->object_number == DART_EMITTER && item->active)))
 				break;
@@ -774,7 +774,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 				item->flags |= IFL_INVISIBLE;
 
 			if(!item->active) {
-				if(GetObjectInfo(currentLevel,item->object_number)->intelligent) {
+				if(GetObjectInfo(currentLevel, item->object_number)->intelligent) {
 					if(item->status == ITEM_INACTIVE) {
 						item->touch_bits = 0;
 						item->status = ITEM_ACTIVE;
@@ -872,7 +872,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 			break;
 
 		case TO_TARGET:
-			camera_item = GetItem(currentLevel,value);
+			camera_item = GetItem(currentLevel, value);
 			break;
 
 		case TO_FINISH:
@@ -980,7 +980,7 @@ short GetDoor(FLOOR_INFO* floor) {
 	if(!floor->index)
 		return 255;
 
-	data = GetFloorData(currentLevel,floor->index);
+	data = GetFloorData(currentLevel, floor->index);
 	type = *data++;
 
 	if((type & 0x1F) == TILT_TYPE || (type & 0x1F) == SPLIT1 || (type & 0x1F) == SPLIT2 || (type & 0x1F) == NOCOLF1B || (type & 0x1F) == NOCOLF1T || (type & 0x1F) == NOCOLF2B || (type & 0x1F) == NOCOLF2T) {
@@ -1060,7 +1060,7 @@ long CheckNoColCeilingTriangle(FLOOR_INFO* floor, long x, long z) {
 	if(!floor->index)
 		return 0;
 
-	data = GetFloorData(currentLevel,floor->index);
+	data = GetFloorData(currentLevel, floor->index);
 	type = *data & 0x1F;
 
 	if(type == TILT_TYPE || type == SPLIT1 || type == SPLIT2 || type == NOCOLF1T || type == NOCOLF1B || type == NOCOLF2T || type == NOCOLF2B) {
@@ -1116,7 +1116,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 	long x_floor, y_floor;
 	short door;
 
-	r = GetRoom(currentLevel,*room_number);
+	r = GetRoom(currentLevel, *room_number);
 
 	do {
 		x_floor = (z - r->z) >> 10;
@@ -1148,7 +1148,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 			break;
 
 		*room_number = door;
-		r = GetRoom(currentLevel,door);
+		r = GetRoom(currentLevel, door);
 
 	} while(door != 255);
 
@@ -1159,7 +1159,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 					break;
 
 				*room_number = floor->sky_room;
-				r = GetRoom(currentLevel,floor->sky_room);
+				r = GetRoom(currentLevel, floor->sky_room);
 				floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
 
 				if(y >= GetMinimumCeiling(floor, x, z))
@@ -1173,7 +1173,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 				break;
 
 			*room_number = floor->pit_room;
-			r = GetRoom(currentLevel,floor->pit_room);
+			r = GetRoom(currentLevel, floor->pit_room);
 			floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
 
 			if(y < GetMaximumFloor(floor, x, z))
@@ -1193,7 +1193,7 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 	long x_floor, y_floor;
 	short data;
 
-	r = GetRoom(currentLevel,room_number);
+	r = GetRoom(currentLevel, room_number);
 
 	do {
 		x_floor = (z - r->z) >> 10;
@@ -1223,7 +1223,7 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 
 		if(data != 255) {
 			room_number = data;
-			r = GetRoom(currentLevel,data);
+			r = GetRoom(currentLevel, data);
 		}
 
 	} while(data != 255);
@@ -1233,7 +1233,7 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 			if(CheckNoColCeilingTriangle(floor, x, z) == 1)
 				break;
 
-			r = GetRoom(currentLevel,floor->sky_room);
+			r = GetRoom(currentLevel, floor->sky_room);
 
 			if(!(r->flags & ROOM_UNDERWATER))
 				break;
@@ -1247,7 +1247,7 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 			if(CheckNoColFloorTriangle(floor, x, z) == 1)
 				break;
 
-			r = GetRoom(currentLevel,floor->pit_room);
+			r = GetRoom(currentLevel, floor->pit_room);
 
 			if(r->flags & ROOM_UNDERWATER)
 				return GetMaximumFloor(floor, x, z);
@@ -1276,7 +1276,7 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 		if(CheckNoColFloorTriangle(floor, x, z) == 1)
 			break;
 
-		r = GetRoom(currentLevel,floor->pit_room);
+		r = GetRoom(currentLevel, floor->pit_room);
 		floor = &r->floor[((z - r->z) >> 10) + ((x - r->x) >> 10) * r->x_size];
 	}
 
@@ -1290,7 +1290,7 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 	if(!floor->index)
 		return height;
 
-	data = GetFloorData(currentLevel,floor->index);
+	data = GetFloorData(currentLevel, floor->index);
 
 	do {
 		type = *data++;
@@ -1348,10 +1348,10 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z) {
 					continue;
 				}
 
-				item = GetItem(currentLevel,trigger & 0x3FF);
+				item = GetItem(currentLevel, trigger & 0x3FF);
 
-				if(GetObjectInfo(currentLevel,item->object_number)->floor && !(item->flags & 0x8000))
-					GetObjectInfo(currentLevel,item->object_number)->floor(item, x, y, z, &height);
+				if(GetObjectInfo(currentLevel, item->object_number)->floor && !(item->flags & 0x8000))
+					GetObjectInfo(currentLevel, item->object_number)->floor(item, x, y, z, &height);
 
 			} while(!(trigger & 0x8000));
 
@@ -1471,7 +1471,7 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 		if(CheckNoColCeilingTriangle(floor, x, z) == 1)
 			break;
 
-		r = GetRoom(currentLevel,f->sky_room);
+		r = GetRoom(currentLevel, f->sky_room);
 		xoff = (z - r->z) >> 10;
 		yoff = (x - r->x) >> 10;
 		f = &r->floor[xoff + r->x_size * yoff];
@@ -1483,7 +1483,7 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 		return NO_HEIGHT;
 
 	if(f->index) {
-		data = GetFloorData(currentLevel,f->index);
+		data = GetFloorData(currentLevel, f->index);
 		type = *data++;
 		ended = 0;
 
@@ -1572,14 +1572,14 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 		if(CheckNoColFloorTriangle(floor, x, z) == 1)
 			break;
 
-		r = GetRoom(currentLevel,floor->pit_room);
+		r = GetRoom(currentLevel, floor->pit_room);
 		xoff = (z - r->z) >> 10;
 		yoff = (x - r->x) >> 10;
 		floor = &r->floor[xoff + r->x_size * yoff];
 	}
 
 	if(floor->index) {
-		data = GetFloorData(currentLevel,floor->index);
+		data = GetFloorData(currentLevel, floor->index);
 
 		do {
 			type = *data++;
@@ -1613,10 +1613,10 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 						if((trigger & 0x3C00) == (TO_CAMERA << 10) || (trigger & 0x3C00) == (TO_FLYBY << 10))
 							trigger = *data++;
 					} else {
-						item = GetItem(currentLevel,trigger & 0x3FF);
+						item = GetItem(currentLevel, trigger & 0x3FF);
 
-						if(GetObjectInfo(currentLevel,item->object_number)->ceiling && !(item->flags & 0x8000))
-							GetObjectInfo(currentLevel,item->object_number)->ceiling(item, x, y, z, &height);
+						if(GetObjectInfo(currentLevel, item->object_number)->ceiling && !(item->flags & 0x8000))
+							GetObjectInfo(currentLevel, item->object_number)->ceiling(item, x, y, z, &height);
 					}
 
 				} while(!(trigger & 0x8000));
@@ -1657,11 +1657,11 @@ void AlterFloorHeight(ITEM_INFO* item, long height) {
 			floor->floor = -127;
 	}
 
-	if(GetBox(currentLevel,floor->box)->overlap_index & 0x8000) {
+	if(GetBox(currentLevel, floor->box)->overlap_index & 0x8000) {
 		if(height >= 0)
-			GetBox(currentLevel,floor->box)->overlap_index &= ~0x4000;
+			GetBox(currentLevel, floor->box)->overlap_index &= ~0x4000;
 		else
-			GetBox(currentLevel,floor->box)->overlap_index |= 0x4000;
+			GetBox(currentLevel, floor->box)->overlap_index |= 0x4000;
 	}
 }
 
@@ -1682,11 +1682,11 @@ long GetChange(ITEM_INFO* item, ANIM_STRUCT* anim) {
 	if(item->current_anim_state == item->goal_anim_state || anim->number_changes <= 0)
 		return 0;
 
-	change = GetAnimChange(currentLevel,anim->change_index);
+	change = GetAnimChange(currentLevel, anim->change_index);
 
 	for(int i = 0; i < anim->number_changes; i++, change++) {
 		if(change->goal_anim_state == item->goal_anim_state && change->number_ranges > 0) {
-			range = GetAnimRange(currentLevel,change->range_index);
+			range = GetAnimRange(currentLevel, change->range_index);
 
 			for(int j = 0; j < change->number_ranges; j++, range++) {
 				if(item->frame_number >= range->start_frame && item->frame_number <= range->end_frame) {
@@ -1770,7 +1770,7 @@ void RefreshCamera(short type, short* data) {
 			target_ok = 0;
 		} else if(((trigger >> 10) & 0xF) == TO_TARGET) {
 			if((camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA) || camera.number == NO_ITEM || GetFixedCamera(currentLevel, camera.number)->flags & 1)
-				camera.item = GetItem(currentLevel,value);
+				camera.item = GetItem(currentLevel, value);
 		}
 
 	} while(!(trigger & 0x8000));
@@ -2157,8 +2157,8 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits) {
 		SoundEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
 
 	GetSpheres(item, Slist, 3);
-	object = GetObjectInfo(currentLevel,item->object_number);
-	meshpp = GetMeshPointer(currentLevel,object->mesh_index + Node * 2);
+	object = GetObjectInfo(currentLevel, item->object_number);
+	meshpp = GetMeshPointer(currentLevel, object->mesh_index + Node * 2);
 	ShatterItem.Bit = 1 << Node;
 	ShatterItem.meshp = *meshpp;
 	ShatterItem.Sphere.x = Slist[Node].x;
@@ -2188,7 +2188,7 @@ long IsRoomOutside(long x, long y, long z) {
 		return -2;
 
 	if(offset < 0) {
-		r = GetRoom(currentLevel,offset & 0x7FFF);
+		r = GetRoom(currentLevel, offset & 0x7FFF);
 
 		if(y >= r->maxceiling && y <= r->minfloor && z >= r->z + 1024 && z <= ((r->x_size - 1) << 10) + r->z && x >= r->x + 1024 && x <= ((r->y_size - 1) << 10) + r->x) {
 			IsRoomOutsideNo = offset & 0x7FFF;
@@ -2209,7 +2209,7 @@ long IsRoomOutside(long x, long y, long z) {
 		pTable = (unsigned char*)&OutsideRoomTable[offset];
 
 		while(*pTable != 255) {
-			r = GetRoom(currentLevel,*pTable);
+			r = GetRoom(currentLevel, *pTable);
 
 			if(y >= r->maxceiling && y <= r->minfloor && z >= r->z + 1024 && z <= ((r->x_size - 1) << 10) + r->z && x >= r->x + 1024 && x <= ((r->y_size - 1) << 10) + r->x) {
 				IsRoomOutsideNo = *pTable;
@@ -2250,10 +2250,10 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 	ClosestDist = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
 
 	for(int i = 0; i < number_los_rooms; i++) {
-		r = GetRoom(currentLevel,los_rooms[i]);
+		r = GetRoom(currentLevel, los_rooms[i]);
 
 		for(item_number = r->item_number; item_number != NO_ITEM; item_number = item->next_item) {
-			item = GetItem(currentLevel,item_number);
+			item = GetItem(currentLevel, item_number);
 
 			if(item->status != ITEM_DEACTIVATED && item->status != ITEM_INVISIBLE && item->object_number != LARA) {
 				bounds = GetBoundsAccurate(item);
@@ -2276,7 +2276,7 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 				ItemPos.z_pos = mesh->z;
 				ItemPos.y_rot = mesh->y_rot;
 
-				if(DoRayBox(start, target, GetStaticObjectBounds(currentLevel,mesh->static_number), &ItemPos, Coord, -1 - mesh->static_number)) {
+				if(DoRayBox(start, target, GetStaticObjectBounds(currentLevel, mesh->static_number), &ItemPos, Coord, -1 - mesh->static_number)) {
 					*StaticMesh = mesh;
 					target->room_number = los_rooms[i];
 				}
@@ -2334,33 +2334,33 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 					TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 					TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 				} else {
-					shotitem = GetItem(currentLevel,item_no);
+					shotitem = GetItem(currentLevel, item_no);
 
 					if(shotitem->object_number != SWITCH_TYPE7 && shotitem->object_number != SWITCH_TYPE8) {
-						if(GetObjectInfo(currentLevel,shotitem->object_number)->explodable_meshbits & ShatterItem.Bit && LaserSight) {
+						if(GetObjectInfo(currentLevel, shotitem->object_number)->explodable_meshbits & ShatterItem.Bit && LaserSight) {
 							ShatterObject(&ShatterItem, 0, 128, target.room_number, 0);
 							shotitem->mesh_bits &= ~ShatterItem.Bit;
 							TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 						} else if(DrawTarget && lara.gun_type == WEAPON_REVOLVER) {
-							if(GetObjectInfo(currentLevel,shotitem->object_number)->intelligent)
+							if(GetObjectInfo(currentLevel, shotitem->object_number)->intelligent)
 								HitTarget(shotitem, &target, weapons[lara.gun_type].damage, 0);
 						} else {
-							if(GetObjectInfo(currentLevel,shotitem->object_number)->HitEffect == 1)
+							if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 1)
 								DoBloodSplat(target.pos.x, target.pos.y, target.pos.z, (GetRandomControl() & 3) + 3, shotitem->pos.y_rot, shotitem->room_number);
-							else if(GetObjectInfo(currentLevel,shotitem->object_number)->HitEffect == 2)
+							else if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 2)
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, -5);
-							else if(GetObjectInfo(currentLevel,shotitem->object_number)->HitEffect == 3)
+							else if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 3)
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 
 							shotitem->hit_status = 1;
 
-							if(!GetObjectInfo(currentLevel,shotitem->object_number)->undead)
+							if(!GetObjectInfo(currentLevel, shotitem->object_number)->undead)
 								shotitem->hit_points -= weapons[lara.gun_type].damage;
 						}
 					} else {
-						if(ShatterItem.Bit == 1 << (GetObjectInfo(currentLevel,shotitem->object_number)->nmeshes - 1) && !(shotitem->flags & IFL_SWITCH_ONESHOT)) {
+						if(ShatterItem.Bit == 1 << (GetObjectInfo(currentLevel, shotitem->object_number)->nmeshes - 1) && !(shotitem->flags & IFL_SWITCH_ONESHOT)) {
 							if(shotitem->object_number == SWITCH_TYPE7)
-								ExplodeItemNode(shotitem, GetObjectInfo(currentLevel,shotitem->object_number)->nmeshes - 1, 0, 64);
+								ExplodeItemNode(shotitem, GetObjectInfo(currentLevel, shotitem->object_number)->nmeshes - 1, 0, 64);
 
 							if(shotitem->flags & IFL_CODEBITS && (shotitem->flags & IFL_CODEBITS) != IFL_CODEBITS) {
 								room_number = shotitem->room_number;
@@ -2371,8 +2371,8 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 
 								for(int i = NumTrigs - 1; i >= 0; i--) {
 									AddActiveItem(TriggerItems[i]);
-									GetItem(currentLevel,TriggerItems[i])->status = ITEM_ACTIVE;
-									GetItem(currentLevel,TriggerItems[i])->flags |= IFL_CODEBITS;
+									GetItem(currentLevel, TriggerItems[i])->status = ITEM_ACTIVE;
+									GetItem(currentLevel, TriggerItems[i])->flags |= IFL_CODEBITS;
 								}
 							}
 
@@ -2416,14 +2416,14 @@ void AnimateItem(ITEM_INFO* item) {
 	long speed, speed2;
 	unsigned short type, num;
 
-	anim = GetAnim(currentLevel,item->anim_number);
+	anim = GetAnim(currentLevel, item->anim_number);
 	item->touch_bits = 0;
 	item->hit_status = 0;
 	item->frame_number++;
 
 	if(anim->number_changes > 0) {
 		if(GetChange(item, anim)) {
-			anim = GetAnim(currentLevel,item->anim_number);
+			anim = GetAnim(currentLevel, item->anim_number);
 			item->current_anim_state = anim->current_anim_state;
 
 			if(item->required_anim_state == item->current_anim_state)
@@ -2433,7 +2433,7 @@ void AnimateItem(ITEM_INFO* item) {
 
 	if(item->frame_number > anim->frame_end) {
 		if(anim->number_commands > 0) {
-			cmd = GetAnimCommand(currentLevel,anim->command_index);
+			cmd = GetAnimCommand(currentLevel, anim->command_index);
 
 			for(int i = anim->number_commands; i > 0; i--) {
 				switch(*cmd++) {
@@ -2451,7 +2451,7 @@ void AnimateItem(ITEM_INFO* item) {
 
 				case ACMD_KILL:
 
-					if(GetObjectInfo(currentLevel,item->object_number)->intelligent)
+					if(GetObjectInfo(currentLevel, item->object_number)->intelligent)
 						item->after_death = 1;
 
 					item->status = ITEM_DEACTIVATED;
@@ -2467,7 +2467,7 @@ void AnimateItem(ITEM_INFO* item) {
 
 		item->anim_number = anim->jump_anim_num;
 		item->frame_number = anim->jump_frame_num;
-		anim = GetAnim(currentLevel,item->anim_number);
+		anim = GetAnim(currentLevel, item->anim_number);
 
 		if(item->current_anim_state != anim->current_anim_state) {
 			item->current_anim_state = anim->current_anim_state;
@@ -2479,7 +2479,7 @@ void AnimateItem(ITEM_INFO* item) {
 	}
 
 	if(anim->number_commands > 0) {
-		cmd = GetAnimCommand(currentLevel,anim->command_index);
+		cmd = GetAnimCommand(currentLevel, anim->command_index);
 
 		for(int i = anim->number_commands; i > 0; i--) {
 			switch(*cmd++) {
@@ -2497,8 +2497,8 @@ void AnimateItem(ITEM_INFO* item) {
 					num = cmd[1] & 0x3FFF;
 					type = cmd[1] & 0xC000;
 
-					if(GetObjectInfo(currentLevel,item->object_number)->water_creature) {
-						if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER)
+					if(GetObjectInfo(currentLevel, item->object_number)->water_creature) {
+						if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER)
 							SoundEffect(num, &item->pos, SFX_WATER);
 						else
 							SoundEffect(num, &item->pos, SFX_DEFAULT);
@@ -2507,7 +2507,7 @@ void AnimateItem(ITEM_INFO* item) {
 						item->pos.y_pos = lara_item->pos.y_pos - 762;
 						item->pos.z_pos = lara_item->pos.z_pos;
 						SoundEffect(num, &item->pos, SFX_DEFAULT);
-					} else if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
+					} else if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 						if(type == SFX_LANDANDWATER || type == SFX_WATERONLY)
 							SoundEffect(num, &item->pos, SFX_DEFAULT);
 					} else if(type == SFX_LANDANDWATER || type == SFX_LANDONLY)
@@ -2741,9 +2741,9 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	if(item_number < 0)
 		ClosestNode = -1;
 	else {
-		item = GetItem(currentLevel,item_number);
-		obj = GetObjectInfo(currentLevel,item->object_number);
-		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
+		item = GetItem(currentLevel, item_number);
+		obj = GetObjectInfo(currentLevel, item->object_number);
+		meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
 
 		GetSpheres(item, Slist, 1);
 		bit = 1;
@@ -2832,7 +2832,7 @@ long GetMaximumFloor(FLOOR_INFO* floor, long x, long z) {
 	height = floor->floor << 8;
 
 	if(height != NO_HEIGHT && floor->index) {
-		data = GetFloorData(currentLevel,floor->index);
+		data = GetFloorData(currentLevel, floor->index);
 		type = *data++;
 		h1 = 0;
 		h2 = 0;
@@ -2891,7 +2891,7 @@ long GetMinimumCeiling(FLOOR_INFO* floor, long x, long z) {
 	height = floor->ceiling << 8;
 
 	if(height != NO_HEIGHT && floor->index) {
-		data = GetFloorData(currentLevel,floor->index);
+		data = GetFloorData(currentLevel, floor->index);
 		type = *data++;
 		ended = 0;
 

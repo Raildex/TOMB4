@@ -1,17 +1,18 @@
 
 #include "game/hammerhead.h"
-#include "game/box.h"
-#include "game/objects.h"
-#include "specific/3dmath.h"
-#include "game/effects.h"
-#include "game/control.h"
-#include "game/lara.h"
-#include "game/creatureinfo.h"
 #include "game/aiinfo.h"
-#include "game/objectinfo.h"
 #include "game/animstruct.h"
 #include "game/biteinfo.h"
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/effects.h"
+#include "game/lara.h"
 #include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "specific/3dmath.h"
+
 static BITE_INFO hammerhead_bite = { 0, 0, 0, 12 };
 
 void InitialiseHammerhead(short item_number) {
@@ -19,8 +20,8 @@ void InitialiseHammerhead(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,HAMMERHEAD)->anim_index + 8;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, HAMMERHEAD)->anim_index + 8;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 0;
 	item->goal_anim_state = 0;
 }
@@ -41,8 +42,8 @@ void HammerheadControl(short item_number) {
 		item->hit_points = 0;
 
 		if(item->current_anim_state != 5) {
-			item->anim_number = GetObjectInfo(currentLevel,HAMMERHEAD)->anim_index + 4;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, HAMMERHEAD)->anim_index + 4;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 5;
 		}
 

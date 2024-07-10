@@ -1,38 +1,39 @@
 
 #include "game/croc.h"
-#include "game/box.h"
-#include "game/objects.h"
-#include "game/control.h"
-#include "specific/3dmath.h"
-#include "game/people.h"
-#include "game/effects.h"
-#include "specific/function_stubs.h"
-#include "game/sphere.h"
-#include "game/items.h"
-#include "specific/output.h"
-#include "game/draw.h"
-#include "game/sound.h"
-#include "game/tomb4fx.h"
-#include "game/effect2.h"
-#include "game/lara.h"
-#include "game/iteminfo.h"
+#include "game/aibits.h"
 #include "game/aiinfo.h"
-#include "game/creatureinfo.h"
 #include "game/animstruct.h"
+#include "game/biteinfo.h"
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/draw.h"
+#include "game/effect2.h"
+#include "game/effects.h"
+#include "game/fxinfo.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
+#include "game/levelinfo.h"
+#include "game/locuststruct.h"
 #include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/people.h"
+#include "game/phd3dpos.h"
+#include "game/phdvector.h"
 #include "game/roomflags.h"
 #include "game/roominfo.h"
-#include "game/biteinfo.h"
-#include "game/aibits.h"
-#include "game/locuststruct.h"
-#include "game/phdvector.h"
-#include "game/larainfo.h"
+#include "game/sound.h"
 #include "game/sparks.h"
-#include "game/fxinfo.h"
-#include "game/phd3dpos.h"
+#include "game/sphere.h"
+#include "game/tomb4fx.h"
 #include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/output.h"
 #include <stdlib.h>
-#include "game/levelinfo.h"
+
 
 LOCUST_STRUCT Locusts[64];
 
@@ -45,14 +46,14 @@ void InitialiseCroc(short item_number) {
 	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 
-	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
-		item->anim_number = GetObjectInfo(currentLevel,CROCODILE)->anim_index + 12;
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
+		item->anim_number = GetObjectInfo(currentLevel, CROCODILE)->anim_index + 12;
+		item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 		item->current_anim_state = 8;
 		item->goal_anim_state = 8;
 	} else {
-		item->anim_number = GetObjectInfo(currentLevel,CROCODILE)->anim_index;
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+		item->anim_number = GetObjectInfo(currentLevel, CROCODILE)->anim_index;
+		item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 	}
@@ -99,21 +100,21 @@ void CrocControl(short item_number) {
 		item->hit_points = 0;
 
 		if(item->current_anim_state != 7 && item->current_anim_state != 10) {
-			if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
-				item->anim_number = GetObjectInfo(currentLevel,CROCODILE)->anim_index + 16;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
+				item->anim_number = GetObjectInfo(currentLevel, CROCODILE)->anim_index + 16;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 10;
 				item->goal_anim_state = 10;
 				item->hit_points = -16384;
 			} else {
-				item->anim_number = GetObjectInfo(currentLevel,CROCODILE)->anim_index + 11;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, CROCODILE)->anim_index + 11;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 7;
 				item->goal_anim_state = 7;
 			}
 		}
 
-		if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER)
+		if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER)
 			CreatureFloat(item_number);
 	} else {
 		if(item->ai_bits)
@@ -196,7 +197,7 @@ void CrocControl(short item_number) {
 
 		case 5:
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base)
 				item->required_anim_state = 0;
 
 			if(info.bite && item->touch_bits & 0x300) {
@@ -225,7 +226,7 @@ void CrocControl(short item_number) {
 
 		case 9:
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base)
 				item->required_anim_state = 0;
 
 			if(info.bite && item->touch_bits & 0x300) {
@@ -270,15 +271,15 @@ void CrocControl(short item_number) {
 	room_number = item->room_number;
 	GetFloor(x, item->pos.y_pos, z, &room_number);
 
-	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
-		if(GetRoom(currentLevel,room_number)->flags & 1) {
+	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
+		if(GetRoom(currentLevel, room_number)->flags & 1) {
 			if(item->current_anim_state == 2) {
 				item->required_anim_state = 3;
 				item->goal_anim_state = 3;
 			} else if(item->current_anim_state == 3) {
 				item->required_anim_state = 8;
 				item->goal_anim_state = 8;
-			} else if(item->anim_number != GetObjectInfo(currentLevel,CROCODILE)->anim_index + 17) {
+			} else if(item->anim_number != GetObjectInfo(currentLevel, CROCODILE)->anim_index + 17) {
 				croc->LOT.step = 20480;
 				croc->LOT.drop = -20480;
 				croc->LOT.fly = 16;
@@ -401,7 +402,7 @@ void DrawLocusts() {
 		fx = &Locusts[i];
 
 		if(fx->On) {
-			meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,AHMET_MIP)->mesh_index + 2 * (-GlobalCounter & 3));
+			meshpp = GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, AHMET_MIP)->mesh_index + 2 * (-GlobalCounter & 3));
 			phd_PushMatrix();
 			phd_TranslateAbs(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
@@ -535,7 +536,7 @@ void TriggerCrocgodMissile(PHD_3DPOS* pos, short room_number, short num) {
 	fx_number = CreateEffect(room_number);
 
 	if(fx_number != NO_ITEM) {
-		fx = GetEffect(currentLevel,fx_number);
+		fx = GetEffect(currentLevel, fx_number);
 		fx->pos.x_pos = pos->x_pos;
 		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
 		fx->pos.z_pos = pos->z_pos;
@@ -547,7 +548,7 @@ void TriggerCrocgodMissile(PHD_3DPOS* pos, short room_number, short num) {
 		fx->flag1 = 6;
 		fx->object_number = BUBBLES;
 		fx->speed = (GetRandomControl() & 0x1F) + 96;
-		fx->frame_number = GetObjectInfo(currentLevel,BUBBLES)->mesh_index + 10;
+		fx->frame_number = GetObjectInfo(currentLevel, BUBBLES)->mesh_index + 10;
 	}
 }
 
@@ -556,7 +557,7 @@ void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	fx = GetEffect(currentLevel,fx_number);
+	fx = GetEffect(currentLevel, fx_number);
 	dx = lara_item->pos.x_pos - fx->pos.x_pos;
 	dz = lara_item->pos.z_pos - fx->pos.z_pos;
 
@@ -606,8 +607,8 @@ void InitialiseCrocgod(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,MUTANT)->anim_index;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, MUTANT)->anim_index;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -676,7 +677,7 @@ void CrocgodControl(short item_number) {
 			break;
 
 		case 3:
-			frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+			frame = item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base;
 
 			if(frame >= 94 && frame <= 96) {
 				pos.x = 0;
@@ -714,7 +715,7 @@ void CrocgodControl(short item_number) {
 				item->item_flags[2]++;
 
 			if(item->item_flags[2] == 999) {
-				frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+				frame = item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base;
 
 				if(frame >= 60 && frame <= 120)
 					TriggerLocust(item);
@@ -723,7 +724,7 @@ void CrocgodControl(short item_number) {
 			break;
 
 		case 5:
-			frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+			frame = item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base;
 
 			if(frame == 45 || frame == 60 || frame == 75) {
 				pos.x = 0;

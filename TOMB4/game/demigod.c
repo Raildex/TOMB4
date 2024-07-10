@@ -1,40 +1,39 @@
 
 #include "game/demigod.h"
-#include "game/items.h"
-#include "specific/function_stubs.h"
-#include "game/objects.h"
-#include "game/effect2.h"
-#include "game/tomb4fx.h"
-#include "game/sphere.h"
-#include "specific/3dmath.h"
-#include "game/box.h"
-#include "game/control.h"
-#include "game/lara_states.h"
-#include "game/people.h"
-#include "game/camera.h"
-#include "game/effects.h"
-#include "game/lara.h"
-#include "game/gameflow.h"
-#include "game/fxinfo.h"
-#include "game/phd3dpos.h"
-#include "game/sparks.h"
-#include "game/smokesparks.h"
-#include "game/iteminfo.h"
-#include "game/roomflags.h"
-#include "game/objectinfo.h"
-#include "game/animstruct.h"
-#include "game/aiinfo.h"
-#include "game/itemstatus.h"
-#include "game/roominfo.h"
-#include "game/creatureinfo.h"
 #include "game/aibits.h"
-#include "game/larainfo.h"
-#include "game/laragunstatus.h"
+#include "game/aiinfo.h"
+#include "game/animstruct.h"
+#include "game/box.h"
+#include "game/camera.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/effect2.h"
+#include "game/effects.h"
 #include "game/floorinfo.h"
-#include "global/types.h"
-#include <stdlib.h>
+#include "game/fxinfo.h"
+#include "game/gameflow.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
-
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/people.h"
+#include "game/phd3dpos.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/smokesparks.h"
+#include "game/sparks.h"
+#include "game/sphere.h"
+#include "game/tomb4fx.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
 
 
 void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type) {
@@ -44,7 +43,7 @@ void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type) {
 	fx_number = CreateEffect(room_number);
 
 	if(fx_number != NO_ITEM) {
-		fx = GetEffect(currentLevel,fx_number);
+		fx = GetEffect(currentLevel, fx_number);
 		fx->pos.x_pos = pos->x_pos;
 		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
 		fx->pos.z_pos = pos->z_pos;
@@ -66,7 +65,7 @@ void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type) {
 		if(type >= 4)
 			type--;
 
-		fx->frame_number = GetObjectInfo(currentLevel,BUBBLES)->mesh_index + type * 2;
+		fx->frame_number = GetObjectInfo(currentLevel, BUBBLES)->mesh_index + type * 2;
 	}
 }
 
@@ -75,7 +74,7 @@ void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	fx = GetEffect(currentLevel,fx_number);
+	fx = GetEffect(currentLevel, fx_number);
 	dx = lara_item->pos.x_pos - fx->pos.x_pos;
 	dz = lara_item->pos.z_pos - fx->pos.z_pos;
 
@@ -164,7 +163,7 @@ void TriggerHammerSmoke(long x, long y, long z, long num) {
 				sptr->RotAdd = -64 - (GetRandomControl() & 0x3F);
 			else
 				sptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
-		} else if(GetRoom(currentLevel,lara_item->room_number)->flags & ROOM_NOT_INSIDE)
+		} else if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE)
 			sptr->Flags = 256;
 		else
 			sptr->Flags = 0;
@@ -187,10 +186,10 @@ void DoDemigodEffects(short item_number) {
 	short anim, frame;
 
 	item = GetItem(currentLevel, item_number);
-	anim = item->anim_number - GetObjectInfo(currentLevel,item->object_number)->anim_index;
+	anim = item->anim_number - GetObjectInfo(currentLevel, item->object_number)->anim_index;
 
 	if(anim == 8 || anim == 19) {
-		if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
+		if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
 			pos1.x = -544;
 			pos1.y = 96;
 			pos1.z = 0;
@@ -212,7 +211,7 @@ void DoDemigodEffects(short item_number) {
 				TriggerDemigodMissile(&pos, item->room_number, 5);
 		}
 	} else if(anim == 16) {
-		frame = item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base;
+		frame = item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base;
 
 		if(frame >= 8 && frame <= 64) {
 			pos1.x = 0;
@@ -240,8 +239,8 @@ void InitialiseDemigod(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 0;
 	item->goal_anim_state = 0;
 
@@ -272,7 +271,7 @@ void DemigodControl(short item_number) {
 		item2 = GetItem(currentLevel, objnum);
 
 		if(item2->status == ITEM_ACTIVE && item2->active) {
-			item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;
+			item->hit_points = GetObjectInfo(currentLevel, item->object_number)->hit_points;
 			return;
 		}
 	}
@@ -290,8 +289,8 @@ void DemigodControl(short item_number) {
 
 	if(0 /*gfCurrentLevel == 24)*/) // Chambers of Tulun
 	{
-		r = GetRoom(currentLevel,lara_item->room_number);
-		zone = GetZone(currentLevel,god->LOT.zone,flip_status);
+		r = GetRoom(currentLevel, lara_item->room_number);
+		zone = GetZone(currentLevel, god->LOT.zone, flip_status);
 		lara_item->box_number = r->floor[((lara_item->pos.z_pos - r->z) >> 10) + r->x_size * ((lara_item->pos.x_pos - r->x) >> 10)].box;
 
 		if(zone[item->box_number] == zone[lara_item->box_number]) {
@@ -309,12 +308,12 @@ void DemigodControl(short item_number) {
 
 		if(item->current_anim_state != 8 && item->current_anim_state != 15) {
 			if(item->current_anim_state == 1 || item->current_anim_state == 2) {
-				item->anim_number = GetObjectInfo(currentLevel,objnum)->anim_index + 27;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, objnum)->anim_index + 27;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 15;
 			} else {
-				item->anim_number = GetObjectInfo(currentLevel,objnum)->anim_index + 12;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, objnum)->anim_index + 12;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 8;
 			}
 		}
@@ -458,7 +457,7 @@ void DemigodControl(short item_number) {
 
 			god->maximum_turn = 0;
 
-			if(item->anim_number == GetObjectInfo(currentLevel,objnum)->anim_index + 6) {
+			if(item->anim_number == GetObjectInfo(currentLevel, objnum)->anim_index + 6) {
 				if(abs(info.angle) < 1274)
 					item->pos.y_rot += info.angle;
 				else if(info.angle < 0)
@@ -515,7 +514,7 @@ void DemigodControl(short item_number) {
 
 			god->maximum_turn = 0;
 
-			if(item->anim_number == GetObjectInfo(currentLevel,objnum)->anim_index + 6) {
+			if(item->anim_number == GetObjectInfo(currentLevel, objnum)->anim_index + 6) {
 				if(abs(info.angle) < 1274)
 					item->pos.y_rot += info.angle;
 				else if(info.angle < 0)
@@ -553,7 +552,7 @@ void DemigodControl(short item_number) {
 
 		case 14:
 
-			if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base == 26) {
+			if(item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base == 26) {
 				pos.x = 80;
 				pos.y = -8;
 				pos.z = -40;
@@ -577,7 +576,7 @@ void DemigodControl(short item_number) {
 					lara.head_x_rot = 0;
 					lara.head_y_rot = 0;
 					lara_item->anim_number = ANIM_FALLDOWN;
-					lara_item->frame_number = GetAnim(currentLevel,ANIM_FALLDOWN)->frame_base;
+					lara_item->frame_number = GetAnim(currentLevel, ANIM_FALLDOWN)->frame_base;
 					lara_item->current_anim_state = AS_FORWARDJUMP;
 					lara_item->goal_anim_state = AS_FORWARDJUMP;
 					lara_item->pos.x_pos += -50 * phd_sin(lara_item->pos.y_rot) >> W2V_SHIFT;

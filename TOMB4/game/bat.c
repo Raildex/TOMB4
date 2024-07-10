@@ -1,24 +1,25 @@
 
 #include "game/bat.h"
 #include "distances.h"
-#include "game/box.h"
-#include "game/objects.h"
-#include "specific/function_stubs.h"
-#include "game/effects.h"
-#include "game/lara.h"
-#include "game/control.h"
-#include "game/lot.h"
-#include "game/creatureinfo.h"
-#include "game/moodtype.h"
-#include "game/iteminfo.h"
 #include "game/aiinfo.h"
 #include "game/animstruct.h"
-#include "game/objectinfo.h"
 #include "game/biteinfo.h"
-#include "global/types.h"
-#include <stdlib.h>
-#include "game/levelinfo.h"
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/effects.h"
+#include "game/iteminfo.h"
 #include "game/items.h"
+#include "game/lara.h"
+#include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/moodtype.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "global/types.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 static BITE_INFO bat_bite = { 0, 16, 45, 4 };
 
 void InitialiseBat(short item_number) {
@@ -26,8 +27,8 @@ void InitialiseBat(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,BAT)->anim_index + 5;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, BAT)->anim_index + 5;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->goal_anim_state = 6;
 	item->current_anim_state = 6;
 }
@@ -50,8 +51,8 @@ void BatControl(short item_number) {
 
 	if(item->hit_points <= 0) {
 		if(item->current_anim_state == 3) {
-			item->anim_number = GetObjectInfo(currentLevel,BAT)->anim_index + 1;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, BAT)->anim_index + 1;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 2;
 			item->goal_anim_state = 2;
 		} else {
@@ -62,8 +63,8 @@ void BatControl(short item_number) {
 			} else {
 				item->gravity_status = 1;
 				item->speed = 0;
-				item->anim_number = GetObjectInfo(currentLevel,BAT)->anim_index + 3;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, BAT)->anim_index + 3;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 4;
 				item->goal_anim_state = 4;
 			}

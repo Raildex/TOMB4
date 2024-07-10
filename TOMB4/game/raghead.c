@@ -1,35 +1,36 @@
 
 #include "game/raghead.h"
-#include "game/box.h"
-#include "game/objects.h"
-#include "specific/3dmath.h"
-#include "game/control.h"
-#include "game/sphere.h"
-#include "game/effect2.h"
-#include "specific/function_stubs.h"
-#include "game/lot.h"
-#include "game/items.h"
-#include "game/people.h"
-#include "game/lara_states.h"
-#include "game/effects.h"
-#include "game/lara.h"
-#include "game/gameflow.h"
-#include "game/creatureinfo.h"
+#include "game/aibits.h"
 #include "game/aiinfo.h"
 #include "game/animstruct.h"
-#include "game/larainfo.h"
-#include "game/objectinfo.h"
-#include "game/itemstatus.h"
 #include "game/biteinfo.h"
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/effect2.h"
+#include "game/effects.h"
+#include "game/gameflow.h"
+#include "game/gfleveloptions.h"
+#include "game/itemflags.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
+#include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/people.h"
+#include "game/roominfo.h"
+#include "game/sphere.h"
 #include "game/weapontypes.h"
 #include "global/types.h"
-#include "game/roominfo.h"
-#include "game/aibits.h"
-#include "game/laragunstatus.h"
-#include "game/itemflags.h"
-#include "game/gfleveloptions.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
 #include <stdlib.h>
-#include "game/levelinfo.h"
+
 
 static BITE_INFO raghead_fire = { 0, -16, 200, 11 };
 static BITE_INFO raghead_blade = { 0, 0, 0, 15 };
@@ -38,10 +39,10 @@ void InitialiseRaghead(short item_number) {
 	ITEM_INFO* item;
 	short obj_num, flag;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 
-	if(GetObjectInfo(currentLevel,SUPER_RAGHEAD)->loaded)
+	if(GetObjectInfo(currentLevel, SUPER_RAGHEAD)->loaded)
 		obj_num = SUPER_RAGHEAD;
 	else
 		obj_num = RAGHEAD;
@@ -66,29 +67,29 @@ void InitialiseRaghead(short item_number) {
 	}
 
 	if(!flag || (flag > 4 && flag < 7)) {
-		item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 18;
+		item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 18;
 		item->current_anim_state = 0;
 		item->goal_anim_state = 0;
 	} else if(flag == 1) {
-		item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 47;
+		item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 47;
 		item->current_anim_state = 24;
 		item->goal_anim_state = 24;
 	} else if(flag == 2) {
-		item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 24;
+		item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 24;
 		item->current_anim_state = 23;
 		item->goal_anim_state = 23;
 	} else if(flag == 3) {
-		item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 29;
+		item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 29;
 		item->current_anim_state = 26;
 		item->goal_anim_state = 26;
 	} else if(flag == 4) {
-		item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 62;
+		item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 62;
 		item->current_anim_state = 39;
 		item->goal_anim_state = 39;
 		item->pos.x_pos += 256 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 		item->pos.z_pos += 256 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 	} else if(flag > 100) {
-		item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 29;
+		item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 29;
 		item->current_anim_state = 26;
 		item->goal_anim_state = 26;
 		item->pos.x_pos += 256 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
@@ -96,7 +97,7 @@ void InitialiseRaghead(short item_number) {
 		item->item_flags[3] = flag;
 	}
 
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 }
 
 void RagheadControl(short item_number) {
@@ -118,7 +119,7 @@ void RagheadControl(short item_number) {
 	item = GetItem(currentLevel, item_number);
 	raghead = (CREATURE_INFO*)item->data;
 
-	if(GetObjectInfo(currentLevel,SUPER_RAGHEAD)->loaded)
+	if(GetObjectInfo(currentLevel, SUPER_RAGHEAD)->loaded)
 		obj_num = SUPER_RAGHEAD;
 	else
 		obj_num = RAGHEAD;
@@ -174,7 +175,7 @@ void RagheadControl(short item_number) {
 		long_jump_ahead = 1;
 
 	if(item->item_flags[1] != item->room_number && gfCurrentLevel != 5) {
-		for(target_num = GetRoom(currentLevel,item->room_number)->item_number; target_num != NO_ITEM; target_num = target->next_item) {
+		for(target_num = GetRoom(currentLevel, item->room_number)->item_number; target_num != NO_ITEM; target_num = target->next_item) {
 			target = GetItem(currentLevel, target_num);
 
 			if(target->object_number == SMALLMEDI_ITEM || target->object_number == UZI_AMMO_ITEM) {
@@ -208,8 +209,8 @@ void RagheadControl(short item_number) {
 		case 18:
 		case 19:
 		case 20:
-			item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 59;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 59;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 35;
 			item->speed = 0;
 			break;
@@ -248,13 +249,13 @@ void RagheadControl(short item_number) {
 			break;
 
 		default:
-			item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 45;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 45;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 32;
 			raghead->LOT.is_jumping = 1;
 
 			if(item->trigger_flags > 999) {
-				for(target_num = GetRoom(currentLevel,2)->item_number; target_num != NO_ITEM; target_num = target->next_item) {
+				for(target_num = GetRoom(currentLevel, 2)->item_number; target_num != NO_ITEM; target_num = target->next_item) {
 					target = GetItem(currentLevel, target_num);
 
 					if(target->trigger_flags / 1000 == item->trigger_flags / 1000 + 1) {
@@ -383,8 +384,8 @@ void RagheadControl(short item_number) {
 					item->ai_bits &= ~MODIFY;
 			} else if(jump_ahead || long_jump_ahead) {
 				raghead->maximum_turn = 0;
-				item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 55;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 55;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 33;
 
 				if(long_jump_ahead)
@@ -476,7 +477,7 @@ void RagheadControl(short item_number) {
 			raghead->maximum_turn = 2002;
 			tilt = angle / 2;
 
-			if(item->object_number == SUPER_RAGHEAD && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 11 && farheight == nearheight && abs(nearheight - y) < 384 && (info.angle > -4096 && info.angle < 4096 && info.distance < 0x900000 || midheight >= nearheight + 512)) {
+			if(item->object_number == SUPER_RAGHEAD && item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 11 && farheight == nearheight && abs(nearheight - y) < 384 && (info.angle > -4096 && info.angle < 4096 && info.distance < 0x900000 || midheight >= nearheight + 512)) {
 				item->goal_anim_state = 30;
 				raghead->maximum_turn = 0;
 			} else if(Targetable(item, &info) && item->item_flags[2] > 0)
@@ -501,21 +502,21 @@ void RagheadControl(short item_number) {
 
 		case 10:
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 21)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 21)
 				item->meshswap_meshbits = 0x7FC010;
 
 			break;
 
 		case 11:
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 20)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 20)
 				item->meshswap_meshbits = 0x7FC800;
 
 			break;
 
 		case 12:
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 12) {
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 12) {
 				if(item->object_number == RAGHEAD)
 					item->meshswap_meshbits = 0x7E0880;
 				else
@@ -526,7 +527,7 @@ void RagheadControl(short item_number) {
 
 		case 13:
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 22)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 22)
 				item->meshswap_meshbits = 0x7FC800;
 
 			break;
@@ -540,8 +541,7 @@ void RagheadControl(short item_number) {
 
 			CreatureYRot(&item->pos, info.angle, 1274);
 
-			if(item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 13 &&
-			 !((item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base) & 1)) {
+			if(item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 13 && !((item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base) & 1)) {
 				item->fired_weapon = 1;
 
 				if(!(item->ai_bits & MODIFY))
@@ -569,7 +569,7 @@ void RagheadControl(short item_number) {
 
 			raghead->maximum_turn = 0;
 
-			if(item->current_anim_state != 15 || item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 12) {
+			if(item->current_anim_state != 15 || item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 12) {
 				if(abs(info.angle) < 1274)
 					item->pos.y_rot += info.angle;
 				else if(info.angle < 0)
@@ -579,8 +579,7 @@ void RagheadControl(short item_number) {
 			}
 
 			if(!raghead->flags && item->touch_bits & 0x1C000) {
-				if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 13 && 
-				item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 21) {
+				if(item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 13 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 21) {
 					lara_item->hit_points -= 120;
 					lara_item->hit_status = 1;
 					CreatureEffectT(item, &raghead_blade, 10, item->pos.y_rot, DoBloodSplat);
@@ -588,7 +587,7 @@ void RagheadControl(short item_number) {
 				}
 			}
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end - 1)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end - 1)
 				raghead->flags = 0;
 
 			break;
@@ -648,7 +647,7 @@ void RagheadControl(short item_number) {
 
 			if(!raghead->flags && item->touch_bits) {
 				lara_item->anim_number = ANIM_STOPHANG;
-				lara_item->frame_number = GetAnim(currentLevel,ANIM_STOPHANG)->frame_base + 9;
+				lara_item->frame_number = GetAnim(currentLevel, ANIM_STOPHANG)->frame_base + 9;
 				lara_item->current_anim_state = AS_UPJUMP;
 				lara_item->goal_anim_state = AS_UPJUMP;
 				lara_item->gravity_status = 1;
@@ -685,7 +684,7 @@ void RagheadControl(short item_number) {
 		case 27:
 			CreatureYRot(&item->pos, info.angle, 2002);
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base + 9 && raghead->enemy) {
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 9 && raghead->enemy) {
 				if(raghead->enemy->object_number != SMALLMEDI_ITEM && raghead->enemy->object_number != UZI_AMMO_ITEM)
 					break;
 
@@ -695,14 +694,14 @@ void RagheadControl(short item_number) {
 				}
 
 				if(raghead->enemy->object_number == SMALLMEDI_ITEM) {
-					item->hit_points += GetObjectInfo(currentLevel,item->object_number)->hit_points >> 1;
+					item->hit_points += GetObjectInfo(currentLevel, item->object_number)->hit_points >> 1;
 
-					if(item->hit_points > GetObjectInfo(currentLevel,item->object_number)->hit_points)
-						item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;
+					if(item->hit_points > GetObjectInfo(currentLevel, item->object_number)->hit_points)
+						item->hit_points = GetObjectInfo(currentLevel, item->object_number)->hit_points;
 				} else
 					item->item_flags[2] += 24;
 
-				KillItem(GetItemNum(currentLevel,raghead->enemy));
+				KillItem(GetItemNum(currentLevel, raghead->enemy));
 
 				for(int i = 0; i < 5; i++) {
 					if(baddie_slots[i].item_num != -1 && baddie_slots[i].item_num != item_number && baddie_slots[i].enemy == raghead->enemy)
@@ -716,9 +715,9 @@ void RagheadControl(short item_number) {
 
 		case 30:
 
-			if(item->anim_number == GetObjectInfo(currentLevel,obj_num)->anim_index + 4)
+			if(item->anim_number == GetObjectInfo(currentLevel, obj_num)->anim_index + 4)
 				CreatureYRot(&item->pos, info.angle, 1274);
-			else if(item->anim_number == GetObjectInfo(currentLevel,obj_num)->anim_index + 18)
+			else if(item->anim_number == GetObjectInfo(currentLevel, obj_num)->anim_index + 18)
 				raghead->LOT.is_jumping = 1;
 
 			break;
@@ -743,7 +742,7 @@ void RagheadControl(short item_number) {
 		case 33:
 		case 38:
 
-			if(item->item_flags[0] < 0 && item->anim_number != GetObjectInfo(currentLevel,obj_num)->anim_index + 55)
+			if(item->item_flags[0] < 0 && item->anim_number != GetObjectInfo(currentLevel, obj_num)->anim_index + 55)
 				item->item_flags[0] += 2;
 
 			break;
@@ -775,43 +774,43 @@ void RagheadControl(short item_number) {
 		CreatureAnimation(item_number, angle, 0);
 	else if(lara.blindTimer > 100) {
 		raghead->maximum_turn = 0;
-		item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 68;
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base + (GetRandomControl() & 7);
+		item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 68;
+		item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base + (GetRandomControl() & 7);
 		item->current_anim_state = 44;
 	} else {
 		switch(CreatureVault(item_number, angle, 2, 260)) {
 		case -4:
 			raghead->maximum_turn = 0;
-			item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 65;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 65;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 42;
 			break;
 
 		case -3:
 			raghead->maximum_turn = 0;
-			item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 66;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 66;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 43;
 			break;
 
 		case 2:
 			raghead->maximum_turn = 0;
-			item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 64;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 64;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 41;
 			break;
 
 		case 3:
 			raghead->maximum_turn = 0;
-			item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 63;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 63;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 40;
 			break;
 
 		case 4:
 			raghead->maximum_turn = 0;
-			item->anim_number = GetObjectInfo(currentLevel,obj_num)->anim_index + 62;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, obj_num)->anim_index + 62;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 39;
 			break;
 		}

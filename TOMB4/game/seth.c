@@ -1,34 +1,35 @@
 
 #include "game/seth.h"
-#include "game/effect2.h"
-#include "specific/function_stubs.h"
-#include "game/items.h"
-#include "game/objects.h"
-#include "game/tomb4fx.h"
-#include "game/sphere.h"
-#include "specific/3dmath.h"
+#include "game/aibits.h"
+#include "game/aiinfo.h"
+#include "game/animstruct.h"
+#include "game/biteinfo.h"
 #include "game/box.h"
 #include "game/control.h"
-#include "game/people.h"
-#include "game/effects.h"
-#include "game/lara_states.h"
-#include "game/lara.h"
-#include "game/sparks.h"
-#include "game/iteminfo.h"
-#include "game/phd3dpos.h"
-#include "game/nodeoffsetinfo.h"
-#include "global/types.h"
-#include "game/aiinfo.h"
 #include "game/creatureinfo.h"
-#include "game/aibits.h"
-#include "game/objectinfo.h"
-#include "game/animstruct.h"
-#include "game/weapontypes.h"
-#include "game/larainfo.h"
+#include "game/effect2.h"
+#include "game/effects.h"
 #include "game/fxinfo.h"
-#include "game/biteinfo.h"
-#include <stdlib.h>
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/nodeoffsetinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/people.h"
+#include "game/phd3dpos.h"
+#include "game/sparks.h"
+#include "game/sphere.h"
+#include "game/tomb4fx.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 
 static BITE_INFO left_hand = { 0, 220, 50, 17 };
 static BITE_INFO right_hand = { 0, 220, 50, 13 };
@@ -37,8 +38,8 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - GetEffect(currentLevel,fx_number)->pos.x_pos;
-	dz = lara_item->pos.z_pos - GetEffect(currentLevel,fx_number)->pos.z_pos;
+	dx = lara_item->pos.x_pos - GetEffect(currentLevel, fx_number)->pos.x_pos;
+	dz = lara_item->pos.z_pos - GetEffect(currentLevel, fx_number)->pos.z_pos;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -75,7 +76,7 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv) {
 	sptr->MaxYvel = 0;
 	sptr->FxObj = (unsigned char)fx_number;
 
-	if(GetEffect(currentLevel,fx_number)->flag1 == 1)
+	if(GetEffect(currentLevel, fx_number)->flag1 == 1)
 		sptr->Scalar = 3;
 	else
 		sptr->Scalar = 2;
@@ -92,7 +93,7 @@ void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type) {
 	fx_number = CreateEffect(room_number);
 
 	if(fx_number != NO_ITEM) {
-		fx = GetEffect(currentLevel,fx_number);
+		fx = GetEffect(currentLevel, fx_number);
 		fx->pos.x_pos = pos->x_pos;
 		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
 		fx->pos.z_pos = pos->z_pos;
@@ -104,7 +105,7 @@ void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type) {
 		fx->flag1 = type;
 		fx->object_number = BUBBLES;
 		fx->speed = (GetRandomControl() & 0x1F) - (type == 1 ? 64 : 0) + 96;
-		fx->frame_number = GetObjectInfo(currentLevel,BUBBLES)->mesh_index + 2 * type;
+		fx->frame_number = GetObjectInfo(currentLevel, BUBBLES)->mesh_index + 2 * type;
 	}
 }
 
@@ -151,8 +152,8 @@ void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - GetItem(currentLevel,item_number)->pos.x_pos;
-	dz = lara_item->pos.z_pos - GetItem(currentLevel,item_number)->pos.z_pos;
+	dx = lara_item->pos.x_pos - GetItem(currentLevel, item_number)->pos.x_pos;
+	dz = lara_item->pos.z_pos - GetItem(currentLevel, item_number)->pos.z_pos;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -203,7 +204,7 @@ void DoSethEffects(short item_number) {
 	short xv, yv, zv, size;
 	short angles[2];
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	item->item_flags[0]++;
 
 	r.x = NodeOffsets[3].x;
@@ -380,9 +381,9 @@ void DoSethEffects(short item_number) {
 void InitialiseSeth(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,SETHA)->anim_index + 4;
+	item->anim_number = GetObjectInfo(currentLevel, SETHA)->anim_index + 4;
 	item->frame_number = item->anim_number;
 	item->current_anim_state = 12;
 	item->goal_anim_state = 12;
@@ -399,7 +400,7 @@ void SethControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	seth = (CREATURE_INFO*)item->data;
 
 	angle = 0;
@@ -520,13 +521,13 @@ void SethControl(short item_number) {
 		case 4:
 
 			if(can_jump) {
-				if(item->anim_number == GetObjectInfo(currentLevel,45)->anim_index + 15 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
+				if(item->anim_number == GetObjectInfo(currentLevel, 45)->anim_index + 15 && item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
 					seth->LOT.is_jumping = 1;
 					seth->maximum_turn = 0;
 				}
 			}
 
-			if(!seth->flags && item->touch_bits && item->anim_number == GetObjectInfo(currentLevel,SETHA)->anim_index + 16) {
+			if(!seth->flags && item->touch_bits && item->anim_number == GetObjectInfo(currentLevel, SETHA)->anim_index + 16) {
 				if(item->touch_bits & 0xE000) {
 					lara_item->hit_points -= 200;
 					lara_item->hit_status = 1;
@@ -551,7 +552,7 @@ void SethControl(short item_number) {
 
 		case 7:
 
-			if(item->anim_number == GetObjectInfo(currentLevel,SETHA)->anim_index + 17 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end && GetRandomControl() & 1)
+			if(item->anim_number == GetObjectInfo(currentLevel, SETHA)->anim_index + 17 && item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end && GetRandomControl() & 1)
 				item->required_anim_state = 10;
 
 			break;
@@ -568,7 +569,7 @@ void SethControl(short item_number) {
 				item->pos.y_rot += 546;
 
 			if(!seth->flags && item->touch_bits) {
-				if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 15 && item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 26) {
+				if(item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 15 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 26) {
 					lara_item->hit_points -= 250;
 					lara_item->hit_status = 1;
 					seth->flags = 1;
@@ -605,7 +606,7 @@ void SethControl(short item_number) {
 
 		case 14:
 
-			if(item->anim_number != GetObjectInfo(currentLevel,45)->anim_index + 26) {
+			if(item->anim_number != GetObjectInfo(currentLevel, 45)->anim_index + 26) {
 				seth->LOT.fly = 16;
 				item->gravity_status = 0;
 				seth->maximum_turn = 0;
@@ -638,20 +639,20 @@ void SethControl(short item_number) {
 	   && info.distance < 0x400000 && !seth->LOT.is_jumping) {
 		if(item->current_anim_state != 12) {
 			if(item->current_anim_state > 13) {
-				item->anim_number = GetObjectInfo(currentLevel,SETHA)->anim_index + 25;
+				item->anim_number = GetObjectInfo(currentLevel, SETHA)->anim_index + 25;
 				item->current_anim_state = 16;
 				item->goal_anim_state = 16;
 			} else if(abs(h - y) < 512) {
-				item->anim_number = GetObjectInfo(currentLevel,SETHA)->anim_index + 17;
+				item->anim_number = GetObjectInfo(currentLevel, SETHA)->anim_index + 17;
 				item->current_anim_state = 7;
 				item->goal_anim_state = 7;
 			} else {
-				item->anim_number = GetObjectInfo(currentLevel,SETHA)->anim_index + 11;
+				item->anim_number = GetObjectInfo(currentLevel, SETHA)->anim_index + 11;
 				item->current_anim_state = 6;
 				item->goal_anim_state = 6;
 			}
 
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 		}
 	}
 

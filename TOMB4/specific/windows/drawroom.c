@@ -1,36 +1,37 @@
 
 #include "specific/drawroom.h"
-#include "game/watertab.h"
-#include "specific/function_stubs.h"
-#include "specific/windows/dxshell.h"
-#include "specific/polyinsert.h"
-#include "specific/function_table.h"
-#include "specific/windows/d3dmatrix.h"
-#include "specific/lighting.h"
 #include "game/camera.h"
-#include "game/draw.h"
-#include "game/effect2.h"
-#include "specific/gamemain.h"
-#include "specific/3dmath.h"
-#include "specific/windows/winmain.h"
-#include "specific/file.h"
 #include "game/control.h"
-#include "game/gameflow.h"
-#include "game/roomdynamic.h"
-#include "game/meshdata.h"
-#include "specific/windows/texturebucket.h"
+#include "game/draw.h"
 #include "game/dynamic.h"
-#include "game/fvector.h"
-#include <d3dtypes.h>
-#include "game/roominfo.h"
-#include "game/pclightinfo.h"
-#include "game/lightinfo.h"
-#include "game/texturestruct.h"
-#include "game/gfleveloptions.h"
-#include "game/lighttypes.h"
+#include "game/effect2.h"
 #include "game/fogbulbstruct.h"
-#include <math.h>
+#include "game/fvector.h"
+#include "game/gameflow.h"
+#include "game/gfleveloptions.h"
 #include "game/levelinfo.h"
+#include "game/lightinfo.h"
+#include "game/lighttypes.h"
+#include "game/meshdata.h"
+#include "game/pclightinfo.h"
+#include "game/roomdynamic.h"
+#include "game/roominfo.h"
+#include "game/texturestruct.h"
+#include "game/watertab.h"
+#include "specific/3dmath.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
+#include "specific/function_table.h"
+#include "specific/gamemain.h"
+#include "specific/lighting.h"
+#include "specific/polyinsert.h"
+#include "specific/windows/d3dmatrix.h"
+#include "specific/windows/dxshell.h"
+#include "specific/windows/texturebucket.h"
+#include "specific/windows/winmain.h"
+#include <d3dtypes.h>
+#include <math.h>
+
 static ROOM_DYNAMIC RoomDynamics[MAX_DYNAMICS];
 static long nRoomDynamics;
 
@@ -318,7 +319,7 @@ void CreateVertexNormals(ROOM_INFO* r) {
 	short nTris;
 
 	data = r->FaceData;
-	r->fnormals = (_D3DVECTOR*)calloc((r->gt3cnt + r->gt4cnt),sizeof(_D3DVECTOR) );
+	r->fnormals = (_D3DVECTOR*)calloc((r->gt3cnt + r->gt4cnt), sizeof(_D3DVECTOR));
 	nQuads = *data++;
 
 	for(int i = 0; i < nQuads; i++) {
@@ -352,7 +353,7 @@ void CreateVertexNormals(ROOM_INFO* r) {
 		data += 4;
 	}
 
-	r->vnormals = (_D3DVECTOR*)calloc( r->nVerts, sizeof(_D3DVECTOR));
+	r->vnormals = (_D3DVECTOR*)calloc(r->nVerts, sizeof(_D3DVECTOR));
 
 	data = r->FaceData;
 	nQuads = *data++;
@@ -421,7 +422,7 @@ void ProcessRoomData(ROOM_INFO* r) {
 	r->gt4cnt = *data_ptr++;
 	data_ptr += r->gt4cnt * 5;
 	r->gt3cnt = *data_ptr;
-	r->verts = (_D3DVECTOR*)calloc(r->nVerts,sizeof(_D3DVECTOR));
+	r->verts = (_D3DVECTOR*)calloc(r->nVerts, sizeof(_D3DVECTOR));
 	faces = (short*)calloc(r->nVerts, sizeof(short));
 	prelight = (short*)calloc(r->nVerts, sizeof(short));
 	data_ptr = r->data + 1; // go to vert data
@@ -503,15 +504,15 @@ void ProcessRoomData(ROOM_INFO* r) {
 
 	free(faces);
 	CreateVertexNormals(r);
-	r->prelight = (long*)calloc(r->nVerts,sizeof(long));
-	r->prelightwater = (long*)calloc(r->nVerts,sizeof(long));
+	r->prelight = (long*)calloc(r->nVerts, sizeof(long));
+	r->prelightwater = (long*)calloc(r->nVerts, sizeof(long));
 	r->watercalc = 0;
 	vb.dwNumVertices = r->nVerts;
 	vb.dwSize = sizeof(D3DVERTEXBUFFERDESC);
 	vb.dwCaps = 0;
 	vb.dwFVF = D3DFVF_VERTEX;
-	DXAttempt(IDirect3D3_CreateVertexBuffer(App.dx.lpD3D,&vb, &r->SourceVB, D3DDP_DONOTCLIP, 0));
-	IDirect3DVertexBuffer_Lock(r->SourceVB,DDLOCK_WRITEONLY, (void**)&vptr, 0);
+	DXAttempt(IDirect3D3_CreateVertexBuffer(App.dx.lpD3D, &vb, &r->SourceVB, D3DDP_DONOTCLIP, 0));
+	IDirect3DVertexBuffer_Lock(r->SourceVB, DDLOCK_WRITEONLY, (void**)&vptr, 0);
 	r->posx = (float)r->x;
 	r->posy = (float)r->y;
 	r->posz = (float)r->z;
@@ -541,7 +542,7 @@ void ProcessRoomData(ROOM_INFO* r) {
 	r->pclight = NULL;
 
 	if(r->num_lights) {
-		r->pclight = (PCLIGHT_INFO*)calloc(r->num_lights, sizeof(PCLIGHT_INFO) );
+		r->pclight = (PCLIGHT_INFO*)calloc(r->num_lights, sizeof(PCLIGHT_INFO));
 		nLights = 0;
 		nBulbs = NumLevelFogBulbs;
 
@@ -611,7 +612,7 @@ void ProcessRoomData(ROOM_INFO* r) {
 		}
 	}
 
-	IDirect3DVertexBuffer_Optimize(r->SourceVB,App.dx._lpD3DDevice, 0);
+	IDirect3DVertexBuffer_Optimize(r->SourceVB, App.dx._lpD3DDevice, 0);
 }
 
 void S_InsertRoom(ROOM_INFO* r) {
@@ -634,7 +635,7 @@ void S_InsertRoom(ROOM_INFO* r) {
 		numQuads = *data++;
 
 		for(int i = 0; i < numQuads; i++, data += 5) {
-			pTex = GetTextInfo(currentLevel,data[4] & 0x3FFF);
+			pTex = GetTextInfo(currentLevel, data[4] & 0x3FFF);
 			doublesided = (data[4] >> 15) & 1;
 
 			if(!pTex->drawtype)
@@ -646,7 +647,7 @@ void S_InsertRoom(ROOM_INFO* r) {
 		numTris = *data++;
 
 		for(int i = 0; i < numTris; i++, data += 4) {
-			pTex = GetTextInfo(currentLevel,data[3] & 0x3FFF);
+			pTex = GetTextInfo(currentLevel, data[3] & 0x3FFF);
 			doublesided = (data[3] >> 15) & 1;
 
 			if(!pTex->drawtype)
@@ -656,7 +657,6 @@ void S_InsertRoom(ROOM_INFO* r) {
 		}
 	}
 }
-
 
 
 void InitBuckets() {
@@ -677,31 +677,31 @@ void DrawBucket(TEXTUREBUCKET* bucket) {
 		return;
 
 	if(HasRendererBumpTexture(currentLevel, bucket->tpage) && App.BumpMapping) {
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_FOGENABLE, 0);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 0);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_ZERO);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLORARG2, D3DTA_CURRENT);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
-		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, GetRendererBumpTexture(currentLevel, bucket->tpage)->dxTex));
-		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTCLIP);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_FOGENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_DESTCOLOR);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_SRCCOLOR);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_FOGENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_ZERO);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLORARG2, D3DTA_CURRENT);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+		DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererBumpTexture(currentLevel, bucket->tpage)->dxTex));
+		IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTCLIP);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_FOGENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_DESTCOLOR);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_SRCCOLOR);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 		DrawPrimitiveCnt++;
 	}
 
-	DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, GetRendererTexture(currentLevel, bucket->tpage)->dxTex));
-	IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+	DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, bucket->tpage)->dxTex));
+	IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
 
 	if(App.BumpMapping)
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
 
 	bucket->nVtx = 0;
 	bucket->tpage = -1;
@@ -762,53 +762,53 @@ void DrawBuckets() {
 	TEXTUREBUCKET* bucket;
 
 	if(App.BumpMapping) {
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_FOGENABLE, 0);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 0);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_ZERO);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLORARG2, D3DTA_CURRENT);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_FOGENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_ZERO);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLORARG2, D3DTA_CURRENT);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 		for(int i = 0; i < 20; i++) {
 			bucket = &Bucket[i];
 
 			if(HasRendererBumpTexture(currentLevel, bucket->tpage) && bucket->nVtx) {
-				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0, GetRendererBumpTexture(currentLevel, bucket->tpage)->dxTex));
-				IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTCLIP);
+				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererBumpTexture(currentLevel, bucket->tpage)->dxTex));
+				IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTCLIP);
 				DrawPrimitiveCnt++;
 			}
 		}
 
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_FOGENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 1);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_SRCBLEND, D3DBLEND_DESTCOLOR);
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_DESTBLEND, D3DBLEND_SRCCOLOR);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice,0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_FOGENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 1);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_DESTCOLOR);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_DESTBLEND, D3DBLEND_SRCCOLOR);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 
 		for(int i = 0; i < 20; i++) {
 			bucket = &Bucket[i];
 
 			if(HasRendererBumpTexture(currentLevel, bucket->tpage) && bucket->nVtx) {
-				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel, bucket->tpage)->dxTex));
-				IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, bucket->tpage)->dxTex));
+				IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
 				bucket->nVtx = 0;
 				bucket->tpage = -1;
 				DrawPrimitiveCnt++;
 			}
 		}
 
-		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice,D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
 
 		for(int i = 0; i < 20; i++) {
 			bucket = &Bucket[i];
 
 			if(!HasRendererBumpTexture(currentLevel, bucket->tpage) && bucket->nVtx) {
-				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice,0,GetRendererTexture(currentLevel, bucket->tpage)->dxTex));
-				IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice,D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
+				DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, bucket->tpage)->dxTex));
+				IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
 				bucket->nVtx = 0;
 				bucket->tpage = -1;
 				DrawPrimitiveCnt++;
@@ -823,7 +823,6 @@ void DrawBuckets() {
 }
 
 
-
 void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i) {
 	MESH_DATA* mesh;
 	D3DVERTEXBUFFERDESC buf;
@@ -831,103 +830,103 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 	long lp;
 	char c;
 	if(mesh_ptr == last_mesh_ptr) {
-			
-			mesh = (MESH_DATA*)mesh_ptr;
-			mesh_vtxbuf[i] = mesh;
-		} else {
-			last_mesh_ptr = mesh_ptr;
-			mesh = (MESH_DATA*)calloc(1,sizeof(MESH_DATA));
-			*GetMeshPointer(currentLevel, i) = (short*)mesh;
-			mesh_vtxbuf[i] = mesh;
-			mesh->x = mesh_ptr[0];
-			mesh->y = mesh_ptr[1];
-			mesh->z = mesh_ptr[2];
-			mesh->r = mesh_ptr[3];
-			mesh->flags = mesh_ptr[4];
-			mesh->nVerts = mesh_ptr[5] & 0xFF;
-			lp = 0;
 
-			if(!mesh->nVerts)
-				lp = mesh_ptr[5] >> 8;
+		mesh = (MESH_DATA*)mesh_ptr;
+		mesh_vtxbuf[i] = mesh;
+	} else {
+		last_mesh_ptr = mesh_ptr;
+		mesh = (MESH_DATA*)calloc(1, sizeof(MESH_DATA));
+		*GetMeshPointer(currentLevel, i) = (short*)mesh;
+		mesh_vtxbuf[i] = mesh;
+		mesh->x = mesh_ptr[0];
+		mesh->y = mesh_ptr[1];
+		mesh->z = mesh_ptr[2];
+		mesh->r = mesh_ptr[3];
+		mesh->flags = mesh_ptr[4];
+		mesh->nVerts = mesh_ptr[5] & 0xFF;
+		lp = 0;
 
-			mesh_ptr += 6;
+		if(!mesh->nVerts)
+			lp = mesh_ptr[5] >> 8;
 
-			if(mesh->nVerts) {
-				buf.dwNumVertices = mesh->nVerts;
-				buf.dwSize = sizeof(D3DVERTEXBUFFERDESC);
-				buf.dwCaps = 0;
-				buf.dwFVF = D3DFVF_TEX1 | D3DFVF_NORMAL | D3DFVF_XYZ;
-				DXAttempt(IDirect3D3_CreateVertexBuffer(App.dx.lpD3D, &buf, &mesh->SourceVB, 0, 0));
-				DXAttempt(IDirect3DVertexBuffer7_Lock(mesh->SourceVB, DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0));
-				IDirect3DVertexBuffer_Lock(mesh->SourceVB, DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0);
+		mesh_ptr += 6;
+
+		if(mesh->nVerts) {
+			buf.dwNumVertices = mesh->nVerts;
+			buf.dwSize = sizeof(D3DVERTEXBUFFERDESC);
+			buf.dwCaps = 0;
+			buf.dwFVF = D3DFVF_TEX1 | D3DFVF_NORMAL | D3DFVF_XYZ;
+			DXAttempt(IDirect3D3_CreateVertexBuffer(App.dx.lpD3D, &buf, &mesh->SourceVB, 0, 0));
+			DXAttempt(IDirect3DVertexBuffer7_Lock(mesh->SourceVB, DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0));
+			IDirect3DVertexBuffer_Lock(mesh->SourceVB, DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0);
+
+			for(int j = 0; j < mesh->nVerts; j++) {
+				vtx[j].x = mesh_ptr[0];
+				vtx[j].y = mesh_ptr[1];
+				vtx[j].z = mesh_ptr[2];
+				mesh_ptr += 3;
+			}
+
+			mesh->nNorms = mesh_ptr[0];
+			mesh_ptr++;
+
+			if(!mesh->nNorms)
+				mesh->nNorms = mesh->nVerts;
+
+			if(mesh->nNorms > 0) {
+				mesh->Normals = (_D3DVECTOR*)calloc(mesh->nNorms, sizeof(_D3DVECTOR));
 
 				for(int j = 0; j < mesh->nVerts; j++) {
-					vtx[j].x = mesh_ptr[0];
-					vtx[j].y = mesh_ptr[1];
-					vtx[j].z = mesh_ptr[2];
+					vtx[j].nx = mesh_ptr[0];
+					vtx[j].ny = mesh_ptr[1];
+					vtx[j].nz = mesh_ptr[2];
 					mesh_ptr += 3;
+					D3DNormalise((_D3DVECTOR*)&vtx[j].nx);
+					mesh->Normals[j].x = vtx[j].nx;
+					mesh->Normals[j].y = vtx[j].ny;
+					mesh->Normals[j].z = vtx[j].nz;
 				}
 
-				mesh->nNorms = mesh_ptr[0];
-				mesh_ptr++;
+				mesh->prelight = 0;
+			} else {
+				mesh->Normals = 0;
+				mesh->prelight = (long*)calloc(mesh->nVerts, sizeof(long));
 
-				if(!mesh->nNorms)
-					mesh->nNorms = mesh->nVerts;
-
-				if(mesh->nNorms > 0) {
-					mesh->Normals = (_D3DVECTOR*)calloc(mesh->nNorms, sizeof(_D3DVECTOR));
-
-					for(int j = 0; j < mesh->nVerts; j++) {
-						vtx[j].nx = mesh_ptr[0];
-						vtx[j].ny = mesh_ptr[1];
-						vtx[j].nz = mesh_ptr[2];
-						mesh_ptr += 3;
-						D3DNormalise((_D3DVECTOR*)&vtx[j].nx);
-						mesh->Normals[j].x = vtx[j].nx;
-						mesh->Normals[j].y = vtx[j].ny;
-						mesh->Normals[j].z = vtx[j].nz;
-					}
-
-					mesh->prelight = 0;
-				} else {
-					mesh->Normals = 0;
-					mesh->prelight = (long*)calloc(mesh->nVerts,sizeof(long));
-
-					for(int j = 0; j < mesh->nVerts; j++) {
-						c = 255 - (mesh_ptr[0] >> 5);
-						mesh->prelight[j] = RGBONLY(c, c, c);
-						mesh_ptr++;
-					}
+				for(int j = 0; j < mesh->nVerts; j++) {
+					c = 255 - (mesh_ptr[0] >> 5);
+					mesh->prelight[j] = RGBONLY(c, c, c);
+					mesh_ptr++;
 				}
-
-				IDirect3DVertexBuffer_Unlock(mesh->SourceVB);
-			} else
-				mesh_ptr += 6 * lp + 1;
-
-			mesh->ngt4 = mesh_ptr[0];
-			mesh_ptr++;
-
-			if(mesh->ngt4) {
-				mesh->gt4 = (short*)calloc(6 * mesh->ngt4,sizeof(short));
-				lp = 6 * mesh->ngt4;
-
-				for(int j = 0; j < lp; j++)
-					mesh->gt4[j] = mesh_ptr[j];
-
-				mesh_ptr += lp;
 			}
 
-			mesh->ngt3 = mesh_ptr[0];
-			mesh_ptr++;
+			IDirect3DVertexBuffer_Unlock(mesh->SourceVB);
+		} else
+			mesh_ptr += 6 * lp + 1;
 
-			if(mesh->ngt3) {
-				mesh->gt3 = (short*)calloc(5 * mesh->ngt3,sizeof(short));
-				lp = 5 * mesh->ngt3;
+		mesh->ngt4 = mesh_ptr[0];
+		mesh_ptr++;
 
-				for(int j = 0; j < lp; j++)
-					mesh->gt3[j] = mesh_ptr[j];
-			}
+		if(mesh->ngt4) {
+			mesh->gt4 = (short*)calloc(6 * mesh->ngt4, sizeof(short));
+			lp = 6 * mesh->ngt4;
+
+			for(int j = 0; j < lp; j++)
+				mesh->gt4[j] = mesh_ptr[j];
+
+			mesh_ptr += lp;
 		}
+
+		mesh->ngt3 = mesh_ptr[0];
+		mesh_ptr++;
+
+		if(mesh->ngt3) {
+			mesh->gt3 = (short*)calloc(5 * mesh->ngt3, sizeof(short));
+			lp = 5 * mesh->ngt3;
+
+			for(int j = 0; j < lp; j++)
+				mesh->gt3[j] = mesh_ptr[j];
+		}
+	}
 }
 
 unsigned short GetRandom(WATERTAB* wt, long lp) {

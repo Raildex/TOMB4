@@ -1,22 +1,23 @@
 
 #include "game/items.h"
-#include "game/effect2.h"
-#include "game/objects.h"
-#include "specific/function_stubs.h"
-#include "game/control.h"
-#include "game/effects.h"
-#include "game/lara.h"
-#include "game/itemflags.h"
-#include "game/larainfo.h"
-#include "game/iteminfo.h"
-#include "global/types.h"
 #include "game/animstruct.h"
-#include "game/itemstatus.h"
+#include "game/control.h"
+#include "game/effect2.h"
+#include "game/effects.h"
 #include "game/floorinfo.h"
-#include "game/objectinfo.h"
-#include "game/roominfo.h"
 #include "game/fxinfo.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roominfo.h"
+#include "global/types.h"
+#include "specific/function_stubs.h"
+
 short next_fx_active;
 short next_item_active;
 
@@ -26,7 +27,7 @@ static short next_item_free;
 void InitialiseItemArray(short num, long count) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,count);
+	item = GetItem(currentLevel, count);
 	next_item_free = (short)count;
 	next_item_active = NO_ITEM;
 
@@ -66,10 +67,10 @@ void KillItem(short item_num) {
 	}
 
 	if(item->room_number != 255) {
-		linknum = GetRoom(currentLevel,item->room_number)->item_number;
+		linknum = GetRoom(currentLevel, item->room_number)->item_number;
 
 		if(linknum == item_num)
-			GetRoom(currentLevel,item->room_number)->item_number = item->next_item;
+			GetRoom(currentLevel, item->room_number)->item_number = item->next_item;
 		else {
 			for(; linknum != NO_ITEM; linknum = GetItem(currentLevel, linknum)->next_item) {
 				if(GetItem(currentLevel, linknum)->next_item == item_num) {
@@ -98,8 +99,8 @@ short CreateItem() {
 	item_num = next_item_free;
 
 	if(item_num != NO_ITEM) {
-		GetItem(currentLevel,item_num)->flags = 0;
-		next_item_free = GetItem(currentLevel,item_num)->next_item;
+		GetItem(currentLevel, item_num)->flags = 0;
+		next_item_free = GetItem(currentLevel, item_num)->next_item;
 	}
 
 	return item_num;
@@ -111,10 +112,10 @@ void InitialiseItem(short item_num) {
 	FLOOR_INFO* floor;
 
 	item = GetItem(currentLevel, item_num);
-	item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
-	item->current_anim_state = GetAnim(currentLevel,item->anim_number)->current_anim_state;
-	item->goal_anim_state = GetAnim(currentLevel,item->anim_number)->current_anim_state;
+	item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
+	item->current_anim_state = GetAnim(currentLevel, item->anim_number)->current_anim_state;
+	item->goal_anim_state = GetAnim(currentLevel, item->anim_number)->current_anim_state;
 	item->required_anim_state = 0;
 	item->pos.x_rot = 0;
 	item->pos.z_rot = 0;
@@ -131,7 +132,7 @@ void InitialiseItem(short item_num) {
 	item->item_flags[1] = 0;
 	item->item_flags[2] = 0;
 	item->item_flags[3] = 0;
-	item->hit_points = GetObjectInfo(currentLevel,item->object_number)->hit_points;
+	item->hit_points = GetObjectInfo(currentLevel, item->object_number)->hit_points;
 	item->poisoned = 0;
 	item->collidable = 1;
 	item->timer = 0;
@@ -153,7 +154,7 @@ void InitialiseItem(short item_num) {
 	if(item->flags & IFL_INVISIBLE) {
 		item->status = ITEM_INVISIBLE;
 		item->flags -= IFL_INVISIBLE;
-	} else if(GetObjectInfo(currentLevel,item->object_number)->intelligent)
+	} else if(GetObjectInfo(currentLevel, item->object_number)->intelligent)
 		item->status = ITEM_INVISIBLE;
 
 	if((item->flags & IFL_CODEBITS) == IFL_CODEBITS) {
@@ -163,15 +164,15 @@ void InitialiseItem(short item_num) {
 		item->status = ITEM_ACTIVE;
 	}
 
-	r = GetRoom(currentLevel,item->room_number);
+	r = GetRoom(currentLevel, item->room_number);
 	item->next_item = r->item_number;
 	r->item_number = item_num;
 	floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 	item->floor = floor->floor << 8;
 	item->box_number = floor->box;
 
-	if(GetObjectInfo(currentLevel,item->object_number)->initialise)
-		GetObjectInfo(currentLevel,item->object_number)->initialise(item_num);
+	if(GetObjectInfo(currentLevel, item->object_number)->initialise)
+		GetObjectInfo(currentLevel, item->object_number)->initialise(item_num);
 
 	item->il.fcnt = -1;
 	item->il.room_number = -1;
@@ -207,10 +208,10 @@ void RemoveDrawnItem(short item_num) {
 	short linknum;
 
 	item = GetItem(currentLevel, item_num);
-	linknum = GetRoom(currentLevel,item->room_number)->item_number;
+	linknum = GetRoom(currentLevel, item->room_number)->item_number;
 
 	if(linknum == item_num)
-		GetRoom(currentLevel,item->room_number)->item_number = item->next_item;
+		GetRoom(currentLevel, item->room_number)->item_number = item->next_item;
 	else {
 		for(; linknum != NO_ITEM; linknum = GetItem(currentLevel, linknum)->next_item) {
 			if(GetItem(currentLevel, linknum)->next_item == item_num) {
@@ -227,7 +228,7 @@ void AddActiveItem(short item_num) {
 	item = GetItem(currentLevel, item_num);
 	item->flags |= IFL_TRIGGERED;
 
-	if(GetObjectInfo(currentLevel,item->object_number)->control) {
+	if(GetObjectInfo(currentLevel, item->object_number)->control) {
 		if(!item->active) {
 			item->active = 1;
 			item->next_active = next_item_active;
@@ -252,7 +253,7 @@ void ItemNewRoom(short item_num, short room_num) {
 	item = GetItem(currentLevel, item_num);
 
 	if(item->room_number != 255) {
-		r = GetRoom(currentLevel,item->room_number);
+		r = GetRoom(currentLevel, item->room_number);
 		linknum = r->item_number;
 
 		if(linknum == item_num)
@@ -268,8 +269,8 @@ void ItemNewRoom(short item_num, short room_num) {
 	}
 
 	item->room_number = room_num;
-	item->next_item = GetRoom(currentLevel,room_num)->item_number;
-	GetRoom(currentLevel,room_num)->item_number = item_num;
+	item->next_item = GetRoom(currentLevel, room_num)->item_number;
+	GetRoom(currentLevel, room_num)->item_number = item_num;
 }
 
 void InitialiseFXArray() {
@@ -295,9 +296,9 @@ short CreateEffect(short room_num) {
 	fx_num = next_fx_free;
 
 	if(fx_num != NO_ITEM) {
-		fx = GetEffect(currentLevel,fx_num);
+		fx = GetEffect(currentLevel, fx_num);
 		next_fx_free = fx->next_fx;
-		r = GetRoom(currentLevel,room_num);
+		r = GetRoom(currentLevel, room_num);
 		fx->room_number = room_num;
 		fx->next_fx = r->fx_number;
 		r->fx_number = fx_num;
@@ -320,27 +321,27 @@ void KillEffect(short fx_num) {
 	}
 
 	DetatchSpark(fx_num, 64);
-	fx = GetEffect(currentLevel,fx_num);
+	fx = GetEffect(currentLevel, fx_num);
 
 	if(next_fx_active == fx_num)
 		next_fx_active = fx->next_active;
 	else {
-		for(linknum = next_fx_active; linknum != NO_ITEM; linknum = GetEffect(currentLevel,linknum)->next_active) {
-			if(GetEffect(currentLevel,linknum)->next_active == fx_num) {
-				GetEffect(currentLevel,linknum)->next_active = fx->next_active;
+		for(linknum = next_fx_active; linknum != NO_ITEM; linknum = GetEffect(currentLevel, linknum)->next_active) {
+			if(GetEffect(currentLevel, linknum)->next_active == fx_num) {
+				GetEffect(currentLevel, linknum)->next_active = fx->next_active;
 				break;
 			}
 		}
 	}
 
-	linknum = GetRoom(currentLevel,fx->room_number)->fx_number;
+	linknum = GetRoom(currentLevel, fx->room_number)->fx_number;
 
 	if(linknum == fx_num)
-		GetRoom(currentLevel,fx->room_number)->fx_number = fx->next_fx;
+		GetRoom(currentLevel, fx->room_number)->fx_number = fx->next_fx;
 	else {
-		for(; linknum != NO_ITEM; linknum = GetEffect(currentLevel,linknum)->next_fx) {
-			if(GetEffect(currentLevel,linknum)->next_fx == fx_num) {
-				GetEffect(currentLevel,linknum)->next_fx = fx->next_fx;
+		for(; linknum != NO_ITEM; linknum = GetEffect(currentLevel, linknum)->next_fx) {
+			if(GetEffect(currentLevel, linknum)->next_fx == fx_num) {
+				GetEffect(currentLevel, linknum)->next_fx = fx->next_fx;
 				break;
 			}
 		}
@@ -362,21 +363,21 @@ void EffectNewRoom(short fx_num, short room_num) {
 		return;
 	}
 
-	fx = GetEffect(currentLevel,fx_num);
-	r = GetRoom(currentLevel,fx->room_number);
+	fx = GetEffect(currentLevel, fx_num);
+	r = GetRoom(currentLevel, fx->room_number);
 
 	if(r->fx_number == fx_num)
 		r->fx_number = fx->next_fx;
 	else {
-		for(linknum = r->fx_number; linknum != NO_ITEM; linknum = GetEffect(currentLevel,linknum)->next_fx) {
-			if(GetEffect(currentLevel,linknum)->next_fx == fx_num) {
-				GetEffect(currentLevel,linknum)->next_fx = fx->next_fx;
+		for(linknum = r->fx_number; linknum != NO_ITEM; linknum = GetEffect(currentLevel, linknum)->next_fx) {
+			if(GetEffect(currentLevel, linknum)->next_fx == fx_num) {
+				GetEffect(currentLevel, linknum)->next_fx = fx->next_fx;
 				break;
 			}
 		}
 	}
 
 	fx->room_number = room_num;
-	fx->next_fx = GetRoom(currentLevel,room_num)->fx_number;
-	GetRoom(currentLevel,room_num)->fx_number = fx_num;
+	fx->next_fx = GetRoom(currentLevel, room_num)->fx_number;
+	GetRoom(currentLevel, room_num)->fx_number = fx_num;
 }

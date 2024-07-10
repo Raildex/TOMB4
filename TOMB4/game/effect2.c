@@ -1,41 +1,42 @@
 
 #include "game/effect2.h"
 #include "game/control.h"
-#include "game/objects.h"
-#include "specific/function_stubs.h"
-#include "game/tomb4fx.h"
-#include "specific/3dmath.h"
-#include "game/missile.h"
-#include "game/items.h"
-#include "game/effects.h"
-#include "game/traps.h"
-#include "game/seth.h"
-#include "game/demigod.h"
-#include "game/harpy.h"
 #include "game/croc.h"
+#include "game/demigod.h"
 #include "game/draw.h"
-#include "game/sound.h"
-#include "game/lara.h"
-#include "game/gameflow.h"
-#include "game/iteminfo.h"
-#include "game/phd3dpos.h"
-#include "game/roominfo.h"
-#include "game/sparks.h"
-#include "game/roomflags.h"
 #include "game/dynamic.h"
+#include "game/effects.h"
 #include "game/fxinfo.h"
-#include "game/ripplestruct.h"
-#include "game/objectinfo.h"
-#include "game/spdynamic.h"
-#include "game/larainfo.h"
+#include "game/gameflow.h"
 #include "game/gamevector.h"
 #include "game/gfleveloptions.h"
+#include "game/harpy.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
+#include "game/levelinfo.h"
+#include "game/missile.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/phd3dpos.h"
+#include "game/ripplestruct.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/seth.h"
+#include "game/sound.h"
+#include "game/sparks.h"
+#include "game/spdynamic.h"
 #include "game/splashsetup.h"
 #include "game/splashstruct.h"
+#include "game/tomb4fx.h"
+#include "game/traps.h"
 #include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
 #include <stdlib.h>
 #include <string.h>
-#include "game/levelinfo.h"
+
 
 DYNAMIC dynamics[MAX_DYNAMICS * 2];
 long nSplashes;
@@ -70,7 +71,7 @@ void ControlSmokeEmitter(short item_number) {
 	if(!TriggerActive(item))
 		return;
 
-	if(item->object_number == STEAM_EMITTER && GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
+	if(item->object_number == STEAM_EMITTER && GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 		if(item->item_flags[0] || !(GetRandomControl() & 0x1F) || item->trigger_flags == 1) {
 			if(!(GetRandomControl() & 3) || item->item_flags[1]) {
 				pos.x_pos = (GetRandomControl() & 0x3F) + item->pos.x_pos - 32;
@@ -213,7 +214,7 @@ void ControlSmokeEmitter(short item_number) {
 		sptr->Friction = 3;
 		sptr->Flags = 538;
 
-		if(GetRoom(currentLevel,item->room_number)->flags & ROOM_OUTSIDE)
+		if(GetRoom(currentLevel, item->room_number)->flags & ROOM_OUTSIDE)
 			sptr->Flags = 794;
 
 		sptr->RotAng = GetRandomControl() & 0xFFF;
@@ -530,7 +531,7 @@ void ControlEnemyMissile(short fx_number) {
 	short room_number, max_speed, max_turn;
 	short angles[2];
 
-	fx = GetEffect(currentLevel,fx_number);
+	fx = GetEffect(currentLevel, fx_number);
 	phd_GetVectorAngles(lara_item->pos.x_pos - fx->pos.x_pos, lara_item->pos.y_pos - fx->pos.y_pos - 256, lara_item->pos.z_pos - fx->pos.z_pos, angles);
 
 	if(fx->flag1 == 1) {
@@ -608,7 +609,7 @@ void ControlEnemyMissile(short fx_number) {
 			ExplodeFX(fx, 0, -32);
 
 		if(fx->flag1 == 1) {
-			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x18008040, (((~GetRoom(currentLevel,fx->room_number)->flags & 0xFF) >> 4) & 2) << 16); // decipher me
+			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x18008040, (((~GetRoom(currentLevel, fx->room_number)->flags & 0xFF) >> 4) & 2) << 16); // decipher me
 			TriggerExplosionSparks(ox, oy, oz, 3, -2, 2, fx->room_number);
 		} else if(fx->flag1 == 0)
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x10008040, 0);
@@ -645,7 +646,7 @@ void ControlEnemyMissile(short fx_number) {
 			LaraBurn();
 			lara.BurnGreen = 1;
 		} else if(fx->flag1 == 0)
-			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0x580018, 48, 0x10008040, (((~GetRoom(currentLevel,fx->room_number)->flags & 0xFF) >> 4) & 2) << 16);
+			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0x580018, 48, 0x10008040, (((~GetRoom(currentLevel, fx->room_number)->flags & 0xFF) >> 4) & 2) << 16);
 		else if(fx->flag1 == 3 || fx->flag1 == 4)
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x10004080, 0x10000);
 		else if(fx->flag1 == 5)
@@ -685,7 +686,7 @@ void ControlEnemyMissile(short fx_number) {
 }
 
 RIPPLE_STRUCT* GetFreeRipple() {
-	for(int i =0; i < nRipples; ++i) {
+	for(int i = 0; i < nRipples; ++i) {
 		if(!(ripples[i].flags & 1)) {
 			return &ripples[i];
 		}
@@ -695,7 +696,7 @@ RIPPLE_STRUCT* GetFreeRipple() {
 	ripples = realloc(ripples, nRipples * sizeof(RIPPLE_STRUCT));
 	for(int i = idx; i < nRipples; ++i) {
 		RIPPLE_STRUCT* bptr = &ripples[i];
-		*bptr = (RIPPLE_STRUCT){0};
+		*bptr = (RIPPLE_STRUCT){ 0 };
 	}
 	return &ripples[idx];
 }
@@ -713,7 +714,6 @@ void SetupRipple(long x, long y, long z, long size, long flags) {
 	ripple->z = z;
 	ripple->x += (GetRandomControl() & 0x3F) - 32;
 	ripple->z += (GetRandomControl() & 0x3F) - 32;
-	
 }
 
 void TriggerUnderwaterBlood(long x, long y, long z, long size) {
@@ -916,7 +916,7 @@ void TriggerExplosionBubble(long x, long y, long z, short room_number) {
 	sptr->Friction = 0;
 	sptr->Flags = 2058;
 	sptr->Scalar = 3;
-	sptr->Def = GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 13;
+	sptr->Def = GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 13;
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
 	size = (GetRandomControl() & 7) + 63;
@@ -961,7 +961,7 @@ void DetatchSpark(long num, long type) {
 		if(sptr->On && (sptr->Flags & type) && sptr->FxObj == num) {
 
 			if(type == 64) {
-				fx = GetEffect(currentLevel,num);
+				fx = GetEffect(currentLevel, num);
 				sptr->x += fx->pos.x_pos;
 				sptr->y += fx->pos.y_pos;
 				sptr->z += fx->pos.z_pos;
@@ -978,11 +978,11 @@ void DetatchSpark(long num, long type) {
 }
 
 SPARKS* GetFreeSpark() {
-	for(int i =0; i < nSpark; ++i) {
+	for(int i = 0; i < nSpark; ++i) {
 		if(!spark[i].On) {
-			spark[i] = (SPARKS){0};
+			spark[i] = (SPARKS){ 0 };
 			spark[i].Dynamic = -1;
-			spark[i].Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
+			spark[i].Def = (unsigned char)GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index;
 			return &spark[i];
 		}
 	}
@@ -991,9 +991,9 @@ SPARKS* GetFreeSpark() {
 	spark = realloc(spark, nSpark * sizeof(SPARKS));
 	for(int i = idx; i < nSpark; ++i) {
 		SPARKS* sptr = &spark[i];
-		*sptr = (SPARKS){0};
+		*sptr = (SPARKS){ 0 };
 		sptr->Dynamic = -1;
-		sptr->Def = (unsigned char)GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index;
+		sptr->Def = (unsigned char)GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index;
 	}
 	return &spark[idx];
 }
@@ -1224,7 +1224,7 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 			sptr->RotAdd = ((rnd >> 1) & 0x3F) + 64;
 
 		sptr->Scalar = 3;
-		sptr->Def = GetObjectInfo(currentLevel,DEFAULT_SPRITES)->mesh_index + 12;
+		sptr->Def = GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 12;
 		sptr->Size = ((rnd >> 10) & 7) + 8;
 		sptr->sSize = sptr->Size;
 		sptr->dSize = 1;
@@ -1697,7 +1697,7 @@ void TriggerRocketSmoke(long x, long y, long z, long col) {
 }
 
 SPLASH_STRUCT* GetFreeSplash() {
-	for(int i =0; i < nSplashes; ++i) {
+	for(int i = 0; i < nSplashes; ++i) {
 		if(!(splashes[i].flags & 1)) {
 			return &splashes[i];
 		}
@@ -1707,7 +1707,7 @@ SPLASH_STRUCT* GetFreeSplash() {
 	splashes = realloc(splashes, nSplashes * sizeof(SPLASH_STRUCT));
 	for(int i = idx; i < nSplashes; ++i) {
 		SPLASH_STRUCT* bptr = &splashes[i];
-		*bptr = (SPLASH_STRUCT){0};
+		*bptr = (SPLASH_STRUCT){ 0 };
 	}
 	return &splashes[idx];
 }

@@ -1,29 +1,30 @@
 
 #include "game/scarab.h"
+#include "game/aibits.h"
+#include "game/aiinfo.h"
+#include "game/animstruct.h"
+#include "game/biteinfo.h"
 #include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/effect2.h"
+#include "game/effects.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
+#include "game/levelinfo.h"
+#include "game/objectinfo.h"
 #include "game/objects.h"
 #include "game/roomflags.h"
 #include "game/roominfo.h"
-#include "specific/function_stubs.h"
-#include "game/effects.h"
-#include "specific/3dmath.h"
-#include "game/control.h"
-#include "specific/output.h"
-#include "game/effect2.h"
-#include "game/lara.h"
-#include "game/creatureinfo.h"
-#include "game/aiinfo.h"
-#include "game/animstruct.h"
-#include "game/larainfo.h"
-#include "game/objectinfo.h"
-#include "game/itemstatus.h"
-#include "game/biteinfo.h"
-#include "game/weapontypes.h"
 #include "game/scarabstruct.h"
-#include "game/aibits.h"
+#include "game/weapontypes.h"
 #include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/output.h"
 #include <stdlib.h>
-#include "game/levelinfo.h"
+
 
 static BITE_INFO beetle_bite = { 0, 0, 0, 12 };
 
@@ -318,17 +319,17 @@ void UpdateScarabs() {
 			fx->pos.x_rot = -(fx->fallspeed << 7);
 
 
-		if(GetRoom(currentLevel,fx->room_number)->flags & ROOM_UNDERWATER) {
+		if(GetRoom(currentLevel, fx->room_number)->flags & ROOM_UNDERWATER) {
 			fx->fallspeed = 0;
 			fx->speed = 16;
-			fx->pos.y_pos = GetRoom(currentLevel,fx->room_number)->maxceiling + 50;
+			fx->pos.y_pos = GetRoom(currentLevel, fx->room_number)->maxceiling + 50;
 
-			if(!(GetRoom(currentLevel,old_room)->flags & ROOM_UNDERWATER)) {
+			if(!(GetRoom(currentLevel, old_room)->flags & ROOM_UNDERWATER)) {
 				// TriggerSmallSplash(fx->pos.x_pos, room[fx->room_number].maxceiling, fx->pos.z_pos, 16);
-				SetupRipple(fx->pos.x_pos, GetRoom(currentLevel,fx->room_number)->maxceiling, fx->pos.z_pos, (GetRandomControl() & 3) + 48, 2);
+				SetupRipple(fx->pos.x_pos, GetRoom(currentLevel, fx->room_number)->maxceiling, fx->pos.z_pos, (GetRandomControl() & 3) + 48, 2);
 				// SoundEffect(SFX_RATSPLASH, &fx->pos, 0);
 			} else if(!(GetRandomControl() & 0xF))
-				SetupRipple(fx->pos.x_pos, GetRoom(currentLevel,fx->room_number)->maxceiling, fx->pos.z_pos, (GetRandomControl() & 3) + 48, 2);
+				SetupRipple(fx->pos.x_pos, GetRoom(currentLevel, fx->room_number)->maxceiling, fx->pos.z_pos, (GetRandomControl() & 3) + 48, 2);
 		}
 	}
 }

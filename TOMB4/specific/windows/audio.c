@@ -1,13 +1,14 @@
 
 #include "specific/audio.h"
+#include "game/control.h"
 #include "specific/file.h"
 #include "specific/function_stubs.h"
-#include "specific/windows/dxshell.h"
-#include "game/control.h"
 #include "specific/loadsave.h"
+#include "specific/windows/dxshell.h"
 #include "specific/windows/winmain.h"
 #include <MSAcm.h>
 #include <dsound.h>
+
 const char* TrackFileNames[112] = {
 	"044_attack_part_i.wav",
 	"008_voncroy9a.wav",
@@ -212,7 +213,7 @@ void ACMSetVolume() {
 		volume = -4000 * (100 - MusicVolume) / 100;
 
 	if(DSBuffer)
-		IDirectSoundBuffer_SetVolume(DSBuffer,volume);
+		IDirectSoundBuffer_SetVolume(DSBuffer, volume);
 }
 
 void ACMEmulateCDPlay(long track, long mode) {
@@ -242,20 +243,20 @@ void ACMEmulateCDPlay(long track, long mode) {
 
 	memcpy(ADPCMBuffer, audio_fp_write_ptr, 0x5800);
 	GetADPCMData();
-	DXAttempt(IDirectSoundBuffer_Lock(DSBuffer,0, audio_buffer_size, (LPVOID*)&pAudioWrite, &AudioBytes, 0, 0, 0));
+	DXAttempt(IDirectSoundBuffer_Lock(DSBuffer, 0, audio_buffer_size, (LPVOID*)&pAudioWrite, &AudioBytes, 0, 0, 0));
 	acmStreamConvert(hACMStream, &StreamHeaders[0], ACM_STREAMCONVERTF_BLOCKALIGN | ACM_STREAMCONVERTF_START);
 	memcpy(ADPCMBuffer, audio_fp_write_ptr, 0x5800);
 	GetADPCMData();
 	acmStreamConvert(hACMStream, &StreamHeaders[1], ACM_STREAMCONVERTF_BLOCKALIGN);
-	DXAttempt(IDirectSoundBuffer_Unlock(DSBuffer,pAudioWrite, audio_buffer_size, 0, 0));
+	DXAttempt(IDirectSoundBuffer_Unlock(DSBuffer, pAudioWrite, audio_buffer_size, 0, 0));
 	CurrentNotify = 2;
 	NextWriteOffset = 2 * NotifySize;
 	ACMSetVolume();
-	IDirectSoundBuffer_Play(DSBuffer,0, 0, DSBPLAY_LOOPING);
+	IDirectSoundBuffer_Play(DSBuffer, 0, 0, DSBPLAY_LOOPING);
 }
 
 BOOL WINAPI ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwSupport) {
-	ACMDRIVERDETAILS driver = {0};
+	ACMDRIVERDETAILS driver = { 0 };
 
 	driver.cbStruct = sizeof(ACMDRIVERDETAILS);
 	acmDriverDetails(hadid, &driver, 0);
@@ -292,7 +293,7 @@ long ACMSetupNotifications() {
 	if(!NotificationThreadHandle)
 		Log(__func__, "Create Notification Thread failed");
 
-	result = IDirectSoundNotify_SetNotificationPositions(DSNotify,5, posNotif);
+	result = IDirectSoundNotify_SetNotificationPositions(DSNotify, 5, posNotif);
 
 	if(result != DS_OK) {
 		CloseHandle(NotifyEventHandles[0]);
@@ -389,9 +390,9 @@ long ACMHandleNotifications() {
 				if((long)audio_fp_write_ptr >= (long)(wav_file_buffer + 0x37000))
 					audio_fp_write_ptr = wav_file_buffer;
 
-				IDirectSoundBuffer_Lock(DSBuffer,NextWriteOffset, NotifySize, (LPVOID*)&write, &bytes, 0, 0, 0);
+				IDirectSoundBuffer_Lock(DSBuffer, NextWriteOffset, NotifySize, (LPVOID*)&write, &bytes, 0, 0, 0);
 				acmStreamConvert(hACMStream, &StreamHeaders[CurrentNotify], ACM_STREAMCONVERTF_BLOCKALIGN);
-				IDirectSoundBuffer_Unlock(DSBuffer,&write, bytes, 0, 0);
+				IDirectSoundBuffer_Unlock(DSBuffer, &write, bytes, 0, 0);
 				NextWriteOffset += bytes;
 
 				if(NextWriteOffset >= audio_buffer_size)
@@ -440,23 +441,23 @@ bool ACMInit() {
 	audio_buffer_size = 0x577C0;
 	NotifySize = 0x15DF0;
 
-	desc = (DSBUFFERDESC){0};
+	desc = (DSBUFFERDESC){ 0 };
 	desc.dwBufferBytes = 0x577C0;
 	desc.dwReserved = 0;
 	desc.dwSize = 20;
 	desc.dwFlags = DSBCAPS_LOCSOFTWARE | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLPOSITIONNOTIFY | DSBCAPS_GETCURRENTPOSITION2;
 	desc.lpwfxFormat = &wav_format;
-	IDirectSound8_CreateSoundBuffer(App.dx.lpDS,&desc, &DSBuffer, 0);
-	IUnknown_QueryInterface(DSBuffer,&DSNGUID, (LPVOID*)&DSNotify);
+	IDirectSound8_CreateSoundBuffer(App.dx.lpDS, &desc, &DSBuffer, 0);
+	IUnknown_QueryInterface(DSBuffer, &DSNGUID, (LPVOID*)&DSNotify);
 
 	ACMSetupNotifications();
 	acmStreamOpen(&hACMStream, hACMDriver, (LPWAVEFORMATEX)&source_wav_format, &wav_format, 0, 0, 0, 0);
 	acmStreamSize(hACMStream, 0x5800, &StreamSize, 0);
-	DXAttempt(IDirectSoundBuffer_Lock(DSBuffer,0, audio_buffer_size, (LPVOID*)&pAudioWrite, &AudioBytes, 0, 0, 0));
+	DXAttempt(IDirectSoundBuffer_Lock(DSBuffer, 0, audio_buffer_size, (LPVOID*)&pAudioWrite, &AudioBytes, 0, 0, 0));
 	memset(pAudioWrite, 0, audio_buffer_size);
 
 	for(int i = 0; i < 4; i++) {
-		StreamHeaders[i] = (ACMSTREAMHEADER){0};
+		StreamHeaders[i] = (ACMSTREAMHEADER){ 0 };
 		StreamHeaders[i].cbStruct = sizeof(ACMSTREAMHEADER);
 		StreamHeaders[i].pbSrc = ADPCMBuffer;
 		StreamHeaders[i].cbSrcLength = 0x5800;
@@ -465,7 +466,7 @@ bool ACMInit() {
 		acmStreamPrepareHeader(hACMStream, &StreamHeaders[i], 0);
 	}
 
-	DXAttempt(IDirectSoundBuffer_Unlock(DSBuffer,pAudioWrite, audio_buffer_size, 0, 0));
+	DXAttempt(IDirectSoundBuffer_Unlock(DSBuffer, pAudioWrite, audio_buffer_size, 0, 0));
 	acm_ready = 1;
 	return 1;
 }
@@ -525,7 +526,7 @@ void S_CDStop() {
 
 		memset(wav_file_buffer, 0, 0x37000);
 		IDirectSoundBuffer_Stop(DSBuffer);
-		IDirectSoundBuffer_SetCurrentPosition(DSBuffer,0);
+		IDirectSoundBuffer_SetCurrentPosition(DSBuffer, 0);
 		while(reading_audio_file) { };
 		fclose(audio_stream_fp);
 		audio_stream_fp = 0;

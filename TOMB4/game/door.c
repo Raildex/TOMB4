@@ -1,36 +1,37 @@
 
 #include "game/door.h"
-#include "game/draw.h"
-#include "game/control.h"
-#include "game/objects.h"
-#include "game/lara_states.h"
-#include "game/collide.h"
-#include "game/newinv.h"
-#include "game/sound.h"
-#include "game/items.h"
-#include "game/sphere.h"
-#include "game/box.h"
-#include "specific/input.h"
-#include "game/lara.h"
-#include "game/switch.h"
-#include "game/lot.h"
-#include "game/phdvector.h"
-#include "game/floorinfo.h"
-#include "game/doorposdata.h"
-#include "game/doordata.h"
-#include "game/creatureinfo.h"
-#include "game/iteminfo.h"
-#include "game/larainfo.h"
-#include "game/itemstatus.h"
-#include "game/itemflags.h"
-#include "game/laragunstatus.h"
 #include "game/animstruct.h"
-#include "game/larawaterstatus.h"
-#include "game/inputbuttons.h"
-#include "game/collinfo.h"
+#include "game/box.h"
 #include "game/boxinfo.h"
-#include "global/types.h"
+#include "game/collide.h"
+#include "game/collinfo.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/doordata.h"
+#include "game/doorposdata.h"
+#include "game/draw.h"
+#include "game/floorinfo.h"
+#include "game/inputbuttons.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
+#include "game/larawaterstatus.h"
 #include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/newinv.h"
+#include "game/objects.h"
+#include "game/phdvector.h"
+#include "game/sound.h"
+#include "game/sphere.h"
+#include "game/switch.h"
+#include "global/types.h"
+#include "specific/input.h"
+
 
 static PHD_VECTOR CrowbarDoorPos = { -412, 0, 140 };
 static PHD_VECTOR PullDoorPos = { -201, 0, 322 };
@@ -54,7 +55,7 @@ void ShutThatDoor(DOORPOS_DATA* d) {
 		d->floor->sky_room = -1;
 
 		if(d->block != NO_BOX) {
-			GetBox(currentLevel,d->block)->overlap_index |= 0x4000;
+			GetBox(currentLevel, d->block)->overlap_index |= 0x4000;
 
 			for(short slot = 0; slot < 5; slot++) {
 				cinfo = &baddie_slots[slot];
@@ -71,7 +72,7 @@ void OpenThatDoor(DOORPOS_DATA* d) {
 		*d->floor = d->data;
 
 		if(d->block != NO_BOX) {
-			GetBox(currentLevel,d->block)->overlap_index &= ~0x4000;
+			GetBox(currentLevel, d->block)->overlap_index &= ~0x4000;
 
 			for(short slot = 0; slot < 5; slot++) {
 				cinfo = &baddie_slots[slot];
@@ -188,7 +189,7 @@ void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 
 			if(MoveLaraPosition(&CrowbarDoorPos, item, l)) {
 				l->anim_number = ANIM_CROWBARDOOR;
-				l->frame_number = GetAnim(currentLevel,ANIM_CROWBARDOOR)->frame_base;
+				l->frame_number = GetAnim(currentLevel, ANIM_CROWBARDOOR)->frame_base;
 				l->current_anim_state = AS_CONTROLLED;
 				item->pos.y_rot ^= 0x8000;
 				AddActiveItem(item_num);
@@ -259,7 +260,7 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 			if(pull) {
 				if(MoveLaraPosition(&PullDoorPos, item, l)) {
 					l->anim_number = ANIM_PULLDOOR;
-					l->frame_number = GetAnim(currentLevel,ANIM_PULLDOOR)->frame_base;
+					l->frame_number = GetAnim(currentLevel, ANIM_PULLDOOR)->frame_base;
 					item->goal_anim_state = 3;
 					goin = 1;
 				} else
@@ -268,7 +269,7 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 				if(item->object_number < KICK_DOOR1) {
 					if(MoveLaraPosition(&PushDoorPos, item, l)) {
 						l->anim_number = ANIM_PUSHDOOR;
-						l->frame_number = GetAnim(currentLevel,ANIM_PUSHDOOR)->frame_base;
+						l->frame_number = GetAnim(currentLevel, ANIM_PUSHDOOR)->frame_base;
 						item->goal_anim_state = 2;
 						goin = 1;
 					} else
@@ -276,7 +277,7 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 				} else {
 					if(MoveLaraPosition(&KickDoorPos, item, l)) {
 						l->anim_number = ANIM_KICKDOOR;
-						l->frame_number = GetAnim(currentLevel,ANIM_KICKDOOR)->frame_base;
+						l->frame_number = GetAnim(currentLevel, ANIM_KICKDOOR)->frame_base;
 						item->goal_anim_state = 2;
 						goin = 1;
 					} else
@@ -314,7 +315,7 @@ void DoubleDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(PushPullKickDoorBounds, item, l)) {
 			if(MoveLaraPosition(&DoubleDoorPos, item, l)) {
 				l->anim_number = ANIM_TWODOOR;
-				l->frame_number = GetAnim(currentLevel,ANIM_TWODOOR)->frame_base;
+				l->frame_number = GetAnim(currentLevel, ANIM_TWODOOR)->frame_base;
 				l->current_anim_state = AS_TWODOOR;
 				AddActiveItem(item_num);
 				item->status = ITEM_ACTIVE;
@@ -340,19 +341,19 @@ void UnderwaterDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_num);
 
-	if(input & IN_ACTION 
-	&& item->status != ITEM_ACTIVE 
-	&& l->current_anim_state == AS_TREAD 
-	&& lara.water_status == LW_UNDERWATER 
-	&& lara.gun_status == LG_NO_ARMS 
-	|| lara.IsMoving 
-	&& lara.GeneralPtr == item_num) {
+	if(input & IN_ACTION
+		   && item->status != ITEM_ACTIVE
+		   && l->current_anim_state == AS_TREAD
+		   && lara.water_status == LW_UNDERWATER
+		   && lara.gun_status == LG_NO_ARMS
+	   || lara.IsMoving
+		   && lara.GeneralPtr == item_num) {
 		l->pos.y_rot ^= 0x8000;
 
 		if(TestLaraPosition(UnderwaterDoorBounds, item, l)) {
 			if(MoveLaraPosition(&UnderwaterDoorPos, item, l)) {
 				l->anim_number = ANIM_WATERDOOR;
-				l->frame_number = GetAnim(currentLevel,ANIM_WATERDOOR)->frame_base;
+				l->frame_number = GetAnim(currentLevel, ANIM_WATERDOOR)->frame_base;
 				l->current_anim_state = AS_CONTROLLED;
 				l->fallspeed = 0;
 				item->status = ITEM_ACTIVE;

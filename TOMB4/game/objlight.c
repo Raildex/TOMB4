@@ -1,25 +1,26 @@
 
 #include "game/objlight.h"
+#include "game/camera.h"
 #include "game/control.h"
 #include "game/effect2.h"
-#include "game/sound.h"
-#include "specific/function_stubs.h"
-#include "game/sphere.h"
-#include "specific/3dmath.h"
-#include "game/camera.h"
-#include "game/tomb4fx.h"
 #include "game/gameflow.h"
 #include "game/gfleveloptions.h"
 #include "game/iteminfo.h"
+#include "game/levelinfo.h"
 #include "game/roomflags.h"
 #include "game/roominfo.h"
+#include "game/sound.h"
+#include "game/sphere.h"
+#include "game/tomb4fx.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
 #include <stdlib.h>
-#include "game/levelinfo.h"
+
 void ControlPulseLight(short item_number) {
 	ITEM_INFO* item;
 	long sin, r, g, b;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(!TriggerActive(item))
 		return;
@@ -39,7 +40,7 @@ void ControlPulseLight(short item_number) {
 	} else if(item->trigger_flags == 2) {
 		SoundEffect(SFX_MAPPER_PYRAMID_OPEN, &item->pos, 0);
 
-		if(GetRoom(currentLevel,camera.pos.room_number)->flags & ROOM_NOT_INSIDE) {
+		if(GetRoom(currentLevel, camera.pos.room_number)->flags & ROOM_NOT_INSIDE) {
 			FlashFadeR = 64;
 			FlashFadeG = 128;
 			FlashFadeB = 128;

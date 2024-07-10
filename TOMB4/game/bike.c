@@ -1,51 +1,52 @@
 
 #include "game/bike.h"
-#include "specific/function_stubs.h"
-#include "specific/specificfx.h"
-#include "game/sphere.h"
-#include "game/camera.h"
-#include "game/objects.h"
-#include "game/control.h"
-#include "specific/3dmath.h"
-#include "game/draw.h"
-#include "specific/output.h"
-#include "game/effect2.h"
-#include "game/lara1gun.h"
-#include "game/tomb4fx.h"
-#include "game/items.h"
-#include "game/sound.h"
-#include "game/lara_states.h"
-#include "game/delstuff.h"
-#include "game/laraflar.h"
-#include "game/collide.h"
-#include "game/effects.h"
-#include "game/debris.h"
-#include "game/lara.h"
-#include "game/jeep.h"
-#include "specific/input.h"
-#include "game/newinv.h"
-#include "game/savegame.h"
-#include "game/bikeinfo.h"
-#include "game/iteminfo.h"
-#include "game/larainfo.h"
-#include "game/inputbuttons.h"
-#include "game/laragunstatus.h"
-#include "game/objectinfo.h"
-#include "game/sparks.h"
-#include "game/heighttypes.h"
 #include "game/animstruct.h"
-#include "game/roomflags.h"
+#include "game/bikeinfo.h"
+#include "game/camera.h"
+#include "game/collide.h"
+#include "game/control.h"
+#include "game/debris.h"
+#include "game/delstuff.h"
+#include "game/draw.h"
+#include "game/effect2.h"
+#include "game/effects.h"
+#include "game/heighttypes.h"
+#include "game/inputbuttons.h"
 #include "game/itemflags.h"
-#include "game/weapontypes.h"
-#include "game/savegameinfo.h"
-#include "game/roominfo.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
 #include "game/itemstatus.h"
-#include "game/staticinfo.h"
-#include "game/meshinfo.h"
+#include "game/jeep.h"
+#include "game/lara.h"
+#include "game/lara1gun.h"
+#include "game/lara_states.h"
+#include "game/laraflar.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
 #include "game/laramesh.h"
-#include "global/types.h"
-#include <stdlib.h>
 #include "game/levelinfo.h"
+#include "game/meshinfo.h"
+#include "game/newinv.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/savegame.h"
+#include "game/savegameinfo.h"
+#include "game/sound.h"
+#include "game/sparks.h"
+#include "game/sphere.h"
+#include "game/staticinfo.h"
+#include "game/tomb4fx.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
+#include "specific/output.h"
+#include "specific/specificfx.h"
+#include <stdlib.h>
+
 
 static ITEM_INFO* GlobalBikeItem;
 static long bikefspeed = 0;
@@ -57,7 +58,7 @@ void InitialiseBike(short item_number) {
 	BIKEINFO* bike;
 
 	item = GetItem(currentLevel, item_number);
-	bike = (BIKEINFO*)Allocate(currentLevel,sizeof(BIKEINFO),1);
+	bike = (BIKEINFO*)Allocate(currentLevel, sizeof(BIKEINFO), 1);
 	item->data = bike;
 	bike->velocity = 0;
 	bike->bike_turn = 0;
@@ -136,11 +137,10 @@ long GetOnBike(short item_number, COLL_INFO* coll) {
 	   < -32000)
 		return 0;
 
-	rot = (short)(
-		phd_atan(
-			item->pos.z_pos - lara_item->pos.z_pos,
-			item->pos.x_pos - lara_item->pos.x_pos)
-		- item->pos.y_rot);
+	rot = (short)(phd_atan(
+					  item->pos.z_pos - lara_item->pos.z_pos,
+					  item->pos.x_pos - lara_item->pos.x_pos)
+				  - item->pos.y_rot);
 
 	if(rot > -8190 && rot < 24570)
 		return 0;
@@ -748,10 +748,9 @@ void BikeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 
 		lara.gun_status = LG_HANDS_BUSY;
-		angle = (short)(
-			phd_atan(
-				item->pos.z_pos - l->pos.z_pos, item->pos.x_pos - l->pos.x_pos)
-			- item->pos.y_rot);
+		angle = (short)(phd_atan(
+							item->pos.z_pos - l->pos.z_pos, item->pos.x_pos - l->pos.x_pos)
+						- item->pos.y_rot);
 
 		if(angle <= -8190 || angle >= 24570) {
 			if(GLOBAL_inventoryitemchosen == PUZZLE_ITEM1) {

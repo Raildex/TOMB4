@@ -1,39 +1,40 @@
 
 #include "game/collide.h"
-#include "game/draw.h"
-#include "game/itemflags.h"
-#include "game/larainfo.h"
-#include "game/objects.h"
+#include "game/animstruct.h"
+#include "game/collinfo.h"
+#include "game/collisiontypes.h"
 #include "game/control.h"
-#include "specific/function_stubs.h"
+#include "game/draw.h"
 #include "game/effects.h"
-#include "game/sphere.h"
-#include "specific/3dmath.h"
+#include "game/floorinfo.h"
+#include "game/floortypes.h"
+#include "game/heighttypes.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
 #include "game/items.h"
-#include "game/sound.h"
-#include "game/lara_states.h"
+#include "game/itemstatus.h"
 #include "game/lara.h"
-#include "specific/file.h"
+#include "game/lara_states.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
+#include "game/larawaterstatus.h"
+#include "game/levelinfo.h"
+#include "game/meshinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
 #include "game/phd3dpos.h"
 #include "game/phdvector.h"
-#include "game/roominfo.h"
-#include "game/iteminfo.h"
-#include "game/collinfo.h"
-#include "game/itemstatus.h"
-#include "game/objectinfo.h"
-#include "game/meshinfo.h"
-#include "game/staticinfo.h"
-#include "game/larawaterstatus.h"
-#include "game/floorinfo.h"
-#include "game/heighttypes.h"
-#include "game/floortypes.h"
-#include "game/collisiontypes.h"
 #include "game/quadrantnames.h"
-#include "game/laragunstatus.h"
-#include "game/animstruct.h"
+#include "game/roominfo.h"
+#include "game/sound.h"
+#include "game/sphere.h"
+#include "game/staticinfo.h"
 #include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
 #include <stdlib.h>
-#include "game/levelinfo.h"
+
 static short StarGateBounds[24] = {
 	-512, 512, -1024, -896, -96, 96,
 	-512, 512, -128, 0, -96, 96,
@@ -52,7 +53,7 @@ void ShiftItem(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->shift.x = 0;
 }
 
-long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO** StoredItems,long StoredItemsSize, MESH_INFO** StoredStatics,long StoredStaticsSize, long StoreLara) {
+long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO** StoredItems, long StoredItemsSize, MESH_INFO** StoredStatics, long StoredStaticsSize, long StoreLara) {
 	MESH_INFO* mesh;
 	ROOM_INFO* r;
 	ITEM_INFO* item2;
@@ -64,7 +65,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 	short room_count, statics_count, items_count, item_number, next_item;
 
 	rooms[0] = item->room_number;
-	r = GetRoom(currentLevel,rooms[0]);
+	r = GetRoom(currentLevel, rooms[0]);
 	doors = r->door;
 	room_count = 1;
 	statics_count = 0;
@@ -85,12 +86,12 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 
 	if(StoredStatics && StoredStaticsSize) {
 		for(int i = 0; i < room_count; i++) {
-			r = GetRoom(currentLevel,rooms[i]);
+			r = GetRoom(currentLevel, rooms[i]);
 			mesh = r->mesh;
 
 			for(j = r->num_meshes; j > 0; j--, mesh++) {
 				if(mesh->Flags & 1) {
-					bounds = GetStaticObjectBounds(currentLevel,mesh->static_number);
+					bounds = GetStaticObjectBounds(currentLevel, mesh->static_number);
 
 					if(item->pos.y_pos + rad + 128 >= mesh->y + bounds[2] && item->pos.y_pos - rad - 128 <= mesh->y + bounds[3]) {
 						sy = phd_sin(mesh->y_rot);
@@ -123,7 +124,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 	}
 
 	for(int i = 0; i < room_count; i++) {
-		item_number = GetRoom(currentLevel,rooms[i])->item_number;
+		item_number = GetRoom(currentLevel, rooms[i])->item_number;
 
 		while(item_number != NO_ITEM) {
 			item2 = GetItem(currentLevel, item_number);
@@ -147,13 +148,13 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 				continue;
 			}
 
-			if(item2->object_number == BURNING_FLOOR || !GetObjectInfo(currentLevel,item2->object_number)->collision && item2->object_number != LARA) // don't get objects without collision
+			if(item2->object_number == BURNING_FLOOR || !GetObjectInfo(currentLevel, item2->object_number)->collision && item2->object_number != LARA) // don't get objects without collision
 			{
 				item_number = next_item;
 				continue;
 			}
 
-			if(!GetObjectInfo(currentLevel,item2->object_number)->draw_routine && item2->object_number != LARA || !item2->mesh_bits) // don't get objects that are not drawn
+			if(!GetObjectInfo(currentLevel, item2->object_number)->draw_routine && item2->object_number != LARA || !item2->mesh_bits) // don't get objects that are not drawn
 			{
 				item_number = next_item;
 				continue;
@@ -367,7 +368,7 @@ short GetTiltType(FLOOR_INFO* floor, long x, long y, long z) {
 		if(CheckNoColFloorTriangle(floor, x, z) == 1)
 			break;
 
-		r = GetRoom(currentLevel,floor->pit_room);
+		r = GetRoom(currentLevel, floor->pit_room);
 		floor = &r->floor[((z - r->z) >> 10) + (((x - r->x) >> 10) * r->x_size)];
 	}
 
@@ -375,7 +376,7 @@ short GetTiltType(FLOOR_INFO* floor, long x, long y, long z) {
 		return 0;
 
 	if(floor->index) {
-		data = GetFloorData(currentLevel,floor->index);
+		data = GetFloorData(currentLevel, floor->index);
 		type = (data[0] & 0x1F);
 
 		if(type == TILT_TYPE)
@@ -434,7 +435,7 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 	lzmax = z + coll->radius;
 	num_nearby_rooms = 1;
 	nearby_rooms[0] = room_number;
-	door = GetRoom(currentLevel,room_number)->door;
+	door = GetRoom(currentLevel, room_number)->door;
 
 	if(door) {
 		for(i = *door++; i > 0; i--) {
@@ -453,11 +454,11 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 	}
 
 	for(i = 0; i < num_nearby_rooms; i++) {
-		r = GetRoom(currentLevel,nearby_rooms[i]);
+		r = GetRoom(currentLevel, nearby_rooms[i]);
 		mesh = r->mesh;
 
 		for(j = r->num_meshes; j > 0; j--, mesh++) {
-			sinfo = GetStaticObject(currentLevel,mesh->static_number);
+			sinfo = GetStaticObject(currentLevel, mesh->static_number);
 
 			if(!(mesh->Flags & 1))
 				continue;
@@ -533,7 +534,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 
 	num_nearby_rooms = 1;
 	nearby_rooms[0] = l->room_number;
-	door = GetRoom(currentLevel,nearby_rooms[0])->door;
+	door = GetRoom(currentLevel, nearby_rooms[0])->door;
 
 	if(door) {
 		for(i = *door++; i > 0; i--) {
@@ -552,7 +553,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 	}
 
 	for(i = 0; i < num_nearby_rooms; i++) {
-		r = GetRoom(currentLevel,nearby_rooms[i]);
+		r = GetRoom(currentLevel, nearby_rooms[i]);
 		item_number = r->item_number;
 
 		while(item_number != NO_ITEM) {
@@ -560,13 +561,13 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 			nex = item->next_item;
 
 			if(item->collidable && item->status != ITEM_INVISIBLE) {
-				if(GetObjectInfo(currentLevel,item->object_number)->collision) {
+				if(GetObjectInfo(currentLevel, item->object_number)->collision) {
 					dx = l->pos.x_pos - item->pos.x_pos;
 					dy = l->pos.y_pos - item->pos.y_pos;
 					dz = l->pos.z_pos - item->pos.z_pos;
 
 					if(dx > -3072 && dx < 3072 && dy > -3072 && dy < 3072 && dz > -3072 && dz < 3072)
-						GetObjectInfo(currentLevel,item->object_number)->collision(item_number, l, coll);
+						GetObjectInfo(currentLevel, item->object_number)->collision(item_number, l, coll);
 				}
 			}
 
@@ -574,7 +575,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 		}
 
 		if(coll->enable_baddie_push) {
-			r = GetRoom(currentLevel,nearby_rooms[i]);
+			r = GetRoom(currentLevel, nearby_rooms[i]);
 			mesh = r->mesh;
 
 			for(j = r->num_meshes; j > 0; j--, mesh++) {
@@ -586,7 +587,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 				dz = l->pos.z_pos - mesh->z;
 
 				if(dx > -3072 && dx < 3072 && dy > -3072 && dy < 3072 && dz > -3072 && dz < 3072) {
-					bounds = GetStaticObjectBounds(currentLevel,mesh->static_number);
+					bounds = GetStaticObjectBounds(currentLevel, mesh->static_number);
 					pos.x_pos = mesh->x;
 					pos.y_pos = mesh->y;
 					pos.z_pos = mesh->z;
@@ -897,28 +898,28 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 			switch((((unsigned long)(mGetAngle(dest->x_pos, dest->z_pos, pos->x_pos, pos->z_pos) + 8192) >> W2V_SHIFT) - ((unsigned short)(dest->y_rot + 8192) >> W2V_SHIFT)) & 3) {
 			case 0:
 				lara_item->anim_number = 65;
-				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
+				lara_item->frame_number = GetAnim(currentLevel, lara_item->anim_number)->frame_base;
 				lara_item->current_anim_state = AS_STEPLEFT;
 				lara_item->goal_anim_state = AS_STEPLEFT;
 				break;
 
 			case 1:
 				lara_item->anim_number = 1;
-				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
+				lara_item->frame_number = GetAnim(currentLevel, lara_item->anim_number)->frame_base;
 				lara_item->current_anim_state = AS_WALK;
 				lara_item->goal_anim_state = AS_WALK;
 				break;
 
 			case 2:
 				lara_item->anim_number = 67;
-				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
+				lara_item->frame_number = GetAnim(currentLevel, lara_item->anim_number)->frame_base;
 				lara_item->current_anim_state = AS_STEPRIGHT;
 				lara_item->goal_anim_state = AS_STEPRIGHT;
 				break;
 
 			default:
 				lara_item->anim_number = 40;
-				lara_item->frame_number = GetAnim(currentLevel,lara_item->anim_number)->frame_base;
+				lara_item->frame_number = GetAnim(currentLevel, lara_item->anim_number)->frame_base;
 				lara_item->current_anim_state = AS_BACK;
 				lara_item->goal_anim_state = AS_BACK;
 				break;
@@ -990,7 +991,6 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
 				return 1;
 			return 0;
 		}
-
 	}
 
 	return Move3DPosTo3DPos(&l->pos, &pos, 12, 364);

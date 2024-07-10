@@ -1,24 +1,25 @@
 
 #include "game/debris.h"
 #include "game/control.h"
-#include "specific/function_stubs.h"
-#include "game/tomb4fx.h"
-#include "specific/3dmath.h"
-#include "game/draw.h"
 #include "game/debrisstruct.h"
-#include "game/meshdata.h"
+#include "game/draw.h"
 #include "game/floorinfo.h"
-#include "game/roominfo.h"
-#include "game/roomflags.h"
-#include "game/phdvector.h"
-#include "game/texturestruct.h"
 #include "game/gamevector.h"
-#include "game/shatteritem.h"
-#include "game/meshinfo.h"
-#include "game/staticinfo.h"
-#include "global/types.h"
-#include <d3d.h>
 #include "game/levelinfo.h"
+#include "game/meshdata.h"
+#include "game/meshinfo.h"
+#include "game/phdvector.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/shatteritem.h"
+#include "game/staticinfo.h"
+#include "game/texturestruct.h"
+#include "game/tomb4fx.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <d3d.h>
+
 DEBRIS_STRUCT debris[256];
 long next_debris;
 short DebrisFlags;
@@ -41,7 +42,7 @@ void UpdateDebris() {
 		if(dptr->On) {
 			dptr->Yvel += dptr->Gravity;
 
-			if (dptr->Yvel > 8192)
+			if(dptr->Yvel > 8192)
 				dptr->Yvel = 8192;
 
 			dptr->Speed -= dptr->Speed >> 4;
@@ -52,21 +53,20 @@ void UpdateDebris() {
 			height = GetHeight(floor, dptr->x, dptr->y, dptr->z);
 			ceiling = GetCeiling(floor, dptr->x, dptr->y, dptr->z);
 
-			if (dptr->y >= height || dptr->y < ceiling) {
+			if(dptr->y >= height || dptr->y < ceiling) {
 				if(dptr->nBounces >= 3) {
 					dptr->On = 0;
 				} else {
-					dptr->Yvel = -(dptr->Yvel>> 2)<<1;
+					dptr->Yvel = -(dptr->Yvel >> 2) << 1;
 					dptr->nBounces++;
 				}
-			}
-			else {
+			} else {
 				dptr->XRot += dptr->Yvel >> 6;
 
 				if(dptr->Yvel)
 					dptr->YRot += dptr->Speed >> 5;
 
-				if(GetRoom(currentLevel,dptr->RoomNumber)->flags & ROOM_UNDERWATER)
+				if(GetRoom(currentLevel, dptr->RoomNumber)->flags & ROOM_UNDERWATER)
 					dptr->Yvel -= dptr->Yvel >> 2;
 			}
 		}
@@ -224,7 +224,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 		RotY = shatter_item->YRot;
 		rgb = 0;
 	} else {
-		meshp = GetMesh(currentLevel,GetStaticObject(currentLevel,StaticMesh->static_number)->mesh_number);
+		meshp = GetMesh(currentLevel, GetStaticObject(currentLevel, StaticMesh->static_number)->mesh_number);
 		TPos.x = StaticMesh->x;
 		TPos.y = StaticMesh->y;
 		TPos.z = StaticMesh->z;
@@ -234,7 +234,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 
 	mesh = (MESH_DATA*)meshp;
 	DebrisMesh = mesh;
-	IDirect3DVertexBuffer_Lock(mesh->SourceVB,DDLOCK_READONLY,(LPVOID*)&vtx,0);
+	IDirect3DVertexBuffer_Lock(mesh->SourceVB, DDLOCK_READONLY, (LPVOID*)&vtx, 0);
 	nVtx = mesh->nVerts;
 	nTris = mesh->ngt3;
 	nQuads = mesh->ngt4;
@@ -273,7 +273,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	Vels = (long*)&tsv_buffer[1536];
 	offsets = (short*)&tsv_buffer[1548];
 	vec.room_number = RoomNumber;
-	DebrisMeshAmbient = GetRoom(currentLevel,RoomNumber)->ambient;
+	DebrisMeshAmbient = GetRoom(currentLevel, RoomNumber)->ambient;
 
 	face_data = (unsigned short*)mesh->gt3;
 

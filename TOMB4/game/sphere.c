@@ -1,18 +1,19 @@
 
 #include "game/sphere.h"
 #include "control.h"
-#include "game/matrixindices.h"
-#include "specific/3dmath.h"
-#include "game/draw.h"
-#include "game/lara.h"
-#include "game/objects.h"
 #include "game/control.h"
+#include "game/draw.h"
 #include "game/iteminfo.h"
+#include "game/lara.h"
+#include "game/levelinfo.h"
+#include "game/matrixindices.h"
 #include "game/objectinfo.h"
+#include "game/objects.h"
 #include "global/types.h"
+#include "specific/3dmath.h"
 #include <math.h>
 #include <string.h>
-#include "game/levelinfo.h"
+
 
 SPHERE Slist[34];
 char GotLaraSpheres;
@@ -52,11 +53,11 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 	phd_TranslateRel(frame[6], frame[7], frame[8]);
 	rot = frame + 9;
 	gar_RotYXZsuperpack(&rot, 0);
-	obj = GetObjectInfo(currentLevel,item->object_number);
-	meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
+	obj = GetObjectInfo(currentLevel, item->object_number);
+	meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
 	meshp = *meshpp;
 	meshpp += 2;
-	bone = GetBone(currentLevel,obj->bone_index);
+	bone = GetBone(currentLevel, obj->bone_index);
 
 	phd_PushMatrix();
 
@@ -194,7 +195,7 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 	mMx = mMXPtr;
 	mIMx = mIMptr;
 	iMx = phd_mxptr;
-	obj = GetObjectInfo(currentLevel,item->object_number);
+	obj = GetObjectInfo(currentLevel, item->object_number);
 	frac = GetFrames(item, frm, &rate);
 
 	phd_PushUnitMatrix();
@@ -206,7 +207,7 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 	if(!extra_rotation)
 		extra_rotation = no_rotation;
 
-	bone = GetBone(currentLevel,obj->bone_index);
+	bone = GetBone(currentLevel, obj->bone_index);
 
 	if(frac) {
 		InitInterpolate2(frac, rate);
@@ -300,7 +301,7 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 	mMx = mMXPtr;
 	mIMx = mIMptr;
 	iMx = phd_mxptr;
-	obj = GetObjectInfo(currentLevel,item->object_number);
+	obj = GetObjectInfo(currentLevel, item->object_number);
 	frac = GetFrames(item, frm, &rate);
 
 	phd_PushUnitMatrix();
@@ -312,7 +313,7 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 	if(!extra_rotation)
 		extra_rotation = no_rotation;
 
-	bone = GetBone(currentLevel,obj->bone_index);
+	bone = GetBone(currentLevel, obj->bone_index);
 
 	if(frac) {
 		InitInterpolate2(frac, rate);
@@ -383,9 +384,9 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 		phd_TranslateRel(vec->x_pos, vec->y_pos, vec->z_pos);
 		phd_RotYXZ(vec->y_rot, vec->x_rot, vec->z_rot);
 	}
-	vec->y_rot = atan2(mMXPtr[M10],mMXPtr[M00]) * 16384;
-	vec->x_rot = asin(-mMXPtr[M20])* 16384;
-	vec->z_rot = atan2(-mMXPtr[M21], mMXPtr[M22])* 16384;
+	vec->y_rot = atan2(mMXPtr[M10], mMXPtr[M00]) * 16384;
+	vec->x_rot = asin(-mMXPtr[M20]) * 16384;
+	vec->z_rot = atan2(-mMXPtr[M21], mMXPtr[M22]) * 16384;
 	vec->x_pos = item->pos.x_pos + (long)mMXPtr[M03];
 	vec->y_pos = item->pos.y_pos + (long)mMXPtr[M13];
 	vec->z_pos = item->pos.z_pos + (long)mMXPtr[M23];

@@ -1,47 +1,48 @@
 
 #include "game/laramisc.h"
-#include "game/carriedweaponflags.h"
-#include "game/gfleveloptions.h"
-#include "game/laramesh.h"
-#include "game/objects.h"
-#include "game/laraswim.h"
-#include "game/lara_states.h"
-#include "game/control.h"
-#include "game/collide.h"
-#include "game/sound.h"
-#include "game/effects.h"
-#include "game/rope.h"
-#include "specific/audio.h"
-#include "game/lara.h"
-#include "game/larasurf.h"
-#include "specific/3dmath.h"
-#include "game/spotcam.h"
+#include "game/animcommands.h"
+#include "game/animstruct.h"
 #include "game/camera.h"
+#include "game/carriedweaponflags.h"
+#include "game/collide.h"
+#include "game/control.h"
+#include "game/effects.h"
+#include "game/gameflow.h"
+#include "game/gfleveloptions.h"
+#include "game/inputbuttons.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
+#include "game/laramesh.h"
+#include "game/larasurf.h"
+#include "game/laraswim.h"
+#include "game/larawaterstatus.h"
+#include "game/levelinfo.h"
 #include "game/newinv.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/rope.h"
+#include "game/savegame.h"
+#include "game/savegameinfo.h"
+#include "game/sfxtypes.h"
+#include "game/sound.h"
+#include "game/spotcam.h"
+#include "game/weapontypes.h"
+#include "specific/3dmath.h"
+#include "specific/audio.h"
+#include "specific/file.h"
+#include "specific/input.h"
 #include "specific/sound.h"
 #include "specific/windows/dxshell.h"
-#include "specific/input.h"
-#include "game/savegame.h"
-#include "game/gameflow.h"
-#include "specific/file.h"
 #include "specific/windows/dxsound.h"
-#include "game/iteminfo.h"
-#include "game/animstruct.h"
-#include "game/larawaterstatus.h"
-#include "game/roomflags.h"
-#include "game/weapontypes.h"
-#include "game/larainfo.h"
-#include "game/laragunstatus.h"
-#include "game/animcommands.h"
-#include "game/sfxtypes.h"
-#include "game/roominfo.h"
-#include "game/itemflags.h"
-#include "game/objectinfo.h"
-#include "game/inputbuttons.h"
-#include "game/savegameinfo.h"
 #include <dinput.h>
-#include "game/levelinfo.h"
-#include "game/items.h"
+
 
 COLL_INFO mycoll;
 
@@ -67,7 +68,7 @@ void LaraCheatyBits() {
 		lara.num_shotgun_ammo2 = -1;
 		savegame.HaveBikeBooster = 1;
 
-		if(GetObjectInfo(currentLevel,LASERSIGHT_ITEM)->loaded)
+		if(GetObjectInfo(currentLevel, LASERSIGHT_ITEM)->loaded)
 			lara.lasersight = 1;
 
 		if(!(gfLevelFlags & GF_YOUNGLARA)) {
@@ -97,7 +98,7 @@ void LaraCheatyBits() {
 
 		if(lara.water_status != LW_FLYCHEAT) {
 			lara.water_status = LW_FLYCHEAT;
-			lara_item->frame_number = GetAnim(currentLevel,ANIM_SWIMCHEAT)->frame_base;
+			lara_item->frame_number = GetAnim(currentLevel, ANIM_SWIMCHEAT)->frame_base;
 			lara_item->anim_number = ANIM_SWIMCHEAT;
 			lara_item->current_anim_state = AS_SWIM;
 			lara_item->goal_anim_state = AS_SWIM;
@@ -129,7 +130,7 @@ void LaraCheat(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(input & IN_WALK && !(input & IN_LOOK)) {
 		lara.water_status = LW_ABOVE_WATER;
-		item->frame_number = GetAnim(currentLevel,ANIM_STOP)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 		item->anim_number = ANIM_STOP;
 		item->pos.z_rot = 0;
 		item->pos.x_rot = 0;
@@ -144,20 +145,20 @@ void LaraCheat(ITEM_INFO* item, COLL_INFO* coll) {
 
 void InitialiseLaraLoad(short item_number) {
 	lara.item_number = item_number;
-	lara_item = GetItem(currentLevel,item_number);
+	lara_item = GetItem(currentLevel, item_number);
 }
 
 void InitialiseLaraAnims(ITEM_INFO* item) {
-	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 		item->anim_number = ANIM_TREAD;
-		item->frame_number = GetAnim(currentLevel,ANIM_TREAD)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_TREAD)->frame_base;
 		item->current_anim_state = AS_TREAD;
 		item->goal_anim_state = AS_TREAD;
 		lara.water_status = LW_UNDERWATER;
 		item->fallspeed = 0;
 	} else {
 		item->anim_number = ANIM_STOP;
-		item->frame_number = GetAnim(currentLevel,ANIM_STOP)->frame_base;
+		item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 		item->current_anim_state = AS_STOP;
 		item->goal_anim_state = AS_STOP;
 		lara.water_status = LW_ABOVE_WATER;
@@ -166,8 +167,8 @@ void InitialiseLaraAnims(ITEM_INFO* item) {
 
 void LaraInitialiseMeshes() {
 	for(int i = 0; i < 15; i++) {
-		*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + i * 2) = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + i * 2);
-		lara.mesh_ptrs[i] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + i * 2) = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_SKIN)->mesh_index + i * 2);
+		lara.mesh_ptrs[i] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + i * 2);
 	}
 
 	if(lara.gun_type == WEAPON_GRENADE)
@@ -192,18 +193,18 @@ void AnimateLara(ITEM_INFO* item) {
 	unsigned short type;
 
 	item->frame_number++;
-	anim = GetAnim(currentLevel,item->anim_number);
+	anim = GetAnim(currentLevel, item->anim_number);
 
 	if(anim->number_changes > 0) {
 		if(GetChange(item, anim)) {
-			anim = GetAnim(currentLevel,item->anim_number);
+			anim = GetAnim(currentLevel, item->anim_number);
 			item->current_anim_state = anim->current_anim_state;
 		}
 	}
 
 	if(item->frame_number > anim->frame_end) {
 		if(anim->number_commands > 0) {
-			cmd = GetAnimCommand(currentLevel,anim->command_index);
+			cmd = GetAnimCommand(currentLevel, anim->command_index);
 
 			for(int i = anim->number_commands; i > 0; i--) {
 				switch(*cmd++) {
@@ -243,12 +244,12 @@ void AnimateLara(ITEM_INFO* item) {
 
 		item->anim_number = anim->jump_anim_num;
 		item->frame_number = anim->jump_frame_num;
-		anim = GetAnim(currentLevel,item->anim_number);
+		anim = GetAnim(currentLevel, item->anim_number);
 		item->current_anim_state = anim->current_anim_state;
 	}
 
 	if(anim->number_commands > 0) {
-		cmd = GetAnimCommand(currentLevel,anim->command_index);
+		cmd = GetAnimCommand(currentLevel, anim->command_index);
 
 		for(int i = anim->number_commands; i > 0; i--) {
 			switch(*cmd++) {
@@ -338,7 +339,7 @@ void LaraControl(short item_number) {
 		DashTimer++;
 
 	lara.IsDucked = 0;
-	room_water_state = GetRoom(currentLevel,l->room_number)->flags & ROOM_UNDERWATER;
+	room_water_state = GetRoom(currentLevel, l->room_number)->flags & ROOM_UNDERWATER;
 	wd = GetWaterDepth(l->pos.x_pos, l->pos.y_pos, l->pos.z_pos, l->room_number);
 	wh = GetWaterHeight(l->pos.x_pos, l->pos.y_pos, l->pos.z_pos, l->room_number);
 
@@ -384,7 +385,7 @@ void LaraControl(short item_number) {
 					} else {
 						l->pos.x_rot = -8190;
 						l->anim_number = 112;
-						l->frame_number = GetAnim(currentLevel,112)->frame_base;
+						l->frame_number = GetAnim(currentLevel, 112)->frame_base;
 						l->current_anim_state = AS_DIVE;
 						l->goal_anim_state = AS_SWIM;
 						l->fallspeed = 3 * l->fallspeed / 2;
@@ -414,28 +415,28 @@ void LaraControl(short item_number) {
 				switch(l->current_anim_state) {
 				case AS_BACK:
 					l->anim_number = 140;
-					l->frame_number = GetAnim(currentLevel,140)->frame_base;
+					l->frame_number = GetAnim(currentLevel, 140)->frame_base;
 					l->current_anim_state = AS_SURFBACK;
 					l->goal_anim_state = AS_SURFBACK;
 					break;
 
 				case AS_STEPRIGHT:
 					l->anim_number = 144;
-					l->frame_number = GetAnim(currentLevel,144)->frame_base;
+					l->frame_number = GetAnim(currentLevel, 144)->frame_base;
 					l->current_anim_state = AS_SURFRIGHT;
 					l->goal_anim_state = AS_SURFRIGHT;
 					break;
 
 				case AS_STEPLEFT:
 					l->anim_number = 143;
-					l->frame_number = GetAnim(currentLevel,143)->frame_base;
+					l->frame_number = GetAnim(currentLevel, 143)->frame_base;
 					l->current_anim_state = AS_SURFLEFT;
 					l->goal_anim_state = AS_SURFLEFT;
 					break;
 
 				default:
 					l->anim_number = 116;
-					l->frame_number = GetAnim(currentLevel,116)->frame_base;
+					l->frame_number = GetAnim(currentLevel, 116)->frame_base;
 					l->current_anim_state = AS_SURFSWIM;
 					l->goal_anim_state = AS_SURFSWIM;
 					break;
@@ -462,7 +463,7 @@ void LaraControl(short item_number) {
 					lara.water_status = LW_SURFACE;
 					l->pos.y_pos = wh;
 					l->anim_number = 114;
-					l->frame_number = GetAnim(currentLevel,114)->frame_base;
+					l->frame_number = GetAnim(currentLevel, 114)->frame_base;
 					l->current_anim_state = AS_SURFTREAD;
 					l->goal_anim_state = AS_SURFTREAD;
 					l->fallspeed = 0;
@@ -478,7 +479,7 @@ void LaraControl(short item_number) {
 				} else {
 					lara.water_status = LW_ABOVE_WATER;
 					l->anim_number = ANIM_FALLDOWN;
-					l->frame_number = GetAnim(currentLevel,ANIM_FALLDOWN)->frame_base;
+					l->frame_number = GetAnim(currentLevel, ANIM_FALLDOWN)->frame_base;
 					l->current_anim_state = AS_FORWARDJUMP;
 					l->goal_anim_state = AS_FORWARDJUMP;
 					l->speed = l->fallspeed / 4;
@@ -501,7 +502,7 @@ void LaraControl(short item_number) {
 				if(hfw <= 256) {
 					lara.water_status = LW_ABOVE_WATER;
 					l->anim_number = ANIM_FALLDOWN;
-					l->frame_number = GetAnim(currentLevel,ANIM_FALLDOWN)->frame_base;
+					l->frame_number = GetAnim(currentLevel, ANIM_FALLDOWN)->frame_base;
 					l->goal_anim_state = AS_FORWARDJUMP;
 					l->current_anim_state = AS_FORWARDJUMP;
 					l->speed = l->fallspeed / 4;
@@ -509,7 +510,7 @@ void LaraControl(short item_number) {
 				} else {
 					lara.water_status = LW_WADE;
 					l->anim_number = ANIM_BREATH;
-					l->frame_number = GetAnim(currentLevel,ANIM_BREATH)->frame_base;
+					l->frame_number = GetAnim(currentLevel, ANIM_BREATH)->frame_base;
 					l->current_anim_state = AS_STOP;
 					l->goal_anim_state = AS_WADE;
 					AnimateItem(l);
@@ -527,7 +528,7 @@ void LaraControl(short item_number) {
 			break;
 		}
 	}
-	S_SetReverbType(GetRoom(currentLevel,camera.pos.room_number)->ReverbType);
+	S_SetReverbType(GetRoom(currentLevel, camera.pos.room_number)->ReverbType);
 
 	if(l->hit_points <= 0) {
 		l->hit_points = -1;

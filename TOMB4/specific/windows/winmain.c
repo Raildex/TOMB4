@@ -1,34 +1,35 @@
 
 #include "specific/windows/winmain.h"
-#include "specific/function_stubs.h"
-#include "specific/windows/cmdline.h"
-#include "specific/windows/registry.h"
-#include "specific/windows/dxshell.h"
-#include <crtdbg.h>
-#include <time.h>
+#include "game/commandlines.h"
+#include "game/gameflow.h"
 #include "game/text.h"
-#include "specific/function_table.h"
-#include "specific/windows/d3dmatrix.h"
 #include "specific/3dmath.h"
 #include "specific/audio.h"
-#include "specific/output.h"
 #include "specific/file.h"
-#include "game/gameflow.h"
-#include "specific/windows/dxsound.h"
-#include "specific/gamemain.h"
 #include "specific/fmv.h"
-#include "specific/windows/winapp.h"
-#include "game/commandlines.h"
-#include "specific/windows/dxflags.h"
-#include "specific/windows/dxdisplaymode.h"
-#include "specific/windows/dxinfo.h"
-#include "specific/windows/dxdirectdrawinfo.h"
+#include "specific/function_stubs.h"
+#include "specific/function_table.h"
+#include "specific/gamemain.h"
+#include "specific/output.h"
+#include "specific/windows/cmdline.h"
+#include "specific/windows/d3dmatrix.h"
 #include "specific/windows/dxd3ddevice.h"
-#include <winuser.h>
+#include "specific/windows/dxdirectdrawinfo.h"
+#include "specific/windows/dxdisplaymode.h"
+#include "specific/windows/dxflags.h"
+#include "specific/windows/dxinfo.h"
+#include "specific/windows/dxshell.h"
+#include "specific/windows/dxsound.h"
+#include "specific/windows/registry.h"
+#include "specific/windows/winapp.h"
 #include "tomb4/resource.h"
-#include <windowsx.h>
-#include <process.h>
+#include <crtdbg.h>
 #include <dinput.h>
+#include <process.h>
+#include <time.h>
+#include <windowsx.h>
+#include <winuser.h>
+
 static COMMANDLINES commandlines[] = {
 	{ "SETUP", 0, &CLSetup },
 	{ "NOFMV", 0, &CLNoFMV }
@@ -369,12 +370,12 @@ void ClearSurfaces() {
 	r.x2 = App.dx.rViewport.left + App.dx.rViewport.right;
 
 	if(App.dx.Flags & DXF_HWR)
-		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport,1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
+		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport, 1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
 
 	S_DumpScreen();
 
 	if(App.dx.Flags & DXF_HWR)
-		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport,1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
+		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport, 1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
 
 	S_DumpScreen();
 }
@@ -517,7 +518,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	size = LoadFile("data\\cutseq.pak", &buf);
 
 	if(size) {
-		cutseqpakPtr = (char*)calloc(*(long*)buf,1);
+		cutseqpakPtr = (char*)calloc(*(long*)buf, 1);
 		S_Decompress(cutseqpakPtr, buf + 4, size - 4, *(long*)buf);
 		free(buf);
 	}

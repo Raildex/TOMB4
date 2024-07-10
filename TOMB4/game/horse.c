@@ -1,30 +1,31 @@
 
 #include "game/horse.h"
-#include "game/objects.h"
-#include "game/box.h"
-#include "game/effect2.h"
-#include "specific/function_stubs.h"
-#include "specific/3dmath.h"
-#include "game/control.h"
-#include "game/items.h"
-#include "game/sound.h"
-#include "game/sphere.h"
-#include "game/effects.h"
-#include "game/lara.h"
-#include "game/iteminfo.h"
-#include "global/types.h"
-#include "game/objectinfo.h"
-#include "game/animstruct.h"
-#include "game/aiinfo.h"
-#include "game/creatureinfo.h"
-#include "game/weapontypes.h"
-#include "game/larainfo.h"
 #include "game/aibits.h"
-#include "game/sparks.h"
-#include "game/itemflags.h"
+#include "game/aiinfo.h"
+#include "game/animstruct.h"
 #include "game/biteinfo.h"
-#include <stdlib.h>
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/effect2.h"
+#include "game/effects.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/sound.h"
+#include "game/sparks.h"
+#include "game/sphere.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 
 static BITE_INFO horseman_axe = { 0, 0, 0, 6 };
 static BITE_INFO horseman_lfoot = { 0, 0, 0, 14 };
@@ -38,8 +39,8 @@ void InitialiseHorseman(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 8;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, HORSEMAN)->anim_index + 8;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->goal_anim_state = 9;
 	item->current_anim_state = 9;
 	item->item_flags[0] = -1;
@@ -102,20 +103,20 @@ void HorsemanControl(short item_number) {
 
 			if(!item->item_flags[1]) {
 				if(item->current_anim_state != 16) {
-					item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 21;
-					item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+					item->anim_number = GetObjectInfo(currentLevel, HORSEMAN)->anim_index + 21;
+					item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 					item->current_anim_state = 16;
 
 					if(item->item_flags[0])
-						GetItem(currentLevel,item->item_flags[0])->after_death = 1;
+						GetItem(currentLevel, item->item_flags[0])->after_death = 1;
 				}
 			} else {
 				item->hit_points = 100;
 				item->ai_bits = 0;
 				item->item_flags[1] = 0;
 				horseman->enemy = NULL;
-				item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 3;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, HORSEMAN)->anim_index + 3;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 8;
 				item2->goal_anim_state = 1;
 				item->dynamic_light = 1; // Flag for enemy bar to use the new health. bite me.
@@ -268,9 +269,9 @@ void HorsemanControl(short item_number) {
 			case 4:
 				horseman->maximum_turn = 0;
 
-				if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
-					item2->anim_number = GetObjectInfo(currentLevel,HORSE)->anim_index + 1;
-					item2->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
+					item2->anim_number = GetObjectInfo(currentLevel, HORSE)->anim_index + 1;
+					item2->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 					item2->current_anim_state = 4;
 				}
 
@@ -339,8 +340,8 @@ void HorsemanControl(short item_number) {
 					item->pos = item2->pos;
 					horseman->reached_goal = 0;
 					horseman->enemy = NULL;
-					item->anim_number = GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 14;
-					item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+					item->anim_number = GetObjectInfo(currentLevel, HORSEMAN)->anim_index + 14;
+					item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 					item->current_anim_state = 5;
 					horseman->maximum_turn = 0;
 				} else if(item->hit_status)
@@ -419,9 +420,9 @@ void HorsemanControl(short item_number) {
 					horseman->flags = 1;
 				}
 
-				if(item->anim_number == GetObjectInfo(currentLevel,HORSEMAN)->anim_index + 29 && item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_base) {
-					item2->anim_number = GetObjectInfo(currentLevel,HORSE)->anim_index + 10;
-					item2->frame_number = GetAnim(currentLevel,item2->anim_number)->frame_base;
+				if(item->anim_number == GetObjectInfo(currentLevel, HORSEMAN)->anim_index + 29 && item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
+					item2->anim_number = GetObjectInfo(currentLevel, HORSE)->anim_index + 10;
+					item2->frame_number = GetAnim(currentLevel, item2->anim_number)->frame_base;
 				}
 
 				if(larainfo.distance <= 0x1000000 && !horseman->reached_goal) {
@@ -456,9 +457,9 @@ void HorsemanControl(short item_number) {
 		}
 
 		if(item->item_flags[1])
-			GetObjectInfo(currentLevel,HORSEMAN)->radius = 409;
+			GetObjectInfo(currentLevel, HORSEMAN)->radius = 409;
 		else
-			GetObjectInfo(currentLevel,HORSEMAN)->radius = 170;
+			GetObjectInfo(currentLevel, HORSEMAN)->radius = 170;
 
 		CreatureAnimation(item_number, angle, 0);
 	}
@@ -541,8 +542,8 @@ void InitialiseHorse(short item_number) {
 	ITEM_INFO* item;
 
 	item = GetItem(currentLevel, item_number);
-	item->anim_number = GetObjectInfo(currentLevel,HORSE)->anim_index + 2;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, HORSE)->anim_index + 2;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->goal_anim_state = 1;
 	item->current_anim_state = 1;
 }

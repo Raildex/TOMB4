@@ -1,6 +1,7 @@
 #include "specific/thread.h"
-#include <windows.h>
 #include <stdlib.h>
+#include <windows.h>
+
 typedef struct THREAD {
 	ULONG Win32Handle;
 	HANDLE ThreadHandle;
@@ -9,7 +10,7 @@ typedef struct THREAD {
 typedef struct WIN32PAYLOAD {
 	void* arg;
 	THREADFUNC func;
-}WIN32PAYLOAD;
+} WIN32PAYLOAD;
 
 ULONG WINAPI Win32ThreadFunc(void* arg) {
 	WIN32PAYLOAD payload = *(WIN32PAYLOAD*)(arg);
@@ -17,12 +18,12 @@ ULONG WINAPI Win32ThreadFunc(void* arg) {
 	return status;
 }
 
-long S_CreateThread(THREAD** output,THREADFUNC func, void* arg) {
-	THREAD* thrd = calloc(1,sizeof(THREAD));
+long S_CreateThread(THREAD** output, THREADFUNC func, void* arg) {
+	THREAD* thrd = calloc(1, sizeof(THREAD));
 	WIN32PAYLOAD payload;
 	payload.arg = arg;
 	payload.func = func;
-	HANDLE handle = CreateThread(NULL,0,Win32ThreadFunc,&payload,CREATE_SUSPENDED,&thrd->Win32Handle);
+	HANDLE handle = CreateThread(NULL, 0, Win32ThreadFunc, &payload, CREATE_SUSPENDED, &thrd->Win32Handle);
 	if(handle) {
 		thrd->ThreadHandle = handle;
 		*output = thrd;
@@ -48,7 +49,7 @@ long S_WaitThread(THREAD* thrd) {
 	return 1;
 }
 
-long S_PauseThread(THREAD *thrd) {
+long S_PauseThread(THREAD* thrd) {
 	DWORD result = SuspendThread(thrd->ThreadHandle);
 	if(result == -1) {
 		return 0;

@@ -1,17 +1,18 @@
 
 #include "specific/windows/cmdline.h"
-#include "specific/function_stubs.h"
 #include "game/gameflow.h"
-#include "specific/windows/registry.h"
-#include "specific/windows/winmain.h"
-#include "specific/windows/dxd3ddevice.h"
-#include "specific/windows/dxtextureinfo.h"
-#include "specific/windows/dxdisplaymode.h"
-#include "specific/windows/dxdirectdrawinfo.h"
 #include "game/languages.h"
-#include "specific/windows/winapp.h"
+#include "specific/function_stubs.h"
+#include "specific/windows/dxd3ddevice.h"
+#include "specific/windows/dxdirectdrawinfo.h"
 #include "specific/windows/dxdirectsoundinfo.h"
+#include "specific/windows/dxdisplaymode.h"
+#include "specific/windows/dxtextureinfo.h"
+#include "specific/windows/registry.h"
+#include "specific/windows/winapp.h"
+#include "specific/windows/winmain.h"
 #include <winuser.h>
+
 
 wchar_t ASCIIToANSITable[7][2] = {
 	{ L' ', L' ' },

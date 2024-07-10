@@ -1,32 +1,33 @@
 
 #include "game/wraith.h"
-#include "specific/function_stubs.h"
-#include "game/effect2.h"
-#include "game/objects.h"
-#include "game/sound.h"
-#include "specific/3dmath.h"
-#include "game/control.h"
-#include "game/items.h"
-#include "game/traps.h"
-#include "game/senet.h"
-#include "game/lara.h"
-#include "game/sparks.h"
-#include "game/wraithstruct.h"
-#include "game/iteminfo.h"
-#include "game/roominfo.h"
-#include "game/roomflags.h"
 #include "game/animstruct.h"
-#include "global/types.h"
-#include <stdlib.h>
+#include "game/control.h"
+#include "game/effect2.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
 #include "game/levelinfo.h"
+#include "game/objects.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/senet.h"
+#include "game/sound.h"
+#include "game/sparks.h"
+#include "game/traps.h"
+#include "game/wraithstruct.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 static short WraithSpeed = 64;
 
 void InitialiseWraith(short item_number) {
 	ITEM_INFO* item;
 	WRAITH_STRUCT* data;
 
-	item = GetItem(currentLevel,item_number);
-	data = (WRAITH_STRUCT*)Allocate(currentLevel,sizeof(WRAITH_STRUCT),8);
+	item = GetItem(currentLevel, item_number);
+	data = (WRAITH_STRUCT*)Allocate(currentLevel, sizeof(WRAITH_STRUCT), 8);
 	item->data = data;
 	item->item_flags[0] = 0;
 	item->hit_points = 0;
@@ -169,11 +170,11 @@ void WraithControl(short item_number) {
 	long x, y, z, dx, dy, dz, dist, oob, h, c;
 	short rotY, rotX, speed, room_number;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	SoundEffect(SFX_WRAITH_WHISPERS, &item->pos, SFX_DEFAULT);
 
 	if(item->hit_points)
-		target = GetItem(currentLevel,item->hit_points);
+		target = GetItem(currentLevel, item->hit_points);
 	else
 		target = lara_item;
 
@@ -183,7 +184,7 @@ void WraithControl(short item_number) {
 		dist = SQUARE(dx) + SQUARE(dz);
 		dy = (target->pos.y_pos - item->pos.y_pos - 128) - abs((dist >> 13) - 512);
 	} else {
-		r = GetRoom(currentLevel,lara_item->room_number);
+		r = GetRoom(currentLevel, lara_item->room_number);
 		dx = r->x + (r->y_size << 9) - item->pos.x_pos;
 		dz = r->z + (r->x_size << 9) - item->pos.z_pos;
 		dist = SQUARE(dx) + SQUARE(dz);
@@ -252,8 +253,8 @@ void WraithControl(short item_number) {
 	if(item->room_number != IsRoomOutsideNo && IsRoomOutsideNo != 255) {
 		ItemNewRoom(item_number, IsRoomOutsideNo);
 
-		for(int i = GetRoom(currentLevel,item->room_number)->item_number; i != NO_ITEM; i = item2->next_item) {
-			item2 = GetItem(currentLevel,i);
+		for(int i = GetRoom(currentLevel, item->room_number)->item_number; i != NO_ITEM; i = item2->next_item) {
+			item2 = GetItem(currentLevel, i);
 
 			if(item2->active) {
 				if(item->object_number == WRAITH1 && item2->object_number == WRAITH2 || // wraith 1 and 2 wanna fite
@@ -269,7 +270,7 @@ void WraithControl(short item_number) {
 	}
 
 	if(item->object_number != WRAITH3) {
-		if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
+		if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 			TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, -2, 1, item->room_number);
 			item->item_flags[1]--;
 
@@ -318,7 +319,7 @@ void WraithControl(short item_number) {
 				target->trigger_flags--;
 
 				if(target->trigger_flags > 0)
-					target->frame_number = GetAnim(currentLevel,target->anim_number)->frame_base;
+					target->frame_number = GetAnim(currentLevel, target->anim_number)->frame_base;
 
 				KillItem(item_number);
 			}

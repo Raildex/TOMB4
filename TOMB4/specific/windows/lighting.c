@@ -1,28 +1,29 @@
 
 #include "specific/lighting.h"
-#include "specific/windows/dxshell.h"
-#include "specific/3dmath.h"
-#include "specific/function_stubs.h"
-#include "specific/windows/d3dmatrix.h"
-#include "game/objects.h"
+#include "game/camera.h"
 #include "game/control.h"
 #include "game/delstuff.h"
-#include "game/effect2.h"
-#include "game/camera.h"
-#include "specific/function_table.h"
 #include "game/draw.h"
-#include "specific/windows/winmain.h"
-#include "game/lara.h"
-#include "game/pclight.h"
-#include "game/lighttypes.h"
 #include "game/dynamic.h"
-#include "global/types.h"
-#include "game/itemlight.h"
+#include "game/effect2.h"
 #include "game/iteminfo.h"
-#include "game/roominfo.h"
-#include "game/pclightinfo.h"
-#include <math.h>
+#include "game/itemlight.h"
+#include "game/lara.h"
 #include "game/levelinfo.h"
+#include "game/lighttypes.h"
+#include "game/objects.h"
+#include "game/pclight.h"
+#include "game/pclightinfo.h"
+#include "game/roominfo.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/function_table.h"
+#include "specific/windows/d3dmatrix.h"
+#include "specific/windows/dxshell.h"
+#include "specific/windows/winmain.h"
+#include <math.h>
+
 ITEM_INFO* current_item;
 long StaticMeshShade;
 long ambientR, ambientG, ambientB;
@@ -247,7 +248,7 @@ void CreateLightList(ITEM_INFO* item) {
 	long bakNum, dx, dy, dz, range;
 	bool in_range;
 
-	r = GetRoom(currentLevel,item->room_number);
+	r = GetRoom(currentLevel, item->room_number);
 
 	if(item->il.room_number != item->room_number) {
 		bakPtr = item->il.pCurrentLights;
@@ -462,7 +463,7 @@ void CalcAmbientLight(ITEM_INFO* item) {
 
 	room_number = item->room_number;
 	GetFloor(item->il.item_pos.x, item->il.item_pos.y, item->il.item_pos.z, &room_number);
-	r = GetRoom(currentLevel,room_number);
+	r = GetRoom(currentLevel, room_number);
 
 	if(item->il.ambient != r->ambient) {
 		if(item->il.fcnt == -1) {

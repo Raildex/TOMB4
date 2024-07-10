@@ -1,46 +1,47 @@
 
 #include "game/troops.h"
 #include "distances.h"
-#include "game/box.h"
-#include "game/objects.h"
-#include "game/sphere.h"
-#include "game/effect2.h"
-#include "specific/3dmath.h"
-#include "specific/function_stubs.h"
-#include "game/people.h"
-#include "game/lara.h"
-#include "game/control.h"
-#include "game/lot.h"
-#include "game/aiinfo.h"
-#include "game/creatureinfo.h"
-#include "game/objectinfo.h"
 #include "game/aibits.h"
-#include "global/types.h"
+#include "game/aiinfo.h"
 #include "game/animstruct.h"
 #include "game/biteinfo.h"
-#include "game/larainfo.h"
-#include <stdlib.h>
-#include "game/levelinfo.h"
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/effect2.h"
 #include "game/items.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
+#include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/people.h"
+#include "game/sphere.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 static BITE_INFO troop_gun = { 0, 300, 64, 7 };
 
 void InitialiseTroop(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 
 	if(item->trigger_flags == 1) {
-		item->anim_number = GetObjectInfo(currentLevel,TROOPS)->anim_index + 27;
+		item->anim_number = GetObjectInfo(currentLevel, TROOPS)->anim_index + 27;
 		item->current_anim_state = 16;
 		item->goal_anim_state = 16;
 	} else {
-		item->anim_number = GetObjectInfo(currentLevel,TROOPS)->anim_index + 12;
+		item->anim_number = GetObjectInfo(currentLevel, TROOPS)->anim_index + 12;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 	}
 
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 }
 
 void TroopControl(short item_number) {
@@ -56,7 +57,7 @@ void TroopControl(short item_number) {
 	if(!CreatureActive(item_number))
 		return;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	troop = (CREATURE_INFO*)item->data;
 	angle = 0;
 	tilt = 0;
@@ -78,13 +79,13 @@ void TroopControl(short item_number) {
 			enemy = troop->enemy;
 
 			if(enemy && enemy->object_number == SCORPION && item->item_flags[0] < 80) {
-				if(enemy->anim_number == GetObjectInfo(currentLevel,SCORPION)->anim_index + 6) {
-					item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 23;
+				if(enemy->anim_number == GetObjectInfo(currentLevel, SCORPION)->anim_index + 6) {
+					item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 23;
 
 					if(item->current_anim_state == 16)
-						item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base + 37;
+						item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base + 37;
 					else
-						item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+						item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 
 					item->current_anim_state = 15;
 					item->goal_anim_state = 15;
@@ -93,8 +94,8 @@ void TroopControl(short item_number) {
 				} else
 					item->item_flags[0]++;
 			} else {
-				item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index + 19;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 19;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 7;
 			}
 		}
@@ -109,7 +110,7 @@ void TroopControl(short item_number) {
 				baddie = &baddie_slots[i];
 
 				if(baddie->item_num != NO_ITEM && baddie->item_num != item_number) {
-					enemy = GetItem(currentLevel,baddie->item_num);
+					enemy = GetItem(currentLevel, baddie->item_num);
 
 					if(enemy->object_number != LARA && enemy->object_number != TROOPS && (enemy != lara_item || troop->hurt_by_lara)) {
 						dx = enemy->pos.x_pos - item->pos.x_pos;
@@ -156,7 +157,7 @@ void TroopControl(short item_number) {
 			troop->flags = 0;
 			troop->maximum_turn = 0;
 
-			if(item->anim_number == GetObjectInfo(currentLevel,item->object_number)->anim_index + 17) {
+			if(item->anim_number == GetObjectInfo(currentLevel, item->object_number)->anim_index + 17) {
 				if(abs(info.angle) < 1820)
 					item->pos.y_rot += info.angle;
 				else if(info.angle < 0)
@@ -326,8 +327,8 @@ void TroopControl(short item_number) {
 		if(lara.blindTimer > 100) {
 			if(item->current_anim_state != 17 && item->current_anim_state != 16) {
 				troop->maximum_turn = 0;
-				item->anim_number = GetObjectInfo(currentLevel,TROOPS)->anim_index + 28;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base + (GetRandomControl() & 7);
+				item->anim_number = GetObjectInfo(currentLevel, TROOPS)->anim_index + 28;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base + (GetRandomControl() & 7);
 				item->current_anim_state = 17;
 			}
 		}

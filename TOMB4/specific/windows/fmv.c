@@ -1,32 +1,33 @@
 
 #include "specific/fmv.h"
 #include "dxptr.h"
-#include "specific/windows/dxshell.h"
-#include "specific/audio.h"
-#include "specific/lighting.h"
-#include "specific/function_table.h"
-#include "specific/windows/winmain.h"
-#include "specific/input.h"
-#include "specific/3dmath.h"
-#include "game/text.h"
-#include "specific/windows/d3dmatrix.h"
-#include "specific/windows/dxsound.h"
-#include "game/control.h"
-#include "specific/windows/cmdline.h"
-#include "specific/gamemain.h"
-#include "specific/loadsave.h"
-#include "specific/windows/dxflags.h"
-#include "specific/windows/dxdisplaymode.h"
 #include "game/binkstruct.h"
-#include "specific/windows/dxinfo.h"
-#include "specific/windows/dxdirectdrawinfo.h"
-#include "specific/windows/dxd3ddevice.h"
+#include "game/control.h"
 #include "game/inputbuttons.h"
+#include "game/text.h"
+#include "specific/3dmath.h"
+#include "specific/audio.h"
+#include "specific/function_table.h"
+#include "specific/gamemain.h"
+#include "specific/input.h"
+#include "specific/lighting.h"
+#include "specific/loadsave.h"
+#include "specific/windows/cmdline.h"
+#include "specific/windows/d3dmatrix.h"
+#include "specific/windows/dxd3ddevice.h"
+#include "specific/windows/dxdirectdrawinfo.h"
+#include "specific/windows/dxdisplaymode.h"
+#include "specific/windows/dxflags.h"
+#include "specific/windows/dxinfo.h"
+#include "specific/windows/dxshell.h"
+#include "specific/windows/dxsound.h"
+#include "specific/windows/winmain.h"
 #include <basetsd.h>
+#include <dsound.h>
 #include <excpt.h>
 #include <nb30.h>
 #include <stdio.h>
-#include <dsound.h>
+
 static void(WINAPI* BinkCopyToBuffer)(BINK_STRUCT*, LPVOID, LONG, long, long, long, long);
 static void(WINAPI* BinkOpenDirectSound)(unsigned long);
 static void(WINAPI* BinkSetSoundSystem)(LPVOID, LPDIRECTSOUND);
@@ -42,11 +43,11 @@ static BINK_STRUCT* Bink;
 static IDirectDrawSurface4* BinkSurface;
 static long BinkSurfaceType;
 
-#define GET_DLL_PROC(dll, proc, n)                     \
-	{                                                  \
-		*(FARPROC*)&(proc) = GetProcAddress((dll), n); \
-		if(!proc)                                      \
-			RaiseException(1,2,1,(const ULONG_PTR*)#proc);                               \
+#define GET_DLL_PROC(dll, proc, n)                            \
+	{                                                         \
+		*(FARPROC*)&(proc) = GetProcAddress((dll), n);        \
+		if(!proc)                                             \
+			RaiseException(1, 2, 1, (const ULONG_PTR*)#proc); \
 	}
 
 bool LoadBinkStuff() {
@@ -82,12 +83,12 @@ void FreeBinkStuff() {
 }
 
 void ShowBinkFrame() {
-	DDSURFACEDESC2 surf = {0};
+	DDSURFACEDESC2 surf = { 0 };
 
 	surf.dwSize = sizeof(DDSURFACEDESC2);
-	DXAttempt(IDirectDrawSurface4_Lock(BinkSurface,0, &surf, DDLOCK_NOSYSLOCK, 0));
+	DXAttempt(IDirectDrawSurface4_Lock(BinkSurface, 0, &surf, DDLOCK_NOSYSLOCK, 0));
 	BinkCopyToBuffer(Bink, surf.lpSurface, surf.lPitch, Bink->num, 0, 0, BinkSurfaceType);
-	DXAttempt(IDirectDrawSurface4_Unlock(BinkSurface,0));
+	DXAttempt(IDirectDrawSurface4_Unlock(BinkSurface, 0));
 
 	if(App.dx.Flags & DXF_WINDOWED)
 		DXShowFrame();

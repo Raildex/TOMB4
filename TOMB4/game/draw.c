@@ -1,51 +1,52 @@
 
 #include "game/draw.h"
-#include "specific/3dmath.h"
-#include "specific/output.h"
-#include "specific/lighting.h"
-#include "game/deltapak.h"
-#include "game/lara_states.h"
-#include "game/control.h"
-#include "game/delstuff.h"
-#include "specific/specificfx.h"
-#include "game/objects.h"
-#include "specific/function_stubs.h"
-#include "game/train.h"
-#include "game/tomb4fx.h"
-#include "game/rope.h"
-#include "game/sound.h"
-#include "specific/polyinsert.h"
-#include "game/mirror.h"
-#include "game/scarab.h"
-#include "game/croc.h"
-#include "game/health.h"
-#include "game/items.h"
-#include "game/effect2.h"
+#include "game/animstruct.h"
+#include "game/biteinfo.h"
 #include "game/camera.h"
+#include "game/control.h"
+#include "game/croc.h"
+#include "game/delstuff.h"
+#include "game/deltapak.h"
+#include "game/dynamic.h"
+#include "game/effect2.h"
 #include "game/effects.h"
 #include "game/footprnt.h"
-#include "game/lara.h"
-#include "game/gameflow.h"
-#include "game/animstruct.h"
-#include "game/iteminfo.h"
-#include "game/fxinfo.h"
-#include "game/roominfo.h"
-#include "game/objectinfo.h"
-#include "game/itemstatus.h"
-#include "game/staticinfo.h"
-#include "game/meshinfo.h"
-#include "game/gfleveloptions.h"
 #include "game/fvector.h"
-#include "game/roomflags.h"
-#include "game/dynamic.h"
-#include "game/larainfo.h"
+#include "game/fxinfo.h"
+#include "game/gameflow.h"
+#include "game/gfleveloptions.h"
+#include "game/health.h"
 #include "game/itemflags.h"
-#include "game/laramesh.h"
-#include "game/weapontypes.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
 #include "game/laraarm.h"
-#include "game/biteinfo.h"
-#include "global/types.h"
+#include "game/larainfo.h"
+#include "game/laramesh.h"
 #include "game/levelinfo.h"
+#include "game/meshinfo.h"
+#include "game/mirror.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/rope.h"
+#include "game/scarab.h"
+#include "game/sound.h"
+#include "game/staticinfo.h"
+#include "game/tomb4fx.h"
+#include "game/train.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/lighting.h"
+#include "specific/output.h"
+#include "specific/polyinsert.h"
+#include "specific/specificfx.h"
+
 
 static BITE_INFO EnemyBites[2] = {
 	{ 0, -40, 272, 7 },
@@ -293,7 +294,7 @@ void InsertRoom(short room_number) {
 	ROOM_INFO* r;
 
 	current_room = room_number;
-	r = GetRoom(currentLevel,room_number);
+	r = GetRoom(currentLevel, room_number);
 	phd_TranslateAbs(0, 0, 0);
 	phd_left = r->left;
 	phd_right = r->right;
@@ -306,7 +307,7 @@ void CalculateObjectLighting(ITEM_INFO* item, short* frame) {
 	long x, y, z;
 
 	if(item->shade >= 0)
-		S_CalculateStaticMeshLight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->shade & 0x7FFF, GetRoom(currentLevel,item->room_number));
+		S_CalculateStaticMeshLight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->shade & 0x7FFF, GetRoom(currentLevel, item->room_number));
 	else {
 		phd_PushUnitMatrix();
 		phd_SetTrans(0, 0, 0);
@@ -374,7 +375,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 	long frac, rate, clip, bit, rnd;
 
 	frac = GetFrames(item, frm, &rate);
-	obj = GetObjectInfo(currentLevel,item->object_number);
+	obj = GetObjectInfo(currentLevel, item->object_number);
 	bite = &EnemyBites[obj->bite_offset];
 
 	if(obj->shadow_size)
@@ -407,8 +408,8 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 			data = (short*)item->data;
 
 		bit = 1;
-		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
-		bone = GetBone(currentLevel,obj->bone_index);
+		meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
+		bone = GetBone(currentLevel, obj->bone_index);
 
 		if(frac) {
 			InitInterpolate(frac, rate);
@@ -463,7 +464,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 					phd_RotYXZ_I(0, -0x3FFC, (short)((rnd << 14) + (rnd >> 2) - 4096));
 					mInterpolateMatrix();
 					// empty func call here
-					phd_PutPolygons(GetMesh(currentLevel,GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index), clip);
+					phd_PutPolygons(GetMesh(currentLevel, GetObjectInfo(currentLevel, GUN_FLASH)->mesh_index), clip);
 					phd_PopMatrix_I();
 					item->fired_weapon--;
 				}
@@ -517,7 +518,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 					phd_RotX(-16380);
 					phd_TranslateRel(bite->x, bite->y, bite->z);
 					// empty func call here
-					phd_PutPolygons(GetMesh(currentLevel,GetObjectInfo(currentLevel,GUN_FLASH)->mesh_index), clip);
+					phd_PutPolygons(GetMesh(currentLevel, GetObjectInfo(currentLevel, GUN_FLASH)->mesh_index), clip);
 					phd_PopMatrix();
 					item->fired_weapon--;
 				}
@@ -545,25 +546,25 @@ static void DoMirrorStuff() {
 	if(BinocularRange) {
 		if(LaserSight) {
 			if(lara.gun_type == WEAPON_REVOLVER) {
-				lara.left_arm.anim_number = GetObjectInfo(currentLevel,SIXSHOOTER_ANIM)->anim_index + 3;
-				lara.right_arm.anim_number = GetObjectInfo(currentLevel,SIXSHOOTER_ANIM)->anim_index + 3;
-				lara.left_arm.frame_number = GetAnim(currentLevel,lara.left_arm.anim_number)->frame_base;
-				lara.right_arm.frame_number = GetAnim(currentLevel,lara.right_arm.anim_number)->frame_base;
+				lara.left_arm.anim_number = GetObjectInfo(currentLevel, SIXSHOOTER_ANIM)->anim_index + 3;
+				lara.right_arm.anim_number = GetObjectInfo(currentLevel, SIXSHOOTER_ANIM)->anim_index + 3;
+				lara.left_arm.frame_number = GetAnim(currentLevel, lara.left_arm.anim_number)->frame_base;
+				lara.right_arm.frame_number = GetAnim(currentLevel, lara.right_arm.anim_number)->frame_base;
 			}
 
 			if(lara.gun_type == WEAPON_CROSSBOW) {
-				lara.left_arm.anim_number = GetObjectInfo(currentLevel,CROSSBOW_ANIM)->anim_index + 2;
-				lara.right_arm.anim_number = GetObjectInfo(currentLevel,CROSSBOW_ANIM)->anim_index + 2;
+				lara.left_arm.anim_number = GetObjectInfo(currentLevel, CROSSBOW_ANIM)->anim_index + 2;
+				lara.right_arm.anim_number = GetObjectInfo(currentLevel, CROSSBOW_ANIM)->anim_index + 2;
 				lara.left_arm.frame_number = 0;
 				lara.right_arm.frame_number = 0;
 			}
 
-			lara.left_arm.frame_base = GetAnim(currentLevel,lara.left_arm.anim_number)->frame_ptr;
-			lara.right_arm.frame_base = GetAnim(currentLevel,lara.right_arm.anim_number)->frame_ptr;
+			lara.left_arm.frame_base = GetAnim(currentLevel, lara.left_arm.anim_number)->frame_ptr;
+			lara.right_arm.frame_base = GetAnim(currentLevel, lara.right_arm.anim_number)->frame_ptr;
 		} else {
 			lara_item->anim_number = ANIM_BINOCS;
-			lara_item->frame_number = GetAnim(currentLevel,ANIM_BINOCS)->frame_base;
-			lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + 2 * LM_RHAND);
+			lara_item->frame_number = GetAnim(currentLevel, ANIM_BINOCS)->frame_base;
+			lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, MESHSWAP2)->mesh_index + 2 * LM_RHAND);
 		}
 	}
 
@@ -576,7 +577,7 @@ static void DoMirrorStuff() {
 		if(!LaserSight) {
 			lara_item->anim_number = old_anim;
 			lara_item->frame_number = old_frame;
-			lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + 2 * LM_RHAND);
+			lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_SKIN)->mesh_index + 2 * LM_RHAND);
 		}
 	}
 }
@@ -587,7 +588,7 @@ void DrawRooms(short CurrentRoom) {
 	short lr;
 
 	current_room = CurrentRoom;
-	r = GetRoom(currentLevel,CurrentRoom);
+	r = GetRoom(currentLevel, CurrentRoom);
 	r->test_left = 0;
 	r->test_top = 0;
 	phd_left = 0;
@@ -622,7 +623,7 @@ void DrawRooms(short CurrentRoom) {
 
 	if(outside) // inlined SkyDrawPhase? did it exist?
 	{
-		if(!GetObjectInfo(currentLevel,HORIZON)->loaded)
+		if(!GetObjectInfo(currentLevel, HORIZON)->loaded)
 			outside = -1;
 		else {
 			if(BinocularRange)
@@ -670,7 +671,7 @@ void DrawRooms(short CurrentRoom) {
 			phd_PopMatrix();
 
 			if(gfLevelFlags & GF_HORIZON) {
-				phd_PutPolygonSkyMesh(GetMesh(currentLevel,GetObjectInfo(currentLevel,HORIZON)->mesh_index), -1);
+				phd_PutPolygonSkyMesh(GetMesh(currentLevel, GetObjectInfo(currentLevel, HORIZON)->mesh_index), -1);
 				OutputSky();
 			}
 
@@ -681,7 +682,7 @@ void DrawRooms(short CurrentRoom) {
 		}
 	}
 
-	if(GetObjectInfo(currentLevel,LARA)->loaded) {
+	if(GetObjectInfo(currentLevel, LARA)->loaded) {
 		if(!(lara_item->flags & IFL_INVISIBLE)) {
 			nPolyType = 4;
 
@@ -798,7 +799,7 @@ void RenderIt(short CurrentRoom) {
 	ROOM_INFO* r;
 
 	current_room = CurrentRoom;
-	r = GetRoom(currentLevel,CurrentRoom);
+	r = GetRoom(currentLevel, CurrentRoom);
 	r->test_left = 0;
 	r->test_top = 0;
 	phd_left = 0;
@@ -832,7 +833,7 @@ void RenderIt(short CurrentRoom) {
 	CreateFXBulbs();
 
 	if(outside) {
-		if(!GetObjectInfo(currentLevel,HORIZON)->loaded)
+		if(!GetObjectInfo(currentLevel, HORIZON)->loaded)
 			outside = -1;
 		else {
 			if(BinocularRange)
@@ -861,7 +862,7 @@ void RenderIt(short CurrentRoom) {
 			phd_PopMatrix();
 
 			if(gfLevelFlags & GF_HORIZON) {
-				phd_PutPolygonSkyMesh(GetMesh(currentLevel,GetObjectInfo(currentLevel,HORIZON)->mesh_index), -1);
+				phd_PutPolygonSkyMesh(GetMesh(currentLevel, GetObjectInfo(currentLevel, HORIZON)->mesh_index), -1);
 				OutputSky();
 			}
 
@@ -907,7 +908,7 @@ void GetRoomBounds() {
 	while(room_list_start != room_list_end) {
 		rn = draw_room_list[room_list_start % 128];
 		room_list_start++;
-		r = GetRoom(currentLevel,rn);
+		r = GetRoom(currentLevel, rn);
 		r->bound_active -= 2;
 
 		if(r->test_left < r->left)
@@ -971,7 +972,7 @@ void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom) {
 	static FVECTOR vbuf[4];
 	float x, y, z, tooNear, tooFar, tL, tR, tT, tB;
 
-	r = GetRoom(currentLevel,rn);
+	r = GetRoom(currentLevel, rn);
 
 	if(r->left <= actualRoom->test_left && r->right >= actualRoom->test_right && r->top <= actualRoom->test_top && r->bottom >= actualRoom->test_bottom)
 		return;
@@ -1104,8 +1105,8 @@ void DrawEffect(short fx_num) {
 	OBJECT_INFO* obj;
 	short* meshp;
 
-	fx = GetEffect(currentLevel,fx_num);
-	obj = GetObjectInfo(currentLevel,fx->object_number);
+	fx = GetEffect(currentLevel, fx_num);
+	obj = GetObjectInfo(currentLevel, fx->object_number);
 
 	if(obj->draw_routine && obj->loaded) {
 		phd_PushMatrix();
@@ -1115,9 +1116,9 @@ void DrawEffect(short fx_num) {
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
 
 			if(obj->nmeshes)
-				meshp = GetMesh(currentLevel,obj->mesh_index);
+				meshp = GetMesh(currentLevel, obj->mesh_index);
 			else
-				meshp = GetMesh(currentLevel,fx->frame_number);
+				meshp = GetMesh(currentLevel, fx->frame_number);
 
 			// empty func call here
 			phd_PutPolygons(meshp, -1);
@@ -1139,7 +1140,7 @@ void PrintObjects(short room_number) {
 
 	current_room = room_number;
 	nPolyType = 1;
-	r = GetRoom(currentLevel,room_number);
+	r = GetRoom(currentLevel, room_number);
 	r->bound_active = 0;
 	phd_PushMatrix();
 	phd_TranslateAbs(r->x, r->y, r->z);
@@ -1163,12 +1164,12 @@ void PrintObjects(short room_number) {
 			phd_PushMatrix();
 			phd_TranslateAbs(mesh->x, mesh->y, mesh->z);
 			phd_RotY(mesh->y_rot);
-			sinfo = GetStaticObject(currentLevel,mesh->static_number);
+			sinfo = GetStaticObject(currentLevel, mesh->static_number);
 			clip = S_GetObjectInfoBounds(&sinfo->x_minp);
 
 			if(clip) {
 				S_CalculateStaticMeshLight(mesh->x, mesh->y, mesh->z, mesh->shade, r);
-				phd_PutPolygons(GetMesh(currentLevel,sinfo->mesh_number), clip);
+				phd_PutPolygons(GetMesh(currentLevel, sinfo->mesh_number), clip);
 			}
 
 			phd_PopMatrix();
@@ -1184,7 +1185,7 @@ void PrintObjects(short room_number) {
 	for(item_number = r->item_number; item_number != NO_ITEM; item_number = item->next_item) {
 		ClipRoomNum = room_number;
 		item = GetItem(currentLevel, item_number);
-		obj = GetObjectInfo(currentLevel,item->object_number);
+		obj = GetObjectInfo(currentLevel, item->object_number);
 
 		if(item->status != ITEM_INVISIBLE) {
 			if(item->after_death)
@@ -1209,7 +1210,7 @@ void PrintObjects(short room_number) {
 	nPolyType = 3;
 
 	for(fx_number = r->fx_number; fx_number != NO_ITEM; fx_number = fx->next_fx) {
-		fx = GetEffect(currentLevel,fx_number);
+		fx = GetEffect(currentLevel, fx_number);
 		DrawEffect(fx_number);
 	}
 
@@ -1224,7 +1225,7 @@ long GetFrames(ITEM_INFO* item, short* frm[], long* rate) {
 	ANIM_STRUCT* anim;
 	long frame, size, frac, num;
 
-	anim = GetAnim(currentLevel,item->anim_number);
+	anim = GetAnim(currentLevel, item->anim_number);
 	frm[0] = anim->frame_ptr;
 	frm[1] = anim->frame_ptr;
 	*rate = anim->interpolation & 0xFF;
@@ -1397,7 +1398,7 @@ void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds) {
 	short rotatedBounds[6];
 	short nDoors;
 
-	r = GetRoom(currentLevel,ClipRoomNum);
+	r = GetRoom(currentLevel, ClipRoomNum);
 
 	if(item->object_number >= ANIMATING1 && item->object_number <= ANIMATING16 || item->object_number >= DOOR_TYPE1 && item->object_number <= DOOR_TYPE8) {
 		phd_left = r->left;

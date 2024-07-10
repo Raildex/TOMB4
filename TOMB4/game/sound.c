@@ -1,21 +1,22 @@
 
 #include "game/sound.h"
-#include "specific/3dmath.h"
-#include "specific/sound.h"
-#include "specific/windows/dxsound.h"
-#include "specific/function_stubs.h"
 #include "game/camera.h"
-#include "game/gameflow.h"
 #include "game/control.h"
-#include "game/samplebuffer.h"
-#include "game/soundslot.h"
-#include "game/phd3dpos.h"
-#include "game/sampleinfo.h"
-#include "global/types.h"
-#include "game/roomflags.h"
-#include "game/roominfo.h"
+#include "game/gameflow.h"
 #include "game/languages.h"
 #include "game/levelinfo.h"
+#include "game/phd3dpos.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/samplebuffer.h"
+#include "game/sampleinfo.h"
+#include "game/soundslot.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/sound.h"
+#include "specific/windows/dxsound.h"
+
 SoundSlot LaSlot[32];
 long sound_active = 0;
 
@@ -26,7 +27,7 @@ void GetPanVolume(SoundSlot* slot) {
 		dx = slot->pos.x - camera.pos.pos.x;
 		dy = slot->pos.y - camera.pos.pos.y;
 		dz = slot->pos.z - camera.pos.pos.z;
-		radius = GetSampleInfo(currentLevel,slot->nSampleInfo)->radius << 10;
+		radius = GetSampleInfo(currentLevel, slot->nSampleInfo)->radius << 10;
 
 		if(dx < -radius || dx > radius || dy < -radius || dy > radius || dz < -radius || dz > radius) {
 			slot->distance = 0;
@@ -72,10 +73,10 @@ void StopSoundEffect(long sfx) {
 	long lut;
 
 	if(sound_active) {
-		lut = *GetSampleLookup(currentLevel,sfx);
+		lut = *GetSampleLookup(currentLevel, sfx);
 
 		for(int i = 0; i < 32; i++) {
-			if(LaSlot[i].nSampleInfo >= lut && LaSlot[i].nSampleInfo < (lut + ((GetSampleInfo(currentLevel,lut)->flags >> 2) & 0xF))) {
+			if(LaSlot[i].nSampleInfo >= lut && LaSlot[i].nSampleInfo < (lut + ((GetSampleInfo(currentLevel, lut)->flags >> 2) & 0xF))) {
 				S_SoundStopSample(i);
 				LaSlot[i].nSampleInfo = -1;
 			}
@@ -123,21 +124,21 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 		}
 	}
 
-	if(!sound_active || (!(flags & SFX_ALWAYS) && (flags & SFX_WATER) != (GetRoom(currentLevel,camera.pos.room_number)->flags & ROOM_UNDERWATER)))
+	if(!sound_active || (!(flags & SFX_ALWAYS) && (flags & SFX_WATER) != (GetRoom(currentLevel, camera.pos.room_number)->flags & ROOM_UNDERWATER)))
 		return 0;
 
-	lut = *GetSampleLookup(currentLevel,sfx);
+	lut = *GetSampleLookup(currentLevel, sfx);
 
 	if(lut == -1) {
 		// empty func call here
-		*GetSampleLookup(currentLevel,sfx) = -2;
+		*GetSampleLookup(currentLevel, sfx) = -2;
 		return 0;
 	}
 
 	if(lut == -2)
 		return 0;
 
-	info = GetSampleInfo(currentLevel,lut);
+	info = GetSampleInfo(currentLevel, lut);
 
 	if(info->randomness) {
 		if((GetRandomDraw() & 0xFF) > info->randomness)
@@ -263,9 +264,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 	}
 
 	if(flag == 3)
-		dx = S_SoundPlaySampleLooped(GetSampleBuffer(currentLevel,sample), (unsigned short)volume, pitch, (short)pan);
+		dx = S_SoundPlaySampleLooped(GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
 	else
-		dx = S_SoundPlaySample(GetSampleBuffer(currentLevel,sample), (unsigned short)volume, pitch, (short)pan);
+		dx = S_SoundPlaySample(GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
 
 	if(dx >= 0) {
 		LaSlot[dx].OrigVolume = OrigVolume;
@@ -296,9 +297,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 			LaSlot[slot].nSampleInfo = -1;
 
 			if(flag == 3)
-				dx = S_SoundPlaySampleLooped(GetSampleBuffer(currentLevel,sample), (unsigned short)volume, pitch, (short)pan);
+				dx = S_SoundPlaySampleLooped(GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
 			else
-				dx = S_SoundPlaySample(GetSampleBuffer(currentLevel,sample), (unsigned short)volume, pitch, (short)pan);
+				dx = S_SoundPlaySample(GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
 
 			if(dx >= 0) {
 				LaSlot[dx].OrigVolume = OrigVolume;

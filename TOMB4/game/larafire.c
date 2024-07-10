@@ -1,48 +1,49 @@
 
 #include "game/larafire.h"
 #include "distances.h"
-#include "game/lara_states.h"
-#include "game/objects.h"
-#include "game/lara2gun.h"
-#include "game/lara1gun.h"
-#include "game/laraflar.h"
+#include "game/animstruct.h"
+#include "game/camera.h"
+#include "game/carriedweaponflags.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
 #include "game/delstuff.h"
 #include "game/draw.h"
-#include "specific/3dmath.h"
-#include "game/control.h"
-#include "specific/function_stubs.h"
-#include "game/sphere.h"
 #include "game/effect2.h"
-#include "game/sound.h"
 #include "game/effects.h"
-#include "game/items.h"
 #include "game/flmtorch.h"
-#include "game/camera.h"
-#include "specific/input.h"
-#include "game/lara.h"
-#include "game/savegame.h"
-#include "game/lot.h"
 #include "game/gameflow.h"
-#include "game/phd3dpos.h"
 #include "game/gamevector.h"
-#include "game/iteminfo.h"
-#include "game/larainfo.h"
-#include "game/weapontypes.h"
-#include "game/objectinfo.h"
-#include "game/animstruct.h"
-#include "global/types.h"
-#include "game/weaponinfo.h"
-#include "game/carriedweaponflags.h"
-#include "game/savegameinfo.h"
-#include "game/creatureinfo.h"
-#include "game/inputbuttons.h"
-#include "game/heighttypes.h"
 #include "game/gfleveloptions.h"
-#include "game/larawaterstatus.h"
+#include "game/heighttypes.h"
+#include "game/inputbuttons.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
+#include "game/lara1gun.h"
+#include "game/lara2gun.h"
+#include "game/lara_states.h"
+#include "game/laraflar.h"
 #include "game/laragunstatus.h"
+#include "game/larainfo.h"
 #include "game/laramesh.h"
-#include <stdlib.h>
+#include "game/larawaterstatus.h"
 #include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/phd3dpos.h"
+#include "game/savegame.h"
+#include "game/savegameinfo.h"
+#include "game/sound.h"
+#include "game/sphere.h"
+#include "game/weaponinfo.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
+#include <stdlib.h>
+
 WEAPON_INFO weapons[9] = {
 	{ 0, 0, 0, 0, // WEAPON_NONE
 	  0, 0, 0, 0,
@@ -182,8 +183,8 @@ static short HoldStates[] = {
 static PHD_3DPOS bum_view;
 static GAME_VECTOR bum_vdest;
 static GAME_VECTOR bum_vsrc;
-static short TargetList[8] = {NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM};
-static short LastTargets[8] = {NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM,NO_ITEM};
+static short TargetList[8] = { NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM };
+static short LastTargets[8] = { NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM };
 
 static long CheckForHoldingState(long state) {
 	short* holds;
@@ -218,8 +219,8 @@ void InitialiseNewWeapon() {
 	switch(lara.gun_type) {
 	case WEAPON_PISTOLS:
 	case WEAPON_UZI:
-		lara.left_arm.frame_base = GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base;
-		lara.right_arm.frame_base = GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base;
+		lara.left_arm.frame_base = GetObjectInfo(currentLevel, PISTOLS_ANIM)->frame_base;
+		lara.right_arm.frame_base = GetObjectInfo(currentLevel, PISTOLS_ANIM)->frame_base;
 
 		if(lara.gun_status != LG_NO_ARMS)
 			draw_pistol_meshes(lara.gun_type);
@@ -229,8 +230,8 @@ void InitialiseNewWeapon() {
 	case WEAPON_REVOLVER:
 	case WEAPON_SHOTGUN:
 	case WEAPON_GRENADE:
-		lara.left_arm.frame_base = GetObjectInfo(currentLevel,WeaponObject(lara.gun_type))->frame_base;
-		lara.right_arm.frame_base = GetObjectInfo(currentLevel,WeaponObject(lara.gun_type))->frame_base;
+		lara.left_arm.frame_base = GetObjectInfo(currentLevel, WeaponObject(lara.gun_type))->frame_base;
+		lara.right_arm.frame_base = GetObjectInfo(currentLevel, WeaponObject(lara.gun_type))->frame_base;
 
 		if(lara.gun_status != LG_NO_ARMS)
 			draw_shotgun_meshes(lara.gun_type);
@@ -238,8 +239,8 @@ void InitialiseNewWeapon() {
 		break;
 
 	case WEAPON_FLARE:
-		lara.left_arm.frame_base = GetObjectInfo(currentLevel,FLARE_ANIM)->frame_base;
-		lara.right_arm.frame_base = GetObjectInfo(currentLevel,FLARE_ANIM)->frame_base;
+		lara.left_arm.frame_base = GetObjectInfo(currentLevel, FLARE_ANIM)->frame_base;
+		lara.right_arm.frame_base = GetObjectInfo(currentLevel, FLARE_ANIM)->frame_base;
 
 		if(lara.gun_status != LG_NO_ARMS)
 			draw_flare_meshes();
@@ -247,8 +248,8 @@ void InitialiseNewWeapon() {
 		break;
 
 	default:
-		lara.left_arm.frame_base = GetAnim(currentLevel,lara_item->anim_number)->frame_ptr;
-		lara.right_arm.frame_base = GetAnim(currentLevel,lara_item->anim_number)->frame_ptr;
+		lara.left_arm.frame_base = GetAnim(currentLevel, lara_item->anim_number)->frame_ptr;
+		lara.right_arm.frame_base = GetAnim(currentLevel, lara_item->anim_number)->frame_ptr;
 		break;
 	}
 }
@@ -599,7 +600,7 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade) {
 	OBJECT_INFO* obj;
 
-	obj = GetObjectInfo(currentLevel,item->object_number);
+	obj = GetObjectInfo(currentLevel, item->object_number);
 	item->hit_status = 1;
 
 	if(item->data && item != lara_item)
@@ -694,7 +695,7 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 	long ceiling, height, oldtype, oldonobj, oldheight, bs, yang, xs;
 	short room_number;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
@@ -1124,7 +1125,7 @@ void LaraGun() {
 
 	case LG_HANDS_BUSY:
 
-		if(lara.gun_type == WEAPON_FLARE && lara.mesh_ptrs[LM_LHAND] == GetMesh(currentLevel,GetObjectInfo(currentLevel,FLARE_ANIM)->mesh_index + LM_LHAND * 2)) {
+		if(lara.gun_type == WEAPON_FLARE && lara.mesh_ptrs[LM_LHAND] == GetMesh(currentLevel, GetObjectInfo(currentLevel, FLARE_ANIM)->mesh_index + LM_LHAND * 2)) {
 			lara.flare_control_left = lara.vehicle != NO_ITEM || CheckForHoldingState(lara_item->current_anim_state);
 			DoFlareInHand(lara.flare_age);
 			set_flare_arm(lara.left_arm.frame_number);
@@ -1170,7 +1171,7 @@ void LaraGun() {
 		break;
 
 	case LG_UNDRAW_GUNS:
-		lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_HEAD * 2);
+		lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_HEAD * 2);
 
 		switch(lara.gun_type) {
 		case WEAPON_PISTOLS:
@@ -1195,9 +1196,9 @@ void LaraGun() {
 	case LG_READY:
 
 		if(input & IN_ACTION)
-			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_SCREAM)->mesh_index + LM_HEAD * 2);
+			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_SCREAM)->mesh_index + LM_HEAD * 2);
 		else
-			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_HEAD * 2);
+			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_HEAD * 2);
 
 		if(camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA && camera.type != HEAVY_CAMERA)
 			camera.type = COMBAT_CAMERA;

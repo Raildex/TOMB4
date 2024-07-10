@@ -1,29 +1,30 @@
 
 #include "game/deathsld.h"
-#include "specific/function_stubs.h"
-#include "game/lara_states.h"
-#include "game/collide.h"
-#include "game/laramisc.h"
-#include "game/items.h"
-#include "game/control.h"
-#include "game/sound.h"
-#include "specific/3dmath.h"
-#include "specific/input.h"
-#include "game/lara.h"
-#include "game/objects.h"
-#include "game/iteminfo.h"
-#include "game/gamevector.h"
-#include "game/objectinfo.h"
 #include "game/animstruct.h"
-#include "game/itemstatus.h"
+#include "game/collide.h"
+#include "game/control.h"
+#include "game/gamevector.h"
+#include "game/inputbuttons.h"
 #include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
 #include "game/laragunstatus.h"
 #include "game/larainfo.h"
-#include "game/phdvector.h"
-#include "game/inputbuttons.h"
-#include "global/types.h"
+#include "game/laramisc.h"
 #include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/phdvector.h"
+#include "game/sound.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
 #include <stdlib.h>
+
 
 static short DeathSlideBounds[12] = { -256, 256, -100, 100, 256, 512, 0, 0, -4550, 4550, 0, 0 };
 static PHD_VECTOR DeathSlidePosition = { 0, 0, 371 };
@@ -33,7 +34,7 @@ void InitialiseDeathSlide(short item_number) {
 	GAME_VECTOR* old;
 
 	item = GetItem(currentLevel, item_number);
-	old = (GAME_VECTOR*)Allocate(currentLevel,sizeof(GAME_VECTOR),1);
+	old = (GAME_VECTOR*)Allocate(currentLevel, sizeof(GAME_VECTOR), 1);
 	item->data = old;
 	old->pos.x = item->pos.x_pos;
 	old->pos.y = item->pos.y_pos;
@@ -139,8 +140,8 @@ void ControlDeathSlide(short item_number) {
 		item->status = ITEM_INACTIVE;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
-		item->anim_number = GetObjectInfo(currentLevel,item->object_number)->anim_index;
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+		item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index;
+		item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 		RemoveActiveItem(item_number);
 	}
 }

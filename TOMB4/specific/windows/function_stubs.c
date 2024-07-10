@@ -1,8 +1,9 @@
 
-#include <stdio.h>
-#include <stdarg.h>
 #include "specific/function_stubs.h"
 #include "game/phdvector.h"
+#include <stdarg.h>
+#include <stdio.h>
+
 
 FILE* logF = 0;
 
@@ -52,7 +53,7 @@ void LogE(const char* scope, const char* s, ...) {
 }
 
 void LogD(const char* scope, const char* s, ...) {
-	#if defined(NDEBUG) && defined (DO_LOG)
+#if defined(NDEBUG) && defined(DO_LOG)
 	fprintf(stdout, "%s : ", scope);
 	va_list list;
 
@@ -61,5 +62,5 @@ void LogD(const char* scope, const char* s, ...) {
 	fprintf(stderr, "\n");
 	va_end(list);
 	fflush(stderr);
-	#endif
+#endif
 }

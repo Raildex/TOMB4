@@ -1,53 +1,54 @@
 #include "game/levelinfo.h"
+#include "game/aiobject.h"
 #include "game/animstruct.h"
+#include "game/boxinfo.h"
 #include "game/camerainfo.h"
 #include "game/changestruct.h"
 #include "game/control.h"
-#include "game/phdspritestruct.h"
-#include "game/spotcam.h"
-#include "levelinfo.h"
-#include "specific/drawroom.h"
 #include "game/effect2.h"
-#include "specific/function_stubs.h"
+#include "game/floorinfo.h"
 #include "game/fxinfo.h"
 #include "game/gameflow.h"
 #include "game/gfleveloptions.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
 #include "game/laraskin.h"
+#include "game/lightinfo.h"
 #include "game/meshdata.h"
+#include "game/meshinfo.h"
 #include "game/objectinfo.h"
 #include "game/objects.h"
-#include "specific/haltexture.h"
-#include "specific/polyinsert.h"
+#include "game/objectvector.h"
+#include "game/phdspritestruct.h"
+#include "game/phdtexturestruct.h"
 #include "game/rangestruct.h"
 #include "game/roominfo.h"
 #include "game/samplebuffer.h"
 #include "game/sampleinfo.h"
 #include "game/setup.h"
+#include "game/spotcam.h"
+#include "game/spritestruct.h"
 #include "game/staticinfo.h"
-#include <assert.h>
-#include <crtdbg.h>
-#include <string.h>
-#include <stdio.h>
-#include <ddraw.h>
-#include <stdlib.h>
-#include <winnt.h>
-#include "game/floorinfo.h"
-#include "game/lightinfo.h"
-#include "game/meshinfo.h"
+#include "game/texturestruct.h"
 #include "global/types.h"
+#include "levelinfo.h"
+#include "specific/drawroom.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
+#include "specific/haltexture.h"
+#include "specific/polyinsert.h"
 #include "specific/sound.h"
 #include "specific/texture.h"
-#include "specific/windows/winmain.h"
-#include "game/boxinfo.h"
 #include "specific/windows/dxsound.h"
-#include "game/texturestruct.h"
-#include "game/phdtexturestruct.h"
-#include "specific/file.h"
-#include "game/spritestruct.h"
-#include "game/aiobject.h"
-#include "game/objectvector.h"
+#include "specific/windows/winmain.h"
+#include <assert.h>
+#include <crtdbg.h>
+#include <ddraw.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <winnt.h>
+
 enum num_samples {
 	sample_lookuptable_size = 512,
 };
@@ -252,7 +253,7 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 
 	Log(__func__, "ProcessMeshData %d", num_meshes);
 	num_level_meshes = num_meshes;
-	mesh_vtxbuf = (MESH_DATA**)calloc(4 * num_meshes,sizeof(MESH_DATA*));
+	mesh_vtxbuf = (MESH_DATA**)calloc(4 * num_meshes, sizeof(MESH_DATA*));
 	lvl->mesh_base = (short*)mesh_vtxbuf;
 	short* last_mesh_ptr = 0;
 	MESH_DATA* msh = (MESH_DATA*)(uintptr_t)num_meshes;
@@ -356,7 +357,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 
 		size = *(long*)*data;
 		*data += sizeof(long);
-		r->data = (short*)calloc(size ,sizeof(short));
+		r->data = (short*)calloc(size, sizeof(short));
 		memcpy(r->data, *data, size * sizeof(short));
 		*data += size * sizeof(short);
 
@@ -364,7 +365,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 		*data += sizeof(short);
 
 		if(nDoors) {
-			r->door = (short*)calloc((16 * nDoors + 1) , sizeof(short));
+			r->door = (short*)calloc((16 * nDoors + 1), sizeof(short));
 			r->door[0] = (short)nDoors;
 			memcpy(r->door + 1, *data, 16 * nDoors * sizeof(short));
 			*data += 16 * nDoors * sizeof(short);
@@ -870,7 +871,7 @@ char LoadTextureInfos(char** data, LEVEL_INFO* lvl) {
 	}
 
 	AdjustUV(val, lvl);
-	
+
 	for(int i = 0; i < 3; i++) {
 		TEXTURESTRUCT* tex;
 		OBJECT_INFO* obj = GetObjectInfo(currentLevel, WATERFALL1 + i);
@@ -975,7 +976,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		char* logoCompressed = NULL;
 		long size = LoadFile("data/uslogo.pak", &logoCompressed);
 		long uncompSize = *(long*)logoCompressed; // logo files contain uncompSize, compSize, compData
-		pComp = (char*)calloc(uncompSize,1);
+		pComp = (char*)calloc(uncompSize, 1);
 		if(!S_Decompress(pComp, logoCompressed + 4, size - 4, uncompSize)) {
 			Log(__func__, "Error decompressing logo! Filesize: %d Decompression size: %d", size, uncompSize);
 		}
@@ -1257,12 +1258,12 @@ TEXTURESTRUCT* GetWaterfallTextInfos(LEVEL_INFO* lvl, long waterfall) {
 	return lvl->AnimatingWaterfalls[waterfall];
 }
 
-long GetWaterfallVCoordinate(LEVEL_INFO *lvl, long waterfall) {
+long GetWaterfallVCoordinate(LEVEL_INFO* lvl, long waterfall) {
 	return lvl->AnimatingWaterfallsV[waterfall];
 }
 
 void* Allocate(LEVEL_INFO* lvl, long size, long count) {
-	return calloc(count,size);
+	return calloc(count, size);
 }
 
 void Deallocate(LEVEL_INFO* lvl, void* ptr) {

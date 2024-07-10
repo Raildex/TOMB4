@@ -1,31 +1,32 @@
 
 #include "game/hair.h"
-#include "game/objects.h"
-#include "game/draw.h"
-#include "game/lara_states.h"
-#include "specific/3dmath.h"
+#include "game/animstruct.h"
 #include "game/control.h"
-#include "specific/function_stubs.h"
-#include "specific/output.h"
 #include "game/delstuff.h"
+#include "game/draw.h"
 #include "game/effect2.h"
-#include "game/lara.h"
 #include "game/gameflow.h"
 #include "game/gfleveloptions.h"
-#include "game/laramesh.h"
-#include "game/larainfo.h"
-#include "game/objectinfo.h"
 #include "game/hairstruct.h"
-#include "game/phdvector.h"
-#include "game/sphere.h"
-#include "game/animstruct.h"
 #include "game/iteminfo.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/larainfo.h"
+#include "game/laramesh.h"
 #include "game/larawaterstatus.h"
+#include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/phdvector.h"
 #include "game/roomflags.h"
 #include "game/roominfo.h"
+#include "game/sphere.h"
 #include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/output.h"
 #include <stdlib.h>
-#include "game/levelinfo.h"
+
 HAIR_STRUCT hairs[2][7];
 static long hair_wind = 0;
 static long hair_dwind_angle = 0;
@@ -38,8 +39,8 @@ void InitialiseHair() {
 	long* bone;
 
 	for(int i = 0; i < 2; i++) {
-		obj = GetObjectInfo(currentLevel,HAIR);
-		bone = GetBone(currentLevel,obj->bone_index);
+		obj = GetObjectInfo(currentLevel, HAIR);
+		bone = GetBone(currentLevel, obj->bone_index);
 		bone += 4;
 		hptr = &hairs[i][0];
 		hptr->pos.y_rot = 0;
@@ -75,7 +76,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 	long frac, rate, water, height, size, dist, x, y, z, dx, dy, dz;
 	short room_num, spaz;
 
-	obj = GetObjectInfo(currentLevel,LARA);
+	obj = GetObjectInfo(currentLevel, LARA);
 
 	if(!cutscenething) {
 		if(lara.hit_direction < 0) {
@@ -91,8 +92,8 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 			else
 				spaz = lara.IsDucked ? ANIM_SPAZ_DUCKL : ANIM_SPAZ_LEFT;
 
-			frame = GetAnim(currentLevel,spaz)->frame_ptr;
-			size = GetAnim(currentLevel,spaz)->interpolation >> 8;
+			frame = GetAnim(currentLevel, spaz)->frame_ptr;
+			size = GetAnim(currentLevel, spaz)->interpolation >> 8;
 			frame += lara.hit_frame * size;
 			frm[0] = frame;
 			frac = 0;
@@ -111,7 +112,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		InitInterpolate(frac, rate);
 		rot[0] = frm[0] + 9;
 		rot[1] = frm[1] + 9;
-		bone = GetBone(currentLevel,obj->bone_index);
+		bone = GetBone(currentLevel, obj->bone_index);
 		phd_TranslateRel_ID(frm[0][6], frm[0][7], frm[0][8], frm[1][6], frm[1][7], frm[1][8]);
 		gar_RotYXZsuperpack_I(&rot[0], &rot[1], 0);
 
@@ -206,7 +207,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		pos.z = (long)mMXPtr[M23];
 	} else {
 		rot[0] = frm[0] + 9;
-		bone = GetBone(currentLevel,obj->bone_index);
+		bone = GetBone(currentLevel, obj->bone_index);
 		phd_TranslateRel(frm[0][6], frm[0][7], frm[0][8]);
 		gar_RotYXZsuperpack(&rot[0], 0);
 
@@ -296,8 +297,8 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 	}
 
 	phd_PopMatrix();
-	obj = GetObjectInfo(currentLevel,HAIR);
-	bone = GetBone(currentLevel,obj->bone_index);
+	obj = GetObjectInfo(currentLevel, HAIR);
+	bone = GetBone(currentLevel, obj->bone_index);
 	hair = &hairs[pigtail][0];
 
 	if(first_hair[pigtail]) {
@@ -373,7 +374,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 			hair->pos.y_pos += 3 * hair->vel.y / 6;
 			hair->pos.z_pos += 3 * hair->vel.z / 6;
 
-			if(lara.water_status == LW_ABOVE_WATER && GetRoom(currentLevel,room_num)->flags & ROOM_NOT_INSIDE) {
+			if(lara.water_status == LW_ABOVE_WATER && GetRoom(currentLevel, room_num)->flags & ROOM_NOT_INSIDE) {
 				hair->pos.x_pos += SmokeWindX;
 				hair->pos.z_pos += SmokeWindZ;
 			}
@@ -471,7 +472,7 @@ void DrawHair() {
 
 	for(int i = 0; i < 2; i++) {
 		ii = i * 6;
-		meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,HAIR)->mesh_index);
+		meshpp = GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, HAIR)->mesh_index);
 		meshpp += 2;
 
 		hair = &hairs[i][1];
@@ -493,7 +494,7 @@ void DrawHair() {
 			phd_PopMatrix();
 		}
 
-		meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,HAIR)->mesh_index);
+		meshpp = GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, HAIR)->mesh_index);
 
 		for(int j = 0; j < 6; j += 2, meshpp += 4) {
 			SkinVerticesToScratch(28 + ii + j);

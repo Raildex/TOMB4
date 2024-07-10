@@ -1,36 +1,37 @@
 
 #include "game/scorpion.h"
 #include "distances.h"
-#include "game/box.h"
-#include "game/objects.h"
-#include "specific/3dmath.h"
-#include "game/control.h"
-#include "game/lot.h"
-#include "game/items.h"
-#include "specific/function_stubs.h"
-#include "game/effects.h"
-#include "game/lara.h"
-#include "game/deltapak.h"
-#include "game/gameflow.h"
-#include "game/sparks.h"
-#include "game/fxinfo.h"
-#include "game/aiinfo.h"
-#include "game/creatureinfo.h"
-#include "game/objectinfo.h"
 #include "game/aibits.h"
-#include "global/types.h"
+#include "game/aiinfo.h"
 #include "game/animstruct.h"
 #include "game/biteinfo.h"
-#include "game/larainfo.h"
-#include "game/itemstatus.h"
-#include "game/weapontypes.h"
-#include "game/meshinfo.h"
-#include "game/roominfo.h"
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/deltapak.h"
+#include "game/effects.h"
 #include "game/floorinfo.h"
-#include "game/savegameinfo.h"
+#include "game/fxinfo.h"
+#include "game/gameflow.h"
 #include "game/itemflags.h"
-#include <stdlib.h>
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/meshinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roominfo.h"
+#include "game/savegameinfo.h"
+#include "game/sparks.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 
 static BITE_INFO stinger = { 0, 0, 0, 8 }; // for the big one
 static BITE_INFO pincer = { 0, 0, 0, 23 };
@@ -41,20 +42,20 @@ static BITE_INFO s_pincer = { 0, 0, 0, 23 };
 void InitialiseScorpion(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 
 	if(item->trigger_flags == 1) {
-		item->anim_number = GetObjectInfo(currentLevel,SCORPION)->anim_index + 7;
+		item->anim_number = GetObjectInfo(currentLevel, SCORPION)->anim_index + 7;
 		item->current_anim_state = 8;
 		item->goal_anim_state = 8;
 	} else {
-		item->anim_number = GetObjectInfo(currentLevel,SCORPION)->anim_index + 2;
+		item->anim_number = GetObjectInfo(currentLevel, SCORPION)->anim_index + 2;
 		item->current_anim_state = 1;
 		item->goal_anim_state = 1;
 	}
 
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 }
 
 void ScorpionControl(short item_number) {
@@ -70,7 +71,7 @@ void ScorpionControl(short item_number) {
 		return;
 
 	angle = 0;
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	scorpion = (CREATURE_INFO*)item->data;
 	s = (682 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
 	c = (682 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
@@ -122,14 +123,14 @@ void ScorpionControl(short item_number) {
 		if(item->current_anim_state != 6) {
 			if(item->trigger_flags > 0 && item->trigger_flags < 7) {
 				cutseq_num = 4;
-				item->anim_number = GetObjectInfo(currentLevel,SCORPION)->anim_index + 5;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, SCORPION)->anim_index + 5;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 6;
 				item->status = ITEM_INVISIBLE;
 				scorpion->maximum_turn = 0;
 
-				for(target_num = GetRoom(currentLevel,item->room_number)->item_number; target_num != NO_ITEM; target_num = enemy->next_item) {
-					enemy = GetItem(currentLevel,target_num);
+				for(target_num = GetRoom(currentLevel, item->room_number)->item_number; target_num != NO_ITEM; target_num = enemy->next_item) {
+					enemy = GetItem(currentLevel, target_num);
 
 					if(enemy->object_number == TROOPS && enemy->trigger_flags == 1) {
 						DisableBaddieAI(target_num);
@@ -141,8 +142,8 @@ void ScorpionControl(short item_number) {
 
 				s = 0;
 			} else if(item->current_anim_state != 7) {
-				item->anim_number = GetObjectInfo(currentLevel,SCORPION)->anim_index + 5;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, SCORPION)->anim_index + 5;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 6;
 				s = 0;
 			}
@@ -150,7 +151,7 @@ void ScorpionControl(short item_number) {
 
 		if(s) {
 			if(cutseq_num == 4) {
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_end - 1;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_end - 1;
 				item->status = ITEM_INVISIBLE;
 			} else if(item->current_anim_state == 6) {
 				if(item->status == ITEM_INVISIBLE)
@@ -171,7 +172,7 @@ void ScorpionControl(short item_number) {
 					target_num = baddie_slots[i].item_num;
 
 					if(target_num != NO_ITEM && target_num != item_number) {
-						enemy = GetItem(currentLevel,target_num);
+						enemy = GetItem(currentLevel, target_num);
 
 						if(enemy->object_number != LARA && enemy->object_number != SCORPION && (enemy != lara_item || scorpion->hurt_by_lara)) {
 							s = enemy->pos.x_pos - item->pos.x_pos;
@@ -281,7 +282,7 @@ void ScorpionControl(short item_number) {
 		case 8:
 			scorpion->maximum_turn = 0;
 
-			if(item->frame_number == GetAnim(currentLevel,item->anim_number)->frame_end)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end)
 				item->trigger_flags++;
 
 			if(enemy && enemy->hit_points <= 0 || item->trigger_flags > 6) {
@@ -314,10 +315,10 @@ void ScorpionControl(short item_number) {
 void InitialiseSmlscorp(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,SMALL_SCORPION)->anim_index + 2;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, SMALL_SCORPION)->anim_index + 2;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -333,15 +334,15 @@ void SmlscorpControl(short item_number) {
 		return;
 
 	angle = 0;
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	scorpion = (CREATURE_INFO*)item->data;
 
 	if(item->hit_points <= 0) {
 		item->hit_points = 0;
 
 		if(item->current_anim_state != 6 && item->current_anim_state != 7) {
-			item->anim_number = GetObjectInfo(currentLevel,SMALL_SCORPION)->anim_index + 5;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, SMALL_SCORPION)->anim_index + 5;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 6;
 		}
 	} else {
@@ -409,7 +410,7 @@ void SmlscorpControl(short item_number) {
 				item->pos.y_rot += 1092;
 
 			if(!scorpion->flags && item->touch_bits & 0x1B00100) {
-				if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 20 && item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 32) {
+				if(item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 20 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 32) {
 					lara_item->hit_points -= 20;
 					lara_item->hit_status = 1;
 

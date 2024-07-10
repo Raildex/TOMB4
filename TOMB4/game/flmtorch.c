@@ -1,45 +1,46 @@
 
 #include "game/flmtorch.h"
-#include "game/effect2.h"
-#include "specific/function_stubs.h"
-#include "game/sound.h"
-#include "game/lara_states.h"
-#include "game/objects.h"
-#include "game/collide.h"
-#include "game/switch.h"
-#include "game/items.h"
-#include "game/laraflar.h"
-#include "game/delstuff.h"
-#include "game/larafire.h"
-#include "specific/3dmath.h"
-#include "game/draw.h"
-#include "specific/input.h"
-#include "game/laramisc.h"
-#include "game/lara.h"
-#include "game/control.h"
-#include "game/tomb4fx.h"
-#include "game/iteminfo.h"
-#include "game/sparks.h"
 #include "game/animstruct.h"
-#include "game/larainfo.h"
-#include "game/weapontypes.h"
-#include "game/inputbuttons.h"
-#include "game/itemstatus.h"
-#include "game/itemflags.h"
-#include "game/larawaterstatus.h"
-#include "game/objectinfo.h"
-#include "game/laragunstatus.h"
-#include "game/phdvector.h"
-#include "game/laramesh.h"
-#include "game/phd3dpos.h"
+#include "game/collide.h"
 #include "game/collinfo.h"
-#include "game/staticinfo.h"
+#include "game/control.h"
+#include "game/delstuff.h"
+#include "game/draw.h"
+#include "game/effect2.h"
+#include "game/inputbuttons.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/larafire.h"
+#include "game/laraflar.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
+#include "game/laramesh.h"
+#include "game/laramisc.h"
+#include "game/larawaterstatus.h"
+#include "game/levelinfo.h"
 #include "game/meshinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/phd3dpos.h"
+#include "game/phdvector.h"
 #include "game/roomflags.h"
 #include "game/roominfo.h"
-#include <stdlib.h>
-#include "game/levelinfo.h"
+#include "game/sound.h"
+#include "game/sparks.h"
+#include "game/staticinfo.h"
+#include "game/switch.h"
+#include "game/tomb4fx.h"
+#include "game/weapontypes.h"
 #include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
+#include <stdlib.h>
+
 
 static short FireBounds[12] = { 0, 0, 0, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 static ITEM_INFO* TorchItem = 0;
@@ -129,7 +130,7 @@ void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 			}
 
 			l->current_anim_state = AS_CONTROLLED;
-			l->frame_number = GetAnim(currentLevel,l->anim_number)->frame_base;
+			l->frame_number = GetAnim(currentLevel, l->anim_number)->frame_base;
 			lara.flare_control_left = 0;
 			lara.left_arm.lock = 3;
 			lara.GeneralPtr = item_number;
@@ -138,7 +139,7 @@ void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		item->pos.y_rot = rot;
 	}
 
-	if(lara.GeneralPtr == item_number && item->status != ITEM_ACTIVE && l->current_anim_state == AS_CONTROLLED && l->anim_number >= ANIM_LIGHT_TORCH1 && l->anim_number <= ANIM_LIGHT_TORCH5 && l->frame_number - GetAnim(currentLevel,l->anim_number)->frame_base == 40) {
+	if(lara.GeneralPtr == item_number && item->status != ITEM_ACTIVE && l->current_anim_state == AS_CONTROLLED && l->anim_number >= ANIM_LIGHT_TORCH1 && l->anim_number <= ANIM_LIGHT_TORCH5 && l->frame_number - GetAnim(currentLevel, l->anim_number)->frame_base == 40) {
 		if(item->object_number == SPRINKLER) {
 			l->item_flags[3] = 0;
 			lara.LitTorch = 0;
@@ -161,11 +162,11 @@ void DoFlameTorch() {
 		if(lara.request_gun_type != lara.gun_type) {
 			lara.left_arm.lock = 2; // drop it
 			lara.left_arm.frame_number = 31;
-			lara.left_arm.anim_number = GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index + 2;
+			lara.left_arm.anim_number = GetObjectInfo(currentLevel, TORCH_ANIM)->anim_index + 2;
 		} else if(input & IN_DRAW && !lara_item->gravity_status && !lara_item->fallspeed && lara_item->current_anim_state != AS_COMPRESS && lara_item->current_anim_state != AS_UPJUMP && lara_item->current_anim_state != AS_FORWARDJUMP && lara_item->current_anim_state != AS_BACKJUMP && lara_item->current_anim_state != AS_RIGHTJUMP && lara_item->current_anim_state != AS_LEFTJUMP || lara.water_status == LW_UNDERWATER) {
 			lara.left_arm.lock = 1; // throw it
 			lara.left_arm.frame_number = 1;
-			lara.left_arm.anim_number = GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index + 1;
+			lara.left_arm.anim_number = GetObjectInfo(currentLevel, TORCH_ANIM)->anim_index + 1;
 
 			if(lara.water_status == LW_UNDERWATER)
 				lara.LitTorch = 0;
@@ -178,7 +179,7 @@ void DoFlameTorch() {
 		if(lara.left_arm.frame_number < 12 && lara_item->gravity_status) {
 			lara.left_arm.lock = 0; // keep holding it
 			lara.left_arm.frame_number = 0;
-			lara.left_arm.anim_number = GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index;
+			lara.left_arm.anim_number = GetObjectInfo(currentLevel, TORCH_ANIM)->anim_index;
 		} else {
 			lara.left_arm.frame_number++;
 
@@ -190,7 +191,7 @@ void DoFlameTorch() {
 				lara.request_gun_type = WEAPON_NONE;
 				lara.gun_status = LG_NO_ARMS;
 			} else if(lara.left_arm.frame_number == 12) {
-				lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2);
+				lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_LHAND * 2);
 				CreateFlare(BURNING_TORCH_ITEM, 1);
 			}
 		}
@@ -209,7 +210,7 @@ void DoFlameTorch() {
 			lara.gun_type = WEAPON_NONE;
 			lara.gun_status = LG_NO_ARMS;
 		} else if(lara.left_arm.frame_number == 36) {
-			lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + LM_LHAND * 2);
+			lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_LHAND * 2);
 			CreateFlare(BURNING_TORCH_ITEM, 0);
 		}
 
@@ -222,7 +223,7 @@ void DoFlameTorch() {
 			lara.flare_control_left = 1;
 			lara.left_arm.lock = 0;
 			lara.left_arm.frame_number = 0;
-			lara.left_arm.anim_number = GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index;
+			lara.left_arm.anim_number = GetObjectInfo(currentLevel, TORCH_ANIM)->anim_index;
 		}
 
 		break;
@@ -231,7 +232,7 @@ void DoFlameTorch() {
 	if(lara.flare_control_left)
 		lara.gun_status = LG_READY;
 
-	lara.left_arm.frame_base = GetAnim(currentLevel,lara.left_arm.anim_number)->frame_ptr;
+	lara.left_arm.frame_base = GetAnim(currentLevel, lara.left_arm.anim_number)->frame_ptr;
 
 	if(lara.LitTorch) {
 		pos.x = -32;
@@ -241,7 +242,7 @@ void DoFlameTorch() {
 		TriggerDynamic(pos.x, pos.y, pos.z, 12 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
 
 		if(!(wibble & 7))
-			TriggerTorchFlame(GetItemNum(currentLevel,lara_item), 0);
+			TriggerTorchFlame(GetItemNum(currentLevel, lara_item), 0);
 
 		TorchItem = lara_item;
 	}
@@ -254,17 +255,17 @@ void GetFlameTorch() {
 	lara.request_gun_type = WEAPON_TORCH;
 	lara.gun_type = WEAPON_TORCH;
 	lara.flare_control_left = 1;
-	lara.left_arm.anim_number = GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index;
+	lara.left_arm.anim_number = GetObjectInfo(currentLevel, TORCH_ANIM)->anim_index;
 	lara.gun_status = LG_READY;
 	lara.left_arm.lock = 0;
 	lara.left_arm.frame_number = 0;
-	lara.left_arm.frame_base = GetAnim(currentLevel,GetObjectInfo(currentLevel,TORCH_ANIM)->anim_index)->frame_ptr;
-	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,TORCH_ANIM)->mesh_index + LM_LHAND * 2);
+	lara.left_arm.frame_base = GetAnim(currentLevel, GetObjectInfo(currentLevel, TORCH_ANIM)->anim_index)->frame_ptr;
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, TORCH_ANIM)->mesh_index + LM_LHAND * 2);
 }
 
 void FlameTorchControl(short item_number) {
-	ITEM_INFO* itemlist[6] = {0};
-	MESH_INFO* meshlist[6] = {0};
+	ITEM_INFO* itemlist[6] = { 0 };
+	MESH_INFO* meshlist[6] = { 0 };
 	ITEM_INFO* item;
 	STATIC_INFO* sinfo;
 	PHD_3DPOS pos;
@@ -287,7 +288,7 @@ void FlameTorchControl(short item_number) {
 	item->pos.x_pos += xv;
 	item->pos.z_pos += zv;
 
-	if(GetRoom(currentLevel,item->room_number)->flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 		item->fallspeed += (5 - item->fallspeed) >> 1;
 		item->speed += (5 - item->speed) >> 1;
 
@@ -300,14 +301,14 @@ void FlameTorchControl(short item_number) {
 	item->pos.y_pos += yv;
 	DoProperDetection(item_number, x, y, z, xv, yv, zv);
 
-	if(GetCollidedObjects(item, 0, 1, itemlist,5, meshlist,5, 0)) {
+	if(GetCollidedObjects(item, 0, 1, itemlist, 5, meshlist, 5, 0)) {
 		mycoll.enable_baddie_push = 1;
 
 		if(itemlist[0]) {
-			if(!GetObjectInfo(currentLevel,itemlist[0]->object_number)->intelligent)
-				ObjectCollision(GetItemNum(currentLevel,itemlist[0]), item, &mycoll);
+			if(!GetObjectInfo(currentLevel, itemlist[0]->object_number)->intelligent)
+				ObjectCollision(GetItemNum(currentLevel, itemlist[0]), item, &mycoll);
 		} else {
-			sinfo = GetStaticObject(currentLevel,meshlist[0]->static_number);
+			sinfo = GetStaticObject(currentLevel, meshlist[0]->static_number);
 			pos.x_pos = meshlist[0]->x;
 			pos.y_pos = meshlist[0]->y;
 			pos.z_pos = meshlist[0]->z;

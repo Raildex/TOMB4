@@ -1,24 +1,25 @@
 
 #include "game/clockworkbeetle.h"
-#include "game/lara_states.h"
-#include "game/items.h"
-#include "game/objects.h"
-#include "game/delstuff.h"
-#include "game/control.h"
-#include "game/sound.h"
-#include "specific/function_stubs.h"
-#include "specific/3dmath.h"
-#include "game/lara.h"
-#include "game/iteminfo.h"
-#include "game/itemstatus.h"
-#include "game/phdvector.h"
-#include "game/larainfo.h"
 #include "game/animstruct.h"
+#include "game/control.h"
+#include "game/delstuff.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
 #include "game/laragunstatus.h"
-#include "game/roominfo.h"
-#include "global/types.h"
-#include <stdlib.h>
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/objects.h"
+#include "game/phdvector.h"
+#include "game/roominfo.h"
+#include "game/sound.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 ITEM_INFO* TriggerClockworkBeetle(long flag) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
@@ -51,7 +52,7 @@ ITEM_INFO* TriggerClockworkBeetle(long flag) {
 			AddActiveItem(item_number);
 
 			if(item->item_flags[0]) {
-				for(item_number = GetRoom(currentLevel,item->room_number)->item_number; item_number != NO_ITEM; item_number = item2->next_item) {
+				for(item_number = GetRoom(currentLevel, item->room_number)->item_number; item_number != NO_ITEM; item_number = item2->next_item) {
 					item2 = GetItem(currentLevel, item_number);
 
 					if(item2->object_number == MAPPER) {
@@ -94,7 +95,7 @@ void ControlClockworkBeetle(short item_number) {
 
 	if(lara_item->anim_number == ANIM_USEBEETLE) {
 		frame = lara_item->frame_number;
-		base = GetAnim(currentLevel,ANIM_USEBEETLE)->frame_base;
+		base = GetAnim(currentLevel, ANIM_USEBEETLE)->frame_base;
 
 		if(frame < base + 14) {
 			item->status = ITEM_INVISIBLE;
@@ -198,7 +199,7 @@ void ControlClockworkBeetle(short item_number) {
 					lara.beetle_uses--;
 					item->item_flags[2] = 5;
 
-					for(int i = GetRoom(currentLevel,item->room_number)->item_number; i != NO_ITEM; i = item2->next_item) {
+					for(int i = GetRoom(currentLevel, item->room_number)->item_number; i != NO_ITEM; i = item2->next_item) {
 						item2 = GetItem(currentLevel, i);
 
 						if(item2->object_number == MAPPER) {

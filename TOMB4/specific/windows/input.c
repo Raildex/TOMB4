@@ -1,29 +1,30 @@
 
 #include "specific/input.h"
-#include "specific/windows/dxshell.h"
-#include "game/sound.h"
-#include "game/newinv.h"
-#include "game/lara_states.h"
-#include "game/control.h"
 #include "game/camera.h"
-#include "specific/loadsave.h"
-#include "specific/windows/winmain.h"
-#include "game/lara.h"
-#include "game/savegame.h"
+#include "game/carriedweaponflags.h"
+#include "game/control.h"
 #include "game/gameflow.h"
-#include "game/spotcam.h"
-#include "game/iteminfo.h"
 #include "game/gfleveloptions.h"
+#include "game/inputbuttons.h"
+#include "game/iteminfo.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/laragunstatus.h"
 #include "game/larainfo.h"
 #include "game/larawaterstatus.h"
-#include "game/laragunstatus.h"
-#include "game/weapontypes.h"
-#include "game/carriedweaponflags.h"
-#include "game/inputbuttons.h"
+#include "game/newinv.h"
+#include "game/savegame.h"
 #include "game/savegameinfo.h"
-#include <stdio.h>
-#include <joystickapi.h>
+#include "game/sound.h"
+#include "game/spotcam.h"
+#include "game/weapontypes.h"
+#include "specific/loadsave.h"
+#include "specific/windows/dxshell.h"
+#include "specific/windows/winmain.h"
 #include <dinput.h>
+#include <joystickapi.h>
+#include <stdio.h>
+
 const char* KeyboardButtons[272] = {
 	0,
 	"Esc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "Bksp",
@@ -350,7 +351,7 @@ long S_UpdateInput() {
 		linput |= IN_DRAW;
 
 	if(Key(10)) {
-		
+
 		if(!flare_no_db) {
 			state = lara_item->current_anim_state;
 
@@ -362,7 +363,7 @@ long S_UpdateInput() {
 				linput |= IN_FLARE;
 			}
 		}
-		
+
 	} else
 		flare_no_db = 0;
 

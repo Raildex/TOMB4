@@ -1,62 +1,61 @@
 #include "game/traps.h"
-#include "game/control.h"
-#include "game/effect2.h"
-#include "specific/function_stubs.h"
-#include "game/sound.h"
-#include "game/tomb4fx.h"
-#include "game/effects.h"
-#include "game/items.h"
-#include "game/draw.h"
-#include "game/objects.h"
-#include "specific/3dmath.h"
-#include "specific/output.h"
-#include "game/sphere.h"
-#include "game/lara_states.h"
-#include "game/collide.h"
-#include "game/delstuff.h"
-#include "game/switch.h"
-#include "game/deltapak.h"
-#include "game/camera.h"
-#include "specific/input.h"
-#include "game/lara.h"
-#include "game/iteminfo.h"
-#include "global/types.h"
-#include "game/larainfo.h"
-#include "game/smokesparks.h"
 #include "game/animstruct.h"
-#include "game/itemstatus.h"
+#include "game/camera.h"
+#include "game/collide.h"
 #include "game/collinfo.h"
-#include "game/roominfo.h"
-#include "game/itemflags.h"
-#include "game/objectinfo.h"
+#include "game/control.h"
+#include "game/delstuff.h"
+#include "game/deltapak.h"
+#include "game/draw.h"
 #include "game/dripstruct.h"
-#include "game/sparks.h"
-#include "game/fxinfo.h"
-#include "game/roomflags.h"
-#include "game/larawaterstatus.h"
-#include "game/laragunstatus.h"
-#include "game/inputbuttons.h"
+#include "game/effect2.h"
+#include "game/effects.h"
 #include "game/floorinfo.h"
+#include "game/fxinfo.h"
 #include "game/heighttypes.h"
-#include <stdlib.h>
+#include "game/inputbuttons.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
+#include "game/laragunstatus.h"
+#include "game/larainfo.h"
+#include "game/larawaterstatus.h"
 #include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/smokesparks.h"
+#include "game/sound.h"
+#include "game/sparks.h"
+#include "game/sphere.h"
+#include "game/switch.h"
+#include "game/tomb4fx.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
+#include "specific/output.h"
+#include <stdlib.h>
+
 
 short SPxzoffs[8] = { 0, 0, 0x200, 0, 0, 0, -0x200, 0 };
 short SPyoffs[8] = { -0x400, 0, -0x200, 0, 0, 0, -0x200, 0 };
 short SPDETyoffs[8] = { 0x400, 0x200, 0x200, 0x200, 0, 0x200, 0x200, 0x200 };
 
 static unsigned char Flame3xzoffs[16][2]
-	= { { 9, 9 },	{ 24, 9 },	{ 40, 9 },	{ 55, 9 },	{ 9, 24 },	{ 24, 24 },
-		{ 40, 24 }, { 55, 24 }, { 9, 40 },	{ 24, 40 }, { 40, 40 }, { 55, 40 },
-		{ 9, 55 },	{ 24, 55 }, { 40, 55 }, { 55, 55 } };
+	= { { 9, 9 }, { 24, 9 }, { 40, 9 }, { 55, 9 }, { 9, 24 }, { 24, 24 }, { 40, 24 }, { 55, 24 }, { 9, 40 }, { 24, 40 }, { 40, 40 }, { 55, 40 }, { 9, 55 }, { 24, 55 }, { 40, 55 }, { 55, 55 } };
 
 short floor_fires[16 * 3] = // 16 points on the burning floor that spawn fires!
 	{
 		// xoff, zoff, size
-		-96,   1216, 2, 560,  736,	2, -432, -976, 2, -64,	-128, 2,
-		824,   64,	 2, 456,  -352, 1, 392,	 352,  1, 1096, 608,  1,
-		-424,  -416, 1, 520,  1152, 1, -248, 516,  1, -808, 80,	  1,
-		-1192, -384, 0, -904, -864, 0, -136, -912, 0, 184,	608,  0
+		-96, 1216, 2, 560, 736, 2, -432, -976, 2, -64, -128, 2,
+		824, 64, 2, 456, -352, 1, 392, 352, 1, 1096, 608, 1,
+		-424, -416, 1, 520, 1152, 1, -248, 516, 1, -808, 80, 1,
+		-1192, -384, 0, -904, -864, 0, -136, -912, 0, 184, 608, 0
 	};
 
 short deadly_floor_fires[4 * 2] = // 4 points on the burning floor that kill
@@ -963,8 +962,8 @@ void ControlHammer(short item_number) {
 
 					if(item2->object_number == OBELISK
 					   && item2->pos.y_rot == -0x4000
-					   && GetItem(currentLevel,item2->item_flags[0])->pos.y_rot == 0x4000
-					   && !GetItem(currentLevel,item2->item_flags[1])->pos.y_rot) {
+					   && GetItem(currentLevel, item2->item_flags[0])->pos.y_rot == 0x4000
+					   && !GetItem(currentLevel, item2->item_flags[1])->pos.y_rot) {
 						item2->flags |= IFL_CODEBITS;
 						GetItem(currentLevel, item2->item_flags[0])->flags
 							|= IFL_CODEBITS;
@@ -1456,9 +1455,8 @@ void FlameEmitter3Control(short item_number) {
 		if(!item->item_flags[0]) {
 			item->item_flags[0] = (GetRandomControl() & 3) + 8;
 			distance = GetRandomControl() & 0x3F;
-			item->item_flags[1] = (short)(
-				distance == item->item_flags[1] ? (distance + 13) & 0x3F
-												: distance);
+			item->item_flags[1] = (short)(distance == item->item_flags[1] ? (distance + 13) & 0x3F
+																		  : distance);
 		} else
 			item->item_flags[0]--;
 
@@ -2234,8 +2232,8 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	item = GetItem(currentLevel, item_number);
 
 	if((input & IN_ACTION && item->status != ITEM_ACTIVE
-		   && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
-		   && lara.gun_status == LG_NO_ARMS)
+		&& l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
+		&& lara.gun_status == LG_NO_ARMS)
 	   || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(TestLaraPosition(FloorTrapDoorBounds, item, l)) {
 			if(MoveLaraPosition(&FloorTrapDoorPos, item, l)) {

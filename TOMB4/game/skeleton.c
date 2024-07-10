@@ -1,39 +1,40 @@
 
 #include "game/skeleton.h"
-#include "game/items.h"
-#include "game/control.h"
-#include "specific/function_stubs.h"
-#include "game/objects.h"
-#include "game/effect2.h"
-#include "specific/3dmath.h"
-#include "game/box.h"
-#include "game/people.h"
-#include "game/tomb4fx.h"
-#include "game/lot.h"
-#include "game/effects.h"
-#include "game/sound.h"
-#include "game/sphere.h"
-#include "game/debris.h"
-#include "game/lara.h"
-#include "game/savegame.h"
-#include "game/sparks.h"
-#include "game/fxinfo.h"
-#include "game/aiinfo.h"
-#include "game/creatureinfo.h"
-#include "game/objectinfo.h"
 #include "game/aibits.h"
-#include "global/types.h"
+#include "game/aiinfo.h"
 #include "game/animstruct.h"
 #include "game/biteinfo.h"
-#include "game/larainfo.h"
-#include "game/itemstatus.h"
-#include "game/weapontypes.h"
-#include "game/meshinfo.h"
-#include "game/roominfo.h"
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/debris.h"
+#include "game/effect2.h"
+#include "game/effects.h"
 #include "game/floorinfo.h"
-#include "game/savegameinfo.h"
-#include <stdlib.h>
+#include "game/fxinfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/meshinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/people.h"
+#include "game/roominfo.h"
+#include "game/savegame.h"
+#include "game/savegameinfo.h"
+#include "game/sound.h"
+#include "game/sparks.h"
+#include "game/sphere.h"
+#include "game/tomb4fx.h"
+#include "game/weapontypes.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 
 static BITE_INFO skelly_hit = { 180, 0, 0, 16 };
 
@@ -48,7 +49,7 @@ void TriggerRiseEffect(ITEM_INFO* item) {
 	if(fx_number == NO_ITEM)
 		return;
 
-	fx = GetEffect(currentLevel,fx_number);
+	fx = GetEffect(currentLevel, fx_number);
 
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
@@ -61,7 +62,7 @@ void TriggerRiseEffect(ITEM_INFO* item) {
 	fx->speed = (short)(GetRandomControl() >> 11);
 	fx->fallspeed = -(short)(GetRandomControl() >> 10);
 	fx->object_number = BODY_PART;
-	fx->frame_number = GetObjectInfo(currentLevel,AHMET_MIP)->mesh_index;
+	fx->frame_number = GetObjectInfo(currentLevel, AHMET_MIP)->mesh_index;
 	fx->shade = 0x4210;
 	fx->flag2 = 1537;
 
@@ -104,29 +105,29 @@ void TriggerRiseEffect(ITEM_INFO* item) {
 void InitialiseSkeleton(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
 
 	if(!item->trigger_flags) {
-		item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index;
+		item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index;
 		item->current_anim_state = 0;
 		item->goal_anim_state = 0;
 	} else if(item->trigger_flags == 1) {
-		item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 37;
+		item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 37;
 		item->current_anim_state = 20;
 		item->goal_anim_state = 20;
 	} else if(item->trigger_flags == 2) {
-		item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 34;
+		item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 34;
 		item->current_anim_state = 19;
 		item->goal_anim_state = 19;
 	} else if(item->trigger_flags == 3) {
-		item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 46;
+		item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 46;
 		item->current_anim_state = 25;
 		item->goal_anim_state = 25;
 		item->status += ITEM_ACTIVE;
 	}
 
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 }
 
 void SkeletonControl(short item_number) {
@@ -147,7 +148,7 @@ void SkeletonControl(short item_number) {
 		return;
 
 	angle = 0;
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	skelly = (CREATURE_INFO*)item->data;
 
 	Xoffset = 870 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
@@ -186,16 +187,16 @@ void SkeletonControl(short item_number) {
 
 	if(item->hit_status && lara.gun_type == WEAPON_SHOTGUN && info.distance < 0xC40000 && state != 7 && state != 17 && state != 12 && state != 13 && state != 25) {
 		if(info.angle >= 0x3000 || info.angle <= -0x3000) {
-			item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 33;
+			item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 33;
 			item->current_anim_state = 13;
 			item->pos.y_rot += info.angle + 0x8000;
 		} else {
-			item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 17;
+			item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 17;
 			item->current_anim_state = 12;
 			item->pos.y_rot += info.angle;
 		}
 
-		item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+		item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 		skelly->LOT.is_jumping = 1;
 		item->hit_points = 25;
 		CreatureAnimation(item_number, angle, 0);
@@ -262,7 +263,7 @@ void SkeletonControl(short item_number) {
 	switch(item->current_anim_state) {
 	case 0:
 
-		if(item->frame_number - GetAnim(currentLevel,item->anim_number)->frame_base < 32)
+		if(item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base < 32)
 			TriggerRiseEffect(item);
 
 		break;
@@ -288,8 +289,8 @@ void SkeletonControl(short item_number) {
 				item->goal_anim_state = 15;
 			else if(jump_ahead || long_jump_ahead) {
 				skelly->maximum_turn = 0;
-				item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 40;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 40;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 21;
 
 				if(long_jump_ahead)
@@ -299,13 +300,13 @@ void SkeletonControl(short item_number) {
 
 				skelly->LOT.is_jumping = 1;
 			} else if(jump_left) {
-				item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 34;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 34;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 19;
 				item->goal_anim_state = 19;
 			} else if(jump_right) {
-				item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 37;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 37;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 20;
 				item->goal_anim_state = 20;
 			} else if(skelly->mood == ESCAPE_MOOD) {
@@ -371,8 +372,8 @@ void SkeletonControl(short item_number) {
 		else
 			item->pos.y_rot += 1092;
 
-		if(item->frame_number > GetAnim(currentLevel,item->anim_number)->frame_base + 15) {
-			r = GetRoom(currentLevel,item->room_number);
+		if(item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 15) {
+			r = GetRoom(currentLevel, item->room_number);
 			pos.x = 0;
 			pos.y = 0;
 			pos.z = 0;
@@ -436,7 +437,7 @@ void SkeletonControl(short item_number) {
 	case 12:
 	case 13:
 
-		if(item->frame_number < GetAnim(currentLevel,item->anim_number)->frame_base + 20) {
+		if(item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 20) {
 			item->hit_points = 25;
 			skelly->maximum_turn = 0;
 			break;
@@ -453,8 +454,8 @@ void SkeletonControl(short item_number) {
 
 		if(h > item->pos.y_pos + 1024) {
 			skelly->maximum_turn = 0;
-			item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 47;
-			item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+			item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 47;
+			item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 			item->current_anim_state = 24;
 			item->gravity_status = 1;
 		} else if(!(GetRandomControl() & 0x1F))
@@ -514,8 +515,8 @@ void SkeletonControl(short item_number) {
 
 				if(h > item->pos.y_pos + 1024) {
 					skelly->maximum_turn = 0;
-					item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 44;
-					item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+					item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 44;
+					item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 					item->current_anim_state = 23;
 					skelly->LOT.is_jumping = 0;
 					item->gravity_status = 1;
@@ -542,15 +543,15 @@ void SkeletonControl(short item_number) {
 
 	case 21:
 
-		if(item->anim_number == GetObjectInfo(currentLevel,SKELETON)->anim_index + 43) {
+		if(item->anim_number == GetObjectInfo(currentLevel, SKELETON)->anim_index + 43) {
 			room_number = item->room_number;
 			floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 			h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 			if(h > item->pos.y_pos + 1280) {
 				skelly->maximum_turn = 0;
-				item->anim_number = GetObjectInfo(currentLevel,SKELETON)->anim_index + 44;
-				item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+				item->anim_number = GetObjectInfo(currentLevel, SKELETON)->anim_index + 44;
+				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 23;
 				skelly->LOT.is_jumping = 0;
 				item->gravity_status = 1;

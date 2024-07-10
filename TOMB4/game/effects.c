@@ -1,46 +1,47 @@
 
 #include "game/effects.h"
 #include "game/attachediteminfo.h"
-#include "lara.h"
-#include "specific/polyinsert.h"
-#include "specific/function_table.h"
-#include "game/sound.h"
-#include "game/deltapak.h"
-#include "game/objects.h"
-#include "game/items.h"
-#include "game/lot.h"
-#include "game/hair.h"
-#include "game/scarab.h"
-#include "game/tomb4fx.h"
-#include "game/footprnt.h"
-#include "game/effect2.h"
+#include "game/camera.h"
 #include "game/control.h"
+#include "game/deltapak.h"
 #include "game/draw.h"
+#include "game/effect2.h"
+#include "game/footprnt.h"
+#include "game/gameflow.h"
+#include "game/hair.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
 #include "game/lara_states.h"
-#include "specific/function_stubs.h"
+#include "game/laragunstatus.h"
+#include "game/laramesh.h"
+#include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/objectvector.h"
+#include "game/pickup.h"
+#include "game/roomflags.h"
+#include "game/roominfo.h"
+#include "game/sampleinfo.h"
+#include "game/savegame.h"
+#include "game/savegameinfo.h"
+#include "game/scarab.h"
+#include "game/sound.h"
+#include "game/soundslot.h"
+#include "game/splashsetup.h"
+#include "game/tomb4fx.h"
+#include "global/types.h"
+#include "lara.h"
 #include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/function_table.h"
+#include "specific/polyinsert.h"
 #include "specific/sound.h"
 #include "specific/windows/dxsound.h"
-#include "game/camera.h"
-#include "game/lara.h"
-#include "game/savegame.h"
-#include "game/pickup.h"
-#include "game/gameflow.h"
-#include "global/types.h"
-#include "game/savegameinfo.h"
-#include "game/iteminfo.h"
-#include "game/laramesh.h"
-#include "game/objectinfo.h"
-#include "game/itemflags.h"
-#include "game/itemstatus.h"
-#include "game/roomflags.h"
-#include "game/splashsetup.h"
-#include "game/roominfo.h"
-#include "game/soundslot.h"
-#include "game/objectvector.h"
-#include "game/sampleinfo.h"
-#include "game/laragunstatus.h"
-#include "game/levelinfo.h"
+
 
 long GlobalFogOff = 0;
 
@@ -128,7 +129,7 @@ void RubbleFX(ITEM_INFO* item) {
 	eq = find_a_fucking_item(EARTHQUAKE);
 
 	if(eq) {
-		AddActiveItem(GetItemNum(currentLevel,eq));
+		AddActiveItem(GetItemNum(currentLevel, eq));
 		eq->status = ITEM_ACTIVE;
 		eq->flags |= IFL_CODEBITS;
 	} else
@@ -153,10 +154,10 @@ void ActivateKey(ITEM_INFO* item) {
 void SwapCrowbar(ITEM_INFO* item) {
 	short* tmp;
 
-	tmp = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA)->mesh_index + 2 * LM_RHAND);
+	tmp = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + 2 * LM_RHAND);
 
 	if(lara.mesh_ptrs[LM_RHAND] == tmp)
-		lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,CROWBAR_ANIM)->mesh_index + (2 * LM_RHAND));
+		lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, CROWBAR_ANIM)->mesh_index + (2 * LM_RHAND));
 	else
 		lara.mesh_ptrs[LM_RHAND] = tmp;
 }
@@ -193,7 +194,7 @@ void GhostTrap(ITEM_INFO* item) {
 			wraith = GetItem(currentLevel, nex);
 
 			if(wraith->object_number == WRAITH3 && !wraith->hit_points) {
-				wraith->hit_points = GetItemNum(currentLevel,item);
+				wraith->hit_points = GetItemNum(currentLevel, item);
 				break;
 			}
 
@@ -211,7 +212,7 @@ void KillActiveBaddies(ITEM_INFO* item) {
 	for(item_num = next_item_active; item_num != NO_ITEM; item_num = target_item->next_active) {
 		target_item = GetItem(currentLevel, item_num);
 
-		if(GetObjectInfo(currentLevel,target_item->object_number)->intelligent) {
+		if(GetObjectInfo(currentLevel, target_item->object_number)->intelligent) {
 			target_item->status = ITEM_INVISIBLE;
 
 			if(item != ((void*)0xABCDEF)) {
@@ -233,24 +234,24 @@ void draw_right_gun(ITEM_INFO* item) {
 	short* tmp;
 
 	tmp = lara.mesh_ptrs[LM_RTHIGH];
-	lara.mesh_ptrs[LM_RTHIGH] = GetMesh(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RTHIGH * 2);
-	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RTHIGH * 2) = tmp;
+	lara.mesh_ptrs[LM_RTHIGH] = GetMesh(currentLevel, GetObjectInfo(currentLevel, PISTOLS_ANIM)->mesh_index + LM_RTHIGH * 2);
+	*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, PISTOLS_ANIM)->mesh_index + LM_RTHIGH * 2) = tmp;
 
 	tmp = lara.mesh_ptrs[LM_RHAND];
-	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RHAND * 2);
-	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_RHAND * 2) = tmp;
+	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, PISTOLS_ANIM)->mesh_index + LM_RHAND * 2);
+	*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, PISTOLS_ANIM)->mesh_index + LM_RHAND * 2) = tmp;
 }
 
 void draw_left_gun(ITEM_INFO* item) {
 	short* tmp;
 
 	tmp = lara.mesh_ptrs[LM_LTHIGH];
-	lara.mesh_ptrs[LM_LTHIGH] = GetMesh(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LTHIGH * 2);
-	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LTHIGH * 2) = tmp;
+	lara.mesh_ptrs[LM_LTHIGH] = GetMesh(currentLevel, GetObjectInfo(currentLevel, PISTOLS_ANIM)->mesh_index + LM_LTHIGH * 2);
+	*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, PISTOLS_ANIM)->mesh_index + LM_LTHIGH * 2) = tmp;
 
 	tmp = lara.mesh_ptrs[LM_LHAND];
-	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LHAND * 2);
-	*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,PISTOLS_ANIM)->mesh_index + LM_LHAND * 2) = tmp;
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, PISTOLS_ANIM)->mesh_index + LM_LHAND * 2);
+	*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, PISTOLS_ANIM)->mesh_index + LM_LHAND * 2) = tmp;
 }
 
 void shoot_right_gun(ITEM_INFO* item) {
@@ -265,12 +266,12 @@ void swap_meshes_with_meshswap1(ITEM_INFO* item) {
 	OBJECT_INFO* obj;
 	short* tmp;
 
-	obj = GetObjectInfo(currentLevel,item->object_number);
+	obj = GetObjectInfo(currentLevel, item->object_number);
 
 	for(int i = 0; i < obj->nmeshes; i++) {
-		tmp = GetMesh(currentLevel,obj->mesh_index + i * 2);
-		*GetMeshPointer(currentLevel,obj->mesh_index + i) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + i * 2);
-		*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,MESHSWAP1)->mesh_index + i * 2) = tmp;
+		tmp = GetMesh(currentLevel, obj->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel, obj->mesh_index + i) = GetMesh(currentLevel, GetObjectInfo(currentLevel, MESHSWAP1)->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, MESHSWAP1)->mesh_index + i * 2) = tmp;
 	}
 }
 
@@ -278,12 +279,12 @@ void swap_meshes_with_meshswap2(ITEM_INFO* item) {
 	OBJECT_INFO* obj;
 	short* tmp;
 
-	obj = GetObjectInfo(currentLevel,item->object_number);
+	obj = GetObjectInfo(currentLevel, item->object_number);
 
 	for(int i = 0; i < obj->nmeshes; i++) {
-		tmp = GetMesh(currentLevel,obj->mesh_index + i * 2);
-		*GetMeshPointer(currentLevel,obj->mesh_index + i) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + i * 2);
-		*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,MESHSWAP2)->mesh_index + i * 2) = tmp;
+		tmp = GetMesh(currentLevel, obj->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel, obj->mesh_index + i) = GetMesh(currentLevel, GetObjectInfo(currentLevel, MESHSWAP2)->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, MESHSWAP2)->mesh_index + i * 2) = tmp;
 	}
 }
 
@@ -291,16 +292,16 @@ void swap_meshes_with_meshswap3(ITEM_INFO* item) {
 	OBJECT_INFO* obj;
 	short* tmp;
 
-	obj = GetObjectInfo(currentLevel,item->object_number);
+	obj = GetObjectInfo(currentLevel, item->object_number);
 
 	for(int i = 0; i < obj->nmeshes; i++) {
-		tmp = GetMesh(currentLevel,obj->mesh_index + i * 2);
-		*GetMeshPointer(currentLevel,obj->mesh_index + i) = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + i * 2);
+		tmp = GetMesh(currentLevel, obj->mesh_index + i * 2);
+		*GetMeshPointer(currentLevel, obj->mesh_index + i) = GetMesh(currentLevel, GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + i * 2);
 
 		if(item == lara_item)
-			lara.mesh_ptrs[i] = GetMesh(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + i * 2);
+			lara.mesh_ptrs[i] = GetMesh(currentLevel, GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + i * 2);
 
-		*GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,MESHSWAP3)->mesh_index + i * 2) = tmp;
+		*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + i * 2) = tmp;
 	}
 }
 
@@ -321,11 +322,11 @@ void ClearScarabsPatch(ITEM_INFO* item) {
 }
 
 void MeshSwapToPour(ITEM_INFO* item) {
-	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,item->item_flags[2])->mesh_index + LM_LHAND * 2);
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, item->item_flags[2])->mesh_index + LM_LHAND * 2);
 }
 
 void MeshSwapFromPour(ITEM_INFO* item) {
-	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel,GetObjectInfo(currentLevel,LARA_SKIN)->mesh_index + LM_LHAND * 2);
+	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_SKIN)->mesh_index + LM_LHAND * 2);
 }
 
 void void_effect(ITEM_INFO* item) {
@@ -360,7 +361,7 @@ void WadeSplash(ITEM_INFO* item, long water, long depth) {
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if(!(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER))
+	if(!(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER))
 		return;
 
 	bounds = GetBestFrame(item);
@@ -399,7 +400,7 @@ void Splash(ITEM_INFO* item) {
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER) {
+	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
 		splash_setup.pos.x = item->pos.x_pos;
 		splash_setup.pos.y = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, room_number);
 		splash_setup.pos.z = item->pos.z_pos;
@@ -419,7 +420,7 @@ void Splash(ITEM_INFO* item) {
 }
 
 short DoBloodSplat(long x, long y, long z, short speed, short ang, short room_number) {
-	if(GetRoom(currentLevel,room_number)->flags & ROOM_UNDERWATER)
+	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER)
 		TriggerUnderwaterBlood(x, y, z, speed);
 	else
 		TriggerBlood(x, y, z, ang >> 4, speed);
@@ -448,7 +449,7 @@ void SoundEffects() {
 	SoundSlot* slot;
 
 	for(int i = 0; i < GetNumSoundEffects(currentLevel); i++) {
-		sfx =GetSoundEffect(currentLevel, i);
+		sfx = GetSoundEffect(currentLevel, i);
 
 		if(flip_status) {
 			if(sfx->flags & 0x40)
@@ -469,7 +470,7 @@ void SoundEffects() {
 		if(slot->nSampleInfo < 0)
 			continue;
 
-		if((GetSampleInfo(currentLevel,slot->nSampleInfo)->flags & 3) != 3) {
+		if((GetSampleInfo(currentLevel, slot->nSampleInfo)->flags & 3) != 3) {
 			if(!S_SoundSampleIsPlaying(i))
 				slot->nSampleInfo = -1;
 			else {
@@ -509,13 +510,13 @@ long ItemNearLara(PHD_3DPOS* pos, long rad) {
 
 void AttachKeyPuzzleObject(ITEM_INFO* item) {
 	if(item->object_number == LARA) {
-		LARA_INFO* l = (LARA_INFO*) item->data;
+		LARA_INFO* l = (LARA_INFO*)item->data;
 		short keyPuzzleItemNo = l->GeneralPtr;
 		ITEM_INFO* keyPuzzleItem = GetItem(currentLevel, keyPuzzleItemNo);
 		enum object_types obj = keyPuzzleItem->object_number;
 		if(obj >= PUZZLE_HOLE1 && obj <= PUZZLE_HOLE12) {
 			obj = obj - PUZZLE_HOLE1 + PUZZLE_ITEM1;
-		}else if(obj >= KEY_HOLE1 && obj <= KEY_HOLE12) {
+		} else if(obj >= KEY_HOLE1 && obj <= KEY_HOLE12) {
 			obj = obj - KEY_HOLE1 + KEY_ITEM1;
 		}
 		short attachedItem = CreateItem();
@@ -537,7 +538,7 @@ void AttachKeyPuzzleObject(ITEM_INFO* item) {
 
 void RemoveKeyPuzzleObject(ITEM_INFO* item) {
 	if(item->object_number == LARA) {
-		LARA_INFO* l = (LARA_INFO*) item->data;
+		LARA_INFO* l = (LARA_INFO*)item->data;
 		if(l->pose_count != NO_ITEM) {
 			KillItem(l->pose_count);
 		}

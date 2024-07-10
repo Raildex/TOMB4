@@ -1,48 +1,49 @@
 
 #include "game/savegame.h"
-#include "game/objects.h"
-#include "game/traps.h"
-#include "game/items.h"
-#include "game/laramisc.h"
-#include "game/control.h"
+#include "game/aiobject.h"
 #include "game/bike.h"
-#include "game/jeep.h"
-#include "game/lot.h"
-#include "game/pickup.h"
-#include "game/clockworkbeetle.h"
-#include "game/spotcam.h"
-#include "specific/function_stubs.h"
+#include "game/bikeinfo.h"
 #include "game/camera.h"
-#include "game/voncroy.h"
+#include "game/camerainfo.h"
+#include "game/clockworkbeetle.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/floorinfo.h"
+#include "game/gameflow.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/jeep.h"
+#include "game/jeepinfo.h"
 #include "game/lara.h"
+#include "game/laramisc.h"
+#include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/lotinfo.h"
+#include "game/meshinfo.h"
 #include "game/newinv.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/objectvector.h"
+#include "game/pendulum.h"
+#include "game/pickup.h"
+#include "game/roominfo.h"
+#include "game/rope.h"
+#include "game/ropestruct.h"
+#include "game/savegameinfo.h"
 #include "game/scarab.h"
 #include "game/senet.h"
+#include "game/spotcam.h"
 #include "game/switch.h"
-#include "game/rope.h"
-#include "game/gameflow.h"
-#include "specific/file.h"
-#include "game/savegameinfo.h"
-#include "game/objectinfo.h"
-#include "game/iteminfo.h"
-#include "global/types.h"
-#include "game/itemstatus.h"
+#include "game/traps.h"
+#include "game/voncroy.h"
 #include "game/weapontypes.h"
-#include "game/aiobject.h"
-#include "game/roominfo.h"
-#include "game/meshinfo.h"
-#include "game/itemflags.h"
-#include "game/camerainfo.h"
-#include "game/creatureinfo.h"
-#include "game/lotinfo.h"
-#include "game/jeepinfo.h"
-#include "game/bikeinfo.h"
-#include "game/ropestruct.h"
-#include "game/pendulum.h"
-#include "game/floorinfo.h"
-#include "game/objectvector.h"
+#include "global/types.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
 #include <windows.h>
-#include "game/levelinfo.h"
+
 
 SAVEGAME_INFO savegame;
 
@@ -349,7 +350,7 @@ long OpenSaveGame(unsigned char current_level, long saving) {
 void SaveLevelData(long FullSave) {
 	/*
 	TODO:
-	
+
 	ITEM_INFO* item;
 	ROOM_INFO* r;
 	OBJECT_INFO* obj;
@@ -723,29 +724,30 @@ void SaveLevelData(long FullSave) {
 			WriteSG(item->item_flags, sizeof(short) * 4);
 		}
 
-		if(0 *//*gfCurrentLevel == 1)*//*) {
-			flags = 0;
+		if(0 */
+	/*gfCurrentLevel == 1)*/ /*) {
+  flags = 0;
 
-			for(int i = 0; i < 64; i++) {
-				if(VonCroyCutFlags[i])
-					flags |= 1 << (i & 0xF);
+  for(int i = 0; i < 64; i++) {
+	  if(VonCroyCutFlags[i])
+		  flags |= 1 << (i & 0xF);
 
-				if((i & 0xF) == 0xF) {
-					WriteSG(&flags, 2);
-					flags = 0;
-				}
-			}
-		}
+	  if((i & 0xF) == 0xF) {
+		  WriteSG(&flags, 2);
+		  flags = 0;
+	  }
+  }
+}
 
-		if(lara.RopePtr != -1) {
-			WriteSG(&RopeList[lara.RopePtr], sizeof(ROPE_STRUCT));
-			CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope - (char*)RopeList);
+if(lara.RopePtr != -1) {
+  WriteSG(&RopeList[lara.RopePtr], sizeof(ROPE_STRUCT));
+  CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope - (char*)RopeList);
 
-			WriteSG(&CurrentPendulum, sizeof(PENDULUM));
-			CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (long)RopeList);
-		}
-	}
-	*/
+  WriteSG(&CurrentPendulum, sizeof(PENDULUM));
+  CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (long)RopeList);
+}
+}
+*/
 }
 
 void RestoreLevelData(long FullSave) {
@@ -1077,21 +1079,22 @@ void RestoreLevelData(long FullSave) {
 			ReadSG(item->item_flags, sizeof(short) * 4);
 		}
 
-		if(0 *//*gfCurrentLevel == 1)*//*) {
-			for(int i = 0; i < 64; i++) {
-				if(!(i & 0xF))
-					ReadSG(&uword, sizeof(unsigned short));
+		if(0 */
+	/*gfCurrentLevel == 1)*/ /*) {
+  for(int i = 0; i < 64; i++) {
+	  if(!(i & 0xF))
+		  ReadSG(&uword, sizeof(unsigned short));
 
-				if(uword & 1 << (i & 0xF))
-					VonCroyCutFlags[i] = 1;
-			}
-		}
+	  if(uword & 1 << (i & 0xF))
+		  VonCroyCutFlags[i] = 1;
+  }
+}
 
-		if(lara.RopePtr != -1) {
-			ReadSG(&RopeList[lara.RopePtr], sizeof(ROPE_STRUCT));
-			ReadSG(&CurrentPendulum, sizeof(PENDULUM));
-			CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (long)RopeList);
-		}
-	}
-	*/
+if(lara.RopePtr != -1) {
+  ReadSG(&RopeList[lara.RopePtr], sizeof(ROPE_STRUCT));
+  ReadSG(&CurrentPendulum, sizeof(PENDULUM));
+  CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (long)RopeList);
+}
+}
+*/
 }

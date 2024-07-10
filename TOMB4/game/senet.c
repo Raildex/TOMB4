@@ -1,31 +1,32 @@
 
 #include "game/senet.h"
-#include "game/objects.h"
-#include "game/items.h"
-#include "game/deltapak.h"
-#include "specific/function_stubs.h"
-#include "game/sound.h"
-#include "game/control.h"
-#include "game/lara_states.h"
-#include "game/collide.h"
-#include "game/tomb4fx.h"
-#include "game/draw.h"
-#include "specific/3dmath.h"
-#include "specific/output.h"
-#include "specific/input.h"
-#include "game/lara.h"
-#include "game/iteminfo.h"
-#include "global/types.h"
-#include "game/itemstatus.h"
-#include "game/itemflags.h"
-#include "game/inputbuttons.h"
-#include "game/larainfo.h"
 #include "game/animstruct.h"
-#include "game/roominfo.h"
-#include "game/objectinfo.h"
+#include "game/collide.h"
+#include "game/control.h"
+#include "game/deltapak.h"
+#include "game/draw.h"
+#include "game/inputbuttons.h"
+#include "game/itemflags.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/itemstatus.h"
+#include "game/lara.h"
+#include "game/lara_states.h"
 #include "game/laragunstatus.h"
-#include <stdlib.h>
+#include "game/larainfo.h"
 #include "game/levelinfo.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/roominfo.h"
+#include "game/sound.h"
+#include "game/tomb4fx.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
+#include "specific/output.h"
+#include <stdlib.h>
+
 
 long SenetTargetX;
 long SenetTargetZ;
@@ -54,7 +55,7 @@ void InitialiseSenet(short item_number) {
 	senet_board[0] = 3;
 
 	for(lp = 0; lp < GetNumLevelItems(currentLevel); lp++) {
-		item = GetItem(currentLevel,lp);
+		item = GetItem(currentLevel, lp);
 
 		switch(item->object_number) {
 		case GAME_PIECE1:
@@ -124,7 +125,7 @@ void MakeMove(long piece, long displacement) {
 void SenetControl(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(last_throw > 0 && item->trigger_flags != 1)
 		MakeMove(item->object_number - GAME_PIECE1, last_throw);
@@ -161,7 +162,7 @@ long CheckSenetWinner(long ourPiece) {
 void InitialiseGameStix(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 	item->data = item->item_flags;
 	item->trigger_flags = NO_ITEM;
 }
@@ -187,7 +188,7 @@ void ThrowSticks(ITEM_INFO* item) {
 	item->hit_points = 120;
 
 	for(lp = 0; lp < 3; lp++)
-		GetItem(currentLevel,senet_item[lp])->trigger_flags = 1;
+		GetItem(currentLevel, senet_item[lp])->trigger_flags = 1;
 }
 
 void GameStixControl(short item_number) {
@@ -197,7 +198,7 @@ void GameStixControl(short item_number) {
 	long piece_num, num, x, z, change;
 	short room_number;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags > -1) {
 		if(item->hit_points == 100)
@@ -220,7 +221,7 @@ void GameStixControl(short item_number) {
 
 		if(!item->hit_points) {
 			for(int i = 0; i < 3; i++)
-				GetItem(currentLevel,senet_item[i])->trigger_flags = 0;
+				GetItem(currentLevel, senet_item[i])->trigger_flags = 0;
 
 			item->trigger_flags = NO_ITEM;
 
@@ -235,7 +236,7 @@ void GameStixControl(short item_number) {
 
 	if(piece_moving > -1) {
 		num = (piece_moving >= 3) + 1;
-		piece = GetItem(currentLevel,senet_item[piece_moving]);
+		piece = GetItem(currentLevel, senet_item[piece_moving]);
 		piece->flags |= IFL_TRIGGERED;
 		piece->after_death = 48;
 		piece_num = senet_piece[piece_moving];
@@ -287,7 +288,7 @@ void GameStixControl(short item_number) {
 
 				if(CheckSenetWinner(num)) {
 					for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
-						item2 = GetItem(currentLevel,i);
+						item2 = GetItem(currentLevel, i);
 
 						if(item2->object_number >= GAME_PIECE1 && item2->object_number <= WHEEL_OF_FORTUNE) {
 							item2->flags |= IFL_INVISIBLE | IFL_CODEBITS;
@@ -300,7 +301,7 @@ void GameStixControl(short item_number) {
 			} else {
 				for(int i = 0; i < 6; i++) {
 					if(piece_moving != i) {
-						piece = GetItem(currentLevel,senet_item[i]);
+						piece = GetItem(currentLevel, senet_item[i]);
 
 						if(x == piece->pos.x_pos && z == piece->pos.z_pos) {
 							if(num == 1)
@@ -372,7 +373,7 @@ void GameStixControl(short item_number) {
 void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS && !item->active || lara.IsMoving && lara.GeneralPtr == item_number) {
 		item->pos.y_rot ^= 0x8000;
@@ -380,7 +381,7 @@ void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(GameStixBounds, item, l)) {
 			if(MoveLaraPosition(&GameStixPos, item, l)) {
 				l->anim_number = ANIM_THROWSTIX;
-				l->frame_number = GetAnim(currentLevel,ANIM_THROWSTIX)->frame_base;
+				l->frame_number = GetAnim(currentLevel, ANIM_THROWSTIX)->frame_base;
 				l->current_anim_state = AS_CONTROLLED;
 				lara.IsMoving = 0;
 				lara.head_x_rot = 0;
@@ -423,7 +424,7 @@ void ShockwaveExplosion(ITEM_INFO* item, unsigned long col, long speed) {
 void ControlGodHead(short item_number) {
 	ITEM_INFO* item;
 
-	item = GetItem(currentLevel,item_number);
+	item = GetItem(currentLevel, item_number);
 
 	if(TriggerActive(item)) {
 		switch(item->pos.y_rot) {
@@ -468,7 +469,7 @@ void DrawGodHead(ITEM_INFO* item) {
 	short* frm[2];
 	long rate, oldAlpha, alpha;
 
-	r = GetRoom(currentLevel,item->room_number);
+	r = GetRoom(currentLevel, item->room_number);
 	phd_left = r->left;
 	phd_right = r->right;
 	phd_top = r->top;
@@ -483,7 +484,7 @@ void DrawGodHead(ITEM_INFO* item) {
 	rate = S_GetObjectInfoBounds(frm[0]);
 
 	if(rate) {
-		meshpp = GetMeshPointer(currentLevel,GetObjectInfo(currentLevel,item->object_number)->mesh_index);
+		meshpp = GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, item->object_number)->mesh_index);
 		scalar.x = 0x4000;
 		scalar.y = 0x4000;
 		scalar.z = item->item_flags[1] << 2;

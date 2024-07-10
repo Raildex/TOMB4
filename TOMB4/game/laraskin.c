@@ -1,15 +1,16 @@
 
 #include "game/laraskin.h"
-#include "game/objects.h"
+#include "game/control.h"
 #include "game/delstuff.h"
 #include "game/gameflow.h"
-#include "game/control.h"
-#include "game/objectinfo.h"
-#include "game/meshdata.h"
 #include "game/gfleveloptions.h"
+#include "game/levelinfo.h"
+#include "game/meshdata.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
 #include <stdlib.h>
 #include <string.h>
-#include "game/levelinfo.h"
+
 
 static unsigned char SkinJoints[14][4] = {
 	{ 0, 1, 1, 3 },
@@ -82,9 +83,9 @@ void CreateSkinningData() {
 		SkinXYZPtr->x = 0;
 		SkinXYZPtr->y = 0;
 		SkinXYZPtr->z = 0;
-		obj = GetObjectInfo(currentLevel,LARA_SKIN);
-		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
-		bone = GetBone(currentLevel,obj->bone_index);
+		obj = GetObjectInfo(currentLevel, LARA_SKIN);
+		meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
+		bone = GetBone(currentLevel, obj->bone_index);
 		aboveMeshNum = SkinJoints[i][0];
 		belowMeshNum = SkinJoints[i][1];
 		aboveMesh = (MESH_DATA*)*meshpp;
@@ -124,8 +125,8 @@ void CreateSkinningData() {
 		SkinXYZPtr->x = 0;
 		SkinXYZPtr->y = 0;
 		SkinXYZPtr->z = 0;
-		meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
-		bone = GetBone(currentLevel,obj->bone_index);
+		meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
+		bone = GetBone(currentLevel, obj->bone_index);
 
 		if(belowMeshNum) {
 			meshpp++;
@@ -160,9 +161,9 @@ void CreateSkinningData() {
 		SkinXYZPtr->x = 0;
 		SkinXYZPtr->y = 0;
 		SkinXYZPtr->z = 0;
-		obj = GetObjectInfo(currentLevel,LARA_SKIN_JOINTS);
-		meshpp = GetMeshPointer(currentLevel,obj->mesh_index + 1);
-		bone = GetBone(currentLevel,obj->bone_index);
+		obj = GetObjectInfo(currentLevel, LARA_SKIN_JOINTS);
+		meshpp = GetMeshPointer(currentLevel, obj->mesh_index + 1);
+		bone = GetBone(currentLevel, obj->bone_index);
 		jointMeshNum = i + 1;
 
 		for(int j = 1; j < obj->nmeshes; j++, bone += 4, meshpp++) {
@@ -301,8 +302,8 @@ void CreateSkinningData() {
 		}
 	}
 
-	obj = GetObjectInfo(currentLevel,HAIR);
-	meshpp = GetMeshPointer(currentLevel,obj->mesh_index);
+	obj = GetObjectInfo(currentLevel, HAIR);
+	meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
 
 	for(int i = 0; i < 3; i++, meshpp += 2) {
 		hairMesh = (MESH_DATA*)*meshpp;
@@ -322,8 +323,8 @@ void OptomiseSkinningData() {
 	unsigned char RemapTable[32];
 
 
-	object = GetObjectInfo(currentLevel,LARA_SKIN_JOINTS);
-	meshpp = GetMeshPointer(currentLevel,object->mesh_index + 1);
+	object = GetObjectInfo(currentLevel, LARA_SKIN_JOINTS);
+	meshpp = GetMeshPointer(currentLevel, object->mesh_index + 1);
 
 	for(c = 0; c < 14; ++c) {
 		JointMesh = *meshpp;

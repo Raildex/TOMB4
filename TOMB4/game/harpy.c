@@ -1,30 +1,31 @@
 
 #include "game/harpy.h"
 #include "distances.h"
-#include "game/effect2.h"
-#include "specific/function_stubs.h"
-#include "game/items.h"
-#include "game/objects.h"
-#include "game/sphere.h"
-#include "specific/3dmath.h"
-#include "game/box.h"
-#include "game/people.h"
-#include "game/effects.h"
-#include "game/lara.h"
-#include "game/control.h"
-#include "game/lot.h"
-#include "game/fxinfo.h"
-#include "global/types.h"
-#include "game/sparks.h"
-#include "game/iteminfo.h"
-#include "game/biteinfo.h"
-#include "game/objectinfo.h"
-#include "game/animstruct.h"
-#include "game/creatureinfo.h"
 #include "game/aiinfo.h"
+#include "game/animstruct.h"
+#include "game/biteinfo.h"
+#include "game/box.h"
+#include "game/control.h"
+#include "game/creatureinfo.h"
+#include "game/effect2.h"
+#include "game/effects.h"
+#include "game/fxinfo.h"
+#include "game/iteminfo.h"
+#include "game/items.h"
+#include "game/lara.h"
 #include "game/larainfo.h"
-#include <stdlib.h>
 #include "game/levelinfo.h"
+#include "game/lot.h"
+#include "game/objectinfo.h"
+#include "game/objects.h"
+#include "game/people.h"
+#include "game/sparks.h"
+#include "game/sphere.h"
+#include "global/types.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include <stdlib.h>
+
 static BITE_INFO right_hand = { 0, 128, 0, 2 };
 static BITE_INFO left_hand = { 0, 128, 0, 4 };
 static BITE_INFO right_hit = { 0, 0, 0, 2 };
@@ -35,8 +36,8 @@ void TriggerHarpyMissileFlame(short fx_number, long xv, long yv, long zv) {
 	SPARKS* sptr;
 	long dx, dz;
 
-	dx = lara_item->pos.x_pos - GetEffect(currentLevel,fx_number)->pos.x_pos;
-	dz = lara_item->pos.z_pos - GetEffect(currentLevel,fx_number)->pos.z_pos;
+	dx = lara_item->pos.x_pos - GetEffect(currentLevel, fx_number)->pos.x_pos;
+	dz = lara_item->pos.z_pos - GetEffect(currentLevel, fx_number)->pos.z_pos;
 
 	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
@@ -85,7 +86,7 @@ void TriggerHarpyMissile(PHD_3DPOS* pos, short room_number, short mesh) {
 	fx_num = CreateEffect(room_number);
 
 	if(fx_num != NO_ITEM) {
-		fx = GetEffect(currentLevel,fx_num);
+		fx = GetEffect(currentLevel, fx_num);
 		fx->pos.x_pos = pos->x_pos;
 		fx->pos.y_pos = pos->y_pos - (GetRandomControl() & 0x3F) - 32;
 		fx->pos.z_pos = pos->z_pos;
@@ -97,7 +98,7 @@ void TriggerHarpyMissile(PHD_3DPOS* pos, short room_number, short mesh) {
 		fx->object_number = BUBBLES;
 		fx->speed = (GetRandomControl() & 0x1F) + 96;
 		fx->flag1 = mesh;
-		fx->frame_number = GetObjectInfo(currentLevel,BUBBLES)->mesh_index + mesh * 2;
+		fx->frame_number = GetObjectInfo(currentLevel, BUBBLES)->mesh_index + mesh * 2;
 	}
 }
 
@@ -270,8 +271,8 @@ void InitialiseHarpy(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 	InitialiseCreature(item_number);
-	item->anim_number = GetObjectInfo(currentLevel,HARPY)->anim_index + 4;
-	item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+	item->anim_number = GetObjectInfo(currentLevel, HARPY)->anim_index + 4;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
 }
@@ -304,8 +305,8 @@ void HarpyControl(short item_number) {
 					item->pos.x_rot = 0;
 					item->pos.y_pos = item->floor;
 				} else {
-					item->anim_number = GetObjectInfo(currentLevel,HARPY)->anim_index + 5;
-					item->frame_number = GetAnim(currentLevel,item->anim_number)->frame_base;
+					item->anim_number = GetObjectInfo(currentLevel, HARPY)->anim_index + 5;
+					item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 					item->current_anim_state = 9;
 					item->gravity_status = 1;
 					item->speed = 0;
@@ -336,7 +337,7 @@ void HarpyControl(short item_number) {
 			baddie = &baddie_slots[i];
 
 			if(baddie->item_num != NO_ITEM && baddie->item_num != item_number) {
-				enemy = GetItem(currentLevel,baddie->item_num);
+				enemy = GetItem(currentLevel, baddie->item_num);
 
 				if(enemy->object_number == LARA_DOUBLE) {
 					dx = enemy->pos.x_pos - item->pos.x_pos;
