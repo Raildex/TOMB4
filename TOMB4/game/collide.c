@@ -52,7 +52,7 @@ void ShiftItem(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->shift.x = 0;
 }
 
-long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO** StoredItems, MESH_INFO** StoredStatics, long StoreLara) {
+long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO** StoredItems,long StoredItemsSize, MESH_INFO** StoredStatics,long StoredStaticsSize, long StoreLara) {
 	MESH_INFO* mesh;
 	ROOM_INFO* r;
 	ITEM_INFO* item2;
@@ -83,7 +83,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 		}
 	}
 
-	if(StoredStatics) {
+	if(StoredStatics && StoredStaticsSize) {
 		for(int i = 0; i < room_count; i++) {
 			r = GetRoom(currentLevel,rooms[i]);
 			mesh = r->mesh;
@@ -105,7 +105,9 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 							if(rad + num + 128 >= bounds[4] && num - rad - 128 <= bounds[5]) {
 								StoredStatics[statics_count] = mesh;
 								statics_count++;
-
+								if(statics_count >= StoredStaticsSize) {
+									break;
+								}
 								if(!rad) {
 									StoredItems[0] = NULL;
 									return 1;
@@ -200,7 +202,9 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 				if(rad + num + 128 >= bounds[4] && num - rad - 128 <= bounds[5]) {
 					StoredItems[items_count] = item2;
 					items_count++;
-
+					if(items_count >= StoredItemsSize) {
+						break;
+					}
 					if(!rad)
 						return 1;
 				}

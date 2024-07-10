@@ -91,7 +91,7 @@ void InitialiseMovingBlock(short item_number) {
 }
 
 static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant) {
-	ITEM_INFO** itemlist;
+	ITEM_INFO* itemlist[6] = {0};
 	ITEM_INFO* collided;
 	FLOOR_INFO* floor;
 	ROOM_INFO* r;
@@ -101,7 +101,6 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 	x = item->pos.x_pos;
 	y = item->pos.y_pos;
 	z = item->pos.z_pos;
-	itemlist = (ITEM_INFO**)&tsv_buffer[0];
 
 	switch(quadrant) {
 	case NORTH:
@@ -148,13 +147,13 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 	rz = item->pos.z_pos;
 	item->pos.x_pos = x;
 	item->pos.z_pos = z;
-	GetCollidedObjects(item, 256, 1, itemlist, 0, 0);
+	GetCollidedObjects(item, 256, 1, itemlist, 5, NULL, 0, 0);
 	item->pos.x_pos = rx;
 	item->pos.z_pos = rz;
 
 	if(itemlist[0]) {
-		for(int i = 0; itemlist[0] != 0; i++, itemlist++) {
-			collided = itemlist[0];
+		for(int i = 0; itemlist[i] != 0; i++) {
+			collided = itemlist[i];
 
 			if(collided->object_number == TWOBLOCK_PLATFORM || collided->object_number == HAMMER)
 				return 1;
@@ -167,14 +166,12 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 }
 
 static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant) {
-	ITEM_INFO** itemlist;
 	ITEM_INFO* collided;
 	FLOOR_INFO* floor;
 	ROOM_INFO* r;
 	long x, y, z, destx, destz, rx, rz, ignore;
 	short room_number;
-
-	itemlist = (ITEM_INFO**)&tsv_buffer[0];
+	ITEM_INFO* itemlist[6] = {0};
 	destx = 0;
 	destz = 0;
 
@@ -220,15 +217,15 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 	rz = item->pos.z_pos;
 	item->pos.x_pos = x;
 	item->pos.z_pos = z;
-	GetCollidedObjects(item, 256, 1, itemlist, 0, 0);
+	GetCollidedObjects(item, 256, 1, itemlist, 4, NULL, 0, 0);
 	item->pos.x_pos = rx;
 	item->pos.z_pos = rz;
 
 	if(itemlist[0]) {
 		ignore = 0;
 
-		for(int i = 0; itemlist[0] != 0; i++, itemlist++) {
-			collided = itemlist[0];
+		for(int i = 0; itemlist[i] != 0; i++) {
+			collided = itemlist[i];
 
 			if(collided->object_number == TWOBLOCK_PLATFORM || collided->object_number == HAMMER) {
 				ignore = 1;
@@ -269,13 +266,13 @@ static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 	rz = lara_item->pos.z_pos;
 	lara_item->pos.x_pos = x;
 	lara_item->pos.z_pos = z;
-	GetCollidedObjects(lara_item, 256, 1, itemlist, 0, 0);
+	GetCollidedObjects(lara_item, 256, 1, itemlist, 5, NULL, 0, 0);
 	lara_item->pos.x_pos = rx;
 	lara_item->pos.z_pos = rz;
 
 	if(itemlist[0]) {
-		for(int i = 0; itemlist[0] != 0; i++, itemlist++) {
-			collided = itemlist[0];
+		for(int i = 0; itemlist[i] != 0; i++) {
+			collided = itemlist[i];
 
 			if(collided == item || collided->object_number == TWOBLOCK_PLATFORM || collided->object_number == HAMMER)
 				return 1;

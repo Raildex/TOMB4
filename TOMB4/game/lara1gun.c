@@ -694,8 +694,8 @@ void undraw_shotgun(long weapon_type) {
 }
 
 void ControlCrossbow(short item_number) {
-	ITEM_INFO** itemlist;
-	MESH_INFO** meshlist;
+	ITEM_INFO* itemlist[11] = {0};
+	MESH_INFO* meshlist[11] = {0};
 	ITEM_INFO* item;
 	ITEM_INFO* target;
 	MESH_INFO* mesh;
@@ -760,9 +760,8 @@ void ControlCrossbow(short item_number) {
 		rad = 128;
 
 	for(int i = 0; i < 2; i++) {
-		itemlist = (ITEM_INFO**)&tsv_buffer[0x2000];
-		meshlist = (MESH_INFO**)&tsv_buffer[0x3000];
-		GetCollidedObjects(item, rad, 1, itemlist, meshlist, 1);
+
+		GetCollidedObjects(item, rad, 1, itemlist, 10, meshlist, 10, 1);
 
 		if(!*itemlist && !*meshlist)
 			break;
@@ -855,8 +854,8 @@ void ControlCrossbow(short item_number) {
 }
 
 void ControlGrenade(short item_number) {
-	ITEM_INFO** itemlist;
-	MESH_INFO** meshlist;
+	ITEM_INFO* itemlist[11];
+	MESH_INFO* meshlist[11];
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 	ITEM_INFO* target;
@@ -1040,9 +1039,7 @@ void ControlGrenade(short item_number) {
 
 	if(item->item_flags[0] != 3 || !exploded) {
 		for(int i = 0; i < 2; i++) {
-			itemlist = (ITEM_INFO**)&tsv_buffer[0x2000];
-			meshlist = (MESH_INFO**)&tsv_buffer[0x3000];
-			GetCollidedObjects(item, rad, 1, itemlist, meshlist, 1);
+			GetCollidedObjects(item, rad, 1, itemlist,10, meshlist,10, 1);
 
 			if(exploded) {
 				j = 0;

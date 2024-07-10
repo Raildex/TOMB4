@@ -138,8 +138,8 @@ void DoFlareInHand(long flare_age) {
 }
 
 void CreateFlare(short object, long thrown) {
-	ITEM_INFO** itemlist;
-	MESH_INFO** meshlist;
+	ITEM_INFO* itemlist[6] = {0};
+	MESH_INFO* meshlist[6] = {0};
 	ITEM_INFO* flare;
 	FLOOR_INFO* floor;
 	PHD_VECTOR pos;
@@ -164,10 +164,8 @@ void CreateFlare(short object, long thrown) {
 
 		room_number = lara_item->room_number;
 		floor = GetFloor(pos.x, pos.y, pos.z, &room_number);
-		itemlist = (ITEM_INFO**)&tsv_buffer[0];
-		meshlist = (MESH_INFO**)&tsv_buffer[1024];
 
-		if(GetCollidedObjects(flare, 0, 1, itemlist, meshlist, 0) || pos.y > GetHeight(floor, pos.x, pos.y, pos.z)) {
+		if(GetCollidedObjects(flare, 0, 1, itemlist,5, meshlist,5, 0) || pos.y > GetHeight(floor, pos.x, pos.y, pos.z)) {
 			collided = 1;
 			flare->pos.y_rot = lara_item->pos.y_rot - 0x8000;
 			flare->pos.x_pos = lara_item->pos.x_pos + (80 * phd_sin(flare->pos.y_rot) >> W2V_SHIFT);
