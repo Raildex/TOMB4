@@ -117,16 +117,18 @@ char CreateTexturePage(long w, long h, TEXTURE_FORMAT tfmt, TEXTURE_FORMAT sfmt,
 	desc.dwWidth = w;
 	desc.dwHeight = h;
 
-	if(w < 32 || h < 32)
+	if(w < 32 || h < 32) {
 		MipMapCount = 0;
+	}
 
 	desc.ddpfPixelFormat = G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].TextureInfos[G_dxinfo->nTexture].ddpf;
 	desc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
 	desc.ddsCaps.dwCaps = DDSCAPS_TEXTURE;
-	if(App.dx.Flags & DXF_HWR)
+	if(App.dx.Flags & DXF_HWR) {
 		desc.ddsCaps.dwCaps2 = DDSCAPS2_TEXTUREMANAGE;
-	else
+	} else {
 		desc.ddsCaps.dwCaps |= DDSCAPS_SYSTEMMEMORY;
+	}
 
 	if(MipMapCount) {
 		desc.dwFlags |= DDSD_MIPMAPCOUNT;

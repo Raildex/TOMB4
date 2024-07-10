@@ -222,14 +222,17 @@ void InitFont() {
 			g = ((tg * j) >> 4) + ((fg * (16 - j)) >> 4);
 			b = ((tb * j) >> 4) + ((fb * (16 - j)) >> 4);
 
-			if(r > 255)
+			if(r > 255) {
 				r = 255;
+			}
 
-			if(g > 255)
+			if(g > 255) {
 				g = 255;
+			}
 
-			if(b > 255)
+			if(b > 255) {
 				b = 255;
+			}
 
 			CalcColorSplit(RGBONLY(b, g, r), &v.color);
 
@@ -282,10 +285,11 @@ void UpdatePulseColour() {
 
 	PulseCnt = (PulseCnt + 1) & 0x1F;
 
-	if(PulseCnt > 16)
+	if(PulseCnt > 16) {
 		c = -PulseCnt;
-	else
+	} else {
 		c = PulseCnt;
+	}
 
 	c <<= 3;
 	CalcColorSplit(RGBONLY(c, c, c), &v.color);
@@ -318,27 +322,30 @@ long GetStringLength(const char* string, long* top, long* bottom) {
 	highest = 1024;
 
 	while(s) {
-		if(s == '\n')
+		if(s == '\n') {
 			break;
+		}
 
-		if(s == ' ')
+		if(s == ' ') {
 			length += (long)(((float)(phd_winxmax + 1) / 640.0F) * 8.0F);
-		else if(s == '\t') {
+		} else if(s == '\t') {
 			length += 40;
 
 			if(top) {
-				if(highest > -12)
+				if(highest > -12) {
 					highest = -12;
+				}
 			}
 
 			if(bottom) {
-				if(lowest < 2)
+				if(lowest < 2) {
 					lowest = 2;
+				}
 			}
 		} else if(s >= 20) {
-			if(s < ' ')
+			if(s < ' ') {
 				def = &CharDef[s + 74];
-			else {
+			} else {
 				if(s >= 128 && s <= 173) {
 					accent = 1;
 					s = AccentTable[s - 128][0];
@@ -347,21 +354,24 @@ long GetStringLength(const char* string, long* top, long* bottom) {
 				def = &CharDef[s - '!'];
 			}
 
-			if(ScaleFlag)
+			if(ScaleFlag) {
 				length += def->w - def->w / 4;
-			else
+			} else {
 				length += def->w;
+			}
 
 			y = def->YOffset;
 
 			if(top) {
-				if(y < highest)
+				if(y < highest) {
 					highest = def->YOffset;
+				}
 			}
 
 			if(bottom) {
-				if(def->h + y > lowest)
+				if(def->h + y > lowest) {
 					lowest = def->h + y;
+				}
 			}
 		}
 
@@ -369,14 +379,16 @@ long GetStringLength(const char* string, long* top, long* bottom) {
 	}
 
 	if(top) {
-		if(accent)
+		if(accent) {
 			highest -= 4;
+		}
 
 		*top = highest;
 	}
 
-	if(bottom)
+	if(bottom) {
 		*bottom = lowest;
+	}
 
 	return length;
 }
@@ -441,18 +453,20 @@ void PrintString(long x, long y, unsigned char col, const char* string, unsigned
 	long x2, bottom, l, top, bottom2;
 	unsigned char s;
 
-	if(flags & FF_BLINK && GnFrameCounter & 0x10)
+	if(flags & FF_BLINK && GnFrameCounter & 0x10) {
 		return;
+	}
 
 	ScaleFlag = (flags & FF_SMALL) != 0;
 	x2 = GetStringLength(string, 0, &bottom);
 
-	if(flags & FF_CENTER)
+	if(flags & FF_CENTER) {
 		x2 = x - (x2 >> 1);
-	else if(flags & FF_RJUSTIFY)
+	} else if(flags & FF_RJUSTIFY) {
 		x2 = x - x2;
-	else
+	} else {
 		x2 = x;
+	}
 
 	s = *string++;
 
@@ -464,12 +478,13 @@ void PrintString(long x, long y, unsigned char col, const char* string, unsigned
 			} else {
 				l = GetStringLength(string, &top, &bottom2);
 
-				if(flags & FF_CENTER)
+				if(flags & FF_CENTER) {
 					x2 = x - (l >> 1);
-				else if(flags & FF_RJUSTIFY)
+				} else if(flags & FF_RJUSTIFY) {
 					x2 = x - l;
-				else
+				} else {
 					x2 = x;
+				}
 
 				y += bottom - top + 2;
 				bottom = bottom2;
@@ -480,10 +495,11 @@ void PrintString(long x, long y, unsigned char col, const char* string, unsigned
 		}
 
 		if(s == ' ') {
-			if(ScaleFlag)
+			if(ScaleFlag) {
 				x2 += 6;
-			else
+			} else {
 				x2 += (long)((float)(phd_winxmax + 1) / 640.0F * 8.0F);
+			}
 
 			s = *string++;
 			continue;
@@ -506,21 +522,24 @@ void PrintString(long x, long y, unsigned char col, const char* string, unsigned
 			accent = &CharDef[AccentTable[s - 128][1] - '!'];
 			DrawChar(x2, y, col, def);
 
-			if(AccentTable[s - 128][1] != ' ')
+			if(AccentTable[s - 128][1] != ' ') {
 				DrawChar(def->w / 2 + x2 - 3, y + def->YOffset, col, accent);
+			}
 		} else {
-			if(s < ' ')
+			if(s < ' ') {
 				def = &CharDef[s + 74];
-			else
+			} else {
 				def = &CharDef[s - '!'];
+			}
 
 			DrawChar(x2, y, col, def);
 		}
 
-		if(ScaleFlag)
+		if(ScaleFlag) {
 			x2 += def->w - def->w / 4;
-		else
+		} else {
 			x2 += def->w;
+		}
 
 		s = *string++;
 	}

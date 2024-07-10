@@ -176,10 +176,11 @@ void WraithControl(short item_number) {
 	item = GetItem(currentLevel, item_number);
 	SoundEffect(SFX_WRAITH_WHISPERS, &item->pos, SFX_DEFAULT);
 
-	if(item->hit_points)
+	if(item->hit_points) {
 		target = GetItem(currentLevel, item->hit_points);
-	else
+	} else {
 		target = lara_item;
+	}
 
 	if(target == lara_item || target->object_number == ANIMATING10) {
 		dx = target->pos.x_pos - item->pos.x_pos;
@@ -197,40 +198,43 @@ void WraithControl(short item_number) {
 
 	rotY = (short)(phd_atan(dz, dx) - item->pos.y_rot);
 
-	if(abs(dx) > abs(dz))
+	if(abs(dx) > abs(dz)) {
 		rotX = (short)(phd_atan(abs(dx) + (abs(dz) >> 1), dy));
-	else
+	} else {
 		rotX = (short)(phd_atan(abs(dz) + (abs(dx) >> 1), dy));
+	}
 
 	rotX -= item->pos.x_rot;
 	speed = (WraithSpeed / item->speed) << 3;
 
-	if(abs(rotY) < item->item_flags[2] && rotY > 0 == item->item_flags[2] > 0)
+	if(abs(rotY) < item->item_flags[2] && rotY > 0 == item->item_flags[2] > 0) {
 		item->pos.y_rot += rotY;
-	else if(rotY >= 0) {
+	} else if(rotY >= 0) {
 		if(item->item_flags[2] > 0) {
 			item->item_flags[2] += speed;
 			item->pos.y_rot += item->item_flags[2];
-		} else
+		} else {
 			item->item_flags[2] = 1;
-	} else if(item->item_flags[2] >= 0)
+		}
+	} else if(item->item_flags[2] >= 0) {
 		item->item_flags[2] = -1;
-	else {
+	} else {
 		item->item_flags[2] -= speed;
 		item->pos.y_rot += item->item_flags[2];
 	}
 
-	if(abs(rotX) < item->item_flags[3] && rotX > 0 == item->item_flags[3] > 0)
+	if(abs(rotX) < item->item_flags[3] && rotX > 0 == item->item_flags[3] > 0) {
 		item->pos.x_rot += rotX;
-	else if(rotX >= 0) {
+	} else if(rotX >= 0) {
 		if(item->item_flags[3] > 0) {
 			item->item_flags[3] += speed;
 			item->pos.x_rot += item->item_flags[3];
-		} else
+		} else {
 			item->item_flags[3] = 1;
-	} else if(item->item_flags[3] >= 0)
+		}
+	} else if(item->item_flags[3] >= 0) {
 		item->item_flags[3] = -1;
-	else {
+	} else {
 		item->item_flags[3] -= speed;
 		item->pos.x_rot += item->item_flags[3];
 	}
@@ -241,8 +245,9 @@ void WraithControl(short item_number) {
 	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
-	if(h < item->pos.y_pos || c > item->pos.y_pos)
+	if(h < item->pos.y_pos || c > item->pos.y_pos) {
 		oob = 1;
+	}
 
 	x = item->pos.x_pos;
 	y = item->pos.y_pos;
@@ -286,19 +291,22 @@ void WraithControl(short item_number) {
 
 					KillItem(item_number);
 				}
-			} else
+			} else {
 				item->item_flags[1] = -1;
+			}
 		} else {
 			item->item_flags[1]--;
 
-			if(item->item_flags[1] < 0)
+			if(item->item_flags[1] < 0) {
 				item->item_flags[1] = 0;
+			}
 		}
 	}
 
 	if(dist < 28900 && abs(item->pos.y_pos - (target->pos.y_pos - 384)) < 256) {
-		if(item->speed > 32)
+		if(item->speed > 32) {
 			item->speed -= 12;
+		}
 
 		if(target == lara_item) {
 			target->hit_points -= (short)(dist >> 10);
@@ -306,8 +314,9 @@ void WraithControl(short item_number) {
 			if(item->object_number == WRAITH1) {
 				item->item_flags[1] += 400;
 
-				if(item->item_flags[1] > 8000)
+				if(item->item_flags[1] > 8000) {
 					LaraBurn();
+				}
 			}
 		} else if(target->object_number == ANIMATING10) {
 			item->ai_bits++;
@@ -321,8 +330,9 @@ void WraithControl(short item_number) {
 				target->hit_points = 0;
 				target->trigger_flags--;
 
-				if(target->trigger_flags > 0)
+				if(target->trigger_flags > 0) {
 					target->frame_number = GetAnim(currentLevel, target->anim_number)->frame_base;
+				}
 
 				KillItem(item_number);
 			}
@@ -338,11 +348,13 @@ void WraithControl(short item_number) {
 		}
 	} else {
 		if(wibble & 0x10) {
-			if(item->speed < WraithSpeed)
+			if(item->speed < WraithSpeed) {
 				item->speed++;
+			}
 
-			if(item->hit_points && item->ai_bits)
+			if(item->hit_points && item->ai_bits) {
 				target->ai_bits--;
+			}
 		}
 	}
 
@@ -352,10 +364,12 @@ void WraithControl(short item_number) {
 	c = GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 	if(h >= item->pos.y_pos && c <= item->pos.y_pos) {
-		if(oob)
+		if(oob) {
 			TriggerWraithEffect(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->pos.y_rot, item->object_number);
-	} else if(!oob)
+		}
+	} else if(!oob) {
 		TriggerWraithEffect(x, y, z, item->pos.y_rot + 0x8000, item->object_number);
+	}
 
 	wraith = (WRAITH_STRUCT*)item->data;
 	wraith += 7;
@@ -403,8 +417,9 @@ void WraithControl(short item_number) {
 	dz = (item->pos.z_pos + z) >> 1;
 	TriggerWraithFlame(dx, dy, dz, wraith->xv, wraith->yv, wraith->zv, item->object_number);
 
-	if(item->object_number == WRAITH3)
+	if(item->object_number == WRAITH3) {
 		TriggerDynamic(wraith->pos.x, wraith->pos.y, wraith->pos.z, 16, wraith[5].r, wraith[5].g, wraith[5].b);
-	else
+	} else {
 		TriggerDynamic(wraith->pos.x, wraith->pos.y, wraith->pos.z, 16, wraith[1].r, wraith[1].g, wraith[1].b);
+	}
 }

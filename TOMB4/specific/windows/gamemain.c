@@ -26,14 +26,17 @@ void GameClose() {
 	ACMClose();
 	FreeLevel();
 
-	if(wav_file_buffer)
+	if(wav_file_buffer) {
 		free(wav_file_buffer);
+	}
 
-	if(ADPCMBuffer)
+	if(ADPCMBuffer) {
 		free(ADPCMBuffer);
+	}
 
-	if(logF)
+	if(logF) {
 		fclose(logF);
+	}
 
 	free(gfScriptFile);
 	free(gfLanguageFile);
@@ -52,8 +55,9 @@ void S_GameMain() {
 		S_CDStop();
 		ClearSurfaces();
 
-		if(!App.SoundDisabled)
+		if(!App.SoundDisabled) {
 			SOUND_Init();
+		}
 
 		DoGameflow();
 		GameClose();

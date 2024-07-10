@@ -61,12 +61,14 @@ void InjuredSasControl(short item_number) {
 	item = GetItem(currentLevel, item_number);
 
 	if(item->current_anim_state == 1) {
-		if(!(GetRandomControl() & 0x7F))
+		if(!(GetRandomControl() & 0x7F)) {
 			item->goal_anim_state = 2;
-		else if(!(GetRandomControl() & 0xFF))
+		} else if(!(GetRandomControl() & 0xFF)) {
 			item->goal_anim_state = 3;
-	} else if(item->current_anim_state == 4 && !(GetRandomControl() & 0x7F))
+		}
+	} else if(item->current_anim_state == 4 && !(GetRandomControl() & 0x7F)) {
 		item->goal_anim_state = 5;
+	}
 
 	AnimateItem(item);
 }
@@ -93,8 +95,9 @@ void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				item->flags |= IFL_CODEBITS;
 				item->status = ITEM_ACTIVE;
 				AddActiveItem(item_number);
-			} else
+			} else {
 				lara.GeneralPtr = item_number;
+			}
 		}
 	} else {
 		if(item->status == ITEM_ACTIVE) {
@@ -123,8 +126,9 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 
 	item_number = CreateItem();
 
-	if(item_number == NO_ITEM)
+	if(item_number == NO_ITEM) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 	item->shade = -0x3DF0;
@@ -153,18 +157,20 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 	SmokeCountL = 32;
 	SmokeWeapon = WEAPON_GRENADE;
 
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 5; i++) {
 		TriggerGunSmoke(oPos.x, oPos.y, oPos.z, pos.x - oPos.x, pos.y - oPos.y, pos.z - oPos.z, 1, 5, 32);
+	}
 
 	InitialiseItem(item_number);
 	item->pos.x_rot = xrot + sas->pos.x_rot;
 	item->pos.y_rot = yrot + sas->pos.y_rot;
 	item->pos.z_rot = 0;
 
-	if(GetRandomControl() & 3)
+	if(GetRandomControl() & 3) {
 		item->item_flags[0] = 1;
-	else
+	} else {
 		item->item_flags[0] = 2;
+	}
 
 	item->item_flags[2] = 1;
 	item->speed = 128;
@@ -195,8 +201,9 @@ void SasControl(short item_number) {
 	long iDistance, dx, dz;
 	short angle, tilt, head, torso_x, torso_y, iAngle, xrot, yrot;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 	sas = (CREATURE_INFO*)item->data;
@@ -222,10 +229,11 @@ void SasControl(short item_number) {
 			item->current_anim_state = 7;
 		}
 	} else {
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(sas);
-		else
+		} else {
 			sas->enemy = lara_item;
+		}
 
 		CreatureAIInfo(item, &info);
 
@@ -239,23 +247,27 @@ void SasControl(short item_number) {
 			iDistance = SQUARE(dx) + SQUARE(dz);
 		}
 
-		if(sas->enemy == lara_item)
+		if(sas->enemy == lara_item) {
 			GetCreatureMood(item, &info, 0);
-		else
+		} else {
 			GetCreatureMood(item, &info, 1);
+		}
 
-		if(lara.vehicle != NO_ITEM && info.bite)
+		if(lara.vehicle != NO_ITEM && info.bite) {
 			sas->mood = ESCAPE_MOOD;
+		}
 
-		if(sas->enemy == lara_item)
+		if(sas->enemy == lara_item) {
 			CreatureMood(item, &info, 0);
-		else
+		} else {
 			CreatureMood(item, &info, 1);
+		}
 
 		angle = CreatureTurn(item, sas->maximum_turn);
 
-		if(item->hit_status)
+		if(item->hit_status) {
 			AlertAllGuards(item_number);
+		}
 
 		switch(item->current_anim_state) {
 		case 1:
@@ -264,54 +276,61 @@ void SasControl(short item_number) {
 			sas->maximum_turn = 0;
 
 			if(item->anim_number == GetObjectInfo(currentLevel, item->object_number)->anim_index + 17) {
-				if(abs(info.angle) < 1820)
+				if(abs(info.angle) < 1820) {
 					item->pos.y_rot += info.angle;
-				else if(info.angle < 0)
+				} else if(info.angle < 0) {
 					item->pos.y_rot -= 1820;
-				else
+				} else {
 					item->pos.y_rot += 1820;
+				}
 			} else if(item->ai_bits == MODIFY || lara.vehicle) {
-				if(abs(info.angle) < 364)
+				if(abs(info.angle) < 364) {
 					item->pos.y_rot += info.angle;
-				else if(info.angle < 0)
+				} else if(info.angle < 0) {
 					item->pos.y_rot -= 364;
-				else
+				} else {
 					item->pos.y_rot += 364;
+				}
 			}
 
 			if(item->ai_bits & GUARD) {
 				head = AIGuard(sas);
 
 				if(!(GetRandomControl() & 0xFF)) {
-					if(item->current_anim_state == 1)
+					if(item->current_anim_state == 1) {
 						item->goal_anim_state = 4;
-					else
+					} else {
 						item->goal_anim_state = 1;
+					}
 				}
 			} else if(item->ai_bits & PATROL1 && item->ai_bits != MODIFY && !lara.vehicle) {
 				item->goal_anim_state = 2;
 				head = 0;
 			} else if(Targetable(item, &info)) {
 				if(info.distance >= 0x900000 && info.zone_number == info.enemy_zone) {
-					if(item->ai_bits != MODIFY)
+					if(item->ai_bits != MODIFY) {
 						item->goal_anim_state = 2;
-				} else if(GetRandomControl() & 1)
+					}
+				} else if(GetRandomControl() & 1) {
 					item->goal_anim_state = 8;
-				else if(GetRandomControl() & 1)
+				} else if(GetRandomControl() & 1) {
 					item->goal_anim_state = 10;
-				else
+				} else {
 					item->goal_anim_state = 12;
-			} else if(item->ai_bits == MODIFY)
+				}
+			} else if(item->ai_bits == MODIFY) {
 				item->goal_anim_state = 1;
-			else if(sas->mood == ESCAPE_MOOD)
+			} else if(sas->mood == ESCAPE_MOOD) {
 				item->goal_anim_state = 3;
-			else if((sas->alerted || sas->mood != BORED_MOOD) && (!(item->ai_bits & FOLLOW) || !sas->reached_goal && iDistance <= 0x400000)) {
-				if(sas->mood != BORED_MOOD && info.distance > 0x400000)
+			} else if((sas->alerted || sas->mood != BORED_MOOD) && (!(item->ai_bits & FOLLOW) || !sas->reached_goal && iDistance <= 0x400000)) {
+				if(sas->mood != BORED_MOOD && info.distance > 0x400000) {
 					item->goal_anim_state = 3;
-				else
+				} else {
 					item->goal_anim_state = 2;
-			} else
+				}
+			} else {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
@@ -320,31 +339,35 @@ void SasControl(short item_number) {
 			sas->flags = 0;
 			sas->maximum_turn = 910;
 
-			if(item->ai_bits & PATROL1)
+			if(item->ai_bits & PATROL1) {
 				item->goal_anim_state = 2;
-			else if(lara.vehicle && (item->ai_bits == MODIFY || !item->ai_bits))
+			} else if(lara.vehicle && (item->ai_bits == MODIFY || !item->ai_bits)) {
 				item->goal_anim_state = 1;
-			else if(sas->mood == ESCAPE_MOOD)
+			} else if(sas->mood == ESCAPE_MOOD) {
 				item->goal_anim_state = 3;
-			else if(item->ai_bits & GUARD || item->ai_bits & FOLLOW && (sas->reached_goal || iDistance > 0x400000))
+			} else if(item->ai_bits & GUARD || item->ai_bits & FOLLOW && (sas->reached_goal || iDistance > 0x400000)) {
 				item->goal_anim_state = 1;
-			else if(Targetable(item, &info)) {
-				if(info.distance >= 0x900000 && info.zone_number == info.enemy_zone)
+			} else if(Targetable(item, &info)) {
+				if(info.distance >= 0x900000 && info.zone_number == info.enemy_zone) {
 					item->goal_anim_state = 9;
-				else
+				} else {
 					item->goal_anim_state = 1;
+				}
 			} else if(sas->mood != BORED_MOOD) {
-				if(info.distance > 0x400000)
+				if(info.distance > 0x400000) {
 					item->goal_anim_state = 3;
-			} else if(info.ahead)
+				}
+			} else if(info.ahead) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
 		case 3:
 
-			if(info.ahead)
+			if(info.ahead) {
 				head = info.angle;
+			}
 
 			sas->maximum_turn = 1820;
 			tilt = angle >> 1;
@@ -356,13 +379,14 @@ void SasControl(short item_number) {
 				}
 			}
 
-			if(item->ai_bits & GUARD || item->ai_bits & FOLLOW && (sas->reached_goal || iDistance > 0x400000))
+			if(item->ai_bits & GUARD || item->ai_bits & FOLLOW && (sas->reached_goal || iDistance > 0x400000)) {
 				item->goal_anim_state = 2;
-			else if(sas->mood != ESCAPE_MOOD) {
-				if(Targetable(item, &info))
+			} else if(sas->mood != ESCAPE_MOOD) {
+				if(Targetable(item, &info)) {
 					item->goal_anim_state = 2;
-				else if(sas->mood == BORED_MOOD || sas->mood == STALK_MOOD && !(item->ai_bits & FOLLOW) && info.distance < 0x400000)
+				} else if(sas->mood == BORED_MOOD || sas->mood == STALK_MOOD && !(item->ai_bits & FOLLOW) && info.distance < 0x400000) {
 					item->goal_anim_state = 2;
+				}
 			}
 
 			break;
@@ -375,10 +399,12 @@ void SasControl(short item_number) {
 			if(item->ai_bits & GUARD) {
 				head = AIGuard(sas);
 
-				if(!(GetRandomControl() & 0xFF))
+				if(!(GetRandomControl() & 0xFF)) {
 					item->goal_anim_state = 1;
-			} else if(Targetable(item, &info) || sas->mood || !info.ahead || item->ai_bits & MODIFY || lara.vehicle)
+				}
+			} else if(Targetable(item, &info) || sas->mood || !info.ahead || item->ai_bits & MODIFY || lara.vehicle) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
@@ -386,10 +412,11 @@ void SasControl(short item_number) {
 		case 13:
 
 			if(item->goal_anim_state != 1 && item->goal_anim_state != 14 && (sas->mood == ESCAPE_MOOD || !Targetable(item, &info))) {
-				if(item->current_anim_state == 11)
+				if(item->current_anim_state == 11) {
 					item->goal_anim_state = 1;
-				else
+				} else {
 					item->goal_anim_state = 14;
+				}
 			}
 
 		case 5:
@@ -400,9 +427,9 @@ void SasControl(short item_number) {
 				torso_x = info.x_angle;
 			}
 
-			if(sas->flags)
+			if(sas->flags) {
 				sas->flags--;
-			else {
+			} else {
 				ShotLara(item, &info, &sas_fire, torso_y, 15);
 				sas->flags = 5;
 				item->fired_weapon = 3;
@@ -420,16 +447,18 @@ void SasControl(short item_number) {
 				torso_x = info.x_angle;
 
 				if(Targetable(item, &info)) {
-					if(item->current_anim_state == 8)
+					if(item->current_anim_state == 8) {
 						item->goal_anim_state = 5;
-					else if(item->current_anim_state == 12)
+					} else if(item->current_anim_state == 12) {
 						item->goal_anim_state = 13;
-					else if(GetRandomControl() & 1)
+					} else if(GetRandomControl() & 1) {
 						item->goal_anim_state = 11;
-					else
+					} else {
 						item->goal_anim_state = 15;
-				} else
+					}
+				} else {
 					item->goal_anim_state = 1;
+				}
 			}
 
 			break;
@@ -441,10 +470,11 @@ void SasControl(short item_number) {
 				torso_y = info.angle;
 				torso_x = info.x_angle;
 
-				if(Targetable(item, &info))
+				if(Targetable(item, &info)) {
 					item->goal_anim_state = 6;
-				else
+				} else {
 					item->goal_anim_state = 2;
+				}
 			}
 
 			break;
@@ -481,16 +511,18 @@ void SasControl(short item_number) {
 
 				SasFireGrenade(item, xrot, yrot);
 
-				if(Targetable(item, &info))
+				if(Targetable(item, &info)) {
 					item->goal_anim_state = 15;
+				}
 			}
 
 			break;
 
 		case 17:
 
-			if(!lara.blindTimer && !(GetRandomControl() & 0x7F))
+			if(!lara.blindTimer && !(GetRandomControl() & 0x7F)) {
 				item->goal_anim_state = 4;
+			}
 
 			break;
 		}

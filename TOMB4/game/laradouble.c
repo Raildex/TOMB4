@@ -18,11 +18,13 @@ void LaraDoubleControl(short item_number) {
 	item = GetItem(currentLevel, item_number);
 	SoundEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_DEFAULT);
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
-	if(item->hit_status)
+	if(item->hit_status) {
 		lara_item->hit_points += item->hit_points - 1000;
+	}
 
 	item->hit_points = 1000;
 	AnimateItem(item);

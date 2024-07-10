@@ -36,14 +36,15 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(!item->trigger_flags)
+	if(!item->trigger_flags) {
 		mesh = LARA_WATER_MESH;
-	else if(item->trigger_flags == 1)
+	} else if(item->trigger_flags == 1) {
 		mesh = LARA_PETROL_MESH;
-	else if(item->trigger_flags == 2)
+	} else if(item->trigger_flags == 2) {
 		mesh = LARA_DIRT_MESH;
-	else
+	} else {
 		return;
+	}
 
 	if((l->anim_number == ANIM_POURWATERSKIN || l->anim_number == ANIM_FILLSCALE) && !item->item_flags[0]) {
 		bounds = GetBoundsAccurate(item);
@@ -105,8 +106,9 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		item->item_flags[0] = 3;
 		item->flags |= IFL_CODEBITS;
 		item->status = ITEM_ACTIVE;
-	} else
+	} else {
 		ObjectCollisionNoBigPush(item_number, l, coll);
+	}
 }
 
 void InitialiseElementPuzzle(short item_number) {
@@ -114,14 +116,15 @@ void InitialiseElementPuzzle(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(!item->trigger_flags)
+	if(!item->trigger_flags) {
 		item->mesh_bits = 80;
-	else if(item->trigger_flags == 1)
+	} else if(item->trigger_flags == 1) {
 		item->mesh_bits = 65;
-	else if(item->trigger_flags == 2)
+	} else if(item->trigger_flags == 2) {
 		item->mesh_bits = 68;
-	else
+	} else {
 		item->mesh_bits = 0;
+	}
 }
 
 void ControlElementPuzzle(short item_number) {
@@ -133,22 +136,24 @@ void ControlElementPuzzle(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(!TriggerActive(item))
+	if(!TriggerActive(item)) {
 		return;
+	}
 
 	if(item->trigger_flags == 1) {
 		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
 		r = (GetRandomControl() & 0x3F) + 192;
 		g = (GetRandomControl() & 0x1F) + 96;
 
-		if(!item->item_flags[3])
+		if(!item->item_flags[3]) {
 			fade = 0;
-		else {
+		} else {
 			item->item_flags[3]--;
 			fade = 255 - GetRandomControl() % ((91 - item->item_flags[3]) << 2);
 
-			if(fade < 1)
+			if(fade < 1) {
 				fade = 1;
+			}
 
 			if(fade <= 255) {
 				r = (r * fade) >> 8;
@@ -159,8 +164,9 @@ void ControlElementPuzzle(short item_number) {
 		AddFire(item->pos.x_pos, item->pos.y_pos - 620, item->pos.z_pos, 1, item->room_number, fade);
 		TriggerDynamic(item->pos.x_pos, item->pos.y_pos - 768, item->pos.z_pos, 12, r, g, 0);
 	} else if(item->trigger_flags == 3) {
-		if(item->item_flags[1] > 90)
+		if(item->item_flags[1] > 90) {
 			SoundEffect(SFX_JOBY_WIND, &item->pos, SFX_DEFAULT);
+		}
 
 		if(item->item_flags[1] < 60) {
 			item->item_flags[1]++;
@@ -187,16 +193,18 @@ void ControlElementPuzzle(short item_number) {
 					if(item->item_flags[0] != 89) {
 						item2->item_flags[3] = 255 - GetRandomControl() % (item->item_flags[0] << 2);
 
-						if(item2->item_flags[3] < 2)
+						if(item2->item_flags[3] < 2) {
 							item2->item_flags[3] = 2;
-						else
+						} else {
 							continue;
+						}
 					}
 
 					RemoveActiveItem(itemNum);
 					item2->status = ITEM_INACTIVE;
-				} else if(item2->object_number == ELEMENT_PUZZLE && item2->trigger_flags == 1 && !item2->item_flags[3])
+				} else if(item2->object_number == ELEMENT_PUZZLE && item2->trigger_flags == 1 && !item2->item_flags[3]) {
 					item2->item_flags[3] = 90;
+				}
 			}
 		}
 	}

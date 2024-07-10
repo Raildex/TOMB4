@@ -193,13 +193,13 @@ void MoveCamera(GAME_VECTOR* ideal, long speed) {
 	height = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	ceiling = GetCeiling(floor, wx, wy, wz);
 
-	if(wy - 255 < ceiling && height < wy + 255 && ceiling < height && ceiling != NO_HEIGHT && height != NO_HEIGHT)
+	if(wy - 255 < ceiling && height < wy + 255 && ceiling < height && ceiling != NO_HEIGHT && height != NO_HEIGHT) {
 		camera.pos.pos.y = (height + ceiling) >> 1;
-	else if(height < wy + 255 && ceiling < height && ceiling != NO_HEIGHT && height != NO_HEIGHT)
+	} else if(height < wy + 255 && ceiling < height && ceiling != NO_HEIGHT && height != NO_HEIGHT) {
 		camera.pos.pos.y = height - 255;
-	else if(wy - 255 < ceiling && ceiling < height && ceiling != NO_HEIGHT && height != NO_HEIGHT)
+	} else if(wy - 255 < ceiling && ceiling < height && ceiling != NO_HEIGHT && height != NO_HEIGHT) {
 		camera.pos.pos.y = ceiling + 255;
-	else if(ceiling >= height || height == NO_HEIGHT || ceiling == NO_HEIGHT) {
+	} else if(ceiling >= height || height == NO_HEIGHT || ceiling == NO_HEIGHT) {
 		camera.pos.pos.x = ideal->pos.x;
 		camera.pos.pos.y = ideal->pos.y;
 		camera.pos.pos.z = ideal->pos.z;
@@ -266,9 +266,9 @@ long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push) {
 		if(y > h) {
 			hdiff = y - h;
 
-			if(hdiff < push)
+			if(hdiff < push) {
 				y = h;
-			else {
+			} else {
 				clipped = 1;
 				break;
 			}
@@ -277,9 +277,9 @@ long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push) {
 		if(y < c) {
 			cdiff = c - y;
 
-			if(cdiff < push)
+			if(cdiff < push) {
 				y = c;
-			else {
+			} else {
 				clipped = 1;
 				break;
 			}
@@ -322,12 +322,13 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 		h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		c = GetCeiling(floor, wx, wy, wz);
 
-		if(c > wy - 255 && h < wy + 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT)
+		if(c > wy - 255 && h < wy + 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT) {
 			wy = (h + c) >> 1;
-		else if(h < wy + 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT)
+		} else if(h < wy + 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT) {
 			wy = h - 255;
-		else if(c > wy - 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT)
+		} else if(c > wy - 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT) {
 			wy = c + 255;
+		}
 	}
 
 	room_number = ideal->room_number;
@@ -335,32 +336,36 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 	h = GetHeight(floor, wx - push, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx - push, wy, wz);
 
-	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c)
+	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c) {
 		wx = push + (wx & ~0x3FF);
+	}
 
 	room_number = ideal->room_number;
 	floor = GetFloor(wx, wy, wz - push, &room_number);
 	h = GetHeight(floor, wx, wy, wz - push, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz - push);
 
-	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c)
+	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c) {
 		wz = push + (wz & ~0x3FF);
+	}
 
 	room_number = ideal->room_number;
 	floor = GetFloor(wx + push, wy, wz, &room_number);
 	h = GetHeight(floor, wx + push, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx + push, wy, wz);
 
-	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c)
+	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c) {
 		wx = (wx | 0x3FF) - push;
+	}
 
 	room_number = ideal->room_number;
 	floor = GetFloor(wx, wy, wz + push, &room_number);
 	h = GetHeight(floor, wx, wy, wz + push, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz + push);
 
-	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c)
+	if(h < wy || h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy < c) {
 		wz = (wz | 0x3FF) - push;
+	}
 
 	if(!yfirst) {
 		room_number = ideal->room_number;
@@ -368,12 +373,13 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 		h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		c = GetCeiling(floor, wx, wy, wz);
 
-		if(c > wy - 255 && h < wy + 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT)
+		if(c > wy - 255 && h < wy + 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT) {
 			wy = (h + c) >> 1;
-		else if(h < wy + 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT)
+		} else if(h < wy + 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT) {
 			wy = h - 255;
-		else if(c > wy - 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT)
+		} else if(c > wy - 255 && c < h && c != NO_HEIGHT && h != NO_HEIGHT) {
 			wy = c + 255;
+		}
 	}
 
 	room_number = ideal->room_number;
@@ -381,8 +387,9 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
-	if(h < wy || wy < c || h == NO_HEIGHT || c == NO_HEIGHT || c >= h)
+	if(h < wy || wy < c || h == NO_HEIGHT || c == NO_HEIGHT || c >= h) {
 		return 1;
+	}
 
 	GetFloor(wx, wy, wz, &ideal->room_number);
 	ideal->pos.x = wx;
@@ -419,11 +426,13 @@ void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long bright
 
 			brightness -= 7;
 
-			if(brightness < 8)
+			if(brightness < 8) {
 				break;
+			}
 
-			if(falloff < 31)
+			if(falloff < 31) {
 				falloff += 2;
+			}
 
 			sx += dx;
 			sy += dy;
@@ -435,10 +444,11 @@ void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long bright
 			if(offs[j]) {
 				x = sx + (falloff * (phd_sin(offs[j] + yrot) / 4) >> 5);
 
-				if(offs[j] & 1)
+				if(offs[j] & 1) {
 					y = sy - (falloff << 7);
-				else
+				} else {
 					y = sy + (falloff << 7);
+				}
 
 				z = sz + (falloff * (phd_cos(offs[j] + yrot) / 4) >> 5);
 			} else {
@@ -452,8 +462,9 @@ void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long bright
 			h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			c = GetCeiling(floor, x, y, z);
 
-			if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h || y < c || h < y)
+			if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h || y < c || h < y) {
 				break;
+			}
 		}
 
 		if(j < 5) {
@@ -461,16 +472,19 @@ void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long bright
 			counter = 5;
 		}
 
-		if(counter)
+		if(counter) {
 			counter--;
+		}
 
 		brightness -= 7;
 
-		if(brightness < 8)
+		if(brightness < 8) {
 			break;
+		}
 
-		if(falloff < 31)
+		if(falloff < 31) {
 			falloff += 2;
+		}
 
 		sx += dx;
 		sy += dy;
@@ -503,8 +517,9 @@ void UpdateCameraElevation() {
 		pos.z = pos1.z - pos.z;
 		pos.x = pos1.x - pos.x;
 		camera.actual_angle = (short)(camera.target_angle + phd_atan(pos.z, pos.x));
-	} else
+	} else {
 		camera.actual_angle = lara_item->pos.y_rot + camera.target_angle;
+	}
 
 	camera.actual_elevation += (camera.target_elevation - camera.actual_elevation) >> 3;
 }
@@ -520,15 +535,17 @@ void ChaseCamera(ITEM_INFO* item) {
 	long distance, dx, dz, farthest, farthestnum, h, c, wx, wy, wz;
 	short angle, room_number;
 
-	if(!camera.target_elevation)
+	if(!camera.target_elevation) {
 		camera.target_elevation = -1820;
+	}
 
 	camera.target_elevation += item->pos.x_rot;
 	UpdateCameraElevation();
-	if(camera.target_elevation > 15470)
+	if(camera.target_elevation > 15470) {
 		camera.target_elevation = 15470;
-	else if(camera.target_elevation < -15470)
+	} else if(camera.target_elevation < -15470) {
 		camera.target_elevation = -15470;
+	}
 
 	distance = camera.target_distance * phd_cos(camera.target_elevation) >> W2V_SHIFT;
 	wx = camera.target.pos.x;
@@ -565,17 +582,19 @@ void ChaseCamera(ITEM_INFO* item) {
 		camera.target.room_number = last_target.room_number;
 	}
 
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 5; i++) {
 		ideals[i].pos.y = (camera.target_distance * phd_sin(camera.target_elevation) >> W2V_SHIFT) + camera.target.pos.y;
+	}
 
 	farthest = infinite_distance;
 	farthestnum = 0;
 
 	for(int i = 0; i < 5; i++) {
-		if(i)
+		if(i) {
 			angle = (i - 1) << 14;
-		else
+		} else {
 			angle = camera.target_angle + item->pos.y_rot;
+		}
 
 		ideals[i].pos.x = camera.target.pos.x - ((distance * phd_sin(angle)) >> W2V_SHIFT);
 		ideals[i].pos.z = camera.target.pos.z - ((distance * phd_cos(angle)) >> W2V_SHIFT);
@@ -632,8 +651,9 @@ void ChaseCamera(ITEM_INFO* item) {
 	ideal.room_number = ideals[farthestnum].room_number;
 	CameraCollisionBounds(&ideal, 384, 1);
 
-	if(camera.old_type == FIXED_CAMERA)
+	if(camera.old_type == FIXED_CAMERA) {
 		camera.speed = 1;
+	}
 
 	MoveCamera(&ideal, camera.speed);
 }
@@ -697,17 +717,19 @@ void CombatCamera(ITEM_INFO* item) {
 	camera.target_distance = 1536;
 	distance = 1536 * phd_cos(camera.target_elevation) >> W2V_SHIFT;
 
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 5; i++) {
 		ideals[i].pos.y = (1536 * phd_sin(camera.target_elevation) >> W2V_SHIFT) + camera.target.pos.y;
+	}
 
 	farthest = infinite_distance;
 	farthestnum = 0;
 
 	for(int i = 0; i < 5; i++) {
-		if(i)
+		if(i) {
 			angle = (i - 1) << 14;
-		else
+		} else {
 			angle = camera.target_angle;
+		}
 
 		ideals[i].pos.x = camera.target.pos.x - ((distance * phd_sin(angle)) >> W2V_SHIFT);
 		ideals[i].pos.z = camera.target.pos.z - ((distance * phd_cos(angle)) >> W2V_SHIFT);
@@ -769,8 +791,9 @@ void CombatCamera(ITEM_INFO* item) {
 	ideal.room_number = ideals[farthestnum].room_number;
 	CameraCollisionBounds(&ideal, 384, 1);
 
-	if(camera.old_type == FIXED_CAMERA)
+	if(camera.old_type == FIXED_CAMERA) {
 		camera.speed = 1;
+	}
 
 	MoveCamera(&ideal, camera.speed);
 }
@@ -795,15 +818,17 @@ void LookCamera(ITEM_INFO* item) {
 	lara.head_x_rot <<= 1;
 	lara.head_y_rot <<= 1;
 
-	if(lara.head_x_rot > 10010)
+	if(lara.head_x_rot > 10010) {
 		lara.head_x_rot = 10010;
-	else if(lara.head_x_rot < -13650)
+	} else if(lara.head_x_rot < -13650) {
 		lara.head_x_rot = -13650;
+	}
 
-	if(lara.head_y_rot < -14560)
+	if(lara.head_y_rot < -14560) {
 		lara.head_y_rot = -14560;
-	else if(lara.head_y_rot > 14560)
+	} else if(lara.head_y_rot > 14560) {
 		lara.head_y_rot = 14560;
+	}
 
 	pos1.x = 0;
 	pos1.y = 16;
@@ -853,8 +878,9 @@ void LookCamera(ITEM_INFO* item) {
 		h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 		c = GetCeiling(floor, wx, wy, wz);
 
-		if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy > h || wy < c)
+		if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h || wy > h || wy < c) {
 			break;
+		}
 
 		wz += dz;
 		wx += dx;
@@ -941,12 +967,13 @@ void LookCamera(ITEM_INFO* item) {
 	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
-	if(c > wy - 255 && h < wy + 255 && h > c && c != NO_HEIGHT && h != NO_HEIGHT)
+	if(c > wy - 255 && h < wy + 255 && h > c && c != NO_HEIGHT && h != NO_HEIGHT) {
 		camera.pos.pos.y = (h + c) >> 1;
-	else if(h < wy + 255 && h > c && c != NO_HEIGHT && h != NO_HEIGHT)
+	} else if(h < wy + 255 && h > c && c != NO_HEIGHT && h != NO_HEIGHT) {
 		camera.pos.pos.y = h - 255;
-	else if(c > wy - 255 && h > c && c != NO_HEIGHT && h != NO_HEIGHT)
+	} else if(c > wy - 255 && h > c && c != NO_HEIGHT && h != NO_HEIGHT) {
 		camera.pos.pos.y = c + 255;
+	}
 
 	wx = camera.pos.pos.x;
 	wy = camera.pos.pos.y;
@@ -956,8 +983,9 @@ void LookCamera(ITEM_INFO* item) {
 	h = GetHeight(floor, wx, wy, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	c = GetCeiling(floor, wx, wy, wz);
 
-	if(wy < c || wy > h || c >= h || h == NO_HEIGHT || c == NO_HEIGHT)
+	if(wy < c || wy > h || c >= h || h == NO_HEIGHT || c == NO_HEIGHT) {
 		mgLOS(&camera.target, &camera.pos, 0);
+	}
 
 	wx = camera.pos.pos.x;
 	wy = camera.pos.pos.y;
@@ -1022,8 +1050,9 @@ void FixedCamera() {
 	if(camera.timer) {
 		camera.timer--;
 
-		if(!camera.timer)
+		if(!camera.timer) {
 			camera.timer = -1;
+		}
 	}
 }
 
@@ -1039,9 +1068,9 @@ void BinocularCamera(ITEM_INFO* item) {
 	char Fire;
 
 	if(!LaserSight) {
-		if(inputBusy & IN_DRAW)
+		if(inputBusy & IN_DRAW) {
 			ExittingBinos = 1;
-		else if(ExittingBinos) {
+		} else if(ExittingBinos) {
 			ExittingBinos = 0;
 			BinocularRange = 0;
 			AlterFOV(14560);
@@ -1062,15 +1091,17 @@ void BinocularCamera(ITEM_INFO* item) {
 	hxrot = lara.head_x_rot << 1;
 	hyrot = lara.head_y_rot;
 
-	if(hxrot > 13650)
+	if(hxrot > 13650) {
 		hxrot = 13650;
-	else if(hxrot < -13650)
+	} else if(hxrot < -13650) {
 		hxrot = -13650;
+	}
 
-	if(hyrot > 14560)
+	if(hyrot > 14560) {
 		hyrot = 14560;
-	else if(hyrot < -14560)
+	} else if(hyrot < -14560) {
 		hyrot = -14560;
+	}
 
 	hyrot += lara_item->pos.y_rot;
 	pos1.x = lara_item->pos.x_pos;
@@ -1080,10 +1111,11 @@ void BinocularCamera(ITEM_INFO* item) {
 	floor = GetFloor(pos1.x, pos1.y, pos1.z, &room_number);
 	c = GetCeiling(floor, pos1.x, pos1.y, pos1.z);
 
-	if(c <= pos1.y - 768)
+	if(c <= pos1.y - 768) {
 		pos1.y -= 768;
-	else
+	} else {
 		pos1.y += 64;
+	}
 
 	speed = (20736 * phd_cos(hxrot)) >> W2V_SHIFT;
 	pos3.x = pos1.x + (phd_sin(hyrot) * speed >> W2V_SHIFT);
@@ -1140,15 +1172,17 @@ void BinocularCamera(ITEM_INFO* item) {
 
 	BinocStep = inputBusy & IN_WALK ? 32 : 64;
 
-	if(inputBusy & IN_SPRINT)
+	if(inputBusy & IN_SPRINT) {
 		BinocularRange -= BinocStep;
-	else if(inputBusy & IN_DUCK)
+	} else if(inputBusy & IN_DUCK) {
 		BinocularRange += BinocStep;
+	}
 
-	if(BinocularRange < 128)
+	if(BinocularRange < 128) {
 		BinocularRange = 128;
-	else if(BinocularRange > 1536)
+	} else if(BinocularRange > 1536) {
 		BinocularRange = 1536;
+	}
 
 	Soffset.x = camera.pos.pos.x;
 	Soffset.y = camera.pos.pos.y;
@@ -1166,22 +1200,26 @@ void BinocularCamera(ITEM_INFO* item) {
 			if(lara.gun_type == WEAPON_REVOLVER) {
 				WeaponDelay = 16;
 				savegame.Game.AmmoUsed++;
-			} else
+			} else {
 				WeaponDelay = 32;
+			}
 
-			if(ammo[0] != -1)
+			if(ammo[0] != -1) {
 				ammo[0]--;
-		} else
+			}
+		} else {
 			Fire = 0;
+		}
 
 		GetTargetOnLOS(&camera.pos, &camera.target, 1, Fire);
 	} else {
 		GetTargetOnLOS(&camera.pos, &camera.target, 0, 0);
 
-		if(inputBusy & IN_ACTION)
+		if(inputBusy & IN_ACTION) {
 			LaraTorch(&Soffset, &Eoffset, lara.head_y_rot, 192);
-		else
+		} else {
 			bLaraTorch = 0;
+		}
 	}
 }
 
@@ -1237,12 +1275,14 @@ void CalculateCamera() {
 		BinocularOn = 1;
 		BinocularCamera(lara_item);
 
-		if(BinocularRange)
+		if(BinocularRange) {
 			return;
+		}
 	}
 
-	if(BinocularOn == 1)
+	if(BinocularOn == 1) {
 		BinocularOn = -8;
+	}
 
 	old_cam.t.z = camera.target.pos.z;
 	old_cam.t.x = camera.target.pos.x;
@@ -1251,19 +1291,22 @@ void CalculateCamera() {
 	if(UseForcedFixedCamera) {
 		camera.type = FIXED_CAMERA;
 
-		if(camera.old_type == FIXED_CAMERA)
+		if(camera.old_type == FIXED_CAMERA) {
 			camera.speed = 1;
+		}
 	}
 
 	if(GetRoom(currentLevel, camera.pos.room_number)->flags & ROOM_UNDERWATER) {
 		SoundEffect(SFX_UNDERWATER, 0, SFX_ALWAYS);
 
-		if(!camera.underwater)
+		if(!camera.underwater) {
 			// empty func call here
 			camera.underwater = 1;
-	} else if(camera.underwater)
+		}
+	} else if(camera.underwater) {
 		// if unused var -> empty func call here
 		camera.underwater = 0;
+	}
 
 	if(camera.type == CINEMATIC_CAMERA) {
 		do_new_cutscene_camera();
@@ -1272,19 +1315,20 @@ void CalculateCamera() {
 
 	item = camera.item;
 
-	if(camera.item && (camera.type == FIXED_CAMERA || camera.type == HEAVY_CAMERA))
+	if(camera.item && (camera.type == FIXED_CAMERA || camera.type == HEAVY_CAMERA)) {
 		fixed_camera = 1;
-	else {
+	} else {
 		item = lara_item;
 		fixed_camera = 0;
 	}
 
 	bounds = GetBoundsAccurate(item);
 
-	if(fixed_camera)
+	if(fixed_camera) {
 		y = item->pos.y_pos + (bounds[2] + bounds[3]) / 2;
-	else
+	} else {
 		y = item->pos.y_pos + bounds[3] + ((3 * (bounds[2] - bounds[3])) >> 2);
+	}
 
 	if(camera.item && !fixed_camera) {
 		dx = camera.item->pos.x_pos - item->pos.x_pos;
@@ -1298,22 +1342,24 @@ void CalculateCamera() {
 		if(gotit > -9100 && gotit < 9100 && tilt > -15470 && tilt < 15470) {
 			change = gotit - lara.head_y_rot;
 
-			if(change > 728)
+			if(change > 728) {
 				lara.head_y_rot += 728;
-			else if(change < -728)
+			} else if(change < -728) {
 				lara.head_y_rot -= 728;
-			else
+			} else {
 				lara.head_y_rot = gotit;
+			}
 
 			lara.torso_y_rot = lara.head_y_rot;
 			change = tilt - lara.head_x_rot;
 
-			if(change > 728)
+			if(change > 728) {
 				lara.head_x_rot += 728;
-			else if(change < -728)
+			} else if(change < -728) {
 				lara.head_x_rot -= 728;
-			else
+			} else {
 				lara.head_x_rot = tilt;
+			}
 
 			lara.torso_x_rot = lara.head_x_rot;
 			camera.type = LOOK_CAMERA;
@@ -1350,8 +1396,9 @@ void CalculateCamera() {
 			camera.target.pos.x = item->pos.x_pos + (shift * phd_sin(item->pos.y_rot) >> W2V_SHIFT);
 			camera.target.pos.z = item->pos.z_pos + (shift * phd_cos(item->pos.y_rot) >> W2V_SHIFT);
 
-			if(item->object_number == LARA)
+			if(item->object_number == LARA) {
 				ConfirmCameraTargetPos();
+			}
 		}
 
 		if(fixed_camera != camera.fixed_camera) {
@@ -1365,8 +1412,9 @@ void CalculateCamera() {
 					camera.target.pos.x = last_target.pos.x + ((camera.target.pos.x - last_target.pos.x) >> 2);
 					camera.target.pos.y = last_target.pos.y + ((camera.target.pos.y - last_target.pos.y) >> 2);
 					camera.target.pos.z = last_target.pos.z + ((camera.target.pos.z - last_target.pos.z) >> 2);
-				} else
+				} else {
 					TargetSnaps = 0;
+				}
 			}
 		}
 
@@ -1378,10 +1426,11 @@ void CalculateCamera() {
 			camera.target.pos.z = last_target.pos.z;
 		}
 
-		if(camera.type != CHASE_CAMERA && camera.flags != 3)
+		if(camera.type != CHASE_CAMERA && camera.flags != 3) {
 			FixedCamera();
-		else
+		} else {
 			ChaseCamera(item);
+		}
 	} else {
 		if(camera.type == COMBAT_CAMERA) {
 			last_target.pos.x = camera.target.pos.x;
@@ -1402,10 +1451,11 @@ void CalculateCamera() {
 
 		camera.fixed_camera = 0;
 
-		if(camera.type == LOOK_CAMERA)
+		if(camera.type == LOOK_CAMERA) {
 			LookCamera(item);
-		else
+		} else {
 			CombatCamera(item);
+		}
 	}
 
 	camera.fixed_camera = fixed_camera;

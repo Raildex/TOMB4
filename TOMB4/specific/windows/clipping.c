@@ -29,8 +29,9 @@ long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out) {
 		inZ = f_mznear - pIn->sz;
 		lastZ = f_mznear - last->sz;
 
-		if(((*(long*)&lastZ) | (*(long*)&inZ)) >= 0)
+		if(((*(long*)&lastZ) | (*(long*)&inZ)) >= 0) {
 			continue;
+		}
 
 		if(((*(long*)&lastZ) ^ (*(long*)&inZ)) < 0) {
 			dz = inZ / (last->sz - pIn->sz);
@@ -97,8 +98,9 @@ long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out) {
 		}
 	}
 
-	if(nPoints < 3)
+	if(nPoints < 3) {
 		nPoints = 0;
+	}
 
 	return nPoints;
 }
@@ -155,8 +157,9 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 		sa2 = (float)(CLRA(v2->specular));
 
 		if(v1->sx < f_left) {
-			if(v2->sx < f_left)
+			if(v2->sx < f_left) {
 				continue;
+			}
 
 			clipper = (f_left - v2->sx) / (v1->sx - v2->sx);
 			VertClip(output[nPoints], v2, v1);
@@ -185,8 +188,9 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			output[nPoints].sy = clipper * (v1->sy - v2->sy) + v2->sy;
 			nPoints++;
 		} else if(v1->sx > f_right) {
-			if(v2->sx > f_right)
+			if(v2->sx > f_right) {
 				continue;
+			}
 
 			clipper = (f_right - v2->sx) / (v1->sx - v2->sx);
 			VertClip(output[nPoints], v2, v1);
@@ -284,8 +288,9 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 		}
 	}
 
-	if(nPoints < 3)
+	if(nPoints < 3) {
 		return 0;
+	}
 
 	n = nPoints;
 
@@ -323,8 +328,9 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 		sa2 = (float)(CLRA(v2->specular));
 
 		if(v1->sy < f_top) {
-			if(v2->sy < f_top)
+			if(v2->sy < f_top) {
 				continue;
+			}
 
 			clipper = (f_top - v2->sy) / (v1->sy - v2->sy);
 			VertClip(in[nPoints], v2, v1);
@@ -353,8 +359,9 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			in[nPoints].sy = f_top;
 			nPoints++;
 		} else if(v1->sy > f_bottom) {
-			if(v2->sy > f_bottom)
+			if(v2->sy > f_bottom) {
 				continue;
+			}
 
 			clipper = (f_bottom - v2->sy) / (v1->sy - v2->sy);
 			VertClip(in[nPoints], v2, v1);
@@ -451,8 +458,9 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 		}
 	}
 
-	if(nPoints < 3)
+	if(nPoints < 3) {
 		nPoints = 0;
+	}
 
 	return nPoints;
 }

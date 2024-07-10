@@ -96,11 +96,13 @@ void CreateSkinningData() {
 			meshpp++;
 
 			for(int j = 1; j < obj->nmeshes; j++, bone += 4, meshpp++) {
-				if(bone[0] & 1)
+				if(bone[0] & 1) {
 					PopXYZ();
+				}
 
-				if(bone[0] & 2)
+				if(bone[0] & 2) {
 					PushXYZ();
+				}
 
 				SkinXYZPtr->x += bone[1];
 				SkinXYZPtr->y += bone[2];
@@ -132,11 +134,13 @@ void CreateSkinningData() {
 			meshpp++;
 
 			for(int j = 1; j < obj->nmeshes; j++, bone += 4, meshpp++) {
-				if(bone[0] & 1)
+				if(bone[0] & 1) {
 					PopXYZ();
+				}
 
-				if(bone[0] & 2)
+				if(bone[0] & 2) {
 					PushXYZ();
+				}
 
 				SkinXYZPtr->x += bone[1];
 				SkinXYZPtr->y += bone[2];
@@ -167,11 +171,13 @@ void CreateSkinningData() {
 		jointMeshNum = i + 1;
 
 		for(int j = 1; j < obj->nmeshes; j++, bone += 4, meshpp++) {
-			if(*bone & 1)
+			if(*bone & 1) {
 				PopXYZ();
+			}
 
-			if(*bone & 2)
+			if(*bone & 2) {
 				PushXYZ();
+			}
 
 			SkinXYZPtr->x += bone[1];
 			SkinXYZPtr->y += bone[2];
@@ -191,8 +197,9 @@ void CreateSkinningData() {
 		jointVerts = jointMesh->nVerts & 0xFF;
 		laraVerts = aboveMesh->nVerts & 0xFF;
 
-		if(jointVerts > 0)
+		if(jointVerts > 0) {
 			memset(vertBuf, 0, jointVerts);
+		}
 
 		joint = &jointMesh->nNorms;
 
@@ -252,9 +259,9 @@ void CreateSkinningData() {
 		ScratchVertNums[SkinJoints[i][3]][belowVerts] = -1;
 		calcPointsCounter = 0;
 
-		if(vertCount == jointVerts)
+		if(vertCount == jointVerts) {
 			jointMesh->nVerts <<= 8;
-		else {
+		} else {
 			for(int j = 0; j < jointVerts; j++) {
 				if(!vertBuf[j]) {
 					PointsToCalc[jointMeshNum - 1][calcPointsCounter] = j;
@@ -282,8 +289,9 @@ void CreateSkinningData() {
 		ScratchVertNums[29][i] = HairScratchVertNums[1][i];
 		ScratchVertNums[35][i] = HairScratchVertNums[1][i];
 
-		if(HairSkinVertNums[0][i] == -1)
+		if(HairSkinVertNums[0][i] == -1) {
 			break;
+		}
 	}
 
 	for(int i = 0; i < 4; i += 2) {
@@ -297,8 +305,9 @@ void CreateSkinningData() {
 			SkinVertNums[i + 36][j] = HairSkinVertNums[4][j];
 			SkinVertNums[i + 37][j] = HairSkinVertNums[3][j];
 
-			if(HairSkinVertNums[2][j] == -1)
+			if(HairSkinVertNums[2][j] == -1) {
 				break;
+			}
 		}
 	}
 
@@ -332,17 +341,20 @@ void OptomiseSkinningData() {
 		numvertsj = JointMesh[5] & 0xFF;
 		numvertstocalc = JointMesh[5] & 0xFF;
 
-		if(!numvertstocalc)
+		if(!numvertstocalc) {
 			numvertstocalc = (unsigned short)JointMesh[5] >> 8;
+		}
 
 		lp = 0;
 
-		while(PointsToCalc[c][lp] != 255)
+		while(PointsToCalc[c][lp] != 255) {
 			lp++;
+		}
 
 		if(numvertsj) {
-			for(lp1 = 0; lp1 < lp; lp1++)
+			for(lp1 = 0; lp1 < lp; lp1++) {
 				RemapTable[PointsToCalc[c][lp1]] = (unsigned char)lp1;
+			}
 
 			padval = lp;
 

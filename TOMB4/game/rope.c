@@ -26,8 +26,9 @@ long nRope = 0;
 
 void DrawRopeList() {
 	for(int i = 0; i < nRope; i++) {
-		if(RopeList[i].Active)
+		if(RopeList[i].Active) {
 			DrawRope(&RopeList[i]);
+		}
 	}
 }
 
@@ -62,8 +63,9 @@ PHD_VECTOR* Normalise(PHD_VECTOR* v) {
 	b = v->y >> 16;
 	c = v->z >> 16;
 
-	if(!a && !b && !c)
+	if(!a && !b && !c) {
 		return v;
+	}
 
 	d = abs(SQUARE(a) + SQUARE(b) + SQUARE(c));
 	e = phd_sqrt(d);
@@ -101,8 +103,9 @@ void phd_GetMatrixAngles(long* m, short* dest) {
 
 	pitch = (short)phd_atan(phd_sqrt(SQUARE(m[M22]) + SQUARE(m[M02])), m[M12]);
 
-	if(m[M12] >= 0 && pitch > 0 || m[M12] < 0 && pitch < 0)
+	if(m[M12] >= 0 && pitch > 0 || m[M12] < 0 && pitch < 0) {
 		pitch = -pitch;
+	}
 
 	yaw = (short)phd_atan(m[M22], m[M02]);
 	sy = phd_sin(yaw);
@@ -363,8 +366,9 @@ void CalculateRope(ROPE_STRUCT* Rope) {
 		Pendulum->Velocity.z -= Pendulum->Velocity.z >> 22;
 	}
 
-	for(n = Pendulum->node; n < 23; n++)
+	for(n = Pendulum->node; n < 23; n++) {
 		ModelRigid(&Rope->Segment[n], &Rope->Segment[n + 1], &Rope->Velocity[n], &Rope->Velocity[n + 1], Rope->SegmentLength);
+	}
 
 	for(n = 0; n < 24; n++) {
 		Rope->Segment[n].x += Rope->Velocity[n].x;
@@ -442,8 +446,9 @@ long RopeNodeCollision(ROPE_STRUCT* rope, long x, long y, long z, long rad) {
 			ry = y - ((rope->MeshSegment[i + 1].y + rope->MeshSegment[i].y) >> 17) - rope->Position.y;
 			rz = z - ((rope->MeshSegment[i + 1].z + rope->MeshSegment[i].z) >> 17) - rope->Position.z;
 
-			if(SQUARE(rx) + SQUARE(ry) + SQUARE(rz) < SQUARE(rad + 64))
+			if(SQUARE(rx) + SQUARE(ry) + SQUARE(rz) < SQUARE(rad + 64)) {
 				return i;
+			}
 		}
 	}
 
@@ -458,8 +463,9 @@ void RopeControl(short item_num) {
 	if(TriggerActive(GetItem(currentLevel, item_num))) {
 		currope->Active = 1;
 		CalculateRope(currope);
-	} else
+	} else {
 		currope->Active = 0;
+	}
 }
 
 void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {

@@ -136,8 +136,9 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 	memcpy(lvl->meshes, *data, size * sizeof(short*));
 	*data += size * sizeof(short*);
 
-	for(int i = 0; i < size; i++)
+	for(int i = 0; i < size; i++) {
 		lvl->meshes[i] = lvl->mesh_base + (long)(uintptr_t)(lvl->meshes[i]) / 2;
+	}
 
 	num_meshes = size;
 
@@ -177,8 +178,9 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 	memcpy(lvl->frames, *data, sizeof(short) * size);
 	*data += sizeof(short) * size;
 
-	for(int i = 0; i < num_anims; i++)
+	for(int i = 0; i < num_anims; i++) {
 		lvl->anims[i].frame_ptr = (short*)((long)lvl->anims[i].frame_ptr + (long)lvl->frames);
+	}
 
 	num = *(long*)*data;
 	*data += sizeof(long);
@@ -335,8 +337,9 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 
 	lvl->rooms = (ROOM_INFO*)calloc(lvl->nRooms, sizeof(ROOM_INFO));
 
-	if(!lvl->rooms)
+	if(!lvl->rooms) {
 		return 0;
+	}
 
 	for(int i = 0; i < lvl->nRooms; i++) {
 		r = GetRoom(currentLevel, i);
@@ -369,8 +372,9 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 			r->door[0] = (short)nDoors;
 			memcpy(r->door + 1, *data, 16 * nDoors * sizeof(short));
 			*data += 16 * nDoors * sizeof(short);
-		} else
+		} else {
 			r->door = 0;
+		}
 
 		r->x_size = *(short*)*data;
 		*data += sizeof(short);
@@ -394,8 +398,9 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 			r->light = (LIGHTINFO*)calloc(size, sizeof(LIGHTINFO));
 			memcpy(r->light, *data, size * sizeof(LIGHTINFO));
 			*data += size * sizeof(LIGHTINFO);
-		} else
+		} else {
 			r->light = 0;
+		}
 
 		r->num_meshes = *(short*)*data;
 		*data += sizeof(short);
@@ -406,10 +411,12 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 			memcpy(r->mesh, *data, size * sizeof(MESH_INFO));
 			*data += size * sizeof(MESH_INFO);
 
-			for(int j = 0; j < r->num_meshes; j++)
+			for(int j = 0; j < r->num_meshes; j++) {
 				r->mesh[j].Flags = 1;
-		} else
+			}
+		} else {
 			r->mesh = 0;
+		}
 
 		r->flipped_room = *(short*)*data;
 		*data += sizeof(short);
@@ -513,8 +520,9 @@ char LoadItems(char** data, LEVEL_INFO* lvl) {
 	num_items = *(long*)*data;
 	*data += 4;
 
-	if(!num_items)
+	if(!num_items) {
 		return 1;
+	}
 
 	lvl->level_items = num_items;
 	InitialiseItemArray((short)lvl->itemsCapacity, lvl->level_items);
@@ -550,8 +558,9 @@ char LoadItems(char** data, LEVEL_INFO* lvl) {
 		*data += sizeof(short);
 	}
 
-	for(int i = 0; i < GetNumLevelItems(lvl); i++)
+	for(int i = 0; i < GetNumLevelItems(lvl); i++) {
 		InitialiseItem(i);
+	}
 
 	for(int i = 0; i < GetNumRooms(currentLevel); i++) {
 		r = GetRoom(currentLevel, i);
@@ -625,18 +634,20 @@ char LoadBoxes(char** data, LEVEL_INFO* lvl) {
 	for(int i = 0; i < lvl->num_boxes; i++) {
 		box = &lvl->boxes[i];
 
-		if(box->overlap_index & 0x8000)
+		if(box->overlap_index & 0x8000) {
 			box->overlap_index |= 0x4000;
-		else if(gfLevelFlags & GF_TRAIN && box->height > -256)
+		} else if(gfLevelFlags & GF_TRAIN && box->height > -256) {
 			box->overlap_index |= 0xC000;
+		}
 	}
 
 	return 1;
 }
 
 ITEM_INFO* GetItem(LEVEL_INFO* lvl, long item) {
-	if(item == NO_ITEM)
+	if(item == NO_ITEM) {
 		return NULL;
+	}
 	return lvl->items + item;
 }
 
@@ -992,8 +1003,9 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 						char b = *(source + (x * 3) + (y * 1536) + 2);
 						char a = -1;
 
-						if(!r && !b && !g)
+						if(!r && !b && !g) {
 							a = 0;
+						}
 
 						long c = RGBA(r, g, b, a);
 						*d++ = c;
@@ -1104,8 +1116,9 @@ char LoadSprites(char** data, LEVEL_INFO* lvl) {
 	num_slots = *(long*)*data;
 	*data += sizeof(long);
 
-	if(num_slots <= 0)
+	if(num_slots <= 0) {
 		return 1;
+	}
 
 	for(int i = 0; i < num_slots; i++) {
 		slot = *(long*)*data;

@@ -206,8 +206,9 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item) {
 		s = lara_item->room_number;
 		y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &s), pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(y == NO_HEIGHT)
+		if(y == NO_HEIGHT) {
 			y = item->floor;
+		}
 	} else {
 		pos.x = item->pos.x_pos;
 		y = item->floor;
@@ -233,15 +234,17 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item) {
 		s = item->room_number;
 		cp[i].y = (float)GetHeight(GetFloor((long)cp[i].x, item->floor, (long)cp[i].z, &s), (long)cp[i].x, item->floor, (long)cp[i].z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(fabsf(cp[i].y - item->floor) > POINT_HEIGHT_CORRECTION)
+		if(fabsf(cp[i].y - item->floor) > POINT_HEIGHT_CORRECTION) {
 			cp[i].y = (float)item->floor;
+		}
 	}
 
 	s = item->room_number;
 	ccp.y = (float)GetHeight(GetFloor((long)ccp.x, item->floor, (long)ccp.z, &s), (long)ccp.x, item->floor, (long)ccp.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(fabsf(ccp.y - item->floor) > POINT_HEIGHT_CORRECTION)
+	if(fabsf(ccp.y - item->floor) > POINT_HEIGHT_CORRECTION) {
 		ccp.y = (float)item->floor;
+	}
 
 	phd_PushMatrix();
 	phd_TranslateAbs(pos.x, y, pos.z);
@@ -358,8 +361,9 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item) {
 		s = lara_item->room_number;
 		pos.y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &s), pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(pos.y == NO_HEIGHT)
+		if(pos.y == NO_HEIGHT) {
 			pos.y = item->floor;
+		}
 	} else {
 		pos.x = item->pos.x_pos;
 		pos.y = item->floor;
@@ -387,8 +391,9 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item) {
 		s = item->room_number;
 		*hY = GetHeight(GetFloor(hXZ[0], item->floor, hXZ[1], &s), hXZ[0], item->floor, hXZ[1], &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(abs(*hY - item->floor) > POINT_HEIGHT_CORRECTION)
+		if(abs(*hY - item->floor) > POINT_HEIGHT_CORRECTION) {
 			*hY = item->floor;
+		}
 	}
 
 	phd_PushMatrix();
@@ -512,8 +517,9 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item) {
 		s = lara_item->room_number;
 		y = GetHeight(GetFloor(pos.x, pos.y, pos.z, &s), pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(y == NO_HEIGHT)
+		if(y == NO_HEIGHT) {
 			y = item->floor;
+		}
 	} else {
 		pos.x = item->pos.x_pos;
 		y = item->floor;
@@ -542,8 +548,9 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item) {
 		s = item->room_number;
 		*hY = GetHeight(GetFloor(hXZ[0], item->floor, hXZ[1], &s), hXZ[0], item->floor, hXZ[1], &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(abs(*hY - item->floor) > POINT_HEIGHT_CORRECTION)
+		if(abs(*hY - item->floor) > POINT_HEIGHT_CORRECTION) {
 			*hY = item->floor;
+		}
 	}
 
 	phd_PushMatrix();
@@ -631,8 +638,9 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 	if(sptr->Flags & 8) {
 		z1 = zptr[0];
 
-		if(z1 <= 0)
+		if(z1 <= 0) {
 			return;
+		}
 
 		if(z1 >= 0x5000) {
 			sptr->On = 0;
@@ -644,15 +652,17 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 			s1 = ((phd_persp * sptr->Size) << sptr->Scalar) / z1;
 			s2 = ((phd_persp * sptr->Size) << sptr->Scalar) / z1;
 
-			if(s1 > scale)
+			if(s1 > scale) {
 				s1 = scale;
-			else if(s1 < smallest_size)
+			} else if(s1 < smallest_size) {
 				s1 = smallest_size;
+			}
 
-			if(s2 > scale)
+			if(s2 > scale) {
 				s2 = scale;
-			else if(s2 < smallest_size)
+			} else if(s2 < smallest_size) {
 				s2 = smallest_size;
+			}
 		} else {
 			s1 = sptr->Size;
 			s2 = sptr->Size;
@@ -714,12 +724,13 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 			v[2].specular = 0xFF000000;
 			v[3].specular = 0xFF000000;
 
-			if(sptr->TransType == 3)
+			if(sptr->TransType == 3) {
 				tex.drawtype = 5;
-			else if(sptr->TransType)
+			} else if(sptr->TransType) {
 				tex.drawtype = 2;
-			else
+			} else {
 				tex.drawtype = 1;
+			}
 
 			tex.tpage = sprite->tpage;
 			tex.u1 = sprite->x1;
@@ -788,8 +799,9 @@ void DrawBikeSpeedo(long ux, long uy, long vel, long maxVel, long turboVel, long
 	if(rVel) {
 		rVel += (((rVel - 4096) >> 5) * phd_sin((GlobalCounter & 7) << (W2V_SHIFT - 1))) >> W2V_SHIFT;
 
-		if(rVel < 0)
+		if(rVel < 0) {
 			rVel = 0;
+		}
 	}
 
 	rMVel = maxVel >> 1;
@@ -909,8 +921,9 @@ void DrawJeepSpeedo(long ux, long uy, long vel, long maxVel, long turboVel, long
 	if(rVel) {
 		rVel += (((rVel - 4096) >> 5) * phd_sin((GlobalCounter & 7) << (W2V_SHIFT - 1))) >> W2V_SHIFT;
 
-		if(rVel < 0)
+		if(rVel < 0) {
 			rVel = 0;
+		}
 	}
 
 	rMVel = maxVel >> 1;
@@ -994,8 +1007,9 @@ void DrawDebris() {
 	for(int i = 0; i < 256; i++) {
 		dptr = &debris[i];
 
-		if(!dptr->On)
+		if(!dptr->On) {
 			continue;
+		}
 
 		phd_PushMatrix();
 		phd_TranslateAbs(dptr->x, dptr->y, dptr->z);
@@ -1031,14 +1045,17 @@ void DrawDebris() {
 		g = ((c * dptr->g) >> 8) + CLRG(dptr->ambient);
 		b = ((c * dptr->b) >> 8) + CLRB(dptr->ambient);
 
-		if(r > 255)
+		if(r > 255) {
 			r = 255;
+		}
 
-		if(g > 255)
+		if(g > 255) {
 			g = 255;
+		}
 
-		if(b > 255)
+		if(b > 255) {
 			b = 255;
+		}
 
 		c = RGBONLY(r, g, b);
 		CalcColorSplit(c, &v[0].color);
@@ -1048,14 +1065,17 @@ void DrawDebris() {
 		g = ((c * dptr->g) >> 8) + CLRG(dptr->ambient);
 		b = ((c * dptr->b) >> 8) + CLRB(dptr->ambient);
 
-		if(r > 255)
+		if(r > 255) {
 			r = 255;
+		}
 
-		if(g > 255)
+		if(g > 255) {
 			g = 255;
+		}
 
-		if(b > 255)
+		if(b > 255) {
 			b = 255;
+		}
 
 		c = RGBONLY(r, g, b);
 		CalcColorSplit(c, &v[1].color);
@@ -1065,14 +1085,17 @@ void DrawDebris() {
 		g = ((c * dptr->g) >> 8) + CLRG(dptr->ambient);
 		b = ((c * dptr->b) >> 8) + CLRB(dptr->ambient);
 
-		if(r > 255)
+		if(r > 255) {
 			r = 255;
+		}
 
-		if(g > 255)
+		if(g > 255) {
 			g = 255;
+		}
 
-		if(b > 255)
+		if(b > 255) {
 			b = 255;
+		}
 
 		c = RGBONLY(r, g, b);
 		CalcColorSplit(c, &v[2].color);
@@ -1087,13 +1110,15 @@ void DrawDebris() {
 		tex = GetTextInfo(currentLevel, (uintptr_t)dptr->TextInfo & 0x7FFF);
 		drawbak = tex->drawtype;
 
-		if(dptr->flags & 1)
+		if(dptr->flags & 1) {
 			tex->drawtype = 2;
+		}
 
-		if(!tex->drawtype)
+		if(!tex->drawtype) {
 			AddTriZBuffer(v, 0, 1, 2, tex, 1);
-		else if(tex->drawtype <= 2)
+		} else if(tex->drawtype <= 2) {
 			AddTriSorted(v, 0, 1, 2, tex, 1);
+		}
 
 		tex->drawtype = drawbak;
 	}
@@ -1286,9 +1311,9 @@ void ClipCheckPoint(_D3DTLVERTEX* v, float x, float y, float z, short* clip) {
 	v->sz = z;
 	clipdistance = 0;
 
-	if(v->sz < f_mznear)
+	if(v->sz < f_mznear) {
 		clipdistance = -128;
-	else {
+	} else {
 		perspz = f_mpersp / v->sz;
 
 		if(v->sz > FogEnd) {
@@ -1300,15 +1325,17 @@ void ClipCheckPoint(_D3DTLVERTEX* v, float x, float y, float z, short* clip) {
 		v->sy = perspz * v->tv + f_centery;
 		v->rhw = perspz * f_moneopersp;
 
-		if(v->sx < phd_winxmin)
+		if(v->sx < phd_winxmin) {
 			clipdistance++;
-		else if(phd_winxmax < v->sx)
+		} else if(phd_winxmax < v->sx) {
 			clipdistance += 2;
+		}
 
-		if(v->sy < phd_winymin)
+		if(v->sy < phd_winymin) {
 			clipdistance += 4;
-		else if(v->sy > phd_winymax)
+		} else if(v->sy > phd_winymax) {
 			clipdistance += 8;
+		}
 	}
 
 	clip[0] = clipdistance;
@@ -1442,15 +1469,17 @@ void setXY4(_D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y
 	v->sz = (float)z;
 	v->rhw = f_moneopersp * zv;
 
-	if(phd_winxmin > v->sx)
+	if(phd_winxmin > v->sx) {
 		clip_distance = 1;
-	else if(phd_winxmax < v->sx)
+	} else if(phd_winxmax < v->sx) {
 		clip_distance = 2;
+	}
 
-	if(phd_winymin > v->sy)
+	if(phd_winymin > v->sy) {
 		clip_distance += 4;
-	else if(phd_winymax < v->sy)
+	} else if(phd_winymax < v->sy) {
 		clip_distance += 8;
+	}
 
 	clip[0] = clip_distance;
 	v++;
@@ -1460,15 +1489,17 @@ void setXY4(_D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y
 	v->sz = (float)z;
 	v->rhw = f_moneopersp * zv;
 
-	if(phd_winxmin > v->sx)
+	if(phd_winxmin > v->sx) {
 		clip_distance = 1;
-	else if(phd_winxmax < v->sx)
+	} else if(phd_winxmax < v->sx) {
 		clip_distance = 2;
+	}
 
-	if(phd_winymin > v->sy)
+	if(phd_winymin > v->sy) {
 		clip_distance += 4;
-	else if(phd_winymax < v->sy)
+	} else if(phd_winymax < v->sy) {
 		clip_distance += 8;
+	}
 
 	clip[1] = clip_distance;
 	v++;
@@ -1478,15 +1509,17 @@ void setXY4(_D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y
 	v->sz = (float)z;
 	v->rhw = f_moneopersp * zv;
 
-	if(phd_winxmin > v->sx)
+	if(phd_winxmin > v->sx) {
 		clip_distance = 1;
-	else if(phd_winxmax < v->sx)
+	} else if(phd_winxmax < v->sx) {
 		clip_distance = 2;
+	}
 
-	if(phd_winymin > v->sy)
+	if(phd_winymin > v->sy) {
 		clip_distance += 4;
-	else if(phd_winymax < v->sy)
+	} else if(phd_winymax < v->sy) {
 		clip_distance += 8;
+	}
 
 	clip[2] = clip_distance;
 	v++;
@@ -1496,15 +1529,17 @@ void setXY4(_D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y
 	v->sz = (float)z;
 	v->rhw = f_moneopersp * zv;
 
-	if(phd_winxmin > v->sx)
+	if(phd_winxmin > v->sx) {
 		clip_distance = 1;
-	else if(phd_winxmax < v->sx)
+	} else if(phd_winxmax < v->sx) {
 		clip_distance = 2;
+	}
 
-	if(phd_winymin > v->sy)
+	if(phd_winymin > v->sy) {
 		clip_distance += 4;
-	else if(phd_winymax < v->sy)
+	} else if(phd_winymax < v->sy) {
 		clip_distance += 8;
+	}
 
 	clip[3] = clip_distance;
 }
@@ -1520,15 +1555,17 @@ void setXY3(_D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y
 	v->sz = (float)z;
 	v->rhw = f_moneopersp * zv;
 
-	if(phd_winxmin > v->sx)
+	if(phd_winxmin > v->sx) {
 		clip_distance = 1;
-	else if(phd_winxmax < v->sx)
+	} else if(phd_winxmax < v->sx) {
 		clip_distance = 2;
+	}
 
-	if(phd_winymin > v->sy)
+	if(phd_winymin > v->sy) {
 		clip_distance += 4;
-	else if(phd_winymax < v->sy)
+	} else if(phd_winymax < v->sy) {
 		clip_distance += 8;
+	}
 
 	clip[0] = clip_distance;
 	v++;
@@ -1538,15 +1575,17 @@ void setXY3(_D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y
 	v->sz = (float)z;
 	v->rhw = f_moneopersp * zv;
 
-	if(phd_winxmin > v->sx)
+	if(phd_winxmin > v->sx) {
 		clip_distance = 1;
-	else if(phd_winxmax < v->sx)
+	} else if(phd_winxmax < v->sx) {
 		clip_distance = 2;
+	}
 
-	if(phd_winymin > v->sy)
+	if(phd_winymin > v->sy) {
 		clip_distance += 4;
-	else if(phd_winymax < v->sy)
+	} else if(phd_winymax < v->sy) {
 		clip_distance += 8;
+	}
 
 	clip[1] = clip_distance;
 	v++;
@@ -1556,15 +1595,17 @@ void setXY3(_D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y
 	v->sz = (float)z;
 	v->rhw = f_moneopersp * zv;
 
-	if(phd_winxmin > v->sx)
+	if(phd_winxmin > v->sx) {
 		clip_distance = 1;
-	else if(phd_winxmax < v->sx)
+	} else if(phd_winxmax < v->sx) {
 		clip_distance = 2;
+	}
 
-	if(phd_winymin > v->sy)
+	if(phd_winymin > v->sy) {
 		clip_distance += 4;
-	else if(phd_winymax < v->sy)
+	} else if(phd_winymax < v->sy) {
 		clip_distance += 8;
+	}
 
 	clip[2] = clip_distance;
 }
@@ -1578,9 +1619,9 @@ void setXYZ4(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 	v->tv = (float)y1;
 	v->sz = (float)z1;
 
-	if(v->sz < f_mznear)
+	if(v->sz < f_mznear) {
 		clip_distance = -128;
-	else {
+	} else {
 		zv = f_mpersp / v->sz;
 
 		if(v->sz > FogEnd) {
@@ -1592,15 +1633,17 @@ void setXYZ4(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 		v->sy = zv * v->tv + f_centery;
 		v->rhw = f_moneopersp * zv;
 
-		if(phd_winxmin > v->sx)
+		if(phd_winxmin > v->sx) {
 			clip_distance++;
-		else if(phd_winxmax < v->sx)
+		} else if(phd_winxmax < v->sx) {
 			clip_distance += 2;
+		}
 
-		if(phd_winymin > v->sy)
+		if(phd_winymin > v->sy) {
 			clip_distance += 4;
-		else if(phd_winymax < v->sy)
+		} else if(phd_winymax < v->sy) {
 			clip_distance += 8;
+		}
 	}
 
 	v++;
@@ -1610,9 +1653,9 @@ void setXYZ4(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 	v->tv = (float)y2;
 	v->sz = (float)z2;
 
-	if(v->sz < f_mznear)
+	if(v->sz < f_mznear) {
 		clip_distance = -128;
-	else {
+	} else {
 		zv = f_mpersp / v->sz;
 
 		if(v->sz > FogEnd) {
@@ -1624,15 +1667,17 @@ void setXYZ4(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 		v->sy = zv * v->tv + f_centery;
 		v->rhw = f_moneopersp * zv;
 
-		if(phd_winxmin > v->sx)
+		if(phd_winxmin > v->sx) {
 			clip_distance++;
-		else if(phd_winxmax < v->sx)
+		} else if(phd_winxmax < v->sx) {
 			clip_distance += 2;
+		}
 
-		if(phd_winymin > v->sy)
+		if(phd_winymin > v->sy) {
 			clip_distance += 4;
-		else if(phd_winymax < v->sy)
+		} else if(phd_winymax < v->sy) {
 			clip_distance += 8;
+		}
 	}
 
 	v++;
@@ -1642,9 +1687,9 @@ void setXYZ4(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 	v->tv = (float)y3;
 	v->sz = (float)z3;
 
-	if(v->sz < f_mznear)
+	if(v->sz < f_mznear) {
 		clip_distance = -128;
-	else {
+	} else {
 		zv = f_mpersp / v->sz;
 
 		if(v->sz > FogEnd) {
@@ -1656,15 +1701,17 @@ void setXYZ4(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 		v->sy = zv * v->tv + f_centery;
 		v->rhw = f_moneopersp * zv;
 
-		if(phd_winxmin > v->sx)
+		if(phd_winxmin > v->sx) {
 			clip_distance++;
-		else if(phd_winxmax < v->sx)
+		} else if(phd_winxmax < v->sx) {
 			clip_distance += 2;
+		}
 
-		if(phd_winymin > v->sy)
+		if(phd_winymin > v->sy) {
 			clip_distance += 4;
-		else if(phd_winymax < v->sy)
+		} else if(phd_winymax < v->sy) {
 			clip_distance += 8;
+		}
 	}
 
 	v++;
@@ -1674,9 +1721,9 @@ void setXYZ4(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 	v->tv = (float)y4;
 	v->sz = (float)z4;
 
-	if(v->sz < f_mznear)
+	if(v->sz < f_mznear) {
 		clip_distance = -128;
-	else {
+	} else {
 		zv = f_mpersp / v->sz;
 
 		if(v->sz > FogEnd) {
@@ -1688,15 +1735,17 @@ void setXYZ4(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 		v->sy = zv * v->tv + f_centery;
 		v->rhw = f_moneopersp * zv;
 
-		if(phd_winxmin > v->sx)
+		if(phd_winxmin > v->sx) {
 			clip_distance++;
-		else if(phd_winxmax < v->sx)
+		} else if(phd_winxmax < v->sx) {
 			clip_distance += 2;
+		}
 
-		if(phd_winymin > v->sy)
+		if(phd_winymin > v->sy) {
 			clip_distance += 4;
-		else if(phd_winymax < v->sy)
+		} else if(phd_winymax < v->sy) {
 			clip_distance += 8;
+		}
 	}
 
 	clip[3] = clip_distance;
@@ -1711,9 +1760,9 @@ void setXYZ3(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 	v->tv = (float)y1;
 	v->sz = (float)z1;
 
-	if(v->sz < f_mznear)
+	if(v->sz < f_mznear) {
 		clip_distance = -128;
-	else {
+	} else {
 		zv = f_mpersp / v->sz;
 
 		if(v->sz > FogEnd) {
@@ -1725,15 +1774,17 @@ void setXYZ3(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 		v->sy = zv * v->tv + f_centery;
 		v->rhw = f_moneopersp * zv;
 
-		if(phd_winxmin > v->sx)
+		if(phd_winxmin > v->sx) {
 			clip_distance++;
-		else if(phd_winxmax < v->sx)
+		} else if(phd_winxmax < v->sx) {
 			clip_distance += 2;
+		}
 
-		if(phd_winymin > v->sy)
+		if(phd_winymin > v->sy) {
 			clip_distance += 4;
-		else if(phd_winymax < v->sy)
+		} else if(phd_winymax < v->sy) {
 			clip_distance += 8;
+		}
 	}
 
 	v++;
@@ -1743,9 +1794,9 @@ void setXYZ3(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 	v->tv = (float)y2;
 	v->sz = (float)z2;
 
-	if(v->sz < f_mznear)
+	if(v->sz < f_mznear) {
 		clip_distance = -128;
-	else {
+	} else {
 		zv = f_mpersp / v->sz;
 
 		if(v->sz > FogEnd) {
@@ -1757,15 +1808,17 @@ void setXYZ3(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 		v->sy = zv * v->tv + f_centery;
 		v->rhw = f_moneopersp * zv;
 
-		if(phd_winxmin > v->sx)
+		if(phd_winxmin > v->sx) {
 			clip_distance++;
-		else if(phd_winxmax < v->sx)
+		} else if(phd_winxmax < v->sx) {
 			clip_distance += 2;
+		}
 
-		if(phd_winymin > v->sy)
+		if(phd_winymin > v->sy) {
 			clip_distance += 4;
-		else if(phd_winymax < v->sy)
+		} else if(phd_winymax < v->sy) {
 			clip_distance += 8;
+		}
 	}
 
 	v++;
@@ -1775,9 +1828,9 @@ void setXYZ3(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 	v->tv = (float)y3;
 	v->sz = (float)z3;
 
-	if(v->sz < f_mznear)
+	if(v->sz < f_mznear) {
 		clip_distance = -128;
-	else {
+	} else {
 		zv = f_mpersp / v->sz;
 
 		if(v->sz > FogEnd) {
@@ -1789,15 +1842,17 @@ void setXYZ3(_D3DTLVERTEX* v, long x1, long y1, long z1, long x2, long y2, long 
 		v->sy = zv * v->tv + f_centery;
 		v->rhw = f_moneopersp * zv;
 
-		if(phd_winxmin > v->sx)
+		if(phd_winxmin > v->sx) {
 			clip_distance++;
-		else if(phd_winxmax < v->sx)
+		} else if(phd_winxmax < v->sx) {
 			clip_distance += 2;
+		}
 
-		if(phd_winymin > v->sy)
+		if(phd_winymin > v->sy) {
 			clip_distance += 4;
-		else if(phd_winymax < v->sy)
+		} else if(phd_winymax < v->sy) {
 			clip_distance += 8;
+		}
 	}
 
 	clip[2] = clip_distance;
@@ -1876,10 +1931,11 @@ void DrawSprite(long x, long y, long slot, long col, long size, long z) {
 
 	s = (long)((float)(phd_winwidth / 640.0F) * (size << 1));
 
-	if(z)
+	if(z) {
 		setXY4(v, x - s, y - s, x + s, y - s, x - s, y + s, x + s, y + s, (long)(z + f_mznear), clipflags);
-	else
+	} else {
 		setXY4(v, x - s, y - s, x + s, y - s, x - s, y + s, x + s, y + s, (long)f_mzfar, clipflags);
+	}
 
 	sprite = GetSpriteInfo(currentLevel, slot + GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index);
 	v[0].specular = 0xFF000000;
@@ -2025,16 +2081,18 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 		dy = abs(pos.y - lara_item->pos.y_pos);
 		dz = abs(pos.z - lara_item->pos.z_pos);
 
-		if(dx > 0x8000 || dy > 0x8000 || dz > 0x8000)
+		if(dx > 0x8000 || dy > 0x8000 || dz > 0x8000) {
 			return;
+		}
 
 		r = 255;
 		g = 255;
 		b = 255;
 		rn = lfobj->room_number;
 	} else {
-		if(GetRoom(currentLevel, camera.pos.room_number)->flags & ROOM_NO_LENSFLARE)
+		if(GetRoom(currentLevel, camera.pos.room_number)->flags & ROOM_NO_LENSFLARE) {
 			return;
+		}
 
 		r = (unsigned char)gfLensFlareColour.r;
 		g = (unsigned char)gfLensFlareColour.g;
@@ -2068,8 +2126,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 			IsRoomOutside(pos.x, pos.y, pos.z);
 			rn = IsRoomOutsideNo;
 
-			if(rn != 255)
+			if(rn != 255) {
 				break;
+			}
 
 			pos.x -= dx;
 			pos.y -= dy;
@@ -2090,8 +2149,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 		}
 	}
 
-	if(!los && lfobj) // can't see object, don't bother
+	if(!los && lfobj) { // can't see object, don't bother
 		return;
+	}
 
 	vec = (long*)&tsv_buffer[0];
 	XY = (long*)&tsv_buffer[32];
@@ -2130,8 +2190,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 	phd_PopMatrix();
 	num = 0;
 
-	if(lfobj)
+	if(lfobj) {
 		num += 6;
+	}
 
 	if(Z[0] > 0) {
 		dx = XY[0] - phd_centerx;
@@ -2158,8 +2219,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 					g2 = dz * flare_table[num + 1] / 640;
 					b2 = dz * flare_table[num + 2] / 640;
 				} else {
-					if(lfobj)
+					if(lfobj) {
 						continue;
+					}
 
 					r2 = flare_table[0] + (GetRandomDraw() & 8);
 					g2 = flare_table[1];
@@ -2176,8 +2238,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 					DrawSprite(pos.x, pos.y, flare_table[num + 5], RGBONLY(r2, g2, b2), flare_table[num + 3] << 1, num);
 				}
 
-				if(!los)
+				if(!los) {
 					return;
+				}
 
 				num += 6;
 			}
@@ -2191,8 +2254,9 @@ void InitTarget_2() {
 
 	obj = GetObjectInfo(currentLevel, TARGET_GRAPHICS);
 
-	if(!obj->loaded)
+	if(!obj->loaded) {
 		return;
+	}
 
 	targetMeshP = (MESH_DATA*)GetMesh(currentLevel, obj->mesh_index);
 	IDirect3DVertexBuffer_Lock(targetMeshP->SourceVB, DDLOCK_READONLY, (void**)&v, 0);
@@ -2215,8 +2279,9 @@ void InitBinoculars() {
 
 	obj = GetObjectInfo(currentLevel, BINOCULAR_GRAPHICS);
 
-	if(!obj->loaded)
+	if(!obj->loaded) {
 		return;
+	}
 
 	binocsMeshP = (MESH_DATA*)GetMesh(currentLevel, obj->mesh_index);
 	IDirect3DVertexBuffer_Lock(binocsMeshP->SourceVB, DDLOCK_READONLY, (void**)&v, 0);
@@ -2246,10 +2311,11 @@ void DrawBinoculars() {
 
 	vtx = MyVertexBuffer;
 
-	if(LaserSight)
+	if(LaserSight) {
 		mesh = targetMeshP;
-	else
+	} else {
 		mesh = binocsMeshP;
+	}
 
 	IDirect3DVertexBuffer_Lock(mesh->SourceVB, DDLOCK_READONLY, (void**)&v, 0);
 	clip = clipflags;
@@ -2260,15 +2326,17 @@ void DrawBinoculars() {
 		vtx[i].sx = (vtx[i].sx * (float)(phd_winxmax / 512.0F)) + f_centerx;
 		vtx[i].sy = (vtx[i].sy * (float)(phd_winymax / 240.0F)) + f_centery;
 
-		if(vtx[i].sx < f_left)
+		if(vtx[i].sx < f_left) {
 			clipdistance = 1;
-		else if(vtx[i].sx > f_right)
+		} else if(vtx[i].sx > f_right) {
 			clipdistance = 2;
+		}
 
-		if(vtx[i].sy < f_top)
+		if(vtx[i].sy < f_top) {
 			clipdistance += 4;
-		else if(vtx[i].sy > f_bottom)
+		} else if(vtx[i].sy > f_bottom) {
 			clipdistance += 8;
+		}
 
 		*clip++ = clipdistance;
 	}
@@ -2364,14 +2432,15 @@ void DrawWraithTrail(ITEM_INFO* item) {
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
 	for(int i = 0; i < 5; i++) {
-		if(!i)
+		if(!i) {
 			phd_RotY(-1092);
-		else if(i == 2)
+		} else if(i == 2) {
 			phd_RotY(1092);
-		else if(i == 3)
+		} else if(i == 3) {
 			phd_RotZ(-1092);
-		else if(i == 4)
+		} else if(i == 4) {
 			phd_RotZ(1092);
+		}
 
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
@@ -2390,18 +2459,20 @@ void DrawWraithTrail(ITEM_INFO* item) {
 			XY[1] = (long)(pos.y * perspz + f_centery);
 			Z[0] = (long)pos.z;
 
-			if(!j || j == 7)
+			if(!j || j == 7) {
 				Z[1] = 0;
-			else
+			} else {
 				Z[1] = RGBONLY(wraith->r, wraith->g, wraith->b);
+			}
 		}
 
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
 
 		for(int j = 0; j < 7; j++, XY += 2, Z += 2) {
-			if(Z[0] <= f_mznear || Z[0] >= 20480)
+			if(Z[0] <= f_mznear || Z[0] >= 20480) {
 				continue;
+			}
 
 			if(Z[0] > 12288) {
 				r = ((Z[1] & 0xFF) * (12288 - Z[0])) >> 13;
@@ -2466,8 +2537,9 @@ void DrawDrips() {
 	for(int i = 0; i < nDrips; i++) {
 		drip = &Drips[i];
 
-		if(!drip->On)
+		if(!drip->On) {
 			continue;
+		}
 
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
@@ -2476,8 +2548,9 @@ void DrawDrips() {
 		pos[1] = drip->pos.y - lara_item->pos.y_pos;
 		pos[2] = drip->pos.z - lara_item->pos.z_pos;
 
-		if(pos[0] < -20480 || pos[0] > 20480 || pos[1] < -20480 || pos[1] > 20480 || pos[2] < -20480 || pos[2] > 20480)
+		if(pos[0] < -20480 || pos[0] > 20480 || pos[1] < -20480 || pos[1] > 20480 || pos[2] < -20480 || pos[2] > 20480) {
 			continue;
+		}
 
 		vec.x = pos[0] * mMXPtr[M00] + pos[1] * mMXPtr[M01] + pos[2] * mMXPtr[M02] + mMXPtr[M03];
 		vec.y = pos[0] * mMXPtr[M10] + pos[1] * mMXPtr[M11] + pos[2] * mMXPtr[M12] + mMXPtr[M13];
@@ -2504,8 +2577,9 @@ void DrawDrips() {
 		XY[3] = (long)(vec.y * perspz + f_centery);
 		Z[1] = (long)vec.z;
 
-		if(!Z[0])
+		if(!Z[0]) {
 			continue;
+		}
 
 		if(Z[0] > 20480) {
 			drip->On = 0;
@@ -2616,8 +2690,9 @@ void DrawBubbles() {
 			continue;
 		}
 
-		if(size < 4)
+		if(size < 4) {
 			size = 4;
+		}
 
 		size >>= 1;
 
@@ -2679,8 +2754,9 @@ void DrawShockwaves() {
 	for(int i = 0; i < nShockWaves; i++) {
 		wave = &ShockWaves[i];
 
-		if(!wave->life)
+		if(!wave->life) {
 			continue;
+		}
 
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
@@ -2875,8 +2951,9 @@ void DrawTrainFloorStrip(long x, long z, TEXTURESTRUCT* tex, long y_and_flags) {
 			z3 = Z[6];
 			z4 = Z[8];
 
-			if(!(z1 | z2 | z3 | z4))
+			if(!(z1 | z2 | z3 | z4)) {
 				continue;
+			}
 
 			x1 = XY[0];
 			y1 = XY[1];
@@ -2887,12 +2964,13 @@ void DrawTrainFloorStrip(long x, long z, TEXTURESTRUCT* tex, long y_and_flags) {
 			x4 = XY[16];
 			y4 = XY[17];
 
-			if(j < 7)
+			if(j < 7) {
 				spec = (j + 1) * 0x101010;
-			else if(j >= 33)
+			} else if(j >= 33) {
 				spec = (40 - j) * 0x101010;
-			else
+			} else {
 				spec = 0x808080;
+			}
 
 			setXYZ4(v, x1, y1, z1, x2, y2, z2, x4, y4, z4, x3, y3, z3, clipflags);
 			spec = ((spec & 0xFF) - 1) << 25;
@@ -2933,8 +3011,9 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 	for(int i = 0; i < nSplashes; i++) {
 		splash = &splashes[i];
 
-		if(!(splash->flags & 1))
+		if(!(splash->flags & 1)) {
 			continue;
+		}
 
 		phd_PushMatrix();
 		phd_TranslateAbs(splash->pos.x, splash->pos.y, splash->pos.z);
@@ -2972,10 +3051,11 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 		Z = (long*)&tsv_buffer[512];
 
 		for(int j = 0; j < 3; j++) {
-			if(j == 2 || (!j && splash->flags & 4) || (j == 1 && splash->flags & 8))
+			if(j == 2 || (!j && splash->flags & 4) || (j == 1 && splash->flags & 8)) {
 				sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 4 + ((wibble >> 4) & 3));
-			else
+			} else {
 				sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 8);
+			}
 
 			links = SplashLinks;
 			linkNum = j << 5;
@@ -3007,14 +3087,17 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 				g = splash->life << 1;
 				b = splash->life << 1;
 
-				if(r > 255)
+				if(r > 255) {
 					r = 255;
+				}
 
-				if(g > 255)
+				if(g > 255) {
 					g = 255;
+				}
 
-				if(b > 255)
+				if(b > 255) {
 					b = 255;
+				}
 
 				c0 = RGBA(r, g, b, 0xFF);
 
@@ -3022,14 +3105,17 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 				g = (splash->life - (splash->life >> 2)) << 1;
 				b = (splash->life - (splash->life >> 2)) << 1;
 
-				if(r > 255)
+				if(r > 255) {
 					r = 255;
+				}
 
-				if(g > 255)
+				if(g > 255) {
 					g = 255;
+				}
 
-				if(b > 255)
+				if(b > 255) {
 					b = 255;
+				}
 
 				c1 = RGBA(r, g, b, 0xFF);
 
@@ -3060,8 +3146,9 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 	for(int i = 0; i < nRipples; i++) {
 		ripple = &ripples[i];
 
-		if(!(ripple->flags & 1))
+		if(!(ripple->flags & 1)) {
 			continue;
+		}
 
 		phd_PushMatrix();
 		phd_TranslateAbs(ripple->x, ripple->y, ripple->z);
@@ -3106,10 +3193,11 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
 
-		if(ripple->flags & 0x20)
+		if(ripple->flags & 0x20) {
 			sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index);
-		else
+		} else {
 			sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 9);
+		}
 
 		x1 = *XY++;
 		y1 = *XY++;
@@ -3167,14 +3255,17 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 			}
 		}
 
-		if(r > 255)
+		if(r > 255) {
 			r = 255;
+		}
 
-		if(g > 255)
+		if(g > 255) {
 			g = 255;
+		}
 
-		if(b > 255)
+		if(b > 255) {
 			b = 255;
+		}
 
 		c0 = RGBA(r, g, b, 0xFF);
 
@@ -3204,14 +3295,17 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 bool ClipLine(long* x1, long* y1, long z1, long* x2, long* y2, long z2, long xMin, long yMin, long w, long h) {
 	float clip;
 
-	if(z1 < 20 || z2 < 20)
+	if(z1 < 20 || z2 < 20) {
 		return 0;
+	}
 
-	if((*x1 < xMin && *x2 < xMin) || (*y1 < yMin && *y2 < yMin))
+	if((*x1 < xMin && *x2 < xMin) || (*y1 < yMin && *y2 < yMin)) {
 		return 0;
+	}
 
-	if((*x1 > w && *x2 > w) || (*y1 > h && *y2 > h))
+	if((*x1 > w && *x2 > w) || (*y1 > h && *y2 > h)) {
 		return 0;
+	}
 
 	if(*x1 > w) {
 		clip = ((float)w - *x2) / (float)(*x1 - *x2);
@@ -3287,15 +3381,17 @@ void S_DrawFireSparks(long size, long life) {
 	for(int i = 0; i < nFireSparks; i++) {
 		sptr = &fire_spark[i];
 
-		if(!sptr->On)
+		if(!sptr->On) {
 			continue;
+		}
 
 		dx = sptr->x >> (2 - size);
 		dy = sptr->y >> (2 - size);
 		dz = sptr->z >> (2 - size);
 
-		if(dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000)
+		if(dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000) {
 			continue;
+		}
 
 		offsets[0] = dx;
 		offsets[1] = dy;
@@ -3309,20 +3405,23 @@ void S_DrawFireSparks(long size, long life) {
 		Z[0] = (long)pos.z;
 
 
-		if(Z[0] <= 0 || Z[0] >= 0x5000)
+		if(Z[0] <= 0 || Z[0] >= 0x5000) {
 			continue;
+		}
 
 		newSize = (((phd_persp * sptr->Size) << 2) / Z[0]) >> (2 - size);
 
-		if(newSize > (sptr->Size << 2))
+		if(newSize > (sptr->Size << 2)) {
 			newSize = (sptr->Size << 2);
-		else if(newSize < 4)
+		} else if(newSize < 4) {
 			newSize = 4;
+		}
 
 		newSize >>= 1;
 
-		if(XY[0] + newSize < phd_winxmin || XY[0] - newSize >= phd_winxmax || XY[1] + newSize < phd_winymin || XY[1] - newSize >= phd_winymax)
+		if(XY[0] + newSize < phd_winxmin || XY[0] - newSize >= phd_winxmax || XY[1] + newSize < phd_winymin || XY[1] - newSize >= phd_winymax) {
 			continue;
+		}
 
 		if(sptr->Flags & 0x10) {
 			ang = sptr->RotAng << 1;
@@ -3421,8 +3520,9 @@ void DrawRope(ROPE_STRUCT* rope) {
 	if(rope->Coords[0][2]) {
 		w = 0x60000 * phd_persp / rope->Coords[0][2];
 
-		if(w < 1)
+		if(w < 1) {
 			w = 1;
+		}
 	}
 
 	w <<= (W2V_SHIFT + 2);
@@ -3456,8 +3556,9 @@ void DrawRope(ROPE_STRUCT* rope) {
 		if(rope->Coords[i][2]) {
 			w = 0x60000 * phd_persp / rope->Coords[i][2];
 
-			if(w < 3)
+			if(w < 3) {
 				w = 3;
+			}
 		}
 
 		w <<= (W2V_SHIFT + 2);
@@ -3478,8 +3579,9 @@ void DrawRope(ROPE_STRUCT* rope) {
 
 			spec = 255;
 
-			if(z1 > 0x3000)
+			if(z1 > 0x3000) {
 				spec = (255 * (0x5000 - z1)) >> 13;
+			}
 
 			v[0].specular = spec << 24;
 			v[1].specular = spec << 24;
@@ -3535,15 +3637,17 @@ void DrawBlood() {
 	for(int i = 0; i < nBlood; i++) {
 		bptr = &blood[i];
 
-		if(!bptr->On)
+		if(!bptr->On) {
 			continue;
+		}
 
 		dx = bptr->x - lara_item->pos.x_pos;
 		dy = bptr->y - lara_item->pos.y_pos;
 		dz = bptr->z - lara_item->pos.z_pos;
 
-		if(dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000)
+		if(dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000) {
 			continue;
+		}
 
 		offsets[0] = dx;
 		offsets[1] = dy;
@@ -3556,15 +3660,17 @@ void DrawBlood() {
 		XY[1] = (long)(pos.y * perspz + f_centery);
 		Z[0] = (long)pos.z;
 
-		if(Z[0] <= 0 || Z[0] >= 0x5000)
+		if(Z[0] <= 0 || Z[0] >= 0x5000) {
 			continue;
+		}
 
 		size = ((phd_persp * bptr->Size) << 1) / Z[0];
 
-		if(size > (bptr->Size << 1))
+		if(size > (bptr->Size << 1)) {
 			size = (bptr->Size << 1);
-		else if(size < 4)
+		} else if(size < 4) {
 			size = 4;
+		}
 
 		size <<= 1;
 		ang = bptr->RotAng << 1;
@@ -3580,9 +3686,9 @@ void DrawBlood() {
 		y4 = XY[1] - c + s;
 		setXY4(v, x1, y1, x2, y2, x3, y3, x4, y4, Z[0], clipflags);
 
-		if(Z[0] <= 0x3000)
+		if(Z[0] <= 0x3000) {
 			col = RGBA(bptr->Shade, 0, 0, 0xFF);
-		else {
+		} else {
 			r = ((0x5000 - Z[0]) * bptr->Shade) >> 13;
 			col = RGBA(r, 0, 0, 0xFF);
 		}
@@ -3641,21 +3747,24 @@ void S_DrawSmokeSparks() {
 			continue;
 		}
 
-		if(sptr->mirror && !is_mirror)
+		if(sptr->mirror && !is_mirror) {
 			is_mirror = 1;
-		else
+		} else {
 			is_mirror = 0;
+		}
 
 		dx = sptr->pos.x - lara_item->pos.x_pos;
 		dy = sptr->pos.y - lara_item->pos.y_pos;
 		dz = sptr->pos.z - lara_item->pos.z_pos;
 
-		if(is_mirror)
+		if(is_mirror) {
 			dz = 2 * gfMirrorZPlane - lara_item->pos.z_pos - sptr->pos.z;
+		}
 
 		if(dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000) {
-			if(!is_mirror)
+			if(!is_mirror) {
 				continue;
+			}
 
 			continue;
 		}
@@ -3672,24 +3781,27 @@ void S_DrawSmokeSparks() {
 		Z[0] = (long)pos.z;
 
 		if(Z[0] <= 0 || Z[0] >= 0x5000) {
-			if(!is_mirror)
+			if(!is_mirror) {
 				continue;
+			}
 
 			continue;
 		}
 
 		size = ((phd_persp * sptr->Size) << 2) / Z[0];
 
-		if(size > (sptr->Size << 2))
+		if(size > (sptr->Size << 2)) {
 			size = (sptr->Size << 2);
-		else if(size < 4)
+		} else if(size < 4) {
 			size = 4;
+		}
 
 		size >>= 1;
 
 		if(XY[0] + size < phd_winxmin || XY[0] - size >= phd_winxmax || XY[1] + size < phd_winymin || XY[1] - size >= phd_winymax) {
-			if(!is_mirror)
+			if(!is_mirror) {
 				continue;
+			}
 
 			continue;
 		}
@@ -3723,10 +3835,11 @@ void S_DrawSmokeSparks() {
 
 		sprite = GetSpriteInfo(currentLevel, sptr->Def);
 
-		if(Z[0] <= 0x3000)
+		if(Z[0] <= 0x3000) {
 			col = sptr->Shade;
-		else
+		} else {
 			col = ((0x5000 - Z[0]) * sptr->Shade) >> 13;
+		}
 
 		v[0].color = RGBA(col, col, col, 0xFF);
 		v[1].color = RGBA(col, col, col, 0xFF);
@@ -3749,8 +3862,9 @@ void S_DrawSmokeSparks() {
 		tex.v4 = sprite->y2;
 		AddQuadSorted(v, 0, 1, 2, 3, &tex, 0);
 
-		if(!is_mirror)
+		if(!is_mirror) {
 			continue;
+		}
 	}
 
 	phd_PopMatrix();
@@ -3793,14 +3907,16 @@ void DoUwEffect() {
 			p->life = (GetRandomDraw() & 7) + 16;
 			p->xvel = GetRandomDraw() & 3;
 
-			if(p->xvel == 2)
+			if(p->xvel == 2) {
 				p->xvel = -1;
+			}
 
 			p->yvel = ((GetRandomDraw() & 7) + 8) << 3;
 			p->zvel = GetRandomDraw() & 3;
 
-			if(p->zvel == 2)
+			if(p->zvel == 2) {
 				p->zvel = -1;
+			}
 		}
 
 		p->pos.x += p->xvel;
@@ -3814,8 +3930,9 @@ void DoUwEffect() {
 
 		p->life--;
 
-		if((p->yvel & 7) < 7)
+		if((p->yvel & 7) < 7) {
 			p->yvel++;
+		}
 	}
 
 	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 10);
@@ -3828,8 +3945,9 @@ void DoUwEffect() {
 	for(int i = 0; i < 256; i++) {
 		p = &uwdust[i];
 
-		if(!p->pos.x)
+		if(!p->pos.x) {
 			continue;
+		}
 
 		x = p->pos.x - lara_item->pos.x_pos;
 		y = p->pos.y - lara_item->pos.y_pos;
@@ -3846,32 +3964,37 @@ void DoUwEffect() {
 		Z[0] = (long)pos.z;
 
 		if(Z[0] < 32) {
-			if(p->life > 16)
+			if(p->life > 16) {
 				p->life = 16;
+			}
 
 			continue;
 		}
 
-		if(XY[0] < phd_winxmin || XY[0] > phd_winxmax || XY[1] < phd_winymin || XY[1] > phd_winymax)
+		if(XY[0] < phd_winxmin || XY[0] > phd_winxmax || XY[1] < phd_winymin || XY[1] > phd_winymax) {
 			continue;
+		}
 
 		size = (phd_persp * (p->yvel >> 3)) / (Z[0] >> 4);
 
-		if(size < 1)
+		if(size < 1) {
 			size = 6;
-		else if(size > 12)
+		} else if(size > 12) {
 			size = 12;
+		}
 
 		size = (0x5556 * size) >> 16;
 
-		if(phd_winwidth > 512)
+		if(phd_winwidth > 512) {
 			size = (long)((float)(phd_winwidth / 512.0F) * (float)size);
+		}
 
 		if((p->yvel & 7) == 7) {
-			if(p->life > 18)
+			if(p->life > 18) {
 				col = 0xFF404040;
-			else
+			} else {
 				col = (p->life | ((p->life | ((p->life | 0xFFFFFFC0) << 8)) << 8)) << 2; // decipher me
+			}
 		} else {
 			yv = (p->yvel & 7) << 2;
 			col = (yv | ((yv | ((yv | 0xFFFFFF80) << 8)) << 8)) << 1; // decipher me
@@ -3922,8 +4045,9 @@ void DrawLightning() {
 	for(int i = 0; i < nLightnings; i++) {
 		pL = &Lightning[i];
 
-		if(!pL->Life)
+		if(!pL->Life) {
 			continue;
+		}
 
 		vec = (PHD_VECTOR*)&tsv_buffer[512];
 		memcpy(&vec[0], &pL->Point[0], sizeof(PHD_VECTOR));
@@ -3941,8 +4065,9 @@ void DrawLightning() {
 		Z = (long*)&tsv_buffer[2048];
 		CalcLightningSpline(vec, offsets, pL);
 
-		if(vec[0].x > 0x6000 || vec[0].y > 0x6000 || vec[0].z > 0x6000)
+		if(vec[0].x > 0x6000 || vec[0].y > 0x6000 || vec[0].z > 0x6000) {
 			continue;
+		}
 
 		for(int j = 0; j < pL->Segments; j++) {
 			p1.x = offsets[0].x * mMXPtr[M00] + offsets[0].y * mMXPtr[M01] + offsets[0].z * mMXPtr[M02] + mMXPtr[M03];
@@ -3978,13 +4103,15 @@ void DrawLightning() {
 		Z = (long*)&tsv_buffer[2048];
 
 		for(int j = 0; j < 3 * pL->Segments - 1; j++) {
-			if(pL->Life < 16)
+			if(pL->Life < 16) {
 				c = pL->Life << 2;
-			else
+			} else {
 				c = 64;
+			}
 
-			if(Z[0] > 0x3000)
+			if(Z[0] > 0x3000) {
 				c = (c * (0x5000 - *Z)) >> 13;
+			}
 
 			c = RGBA(c, c, c, 66);
 
@@ -4021,13 +4148,15 @@ void DrawLightning() {
 
 				AddLineSorted(&v[0], &v[1], 6);
 
-				if(Z[0] > 0x4000)
+				if(Z[0] > 0x4000) {
 					xsize = 1;
-				else
+				} else {
 					xsize = ((0x4000 - Z[0]) * pL->Size) >> 16;
+				}
 
-				if(xsize < 4)
+				if(xsize < 4) {
 					xsize = 4;
+				}
 
 				if(pL->Life < 16) {
 					r = (pL->Life * pL->r) >> 4;

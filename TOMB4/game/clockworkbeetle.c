@@ -44,10 +44,11 @@ ITEM_INFO* TriggerClockworkBeetle(long flag) {
 			item->pos.x_rot = 0;
 			item->pos.y_rot = lara_item->pos.y_rot;
 
-			if(lara.beetle_uses)
+			if(lara.beetle_uses) {
 				item->item_flags[0] = lara.OnBeetleFloor;
-			else
+			} else {
 				item->item_flags[0] = 0;
+			}
 
 			item->speed = 0;
 			AddActiveItem(item_number);
@@ -64,17 +65,19 @@ ITEM_INFO* TriggerClockworkBeetle(long flag) {
 						if(dx > -1024 && dx < 1024 && dz > -1024 && dz < 1024 && dy > -1024 && dy < 1024) {
 							item->item_flags[1] = item2->pos.y_rot + 0x8000;
 
-							if(item2->item_flags[0])
+							if(item2->item_flags[0]) {
 								item->item_flags[0] = 0;
-							else
+							} else {
 								item2->item_flags[0] = 1;
+							}
 						}
 					}
 				}
 			}
 
-			if(!item->item_flags[0])
+			if(!item->item_flags[0]) {
 				item->item_flags[3] = 150;
+			}
 
 			return item;
 		}
@@ -144,18 +147,20 @@ void ControlClockworkBeetle(short item_number) {
 	if(item->pos.y_pos > h) {
 		item->pos.y_pos = h;
 
-		if(item->fallspeed <= 32)
+		if(item->fallspeed <= 32) {
 			item->fallspeed = 0;
-		else
+		} else {
 			item->fallspeed = -item->fallspeed >> 1;
+		}
 
 		bounce = 1;
 	}
 
 	TestTriggers(trigger_index, 0, 0);
 
-	if(room_number != item->room_number)
+	if(room_number != item->room_number) {
 		ItemNewRoom(item_number, room_number);
+	}
 
 	if(item->item_flags[0]) {
 		item->pos.z_rot = (0x1000 * phd_sin(0x1000 * (GlobalCounter & 15))) >> W2V_SHIFT;
@@ -173,16 +178,18 @@ void ControlClockworkBeetle(short item_number) {
 				angle = (short)phd_atan(z, x);
 				rotY = angle - item->pos.y_rot;
 
-				if(abs(rotY) > 0x8000)
+				if(abs(rotY) > 0x8000) {
 					rotY = item->pos.y_rot - angle;
+				}
 
 				if(abs(rotY) < 256) {
 					item->pos.y_rot = angle;
 					item->item_flags[2] = 1;
-				} else if(rotY < 0)
+				} else if(rotY < 0) {
 					item->pos.y_rot -= 256;
-				else
+				} else {
 					item->pos.y_rot += 256;
+				}
 			}
 
 			break;
@@ -196,9 +203,9 @@ void ControlClockworkBeetle(short item_number) {
 				item->pos.x_pos = (item->pos.x_pos & -512) | 512;
 				item->pos.z_pos = (item->pos.z_pos & -512) | 512;
 
-				if(item->item_flags[2] == 1)
+				if(item->item_flags[2] == 1) {
 					item->item_flags[2] = 2;
-				else {
+				} else {
 					lara.beetle_uses--;
 					item->item_flags[2] = 5;
 
@@ -210,8 +217,9 @@ void ControlClockworkBeetle(short item_number) {
 							dy = item->pos.y_pos - item2->pos.y_pos;
 							dz = item->pos.z_pos - item2->pos.z_pos;
 
-							if(dx > -1024 && dx < 1024 && dz > -1024 && dz < 1024 && dy > -1024 && dy < 1024)
+							if(dx > -1024 && dx < 1024 && dz > -1024 && dz < 1024 && dy > -1024 && dy < 1024) {
 								item2->item_flags[0] = 1;
+							}
 						}
 					}
 				}
@@ -220,15 +228,18 @@ void ControlClockworkBeetle(short item_number) {
 				item->pos.y_rot = angle;
 
 				if(SQUARE(x) + SQUARE(z) >= 0x19000) {
-					if(item->speed < 32)
+					if(item->speed < 32) {
 						item->speed++;
+					}
 				} else if(item->speed > 4) {
-					if(item->item_flags[2] == 4)
+					if(item->item_flags[2] == 4) {
 						item->speed -= 2;
-					else
+					} else {
 						item->speed--;
-				} else if(item->speed < 4)
+					}
+				} else if(item->speed < 4) {
 					item->speed++;
+				}
 
 				item->pos.x_pos += item->speed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 				item->pos.z_pos += item->speed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
@@ -239,59 +250,66 @@ void ControlClockworkBeetle(short item_number) {
 		case 2:
 			rotY = item->item_flags[1] - item->pos.y_rot;
 
-			if(abs(rotY) > 0x8000)
+			if(abs(rotY) > 0x8000) {
 				rotY = item->pos.y_rot - item->item_flags[1];
+			}
 
 			if(abs(rotY) < 256) {
 				item->item_flags[2] = 3;
 				item->pos.y_rot = item->item_flags[1];
-			} else if(rotY < 0)
+			} else if(rotY < 0) {
 				item->pos.y_rot -= 256;
-			else
+			} else {
 				item->pos.y_rot += 256;
+			}
 
 			break;
 
 		case 3:
 
-			if(item->speed < 32)
+			if(item->speed < 32) {
 				item->speed++;
+			}
 
 			item->pos.x_pos += item->speed * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 			item->pos.z_pos += item->speed * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 
-			if(!lara.OnBeetleFloor)
+			if(!lara.OnBeetleFloor) {
 				item->item_flags[3] = 1;
-			else if(item->item_flags[3])
+			} else if(item->item_flags[3]) {
 				item->item_flags[2] = 4;
+			}
 
 			break;
 		}
 	} else {
 		item->pos.z_rot = (0x2000 * phd_sin(0x2000 * (GlobalCounter & 7))) >> W2V_SHIFT;
 
-		if(item->item_flags[3])
+		if(item->item_flags[3]) {
 			item->item_flags[3]--;
+		}
 
 		if(lara.beetle_uses) {
-			if(item->item_flags[3] > 75)
+			if(item->item_flags[3] > 75) {
 				rotY = 150 - item->item_flags[3];
-			else
+			} else {
 				rotY = item->item_flags[3];
+			}
 
 			item->pos.y_rot += rotY << 5;
 			rotY >>= 1;
 
-			if(bounce && item->item_flags[3] > 30 && rotY)
+			if(bounce && item->item_flags[3] > 30 && rotY) {
 				item->fallspeed = -((rotY >> 1) + GetRandomControl() % rotY);
+			}
 		} else {
 			item->pos.z_rot <<= 1;
 			rotY = (150 - item->item_flags[3]) >> 1;
 			item->pos.y_rot += rotY << 7;
 
-			if(bounce && rotY)
+			if(bounce && rotY) {
 				item->fallspeed = -((rotY >> 1) + GetRandomControl() % rotY);
-			else if(item->item_flags[3] < 30) {
+			} else if(item->item_flags[3] < 30) {
 				SoundEffect(SFX_BEETLE_CLK_EXP, &item->pos, 0);
 				ExplodeItemNode(item, 0, 0, 128);
 				KillItem(item_number);

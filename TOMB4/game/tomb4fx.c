@@ -45,7 +45,6 @@
 #include <string.h>
 
 
-
 NODEOFFSET_INFO NodeOffsets[16] = {
 	{ -16, 40, 160, -14, 0 },
 	{ -16, -8, 160, 0, 0 },
@@ -155,14 +154,16 @@ LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation,
 	lptr->Point[3].z = d->z;
 	vptr = &lptr->Xvel1;
 
-	for(int j = 0; j < 6; j++)
+	for(int j = 0; j < 6; j++) {
 		*vptr++ = (GetRandomControl() % variation) - (variation >> 1);
+	}
 
 	for(int j = 0; j < 3; j++) {
-		if(flags & 2)
+		if(flags & 2) {
 			*vptr++ = (GetRandomControl() % variation) - (variation >> 1);
-		else
+		} else {
 			*vptr++ = 0;
+		}
 	}
 
 	lptr->Flags = flags;
@@ -196,10 +197,11 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 	rotation = frame + 9;
 	gar_RotYXZsuperpack(&rotation, 0);
 
-	if(!item->data)
+	if(!item->data) {
 		extra_rotation = no_rotation;
-	else
+	} else {
 		extra_rotation = (short*)item->data;
+	}
 
 	bone = GetBone(currentLevel, obj->bone_index);
 	bit = 1;
@@ -217,19 +219,21 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 				fx->pos.y_rot = (short)(GetRandomControl() << 1);
 				fx->pos.x_rot = 0;
 
-				if(Flags & 0x10)
+				if(Flags & 0x10) {
 					fx->speed = 0;
-				else if(Flags & 0x20)
+				} else if(Flags & 0x20) {
 					fx->speed = (short)(GetRandomControl() >> 12);
-				else
+				} else {
 					fx->speed = (short)(GetRandomControl() >> 8);
+				}
 
-				if(Flags & 0x40)
+				if(Flags & 0x40) {
 					fx->fallspeed = 0;
-				else if(Flags & 0x80)
+				} else if(Flags & 0x80) {
 					fx->fallspeed = (short)(-(GetRandomControl() >> 12));
-				else
+				} else {
 					fx->fallspeed = (short)(-(GetRandomControl() >> 8));
+				}
 
 				fx->frame_number = obj->mesh_index;
 				fx->object_number = BODY_PART;
@@ -244,11 +248,13 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 	for(int i = 1; i < obj->nmeshes; i++, bone += 4) {
 		poppush = bone[0];
 
-		if(poppush & 1)
+		if(poppush & 1) {
 			phd_PopMatrix();
+		}
 
-		if(poppush & 2)
+		if(poppush & 2) {
 			phd_PushMatrix();
+		}
 
 		phd_TranslateRel(bone[1], bone[2], bone[3]);
 		gar_RotYXZsuperpack(&rotation, 0);
@@ -284,19 +290,21 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 				fx->pos.y_rot = (short)(GetRandomControl() << 1);
 				fx->pos.x_rot = 0;
 
-				if(Flags & 0x10)
+				if(Flags & 0x10) {
 					fx->speed = 0;
-				else if(Flags & 0x20)
+				} else if(Flags & 0x20) {
 					fx->speed = (short)(GetRandomControl() >> 12);
-				else
+				} else {
 					fx->speed = (short)(GetRandomControl() >> 8);
+				}
 
-				if(Flags & 0x40)
+				if(Flags & 0x40) {
 					fx->fallspeed = 0;
-				else if(Flags & 0x80)
+				} else if(Flags & 0x80) {
 					fx->fallspeed = (short)(-(GetRandomControl() >> 12));
-				else
+				} else {
 					fx->fallspeed = (short)(-(GetRandomControl() >> 8));
+				}
 
 				fx->frame_number = obj->mesh_index + 2 * i;
 				fx->object_number = BODY_PART;
@@ -348,8 +356,9 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	sptr->Life = (GetRandomControl() & 3) + 40;
 	sptr->sLife = sptr->Life;
 
-	if((weaponType == WEAPON_PISTOLS || weaponType == WEAPON_REVOLVER || weaponType == WEAPON_UZI) && sptr->dShade > 64u)
+	if((weaponType == WEAPON_PISTOLS || weaponType == WEAPON_REVOLVER || weaponType == WEAPON_UZI) && sptr->dShade > 64u) {
 		sptr->dShade = 64;
+	}
 
 	sptr->TransType = 2;
 	sptr->pos.x = (GetRandomControl() & 0x1F) + x - 16;
@@ -369,22 +378,26 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	sptr->Friction = 4;
 
 	if(GetRandomControl() & 1) {
-		if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE)
+		if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE) {
 			sptr->Flags = 272;
+		}
 
-		else
+		else {
 			sptr->Flags = 16;
+		}
 
 		sptr->RotAng = GetRandomControl() & 0xFFF;
 
-		if(GetRandomControl() & 1)
+		if(GetRandomControl() & 1) {
 			sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
-		else
+		} else {
 			sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
-	} else if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE)
+		}
+	} else if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE) {
 		sptr->Flags = 256;
-	else
+	} else {
 		sptr->Flags = 0;
+	}
 
 	sptr->Gravity = -2 - (GetRandomControl() & 1);
 	sptr->MaxYvel = -2 - (GetRandomControl() & 1);
@@ -433,8 +446,9 @@ void UpdateDrips() {
 	for(int i = 0; i < nDrips; i++) {
 		drip = &Drips[i];
 
-		if(!drip->On)
+		if(!drip->On) {
 			continue;
+		}
 
 		drip->Life--;
 
@@ -460,8 +474,9 @@ void UpdateDrips() {
 		floor = GetFloor(drip->pos.x, drip->pos.y, drip->pos.z, &drip->RoomNumber);
 		h = GetHeight(floor, drip->pos.x, drip->pos.y, drip->pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-		if(GetRoom(currentLevel, drip->RoomNumber)->flags & ROOM_UNDERWATER || drip->pos.y > h)
+		if(GetRoom(currentLevel, drip->RoomNumber)->flags & ROOM_UNDERWATER || drip->pos.y > h) {
 			drip->On = 0;
+		}
 	}
 }
 
@@ -540,12 +555,14 @@ void TriggerGlobalFireFlame() {
 		sptr->Flags = 16;
 		sptr->RotAng = GetRandomControl() & 0xFFF;
 
-		if(GetRandomControl() & 1)
+		if(GetRandomControl() & 1) {
 			sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
-		else
+		} else {
 			sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
-	} else
+		}
+	} else {
 		sptr->Flags = 0;
+	}
 
 	sptr->Size = (GetRandomControl() & 0x1F) + 128;
 	sptr->sSize = sptr->Size;
@@ -585,12 +602,14 @@ void keep_those_fires_burning() {
 				sptr->Flags = 16;
 				sptr->RotAng = GetRandomControl() & 0xFFF;
 
-				if(GetRandomControl() & 1)
+				if(GetRandomControl() & 1) {
 					sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
-				else
+				} else {
 					sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
-			} else
+				}
+			} else {
 				sptr->Flags = 0;
+			}
 
 			sptr->Gravity = -16 - (GetRandomControl() & 0xF);
 			sptr->MaxYvel = -8 - (GetRandomControl() & 7);
@@ -610,8 +629,9 @@ void UpdateFireSparks() {
 	for(int i = 0; i < nFireSparks; i++) {
 		sptr = &fire_spark[i];
 
-		if(!sptr->On)
+		if(!sptr->On) {
 			continue;
+		}
 
 		sptr->Life--;
 
@@ -641,22 +661,25 @@ void UpdateFireSparks() {
 			sptr->B = sptr->dB;
 		}
 
-		if(sptr->Flags & 0x10)
+		if(sptr->Flags & 0x10) {
 			sptr->RotAng = (sptr->RotAng + sptr->RotAdd) & 0xFFF;
+		}
 
-		if(sptr->R < 24 && sptr->G < 24 && sptr->B < 24)
+		if(sptr->R < 24 && sptr->G < 24 && sptr->B < 24) {
 			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 2);
-		else if(sptr->R < 80 && sptr->G < 80 && sptr->B < 80)
+		} else if(sptr->R < 80 && sptr->G < 80 && sptr->B < 80) {
 			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 1);
-		else
+		} else {
 			sptr->Def = (unsigned char)GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index;
+		}
 
 		fade = ((sptr->sLife - sptr->Life) << 16) / sptr->sLife;
 		sptr->Yvel += sptr->Gravity;
 
 		if(sptr->MaxYvel) {
-			if(sptr->Yvel < 0 && sptr->Yvel < sptr->MaxYvel << 5 || sptr->Yvel > 0 && sptr->Yvel > sptr->MaxYvel << 5)
+			if(sptr->Yvel < 0 && sptr->Yvel < sptr->MaxYvel << 5 || sptr->Yvel > 0 && sptr->Yvel > sptr->MaxYvel << 5) {
 				sptr->Yvel = sptr->MaxYvel << 5;
+			}
 		}
 
 		if(sptr->Friction) {
@@ -701,10 +724,11 @@ void AddFire(long x, long y, long z, long size, short room_number, short fade) {
 
 	fire = GetFreeFire();
 
-	if(fade)
+	if(fade) {
 		fire->on = (char)fade;
-	else
+	} else {
 		fire->on = 1;
+	}
 
 	fire->pos.x = x;
 	fire->pos.y = y;
@@ -724,13 +748,15 @@ void S_DrawFires() {
 	for(int i = 0; i < nFires; i++) {
 		fire = &fires[i];
 
-		if(!fire->on)
+		if(!fire->on) {
 			continue;
+		}
 
-		if(fire->size == 2)
+		if(fire->size == 2) {
 			size = 256;
-		else
+		} else {
 			size = 384;
+		}
 
 		bounds[0] = -size;
 		bounds[1] = size;
@@ -749,10 +775,11 @@ void S_DrawFires() {
 		phd_TranslateAbs(fire->pos.x, fire->pos.y, fire->pos.z);
 
 		if(S_GetObjectInfoBounds(bounds)) {
-			if(fire->on == 1)
+			if(fire->on == 1) {
 				S_DrawFireSparks((unsigned char)fire->size, 255);
-			else
+			} else {
 				S_DrawFireSparks((unsigned char)fire->size, fire->on & 0xFF);
+			}
 		}
 
 		phd_PopMatrix();
@@ -771,8 +798,9 @@ void UpdateSmokeSparks() {
 	for(int i = 0; i < nSmokeSparks; i++) {
 		sptr = &smoke_spark[i];
 
-		if(!sptr->On)
+		if(!sptr->On) {
 			continue;
+		}
 
 		sptr->Life -= 2;
 
@@ -792,25 +820,29 @@ void UpdateSmokeSparks() {
 				sptr->On = 0;
 				continue;
 			}
-		} else
+		} else {
 			sptr->Shade = sptr->dShade;
+		}
 
-		if(sptr->Shade < 24)
+		if(sptr->Shade < 24) {
 			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 2);
-		else if(sptr->Shade < 80)
+		} else if(sptr->Shade < 80) {
 			sptr->Def = (unsigned char)(GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 1);
-		else
+		} else {
 			sptr->Def = (unsigned char)GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index;
+		}
 
-		if(sptr->Flags & 0x10)
+		if(sptr->Flags & 0x10) {
 			sptr->RotAng = (sptr->RotAng + sptr->RotAdd) & 0xFFF;
+		}
 
 		fade = ((sptr->sLife - sptr->Life) << 16) / sptr->sLife;
 		sptr->Yvel += sptr->Gravity;
 
 		if(sptr->MaxYvel) {
-			if(sptr->Yvel < 0 && sptr->Yvel < sptr->MaxYvel << 5 || sptr->Yvel > 0 && sptr->Yvel > sptr->MaxYvel << 5)
+			if(sptr->Yvel < 0 && sptr->Yvel < sptr->MaxYvel << 5 || sptr->Yvel > 0 && sptr->Yvel > sptr->MaxYvel << 5) {
 				sptr->Yvel = sptr->MaxYvel << 5;
+			}
 		}
 
 		if(sptr->Friction & 0xF) {
@@ -818,8 +850,9 @@ void UpdateSmokeSparks() {
 			sptr->Zvel -= sptr->Zvel >> (sptr->Friction & 0xF);
 		}
 
-		if(sptr->Friction & 0xF0)
+		if(sptr->Friction & 0xF0) {
 			sptr->Yvel -= sptr->Yvel >> (sptr->Friction >> 4);
+		}
 
 		sptr->pos.x += sptr->Xvel >> 5;
 		sptr->pos.y += sptr->Yvel >> 5;
@@ -858,14 +891,16 @@ void TriggerShatterSmoke(long x, long y, long z) {
 		sptr->Flags = 16;
 		sptr->RotAng = GetRandomControl() & 0xFFF;
 
-		if(GetRandomControl() & 1)
+		if(GetRandomControl() & 1) {
 			sptr->RotAdd = -64 - (GetRandomControl() & 0x3F);
-		else
+		} else {
 			sptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
-	} else if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE)
+		}
+	} else if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE) {
 		sptr->Flags = 256;
-	else
+	} else {
 		sptr->Flags = 0;
+	}
 
 	sptr->Gravity = -4 - (GetRandomControl() & 3);
 	sptr->MaxYvel = -4 - (GetRandomControl() & 3);
@@ -962,10 +997,11 @@ void TriggerGunShell(short leftright, short objnum, long weapon) {
 	}
 
 	if(lara_item->mesh_bits) {
-		if(weapon == WEAPON_SHOTGUN)
+		if(weapon == WEAPON_SHOTGUN) {
 			shade = 24;
-		else
+		} else {
 			shade = 16;
+		}
 
 		TriggerGunSmoke(pos.x, pos.y, pos.z, 0, 0, 0, 0, weapon, shade);
 	}
@@ -988,12 +1024,15 @@ void TriggerGunShell(short leftright, short objnum, long weapon) {
 			shell->DirXrot = lara.torso_y_rot + lara_item->pos.y_rot - (GetRandomControl() & 0xFFF) + lara.left_arm.y_rot + 0x2800;
 			shell->pos.y_rot += lara.left_arm.y_rot + lara.torso_y_rot + lara_item->pos.y_rot;
 
-			if(shell->speed < 24)
+			if(shell->speed < 24) {
 				shell->speed += 24;
-		} else
+			}
+		} else {
 			shell->DirXrot = lara_item->pos.y_rot - (GetRandomControl() & 0xFFF) + lara.left_arm.y_rot + 0x4800;
-	} else
+		}
+	} else {
 		shell->DirXrot = lara_item->pos.y_rot + (GetRandomControl() & 0xFFF) + lara.left_arm.y_rot - 0x4800;
+	}
 }
 
 void UpdateGunShells() {
@@ -1007,8 +1046,9 @@ void UpdateGunShells() {
 	for(int i = 0; i < nGunshells; i++) {
 		shell = &Gunshells[i];
 
-		if(!shell->counter)
+		if(!shell->counter) {
 			continue;
+		}
 
 		ox = shell->pos.x_pos;
 		oy = shell->pos.y_pos;
@@ -1019,14 +1059,16 @@ void UpdateGunShells() {
 		if(GetRoom(currentLevel, oroom)->flags & ROOM_UNDERWATER) {
 			shell->fallspeed++;
 
-			if(shell->fallspeed > 8)
+			if(shell->fallspeed > 8) {
 				shell->fallspeed = 8;
-			else if(shell->fallspeed < 0)
+			} else if(shell->fallspeed < 0) {
 				shell->fallspeed >>= 1;
+			}
 
 			shell->speed -= shell->speed >> 1;
-		} else
+		} else {
 			shell->fallspeed += 6;
+		}
 
 		shell->pos.x_rot += 182 * ((shell->speed >> 1) + 7);
 		shell->pos.y_rot += 182 * shell->speed;
@@ -1069,9 +1111,9 @@ void UpdateGunShells() {
 				continue;
 			}
 
-			if(oy <= h)
+			if(oy <= h) {
 				shell->fallspeed = -shell->fallspeed >> 1;
-			else {
+			} else {
 				shell->DirXrot += 0x8000;
 				shell->pos.x_pos = ox;
 				shell->pos.z_pos = oz;
@@ -1199,8 +1241,9 @@ void DrawGunflashes() {
 	for(int i = 0; i < nGunflashes; i++) {
 		flash = &Gunflashes[i];
 
-		if(!flash->on)
+		if(!flash->on) {
 			break;
+		}
 
 		mMXPtr[M00] = flash->mx[M00];
 		mMXPtr[M01] = flash->mx[M01];
@@ -1246,8 +1289,9 @@ void UpdateBlood() {
 	for(int i = 0; i < nBlood; i++) {
 		bptr = &blood[i];
 
-		if(!bptr->On)
+		if(!bptr->On) {
 			continue;
+		}
 
 		bptr->Life--;
 
@@ -1268,8 +1312,9 @@ void UpdateBlood() {
 					bptr->On = 0;
 					continue;
 				}
-			} else
+			} else {
 				bptr->Shade = bptr->dShade;
+			}
 		}
 
 		bptr->RotAng = (bptr->RotAng + bptr->RotAdd) & 0xFFF;
@@ -1306,10 +1351,11 @@ void TriggerBlood(long x, long y, long z, long angle, long num) {
 		bptr->y = (GetRandomControl() & 0x1F) + y - 16;
 		bptr->z = (GetRandomControl() & 0x1F) + z - 16;
 
-		if(angle == -1)
+		if(angle == -1) {
 			ang = (short)GetRandomControl();
-		else
+		} else {
 			ang = (short)((GetRandomControl() & 0x1F) + angle - 16);
+		}
 
 		ang &= 0xFFF;
 		speed = GetRandomControl() & 0xF;
@@ -1319,10 +1365,11 @@ void TriggerBlood(long x, long y, long z, long angle, long num) {
 		bptr->Yvel = -128 - (GetRandomControl() & 0xFF);
 		bptr->RotAng = GetRandomControl() & 0xFFF;
 
-		if(GetRandomControl() & 1)
+		if(GetRandomControl() & 1) {
 			bptr->RotAdd = -64 - (GetRandomControl() & 0x3F);
-		else
+		} else {
 			bptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
+		}
 
 		bptr->Gravity = (GetRandomControl() & 0x1F) + 31;
 		size = (GetRandomControl() & 7) + 8;
@@ -1378,8 +1425,9 @@ void UpdateBubbles() {
 	for(int i = 0; i < nBubbles; i++) {
 		bubble = &Bubbles[i];
 
-		if(!bubble->size)
+		if(!bubble->size) {
 			continue;
+		}
 
 		bubble->pad += 6;
 		bubble->speed += bubble->vel;
@@ -1409,11 +1457,13 @@ void UpdateBubbles() {
 			continue;
 		}
 
-		if(bubble->size < bubble->dsize)
+		if(bubble->size < bubble->dsize) {
 			bubble->size++;
+		}
 
-		if(bubble->shade < 144)
+		if(bubble->shade < 144) {
 			bubble->shade += 2;
+		}
 
 		bubble->room_number = room_number;
 	}
@@ -1439,8 +1489,9 @@ void TriggerLaraDrips() {
 	DRIP_STRUCT* drip;
 	PHD_VECTOR pos;
 
-	if(wibble & 0xF)
+	if(wibble & 0xF) {
 		return;
+	}
 
 	for(int i = 14; i > 0; i--) {
 		if(lara.wet[i] && !LaraNodeUnderwater[i] && (GetRandomControl() & 0x1FF) < lara.wet[i]) {
@@ -1508,8 +1559,9 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 	dx = lara_item->pos.x_pos - x;
 	dz = lara_item->pos.z_pos - z;
 
-	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
+	}
 
 	sptr = GetFreeSpark();
 	sptr->On = 1;
@@ -1528,10 +1580,11 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 	xvel = speed * phd_sin(dir) >> (W2V_SHIFT - 4);
 	zvel = speed * phd_cos(dir) >> (W2V_SHIFT - 4);
 
-	if(GetRandomControl() & 1)
+	if(GetRandomControl() & 1) {
 		dir += 0x4000;
-	else
+	} else {
 		dir -= 0x4000;
+	}
 
 	speed = (GetRandomControl() & 0x1FF) - 256;
 	x += speed * phd_sin(dir) >> W2V_SHIFT;
@@ -1546,10 +1599,11 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 	sptr->Flags = 538;
 	sptr->RotAng = GetRandomControl() & 0xFFF;
 
-	if(GetRandomControl() & 1)
+	if(GetRandomControl() & 1) {
 		sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
-	else
+	} else {
 		sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
+	}
 
 	sptr->Scalar = 1;
 	sptr->Def = (unsigned char)(GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 14);
@@ -1569,13 +1623,15 @@ void UpdateShockwaves() {
 	for(int i = 0; i < nShockWaves; i++) {
 		sw = &ShockWaves[i];
 
-		if(!sw->life)
+		if(!sw->life) {
 			continue;
+		}
 
 		sw->life--;
 
-		if(!sw->life)
+		if(!sw->life) {
 			continue;
+		}
 
 		sw->OuterRad += sw->Speed;
 		sw->InnerRad += sw->Speed >> 1;
@@ -1591,8 +1647,9 @@ void UpdateShockwaves() {
 				dir = (short)phd_atan(dz, dx);
 				TriggerShockwaveHitEffect(lara_item->pos.x_pos, sw->y, lara_item->pos.z_pos, *(long*)&sw->r, dir, sw->Speed);
 				lara_item->hit_points -= sw->Speed >> (((sw->Flags & 2) != 0) + 2);
-			} else
+			} else {
 				sw->Temp = 0;
+			}
 		}
 	}
 }
@@ -1605,8 +1662,9 @@ void UpdateLightning() {
 	for(int i = 0; i < nLightnings; i++) {
 		lptr = &Lightning[i];
 
-		if(!lptr->Life)
+		if(!lptr->Life) {
 			continue;
+		}
 
 		lptr->Life -= 2;
 
@@ -1628,8 +1686,9 @@ long LSpline(long x, long* knots, long nk) {
 	x *= nk - 3;
 	span = x >> 16;
 
-	if(span >= nk - 3)
+	if(span >= nk - 3) {
 		span = nk - 4;
+	}
 
 	x -= 65536 * span;
 	k = &knots[3 * span];
@@ -1693,8 +1752,9 @@ void TriggerLightningGlow(long x, long y, long z, long rgb) {
 	dx = lara_item->pos.x_pos - x;
 	dz = lara_item->pos.z_pos - z;
 
-	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
+	}
 
 	sptr = GetFreeSpark();
 	sptr->On = 1;
@@ -1732,8 +1792,9 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number) {
 	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
 		TriggerExplosionBubble(x, y, z, (short)room_number);
 		uw = 1;
-	} else
+	} else {
 		uw = 0;
+	}
 
 	sptr = GetFreeSmokeSpark();
 	sptr->On = 1;
@@ -1760,17 +1821,19 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number) {
 		sptr->Friction = 85;
 	}
 
-	if(GetRoom(currentLevel, room_number)->flags & ROOM_NOT_INSIDE)
+	if(GetRoom(currentLevel, room_number)->flags & ROOM_NOT_INSIDE) {
 		sptr->Flags = 272;
-	else
+	} else {
 		sptr->Flags = 16;
+	}
 
 	sptr->RotAng = GetRandomControl() & 0xFFF;
 
-	if(GetRandomControl() & 1)
+	if(GetRandomControl() & 1) {
 		sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
-	else
+	} else {
 		sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
+	}
 
 	sptr->MaxYvel = 0;
 	sptr->Gravity = 0;
@@ -1794,8 +1857,9 @@ void S_DrawSparks() {
 
 	smallest_size = 0;
 
-	for(int i = 0; i < 16; i++)
+	for(int i = 0; i < 16; i++) {
 		NodeOffsets[i].GotIt = 0;
+	}
 
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
@@ -1806,8 +1870,9 @@ void S_DrawSparks() {
 	for(int i = 0; i < nSpark; i++) {
 		sptr = &spark[i];
 
-		if(!sptr->On)
+		if(!sptr->On) {
 			continue;
+		}
 
 		if(sptr->Flags & 0x40) {
 			fx = GetEffect(currentLevel, sptr->FxObj);
@@ -1834,10 +1899,11 @@ void S_DrawSparks() {
 					pos.y = NodeOffsets[sptr->NodeNumber].y;
 					pos.z = NodeOffsets[sptr->NodeNumber].z;
 
-					if(NodeOffsets[sptr->NodeNumber].mesh_num < 0)
+					if(NodeOffsets[sptr->NodeNumber].mesh_num < 0) {
 						GetLaraJointPos(&pos, -NodeOffsets[sptr->NodeNumber].mesh_num);
-					else
+					} else {
 						GetJointAbsPosition(item, &pos, NodeOffsets[sptr->NodeNumber].mesh_num);
+					}
 
 					NodeOffsets[sptr->NodeNumber].GotIt = 1;
 					NodeVectors[sptr->NodeNumber].x = pos.x;
@@ -1887,8 +1953,9 @@ void S_DrawSparks() {
 		Z[0] = (long)fPos.z;
 
 		if(sptr->Flags & 8) {
-			if(sptr->Flags & 2)
+			if(sptr->Flags & 2) {
 				smallest_size = 4;
+			}
 		} else {
 			offsets[0] = x - (sptr->Xvel >> 4);
 			offsets[1] = y - (sptr->Yvel >> 4);
@@ -1917,13 +1984,15 @@ void UpdateFadeClip() {
 	if(DestFadeScreenHeight < FadeScreenHeight) {
 		FadeScreenHeight -= FadeClipSpeed;
 
-		if(DestFadeScreenHeight > FadeScreenHeight)
+		if(DestFadeScreenHeight > FadeScreenHeight) {
 			FadeScreenHeight = DestFadeScreenHeight;
+		}
 	} else if(DestFadeScreenHeight > FadeScreenHeight) {
 		FadeScreenHeight += FadeClipSpeed;
 
-		if(DestFadeScreenHeight < FadeScreenHeight)
+		if(DestFadeScreenHeight < FadeScreenHeight) {
 			FadeScreenHeight = DestFadeScreenHeight;
+		}
 	}
 }
 
@@ -1965,8 +2034,9 @@ void Fade() {
 				if(ScreenFadeBack) {
 					dScreenFade = 0;
 					ScreenFadeBack = 0;
-				} else
+				} else {
 					ScreenFading = 0;
+				}
 			}
 		}
 	} else if(dScreenFade < ScreenFade) {
@@ -1978,6 +2048,7 @@ void Fade() {
 		}
 	}
 
-	if(ScreenFade || dScreenFade)
+	if(ScreenFade || dScreenFade) {
 		DrawPsxTile(0, phd_winwidth | (phd_winheight << 16), RGBA(ScreenFade, ScreenFade, ScreenFade, 98), 2, 0);
+	}
 }

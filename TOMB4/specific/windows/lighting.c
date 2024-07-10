@@ -53,8 +53,9 @@ void InitItemDynamicLighting(ITEM_INFO* item) {
 	for(int i = 0; i < MAX_DYNAMICS; i++) {
 		dptr = &dynamics[i];
 
-		if(dptr->on)
+		if(dptr->on) {
 			SetupDynamicLight(dptr, item);
+		}
 	}
 
 	ambientR = CLRR(item->il.ambient);
@@ -134,22 +135,26 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
 		point->b = light->b * 255.0F;
 		point->rad = (light->Outer - num2) / light->Outer;
 
-		if(point->rad < 0)
+		if(point->rad < 0) {
 			point->rad = 0;
+		}
 
 		if(SetupLight_thing && point->rad < 1) {
 			r = CLRR(*ambient) + (long)(point->rad * point->r);
 			g = CLRG(*ambient) + (long)(point->rad * point->g);
 			b = CLRB(*ambient) + (long)(point->rad * point->b);
 
-			if(r > 255)
+			if(r > 255) {
 				r = 255;
+			}
 
-			if(g > 255)
+			if(g > 255) {
 				g = 255;
+			}
 
-			if(b > 255)
+			if(b > 255) {
 				b = 255;
+			}
 
 			*ambient = RGBONLY(r, g, b);
 			point->rad /= 2; // if it's this close and we're already changing ambience, ramp down radius to avoid double color
@@ -173,10 +178,11 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
 		point = &SpotLights[nSpotLights];
 		num2 = (float)sqrt(SQUARE(x) + SQUARE(y) + SQUARE(z));
 
-		if(SetupLight_thing)
+		if(SetupLight_thing) {
 			num = 2.0F / num2;
-		else
+		} else {
 			num = 1.0F / num2;
+		}
 
 		point->vec.x = (D3DLightMatrix._11 * x + D3DLightMatrix._12 * y + D3DLightMatrix._13 * z) * num;
 		point->vec.y = (D3DLightMatrix._21 * x + D3DLightMatrix._22 * y + D3DLightMatrix._23 * z) * num;
@@ -186,8 +192,9 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
 		point->b = light->b * 255.0F;
 		point->rad = 1.0F - num2 / light->Cutoff;
 
-		if(point->rad < 0)
+		if(point->rad < 0) {
 			point->rad = 0;
+		}
 
 		nSpotLights++;
 		nTotalLights++;
@@ -200,25 +207,30 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
 		val = phd_sqrt(light->Range);
 		val2 = light->shadow >> 3;
 
-		if(val >= light->Inner)
+		if(val >= light->Inner) {
 			val2 = (long)((val - light->Outer) / ((light->Outer - light->Inner) / -val2));
+		}
 
-		if(val2 < 0)
+		if(val2 < 0) {
 			val2 = 0;
+		}
 
 		val2 >>= 1;
 		r -= val2;
 		g -= val2;
 		b -= val2;
 
-		if(r < 0)
+		if(r < 0) {
 			r = 0;
+		}
 
-		if(g < 0)
+		if(g < 0) {
 			g = 0;
+		}
 
-		if(b < 0)
+		if(b < 0) {
 			b = 0;
+		}
 
 		*ambient = RGBONLY(r, g, b);
 		nShadowLights++;
@@ -262,9 +274,9 @@ void CreateLightList(ITEM_INFO* item) {
 
 		for(int i = 0; i < item->il.nPrevLights; i++) {
 			if(prev_lights[i].Active) {
-				if(prev_lights[i].Type == LIGHT_SHADOW)
+				if(prev_lights[i].Type == LIGHT_SHADOW) {
 					prev_lights[i].iny = -prev_lights[i].shadow >> 3;
-				else {
+				} else {
 					prev_lights[i].rs = prev_lights[i].r * -0.125F;
 					prev_lights[i].gs = prev_lights[i].g * -0.125F;
 					prev_lights[i].bs = prev_lights[i].b * -0.125F;
@@ -309,8 +321,9 @@ void CreateLightList(ITEM_INFO* item) {
 			current_lights->Type = room_light->Type;
 			current_lights->Active = 0;
 
-			if(room_light->Type == LIGHT_SHADOW)
+			if(room_light->Type == LIGHT_SHADOW) {
 				current_lights->inx = room_light->shadow;
+			}
 
 			current_lights++;
 			room_light++;
@@ -330,21 +343,23 @@ void CreateLightList(ITEM_INFO* item) {
 		if(current_lights[i].Type == LIGHT_POINT || current_lights[i].Type == LIGHT_SHADOW) {
 			range = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
 
-			if(range > SQUARE(current_lights[i].Outer))
+			if(range > SQUARE(current_lights[i].Outer)) {
 				in_range = 0;
+			}
 		} else if(current_lights[i].Type == LIGHT_SPOT) {
 			range = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
 
-			if(range > SQUARE(current_lights[i].Cutoff))
+			if(range > SQUARE(current_lights[i].Cutoff)) {
 				in_range = 0;
-			else {
+			} else {
 				vec.x = (float)-dx;
 				vec.y = (float)-dy;
 				vec.z = (float)-dz;
 				D3DNormalise(&vec);
 
-				if(current_lights[i].nx * vec.x + current_lights[i].ny * vec.y + current_lights[i].nz * vec.z <= current_lights[i].Outer)
+				if(current_lights[i].nx * vec.x + current_lights[i].ny * vec.y + current_lights[i].nz * vec.z <= current_lights[i].Outer) {
 					in_range = 0;
+				}
 			}
 		}
 
@@ -373,9 +388,9 @@ void CreateLightList(ITEM_INFO* item) {
 			}
 		} else {
 			if(current_lights[i].Active && !current_lights[i].fcnt) {
-				if(current_lights[i].Type == LIGHT_SHADOW)
+				if(current_lights[i].Type == LIGHT_SHADOW) {
 					current_lights[i].iny = -current_lights[i].shadow >> 3;
-				else {
+				} else {
 					current_lights[i].rs = current_lights[i].r * -0.125F;
 					current_lights[i].gs = current_lights[i].g * -0.125F;
 					current_lights[i].bs = current_lights[i].b * -0.125F;
@@ -393,9 +408,9 @@ void CreateLightList(ITEM_INFO* item) {
 void FadeLightList(PCLIGHT* lights, long nLights) {
 	for(int i = 0; i < nLights; i++) {
 		if(lights[i].Active && lights[i].fcnt) {
-			if(lights[i].Type == LIGHT_SHADOW)
+			if(lights[i].Type == LIGHT_SHADOW) {
 				lights[i].shadow += lights[i].iny;
-			else {
+			} else {
 				lights[i].r += lights[i].rs;
 				lights[i].g += lights[i].gs;
 				lights[i].b += lights[i].bs;
@@ -404,11 +419,13 @@ void FadeLightList(PCLIGHT* lights, long nLights) {
 			lights[i].fcnt--;
 
 			if(lights[i].Type == LIGHT_SHADOW) {
-				if(lights[i].shadow <= 0)
+				if(lights[i].shadow <= 0) {
 					lights[i].Active = 0;
+				}
 			} else {
-				if(lights[i].r <= 0 && lights[i].g <= 0 && lights[i].b <= 0)
+				if(lights[i].r <= 0 && lights[i].g <= 0 && lights[i].b <= 0) {
 					lights[i].Active = 0;
+				}
 			}
 		}
 	}
@@ -423,15 +440,17 @@ void InitObjectLighting(ITEM_INFO* item) {
 	light = (PCLIGHT*)item->il.pCurrentLights;
 
 	for(int i = 0; i < item->il.nCurrentLights; i++) {
-		if(light[i].Active)
+		if(light[i].Active) {
 			SetupLight(&light[i], item, &node_ambient);
+		}
 	}
 
 	light = (PCLIGHT*)item->il.pPrevLights;
 
 	for(int i = 0; i < item->il.nPrevLights; i++) {
-		if(light[i].Active)
+		if(light[i].Active) {
 			SetupLight(&light[i], item, &node_ambient);
+		}
 	}
 
 	InitItemDynamicLighting(item);
@@ -441,8 +460,9 @@ void InitObjectLighting(ITEM_INFO* item) {
 			node_ambient = LaraNodeAmbient[0];
 			item->il.fcnt = 0;
 			item->il.ambient = node_ambient;
-		} else
+		} else {
 			node_ambient = LaraNodeAmbient[1];
+		}
 	}
 
 	if(item->object_number == BURNING_FLOOR && item->required_anim_state) {

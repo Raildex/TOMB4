@@ -27,8 +27,9 @@ void JeanYvesControl(short item_number) {
 	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags < lara.highest_location) {
-		if(lara.highest_location > 3)
+		if(lara.highest_location > 3) {
 			lara.highest_location = 3;
+		}
 
 		random = (GetRandomControl() & 3) + 4 * lara.highest_location;
 		item->goal_anim_state = random + 1;
@@ -37,10 +38,11 @@ void JeanYvesControl(short item_number) {
 		item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 		item->trigger_flags = lara.highest_location;
 	} else {
-		if(GetRandomControl() & 3)
+		if(GetRandomControl() & 3) {
 			item->goal_anim_state = (GetRandomControl() & 1) + 1;
-		else
+		} else {
 			item->goal_anim_state = 3 * (GetRandomControl() & 1);
+		}
 
 		item->goal_anim_state += ((char)item->current_anim_state - 1 & 0xC) + 1;
 	}

@@ -70,8 +70,9 @@ void CrocControl(short item_number) {
 	long s, c, x, z, h, h2;
 	short room_number, angle, rot, roll;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 	croc = (CREATURE_INFO*)item->data;
@@ -85,8 +86,9 @@ void CrocControl(short item_number) {
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
 	h = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h) > 512)
+	if(abs(item->pos.y_pos - h) > 512) {
 		h = item->pos.y_pos;
+	}
 
 	x = item->pos.x_pos - s;
 	z = item->pos.z_pos - c;
@@ -94,8 +96,9 @@ void CrocControl(short item_number) {
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
 	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h2) > 512)
+	if(abs(item->pos.y_pos - h2) > 512) {
 		h2 = item->pos.y_pos;
+	}
 
 	roll = (short)phd_atan(2048, h2 - h);
 
@@ -117,13 +120,15 @@ void CrocControl(short item_number) {
 			}
 		}
 
-		if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER)
+		if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 			CreatureFloat(item_number);
+		}
 	} else {
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(croc);
-		else if(croc->hurt_by_lara)
+		} else if(croc->hurt_by_lara) {
 			croc->enemy = lara_item;
+		}
 
 		CreatureAIInfo(item, &info);
 		GetCreatureMood(item, &info, 1);
@@ -131,8 +136,9 @@ void CrocControl(short item_number) {
 		angle = CreatureTurn(item, croc->maximum_turn);
 
 		if(item->hit_status || info.distance < 0x240000 || (TargetVisible(item, &info) && info.distance < 0x1900000)) {
-			if(!croc->alerted)
+			if(!croc->alerted) {
 				croc->alerted = 1;
+			}
 
 			AlertAllGuards(item_number);
 		}
@@ -149,38 +155,42 @@ void CrocControl(short item_number) {
 				item->item_flags[0] += item->item_flags[1];
 
 				if(!(GetRandomControl() & 0x1F)) {
-					if(GetRandomControl() & 1)
+					if(GetRandomControl() & 1) {
 						item->item_flags[1] = 0;
-					else {
-						if(GetRandomControl() & 1)
+					} else {
+						if(GetRandomControl() & 1) {
 							item->item_flags[1] = 12;
-						else
+						} else {
 							item->item_flags[1] = -12;
+						}
 					}
 				}
 
-				if(item->item_flags[0] > 1024)
+				if(item->item_flags[0] > 1024) {
 					item->item_flags[0] = 1024;
-				else if(item->item_flags[0] < -1024)
+				} else if(item->item_flags[0] < -1024) {
 					item->item_flags[0] = -1024;
-			} else if(info.bite && info.distance < 0x90000)
+				}
+			} else if(info.bite && info.distance < 0x90000) {
 				item->goal_anim_state = 5;
-			else if(info.ahead && info.distance < 0x100000)
+			} else if(info.ahead && info.distance < 0x100000) {
 				item->goal_anim_state = 3;
-			else
+			} else {
 				item->goal_anim_state = 2;
+			}
 
 			break;
 
 		case 2:
 			croc->maximum_turn = 546;
 
-			if(item->required_anim_state)
+			if(item->required_anim_state) {
 				item->goal_anim_state = item->required_anim_state;
-			else if(info.bite && info.distance < 0x90000)
+			} else if(info.bite && info.distance < 0x90000) {
 				item->goal_anim_state = 1;
-			else if(info.ahead && info.distance < 0x100000)
+			} else if(info.ahead && info.distance < 0x100000) {
 				item->goal_anim_state = 3;
+			}
 
 			break;
 
@@ -189,19 +199,21 @@ void CrocControl(short item_number) {
 			croc->LOT.step = 256;
 			croc->LOT.drop = -256;
 
-			if(item->required_anim_state)
+			if(item->required_anim_state) {
 				item->goal_anim_state = item->required_anim_state;
-			else if(info.bite && info.distance < 0x90000)
+			} else if(info.bite && info.distance < 0x90000) {
 				item->goal_anim_state = 1;
-			else if(!info.ahead || info.distance > 0x240000)
+			} else if(!info.ahead || info.distance > 0x240000) {
 				item->goal_anim_state = 2;
+			}
 
 			break;
 
 		case 5:
 
-			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
 				item->required_anim_state = 0;
+			}
 
 			if(info.bite && item->touch_bits & 0x300) {
 				if(!item->required_anim_state) {
@@ -210,8 +222,9 @@ void CrocControl(short item_number) {
 					lara_item->hit_status = 1;
 					item->required_anim_state = 1;
 				}
-			} else
+			} else {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
@@ -220,17 +233,19 @@ void CrocControl(short item_number) {
 			croc->LOT.step = 20480;
 			croc->LOT.drop = -20480;
 
-			if(item->required_anim_state)
+			if(item->required_anim_state) {
 				item->goal_anim_state = item->required_anim_state;
-			else if(info.bite && item->touch_bits & 0x300)
+			} else if(info.bite && item->touch_bits & 0x300) {
 				item->goal_anim_state = 9;
+			}
 
 			break;
 
 		case 9:
 
-			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base) {
 				item->required_anim_state = 0;
+			}
 
 			if(info.bite && item->touch_bits & 0x300) {
 				if(!item->required_anim_state) {
@@ -239,8 +254,9 @@ void CrocControl(short item_number) {
 					lara_item->hit_status = 1;
 					item->required_anim_state = 8;
 				}
-			} else
+			} else {
 				item->goal_anim_state = 8;
+			}
 
 			break;
 		}
@@ -253,20 +269,22 @@ void CrocControl(short item_number) {
 	CreatureJoint(item, 3, -rot);
 
 	if(item->current_anim_state < 8) {
-		if(abs(roll - item->pos.x_rot) < 256)
+		if(abs(roll - item->pos.x_rot) < 256) {
 			item->pos.x_rot = roll;
-		else if(roll > item->pos.x_rot)
+		} else if(roll > item->pos.x_rot) {
 			item->pos.x_rot += 256;
-		else if(roll < item->pos.x_rot)
+		} else if(roll < item->pos.x_rot) {
 			item->pos.x_rot -= 256;
+		}
 	}
 
 	CreatureAnimation(item_number, angle, 0);
 
-	if(item->current_anim_state == 8)
+	if(item->current_anim_state == 8) {
 		s = (1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
-	else
+	} else {
 		s = (512 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
+	}
 
 	c = (1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
 	x = item->pos.x_pos + s;
@@ -296,8 +314,9 @@ void CrocControl(short item_number) {
 			croc->LOT.fly = 0;
 			CreatureUnderwater(item, 0);
 		}
-	} else
+	} else {
 		croc->LOT.fly = 0;
+	}
 }
 
 long GetFreeLocust() {
@@ -332,8 +351,9 @@ void TriggerLocust(ITEM_INFO* item) {
 
 	fx_number = GetFreeLocust();
 
-	if(fx_number == NO_ITEM)
+	if(fx_number == NO_ITEM) {
 		return;
+	}
 
 	fx = &Locusts[fx_number];
 
@@ -372,14 +392,15 @@ void InitialiseLocustEmitter(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(!item->pos.y_rot)
+	if(!item->pos.y_rot) {
 		item->pos.z_pos += 512;
-	else if(item->pos.y_rot == 16384)
+	} else if(item->pos.y_rot == 16384) {
 		item->pos.x_pos += 512;
-	else if(item->pos.y_rot == -32768)
+	} else if(item->pos.y_rot == -32768) {
 		item->pos.z_pos -= 512;
-	else if(item->pos.y_rot == -16384)
+	} else if(item->pos.y_rot == -16384) {
 		item->pos.x_pos -= 512;
+	}
 }
 
 void ControlLocustEmitter(short item_number) {
@@ -387,14 +408,16 @@ void ControlLocustEmitter(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(!TriggerActive(item))
+	if(!TriggerActive(item)) {
 		return;
+	}
 
 	if(item->trigger_flags) {
 		TriggerLocust(item);
 		item->trigger_flags--;
-	} else
+	} else {
 		KillItem(item_number);
+	}
 }
 
 void DrawLocusts() {
@@ -437,8 +460,9 @@ void UpdateLocusts() {
 		fx = &Locusts[i];
 
 		if(fx->On) {
-			if((lara.burn || lara_item->hit_points <= 0) && fx->Counter > 90 && !(GetRandomControl() & 7))
+			if((lara.burn || lara_item->hit_points <= 0) && fx->Counter > 90 && !(GetRandomControl() & 7)) {
 				fx->Counter = 90;
+			}
 
 			fx->Counter--;
 
@@ -469,39 +493,45 @@ void UpdateLocusts() {
 
 			ox = phd_sqrt(ox + oz) >> 3;
 
-			if(ox > 128)
+			if(ox > 128) {
 				ox = 128;
-			else if(ox < 48)
+			} else if(ox < 48) {
 				ox = 48;
+			}
 
-			if(fx->speed < ox)
+			if(fx->speed < ox) {
 				fx->speed++;
-			else if(fx->speed > ox)
+			} else if(fx->speed > ox) {
 				fx->speed--;
+			}
 
 			if(fx->Counter > 90) {
 				max_turn = fx->speed << 7;
 				oy = (unsigned short)angles[0] - (unsigned short)fx->pos.y_rot;
 
-				if(abs(oy) > 32768)
+				if(abs(oy) > 32768) {
 					oy = (unsigned short)fx->pos.y_rot - (unsigned short)angles[0];
+				}
 
 				ox = (unsigned short)angles[1] - (unsigned short)fx->pos.x_rot;
 
-				if(abs(ox) > 32768)
+				if(abs(ox) > 32768) {
 					ox = (unsigned short)fx->pos.x_rot - (unsigned short)angles[0];
+				}
 
 				ox >>= 3;
 				oy >>= 3;
 
-				if(oy > max_turn)
+				if(oy > max_turn) {
 					oy = max_turn;
-				else if(oy < -max_turn)
+				} else if(oy < -max_turn) {
 					oy = -max_turn;
-				if(ox > max_turn)
+				}
+				if(ox > max_turn) {
 					ox = max_turn;
-				else if(ox < -max_turn)
+				} else if(ox < -max_turn) {
 					ox = -max_turn;
+				}
 
 				fx->pos.y_rot += (short)oy;
 				fx->pos.x_rot += (short)ox;
@@ -519,8 +549,9 @@ void UpdateLocusts() {
 				if(fx->pos.x_pos > bounds[0] && fx->pos.x_pos < bounds[1] && fx->pos.y_pos > bounds[2] && fx->pos.y_pos < bounds[3] && fx->pos.z_pos > bounds[4] && fx->pos.z_pos < bounds[5]) {
 					TriggerBlood(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, GetRandomControl() << 1, 2);
 
-					if(lara_item->hit_points > 0)
+					if(lara_item->hit_points > 0) {
 						lara_item->hit_points -= 3;
+					}
 				}
 			}
 		}
@@ -564,8 +595,9 @@ void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	dx = lara_item->pos.x_pos - fx->pos.x_pos;
 	dz = lara_item->pos.z_pos - fx->pos.z_pos;
 
-	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
+	}
 
 	sptr = GetFreeSpark();
 	sptr->On = 1;
@@ -591,10 +623,11 @@ void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	sptr->Flags = 538;
 	sptr->RotAng = GetRandomControl() & 0xFFF;
 
-	if(GetRandomControl() & 1)
+	if(GetRandomControl() & 1) {
 		sptr->RotAdd = -32 - (GetRandomControl() & 0x1F);
-	else
+	} else {
 		sptr->RotAdd = (GetRandomControl() & 0x1F) + 32;
+	}
 
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
@@ -626,8 +659,9 @@ void CrocgodControl(short item_number) {
 	short angles[2];
 	short angle, torso, neck, frame;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	angle = 0;
 	torso = 0;
@@ -635,20 +669,22 @@ void CrocgodControl(short item_number) {
 	item = GetItem(currentLevel, item_number);
 	crocgod = (CREATURE_INFO*)item->data;
 
-	if(item->hit_points <= 0)
+	if(item->hit_points <= 0) {
 		item->hit_points = 0;
-	else {
-		if(item->ai_bits)
+	} else {
+		if(item->ai_bits) {
 			GetAITarget(crocgod);
-		else if(crocgod->hurt_by_lara)
+		} else if(crocgod->hurt_by_lara) {
 			crocgod->enemy = lara_item;
+		}
 
 		item->pos.y_pos -= 768;
 		CreatureAIInfo(item, &info);
 		item->pos.y_pos += 768;
 
-		if(crocgod->enemy != lara_item)
+		if(crocgod->enemy != lara_item) {
 			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+		}
 
 		GetCreatureMood(item, &info, 1);
 		CreatureMood(item, &info, 1);
@@ -669,12 +705,13 @@ void CrocgodControl(short item_number) {
 			} else {
 				item->item_flags[2] = 999;
 
-				if(info.distance < 0x1900000)
+				if(info.distance < 0x1900000) {
 					item->goal_anim_state = 5;
-				else if(info.distance < 0x3840000)
+				} else if(info.distance < 0x3840000) {
 					item->goal_anim_state = 3;
-				else if(info.distance < 0x7900000)
+				} else if(info.distance < 0x7900000) {
 					item->goal_anim_state = 4;
+				}
 			}
 
 			break;
@@ -698,13 +735,14 @@ void CrocgodControl(short item_number) {
 				mPos.y_rot = angles[0];
 				mPos.x_rot = angles[1];
 
-				if(frame == 94)
+				if(frame == 94) {
 					TriggerCrocgodMissile(&mPos, item->room_number, 0);
-				else {
-					if(frame == 95)
+				} else {
+					if(frame == 95) {
 						mPos.y_rot = angles[0] - 2048;
-					else
+					} else {
 						mPos.y_rot = angles[0] + 2048;
+					}
 
 					TriggerCrocgodMissile(&mPos, item->room_number, 1);
 				}
@@ -714,14 +752,16 @@ void CrocgodControl(short item_number) {
 
 		case 4:
 
-			if(item->item_flags[2] < 600)
+			if(item->item_flags[2] < 600) {
 				item->item_flags[2]++;
+			}
 
 			if(item->item_flags[2] == 999) {
 				frame = item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base;
 
-				if(frame >= 60 && frame <= 120)
+				if(frame >= 60 && frame <= 120) {
 					TriggerLocust(item);
+				}
 			}
 
 			break;
@@ -745,10 +785,11 @@ void CrocgodControl(short item_number) {
 				mPos.y_rot = angles[0];
 				mPos.x_rot = angles[1];
 
-				if(frame == 60)
+				if(frame == 60) {
 					TriggerCrocgodMissile(&mPos, item->room_number, 0);
-				else
+				} else {
 					TriggerCrocgodMissile(&mPos, item->room_number, 1);
+				}
 			}
 
 			break;

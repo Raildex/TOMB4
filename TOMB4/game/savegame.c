@@ -55,8 +55,9 @@ long CheckSumValid(char* buffer) {
 
 	checksum = 0;
 
-	for(int i = 0; i < sizeof(SAVEGAME_INFO); i++)
+	for(int i = 0; i < sizeof(SAVEGAME_INFO); i++) {
 		checksum += *buffer++;
+	}
 
 	return !checksum;
 }
@@ -68,9 +69,9 @@ void sgInitialiseHub(long dont_save_lara) {
 		savegame.HubSizes[i] = 0;
 	}
 
-	if(dont_save_lara)
+	if(dont_save_lara) {
 		savegame.HubSavedLara = 0;
-	else {
+	} else {
 		SaveLaraData();
 		savegame.HubSavedLara = 1;
 	}
@@ -127,8 +128,9 @@ void WriteSG(void* pointer, long size) {
 
 	SGcount += size;
 
-	for(data = (char*)pointer; size > 0; size--)
+	for(data = (char*)pointer; size > 0; size--) {
 		*SGpoint++ = *data++;
+	}
 }
 
 void ReadSG(void* pointer, long size) {
@@ -136,15 +138,17 @@ void ReadSG(void* pointer, long size) {
 
 	SGcount += size;
 
-	for(data = (char*)pointer; size > 0; size--)
+	for(data = (char*)pointer; size > 0; size--) {
 		*data++ = *SGpoint++;
+	}
 }
 
 void SaveHubData(long index) {
 	savegame.HubSizes[index] = (unsigned short)(SGcount - savegame.HubOffsets[index]);
 
-	if(index < 10)
+	if(index < 10) {
 		savegame.HubSizes[index - 9] = savegame.HubSizes[index] + savegame.HubOffsets[index];
+	}
 }
 
 void RestoreLaraData(long FullSave) {
@@ -259,8 +263,9 @@ void CreateCheckSum() {
 	ptr = (char*)&savegame;
 	checksum = 0;
 
-	for(int i = 0; i < sizeof(SAVEGAME_INFO); i++)
+	for(int i = 0; i < sizeof(SAVEGAME_INFO); i++) {
 		checksum += *ptr++;
+	}
 
 	savegame.Checksum = -checksum;
 }
@@ -301,8 +306,9 @@ long OpenSaveGame(unsigned char current_level, long saving) {
 
 	index = 0;
 
-	while(index < 10 && savegame.HubLevels[index] != current_level)
+	while(index < 10 && savegame.HubLevels[index] != current_level) {
 		index++;
+	}
 
 	if(saving == 1) {
 		j = index + 1;
@@ -313,8 +319,9 @@ long OpenSaveGame(unsigned char current_level, long saving) {
 				curOffset = &savegame.HubOffsets[i];
 				nexOffset = &savegame.HubOffsets[j];
 
-				if(!savegame.HubLevels[j])
+				if(!savegame.HubLevels[j]) {
 					break;
+				}
 
 				memcpy(&savegame.buffer[curOffset[0]], &savegame.buffer[nexOffset[0]], nexOffset[10]);
 				curOffset[10] = nexOffset[10];
@@ -328,8 +335,9 @@ long OpenSaveGame(unsigned char current_level, long saving) {
 		}
 
 		for(index = 0; index < 10; index++) {
-			if(!savegame.HubLevels[index])
+			if(!savegame.HubLevels[index]) {
 				break;
+			}
 		}
 
 		savegame.HubLevels[index] = current_level;

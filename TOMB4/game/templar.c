@@ -52,8 +52,9 @@ void TemplarControl(short item_number) {
 	AI_INFO info;
 	short anim, head, torso_x, torso_y, angle;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 	anim = item->anim_number - GetObjectInfo(currentLevel, KNIGHTS_TEMPLAR)->anim_index;
@@ -71,18 +72,21 @@ void TemplarControl(short item_number) {
 	torso_x = 0;
 	torso_y = 0;
 
-	if(item->hit_points < GetObjectInfo(currentLevel, KNIGHTS_TEMPLAR)->hit_points)
+	if(item->hit_points < GetObjectInfo(currentLevel, KNIGHTS_TEMPLAR)->hit_points) {
 		item->hit_points = GetObjectInfo(currentLevel, KNIGHTS_TEMPLAR)->hit_points;
+	}
 
-	if(item->ai_bits)
+	if(item->ai_bits) {
 		GetAITarget(knight);
-	else if(knight->hurt_by_lara)
+	} else if(knight->hurt_by_lara) {
 		knight->enemy = lara_item;
+	}
 
 	CreatureAIInfo(item, &info);
 
-	if(knight->enemy != lara_item)
+	if(knight->enemy != lara_item) {
 		phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+	}
 
 	GetCreatureMood(item, &info, 1);
 	CreatureMood(item, &info, 1);
@@ -100,24 +104,27 @@ void TemplarControl(short item_number) {
 		knight->maximum_turn = 364;
 
 		if(info.distance > 0x718E4) {
-			if(lara.target_item == item_number)
+			if(lara.target_item == item_number) {
 				item->goal_anim_state = 6;
-			else
+			} else {
 				item->goal_anim_state = 2;
-		} else if(GetRandomControl() & 1)
+			}
+		} else if(GetRandomControl() & 1) {
 			item->goal_anim_state = 4;
-		else if(GetRandomControl() & 1)
+		} else if(GetRandomControl() & 1) {
 			item->goal_anim_state = 3;
-		else
+		} else {
 			item->goal_anim_state = 5;
+		}
 
 		break;
 
 	case 2:
 		knight->maximum_turn = 1274;
 
-		if(lara.target_item == item_number || info.distance <= 0x718E4)
+		if(lara.target_item == item_number || info.distance <= 0x718E4) {
 			item->goal_anim_state = 1;
+		}
 
 		break;
 
@@ -126,12 +133,13 @@ void TemplarControl(short item_number) {
 	case 5:
 		knight->maximum_turn = 0;
 
-		if(abs(info.angle) < 182)
+		if(abs(info.angle) < 182) {
 			item->pos.y_rot += info.angle;
-		else if(info.angle < 0)
+		} else if(info.angle < 0) {
 			item->pos.y_rot -= 182;
-		else
+		} else {
 			item->pos.y_rot += 182;
+		}
 
 		if(item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 42 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 51) {
 			r = GetRoom(currentLevel, item->room_number);
@@ -170,22 +178,25 @@ void TemplarControl(short item_number) {
 	case 6:
 		knight->maximum_turn = 0;
 
-		if(abs(info.angle) < 182)
+		if(abs(info.angle) < 182) {
 			item->pos.y_rot += info.angle;
-		else if(info.angle < 0)
+		} else if(info.angle < 0) {
 			item->pos.y_rot -= 182;
-		else
+		} else {
 			item->pos.y_rot += 182;
+		}
 
 		if(item->hit_status) {
-			if(GetRandomControl() & 1)
+			if(GetRandomControl() & 1) {
 				item->goal_anim_state = 7;
-			else
+			} else {
 				item->goal_anim_state = 8;
-		} else if(info.distance > 465124 && lara.target_item == item_number)
+			}
+		} else if(info.distance > 465124 && lara.target_item == item_number) {
 			item->goal_anim_state = 6;
-		else
+		} else {
 			item->goal_anim_state = 1;
+		}
 
 		break;
 	}

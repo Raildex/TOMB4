@@ -103,8 +103,9 @@ int LoadLevel(void* name) {
 		if(!(sfxMarker[0] == 'S' && sfxMarker[1] == 'F' && sfxMarker[2] == 'X')) {
 			Log(__func__, "Invalid Marker %c %c %c!", sfxMarker[0], sfxMarker[1], sfxMarker[2]);
 		}
-		if(acm_ready && !App.SoundDisabled)
+		if(acm_ready && !App.SoundDisabled) {
 			LoadSamples(level_fp, &FileData, currentLevel);
+		}
 
 		free(pData);
 		S_LoadBar();
@@ -139,8 +140,9 @@ long S_LoadLevelFile(long num) {
 }
 
 void FreeLevel() {
-	if(currentLevel)
+	if(currentLevel) {
 		DestroyLevel(currentLevel);
+	}
 	currentLevel = NULL;
 }
 
@@ -188,8 +190,9 @@ FILE* FileOpen(const char* name) {
 	Log(__func__, "FileOpen - %s", path_name);
 	file = fopen(path_name, "rb");
 
-	if(!file)
+	if(!file) {
 		Log(__func__, "Unable To Open %s", path_name);
+	}
 
 	return file;
 }
@@ -216,13 +219,15 @@ long LoadFile(const char* name, char** dest) {
 	Log(__func__, "File - %s", name);
 	file = FileOpen(name);
 
-	if(!file)
+	if(!file) {
 		return 0;
+	}
 
 	size = FileSize(file);
 
-	if(!*dest)
+	if(!*dest) {
 		*dest = (char*)calloc(size, 1);
+	}
 
 	count = fread(*dest, 1, size, file);
 	Log(__func__, "Read - %d FileSize - %d", count, size);

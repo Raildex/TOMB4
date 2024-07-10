@@ -79,10 +79,11 @@ void DoOptions() {
 	if(menu) // controls menu
 	{
 
-		if(Gameflow->Language == GERMAN)
+		if(Gameflow->Language == GERMAN) {
 			keyboard_buttons = (char**)GermanKeyboard;
-		else
+		} else {
 			keyboard_buttons = (char**)KeyboardButtons;
+		}
 
 		nMask = 17;
 		small_font = 1;
@@ -108,12 +109,13 @@ void DoOptions() {
 		PrintString(phd_centerx >> 2, f + y++ * font_height, sel & (1 << i++) ? 1 : 2, SCRIPT_TEXT(TXT_Step_Left), 0);
 		PrintString(phd_centerx >> 2, f + y++ * font_height, sel & (1 << i++) ? 1 : 2, SCRIPT_TEXT(TXT_Step_Right), 0);
 
-		if(!ControlMethod)
+		if(!ControlMethod) {
 			PrintString(phd_centerx + (phd_centerx >> 2), f, sel2 & 1 ? 1 : 6, SCRIPT_TEXT(TXT_Keyboard), 0);
-		else if(ControlMethod == 1)
+		} else if(ControlMethod == 1) {
 			PrintString(phd_centerx + (phd_centerx >> 2), f, sel2 & 1 ? 1 : 6, SCRIPT_TEXT(TXT_Joystick), 0);
-		else if(ControlMethod == 2)
+		} else if(ControlMethod == 2) {
 			PrintString(phd_centerx + (phd_centerx >> 2), f, sel2 & 1 ? 1 : 6, SCRIPT_TEXT(TXT_Reset), 0);
+		}
 
 		y = 1;
 		i = 1;
@@ -219,36 +221,43 @@ void DoOptions() {
 				ControlMethod++;
 			}
 
-			if(ControlMethod > 2)
+			if(ControlMethod > 2) {
 				ControlMethod = 2;
+			}
 
-			if(ControlMethod < 0)
+			if(ControlMethod < 0) {
 				ControlMethod = 0;
+			}
 
 			if(ControlMethod == 1) {
 				joy.dwSize = sizeof(JOYINFOEX);
 
 				if(joyGetPosEx(0, &joy) == JOYERR_UNPLUGGED) {
-					if(dbinput & IN_LEFT)
+					if(dbinput & IN_LEFT) {
 						ControlMethod = 0;
+					}
 
-					if(dbinput & IN_RIGHT)
+					if(dbinput & IN_RIGHT) {
 						ControlMethod = 2;
+					}
 				}
 			}
 		}
 
-		if(!sel)
+		if(!sel) {
 			sel = 1;
+		}
 
-		if(sel > (unsigned long)(1 << (nMask - 1)))
+		if(sel > (unsigned long)(1 << (nMask - 1))) {
 			sel = 1 << (nMask - 1);
+		}
 
 		if(dbinput & IN_DESELECT) {
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
-			if(ControlMethod < 2)
+			if(ControlMethod < 2) {
 				menu = 0;
+			}
 
 			dbinput = 0;
 			sel = 1;
@@ -266,17 +275,19 @@ void DoOptions() {
 		S_DoSlider(400, 3 * font_height - (font_height >> 1) + f + 4, 200, 16, MusicVolume, 0xFF1F1F1F, 0xFF3F3FFF, mSliderCol);
 		S_DoSlider(400, f + 4 * font_height + 4 - (font_height >> 1), 200, 16, SFXVolume, 0xFF1F1F1F, 0xFF3F3FFF, sSliderCol);
 
-		if(!SoundQuality)
+		if(!SoundQuality) {
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 5 * font_height, sel & 8 ? 1 : 6, SCRIPT_TEXT(TXT_Low), 0);
-		else if(SoundQuality == 1)
+		} else if(SoundQuality == 1) {
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 5 * font_height, sel & 8 ? 1 : 6, SCRIPT_TEXT(TXT_Medium), 0);
-		else if(SoundQuality == 2)
+		} else if(SoundQuality == 2) {
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 5 * font_height, sel & 8 ? 1 : 6, SCRIPT_TEXT(TXT_High), 0);
+		}
 
-		if(App.AutoTarget)
+		if(App.AutoTarget) {
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 6 * font_height, sel & 0x10 ? 1 : 6, SCRIPT_TEXT(TXT_Automatic), 0);
-		else
+		} else {
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 6 * font_height, sel & 0x10 ? 1 : 6, SCRIPT_TEXT(TXT_Manual), 0);
+		}
 
 		PrintString(phd_centerx, (font_height >> 1) + f + 7 * font_height, sel & 0x20 ? 1 : 2, "tomb4 options", FF_CENTER);
 
@@ -301,11 +312,13 @@ void DoOptions() {
 			menu = 200;
 		}
 
-		if(!sel)
+		if(!sel) {
 			sel = 1;
+		}
 
-		if(sel > (unsigned long)(1 << (nMask - 1)))
+		if(sel > (unsigned long)(1 << (nMask - 1))) {
 			sel = 1 << (nMask - 1);
+		}
 
 		mSliderCol = 0xFF3F3F3F;
 		sSliderCol = 0xFF3F3F3F;
@@ -313,31 +326,37 @@ void DoOptions() {
 		if(sel & 2) {
 			sfx_bak = SFXVolume;
 
-			if(linput & IN_LEFT)
+			if(linput & IN_LEFT) {
 				MusicVolume--;
+			}
 
-			if(linput & IN_RIGHT)
+			if(linput & IN_RIGHT) {
 				MusicVolume++;
+			}
 
-			if(MusicVolume > 100)
+			if(MusicVolume > 100) {
 				MusicVolume = 100;
-			else if(MusicVolume < 0)
+			} else if(MusicVolume < 0) {
 				MusicVolume = 0;
+			}
 
 			sSliderCol = 0xFF3F3F3F;
 			mSliderCol = 0xFF7F7F7F;
 			ACMSetVolume();
 		} else if(sel & 4) {
-			if(linput & IN_LEFT)
+			if(linput & IN_LEFT) {
 				SFXVolume--;
+			}
 
-			if(linput & IN_RIGHT)
+			if(linput & IN_RIGHT) {
 				SFXVolume++;
+			}
 
-			if(SFXVolume > 100)
+			if(SFXVolume > 100) {
 				SFXVolume = 100;
-			else if(SFXVolume < 0)
+			} else if(SFXVolume < 0) {
 				SFXVolume = 0;
+			}
 
 			if(SFXVolume != sfx_bak) {
 				if(sfx_breath_db == -1 || !DSIsChannelPlaying(0)) {
@@ -345,8 +364,9 @@ void DoOptions() {
 					sfx_bak = SFXVolume;
 					sfx_breath_db = SoundEffect(SFX_LARA_BREATH, 0, SFX_ALWAYS);
 					DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
-				} else if(sfx_breath_db != -1 && DSIsChannelPlaying(0))
+				} else if(sfx_breath_db != -1 && DSIsChannelPlaying(0)) {
 					DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
+				}
 			}
 
 			mSliderCol = 0xFF3F3F3F;
@@ -354,16 +374,19 @@ void DoOptions() {
 		} else if(sel & 8) {
 			sfx_bak = SFXVolume;
 
-			if(dbinput & IN_LEFT)
+			if(dbinput & IN_LEFT) {
 				SoundQuality--;
+			}
 
-			if(dbinput & IN_RIGHT)
+			if(dbinput & IN_RIGHT) {
 				SoundQuality++;
+			}
 
-			if(SoundQuality > 2)
+			if(SoundQuality > 2) {
 				SoundQuality = 2;
-			else if(SoundQuality < 0)
+			} else if(SoundQuality < 0) {
 				SoundQuality = 0;
+			}
 
 			if(SoundQuality != sfx_quality_bak) {
 				S_SoundStopAllSamples();
@@ -373,15 +396,17 @@ void DoOptions() {
 			}
 		} else if(sel & 16) {
 			if(dbinput & IN_LEFT) {
-				if(App.AutoTarget)
+				if(App.AutoTarget) {
 					App.AutoTarget = 0;
+				}
 
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			}
 
 			if(dbinput & IN_RIGHT) {
-				if(!App.AutoTarget)
+				if(!App.AutoTarget) {
 					App.AutoTarget = 1;
+				}
 
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			}
@@ -446,15 +471,17 @@ long S_DisplayPauseMenu(long reset) {
 			PrintString(phd_centerx, y + 2 * font_height, selection & 4 ? 1 : 2, SCRIPT_TEXT(TXT_Exit_to_Title), FF_CENTER);
 
 			if(dbinput & IN_FORWARD) {
-				if(selection > 1)
+				if(selection > 1) {
 					selection >>= 1;
+				}
 
 				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 			}
 
 			if(dbinput & IN_BACK) {
-				if(selection < 4)
+				if(selection < 4) {
 					selection <<= 1;
+				}
 
 				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 			}
@@ -467,12 +494,13 @@ long S_DisplayPauseMenu(long reset) {
 			if(dbinput & IN_SELECT && !keymap[DIK_LALT]) {
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
-				if(selection & 1)
+				if(selection & 1) {
 					menu = 2;
-				else if(selection & 2)
+				} else if(selection & 2) {
 					menu = 1;
-				else if(selection & 4)
+				} else if(selection & 4) {
 					return 8;
+				}
 			}
 		}
 	} else if(menu == 1) {
@@ -502,10 +530,11 @@ long DoLoadSave(long LoadSave) {
 	char string[80];
 	char name[41];
 
-	if(LoadSave & IN_SAVE)
+	if(LoadSave & IN_SAVE) {
 		txt = TXT_Save_Game;
-	else
+	} else {
 		txt = TXT_Load_Game;
+	}
 
 	PrintString(phd_centerx, font_height, 6, SCRIPT_TEXT(txt), FF_CENTER);
 
@@ -513,14 +542,16 @@ long DoLoadSave(long LoadSave) {
 		pSave = &SaveGames[i];
 		color = 2;
 
-		if(i == selection)
+		if(i == selection) {
 			color = 1;
+		}
 
 		memset(name, ' ', 40);
 		l = strlen(pSave->name);
 
-		if(l > 40)
+		if(l > 40) {
 			l = 40;
+		}
 
 		strncpy(name, pSave->name, l);
 		name[40] = 0;
@@ -550,14 +581,16 @@ long DoLoadSave(long LoadSave) {
 		SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 	}
 
-	if(selection < 0)
+	if(selection < 0) {
 		selection = 0;
-	else if(selection > 14)
+	} else if(selection > 14) {
 		selection = 14;
+	}
 
 	if(dbinput & IN_SELECT) {
-		if(SaveGames[selection].valid || LoadSave == IN_SAVE)
+		if(SaveGames[selection].valid || LoadSave == IN_SAVE) {
 			return selection;
+		}
 
 		SoundEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
 	}
@@ -570,21 +603,24 @@ long S_LoadSave(long load_or_save, long mono, long inv_active) {
 
 	fade = 0;
 
-	if(!mono)
+	if(!mono) {
 		CreateMonoScreen();
+	}
 
 	GetSaveLoadFiles();
 
-	if(!inv_active)
+	if(!inv_active) {
 		InventoryActive = 1;
+	}
 
 	while(1) {
 		S_InitialisePolyList();
 
-		if(fade)
+		if(fade) {
 			dbinput = 0;
-		else
+		} else {
 			S_UpdateInput();
+		}
 
 		SetDebounce = 1;
 		S_DisplayMonoScreen();
@@ -604,8 +640,9 @@ long S_LoadSave(long load_or_save, long mono, long inv_active) {
 			fade = ret + 1;
 			S_LoadGame(ret);
 
-			if(!DeathMenuActive)
+			if(!DeathMenuActive) {
 				SetFade(0, 255);
+			}
 
 			ret = -1;
 		}
@@ -623,11 +660,13 @@ long S_LoadSave(long load_or_save, long mono, long inv_active) {
 
 	S_TimeInit();
 
-	if(!mono)
+	if(!mono) {
 		FreeMonoScreen();
+	}
 
-	if(!inv_active)
+	if(!inv_active) {
 		InventoryActive = 0;
+	}
 
 	return ret;
 }
@@ -699,10 +738,11 @@ void S_DisplayMonoScreen() {
 void CreateMonoScreen() {
 	MonoScreenOn = 1;
 
-	if(App.dx.Flags & DXF_WINDOWED)
+	if(App.dx.Flags & DXF_WINDOWED) {
 		ConvertSurfaceToTextures(App.dx.lpBackBuffer);
-	else
+	} else {
 		ConvertSurfaceToTextures(App.dx.lpPrimaryBuffer);
+	}
 }
 
 void FreeMonoScreen() {
@@ -729,13 +769,15 @@ static void BitMaskGetNumberOfBits(unsigned long bitMask, unsigned long* bitDept
 		return;
 	}
 
-	for(i = 0; !(bitMask & 1); i++)
+	for(i = 0; !(bitMask & 1); i++) {
 		bitMask >>= 1;
+	}
 
 	*bitOffset = i;
 
-	for(i = 0; bitMask != 0; i++)
+	for(i = 0; bitMask != 0; i++) {
 		bitMask >>= 1;
+	}
 
 	*bitDepth = i;
 }
@@ -786,22 +828,25 @@ static void CustomBlt(DDSURFACEDESC2* dst, unsigned long dstX, unsigned long dst
 				high = dstMask.dwRBitDepth - srcMask.dwRBitDepth;
 				low = (srcMask.dwRBitDepth > high) ? srcMask.dwRBitDepth - high : 0;
 				r = (r << high) | (r >> low);
-			} else if(srcMask.dwRBitDepth > dstMask.dwRBitDepth)
+			} else if(srcMask.dwRBitDepth > dstMask.dwRBitDepth) {
 				r >>= srcMask.dwRBitDepth - dstMask.dwRBitDepth;
+			}
 
 			if(srcMask.dwGBitDepth < dstMask.dwGBitDepth) {
 				high = dstMask.dwGBitDepth - srcMask.dwGBitDepth;
 				low = (srcMask.dwGBitDepth > high) ? srcMask.dwGBitDepth - high : 0;
 				g = (g << high) | (g >> low);
-			} else if(srcMask.dwGBitDepth > dstMask.dwGBitDepth)
+			} else if(srcMask.dwGBitDepth > dstMask.dwGBitDepth) {
 				g >>= srcMask.dwGBitDepth - dstMask.dwGBitDepth;
+			}
 
 			if(srcMask.dwBBitDepth < dstMask.dwBBitDepth) {
 				high = dstMask.dwBBitDepth - srcMask.dwBBitDepth;
 				low = (srcMask.dwBBitDepth > high) ? srcMask.dwBBitDepth - high : 0;
 				b = (b << high) | (b >> low);
-			} else if(srcMask.dwBBitDepth > dstMask.dwBBitDepth)
+			} else if(srcMask.dwBBitDepth > dstMask.dwBBitDepth) {
 				b >>= srcMask.dwBBitDepth - dstMask.dwBBitDepth;
+			}
 
 			RGBM_Mono((unsigned char*)&r, (unsigned char*)&g, (unsigned char*)&b);
 			color = dst->ddpfPixelFormat.dwRGBAlphaBitMask; // destination is opaque
@@ -871,10 +916,11 @@ long S_PauseMenu() {
 	do {
 		S_InitialisePolyList();
 
-		if(fade)
+		if(fade) {
 			dbinput = 0;
-		else
+		} else {
 			S_UpdateInput();
+		}
 
 		SetDebounce = 1;
 		S_DisplayMonoScreen();
@@ -883,8 +929,9 @@ long S_PauseMenu() {
 		S_OutputPolyList();
 		S_DumpScreen();
 
-		if(ret == 1)
+		if(ret == 1) {
 			break;
+		}
 
 		if(ret == 8) {
 			fade = 8;
@@ -939,8 +986,9 @@ long GetSaveLoadFiles() {
 			continue;
 		}
 
-		if(pSave->num > SaveCounter)
+		if(pSave->num > SaveCounter) {
 			SaveCounter = pSave->num;
+		}
 
 		pSave->valid = 1;
 		fclose(file);

@@ -192,8 +192,9 @@ static long CheckForHoldingState(long state) {
 	holds = HoldStates;
 
 	while(*holds >= 0) {
-		if(state == *holds)
+		if(state == *holds) {
 			return 1;
+		}
 
 		holds++;
 	}
@@ -222,8 +223,9 @@ void InitialiseNewWeapon() {
 		lara.left_arm.frame_base = GetObjectInfo(currentLevel, PISTOLS_ANIM)->frame_base;
 		lara.right_arm.frame_base = GetObjectInfo(currentLevel, PISTOLS_ANIM)->frame_base;
 
-		if(lara.gun_status != LG_NO_ARMS)
+		if(lara.gun_status != LG_NO_ARMS) {
 			draw_pistol_meshes(lara.gun_type);
+		}
 
 		break;
 
@@ -233,8 +235,9 @@ void InitialiseNewWeapon() {
 		lara.left_arm.frame_base = GetObjectInfo(currentLevel, WeaponObject(lara.gun_type))->frame_base;
 		lara.right_arm.frame_base = GetObjectInfo(currentLevel, WeaponObject(lara.gun_type))->frame_base;
 
-		if(lara.gun_status != LG_NO_ARMS)
+		if(lara.gun_status != LG_NO_ARMS) {
 			draw_shotgun_meshes(lara.gun_type);
+		}
 
 		break;
 
@@ -242,8 +245,9 @@ void InitialiseNewWeapon() {
 		lara.left_arm.frame_base = GetObjectInfo(currentLevel, FLARE_ANIM)->frame_base;
 		lara.right_arm.frame_base = GetObjectInfo(currentLevel, FLARE_ANIM)->frame_base;
 
-		if(lara.gun_status != LG_NO_ARMS)
+		if(lara.gun_status != LG_NO_ARMS) {
 			draw_flare_meshes();
+		}
 
 		break;
 
@@ -304,8 +308,9 @@ void LaraTargetInfo(WEAPON_INFO* winfo) {
 		}
 
 		if(lara.left_arm.lock) {
-			if(ang[0] < winfo->left_angles[0] || ang[0] > winfo->left_angles[1] || ang[1] < winfo->left_angles[2] || ang[1] > winfo->left_angles[3])
+			if(ang[0] < winfo->left_angles[0] || ang[0] > winfo->left_angles[1] || ang[1] < winfo->left_angles[2] || ang[1] > winfo->left_angles[3]) {
 				lara.left_arm.lock = 0;
+			}
 		}
 
 		if(lara.right_arm.lock) {
@@ -339,32 +344,35 @@ short* get_current_ammo_pointer(long weapon_type) {
 
 	case WEAPON_SHOTGUN:
 
-		if(lara.shotgun_type_carried & W_AMMO1)
+		if(lara.shotgun_type_carried & W_AMMO1) {
 			ammo = &lara.num_shotgun_ammo1;
-		else
+		} else {
 			ammo = &lara.num_shotgun_ammo2;
+		}
 
 		break;
 
 	case WEAPON_GRENADE:
 
-		if(lara.grenade_type_carried & W_AMMO1)
+		if(lara.grenade_type_carried & W_AMMO1) {
 			ammo = &lara.num_grenade_ammo1;
-		else if(lara.grenade_type_carried & W_AMMO2)
+		} else if(lara.grenade_type_carried & W_AMMO2) {
 			ammo = &lara.num_grenade_ammo2;
-		else
+		} else {
 			ammo = &lara.num_grenade_ammo3;
+		}
 
 		break;
 
 	case WEAPON_CROSSBOW:
 
-		if(lara.crossbow_type_carried & W_AMMO1)
+		if(lara.crossbow_type_carried & W_AMMO1) {
 			ammo = &lara.num_crossbow_ammo1;
-		else if(lara.crossbow_type_carried & W_AMMO2)
+		} else if(lara.crossbow_type_carried & W_AMMO2) {
 			ammo = &lara.num_crossbow_ammo2;
-		else
+		} else {
 			ammo = &lara.num_crossbow_ammo3;
+		}
 
 		break;
 
@@ -389,11 +397,13 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 	GetLaraJointPos((PHD_VECTOR*)&bum_view, 11);
 	ammo = get_current_ammo_pointer(weapon_type);
 
-	if(!*ammo)
+	if(!*ammo) {
 		return 0;
+	}
 
-	if(*ammo != -1)
+	if(*ammo != -1) {
 		--*ammo;
+	}
 
 	winfo = &weapons[weapon_type];
 
@@ -440,8 +450,9 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 		bum_vdest.pos.y = bum_vsrc.pos.y + (long)(bestdist * mMXPtr[M21]);
 		bum_vdest.pos.z = bum_vsrc.pos.z + (long)(bestdist * mMXPtr[M22]);
 
-		if(!GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1))
+		if(!GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1)) {
 			HitTarget(target, &bum_vdest, winfo->damage, 0);
+		}
 
 		return 1;
 	}
@@ -460,19 +471,21 @@ void AimWeapon(WEAPON_INFO* winfo, LARA_ARM* arm) {
 		y = 0;
 	}
 
-	if(arm->y_rot >= y - speed && arm->y_rot <= speed + y)
+	if(arm->y_rot >= y - speed && arm->y_rot <= speed + y) {
 		arm->y_rot = y;
-	else if(arm->y_rot < y)
+	} else if(arm->y_rot < y) {
 		arm->y_rot += speed;
-	else
+	} else {
 		arm->y_rot -= speed;
+	}
 
-	if(arm->x_rot >= x - speed && arm->x_rot <= speed + x)
+	if(arm->x_rot >= x - speed && arm->x_rot <= speed + x) {
 		arm->x_rot = x;
-	else if(arm->x_rot < x)
+	} else if(arm->x_rot < x) {
 		arm->x_rot += speed;
-	else
+	} else {
 		arm->x_rot -= speed;
+	}
 
 	arm->z_rot = 0;
 }
@@ -544,11 +557,13 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 
 	if(TargetList[0]) {
 		for(slot = 0; slot < 8; slot++) {
-			if(TargetList[slot] == NO_ITEM)
+			if(TargetList[slot] == NO_ITEM) {
 				lara.target_item = NO_ITEM;
+			}
 
-			if(TargetList[slot] == lara.target_item)
+			if(TargetList[slot] == lara.target_item) {
 				break;
+			}
 		}
 
 		if(savegame.AutoTarget || input & IN_TARGET) {
@@ -559,8 +574,9 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 				lara.target_item = NO_ITEM;
 
 				for(match = 0; match < 8; match++) {
-					if(TargetList[match] == NO_ITEM)
+					if(TargetList[match] == NO_ITEM) {
 						break;
+					}
 
 					for(slot = 0; slot < 8; slot++) {
 						if(LastTargets[slot] == NO_ITEM) {
@@ -568,8 +584,9 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 							break;
 						}
 
-						if(LastTargets[slot] == TargetList[match])
+						if(LastTargets[slot] == TargetList[match]) {
 							break;
+						}
 					}
 
 					if(slot == 8) {
@@ -584,12 +601,14 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 				}
 			}
 		}
-	} else
+	} else {
 		lara.target_item = NO_ITEM;
+	}
 
 	if(lara.target_item != LastTargets[0]) {
-		for(slot = 7; slot > 0; slot--)
+		for(slot = 7; slot > 0; slot--) {
 			LastTargets[slot] = LastTargets[slot - 1];
+		}
 
 		LastTargets[0] = lara.target_item;
 	}
@@ -603,8 +622,9 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade) 
 	obj = GetObjectInfo(currentLevel, item->object_number);
 	item->hit_status = 1;
 
-	if(item->data && item != lara_item)
+	if(item->data && item != lara_item) {
 		((CREATURE_INFO*)item->data)->hurt_by_lara = 1;
+	}
 
 	if(hitpos && obj->HitEffect) {
 		switch(obj->HitEffect) {
@@ -630,8 +650,9 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade) 
 	}
 
 	if(!obj->undead || grenade || item->hit_points == -16384) {
-		if(item->hit_points > 0 && item->hit_points <= damage)
+		if(item->hit_points > 0 && item->hit_points <= damage) {
 			savegame.Level.Kills++;
+		}
 
 		item->hit_points -= (short)damage;
 	}
@@ -663,10 +684,11 @@ long WeaponObjectMesh(long weapon_type) {
 	switch(weapon_type) {
 	case WEAPON_REVOLVER:
 
-		if(lara.sixshooter_type_carried & W_LASERSIGHT)
+		if(lara.sixshooter_type_carried & W_LASERSIGHT) {
 			return LARA_REVOLVER_LASER;
-		else
+		} else {
 			return SIXSHOOTER_ANIM;
+		}
 
 	case WEAPON_UZI:
 		return UZI_ANIM;
@@ -679,10 +701,11 @@ long WeaponObjectMesh(long weapon_type) {
 
 	case WEAPON_CROSSBOW:
 
-		if(lara.crossbow_type_carried & W_LASERSIGHT)
+		if(lara.crossbow_type_carried & W_LASERSIGHT) {
 			return LARA_CROSSBOW_LASER;
-		else
+		} else {
 			return CROSSBOW_ANIM;
+		}
 
 	default:
 		return PISTOLS_ANIM;
@@ -714,8 +737,9 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 		if((oldtype == BIG_SLOPE || oldtype == DIAGONAL) && oldheight < height) {
 			yang = (unsigned short)item->pos.y_rot;
 
-			if(tiltzoff < 0 && yang >= 32768 || tiltzoff > 0 && yang <= 32768 || tiltxoff < 0 && yang >= 16384 && yang <= 49152 || tiltxoff > 0 && (yang <= 16384 || yang >= 49152))
+			if(tiltzoff < 0 && yang >= 32768 || tiltzoff > 0 && yang <= 32768 || tiltxoff < 0 && yang >= 16384 && yang <= 49152 || tiltxoff > 0 && (yang <= 16384 || yang >= 49152)) {
 				bs = 1;
+			}
 		}
 
 		if(y > height + 32 && !bs && ((item->pos.x_pos ^ x) & ~0x3FF || (item->pos.z_pos ^ z) & ~0x3FF)) {
@@ -728,13 +752,14 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 		} else if(oldtype != BIG_SLOPE && oldtype != DIAGONAL) {
 			if(item->fallspeed > 0) {
 				if(item->fallspeed > 16) {
-					if(item->object_number == GRENADE)
+					if(item->object_number == GRENADE) {
 						item->fallspeed = (item->fallspeed >> 1) - item->fallspeed;
-					else {
+					} else {
 						item->fallspeed = -(item->fallspeed >> 2);
 
-						if(item->fallspeed < -100)
+						if(item->fallspeed < -100) {
 							item->fallspeed = -100;
+						}
 					}
 				} else {
 					item->fallspeed = 0;
@@ -743,11 +768,13 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						item->speed--;
 						item->required_anim_state = 1;
 						item->pos.x_rot = 0;
-					} else
+					} else {
 						item->speed -= 3;
+					}
 
-					if(item->speed < 0)
+					if(item->speed < 0) {
 						item->speed = 0;
+					}
 				}
 			}
 
@@ -759,8 +786,9 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				if((unsigned short)item->pos.y_rot > 32768) {
 					item->pos.y_rot = -1 - item->pos.y_rot;
 
-					if(item->fallspeed > 0)
+					if(item->fallspeed > 0) {
 						item->fallspeed = -(item->fallspeed >> 1);
+					}
 				} else {
 					if(item->speed < 32) {
 						item->speed -= (short)(2 * tiltzoff);
@@ -768,13 +796,15 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						if((unsigned short)item->pos.y_rot > 16384 && (unsigned short)item->pos.y_rot < 49152) {
 							item->pos.y_rot -= 4096;
 
-							if((unsigned short)item->pos.y_rot < 16384)
+							if((unsigned short)item->pos.y_rot < 16384) {
 								item->pos.y_rot = 16384;
+							}
 						} else if((unsigned short)item->pos.y_rot < 16384) {
 							item->pos.y_rot += 4096;
 
-							if((unsigned short)item->pos.y_rot > 16384)
+							if((unsigned short)item->pos.y_rot > 16384) {
 								item->pos.y_rot = 16384;
+							}
 						}
 					}
 
@@ -784,8 +814,9 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				if((unsigned short)item->pos.y_rot < 32768) {
 					item->pos.y_rot = -1 - item->pos.y_rot;
 
-					if(item->fallspeed > 0)
+					if(item->fallspeed > 0) {
 						item->fallspeed = -(item->fallspeed >> 1);
+					}
 				} else {
 					if(item->speed < 32) {
 						item->speed += (short)(2 * tiltzoff);
@@ -793,13 +824,15 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						if((unsigned short)item->pos.y_rot > 49152 || (unsigned short)item->pos.y_rot < 16384) {
 							item->pos.y_rot -= 4096;
 
-							if((unsigned short)item->pos.y_rot < 49152)
+							if((unsigned short)item->pos.y_rot < 49152) {
 								item->pos.y_rot = -16384;
+							}
 						} else if((unsigned short)item->pos.y_rot < 49152) {
 							item->pos.y_rot += 4096;
 
-							if((unsigned short)item->pos.y_rot > 49152)
+							if((unsigned short)item->pos.y_rot > 49152) {
 								item->pos.y_rot = -16384;
+							}
 						}
 					}
 
@@ -809,8 +842,9 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				if((unsigned short)item->pos.y_rot > 16384 && (unsigned short)item->pos.y_rot < 49152) {
 					item->pos.y_rot = 32767 - item->pos.y_rot;
 
-					if(item->fallspeed > 0)
+					if(item->fallspeed > 0) {
 						item->fallspeed = -(item->fallspeed >> 1);
+					}
 				} else {
 					if(item->speed < 32) {
 						item->speed -= (short)(2 * tiltxoff);
@@ -818,13 +852,15 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						if((unsigned short)item->pos.y_rot < 32768) {
 							item->pos.y_rot -= 4096;
 
-							if((unsigned short)item->pos.y_rot > 61440)
+							if((unsigned short)item->pos.y_rot > 61440) {
 								item->pos.y_rot = 0;
+							}
 						} else {
 							item->pos.y_rot += 4096;
 
-							if((unsigned short)item->pos.y_rot < 4096)
+							if((unsigned short)item->pos.y_rot < 4096) {
 								item->pos.y_rot = 0;
+							}
 						}
 					}
 
@@ -834,8 +870,9 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				if((unsigned short)item->pos.y_rot > 49152 || (unsigned short)item->pos.y_rot < 16384) {
 					item->pos.y_rot = 32767 - item->pos.y_rot;
 
-					if(item->fallspeed > 0)
+					if(item->fallspeed > 0) {
 						item->fallspeed = -(item->fallspeed >> 1);
+					}
 				} else {
 					if(item->speed < 32) {
 						item->speed += (short)(2 * tiltxoff);
@@ -843,13 +880,15 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						if((unsigned short)item->pos.y_rot > 32768) {
 							item->pos.y_rot -= 4096;
 
-							if((unsigned short)item->pos.y_rot < 32768)
+							if((unsigned short)item->pos.y_rot < 32768) {
 								item->pos.y_rot = -32768;
+							}
 						} else if((unsigned short)item->pos.y_rot < 32768) {
 							item->pos.y_rot += 4096;
 
-							if((unsigned short)item->pos.y_rot > 32768)
+							if((unsigned short)item->pos.y_rot > 32768) {
 								item->pos.y_rot = -32768;
+							}
 						}
 					}
 
@@ -859,8 +898,9 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				if((unsigned short)item->pos.y_rot > 24576 && (unsigned short)item->pos.y_rot < 57344) {
 					item->pos.y_rot = -16385 - item->pos.y_rot;
 
-					if(item->fallspeed > 0)
+					if(item->fallspeed > 0) {
 						item->fallspeed = -(item->fallspeed >> 1);
+					}
 				} else {
 					if(item->speed < 32) {
 						item->speed -= (short)(tiltxoff + tiltzoff);
@@ -868,13 +908,15 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						if((unsigned short)item->pos.y_rot > 8192 && (unsigned short)item->pos.y_rot < 40960) {
 							item->pos.y_rot -= 4096;
 
-							if((unsigned short)item->pos.y_rot < 8192)
+							if((unsigned short)item->pos.y_rot < 8192) {
 								item->pos.y_rot = 8192;
+							}
 						} else if(item->pos.y_rot != 8192) {
 							item->pos.y_rot += 4096;
 
-							if((unsigned short)item->pos.y_rot > 8192)
+							if((unsigned short)item->pos.y_rot > 8192) {
 								item->pos.y_rot = 8192;
+							}
 						}
 					}
 
@@ -884,8 +926,9 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				if((unsigned short)item->pos.y_rot > 40960 || (unsigned short)item->pos.y_rot < 8192) {
 					item->pos.y_rot = 16383 - item->pos.y_rot;
 
-					if(item->fallspeed > 0)
+					if(item->fallspeed > 0) {
 						item->fallspeed = -(item->fallspeed >> 1);
+					}
 				} else {
 					if(item->speed < 32) {
 						item->speed += (short)(tiltxoff - tiltzoff);
@@ -893,13 +936,15 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						if((unsigned short)item->pos.y_rot < 57344 && (unsigned short)item->pos.y_rot > 24576) {
 							item->pos.y_rot -= 4096;
 
-							if((unsigned short)item->pos.y_rot < 24576)
+							if((unsigned short)item->pos.y_rot < 24576) {
 								item->pos.y_rot = 24576;
+							}
 						} else if(item->pos.y_rot != 24576) {
 							item->pos.y_rot += 4096;
 
-							if((unsigned short)item->pos.y_rot > 24576)
+							if((unsigned short)item->pos.y_rot > 24576) {
 								item->pos.y_rot = 24576;
+							}
 						}
 					}
 
@@ -909,8 +954,9 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				if((unsigned short)item->pos.y_rot > 57344 || (unsigned short)item->pos.y_rot < 24576) {
 					item->pos.y_rot = -16385 - item->pos.y_rot;
 
-					if(item->fallspeed > 0)
+					if(item->fallspeed > 0) {
 						item->fallspeed = -(item->fallspeed >> 1);
+					}
 				} else {
 					if(item->speed < 32) {
 						item->speed += (short)(tiltxoff + tiltzoff);
@@ -918,13 +964,15 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						if((unsigned short)item->pos.y_rot < 8192 || (unsigned short)item->pos.y_rot > 40960) {
 							item->pos.y_rot -= 4096;
 
-							if((unsigned short)item->pos.y_rot < 40960)
+							if((unsigned short)item->pos.y_rot < 40960) {
 								item->pos.y_rot = -24576;
+							}
 						} else if(item->pos.y_rot != -24576) {
 							item->pos.y_rot += 4096;
 
-							if((unsigned short)item->pos.y_rot > 40960)
+							if((unsigned short)item->pos.y_rot > 40960) {
 								item->pos.y_rot = -24576;
+							}
 						}
 					}
 
@@ -934,8 +982,9 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				if((unsigned short)item->pos.y_rot > 8192 && (unsigned short)item->pos.y_rot < 40960) {
 					item->pos.y_rot = 16383 - item->pos.y_rot;
 
-					if(item->fallspeed > 0)
+					if(item->fallspeed > 0) {
 						item->fallspeed = -(item->fallspeed >> 1);
+					}
 				} else {
 					if(item->speed < 32) {
 						item->speed += (short)(tiltzoff - tiltxoff);
@@ -943,13 +992,15 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 						if((unsigned short)item->pos.y_rot < 24576 || (unsigned short)item->pos.y_rot > 57344) {
 							item->pos.y_rot -= 4096;
 
-							if((unsigned short)item->pos.y_rot < 57344)
+							if((unsigned short)item->pos.y_rot < 57344) {
 								item->pos.y_rot = -8192;
+							}
 						} else if(item->pos.y_rot != -8192) {
 							item->pos.y_rot += 4096;
 
-							if((unsigned short)item->pos.y_rot > 57344)
+							if((unsigned short)item->pos.y_rot > 57344) {
 								item->pos.y_rot = -8192;
+							}
 						}
 					}
 
@@ -976,13 +1027,14 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 			if(item->pos.y_pos >= height && oldonobj) {
 				if(item->fallspeed > 0) {
 					if(item->fallspeed > 16) {
-						if(item->object_number == GRENADE)
+						if(item->object_number == GRENADE) {
 							item->fallspeed = (item->fallspeed >> 1) - item->fallspeed;
-						else {
+						} else {
 							item->fallspeed = -(item->fallspeed >> 2);
 
-							if(item->fallspeed < -100)
+							if(item->fallspeed < -100) {
 								item->fallspeed = -100;
+							}
 						}
 					} else {
 						item->fallspeed = 0;
@@ -991,11 +1043,13 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 							item->speed--;
 							item->required_anim_state = 1;
 							item->pos.x_rot = 0;
-						} else
+						} else {
 							item->speed -= 3;
+						}
 
-						if(item->speed < 0)
+						if(item->speed < 0) {
 							item->speed = 0;
+						}
 					}
 				}
 
@@ -1014,54 +1068,63 @@ void DoProperDetection(short item_number, long x, long y, long z, long xv, long 
 				item->pos.y_pos = y;
 				item->pos.z_pos = z;
 
-				if(item->object_number == GRENADE)
+				if(item->object_number == GRENADE) {
 					item->speed -= item->speed >> 3;
-				else
+				} else {
 					item->speed >>= 1;
-			} else
+				}
+			} else {
 				item->pos.y_pos = ceiling;
+			}
 
-			if(item->fallspeed < 0)
+			if(item->fallspeed < 0) {
 				item->fallspeed = -item->fallspeed;
+			}
 		}
 	}
 
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if(room_number != item->room_number)
+	if(room_number != item->room_number) {
 		ItemNewRoom(item_number, room_number);
+	}
 }
 
 void LaraGun() {
 	short state;
 
-	if(lara.left_arm.flash_gun > 0)
+	if(lara.left_arm.flash_gun > 0) {
 		lara.left_arm.flash_gun--;
+	}
 
-	if(lara.right_arm.flash_gun > 0)
+	if(lara.right_arm.flash_gun > 0) {
 		lara.right_arm.flash_gun--;
+	}
 
 	if(lara.gun_type == WEAPON_TORCH) {
 		DoFlameTorch();
 		return;
 	}
 
-	if(lara_item->hit_points <= 0)
+	if(lara_item->hit_points <= 0) {
 		lara.gun_status = LG_NO_ARMS;
-	else if(lara.gun_status == LG_NO_ARMS) {
-		if(input & IN_DRAW)
+	} else if(lara.gun_status == LG_NO_ARMS) {
+		if(input & IN_DRAW) {
 			lara.request_gun_type = lara.last_gun_type;
-		else if(input & IN_FLARE && !(gfLevelFlags & GF_YOUNGLARA)) {
-			if(lara_item->current_anim_state == AS_DUCK && lara_item->anim_number != ANIM_DUCKBREATHE)
+		} else if(input & IN_FLARE && !(gfLevelFlags & GF_YOUNGLARA)) {
+			if(lara_item->current_anim_state == AS_DUCK && lara_item->anim_number != ANIM_DUCKBREATHE) {
 				return;
+			}
 
 			if(lara.gun_type == WEAPON_FLARE) {
-				if(!lara.left_arm.frame_number)
+				if(!lara.left_arm.frame_number) {
 					lara.gun_status = LG_UNDRAW_GUNS;
+				}
 			} else if(lara.num_flares) {
-				if(lara.num_flares != -1)
+				if(lara.num_flares != -1) {
 					lara.num_flares--;
+				}
 
 				lara.request_gun_type = WEAPON_FLARE;
 			}
@@ -1071,15 +1134,17 @@ void LaraGun() {
 			state = lara_item->current_anim_state;
 
 			if((state == AS_DUCK || state == AS_DUCKROTL || state == AS_DUCKROTR) && (lara.request_gun_type == WEAPON_SHOTGUN || lara.request_gun_type == WEAPON_CROSSBOW || lara.request_gun_type == WEAPON_GRENADE)) {
-				if(lara.gun_type == WEAPON_FLARE)
+				if(lara.gun_type == WEAPON_FLARE) {
 					lara.request_gun_type = WEAPON_FLARE;
+				}
 			} else if(lara.request_gun_type != WEAPON_FLARE && (lara.vehicle != NO_ITEM || lara.water_status != LW_ABOVE_WATER && (lara.water_status != LW_WADE || lara.water_surface_dist <= -weapons[lara.gun_type].gun_height))) {
 				lara.last_gun_type = lara.request_gun_type;
 
-				if(lara.gun_type != WEAPON_FLARE)
+				if(lara.gun_type != WEAPON_FLARE) {
 					lara.gun_type = lara.request_gun_type;
-				else
+				} else {
 					lara.request_gun_type = WEAPON_FLARE;
+				}
 			} else {
 				if(lara.gun_type == WEAPON_FLARE) {
 					CreateFlare(FLARE_ITEM, 0);
@@ -1096,23 +1161,26 @@ void LaraGun() {
 			}
 		}
 	} else if(lara.gun_status == LG_READY) {
-		if(input & IN_DRAW || lara.request_gun_type != lara.gun_type || lara.water_status != LW_ABOVE_WATER && (lara.water_status != LW_WADE || lara.water_surface_dist < -weapons[lara.gun_type].gun_height))
+		if(input & IN_DRAW || lara.request_gun_type != lara.gun_type || lara.water_status != LW_ABOVE_WATER && (lara.water_status != LW_WADE || lara.water_surface_dist < -weapons[lara.gun_type].gun_height)) {
 			lara.gun_status = LG_UNDRAW_GUNS;
-	} else if(lara.gun_status == LG_HANDS_BUSY && input & IN_FLARE && lara_item->current_anim_state == AS_ALL4S && lara_item->anim_number == ANIM_ALL4S)
+		}
+	} else if(lara.gun_status == LG_HANDS_BUSY && input & IN_FLARE && lara_item->current_anim_state == AS_ALL4S && lara_item->anim_number == ANIM_ALL4S) {
 		lara.request_gun_type = 7;
+	}
 
 	switch(lara.gun_status) {
 	case LG_NO_ARMS:
 
 		if(lara.gun_type == WEAPON_FLARE) {
-			if(lara.vehicle == NO_ITEM && !CheckForHoldingState(lara_item->current_anim_state))
+			if(lara.vehicle == NO_ITEM && !CheckForHoldingState(lara_item->current_anim_state)) {
 				lara.flare_control_left = 0;
-			else if(lara.flare_control_left) {
+			} else if(lara.flare_control_left) {
 				if(lara.left_arm.frame_number) {
 					lara.left_arm.frame_number++;
 
-					if(lara.left_arm.frame_number == 110)
+					if(lara.left_arm.frame_number == 110) {
 						lara.left_arm.frame_number = 0;
+					}
 				}
 			} else {
 				lara.flare_control_left = 1;
@@ -1137,16 +1205,18 @@ void LaraGun() {
 
 	case LG_DRAW_GUNS:
 
-		if(lara.gun_type != WEAPON_FLARE && lara.gun_type != WEAPON_NONE)
+		if(lara.gun_type != WEAPON_FLARE && lara.gun_type != WEAPON_NONE) {
 			lara.last_gun_type = lara.gun_type;
+		}
 
 		switch(lara.gun_type) {
 		case WEAPON_PISTOLS:
 		case WEAPON_REVOLVER:
 		case WEAPON_UZI:
 
-			if(camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA && camera.type != HEAVY_CAMERA)
+			if(camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA && camera.type != HEAVY_CAMERA) {
 				camera.type = COMBAT_CAMERA;
+			}
 
 			draw_pistols(lara.gun_type);
 			break;
@@ -1155,8 +1225,9 @@ void LaraGun() {
 		case WEAPON_GRENADE:
 		case WEAPON_CROSSBOW:
 
-			if(camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA && camera.type != HEAVY_CAMERA)
+			if(camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA && camera.type != HEAVY_CAMERA) {
 				camera.type = COMBAT_CAMERA;
+			}
 
 			draw_shotgun(lara.gun_type);
 			break;
@@ -1197,13 +1268,15 @@ void LaraGun() {
 
 	case LG_READY:
 
-		if(input & IN_ACTION)
+		if(input & IN_ACTION) {
 			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_SCREAM)->mesh_index + LM_HEAD * 2);
-		else
+		} else {
 			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_HEAD * 2);
+		}
 
-		if(camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA && camera.type != HEAVY_CAMERA)
+		if(camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA && camera.type != HEAVY_CAMERA) {
 			camera.type = COMBAT_CAMERA;
+		}
 
 		if(input & IN_ACTION) {
 			if(!*get_current_ammo_pointer(lara.gun_type)) {

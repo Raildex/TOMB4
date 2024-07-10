@@ -188,9 +188,9 @@ static long S_Death() {
 				ret = go_and_load_game();
 
 				if(ret) {
-					if(ret > 0)
+					if(ret > 0) {
 						ret = 2;
-					else {
+					} else {
 						menu = 0;
 						ret = 0;
 					}
@@ -199,8 +199,9 @@ static long S_Death() {
 		} else {
 			PrintString(phd_centerx, phd_centery, 3, SCRIPT_TEXT(TXT_GAME_OVER), FF_CENTER);
 
-			if(lara.death_count > 300 || (lara.death_count > 150 && input != IN_NONE))
+			if(lara.death_count > 300 || (lara.death_count > 150 && input != IN_NONE)) {
 				return 1;
+			}
 		}
 
 		S_OutputPolyList();
@@ -223,11 +224,13 @@ long ControlPhase(long nframes, long demo_mode) {
 
 	RegeneratePickups();
 
-	if(nframes > 10)
+	if(nframes > 10) {
 		nframes = 10;
+	}
 
-	if(bTrackCamInit)
+	if(bTrackCamInit) {
 		bUseSpotCam = 0;
+	}
 
 	SetDebounce = 1;
 
@@ -235,35 +238,41 @@ long ControlPhase(long nframes, long demo_mode) {
 		GlobalCounter++;
 		UpdateSky();
 
-		if(S_UpdateInput() == IN_ALL)
+		if(S_UpdateInput() == IN_ALL) {
 			return 0;
+		}
 
 		if(bDisableLaraControl) {
-			if(gfCurrentLevel)
+			if(gfCurrentLevel) {
 				dbinput = 0;
+			}
 
 			input &= IN_LOOK;
 		}
 
 		if(cutseq_trig) {
-			if(keymap[DIK_ESCAPE] && !ScreenFading && !bDoCredits)
+			if(keymap[DIK_ESCAPE] && !ScreenFading && !bDoCredits) {
 				cutseq_trig = 3;
+			}
 
 			input = 0;
 
-			if(cutseq_num == 27)
+			if(cutseq_num == 27) {
 				input = IN_ACTION;
+			}
 		}
 
 		SetDebounce = 0;
 
 		if(gfCurrentLevel && (dbinput & IN_OPTION || GLOBAL_enterinventory != -1) && !cutseq_trig && lara_item->hit_points > 0) {
-			if(S_CallInventory2())
+			if(S_CallInventory2()) {
 				return 2;
+			}
 		}
 
-		if(gfLevelComplete)
+		if(gfLevelComplete) {
 			return 3;
+		}
 
 		if(/*tomb4.gameover*/ true) {
 			if(reset_flag) {
@@ -287,21 +296,25 @@ long ControlPhase(long nframes, long demo_mode) {
 			}
 		}
 
-		if(demo_mode && input == IN_ALL)
+		if(demo_mode && input == IN_ALL) {
 			input = 0;
+		}
 
 		if(!FadeScreenHeight) {
-			if(input & IN_SAVE && lara_item->hit_points > 0)
+			if(input & IN_SAVE && lara_item->hit_points > 0) {
 				S_LoadSave(IN_SAVE, 0, 0);
+			}
 
 			else if(input & IN_LOAD) {
-				if(S_LoadSave(IN_LOAD, 0, 0) >= 0)
+				if(S_LoadSave(IN_LOAD, 0, 0) >= 0) {
 					return 2;
+				}
 			}
 
 			if(input & IN_PAUSE && gfGameMode == 0 && lara_item->hit_points > 0) {
-				if(S_PauseMenu() == 8)
+				if(S_PauseMenu() == 8) {
 					return 1;
+				}
 			}
 		}
 
@@ -332,8 +345,9 @@ long ControlPhase(long nframes, long demo_mode) {
 				lara.torso_x_rot = 0;
 				lara.torso_y_rot = 0;
 				BinocularOn = -8;
-			} else
+			} else {
 				input |= IN_LOOK;
+			}
 		}
 
 		ClearDynamics();
@@ -347,10 +361,12 @@ long ControlPhase(long nframes, long demo_mode) {
 			nex = item->next_active;
 
 			if(item->after_death < 128) {
-				if(GetObjectInfo(currentLevel, item->object_number)->control)
+				if(GetObjectInfo(currentLevel, item->object_number)->control) {
 					GetObjectInfo(currentLevel, item->object_number)->control(item_num);
-			} else
+				}
+			} else {
 				KillItem(item_num);
+			}
 
 			item_num = nex;
 		}
@@ -364,8 +380,9 @@ long ControlPhase(long nframes, long demo_mode) {
 			fx = GetEffect(currentLevel, fx_num);
 			nex = fx->next_active;
 
-			if(GetObjectInfo(currentLevel, fx->object_number)->control)
+			if(GetObjectInfo(currentLevel, fx->object_number)->control) {
 				GetObjectInfo(currentLevel, fx->object_number)->control(fx_num);
+			}
 
 			fx_num = nex;
 		}
@@ -373,23 +390,29 @@ long ControlPhase(long nframes, long demo_mode) {
 		InItemControlLoop = 0;
 		KillMoveEffects();
 
-		if(KillEverythingFlag)
+		if(KillEverythingFlag) {
 			KillEverything();
+		}
 
-		if(SmokeCountL)
+		if(SmokeCountL) {
 			SmokeCountL--;
+		}
 
-		if(SmokeCountR)
+		if(SmokeCountR) {
 			SmokeCountR--;
+		}
 
-		if(SplashCount)
+		if(SplashCount) {
 			SplashCount--;
+		}
 
-		if(WeaponDelay)
+		if(WeaponDelay) {
 			WeaponDelay--;
+		}
 
-		if(lara.blindTimer)
+		if(lara.blindTimer) {
 			lara.blindTimer--;
+		}
 
 		if(lara.has_fired && !(wibble & 0x7F)) {
 			AlertNearbyGuards(lara_item);
@@ -404,10 +427,11 @@ long ControlPhase(long nframes, long demo_mode) {
 		ZSoff2 += 160;
 
 		if(lara.poisoned && !GLOBAL_playing_cutseq) {
-			if(lara.poisoned > 4096)
+			if(lara.poisoned > 4096) {
 				lara.poisoned = 4096;
-			else if(lara.dpoisoned)
+			} else if(lara.dpoisoned) {
 				lara.dpoisoned++;
+			}
 
 			if(lara.poisoned >= 256 && !(wibble & 0xFF)) {
 				lara_item->hit_points -= lara.poisoned >> 8;
@@ -417,8 +441,9 @@ long ControlPhase(long nframes, long demo_mode) {
 
 		InItemControlLoop = 1;
 
-		if(!GLOBAL_playing_cutseq && !gfGameMode)
+		if(!GLOBAL_playing_cutseq && !gfGameMode) {
 			LaraControl(0);
+		}
 
 		InItemControlLoop = 0;
 
@@ -442,17 +467,19 @@ long ControlPhase(long nframes, long demo_mode) {
 		if(!GLOBAL_playing_cutseq) {
 			HairControl(0, 0, 0);
 
-			if(gfLevelFlags & GF_YOUNGLARA)
+			if(gfLevelFlags & GF_YOUNGLARA) {
 				HairControl(0, 1, 0);
+			}
 		}
 
 		if(GLOBAL_playing_cutseq) {
 			camera.type = CINEMATIC_CAMERA;
 			CalculateCamera();
-		} else if(bUseSpotCam)
+		} else if(bUseSpotCam) {
 			CalculateSpotCams();
-		else if(!bVoncroyCutScene)
+		} else if(!bVoncroyCutScene) {
 			CalculateCamera();
+		}
 
 		CamRot.y = (mGetAngle(camera.pos.pos.z, camera.pos.pos.x, camera.target.pos.z, camera.target.pos.x) >> 4) & 0xFFF;
 		wibble = (wibble + 4) & 0xFC;
@@ -479,8 +506,9 @@ long ControlPhase(long nframes, long demo_mode) {
 			GameTimer++;
 
 			if(savegame.Level.Timer) {
-				if(!GLOBAL_playing_cutseq)
+				if(!GLOBAL_playing_cutseq) {
 					savegame.Level.Timer++;
+				}
 			}
 		}
 
@@ -500,8 +528,9 @@ void FlipMap(long FlipNumber) {
 		r = GetRoom(currentLevel, i);
 
 		if(r->flipped_room >= 0 && r->FlipNumber == FlipNumber) {
-			for(int j = r->item_number; j != NO_ITEM; j = GetItem(currentLevel, j)->next_item)
+			for(int j = r->item_number; j != NO_ITEM; j = GetItem(currentLevel, j)->next_item) {
 				GetItem(currentLevel, j)->il.room_number = 255;
+			}
 
 			RemoveRoomFlipItems(r);
 			flipped = GetRoom(currentLevel, r->flipped_room);
@@ -532,8 +561,9 @@ void RemoveRoomFlipItems(ROOM_INFO* r) {
 		item = GetItem(currentLevel, item_num);
 
 		if(item->flags & IFL_INVISIBLE && GetObjectInfo(currentLevel, item->object_number)->intelligent) {
-			if(item->hit_points <= 0 && item->hit_points != -16384)
+			if(item->hit_points <= 0 && item->hit_points != -16384) {
 				KillItem(item_num);
+			}
 		}
 	}
 }
@@ -544,11 +574,13 @@ void AddRoomFlipItems(ROOM_INFO* r) {
 	for(short item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item) {
 		item = GetItem(currentLevel, item_num);
 
-		if(GetItem(currentLevel, item_num)->object_number == RAISING_BLOCK1 && item->item_flags[1])
+		if(GetItem(currentLevel, item_num)->object_number == RAISING_BLOCK1 && item->item_flags[1]) {
 			AlterFloorHeight(item, -1024);
+		}
 
-		if(item->object_number == RAISING_BLOCK2 && item->item_flags[1])
+		if(item->object_number == RAISING_BLOCK2 && item->item_flags[1]) {
 			AlterFloorHeight(item, -2048);
+		}
 	}
 }
 
@@ -557,7 +589,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 	ITEM_INFO* camera_item;
 	long switch_off, flip, flip_available, neweffect, key, quad;
 	short camera_flags, camera_timer, type, trigger, value, flags, state;
-	static unsigned char HeavyTriggered;
+	unsigned char HeavyTriggered;
 	char timer;
 
 	switch_off = 0;
@@ -574,15 +606,18 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 		lara.climb_status = 0;
 	}
 
-	if(!data)
+	if(!data) {
 		return;
+	}
 
 	if((*data & 0x1F) == LAVA_TYPE) {
-		if(!heavy && (lara_item->pos.y_pos == lara_item->floor || lara.water_status != LW_ABOVE_WATER))
+		if(!heavy && (lara_item->pos.y_pos == lara_item->floor || lara.water_status != LW_ABOVE_WATER)) {
 			LavaBurn(lara_item);
+		}
 
-		if(*data & 0x8000)
+		if(*data & 0x8000) {
 			return;
+		}
 
 		data++;
 	}
@@ -591,39 +626,46 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 		if(!heavy) {
 			quad = (unsigned short)(lara_item->pos.y_rot + 8192) >> W2V_SHIFT;
 
-			if((1 << (quad + 8)) & *data)
+			if((1 << (quad + 8)) & *data) {
 				lara.climb_status = 1;
+			}
 		}
 
-		if(*data & 0x8000)
+		if(*data & 0x8000) {
 			return;
+		}
 
 		data++;
 	}
 
 	if((*data & 0x1F) == MONKEY_TYPE) {
-		if(!heavy)
+		if(!heavy) {
 			lara.CanMonkeySwing = 1;
+		}
 
-		if(*data & 0x8000)
+		if(*data & 0x8000) {
 			return;
+		}
 
 		data++;
 	}
 
 	if((*data & 0x1F) == TRIGTRIGGER_TYPE) {
-		if(!(*data & 0x20) || *data & 0x8000)
+		if(!(*data & 0x20) || *data & 0x8000) {
 			return;
+		}
 
 		data++;
 	}
 
 	if((*data & 0x1F) == MINER_TYPE) {
-		if(!heavy)
+		if(!heavy) {
 			lara.OnBeetleFloor = 1;
+		}
 
-		if(*data & 0x8000)
+		if(*data & 0x8000) {
 			return;
+		}
 
 		data++;
 	}
@@ -632,8 +674,9 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 	flags = *data++;
 	timer = flags & 0xff;
 
-	if(camera.type != HEAVY_CAMERA)
+	if(camera.type != HEAVY_CAMERA) {
 		RefreshCamera(type, data);
+	}
 
 	if(heavy) {
 		switch(type) {
@@ -642,12 +685,14 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 			break;
 
 		case HEAVYSWITCH:
-			if(!HeavyFlags)
+			if(!HeavyFlags) {
 				return;
+			}
 
 			if(HeavyFlags >= 0) {
-				if((flags & IFL_CODEBITS) != HeavyFlags)
+				if((flags & IFL_CODEBITS) != HeavyFlags) {
 					return;
+				}
 			} else {
 				flags |= IFL_CODEBITS;
 				flags += (short)HeavyFlags;
@@ -663,19 +708,22 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 		case PAD:
 		case ANTIPAD:
 
-			if(lara_item->pos.y_pos != lara_item->floor)
+			if(lara_item->pos.y_pos != lara_item->floor) {
 				return;
+			}
 
 			break;
 
 		case SWITCH:
 			value = *data++ & 0x3FF;
 
-			if(flags & IFL_INVISIBLE)
+			if(flags & IFL_INVISIBLE) {
 				GetItem(currentLevel, value)->item_flags[0] = 1;
+			}
 
-			if(!SwitchTrigger(value, timer))
+			if(!SwitchTrigger(value, timer)) {
 				return;
+			}
 
 			switch_off = GetItem(currentLevel, value)->current_anim_state == 1;
 			break;
@@ -684,16 +732,18 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 			value = *data++ & 0x3FF;
 			key = KeyTrigger(value);
 
-			if(key != -1)
+			if(key != -1) {
 				break;
+			}
 
 			return;
 
 		case PICKUP:
 			value = *data++ & 0x3FF;
 
-			if(PickupTrigger(value))
+			if(PickupTrigger(value)) {
 				break;
+			}
 
 			return;
 
@@ -705,16 +755,18 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 
 		case COMBAT:
 
-			if(lara.gun_status == LG_READY)
+			if(lara.gun_status == LG_READY) {
 				break;
+			}
 
 			return;
 
 		case MONKEY:
 			state = lara_item->current_anim_state;
 
-			if(state >= AS_HANG2 && (state <= AS_MONKEY180 || state == AS_HANGTURNL || state == AS_HANGTURNR))
+			if(state >= AS_HANG2 && (state <= AS_MONKEY180 || state == AS_HANGTURNL || state == AS_HANGTURNR)) {
 				break;
+			}
 
 			return;
 		}
@@ -730,25 +782,29 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 		case TO_OBJECT:
 			item = GetItem(currentLevel, value);
 
-			if(key >= 2 || ((type == ANTIPAD || type == ANTITRIGGER || type == HEAVYANTITRIGGER) && item->flags & IFL_ANTITRIGGER_ONESHOT) || (type == SWITCH && item->flags & IFL_SWITCH_ONESHOT) || (type != SWITCH && type != ANTIPAD && type != ANTITRIGGER && type != HEAVYANTITRIGGER && item->flags & IFL_INVISIBLE) || ((type != ANTIPAD && type != ANTITRIGGER && type != HEAVYANTITRIGGER) && (item->object_number == DART_EMITTER && item->active)))
+			if(key >= 2 || ((type == ANTIPAD || type == ANTITRIGGER || type == HEAVYANTITRIGGER) && item->flags & IFL_ANTITRIGGER_ONESHOT) || (type == SWITCH && item->flags & IFL_SWITCH_ONESHOT) || (type != SWITCH && type != ANTIPAD && type != ANTITRIGGER && type != HEAVYANTITRIGGER && item->flags & IFL_INVISIBLE) || ((type != ANTIPAD && type != ANTITRIGGER && type != HEAVYANTITRIGGER) && (item->object_number == DART_EMITTER && item->active))) {
 				break;
+			}
 
 			item->timer = timer;
 
-			if(timer != 1)
+			if(timer != 1) {
 				item->timer *= 30;
+			}
 
 			if(type == SWITCH || type == HEAVYSWITCH) {
 				if(HeavyFlags >= 0) {
 					item->flags ^= flags & IFL_CODEBITS;
 
-					if(flags & IFL_INVISIBLE)
+					if(flags & IFL_INVISIBLE) {
 						item->flags |= IFL_SWITCH_ONESHOT;
+					}
 				} else if(((item->flags ^ flags) & IFL_CODEBITS) == IFL_CODEBITS) {
 					item->flags ^= (flags & IFL_CODEBITS);
 
-					if(flags & IFL_INVISIBLE)
+					if(flags & IFL_INVISIBLE) {
 						item->flags |= IFL_SWITCH_ONESHOT;
+					}
 				}
 			} else if(type == ANTIPAD || type == ANTITRIGGER || type == HEAVYANTITRIGGER) {
 				if(item->object_number == EARTHQUAKE) {
@@ -758,18 +814,22 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 
 				item->flags &= ~(IFL_CODEBITS | IFL_REVERSE);
 
-				if(flags & IFL_INVISIBLE)
+				if(flags & IFL_INVISIBLE) {
 					item->flags |= IFL_ANTITRIGGER_ONESHOT;
-			} else if(flags & IFL_CODEBITS)
+				}
+			} else if(flags & IFL_CODEBITS) {
 				item->flags |= flags & IFL_CODEBITS;
+			}
 
-			if((item->flags & IFL_CODEBITS) != IFL_CODEBITS)
+			if((item->flags & IFL_CODEBITS) != IFL_CODEBITS) {
 				break;
+			}
 
 			item->flags |= IFL_TRIGGERED;
 
-			if(flags & IFL_INVISIBLE)
+			if(flags & IFL_INVISIBLE) {
 				item->flags |= IFL_INVISIBLE;
+			}
 
 			if(!item->active) {
 				if(GetObjectInfo(currentLevel, item->object_number)->intelligent) {
@@ -781,10 +841,11 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 					} else if(item->status == ITEM_INVISIBLE) {
 						item->touch_bits = 0;
 
-						if(EnableBaddieAI(value, 0))
+						if(EnableBaddieAI(value, 0)) {
 							item->status = ITEM_ACTIVE;
-						else
+						} else {
 							item->status = ITEM_INVISIBLE;
+						}
 
 						AddActiveItem(value);
 					}
@@ -803,26 +864,30 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 			camera_flags = trigger;
 			camera_timer = trigger & 0xFF;
 
-			if(key == 1 || GetFixedCamera(currentLevel, value)->flags & IFL_INVISIBLE)
+			if(key == 1 || GetFixedCamera(currentLevel, value)->flags & IFL_INVISIBLE) {
 				break;
+			}
 
 			camera.number = value;
 
-			if(((camera.type == LOOK_CAMERA || camera.type == COMBAT_CAMERA) && !(GetFixedCamera(currentLevel, camera.number)->flags & 1)) || type == COMBAT || (type == SWITCH && timer && switch_off))
+			if(((camera.type == LOOK_CAMERA || camera.type == COMBAT_CAMERA) && !(GetFixedCamera(currentLevel, camera.number)->flags & 1)) || type == COMBAT || (type == SWITCH && timer && switch_off)) {
 				break;
+			}
 
 			if(camera.number != camera.last || type == SWITCH) {
 				camera.timer = camera_timer * 30;
 
-				if(camera_flags & IFL_INVISIBLE)
+				if(camera_flags & IFL_INVISIBLE) {
 					GetFixedCamera(currentLevel, camera.number)->flags |= IFL_INVISIBLE;
+				}
 
 				camera.speed = ((camera_flags & IFL_CODEBITS) >> 6) + 1;
 
-				if(heavy)
+				if(heavy) {
 					camera.type = HEAVY_CAMERA;
-				else
+				} else {
 					camera.type = FIXED_CAMERA;
+				}
 			}
 
 			break;
@@ -834,38 +899,45 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 		case TO_FLIPMAP:
 			flip_available = 1;
 
-			if(flipmap[value] & IFL_INVISIBLE)
+			if(flipmap[value] & IFL_INVISIBLE) {
 				break;
+			}
 
-			if(type == SWITCH)
+			if(type == SWITCH) {
 				flipmap[value] ^= flags & IFL_CODEBITS;
-			else if(flags & IFL_CODEBITS)
+			} else if(flags & IFL_CODEBITS) {
 				flipmap[value] |= flags & IFL_CODEBITS;
+			}
 
 			if((flipmap[value] & IFL_CODEBITS) == IFL_CODEBITS) {
-				if(flags & IFL_INVISIBLE)
+				if(flags & IFL_INVISIBLE) {
 					flipmap[value] |= IFL_INVISIBLE;
+				}
 
-				if(!flip_stats[value])
+				if(!flip_stats[value]) {
 					flip = value;
-			} else if(flip_stats[value])
+				}
+			} else if(flip_stats[value]) {
 				flip = value;
+			}
 
 			break;
 
 		case TO_FLIPON:
 			flip_available = 1;
 
-			if((flipmap[value] & IFL_CODEBITS) == IFL_CODEBITS && !flip_stats[value])
+			if((flipmap[value] & IFL_CODEBITS) == IFL_CODEBITS && !flip_stats[value]) {
 				flip = value;
+			}
 
 			break;
 
 		case TO_FLIPOFF:
 			flip_available = 1;
 
-			if((flipmap[value] & IFL_CODEBITS) == IFL_CODEBITS && flip_stats[value])
+			if((flipmap[value] & IFL_CODEBITS) == IFL_CODEBITS && flip_stats[value]) {
 				flip = value;
+			}
 
 			break;
 
@@ -902,27 +974,32 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 			camera_flags = trigger;
 			camera_timer = trigger & 0xFF;
 
-			if(key == 1)
+			if(key == 1) {
 				break;
+			}
 
 			if(type == ANTIPAD || type == ANTITRIGGER || type == HEAVYANTITRIGGER) {
 				bUseSpotCam = 0;
 				break;
 			}
 
-			if(GetSpotCam(currentLevel, value)->flags & SP_FLYBYONESHOT)
+			if(GetSpotCam(currentLevel, value)->flags & SP_FLYBYONESHOT) {
 				break;
+			}
 
-			if(camera_flags & IFL_INVISIBLE)
+			if(camera_flags & IFL_INVISIBLE) {
 				GetSpotCam(currentLevel, value)->flags |= SP_FLYBYONESHOT;
+			}
 
-			if(bUseSpotCam)
+			if(bUseSpotCam) {
 				break;
+			}
 
 			bUseSpotCam = 1;
 
-			if(LastSequence != value)
+			if(LastSequence != value) {
 				bTrackCamInit = 0;
+			}
 
 			InitialiseSpotCam(value);
 			break;
@@ -930,26 +1007,30 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 		case TO_CUTSCENE:
 
 			if(value == 32) {
-				if(!(FmvSceneTriggered & 0x80))
+				if(!(FmvSceneTriggered & 0x80)) {
 					DEL_playingamefmv = 1;
+				}
 			} else if(!cutseq_trig && !CheckCutPlayed(value)) {
-				if(value == 8)
+				if(value == 8) {
 					SetCutPlayed(8);
-				else if(value >= 17 && value <= 20) {
-					if(lara.highest_location == value - 17)
+				} else if(value >= 17 && value <= 20) {
+					if(lara.highest_location == value - 17) {
 						cutseq_num = value;
+					}
 				} else if(value == 27) {
-					if(lara_item->room_number == 55)
+					if(lara_item->room_number == 55) {
 						cutseq_num = 27;
+					}
 				} else if(value == 7) {
-					if(CheckCutPlayed(8))
+					if(CheckCutPlayed(8)) {
 						cutseq_num = 8;
-					else {
+					} else {
 						cutseq_num = 7;
 						SetCutPlayed(8);
 					}
-				} else
+				} else {
 					cutseq_num = value;
+				}
 			}
 
 			break;
@@ -959,11 +1040,13 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 		}
 	} while(!(trigger & 0x8000));
 
-	if(camera_item && (camera.type == FIXED_CAMERA || camera.type == HEAVY_CAMERA))
+	if(camera_item && (camera.type == FIXED_CAMERA || camera.type == HEAVY_CAMERA)) {
 		camera.item = camera_item;
+	}
 
-	if(flip != -1)
+	if(flip != -1) {
 		FlipMap(flip);
+	}
 
 	if(neweffect != -1 && (flip || !flip_available)) {
 		flipeffect = neweffect;
@@ -975,30 +1058,34 @@ short GetDoor(FLOOR_INFO* floor) {
 	short* data;
 	short type;
 
-	if(!floor->index)
+	if(!floor->index) {
 		return 255;
+	}
 
 	data = GetFloorData(currentLevel, floor->index);
 	type = *data++;
 
 	if((type & 0x1F) == TILT_TYPE || (type & 0x1F) == SPLIT1 || (type & 0x1F) == SPLIT2 || (type & 0x1F) == NOCOLF1B || (type & 0x1F) == NOCOLF1T || (type & 0x1F) == NOCOLF2B || (type & 0x1F) == NOCOLF2T) {
-		if(type & 0x8000)
+		if(type & 0x8000) {
 			return 255;
+		}
 
 		data++;
 		type = *data++;
 	}
 
 	if((type & 0x1F) == ROOF_TYPE || (type & 0x1F) == SPLIT3 || (type & 0x1F) == SPLIT4 || (type & 0x1F) == NOCOLC1B || (type & 0x1F) == NOCOLC1T || (type & 0x1F) == NOCOLC2B || (type & 0x1F) == NOCOLC2T) {
-		if(type & 0x8000)
+		if(type & 0x8000) {
 			return 255;
+		}
 
 		data++;
 		type = *data++;
 	}
 
-	if((type & 0x1F) == DOOR_TYPE)
+	if((type & 0x1F) == DOOR_TYPE) {
 		return *data;
+	}
 
 	return 255;
 }
@@ -1006,8 +1093,9 @@ short GetDoor(FLOOR_INFO* floor) {
 long CheckNoColFloorTriangle(FLOOR_INFO* floor, long x, long z) {
 	short type;
 
-	if(!floor->index)
+	if(!floor->index) {
 		return 0;
+	}
 
 	type = *(GetFloorData(currentLevel, floor->index)) & 0x1F;
 
@@ -1018,29 +1106,33 @@ long CheckNoColFloorTriangle(FLOOR_INFO* floor, long x, long z) {
 		switch(type) {
 		case NOCOLF1T:
 
-			if(x <= 1024 - z)
+			if(x <= 1024 - z) {
 				return -1;
+			}
 
 			break;
 
 		case NOCOLF1B:
 
-			if(x > 1024 - z)
+			if(x > 1024 - z) {
 				return -1;
+			}
 
 			break;
 
 		case NOCOLF2T:
 
-			if(x <= z)
+			if(x <= z) {
 				return -1;
+			}
 
 			break;
 
 		case NOCOLF2B:
 
-			if(x > z)
+			if(x > z) {
 				return -1;
+			}
 
 			break;
 		}
@@ -1055,15 +1147,17 @@ long CheckNoColCeilingTriangle(FLOOR_INFO* floor, long x, long z) {
 	short* data;
 	short type;
 
-	if(!floor->index)
+	if(!floor->index) {
 		return 0;
+	}
 
 	data = GetFloorData(currentLevel, floor->index);
 	type = *data & 0x1F;
 
 	if(type == TILT_TYPE || type == SPLIT1 || type == SPLIT2 || type == NOCOLF1T || type == NOCOLF1B || type == NOCOLF2T || type == NOCOLF2B) {
-		if(*data & 0x8000)
+		if(*data & 0x8000) {
 			return 0;
+		}
 
 		type = data[2] & 0x1F;
 	}
@@ -1075,29 +1169,33 @@ long CheckNoColCeilingTriangle(FLOOR_INFO* floor, long x, long z) {
 		switch(type) {
 		case NOCOLC1T:
 
-			if(x <= 1024 - z)
+			if(x <= 1024 - z) {
 				return -1;
+			}
 
 			break;
 
 		case NOCOLC1B:
 
-			if(x > 1024 - z)
+			if(x > 1024 - z) {
 				return -1;
+			}
 
 			break;
 
 		case NOCOLC2T:
 
-			if(x <= z)
+			if(x <= z) {
 				return -1;
+			}
 
 			break;
 
 		case NOCOLC2B:
 
-			if(x > z)
+			if(x > z) {
 				return -1;
+			}
 
 			break;
 		}
@@ -1123,27 +1221,31 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 		if(x_floor <= 0) {
 			x_floor = 0;
 
-			if(y_floor < 1)
+			if(y_floor < 1) {
 				y_floor = 1;
-			else if(y_floor > r->y_size - 2)
+			} else if(y_floor > r->y_size - 2) {
 				y_floor = r->y_size - 2;
+			}
 		} else if(x_floor >= r->x_size - 1) {
 			x_floor = r->x_size - 1;
 
-			if(y_floor < 1)
+			if(y_floor < 1) {
 				y_floor = 1;
-			else if(y_floor > r->y_size - 2)
+			} else if(y_floor > r->y_size - 2) {
 				y_floor = r->y_size - 2;
-		} else if(y_floor < 0)
+			}
+		} else if(y_floor < 0) {
 			y_floor = 0;
-		else if(y_floor >= r->y_size)
+		} else if(y_floor >= r->y_size) {
 			y_floor = r->y_size - 1;
+		}
 
 		floor = &r->floor[x_floor + y_floor * r->x_size];
 		door = GetDoor(floor);
 
-		if(door == 255)
+		if(door == 255) {
 			break;
+		}
 
 		*room_number = door;
 		r = GetRoom(currentLevel, door);
@@ -1153,32 +1255,37 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 	if(y < GetMaximumFloor(floor, x, z)) {
 		if(y < GetMinimumCeiling(floor, x, z) && floor->sky_room != 255) {
 			do {
-				if(CheckNoColCeilingTriangle(floor, x, z) == 1)
+				if(CheckNoColCeilingTriangle(floor, x, z) == 1) {
 					break;
+				}
 
 				*room_number = floor->sky_room;
 				r = GetRoom(currentLevel, floor->sky_room);
 				floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
 
-				if(y >= GetMinimumCeiling(floor, x, z))
+				if(y >= GetMinimumCeiling(floor, x, z)) {
 					break;
+				}
 
 			} while(floor->sky_room != 255);
 		}
 	} else if(floor->pit_room != 255) {
 		while(1) {
-			if(CheckNoColFloorTriangle(floor, x, z) == 1)
+			if(CheckNoColFloorTriangle(floor, x, z) == 1) {
 				break;
+			}
 
 			*room_number = floor->pit_room;
 			r = GetRoom(currentLevel, floor->pit_room);
 			floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
 
-			if(y < GetMaximumFloor(floor, x, z))
+			if(y < GetMaximumFloor(floor, x, z)) {
 				break;
+			}
 
-			if(floor->pit_room == 255)
+			if(floor->pit_room == 255) {
 				return floor;
+			}
 		}
 	}
 
@@ -1200,21 +1307,24 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 		if(x_floor <= 0) {
 			x_floor = 0;
 
-			if(y_floor < 1)
+			if(y_floor < 1) {
 				y_floor = 1;
-			else if(y_floor > r->y_size - 2)
+			} else if(y_floor > r->y_size - 2) {
 				y_floor = r->y_size - 2;
+			}
 		} else if(x_floor >= r->x_size - 1) {
 			x_floor = r->x_size - 1;
 
-			if(y_floor < 1)
+			if(y_floor < 1) {
 				y_floor = 1;
-			else if(y_floor > r->y_size - 2)
+			} else if(y_floor > r->y_size - 2) {
 				y_floor = r->y_size - 2;
-		} else if(y_floor < 0)
+			}
+		} else if(y_floor < 0) {
 			y_floor = 0;
-		else if(y_floor >= r->y_size)
+		} else if(y_floor >= r->y_size) {
 			y_floor = r->y_size - 1;
+		}
 
 		floor = &r->floor[x_floor + y_floor * r->x_size];
 		data = GetDoor(floor);
@@ -1228,30 +1338,33 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 
 	if(r->flags & ROOM_UNDERWATER) {
 		while(floor->sky_room != 255) {
-			if(CheckNoColCeilingTriangle(floor, x, z) == 1)
+			if(CheckNoColCeilingTriangle(floor, x, z) == 1) {
 				break;
+			}
 
 			r = GetRoom(currentLevel, floor->sky_room);
 
-			if(!(r->flags & ROOM_UNDERWATER))
+			if(!(r->flags & ROOM_UNDERWATER)) {
 				break;
+			}
 
 			floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
 		}
 
 		return GetMinimumCeiling(floor, x, z);
-	} else {
-		while(floor->pit_room != 255) {
-			if(CheckNoColFloorTriangle(floor, x, z) == 1)
-				break;
-
-			r = GetRoom(currentLevel, floor->pit_room);
-
-			if(r->flags & ROOM_UNDERWATER)
-				return GetMaximumFloor(floor, x, z);
-
-			floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
+	}
+	while(floor->pit_room != 255) {
+		if(CheckNoColFloorTriangle(floor, x, z) == 1) {
+			break;
 		}
+
+		r = GetRoom(currentLevel, floor->pit_room);
+
+		if(r->flags & ROOM_UNDERWATER) {
+			return GetMaximumFloor(floor, x, z);
+		}
+
+		floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
 	}
 
 	return NO_HEIGHT;
@@ -1271,8 +1384,9 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 	*ht = WALL;
 
 	while(floor->pit_room != 255) {
-		if(CheckNoColFloorTriangle(floor, x, z) == 1)
+		if(CheckNoColFloorTriangle(floor, x, z) == 1) {
 			break;
+		}
 
 		r = GetRoom(currentLevel, floor->pit_room);
 		floor = &r->floor[((z - r->z) >> 10) + ((x - r->x) >> 10) * r->x_size];
@@ -1280,13 +1394,15 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 
 	height = floor->floor << 8;
 
-	if(height == NO_HEIGHT)
+	if(height == NO_HEIGHT) {
 		return height;
+	}
 
 	trigger_index = 0;
 
-	if(!floor->index)
+	if(!floor->index) {
 		return height;
+	}
 
 	data = GetFloorData(currentLevel, floor->index);
 
@@ -1311,28 +1427,32 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 			*tiltxoff = xoff;
 			*tiltzoff = yoff;
 
-			if(abs(xoff) > 2 || abs(yoff) > 2)
+			if(abs(xoff) > 2 || abs(yoff) > 2) {
 				*ht = BIG_SLOPE;
-			else
+			} else {
 				*ht = SMALL_SLOPE;
+			}
 
-			if(xoff < 0)
+			if(xoff < 0) {
 				height -= xoff * (z & 1023) >> 2;
-			else
+			} else {
 				height += xoff * ((-1 - z) & 1023) >> 2;
+			}
 
-			if(yoff < 0)
+			if(yoff < 0) {
 				height -= yoff * (x & 1023) >> 2;
-			else
+			} else {
 				height += yoff * ((-1 - x) & 1023) >> 2;
+			}
 
 			data++;
 			break;
 
 		case TRIGGER_TYPE:
 
-			if(!trigger_index)
+			if(!trigger_index) {
 				trigger_index = data - 1;
+			}
 
 			data++;
 
@@ -1340,16 +1460,18 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 				trigger = *data++;
 
 				if((trigger & 0x3C00) != (TO_OBJECT << 10)) {
-					if((trigger & 0x3C00) == (TO_CAMERA << 10) || (trigger & 0x3C00) == (TO_FLYBY << 10))
+					if((trigger & 0x3C00) == (TO_CAMERA << 10) || (trigger & 0x3C00) == (TO_FLYBY << 10)) {
 						trigger = *data++;
+					}
 
 					continue;
 				}
 
 				item = GetItem(currentLevel, trigger & 0x3FF);
 
-				if(GetObjectInfo(currentLevel, item->object_number)->floor && !(item->flags & 0x8000))
+				if(GetObjectInfo(currentLevel, item->object_number)->floor && !(item->flags & 0x8000)) {
 					GetObjectInfo(currentLevel, item->object_number)->floor(item, x, y, z, &height, ht, tiltxoff, tiltzoff, OnObject);
+				}
 
 			} while(!(trigger & 0x8000));
 
@@ -1364,8 +1486,9 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 		case TRIGTRIGGER_TYPE:
 		case MINER_TYPE:
 
-			if(!trigger_index)
+			if(!trigger_index) {
 				trigger_index = data - 1;
+			}
 
 			break;
 
@@ -1388,8 +1511,9 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 				if(dx > (1024 - dz)) {
 					hadj = (type >> 5) & 0x1F;
 
-					if((type >> 5) & 0x10)
+					if((type >> 5) & 0x10) {
 						hadj |= 0xFFF0;
+					}
 
 					height += hadj << 8;
 					xoff = tilt3 - tilt0;
@@ -1397,8 +1521,9 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 				} else {
 					hadj = (type >> 10) & 0x1F;
 
-					if((type >> 10) & 0x10)
+					if((type >> 10) & 0x10) {
 						hadj |= 0xFFF0;
+					}
 
 					height += hadj << 8;
 					xoff = tilt2 - tilt1;
@@ -1408,8 +1533,9 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 				if(dx > dz) {
 					hadj = (type >> 5) & 0x1F;
 
-					if((type >> 5) & 0x10)
+					if((type >> 5) & 0x10) {
 						hadj |= 0xFFF0;
+					}
 
 					height += hadj << 8;
 					xoff = tilt3 - tilt0;
@@ -1418,8 +1544,9 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 
 					hadj = (type >> 10) & 0x1F;
 
-					if((type >> 10) & 0x10)
+					if((type >> 10) & 0x10) {
 						hadj |= 0xFFF0;
+					}
 
 					height += hadj << 8;
 					xoff = tilt2 - tilt1;
@@ -1430,18 +1557,21 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 			*tiltxoff = xoff;
 			*tiltzoff = yoff;
 
-			if(abs(xoff) > 2 || abs(yoff) > 2)
+			if(abs(xoff) > 2 || abs(yoff) > 2) {
 				*ht = DIAGONAL;
+			}
 
-			if(xoff >= 0)
+			if(xoff >= 0) {
 				height += xoff * ((-1 - z) & 1023) >> 2;
-			else
+			} else {
 				height -= xoff * (z & 1023) >> 2;
+			}
 
-			if(yoff >= 0)
+			if(yoff >= 0) {
 				height += yoff * ((-1 - x) & 1023) >> 2;
-			else
+			} else {
 				height -= yoff * (x & 1023) >> 2;
+			}
 
 			data++;
 			break;
@@ -1466,8 +1596,9 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 	f = floor;
 
 	while(f->sky_room != 255) {
-		if(CheckNoColCeilingTriangle(floor, x, z) == 1)
+		if(CheckNoColCeilingTriangle(floor, x, z) == 1) {
 			break;
+		}
 
 		r = GetRoom(currentLevel, f->sky_room);
 		xoff = (z - r->z) >> 10;
@@ -1477,8 +1608,9 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 
 	height = f->ceiling << 8;
 
-	if(height == NO_HEIGHT)
+	if(height == NO_HEIGHT) {
 		return NO_HEIGHT;
+	}
 
 	if(f->index) {
 		data = GetFloorData(currentLevel, f->index);
@@ -1488,8 +1620,9 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 		if((type & 0x1F) == TILT_TYPE || (type & 0x1F) == SPLIT1 || (type & 0x1F) == SPLIT2 || (type & 0x1F) == NOCOLF1T || (type & 0x1F) == NOCOLF1B || (type & 0x1F) == NOCOLF2T || (type & 0x1F) == NOCOLF2B) {
 			data++;
 
-			if(type & 0x8000)
+			if(type & 0x8000) {
 				ended = 1;
+			}
 
 			type = *data++;
 		}
@@ -1511,8 +1644,9 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 						if(dx <= 1024 - dz) {
 							hadj = type >> 10 & 0x1F;
 
-							if(hadj & 0x10)
+							if(hadj & 0x10) {
 								hadj |= 0xFFF0;
+							}
 
 							height += hadj << 8;
 							h1 = t2 - t1;
@@ -1520,8 +1654,9 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 						} else {
 							hadj = type >> 5 & 0x1F;
 
-							if(hadj & 0x10)
+							if(hadj & 0x10) {
 								hadj |= 0xFFF0;
+							}
 
 							height += hadj << 8;
 							h1 = t3 - t0;
@@ -1531,8 +1666,9 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 						if(dx <= dz) {
 							hadj = type >> 10 & 0x1F;
 
-							if(hadj & 0x10)
+							if(hadj & 0x10) {
 								hadj |= 0xFFF0;
+							}
 
 							height += hadj << 8;
 							h1 = t2 - t1;
@@ -1540,8 +1676,9 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 						} else {
 							hadj = type >> 5 & 0x1F;
 
-							if(hadj & 0x10)
+							if(hadj & 0x10) {
 								hadj |= 0xFFF0;
+							}
 
 							height += hadj << 8;
 							h1 = t3 - t0;
@@ -1554,21 +1691,24 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 				h2 = *(char*)data;
 			}
 
-			if(h1 < 0)
+			if(h1 < 0) {
 				height += (z & 0x3FF) * h1 >> 2;
-			else
+			} else {
 				height -= (-1 - z & 0x3FF) * h1 >> 2;
+			}
 
-			if(h2 < 0)
+			if(h2 < 0) {
 				height += (-1 - x & 0x3FF) * h2 >> 2;
-			else
+			} else {
 				height -= (x & 0x3FF) * h2 >> 2;
+			}
 		}
 	}
 
 	while(floor->pit_room != 255) {
-		if(CheckNoColFloorTriangle(floor, x, z) == 1)
+		if(CheckNoColFloorTriangle(floor, x, z) == 1) {
 			break;
+		}
 
 		r = GetRoom(currentLevel, floor->pit_room);
 		xoff = (z - r->z) >> 10;
@@ -1608,13 +1748,15 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 					trigger = *data++;
 
 					if((trigger & 0x3C00) != (TO_OBJECT << 10)) {
-						if((trigger & 0x3C00) == (TO_CAMERA << 10) || (trigger & 0x3C00) == (TO_FLYBY << 10))
+						if((trigger & 0x3C00) == (TO_CAMERA << 10) || (trigger & 0x3C00) == (TO_FLYBY << 10)) {
 							trigger = *data++;
+						}
 					} else {
 						item = GetItem(currentLevel, trigger & 0x3FF);
 
-						if(GetObjectInfo(currentLevel, item->object_number)->ceiling && !(item->flags & 0x8000))
+						if(GetObjectInfo(currentLevel, item->object_number)->ceiling && !(item->flags & 0x8000)) {
 							GetObjectInfo(currentLevel, item->object_number)->ceiling(item, x, y, z, &height);
+						}
 					}
 
 				} while(!(trigger & 0x8000));
@@ -1646,20 +1788,22 @@ void AlterFloorHeight(ITEM_INFO* item, long height) {
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_num);
 	ceiling = GetFloor(item->pos.x_pos, item->pos.y_pos + height - 1024, item->pos.z_pos, &room_num);
 
-	if(floor->floor == -127)
+	if(floor->floor == -127) {
 		floor->floor = ceiling->ceiling + (char)(height >> 8);
-	else {
+	} else {
 		floor->floor += (char)(height >> 8);
 
-		if(floor->floor == ceiling->ceiling)
+		if(floor->floor == ceiling->ceiling) {
 			floor->floor = -127;
+		}
 	}
 
 	if(GetBox(currentLevel, floor->box)->overlap_index & 0x8000) {
-		if(height >= 0)
+		if(height >= 0) {
 			GetBox(currentLevel, floor->box)->overlap_index &= ~0x4000;
-		else
+		} else {
 			GetBox(currentLevel, floor->box)->overlap_index |= 0x4000;
+		}
 	}
 }
 
@@ -1677,8 +1821,9 @@ long GetChange(ITEM_INFO* item, ANIM_STRUCT* anim) {
 	CHANGE_STRUCT* change;
 	RANGE_STRUCT* range;
 
-	if(item->current_anim_state == item->goal_anim_state || anim->number_changes <= 0)
+	if(item->current_anim_state == item->goal_anim_state || anim->number_changes <= 0) {
 		return 0;
+	}
 
 	change = GetAnimChange(currentLevel, anim->change_index);
 
@@ -1703,28 +1848,31 @@ void UpdateSky() {
 	if(gfLevelFlags & GF_LAYER1) {
 		SkyPos += gfLayer1Vel;
 
-		if(SkyPos > 0x2C00)
+		if(SkyPos > 0x2C00) {
 			SkyPos -= 0x2C00;
-		else if(SkyPos < 0)
+		} else if(SkyPos < 0) {
 			SkyPos += 0x2C00;
+		}
 	}
 
 	if(gfLevelFlags & GF_LAYER2) {
 		SkyPos2 += gfLayer2Vel;
 
-		if(SkyPos2 > 0x2C00)
+		if(SkyPos2 > 0x2C00) {
 			SkyPos2 -= 0x2C00;
-		else if(SkyPos2 < 0)
+		} else if(SkyPos2 < 0) {
 			SkyPos2 += 0x2C00;
+		}
 	}
 }
 
 void KillMoveEffects() {
 	for(int i = 0; i < ItemNewRoomNo; i++) {
-		if(ItemNewRooms[i][0] & 0x8000)
+		if(ItemNewRooms[i][0] & 0x8000) {
 			KillEffect(ItemNewRooms[i][0] & 0x7FFF);
-		else
+		} else {
 			EffectNewRoom(ItemNewRooms[i][0], ItemNewRooms[i][1]);
+		}
 	}
 
 	ItemNewRoomNo = 0;
@@ -1732,10 +1880,11 @@ void KillMoveEffects() {
 
 void KillMoveItems() {
 	for(int i = 0; i < ItemNewRoomNo; i++) {
-		if(ItemNewRooms[i][0] & 0x8000)
+		if(ItemNewRooms[i][0] & 0x8000) {
 			KillItem(ItemNewRooms[i][0] & 0x7FFF);
-		else
+		} else {
 			ItemNewRoom(ItemNewRooms[i][0], ItemNewRooms[i][1]);
+		}
 	}
 
 	ItemNewRoomNo = 0;
@@ -1767,19 +1916,22 @@ void RefreshCamera(short type, short* data) {
 
 			target_ok = 0;
 		} else if(((trigger >> 10) & 0xF) == TO_TARGET) {
-			if((camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA) || camera.number == NO_ITEM || GetFixedCamera(currentLevel, camera.number)->flags & 1)
+			if((camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA) || camera.number == NO_ITEM || GetFixedCamera(currentLevel, camera.number)->flags & 1) {
 				camera.item = GetItem(currentLevel, value);
+			}
 		}
 
 	} while(!(trigger & 0x8000));
 
 	if(camera.item) {
-		if(!target_ok || (target_ok == 2 && camera.item->looked_at && camera.item != camera.last_item))
+		if(!target_ok || (target_ok == 2 && camera.item->looked_at && camera.item != camera.last_item)) {
 			camera.item = NULL;
+		}
 	}
 
-	if(camera.number == -1 && camera.timer > 0)
+	if(camera.number == -1 && camera.timer > 0) {
 		camera.timer = -1;
+	}
 }
 
 long TriggerActive(ITEM_INFO* item) {
@@ -1787,26 +1939,31 @@ long TriggerActive(ITEM_INFO* item) {
 
 	reverse = (item->flags & IFL_REVERSE) ? 1 : 0;
 
-	if((item->flags & IFL_CODEBITS) != IFL_CODEBITS)
+	if((item->flags & IFL_CODEBITS) != IFL_CODEBITS) {
 		return reverse;
+	}
 
-	if(!item->timer)
+	if(!item->timer) {
 		return !reverse;
+	}
 
 	if(item->timer > 0) {
 		item->timer--;
 
-		if(!item->timer)
+		if(!item->timer) {
 			item->timer = -1;
+		}
 	} else if(item->timer < -1) {
 		item->timer++;
 
-		if(item->timer == -1)
+		if(item->timer == -1) {
 			item->timer = 0;
+		}
 	}
 
-	if(item->timer <= -1)
+	if(item->timer <= -1) {
 		return reverse;
+	}
 
 	return !reverse;
 }
@@ -1818,8 +1975,9 @@ void TriggerNormalCDTrack(short value, short flags, short type) {
 		if(CurrentAtmosphere != value) {
 			CurrentAtmosphere = (unsigned char)value;
 
-			if(IsAtmospherePlaying)
+			if(IsAtmospherePlaying) {
 				S_CDPlay(value, 1);
+			}
 		}
 	} else {
 		code = (flags >> 8) & 0x3F; //(IFL_CODEBITS | IFL_INVISIBLE)= 0x3F00, then >> 8, 3F
@@ -1833,8 +1991,9 @@ void TriggerNormalCDTrack(short value, short flags, short type) {
 }
 
 void TriggerCDTrack(short value, short flags, short type) {
-	if(value < 128)
+	if(value < 128) {
 		TriggerNormalCDTrack(value, flags, type);
+	}
 }
 
 long ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {
@@ -1856,8 +2015,9 @@ long ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {
 			dy = ((target->pos.y - src.pos.y) * i >> 2) + src.pos.y;
 			dz = ((target->pos.z - src.pos.z) * i >> 2) + src.pos.z;
 
-			if(dy < GetHeight(GetFloor(dx, dy, dz, &room_no), dx, dy, dz, &ht, &tiltxoff, &tiltzoff, &OnObject))
+			if(dy < GetHeight(GetFloor(dx, dy, dz, &room_no), dx, dy, dz, &ht, &tiltxoff, &tiltzoff, &OnObject)) {
 				break;
+			}
 		}
 
 		target->pos.x = dx;
@@ -1879,8 +2039,9 @@ long ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {
 			dy = ((target->pos.y - src.pos.y) * i >> 2) + src.pos.y;
 			dz = ((target->pos.z - src.pos.z) * i >> 2) + src.pos.z;
 
-			if(dy > GetCeiling(GetFloor(dx, dy, dz, &room_no), dx, dy, dz))
+			if(dy > GetCeiling(GetFloor(dx, dy, dz, &room_no), dx, dy, dz)) {
 				break;
+			}
 		}
 
 		target->pos.x = dx;
@@ -1902,8 +2063,9 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 
 	dx = target->pos.x - start->pos.x;
 
-	if(!dx)
+	if(!dx) {
 		return 1;
+	}
 
 	dy = 1024 * (target->pos.y - start->pos.y) / dx;
 	dz = 1024 * (target->pos.z - start->pos.z) / dx;
@@ -2011,8 +2173,9 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 
 	dz = target->pos.z - start->pos.z;
 
-	if(!dz)
+	if(!dz) {
 		return 1;
+	}
 
 	dx = 1024 * (target->pos.x - start->pos.x) / dz;
 	dy = 1024 * (target->pos.y - start->pos.y) / dz;
@@ -2127,8 +2290,9 @@ long LOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 	if(los2) {
 		GetFloor(target->pos.x, target->pos.y, target->pos.z, &target->room_number);
 
-		if(ClipTarget(start, target) && los1 == 1 && los2 == 1)
+		if(ClipTarget(start, target) && los1 == 1 && los2 == 1) {
 			return 1;
+		}
 	}
 
 	return 0;
@@ -2152,13 +2316,15 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits) {
 	OBJECT_INFO* object;
 	short** meshpp;
 
-	if(!(item->mesh_bits & (1 << Node)))
+	if(!(item->mesh_bits & (1 << Node))) {
 		return 0;
+	}
 
-	if(bits == 256)
+	if(bits == 256) {
 		bits = -64;
-	else
+	} else {
 		SoundEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
+	}
 
 	GetSpheres(item, Slist, 3);
 	object = GetObjectInfo(currentLevel, item->object_number);
@@ -2185,13 +2351,15 @@ long IsRoomOutside(long x, long y, long z) {
 	long h, c;
 	short offset, room_no;
 
-	if(x < 0 || z < 0)
+	if(x < 0 || z < 0) {
 		return -2;
+	}
 
 	offset = OutsideRoomOffsets[27 * (x >> 12) + (z >> 12)];
 
-	if(offset == -1)
+	if(offset == -1) {
 		return -2;
+	}
 
 	if(offset < 0) {
 		r = GetRoom(currentLevel, offset & 0x7FFF);
@@ -2203,13 +2371,15 @@ long IsRoomOutside(long x, long y, long z) {
 			h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			c = GetCeiling(floor, x, y, z);
 
-			if(h == NO_HEIGHT || y > h || y < c)
+			if(h == NO_HEIGHT || y > h || y < c) {
 				return -2;
+			}
 
-			if(r->flags & (ROOM_UNDERWATER | ROOM_NOT_INSIDE))
+			if(r->flags & (ROOM_UNDERWATER | ROOM_NOT_INSIDE)) {
 				return 1;
-			else
+			} else {
 				return -3;
+			}
 		}
 	} else {
 		pTable = (unsigned char*)&OutsideRoomTable[offset];
@@ -2224,13 +2394,15 @@ long IsRoomOutside(long x, long y, long z) {
 				h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 				c = GetCeiling(floor, x, y, z);
 
-				if(h == NO_HEIGHT || y > h || y < c)
+				if(h == NO_HEIGHT || y > h || y < c) {
 					return -2;
+				}
 
-				if(r->flags & (ROOM_UNDERWATER | ROOM_NOT_INSIDE))
+				if(r->flags & (ROOM_UNDERWATER | ROOM_NOT_INSIDE)) {
 					return 1;
-				else
+				} else {
 					return -3;
+				}
 			}
 
 			pTable++;
@@ -2268,8 +2440,9 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 				ItemPos.z_pos = item->pos.z_pos;
 				ItemPos.y_rot = item->pos.y_rot;
 
-				if(DoRayBox(start, target, bounds, &ItemPos, Coord, item_number))
+				if(DoRayBox(start, target, bounds, &ItemPos, Coord, item_number)) {
 					target->room_number = los_rooms[i];
+				}
 			}
 		}
 
@@ -2313,8 +2486,9 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 	GetFloor(target.pos.x, target.pos.y, target.pos.z, &target.room_number);
 
 	if(firing && LaserSight) {
-		if(lara.gun_type == WEAPON_REVOLVER)
+		if(lara.gun_type == WEAPON_REVOLVER) {
 			SoundEffect(SFX_DESERT_EAGLE_FIRE, 0, SFX_DEFAULT);
+		}
 	}
 
 	item_no = (short)ObjectOnLOS2(src, dest, &v, &Mesh);
@@ -2324,8 +2498,9 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 		target.pos.y = v.y - ((v.y - src->pos.y) >> 5);
 		target.pos.z = v.z - ((v.z - src->pos.z) >> 5);
 
-		if(item_no >= 0 && DrawTarget)
+		if(item_no >= 0 && DrawTarget) {
 			lara.target_item = item_no;
+		}
 
 		if(firing) {
 			if(lara.gun_type != WEAPON_CROSSBOW) {
@@ -2350,25 +2525,29 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 							shotitem->mesh_bits &= ~ShatterItem.Bit;
 							TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 						} else if(DrawTarget && lara.gun_type == WEAPON_REVOLVER) {
-							if(GetObjectInfo(currentLevel, shotitem->object_number)->intelligent)
+							if(GetObjectInfo(currentLevel, shotitem->object_number)->intelligent) {
 								HitTarget(shotitem, &target, weapons[lara.gun_type].damage, 0);
+							}
 						} else {
-							if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 1)
+							if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 1) {
 								DoBloodSplat(target.pos.x, target.pos.y, target.pos.z, (GetRandomControl() & 3) + 3, shotitem->pos.y_rot, shotitem->room_number);
-							else if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 2)
+							} else if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 2) {
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, -5);
-							else if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 3)
+							} else if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 3) {
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
+							}
 
 							shotitem->hit_status = 1;
 
-							if(!GetObjectInfo(currentLevel, shotitem->object_number)->undead)
+							if(!GetObjectInfo(currentLevel, shotitem->object_number)->undead) {
 								shotitem->hit_points -= weapons[lara.gun_type].damage;
+							}
 						}
 					} else {
 						if(ShatterItem.Bit == 1 << (GetObjectInfo(currentLevel, shotitem->object_number)->nmeshes - 1) && !(shotitem->flags & IFL_SWITCH_ONESHOT)) {
-							if(shotitem->object_number == SWITCH_TYPE7)
+							if(shotitem->object_number == SWITCH_TYPE7) {
 								ExplodeItemNode(shotitem, GetObjectInfo(currentLevel, shotitem->object_number)->nmeshes - 1, 0, 64);
+							}
 
 							if(shotitem->flags & IFL_CODEBITS && (shotitem->flags & IFL_CODEBITS) != IFL_CODEBITS) {
 								room_number = shotitem->room_number;
@@ -2392,8 +2571,9 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 						TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 					}
 				}
-			} else if(LaserSight)
+			} else if(LaserSight) {
 				FireCrossBowFromLaserSight(src, &target);
+			}
 		}
 
 		hit = 1;
@@ -2402,10 +2582,12 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 		target.pos.y -= (target.pos.y - src->pos.y) >> 5;
 		target.pos.z -= (target.pos.z - src->pos.z) >> 5;
 
-		if(firing && !ricochet)
+		if(firing && !ricochet) {
 			TriggerRicochetSpark(&target, lara_item->pos.y_rot, 8, 0);
-	} else if(firing && LaserSight)
+		}
+	} else if(firing && LaserSight) {
 		FireCrossBowFromLaserSight(src, &target);
+	}
 
 	if(DrawTarget && (hit || !ricochet)) {
 		LaserSightActive = 1;
@@ -2434,8 +2616,9 @@ void AnimateItem(ITEM_INFO* item) {
 			anim = GetAnim(currentLevel, item->anim_number);
 			item->current_anim_state = anim->current_anim_state;
 
-			if(item->required_anim_state == item->current_anim_state)
+			if(item->required_anim_state == item->current_anim_state) {
 				item->required_anim_state = 0;
+			}
 		}
 	}
 
@@ -2459,8 +2642,9 @@ void AnimateItem(ITEM_INFO* item) {
 
 				case ACMD_KILL:
 
-					if(GetObjectInfo(currentLevel, item->object_number)->intelligent)
+					if(GetObjectInfo(currentLevel, item->object_number)->intelligent) {
 						item->after_death = 1;
+					}
 
 					item->status = ITEM_DEACTIVATED;
 					break;
@@ -2482,8 +2666,9 @@ void AnimateItem(ITEM_INFO* item) {
 			item->goal_anim_state = anim->current_anim_state;
 		}
 
-		if(item->required_anim_state == item->current_anim_state)
+		if(item->required_anim_state == item->current_anim_state) {
 			item->required_anim_state = 0;
+		}
 	}
 
 	if(anim->number_commands > 0) {
@@ -2506,20 +2691,23 @@ void AnimateItem(ITEM_INFO* item) {
 					type = cmd[1] & 0xC000;
 
 					if(GetObjectInfo(currentLevel, item->object_number)->water_creature) {
-						if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER)
+						if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 							SoundEffect(num, &item->pos, SFX_WATER);
-						else
+						} else {
 							SoundEffect(num, &item->pos, SFX_DEFAULT);
+						}
 					} else if(item->room_number == 255) {
 						item->pos.x_pos = lara_item->pos.x_pos;
 						item->pos.y_pos = lara_item->pos.y_pos - 762;
 						item->pos.z_pos = lara_item->pos.z_pos;
 						SoundEffect(num, &item->pos, SFX_DEFAULT);
 					} else if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
-						if(type == SFX_LANDANDWATER || type == SFX_WATERONLY)
+						if(type == SFX_LANDANDWATER || type == SFX_WATERONLY) {
 							SoundEffect(num, &item->pos, SFX_DEFAULT);
-					} else if(type == SFX_LANDANDWATER || type == SFX_LANDONLY)
+						}
+					} else if(type == SFX_LANDANDWATER || type == SFX_LANDONLY) {
 						SoundEffect(num, &item->pos, SFX_DEFAULT);
+					}
 				}
 
 				cmd += 2;
@@ -2541,24 +2729,27 @@ void AnimateItem(ITEM_INFO* item) {
 	speed2 = 0;
 
 	if(item->gravity_status) {
-		if(item->fallspeed < 128)
+		if(item->fallspeed < 128) {
 			item->fallspeed += 6;
-		else
+		} else {
 			item->fallspeed++;
+		}
 
 		item->pos.y_pos += item->fallspeed;
 	} else {
 		speed = anim->velocity;
 
-		if(anim->acceleration)
+		if(anim->acceleration) {
 			speed += anim->acceleration * (item->frame_number - anim->frame_base);
+		}
 
 		item->speed = speed >> 16;
 
 		speed2 = anim->Xvelocity;
 
-		if(anim->Xacceleration)
+		if(anim->Xacceleration) {
 			speed2 += anim->Xacceleration * (item->frame_number - anim->frame_base);
+		}
 
 		speed2 >>= 16;
 	}
@@ -2586,8 +2777,9 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 		quad[0] = 0;
 		planes[0] = max->x;
 		inside = 0;
-	} else
+	} else {
 		quad[0] = 2;
+	}
 
 	if(origin->y < min->y) {
 		quad[1] = 1;
@@ -2597,8 +2789,9 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 		quad[1] = 0;
 		planes[1] = max->y;
 		inside = 0;
-	} else
+	} else {
 		quad[1] = 2;
+	}
 
 	if(origin->z < min->z) {
 		quad[2] = 1;
@@ -2608,8 +2801,9 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 		quad[2] = 0;
 		planes[2] = max->z;
 		inside = 0;
-	} else
+	} else {
 		quad[2] = 2;
+	}
 
 	if(inside) {
 		Coord->x = origin->x >> 16;
@@ -2618,56 +2812,64 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 		return 1;
 	}
 
-	if(quad[0] == 2 || !dir->x)
+	if(quad[0] == 2 || !dir->x) {
 		dists[0] = -65536;
-	else
+	} else {
 		dists[0] = ((planes[0] - origin->x) / (dir->x >> 8)) << 8;
+	}
 
-	if(quad[1] == 2 || !dir->y)
+	if(quad[1] == 2 || !dir->y) {
 		dists[1] = -65536;
-	else
+	} else {
 		dists[1] = ((planes[1] - origin->y) / (dir->y >> 8)) << 8;
+	}
 
-	if(quad[2] == 2 || !dir->z)
+	if(quad[2] == 2 || !dir->z) {
 		dists[2] = -65536;
-	else
+	} else {
 		dists[2] = ((planes[2] - origin->z) / (dir->z >> 8)) << 8;
+	}
 
 	plane = 0;
 
 	for(int i = 1; i < 3; i++) {
-		if(dists[plane] < dists[i])
+		if(dists[plane] < dists[i]) {
 			plane = i;
+		}
 	}
 
-	if(dists[plane] < 0)
+	if(dists[plane] < 0) {
 		return 0;
+	}
 
-	if(!plane)
+	if(!plane) {
 		Coord->x = planes[0];
-	else {
+	} else {
 		Coord->x = origin->x + (((long long)dir->x * (long long)dists[plane]) >> 16);
 
-		if((!quad[0] && Coord->x < min->x) || (quad[0] == 1 && Coord->x > max->x))
+		if((!quad[0] && Coord->x < min->x) || (quad[0] == 1 && Coord->x > max->x)) {
 			return 0;
+		}
 	}
 
-	if(plane == 1)
+	if(plane == 1) {
 		Coord->y = planes[1];
-	else {
+	} else {
 		Coord->y = origin->y + (((long long)dir->y * (long long)dists[plane]) >> 16);
 
-		if((!quad[1] && Coord->y < min->y) || (quad[1] == 1 && Coord->y > max->y))
+		if((!quad[1] && Coord->y < min->y) || (quad[1] == 1 && Coord->y > max->y)) {
 			return 0;
+		}
 	}
 
-	if(plane == 2)
+	if(plane == 2) {
 		Coord->z = planes[2];
-	else {
+	} else {
 		Coord->z = origin->z + (((long long)dir->z * (long long)dists[plane]) >> 16);
 
-		if((!quad[2] && Coord->z < min->z) || (quad[2] == 1 && Coord->z > max->z))
+		if((!quad[2] && Coord->z < min->z) || (quad[2] == 1 && Coord->z > max->z)) {
 			return 0;
+		}
 	}
 
 	Coord->x >>= 16;
@@ -2724,11 +2926,13 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	dir.y <<= 8;
 	dir.z <<= 8;
 
-	if(!RayBoxIntersect(&min, &max, &origin, &dir, Coord))
+	if(!RayBoxIntersect(&min, &max, &origin, &dir, Coord)) {
 		return 0;
+	}
 
-	if(Coord->x < bounds[0] || Coord->x > bounds[1] || Coord->y < bounds[2] || Coord->y > bounds[3] || Coord->z < bounds[4] || Coord->z > bounds[5])
+	if(Coord->x < bounds[0] || Coord->x > bounds[1] || Coord->y < bounds[2] || Coord->y > bounds[3] || Coord->z < bounds[4] || Coord->z > bounds[5]) {
 		return 0;
+	}
 
 	phd_PushUnitMatrix();
 	phd_RotY(ItemPos->y_rot);
@@ -2746,9 +2950,9 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	ClosestBit = 0;
 	item = NULL;
 
-	if(item_number < 0)
+	if(item_number < 0) {
 		ClosestNode = -1;
-	else {
+	} else {
 		item = GetItem(currentLevel, item_number);
 		obj = GetObjectInfo(currentLevel, item->object_number);
 		meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
@@ -2758,8 +2962,9 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 		ClosestNode = -2;
 
 		for(int i = 0; i < obj->nmeshes; i++, meshpp += 2, bit <<= 1) {
-			if(!(item->mesh_bits & bit))
+			if(!(item->mesh_bits & bit)) {
 				continue;
+			}
 
 			sphere = &Slist[i];
 			s.x = start->pos.x;
@@ -2777,15 +2982,17 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 			r0 = ((sp.x - s.x) * (t.x - s.x)) + ((sp.y - s.y) * (t.y - s.y)) + ((sp.z - s.z) * (t.z - s.z));
 			r1 = SQUARE(t.x - s.x) + SQUARE(t.y - s.y) + SQUARE(t.z - s.z);
 
-			if((r0 >= 0 || r1 >= 0) && (r1 <= 0 || r0 <= 0) || (abs(r0) > abs(r1)))
+			if((r0 >= 0 || r1 >= 0) && (r1 <= 0 || r0 <= 0) || (abs(r0) > abs(r1))) {
 				continue;
+			}
 
 			r1 >>= 16;
 
-			if(r1)
+			if(r1) {
 				r = r0 / r1;
-			else
+			} else {
 				r = 0;
+			}
 
 			pos.x = s.x + ((r * (t.x - s.x)) >> 16);
 			pos.y = s.y + ((r * (t.y - s.y)) >> 16);
@@ -2876,8 +3083,9 @@ long GetMaximumFloor(FLOOR_INFO* floor, long x, long z) {
 					}
 				}
 
-				if(hadj & 0x10)
+				if(hadj & 0x10) {
 					hadj |= 0xFFF0;
+				}
 
 				height += hadj << 8;
 			}
@@ -2906,8 +3114,9 @@ long GetMinimumCeiling(FLOOR_INFO* floor, long x, long z) {
 		if((type & 0x1F) == TILT_TYPE || (type & 0x1F) == SPLIT1 || (type & 0x1F) == SPLIT2 || (type & 0x1F) == NOCOLF1T || (type & 0x1F) == NOCOLF1B || (type & 0x1F) == NOCOLF2T || (type & 0x1F) == NOCOLF2B) {
 			data++;
 
-			if(type & 0x8000)
+			if(type & 0x8000) {
 				ended = 1;
+			}
 
 			type = *data++;
 		}
@@ -2947,8 +3156,9 @@ long GetMinimumCeiling(FLOOR_INFO* floor, long x, long z) {
 						}
 					}
 
-					if(hadj & 0x10)
+					if(hadj & 0x10) {
 						hadj |= 0xFFF0;
+					}
 
 					height += hadj << 8;
 				}

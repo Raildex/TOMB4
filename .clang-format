@@ -22,6 +22,7 @@ SpacesInAngles: Never
 AlignArrayOfStructures: None
 AlignAfterOpenBracket: AlwaysBreak
 BracedInitializerIndentWidth: 4
+InsertBraces: Yes
 BraceWrapping: 
   AfterCaseLabel: false
   AfterClass: false

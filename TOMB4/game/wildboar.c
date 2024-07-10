@@ -41,8 +41,9 @@ void WildboarControl(short item_number) {
 	long dx, dz, ldist, dist, max_dist;
 	short angle, neckX, neckY, headX, headY;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	angle = 0;
 	neckX = 0;
@@ -65,9 +66,9 @@ void WildboarControl(short item_number) {
 		dz = lara_item->pos.z_pos - item->pos.z_pos;
 		ldist = SQUARE(dx) + SQUARE(dz);
 
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(boar);
-		else {
+		} else {
 			boar->enemy = lara_item;
 			max_dist = infinite_distance;
 
@@ -96,8 +97,9 @@ void WildboarControl(short item_number) {
 		CreatureAIInfo(item, &info);
 		GetCreatureMood(item, &info, 1);
 
-		if(item->flags)
+		if(item->flags) {
 			boar->mood = ESCAPE_MOOD;
+		}
 
 		CreatureMood(item, &info, 1);
 		angle = CreatureTurn(item, boar->maximum_turn);
@@ -113,13 +115,14 @@ void WildboarControl(short item_number) {
 		case 1:
 			boar->maximum_turn = 0;
 
-			if(info.ahead && info.distance || item->flags)
+			if(info.ahead && info.distance || item->flags) {
 				item->goal_anim_state = 2;
-			else if((GetRandomControl() & 0x7F) != 0) {
+			} else if((GetRandomControl() & 0x7F) != 0) {
 				neckY = AIGuard(boar) >> 1;
 				headY = neckY;
-			} else
+			} else {
 				item->goal_anim_state = 3;
+			}
 
 			break;
 
@@ -151,10 +154,11 @@ void WildboarControl(short item_number) {
 		case 3:
 			boar->maximum_turn = 0;
 
-			if(info.ahead && info.distance)
+			if(info.ahead && info.distance) {
 				item->goal_anim_state = 1;
-			else if(!(GetRandomControl() & 0x7F))
+			} else if(!(GetRandomControl() & 0x7F)) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 

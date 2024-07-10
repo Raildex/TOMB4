@@ -183,10 +183,11 @@ void gar_RotYXZsuperpack(short** pprot, long skip) {
 	while(skip) {
 		prot = (unsigned short*)*pprot;
 
-		if(prot[0] & 0xC000)
+		if(prot[0] & 0xC000) {
 			*pprot += 1;
-		else
+		} else {
 			*pprot += 2;
+		}
 
 		skip--;
 	}
@@ -306,9 +307,9 @@ void InsertRoom(short room_number) {
 void CalculateObjectLighting(ITEM_INFO* item, short* frame) {
 	long x, y, z;
 
-	if(item->shade >= 0)
+	if(item->shade >= 0) {
 		S_CalculateStaticMeshLight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->shade & 0x7FFF, GetRoom(currentLevel, item->room_number));
-	else {
+	} else {
 		phd_PushUnitMatrix();
 		phd_SetTrans(0, 0, 0);
 		phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
@@ -330,9 +331,9 @@ void CalculateObjectLightingLara() {
 	PHD_VECTOR pos;
 	short room_no;
 
-	if(GLOBAL_playing_cutseq)
+	if(GLOBAL_playing_cutseq) {
 		CalculateObjectLightingLaraCutSeq();
-	else {
+	} else {
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
@@ -340,10 +341,11 @@ void CalculateObjectLightingLara() {
 		if(lara_item->anim_number == ANIM_DUCKBREATHE || lara_item->anim_number == ANIM_ALL4S || lara_item->anim_number == ANIM_BREATH) {
 			pos.x = lara_item->pos.x_pos;
 
-			if(lara_item->anim_number == ANIM_BREATH)
+			if(lara_item->anim_number == ANIM_BREATH) {
 				pos.y = lara_item->pos.y_pos - 512;
-			else
+			} else {
 				pos.y = lara_item->pos.y_pos - 192;
+			}
 
 			pos.z = lara_item->pos.z_pos;
 			room_no = lara_item->room_number;
@@ -378,19 +380,21 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 	obj = GetObjectInfo(currentLevel, item->object_number);
 	bite = &EnemyBites[obj->bite_offset];
 
-	if(obj->shadow_size)
+	if(obj->shadow_size) {
 		S_PrintShadow(obj->shadow_size, frm[0], item);
+	}
 
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 
-	if(obj->object_mip && (obj + 1)->loaded && mMXPtr[M23] / 4 > obj->object_mip)
+	if(obj->object_mip && (obj + 1)->loaded && mMXPtr[M23] / 4 > obj->object_mip) {
 		obj++;
+	}
 
-	if(item->object_number < ENEMY_JEEP || item->object_number > SETHA_MIP)
+	if(item->object_number < ENEMY_JEEP || item->object_number > SETHA_MIP) {
 		calc_animating_item_clip_window(item, frm[0]);
-	else {
+	} else {
 		phd_left = 0;
 		phd_right = phd_winwidth;
 		phd_top = 0;
@@ -402,10 +406,11 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 	if(clip) {
 		CalculateObjectLighting(item, frm[0]);
 
-		if(!item->data)
+		if(!item->data) {
 			data = no_rotation;
-		else
+		} else {
 			data = (short*)item->data;
+		}
 
 		bit = 1;
 		meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
@@ -419,42 +424,49 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 			gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 
 			if(item->mesh_bits & 1) {
-				if(item->meshswap_meshbits & 1)
+				if(item->meshswap_meshbits & 1) {
 					phd_PutPolygons_I(meshpp[1], clip);
-				else
+				} else {
 					phd_PutPolygons_I(meshpp[0], clip);
+				}
 			}
 
 			meshpp += 2;
 
 			for(int i = 0; i < obj->nmeshes - 1; i++, bone += 4, meshpp += 2) {
-				if(bone[0] & 1)
+				if(bone[0] & 1) {
 					phd_PopMatrix_I();
+				}
 
-				if(bone[0] & 2)
+				if(bone[0] & 2) {
 					phd_PushMatrix_I();
+				}
 
 				phd_TranslateRel_I(bone[1], bone[2], bone[3]);
 				gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 
 				if(bone[0] & 0x1C) {
-					if(bone[0] & 8)
+					if(bone[0] & 8) {
 						phd_RotY_I(*data++);
+					}
 
-					if(bone[0] & 4)
+					if(bone[0] & 4) {
 						phd_RotX_I(*data++);
+					}
 
-					if(bone[0] & 16)
+					if(bone[0] & 16) {
 						phd_RotZ_I(*data++);
+					}
 				}
 
 				bit <<= 1;
 
 				if(bit & item->mesh_bits) {
-					if(bit & item->meshswap_meshbits)
+					if(bit & item->meshswap_meshbits) {
 						phd_PutPolygons_I(meshpp[1], clip);
-					else
+					} else {
 						phd_PutPolygons_I(meshpp[0], clip);
+					}
 				}
 
 				if(item->fired_weapon && i == bite->mesh_num - 1) {
@@ -475,42 +487,49 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 			gar_RotYXZsuperpack(&rot, 0);
 
 			if(item->mesh_bits & 1) {
-				if(item->meshswap_meshbits & 1)
+				if(item->meshswap_meshbits & 1) {
 					phd_PutPolygons(meshpp[1], clip);
-				else
+				} else {
 					phd_PutPolygons(meshpp[0], clip);
+				}
 			}
 
 			meshpp += 2;
 
 			for(int i = 0; i < obj->nmeshes - 1; i++, bone += 4, meshpp += 2) {
-				if(bone[0] & 1)
+				if(bone[0] & 1) {
 					phd_PopMatrix();
+				}
 
-				if(bone[0] & 2)
+				if(bone[0] & 2) {
 					phd_PushMatrix();
+				}
 
 				phd_TranslateRel(bone[1], bone[2], bone[3]);
 				gar_RotYXZsuperpack(&rot, 0);
 
 				if(bone[0] & 0x1C) {
-					if(bone[0] & 8)
+					if(bone[0] & 8) {
 						phd_RotY(*data++);
+					}
 
-					if(bone[0] & 4)
+					if(bone[0] & 4) {
 						phd_RotX(*data++);
+					}
 
-					if(bone[0] & 16)
+					if(bone[0] & 16) {
 						phd_RotZ(*data++);
+					}
 				}
 
 				bit <<= 1;
 
 				if(bit & item->mesh_bits) {
-					if(bit & item->meshswap_meshbits)
+					if(bit & item->meshswap_meshbits) {
 						phd_PutPolygons(meshpp[1], clip);
-					else
+					} else {
 						phd_PutPolygons(meshpp[0], clip);
+					}
 				}
 
 				if(item->fired_weapon && i == bite->mesh_num - 1) {
@@ -623,11 +642,12 @@ void DrawRooms(short CurrentRoom) {
 
 	if(outside) // inlined SkyDrawPhase? did it exist?
 	{
-		if(!GetObjectInfo(currentLevel, HORIZON)->loaded)
+		if(!GetObjectInfo(currentLevel, HORIZON)->loaded) {
 			outside = -1;
-		else {
-			if(BinocularRange)
+		} else {
+			if(BinocularRange) {
 				AlterFOV(14560 - (short)BinocularRange);
+			}
 
 			phd_PushMatrix();
 			phd_TranslateAbs(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z);
@@ -642,11 +662,13 @@ void DrawRooms(short CurrentRoom) {
 				} else {
 					UpdateSkyLightning();
 
-					if(LightningSFXDelay > -1)
+					if(LightningSFXDelay > -1) {
 						LightningSFXDelay--;
+					}
 
-					if(!LightningSFXDelay)
+					if(!LightningSFXDelay) {
 						SoundEffect(SFX_THUNDER_RUMBLE, 0, SFX_DEFAULT);
+					}
 				}
 			}
 
@@ -656,17 +678,20 @@ void DrawRooms(short CurrentRoom) {
 			if(gfLevelFlags & GF_LAYER1) {
 				phd_RotY(32760);
 
-				if(gfLevelFlags & GF_LIGHTNING)
+				if(gfLevelFlags & GF_LIGHTNING) {
 					DrawFlatSky(RGBA(LightningRGB[0], LightningRGB[1], LightningRGB[2], 44), SkyPos, -1536, 4);
-				else
+				} else {
 					DrawFlatSky(*(unsigned long*)&gfLayer1Col, SkyPos, -1536, 4);
+				}
 			}
 
-			if(gfLevelFlags & GF_LAYER2)
+			if(gfLevelFlags & GF_LAYER2) {
 				DrawFlatSky(0xFF000000 | *(unsigned long*)&gfLayer2Col, SkyPos2, -1536, 2);
+			}
 
-			if(gfLevelFlags & GF_LAYER1 || gfLevelFlags & GF_LAYER2)
+			if(gfLevelFlags & GF_LAYER1 || gfLevelFlags & GF_LAYER2) {
 				OutputSky();
+			}
 
 			phd_PopMatrix();
 
@@ -677,8 +702,9 @@ void DrawRooms(short CurrentRoom) {
 
 			phd_PopMatrix();
 
-			if(BinocularRange)
+			if(BinocularRange) {
 				AlterFOV(7 * (2080 - (short)BinocularRange));
+			}
 		}
 	}
 
@@ -726,8 +752,9 @@ void DrawRooms(short CurrentRoom) {
 				DrawGunflashes();
 			}
 
-			if(gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom)
+			if(gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom) {
 				DoMirrorStuff();
+			}
 		}
 	}
 
@@ -735,25 +762,30 @@ void DrawRooms(short CurrentRoom) {
 
 	for(int i = 0; i < MAX_DYNAMICS; i++) {
 		if(dynamics[i].on) {
-			if(dynamics[i].pos.x < 0)
+			if(dynamics[i].pos.x < 0) {
 				dynamics[i].pos.x = 0;
+			}
 
-			if(dynamics[i].pos.z < 0)
+			if(dynamics[i].pos.z < 0) {
 				dynamics[i].pos.z = 0;
+			}
 		}
 	}
 
-	for(int i = 0; i < number_draw_rooms; i++)
+	for(int i = 0; i < number_draw_rooms; i++) {
 		InsertRoom(draw_rooms[i]);
+	}
 
-	if(gfLevelFlags & GF_TRAIN)
+	if(gfLevelFlags & GF_TRAIN) {
 		DrawTrainFloor();
+	}
 
 	DrawGunshells();
 	nPolyType = 3;
 
-	if(GLOBAL_playing_cutseq)
+	if(GLOBAL_playing_cutseq) {
 		DrawCutSeqActors();
+	}
 
 	nPolyType = 6;
 	DrawRopeList();
@@ -785,14 +817,17 @@ void DrawRooms(short CurrentRoom) {
 	lara_item->pos.z_pos = lz;
 	lara_item->room_number = lr;
 
-	if(gfLevelFlags & GF_LENSFLARE)
+	if(gfLevelFlags & GF_LENSFLARE) {
 		SetUpLensFlare(gfLensFlare.x, gfLensFlare.y - 4096, gfLensFlare.z, 0);
+	}
 
-	if(LaserSightActive)
+	if(LaserSightActive) {
 		DrawLaserSightSprite();
+	}
 
-	for(int i = 0; i < number_draw_rooms; i++)
+	for(int i = 0; i < number_draw_rooms; i++) {
 		PrintObjects(draw_rooms[i]);
+	}
 }
 
 void RenderIt(short CurrentRoom) {
@@ -833,11 +868,12 @@ void RenderIt(short CurrentRoom) {
 	CreateFXBulbs();
 
 	if(outside) {
-		if(!GetObjectInfo(currentLevel, HORIZON)->loaded)
+		if(!GetObjectInfo(currentLevel, HORIZON)->loaded) {
 			outside = -1;
-		else {
-			if(BinocularRange)
+		} else {
+			if(BinocularRange) {
 				AlterFOV(14560 - (short)BinocularRange);
+			}
 
 			phd_PushMatrix();
 			phd_TranslateAbs(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z);
@@ -847,17 +883,20 @@ void RenderIt(short CurrentRoom) {
 			if(gfLevelFlags & GF_LAYER1) {
 				phd_RotY(32760);
 
-				if(gfLevelFlags & GF_LIGHTNING)
+				if(gfLevelFlags & GF_LIGHTNING) {
 					DrawFlatSky(RGBA(LightningRGB[0], LightningRGB[1], LightningRGB[2], 44), SkyPos, -1536, 4);
-				else
+				} else {
 					DrawFlatSky(*(unsigned long*)&gfLayer1Col, SkyPos, -1536, 4);
+				}
 			}
 
-			if(gfLevelFlags & GF_LAYER2)
+			if(gfLevelFlags & GF_LAYER2) {
 				DrawFlatSky(0xFF000000 | *(unsigned long*)&gfLayer2Col, SkyPos2, -1536, 2);
+			}
 
-			if(gfLevelFlags & GF_LAYER1 || gfLevelFlags & GF_LAYER2)
+			if(gfLevelFlags & GF_LAYER1 || gfLevelFlags & GF_LAYER2) {
 				OutputSky();
+			}
 
 			phd_PopMatrix();
 
@@ -872,14 +911,17 @@ void RenderIt(short CurrentRoom) {
 
 	nPolyType = 0;
 
-	for(int i = 0; i < number_draw_rooms; i++)
+	for(int i = 0; i < number_draw_rooms; i++) {
 		InsertRoom(draw_rooms[i]);
+	}
 
-	if(gfLevelFlags & GF_TRAIN)
+	if(gfLevelFlags & GF_TRAIN) {
 		DrawTrainFloor();
+	}
 
-	for(int i = 0; i < number_draw_rooms; i++)
+	for(int i = 0; i < number_draw_rooms; i++) {
 		PrintObjects(draw_rooms[i]);
+	}
 }
 
 long DrawPhaseGame() {
@@ -888,8 +930,9 @@ long DrawPhaseGame() {
 	CalcLaraMatrices(1);
 	phd_PopMatrix();
 
-	if(GLOBAL_playing_cutseq)
+	if(GLOBAL_playing_cutseq) {
 		frigup_lara();
+	}
 
 	SetLaraUnderwaterNodes();
 	DrawRooms(camera.pos.room_number);
@@ -911,39 +954,48 @@ void GetRoomBounds() {
 		r = GetRoom(currentLevel, rn);
 		r->bound_active -= 2;
 
-		if(r->test_left < r->left)
+		if(r->test_left < r->left) {
 			r->left = r->test_left;
+		}
 
-		if(r->test_top < r->top)
+		if(r->test_top < r->top) {
 			r->top = r->test_top;
+		}
 
-		if(r->test_right > r->right)
+		if(r->test_right > r->right) {
 			r->right = r->test_right;
+		}
 
-		if(r->test_bottom > r->bottom)
+		if(r->test_bottom > r->bottom) {
 			r->bottom = r->test_bottom;
+		}
 
 		if(!(r->bound_active & 1)) {
 			draw_rooms[number_draw_rooms] = (short)rn;
 			number_draw_rooms++;
 			r->bound_active |= 1;
 
-			if(r->flags & ROOM_OUTSIDE)
+			if(r->flags & ROOM_OUTSIDE) {
 				outside = ROOM_OUTSIDE;
+			}
 		}
 
 		if(r->flags & ROOM_OUTSIDE) {
-			if(r->left < outside_left)
+			if(r->left < outside_left) {
 				outside_left = r->left;
+			}
 
-			if(r->right > outside_right)
+			if(r->right > outside_right) {
 				outside_right = r->right;
+			}
 
-			if(r->top < outside_top)
+			if(r->top < outside_top) {
 				outside_top = r->top;
+			}
 
-			if(r->bottom > outside_bottom)
+			if(r->bottom > outside_bottom) {
 				outside_bottom = r->bottom;
+			}
 		}
 
 		phd_PushMatrix();
@@ -954,8 +1006,9 @@ void GetRoomBounds() {
 			for(drn = *door++; drn > 0; drn--) {
 				rn = *door++;
 
-				if(door[0] * (long)(r->x + door[3] - mW2V[M03]) + door[1] * (long)(r->y + door[4] - mW2V[M13]) + door[2] * (long)(r->z + door[5] - mW2V[M23]) < 0)
+				if(door[0] * (long)(r->x + door[3] - mW2V[M03]) + door[1] * (long)(r->y + door[4] - mW2V[M13]) + door[2] * (long)(r->z + door[5] - mW2V[M23]) < 0) {
 					SetRoomBounds(door, rn, r);
+				}
 
 				door += 15;
 			}
@@ -974,8 +1027,9 @@ void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom) {
 
 	r = GetRoom(currentLevel, rn);
 
-	if(r->left <= actualRoom->test_left && r->right >= actualRoom->test_right && r->top <= actualRoom->test_top && r->bottom >= actualRoom->test_bottom)
+	if(r->left <= actualRoom->test_left && r->right >= actualRoom->test_right && r->top <= actualRoom->test_top && r->bottom >= actualRoom->test_bottom) {
 		return;
+	}
 
 	tL = (float)actualRoom->test_right;
 	tR = (float)actualRoom->test_left;
@@ -994,11 +1048,12 @@ void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom) {
 		y = v->y;
 		z = v->z;
 
-		if(z <= 0)
+		if(z <= 0) {
 			tooNear++;
-		else {
-			if(z > f_zfar)
+		} else {
+			if(z > f_zfar) {
 				tooFar++;
+			}
 
 			z /= f_mpersp;
 
@@ -1006,89 +1061,106 @@ void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom) {
 				x = x / z + f_centerx;
 				y = y / z + f_centery;
 			} else {
-				if(x < 0)
+				if(x < 0) {
 					x = (float)phd_left;
-				else
+				} else {
 					x = (float)phd_right;
+				}
 
-				if(y < 0)
+				if(y < 0) {
 					y = (float)phd_top;
-				else
+				} else {
 					y = (float)phd_bottom;
+				}
 			}
 
-			if(x - 1 < tL)
+			if(x - 1 < tL) {
 				tL = x - 1;
+			}
 
-			if(x + 1 > tR)
+			if(x + 1 > tR) {
 				tR = x + 1;
+			}
 
-			if(y - 1 < tT)
+			if(y - 1 < tT) {
 				tT = y - 1;
+			}
 
-			if(y + 1 > tB)
+			if(y + 1 > tB) {
 				tB = y + 1;
+			}
 		}
 	}
 
-	if(tooNear == 4 || (tooFar == 4 && !outside))
+	if(tooNear == 4 || (tooFar == 4 && !outside)) {
 		return;
+	}
 
 	if(tooNear > 0) {
 		v = vbuf;
 		lastV = &vbuf[3];
 
 		for(int i = 0; i < 4; i++, lastV = v, v++) {
-			if(lastV->z <= 0 == v->z <= 0)
+			if(lastV->z <= 0 == v->z <= 0) {
 				continue;
+			}
 
-			if(v->x < 0 && lastV->x < 0)
+			if(v->x < 0 && lastV->x < 0) {
 				tL = 0;
-			else if(v->x > 0 && lastV->x > 0)
+			} else if(v->x > 0 && lastV->x > 0) {
 				tR = phd_winxmax;
-			else {
+			} else {
 				tL = 0;
 				tR = phd_winxmax;
 			}
 
-			if(v->y < 0 && lastV->y < 0)
+			if(v->y < 0 && lastV->y < 0) {
 				tT = 0;
-			else if(v->y > 0 && lastV->y > 0)
+			} else if(v->y > 0 && lastV->y > 0) {
 				tB = phd_winymax;
-			else {
+			} else {
 				tT = 0;
 				tB = phd_winymax;
 			}
 		}
 	}
 
-	if(tL < actualRoom->test_left)
+	if(tL < actualRoom->test_left) {
 		tL = actualRoom->test_left;
+	}
 
-	if(tR > actualRoom->test_right)
+	if(tR > actualRoom->test_right) {
 		tR = actualRoom->test_right;
+	}
 
-	if(tT < actualRoom->test_top)
+	if(tT < actualRoom->test_top) {
 		tT = actualRoom->test_top;
+	}
 
-	if(tB > actualRoom->test_bottom)
+	if(tB > actualRoom->test_bottom) {
 		tB = actualRoom->test_bottom;
+	}
 
-	if(tL >= tR || tT >= tB)
+	if(tL >= tR || tT >= tB) {
 		return;
+	}
 
 	if(r->bound_active & 2) {
-		if(tL < r->test_left)
+		if(tL < r->test_left) {
 			r->test_left = (short)tL;
+		}
 
-		if(tT < r->test_top)
+		if(tT < r->test_top) {
 			r->test_top = (short)tT;
+		}
 
-		if(tR > r->test_right)
+		if(tR > r->test_right) {
 			r->test_right = (short)tR;
+		}
 
-		if(tB > r->test_bottom)
+		if(tB > r->test_bottom) {
 			r->test_bottom = (short)tB;
+		}
 	} else {
 		draw_room_list[room_list_end % 128] = rn;
 		room_list_end++;
@@ -1115,10 +1187,11 @@ void DrawEffect(short fx_num) {
 		if(mMXPtr[M23] > f_mznear && mMXPtr[M23] < f_mzfar) {
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
 
-			if(obj->nmeshes)
+			if(obj->nmeshes) {
 				meshp = GetMesh(currentLevel, obj->mesh_index);
-			else
+			} else {
 				meshp = GetMesh(currentLevel, fx->frame_number);
+			}
 
 			// empty func call here
 			phd_PutPolygons(meshp, -1);
@@ -1188,23 +1261,28 @@ void PrintObjects(short room_number) {
 		obj = GetObjectInfo(currentLevel, item->object_number);
 
 		if(item->status != ITEM_INVISIBLE) {
-			if(item->after_death)
+			if(item->after_death) {
 				GlobalAlpha = 0xFE000000 * item->after_death;
+			}
 
-			if(obj->draw_routine)
+			if(obj->draw_routine) {
 				obj->draw_routine(item);
+			}
 
-			if(obj->draw_routine_extra)
+			if(obj->draw_routine_extra) {
 				obj->draw_routine_extra(item);
+			}
 
 			GlobalAlpha = 0xFF000000;
 		}
 
-		if(item->after_death < 128 && item->after_death > 0)
+		if(item->after_death < 128 && item->after_death > 0) {
 			item->after_death++;
+		}
 
-		if(item->after_death == 128)
+		if(item->after_death == 128) {
 			KillItem(item_number);
+		}
 	}
 
 	nPolyType = 3;
@@ -1235,13 +1313,15 @@ long GetFrames(ITEM_INFO* item, short* frm[], long* rate) {
 	frm[1] = frm[0] + size;
 	frac = frame % *rate;
 
-	if(!frac)
+	if(!frac) {
 		return 0;
+	}
 
 	num = *rate * (frame / *rate + 1);
 
-	if(num > anim->frame_end)
+	if(num > anim->frame_end) {
 		*rate = *rate + anim->frame_end - num;
+	}
 
 	return frac;
 }
@@ -1254,8 +1334,9 @@ short* GetBoundsAccurate(ITEM_INFO* item) {
 
 	frac = GetFrames(item, frmptr, &rate);
 
-	if(!frac)
+	if(!frac) {
 		return frmptr[0];
+	}
 
 	bptr = interpolated_bounds;
 
@@ -1274,18 +1355,20 @@ short* GetBestFrame(ITEM_INFO* item) {
 
 	frac = GetFrames(item, frm, &rate);
 
-	if(frac > rate >> 1)
+	if(frac > rate >> 1) {
 		return frm[1];
-	else
+	} else {
 		return frm[0];
+	}
 }
 
 void UpdateSkyLightning() {
 	if(LightningCount <= 0) {
-		if(LightningRand < 4)
+		if(LightningRand < 4) {
 			LightningRand = 0;
-		else
+		} else {
 			LightningRand -= LightningRand >> 2;
+		}
 	} else {
 		LightningCount--;
 
@@ -1301,8 +1384,9 @@ void UpdateSkyLightning() {
 	for(int i = 0; i < 3; i++) {
 		LightningRGB[i] = LightningRGBs[i] + ((LightningRGBs[i] * LightningRand) >> 8);
 
-		if(LightningRGB[i] > 255)
+		if(LightningRGB[i] > 255) {
 			LightningRGB[i] = 255;
+		}
 	}
 }
 
@@ -1362,23 +1446,29 @@ void mRotBoundingBoxNoPersp(short* bounds, short* rotatedBounds) {
 		y = pos[i].x * phd_mxptr[M10] + pos[i].y * phd_mxptr[M11] + pos[i].z * phd_mxptr[M12] + phd_mxptr[M13];
 		z = pos[i].x * phd_mxptr[M20] + pos[i].y * phd_mxptr[M21] + pos[i].z * phd_mxptr[M22] + phd_mxptr[M23];
 
-		if(x < xMin)
+		if(x < xMin) {
 			xMin = (short)x;
+		}
 
-		if(x > xMax)
+		if(x > xMax) {
 			xMax = (short)x;
+		}
 
-		if(y < yMin)
+		if(y < yMin) {
 			yMin = (short)y;
+		}
 
-		if(y > yMax)
+		if(y > yMax) {
 			yMax = (short)y;
+		}
 
-		if(z < zMin)
+		if(z < zMin) {
 			zMin = (short)z;
+		}
 
-		if(z > zMax)
+		if(z > zMax) {
 			zMax = (short)z;
+		}
 	}
 
 	rotatedBounds[0] = xMin;
@@ -1441,8 +1531,9 @@ void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds) {
 		nDoors = *door++;
 
 		for(; nDoors > 0; nDoors--, door += 16) {
-			if(door[0] != camera.pos.room_number)
+			if(door[0] != camera.pos.room_number) {
 				continue;
+			}
 
 			xMinD = door[4]; // skip door normal
 			xMaxD = door[4];
@@ -1451,50 +1542,59 @@ void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds) {
 			zMinD = door[6];
 			zMaxD = door[6];
 
-			if(door[7] < xMinD)
+			if(door[7] < xMinD) {
 				xMinD = door[7];
-			else if(door[7] > xMaxD)
+			} else if(door[7] > xMaxD) {
 				xMaxD = door[7];
+			}
 
-			if(door[8] < yMinD)
+			if(door[8] < yMinD) {
 				yMinD = door[8];
-			else if(door[8] > yMaxD)
+			} else if(door[8] > yMaxD) {
 				yMaxD = door[8];
+			}
 
-			if(door[9] < zMinD)
+			if(door[9] < zMinD) {
 				zMinD = door[9];
-			else if(door[9] > zMaxD)
+			} else if(door[9] > zMaxD) {
 				zMaxD = door[9];
+			}
 
-			if(door[10] < xMinD)
+			if(door[10] < xMinD) {
 				xMinD = door[10];
-			else if(door[10] > xMaxD)
+			} else if(door[10] > xMaxD) {
 				xMaxD = door[10];
+			}
 
-			if(door[11] < yMinD)
+			if(door[11] < yMinD) {
 				yMinD = door[11];
-			else if(door[11] > yMaxD)
+			} else if(door[11] > yMaxD) {
 				yMaxD = door[11];
+			}
 
-			if(door[12] < zMinD)
+			if(door[12] < zMinD) {
 				zMinD = door[12];
-			else if(door[12] > zMaxD)
+			} else if(door[12] > zMaxD) {
 				zMaxD = door[12];
+			}
 
-			if(door[13] < xMinD)
+			if(door[13] < xMinD) {
 				xMinD = door[13];
-			else if(door[13] > xMaxD)
+			} else if(door[13] > xMaxD) {
 				xMaxD = door[13];
+			}
 
-			if(door[14] < yMinD)
+			if(door[14] < yMinD) {
 				yMinD = door[14];
-			else if(door[14] > yMaxD)
+			} else if(door[14] > yMaxD) {
 				yMaxD = door[14];
+			}
 
-			if(door[15] < zMinD)
+			if(door[15] < zMinD) {
 				zMinD = door[15];
-			else if(door[15] > zMaxD)
+			} else if(door[15] > zMaxD) {
 				zMaxD = door[15];
+			}
 
 			xMinD += xMinR - 1024;
 			xMaxD += xMinR - 1024;
@@ -1503,8 +1603,9 @@ void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds) {
 			zMinD += zMinR - 1024;
 			zMaxD += zMinR - 1024;
 
-			if(xMinD <= xMax && xMaxD >= xMin && yMinD <= yMax && yMaxD >= yMin && zMinD <= zMax && zMaxD >= zMin)
+			if(xMinD <= xMax && xMaxD >= xMin && yMinD <= yMax && yMaxD >= yMin && zMinD <= zMax && zMaxD >= zMin) {
 				break;
+			}
 		}
 
 		if(!nDoors) {

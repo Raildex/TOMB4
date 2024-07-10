@@ -190,10 +190,11 @@ static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, 
 	x1 = (float)(x + width);
 	y1 = y + (h * 6);
 
-	if(scaled)
+	if(scaled) {
 		p = GetRenderScale(1);
-	else
+	} else {
 		p = GetFixedScale(1);
+	}
 
 	DrawColoredRect(x0 - p, y0, x1 + p, y1, f_mznear + 1, 0, 0, 0, 0, &tex);
 	DrawColoredRect(x0 - (2 * p), y0 - p, x1 + (2 * p), y1 + p, f_mznear + 2, 0xFF508282, 0xFFA0A0A0, 0xFF508282, 0xFFA0A0A0, &tex);
@@ -213,10 +214,11 @@ static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long c
 	tex.drawtype = 0;
 	tex.tpage = 0;
 
-	if(scaled)
+	if(scaled) {
 		p = GetRenderScale(1);
-	else
+	} else {
 		p = GetFixedScale(1);
+	}
 
 	y2 = y + height;
 	bar = width * pos / 100;
@@ -264,10 +266,11 @@ static void DoBar(long x, long y, long width, long height, long pos, long c1, lo
 	tex.drawtype = 0;
 	tex.tpage = 0;
 
-	if(scaled)
+	if(scaled) {
 		p = GetRenderScale(1);
-	else
+	} else {
 		p = GetFixedScale(1);
+	}
 
 	xw = x + width;
 	y2 = y + height;
@@ -305,8 +308,9 @@ static void S_DrawEnemyBar2(long pos) {
 void S_DrawHealthBar(long pos) {
 	long x, y, w, h;
 
-	if(!gfCurrentLevel)
+	if(!gfCurrentLevel) {
 		return;
+	}
 
 	if(BinocularRange) {
 		S_DrawHealthBar2(pos);
@@ -333,8 +337,9 @@ void S_DrawHealthBar(long pos) {
 void S_DrawAirBar(long pos) {
 	long x, y, w, h;
 
-	if(!gfCurrentLevel)
+	if(!gfCurrentLevel) {
 		return;
+	}
 
 	w = GetRenderScale(150);
 	h = GetRenderScale(6);
@@ -351,8 +356,9 @@ void S_DrawAirBar(long pos) {
 void S_DrawDashBar(long pos) {
 	long x, y, w, h;
 
-	if(!gfCurrentLevel)
+	if(!gfCurrentLevel) {
 		return;
+	}
 
 	w = GetRenderScale(150);
 	h = GetRenderScale(6);
@@ -395,8 +401,9 @@ void S_DoSlider(long x, long y, long width, long height, long pos, long c1, long
 	nPolyType = 4;
 	V += 0.01F;
 
-	if(V > 0.99F)
+	if(V > 0.99F) {
 		V = 0;
+	}
 
 	clipflags[0] = 0;
 	clipflags[1] = 0;

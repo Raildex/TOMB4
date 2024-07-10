@@ -49,8 +49,9 @@ bool DXChangeOutputFormat(long nSamplesPerSec, bool force) {
 	WAVEFORMATEX pcfxFormat;
 	static long lastSPC;
 
-	if(!force && lastSPC == nSamplesPerSec)
+	if(!force && lastSPC == nSamplesPerSec) {
 		return 1;
+	}
 
 	lastSPC = nSamplesPerSec;
 	pcfxFormat.wFormatTag = WAVE_FORMAT_PCM;
@@ -85,10 +86,11 @@ void DSAdjustPitch(long num, long pitch) {
 	if(XA_Voices[num]) {
 		frequency = (unsigned long)((float)pitch / 65536.0F * 22050.0F);
 
-		if(frequency < 100)
+		if(frequency < 100) {
 			frequency = 100;
-		else if(frequency > 100000)
+		} else if(frequency > 100000) {
 			frequency = 100000;
+		}
 
 		IXAudio2SourceVoice_SetFrequencyRatio(XA_Voices[num], frequency / 22050.0F, XAUDIO2_COMMIT_NOW);
 	}
@@ -99,10 +101,12 @@ void DSAdjustPan(long num, long pan) {
 
 	if(XA_Voices[num]) {
 		if(pan < 0) {
-			if(pan < -0x4000)
+			if(pan < -0x4000) {
 				pan = -0x4000 - pan;
-		} else if(pan > 0 && pan > 0x4000)
+			}
+		} else if(pan > 0 && pan > 0x4000) {
 			pan = 0x8000 - pan;
+		}
 
 		pan >>= 4;
 
@@ -162,11 +166,13 @@ bool DXDSCreate() {
 	chain.pEffectDescriptors = &chaind;
 	DXAttempt(IXAudio2_CreateMasteringVoice(App.dx.lpXA, &XAMaster, 2, 44100, 0, 0, &chain, AudioCategory_GameEffects));
 
-	for(int i = 0; i < 32; i++)
+	for(int i = 0; i < 32; i++) {
 		DXAttempt(IXAudio2_CreateSourceVoice(App.dx.lpXA, &XA_Voices[i], &pcm_format, 0, XAUDIO2_MAX_FREQ_RATIO, 0, 0, 0));
+	}
 
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < 4; i++) {
 		ReverbConvertI3DL2ToNative(&reverb_preset[i], &reverb_type[i], FALSE);
+	}
 
 	sound_active = 1;
 	return 1;
@@ -176,8 +182,9 @@ long S_ConvertSamples(unsigned char* data, long comp_size, long uncomp_size, lon
 	HACMSTREAM hACMStream;
 	ACMSTREAMHEADER ACMStreamHeader = { 0 };
 	mmresult = acmStreamOpen(&hACMStream, hACMDriver, (LPWAVEFORMATEX)source_pcm_format, &pcm_format, 0, 0, 0, 0);
-	if(mmresult != DS_OK)
+	if(mmresult != DS_OK) {
 		Log(__func__, "Stream Open %d", mmresult);
+	}
 
 	char* decompressed_samples_buffer = (char*)calloc(0xF0000, 1);
 	char* samples_buffer = (char*)calloc(0xF005A, 1);
@@ -209,14 +216,16 @@ long S_ConvertSamples(unsigned char* data, long comp_size, long uncomp_size, lon
 
 	format = (LPWAVEFORMATEX)(data + 20);
 
-	if(format->nSamplesPerSec != 22050)
+	if(format->nSamplesPerSec != 22050) {
 		Log(__func__, "Incorrect SamplesPerSec");
+	}
 
 	ACMStreamHeader.cbSrcLength = comp_size - (sizeof(WAVEFORMATEX) + format->cbSize + 40);
 	mmresult = acmStreamConvert(hACMStream, &ACMStreamHeader, ACM_STREAMCONVERTF_BLOCKALIGN | ACM_STREAMCONVERTF_START);
 
-	if(mmresult != DS_OK)
+	if(mmresult != DS_OK) {
 		Log(__func__, "Stream Convert %d", mmresult);
+	}
 
 	buffers[num].data = (BYTE*)calloc(uncomp_size, 1);
 	memcpy((void*)buffers[num].data, decompressed_samples_buffer, uncomp_size - 32);
@@ -251,8 +260,9 @@ bool DSIsChannelPlaying(long num) {
 	if(XA_Voices[num]) {
 		IXAudio2SourceVoice_GetState(XA_Voices[num], &state, XAUDIO2_VOICE_NOSAMPLESPLAYED);
 
-		if(state.BuffersQueued)
+		if(state.BuffersQueued) {
 			return 1;
+		}
 	}
 
 	return 0;
@@ -260,8 +270,9 @@ bool DSIsChannelPlaying(long num) {
 
 long DSGetFreeChannel() {
 	for(int i = 0; i < 32; i++) {
-		if(!DSIsChannelPlaying(i))
+		if(!DSIsChannelPlaying(i)) {
 			return i;
+		}
 	}
 
 	return -1;
@@ -274,8 +285,9 @@ long S_StartSample(SAMPLE_BUFFER* data, long volume, long pitch, long pan, unsig
 
 	channel = DSGetFreeChannel();
 
-	if(channel < 0)
+	if(channel < 0) {
 		return -1;
+	}
 
 	voice = XA_Voices[channel];
 	DSChangeVolume(channel, volume);
@@ -296,25 +308,29 @@ long CalcVolume(long volume) {
 
 	result = 8000 - (long)((float)(0x7FFF - volume) * 0.30518511F);
 
-	if(result > 0)
+	if(result > 0) {
 		result = 0;
-	else if(result < -10000)
+	} else if(result < -10000) {
 		result = -10000;
+	}
 
 	result -= (100 - SFXVolume) * 50;
 
-	if(result > 0)
+	if(result > 0) {
 		result = 0;
+	}
 
-	if(result < -10000)
+	if(result < -10000) {
 		result = -10000;
+	}
 
 	return result;
 }
 
 void S_SoundStopAllSamples() {
-	for(int i = 0; i < 32; i++)
+	for(int i = 0; i < 32; i++) {
 		DXStopSample(i);
+	}
 }
 
 void S_SoundStopSample(long num) {
@@ -334,8 +350,9 @@ void DXFreeSounds() {
 }
 
 long S_SoundSampleIsPlaying(long num) {
-	if(sound_active && DSIsChannelPlaying(num))
+	if(sound_active && DSIsChannelPlaying(num)) {
 		return 1;
+	}
 
 	return 0;
 }
@@ -348,16 +365,19 @@ void S_SoundSetPanAndVolume(long num, short pan, unsigned short volume) {
 }
 
 void S_SoundSetPitch(long num, long pitch) {
-	if(sound_active)
+	if(sound_active) {
 		DSAdjustPitch(num, pitch);
+	}
 }
 
 void S_SetReverbType(long reverb) {
-	if(App.SoundDisabled)
+	if(App.SoundDisabled) {
 		return;
+	}
 
-	if(/*tomb4.reverb == 1*/ 1)
+	if(/*tomb4.reverb == 1*/ 1) {
 		reverb = 0;
+	}
 
 	if(current_reverb != reverb) {
 		if(reverb) {
@@ -377,8 +397,9 @@ void S_SetReverbType(long reverb) {
 }
 
 void DXDSClose() {
-	if(App.SoundDisabled)
+	if(App.SoundDisabled) {
 		return;
+	}
 
 	for(int i = 0; i < 32; i++) {
 		if(XA_Voices[i]) {

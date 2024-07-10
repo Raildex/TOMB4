@@ -54,8 +54,9 @@ void TroopControl(short item_number) {
 	long dist, max_dist, dx, dz, iDistance;
 	short angle, tilt, torso_x, torso_y, head, iAngle;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 	troop = (CREATURE_INFO*)item->data;
@@ -82,17 +83,19 @@ void TroopControl(short item_number) {
 				if(enemy->anim_number == GetObjectInfo(currentLevel, SCORPION)->anim_index + 6) {
 					item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 23;
 
-					if(item->current_anim_state == 16)
+					if(item->current_anim_state == 16) {
 						item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base + 37;
-					else
+					} else {
 						item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
+					}
 
 					item->current_anim_state = 15;
 					item->goal_anim_state = 15;
 					item->pos = enemy->pos;
 					enemy->trigger_flags = 99;
-				} else
+				} else {
 					item->item_flags[0]++;
+				}
 			} else {
 				item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 19;
 				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
@@ -100,9 +103,9 @@ void TroopControl(short item_number) {
 			}
 		}
 	} else {
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(troop);
-		else {
+		} else {
 			troop->enemy = NULL;
 			max_dist = infinite_distance;
 
@@ -126,8 +129,9 @@ void TroopControl(short item_number) {
 			}
 		}
 
-		if(troop->hurt_by_lara && item->current_anim_state != 16)
+		if(troop->hurt_by_lara && item->current_anim_state != 16) {
 			troop->enemy = lara_item;
+		}
 
 		CreatureAIInfo(item, &info);
 
@@ -141,15 +145,17 @@ void TroopControl(short item_number) {
 			iDistance = SQUARE(dx) + SQUARE(dz);
 		}
 
-		if(!troop->hurt_by_lara && troop->enemy == lara_item)
+		if(!troop->hurt_by_lara && troop->enemy == lara_item) {
 			troop->enemy = NULL;
+		}
 
 		GetCreatureMood(item, &info, 0);
 		CreatureMood(item, &info, 0);
 		angle = CreatureTurn(item, troop->maximum_turn);
 
-		if(item->hit_status)
+		if(item->hit_status) {
 			AlertAllGuards(item_number);
+		}
 
 		switch(item->current_anim_state) {
 		case 1:
@@ -158,43 +164,48 @@ void TroopControl(short item_number) {
 			troop->maximum_turn = 0;
 
 			if(item->anim_number == GetObjectInfo(currentLevel, item->object_number)->anim_index + 17) {
-				if(abs(info.angle) < 1820)
+				if(abs(info.angle) < 1820) {
 					item->pos.y_rot += info.angle;
-				else if(info.angle < 0)
+				} else if(info.angle < 0) {
 					item->pos.y_rot -= 1820;
-				else
+				} else {
 					item->pos.y_rot += 1820;
+				}
 			}
 
 			if(item->ai_bits & GUARD) {
 				head = AIGuard(troop);
 
 				if(!(GetRandomControl() & 0xFF)) {
-					if(item->current_anim_state == 1)
+					if(item->current_anim_state == 1) {
 						item->goal_anim_state = 4;
-					else
+					} else {
 						item->goal_anim_state = 1;
+					}
 				}
 			} else if(item->ai_bits & PATROL1) {
 				item->goal_anim_state = 2;
 				head = 0;
-			} else if(troop->mood == ESCAPE_MOOD)
+			} else if(troop->mood == ESCAPE_MOOD) {
 				item->goal_anim_state = 3;
-			else if(Targetable(item, &info)) {
-				if(info.distance >= 0x900000 && info.zone_number == info.enemy_zone)
+			} else if(Targetable(item, &info)) {
+				if(info.distance >= 0x900000 && info.zone_number == info.enemy_zone) {
 					item->goal_anim_state = 2;
-				else if(GetRandomControl() >= 0x4000)
+				} else if(GetRandomControl() >= 0x4000) {
 					item->goal_anim_state = 10;
-				else
+				} else {
 					item->goal_anim_state = 8;
+				}
 			} else {
 				if((troop->alerted || troop->mood != BORED_MOOD) && (!(item->ai_bits & FOLLOW) || !troop->reached_goal && iDistance <= 0x400000)) {
-					if(troop->mood == BORED_MOOD || info.distance <= 0x400000)
+					if(troop->mood == BORED_MOOD || info.distance <= 0x400000) {
 						item->goal_anim_state = 2;
-					else
+					} else {
 						item->goal_anim_state = 3;
-				} else
+					}
+				} else {
 					item->goal_anim_state = 1;
+				}
 			}
 
 			break;
@@ -204,40 +215,45 @@ void TroopControl(short item_number) {
 			troop->flags = 0;
 			troop->maximum_turn = 910;
 
-			if(item->ai_bits & PATROL1)
+			if(item->ai_bits & PATROL1) {
 				item->goal_anim_state = 2;
-			else if(troop->mood == ESCAPE_MOOD)
+			} else if(troop->mood == ESCAPE_MOOD) {
 				item->goal_anim_state = 3;
-			else if(item->ai_bits & GUARD || item->ai_bits & FOLLOW && (troop->reached_goal || iDistance > 0x400000))
+			} else if(item->ai_bits & GUARD || item->ai_bits & FOLLOW && (troop->reached_goal || iDistance > 0x400000)) {
 				item->goal_anim_state = 1;
-			else if(Targetable(item, &info)) {
-				if(info.distance < 0x900000 || info.zone_number != info.enemy_zone)
+			} else if(Targetable(item, &info)) {
+				if(info.distance < 0x900000 || info.zone_number != info.enemy_zone) {
 					item->goal_anim_state = 1;
-				else
+				} else {
 					item->goal_anim_state = 9;
+				}
 			} else if(troop->mood != BORED_MOOD) {
-				if(info.distance > 0x400000)
+				if(info.distance > 0x400000) {
 					item->goal_anim_state = 3;
-			} else if(info.ahead)
+				}
+			} else if(info.ahead) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
 		case 3:
 
-			if(info.ahead)
+			if(info.ahead) {
 				head = info.angle;
+			}
 
 			troop->maximum_turn = 1820;
 			tilt = angle >> 1;
 
-			if(item->ai_bits & GUARD || item->ai_bits & FOLLOW && (troop->reached_goal || iDistance > 0x400000))
+			if(item->ai_bits & GUARD || item->ai_bits & FOLLOW && (troop->reached_goal || iDistance > 0x400000)) {
 				item->goal_anim_state = 2;
-			else if(troop->mood != ESCAPE_MOOD) {
-				if(Targetable(item, &info))
+			} else if(troop->mood != ESCAPE_MOOD) {
+				if(Targetable(item, &info)) {
 					item->goal_anim_state = 2;
-				else if(troop->mood == BORED_MOOD || troop->mood == STALK_MOOD && !(item->ai_bits & FOLLOW) && info.distance < 0x400000)
+				} else if(troop->mood == BORED_MOOD || troop->mood == STALK_MOOD && !(item->ai_bits & FOLLOW) && info.distance < 0x400000) {
 					item->goal_anim_state = 2;
+				}
 			}
 
 			break;
@@ -250,19 +266,22 @@ void TroopControl(short item_number) {
 			if(item->ai_bits & GUARD) {
 				head = AIGuard(troop);
 
-				if(!(GetRandomControl() & 0xFF))
+				if(!(GetRandomControl() & 0xFF)) {
 					item->goal_anim_state = 1;
-			} else if(Targetable(item, &info))
+				}
+			} else if(Targetable(item, &info)) {
 				item->goal_anim_state = 5;
-			else if(troop->mood != BORED_MOOD || !info.ahead)
+			} else if(troop->mood != BORED_MOOD || !info.ahead) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
 		case 11:
 
-			if(item->goal_anim_state != 1 && (troop->mood == ESCAPE_MOOD || info.distance > 0x900000 || !Targetable(item, &info)))
+			if(item->goal_anim_state != 1 && (troop->mood == ESCAPE_MOOD || info.distance > 0x900000 || !Targetable(item, &info))) {
 				item->goal_anim_state = 1;
+			}
 
 		case 5:
 		case 6:
@@ -272,9 +291,9 @@ void TroopControl(short item_number) {
 				torso_x = info.x_angle;
 			}
 
-			if(troop->flags)
+			if(troop->flags) {
 				troop->flags--;
-			else {
+			} else {
 				ShotLara(item, &info, &troop_gun, torso_y, 23);
 				troop->flags = 5;
 			}
@@ -289,10 +308,11 @@ void TroopControl(short item_number) {
 				torso_y = info.angle;
 				torso_x = info.x_angle;
 
-				if(Targetable(item, &info))
+				if(Targetable(item, &info)) {
 					item->goal_anim_state = item->current_anim_state != 8 ? 11 : 5;
-				else
+				} else {
 					item->goal_anim_state = 1;
+				}
 			}
 
 			break;
@@ -304,10 +324,11 @@ void TroopControl(short item_number) {
 				torso_y = info.angle;
 				torso_x = info.x_angle;
 
-				if(Targetable(item, &info))
+				if(Targetable(item, &info)) {
 					item->goal_anim_state = 6;
-				else
+				} else {
 					item->goal_anim_state = 2;
+				}
 			}
 
 			break;
@@ -318,8 +339,9 @@ void TroopControl(short item_number) {
 
 		case 17:
 
-			if(!lara.blindTimer && !(GetRandomControl() & 0x7F))
+			if(!lara.blindTimer && !(GetRandomControl() & 0x7F)) {
 				item->goal_anim_state = 4;
+			}
 
 			break;
 		}

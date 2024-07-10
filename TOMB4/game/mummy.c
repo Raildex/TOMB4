@@ -49,8 +49,9 @@ void MummyControl(short item_number) {
 	long stop;
 	short angle, head, torso_x, torso_y;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 	mummy = (CREATURE_INFO*)item->data;
@@ -59,10 +60,11 @@ void MummyControl(short item_number) {
 	torso_x = 0;
 	torso_y = 0;
 
-	if(item->ai_bits)
+	if(item->ai_bits) {
 		GetAITarget(mummy);
-	else if(mummy->hurt_by_lara)
+	} else if(mummy->hurt_by_lara) {
 		mummy->enemy = lara_item;
+	}
 
 	CreatureAIInfo(item, &info);
 	stop = 0;
@@ -93,8 +95,9 @@ void MummyControl(short item_number) {
 	}
 
 	if(!stop) {
-		if(mummy->enemy != lara_item)
+		if(mummy->enemy != lara_item) {
 			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+		}
 
 		GetCreatureMood(item, &info, 1);
 		CreatureMood(item, &info, 1);
@@ -110,8 +113,9 @@ void MummyControl(short item_number) {
 		case 0:
 			mummy->maximum_turn = 0;
 
-			if(info.distance < 0x100000 || item->trigger_flags > -1)
+			if(info.distance < 0x100000 || item->trigger_flags > -1) {
 				item->goal_anim_state = 2;
+			}
 
 			break;
 
@@ -119,18 +123,19 @@ void MummyControl(short item_number) {
 			mummy->flags = 0;
 			mummy->maximum_turn = 0;
 
-			if(info.distance > 0x40000 && info.distance < 0x3100000)
+			if(info.distance > 0x40000 && info.distance < 0x3100000) {
 				item->goal_anim_state = 2;
-			else if(info.distance < 0x40000)
+			} else if(info.distance < 0x40000) {
 				item->goal_anim_state = 10;
-			else {
+			} else {
 				head = 0;
 				torso_x = 0;
 				torso_y = 0;
 				item->goal_anim_state = 1;
 
-				if(item->trigger_flags > -100 && item->trigger_flags < 0)
+				if(item->trigger_flags > -100 && item->trigger_flags < 0) {
 					item->trigger_flags++;
+				}
 			}
 
 			break;
@@ -140,15 +145,17 @@ void MummyControl(short item_number) {
 			if(item->trigger_flags == 1) {
 				mummy->maximum_turn = 0;
 
-				if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end)
+				if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end) {
 					item->trigger_flags = 0;
+				}
 			} else {
 				mummy->maximum_turn = 1274;
 
-				if(info.distance < 0x900000)
+				if(info.distance < 0x900000) {
 					item->goal_anim_state = 3;
-				else if(info.distance > 0x3100000)
+				} else if(info.distance > 0x3100000) {
 					item->goal_anim_state = 1;
+				}
 			}
 
 			break;
@@ -157,17 +164,18 @@ void MummyControl(short item_number) {
 			mummy->flags = 0;
 			mummy->maximum_turn = 1274;
 
-			if(info.distance < 0x40000)
+			if(info.distance < 0x40000) {
 				item->goal_anim_state = 1;
-			else if(info.distance > 0x900000) {
+			} else if(info.distance > 0x900000) {
 				if(info.distance < 0x3100000) {
 					item->goal_anim_state = 2;
 					break;
 				}
-			} else if(info.distance > 0x3100000)
+			} else if(info.distance > 0x3100000) {
 				item->goal_anim_state = 1;
-			else if(info.distance < 0x718E4)
+			} else if(info.distance < 0x718E4) {
 				item->goal_anim_state = 4;
+			}
 
 			break;
 
@@ -175,22 +183,24 @@ void MummyControl(short item_number) {
 		case 10:
 			mummy->maximum_turn = 0;
 
-			if(abs(info.angle) < 1274)
+			if(abs(info.angle) < 1274) {
 				item->pos.y_rot += info.angle;
-			else if(info.angle < 0)
+			} else if(info.angle < 0) {
 				item->pos.y_rot -= 1274;
-			else
+			} else {
 				item->pos.y_rot += 1274;
+			}
 
 			if(!mummy->flags && item->touch_bits & 0x4800) {
 				if(item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 13 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 22) {
 					lara_item->hit_points -= 100;
 					lara_item->hit_status = 1;
 
-					if(item->anim_number == GetObjectInfo(currentLevel, MUMMY)->anim_index + 15)
+					if(item->anim_number == GetObjectInfo(currentLevel, MUMMY)->anim_index + 15) {
 						CreatureEffectT(item, &left_hand, 5, -1, DoBloodSplat);
-					else
+					} else {
 						CreatureEffectT(item, &right_hand, 5, -1, DoBloodSplat);
+					}
 
 					mummy->flags = 1;
 				}

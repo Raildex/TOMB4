@@ -42,8 +42,9 @@ void InitialiseBaboon(short item_number) {
 	item->item_flags[0] = (short)(item->pos.z_pos >> 2 & 0xFFFFFF00 | item->pos.x_pos >> 10);
 	item->item_flags[1] = (short)(item->pos.y_pos >> 8);
 
-	if(item->object_number == BABOON_NORMAL)
+	if(item->object_number == BABOON_NORMAL) {
 		item->ai_bits = FOLLOW;
+	}
 }
 
 void BaboonControl(short item_number) {
@@ -63,30 +64,34 @@ void BaboonControl(short item_number) {
 		item = GetItem(currentLevel, item_number);
 		baboon = (CREATURE_INFO*)item->data;
 
-		if(!item->item_flags[2])
+		if(!item->item_flags[2]) {
 			FindCrowbarSwitch(item, 1);
+		}
 
 		if(item->hit_points <= 0 && item->hit_points != -16384) {
 			if(item->current_anim_state != 11 && item->current_anim_state != 21) {
 				item->anim_number = GetObjectInfo(currentLevel, BABOON_NORMAL)->anim_index + 14;
 				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 				item->current_anim_state = 11;
-			} else if(item->current_anim_state == 11 && item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end)
+			} else if(item->current_anim_state == 11 && item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end) {
 				ReTriggerBaboon(item_number);
+			}
 		} else {
 			GetAITarget(baboon);
 
-			if(item->object_number != BABOON_NORMAL || baboon->hurt_by_lara)
+			if(item->object_number != BABOON_NORMAL || baboon->hurt_by_lara) {
 				baboon->enemy = lara_item;
+			}
 
 			CreatureAIInfo(item, &info);
 
-			if(!baboon->hurt_by_lara && item->object_number == BABOON_NORMAL && baboon->enemy == lara_item)
+			if(!baboon->hurt_by_lara && item->object_number == BABOON_NORMAL && baboon->enemy == lara_item) {
 				baboon->enemy = NULL;
+			}
 
-			if(baboon->enemy == lara_item)
+			if(baboon->enemy == lara_item) {
 				distance = info.distance;
-			else {
+			} else {
 				dx = lara_item->pos.x_pos - item->pos.x_pos;
 				dz = lara_item->pos.z_pos - item->pos.z_pos;
 				phd_atan(dz, dx);
@@ -107,17 +112,19 @@ void BaboonControl(short item_number) {
 			case 2:
 				baboon->maximum_turn = 1274;
 
-				if(item->ai_bits & PATROL1)
+				if(item->ai_bits & PATROL1) {
 					item->goal_anim_state = 2;
-				else if(baboon->mood == ESCAPE_MOOD)
+				} else if(baboon->mood == ESCAPE_MOOD) {
 					item->goal_anim_state = 4;
-				else if(baboon->mood == BORED_MOOD) {
-					if(GetRandomControl() < 256)
+				} else if(baboon->mood == BORED_MOOD) {
+					if(GetRandomControl() < 256) {
 						item->goal_anim_state = 6;
-				} else if(info.bite && info.distance < 465124)
+					}
+				} else if(info.bite && info.distance < 465124) {
 					item->goal_anim_state = 3;
-				else
+				} else {
 					item->goal_anim_state = 3;
+				}
 
 				break;
 
@@ -130,51 +137,58 @@ void BaboonControl(short item_number) {
 					AIGuard(baboon);
 
 					if(!(GetRandomControl() & 0xF)) {
-						if(GetRandomControl() & 0x1)
+						if(GetRandomControl() & 0x1) {
 							item->goal_anim_state = 10;
-						else
+						} else {
 							item->goal_anim_state = 6;
+						}
 					}
-				} else if(item->ai_bits & PATROL1)
+				} else if(item->ai_bits & PATROL1) {
 					item->goal_anim_state = 2;
-				else if(baboon->mood == ESCAPE_MOOD) {
-					if(lara.target_item != item_number && info.ahead)
+				} else if(baboon->mood == ESCAPE_MOOD) {
+					if(lara.target_item != item_number && info.ahead) {
 						item->goal_anim_state = 3;
-					else
+					} else {
 						item->goal_anim_state = 4;
+					}
 				} else if(baboon->mood == BORED_MOOD) {
-					if(item->required_anim_state)
+					if(item->required_anim_state) {
 						item->goal_anim_state = item->required_anim_state;
-					else if(!(GetRandomControl() & 0x3))
+					} else if(!(GetRandomControl() & 0x3)) {
 						item->goal_anim_state = 2;
-					else if(GetRandomControl() & 0x1) {
-						if(GetRandomControl() & 0x1)
+					} else if(GetRandomControl() & 0x1) {
+						if(GetRandomControl() & 0x1) {
 							item->goal_anim_state = 10;
-						else
+						} else {
 							item->goal_anim_state = 9;
+						}
 					}
 				} else if(item->ai_bits & FOLLOW && (baboon->reached_goal || distance > 1048576)) {
-					if(item->required_anim_state)
+					if(item->required_anim_state) {
 						item->goal_anim_state = item->required_anim_state;
-					else if(GetRandomControl() & 0x1)
+					} else if(GetRandomControl() & 0x1) {
 						item->goal_anim_state = 6;
-					else if(GetRandomControl() & 0x1)
+					} else if(GetRandomControl() & 0x1) {
 						item->goal_anim_state = 10;
-					else
+					} else {
 						item->goal_anim_state = 9;
+					}
 				} else if(info.bite) {
 					if(info.distance < 116281) {
-						if(lara_item->pos.y_pos < item->pos.y_pos)
+						if(lara_item->pos.y_pos < item->pos.y_pos) {
 							item->goal_anim_state = 13;
-						else
+						} else {
 							item->goal_anim_state = 12;
+						}
 					} else if(info.distance >= 465124) {
-						if(info.bite && info.distance < 1048576)
+						if(info.bite && info.distance < 1048576) {
 							item->goal_anim_state = 9;
-						else
+						} else {
 							item->goal_anim_state = 4;
-					} else
+						}
+					} else {
 						item->goal_anim_state = 14;
+					}
 				} else if(info.distance < 465124 && item2 != lara_item && item2 && item2->object_number != AI_PATROL1 && item2->object_number != AI_PATROL2 && abs(item->pos.y_pos - item2->pos.y_pos) < 256) {
 					item->pos.x_pos = item2->pos.x_pos;
 					item->pos.y_pos = item2->pos.y_pos;
@@ -189,10 +203,11 @@ void BaboonControl(short item_number) {
 					room_number = item->room_number;
 					GetHeight(GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number), item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 					TestTriggers(trigger_index, 1, 0);
-				} else if(info.bite && info.distance < 1048576)
+				} else if(info.bite && info.distance < 1048576) {
 					item->goal_anim_state = 9;
-				else
+				} else {
 					item->goal_anim_state = 4;
+				}
 
 				break;
 
@@ -200,19 +215,21 @@ void BaboonControl(short item_number) {
 				baboon->maximum_turn = 2002;
 				tilt = angle / 2;
 
-				if(item->ai_bits & GUARD)
+				if(item->ai_bits & GUARD) {
 					item->goal_anim_state = 3;
-				else if(baboon->mood == ESCAPE_MOOD) {
-					if(lara.target_item != item_number && info.ahead)
+				} else if(baboon->mood == ESCAPE_MOOD) {
+					if(lara.target_item != item_number && info.ahead) {
 						item->goal_anim_state = 3;
-				} else if(item->ai_bits & FOLLOW && (baboon->reached_goal || distance > 4194304))
+					}
+				} else if(item->ai_bits & FOLLOW && (baboon->reached_goal || distance > 4194304)) {
 					item->goal_anim_state = 3;
-				else if(baboon->mood == BORED_MOOD)
+				} else if(baboon->mood == BORED_MOOD) {
 					item->goal_anim_state = 9;
-				else if(info.distance < 465124)
+				} else if(info.distance < 465124) {
 					item->goal_anim_state = 3;
-				else if(info.bite && info.distance < 1048576)
+				} else if(info.bite && info.distance < 1048576) {
 					item->goal_anim_state = 9;
+				}
 
 				break;
 
@@ -229,12 +246,14 @@ void BaboonControl(short item_number) {
 							item2->carried_item = -1;
 
 							for(int i = 0; i < 5; i++) {
-								if(baddie_slots[i].item_num != -1 && baddie_slots[i].item_num != item_number && baddie_slots[i].enemy == baboon->enemy)
+								if(baddie_slots[i].item_num != -1 && baddie_slots[i].item_num != item_number && baddie_slots[i].enemy == baboon->enemy) {
 									baddie_slots[i].enemy = NULL;
+								}
 							}
 
-							if(item->ai_bits != MODIFY)
+							if(item->ai_bits != MODIFY) {
 								item->ai_bits |= MODIFY | AMBUSH;
+							}
 						}
 
 						baboon->enemy = NULL;
@@ -251,12 +270,13 @@ void BaboonControl(short item_number) {
 					} else {
 						baboon->maximum_turn = 0;
 
-						if(abs(info.angle) < 1274)
+						if(abs(info.angle) < 1274) {
 							item->pos.y_rot += info.angle;
-						else if(info.angle < 0)
+						} else if(info.angle < 0) {
 							item->pos.y_rot -= 1274;
-						else
+						} else {
 							item->pos.y_rot += 1274;
+						}
 					}
 				}
 
@@ -270,44 +290,49 @@ void BaboonControl(short item_number) {
 					AIGuard(baboon);
 
 					if(!(GetRandomControl() & 0xF)) {
-						if(GetRandomControl() & 0x1)
+						if(GetRandomControl() & 0x1) {
 							item->goal_anim_state = 8;
-						else
+						} else {
 							item->goal_anim_state = 7;
+						}
 					}
-				} else if(item->ai_bits & PATROL1)
+				} else if(item->ai_bits & PATROL1) {
 					item->goal_anim_state = 2;
-				else if(baboon->mood == ESCAPE_MOOD)
+				} else if(baboon->mood == ESCAPE_MOOD) {
 					item->goal_anim_state = 3;
-				else if(baboon->mood == BORED_MOOD) {
-					if(item->required_anim_state)
+				} else if(baboon->mood == BORED_MOOD) {
+					if(item->required_anim_state) {
 						item->goal_anim_state = item->required_anim_state;
-					else if(!(GetRandomControl() & 0x3))
+					} else if(!(GetRandomControl() & 0x3)) {
 						item->goal_anim_state = 2;
-					else if(GetRandomControl() & 0x3) {
-						if(GetRandomControl() & 0x1)
+					} else if(GetRandomControl() & 0x3) {
+						if(GetRandomControl() & 0x1) {
 							item->goal_anim_state = 8;
-						else
+						} else {
 							item->goal_anim_state = 7;
+						}
 					}
 				} else if(!(item->ai_bits & FOLLOW)) {
-					if(info.bite && info.distance < 465124)
+					if(info.bite && info.distance < 465124) {
 						item->goal_anim_state = 3;
-					else
+					} else {
 						item->goal_anim_state = 3;
+					}
 				} else if(baboon->reached_goal || distance > 1048576) {
-					if(item->required_anim_state)
+					if(item->required_anim_state) {
 						item->goal_anim_state = item->required_anim_state;
-					else if(GetRandomControl() & 0x1)
+					} else if(GetRandomControl() & 0x1) {
 						item->goal_anim_state = 3;
-					else if(GetRandomControl() & 0x1)
+					} else if(GetRandomControl() & 0x1) {
 						item->goal_anim_state = 8;
-					else
+					} else {
 						item->goal_anim_state = 7;
-				} else if(info.bite && info.distance < 465124)
+					}
+				} else if(info.bite && info.distance < 465124) {
 					item->goal_anim_state = 3;
-				else
+				} else {
 					item->goal_anim_state = 3;
+				}
 
 				break;
 
@@ -315,17 +340,19 @@ void BaboonControl(short item_number) {
 			case 13:
 			case 14:
 
-				if(info.ahead)
+				if(info.ahead) {
 					head = info.angle;
+				}
 
 				baboon->maximum_turn = 0;
 
-				if(abs(info.angle) < 1274)
+				if(abs(info.angle) < 1274) {
 					item->pos.y_rot += info.angle;
-				else if(info.angle < 0)
+				} else if(info.angle < 0) {
 					item->pos.y_rot -= 1274;
-				else
+				} else {
 					item->pos.y_rot += 1274;
+				}
 
 				if(!baboon->flags && item->touch_bits & 0x90) {
 					lara_item->hit_points -= 70;
@@ -362,8 +389,9 @@ void FindCrowbarSwitch(ITEM_INFO* item, short switch_index) {
 	for(item_num = GetRoom(currentLevel, item->room_number)->item_number; item_num != NO_ITEM; item_num = item2->next_item) {
 		item2 = GetItem(currentLevel, item_num);
 
-		if(item2->object_number == COG)
+		if(item2->object_number == COG) {
 			item2->item_flags[0] = switch_index;
+		}
 	}
 
 	item->item_flags[2] = switch_index;
@@ -379,8 +407,9 @@ void ReTriggerBaboon(short item_number) {
 	item->pos.z_pos = (item->item_flags[0] & 0xFFFFFF00) << 2 | 0x200;
 	IsRoomOutside(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
-	if(item->room_number != IsRoomOutsideNo)
+	if(item->room_number != IsRoomOutsideNo) {
 		ItemNewRoom(item_number, IsRoomOutsideNo);
+	}
 
 	item->anim_number = GetObjectInfo(currentLevel, BABOON_NORMAL)->anim_index + 2;
 	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
@@ -394,8 +423,9 @@ void ReTriggerBaboon(short item_number) {
 	DisableBaddieAI(item_number);
 
 	if(item->object_number != BABOON_NORMAL || !item->trigger_flags) {
-		if(item->object_number == BABOON_NORMAL || !item->trigger_flags)
+		if(item->object_number == BABOON_NORMAL || !item->trigger_flags) {
 			item->ai_bits = FOLLOW;
+		}
 
 		FindCrowbarSwitch(item, 0);
 	}

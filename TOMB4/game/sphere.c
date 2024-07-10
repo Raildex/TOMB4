@@ -31,8 +31,9 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 	short* extra_rot;
 	long x, y, z, poppush;
 
-	if(!item)
+	if(!item) {
 		return 0;
+	}
 
 	if(WorldSpace & 1) {
 		x = item->pos.x_pos;
@@ -61,8 +62,9 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 
 	phd_PushMatrix();
 
-	if(!(WorldSpace & 2))
+	if(!(WorldSpace & 2)) {
 		phd_TranslateRel(meshp[0], meshp[1], meshp[2]);
+	}
 
 	ptr->x = x + (long)mMXPtr[M03];
 	ptr->y = y + (long)mMXPtr[M13];
@@ -76,31 +78,37 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 	for(int i = 0; i < obj->nmeshes - 1; i++) {
 		poppush = *bone++;
 
-		if(poppush & 1)
+		if(poppush & 1) {
 			phd_PopMatrix();
+		}
 
-		if(poppush & 2)
+		if(poppush & 2) {
 			phd_PushMatrix();
+		}
 
 		phd_TranslateRel(bone[0], bone[1], bone[2]);
 		gar_RotYXZsuperpack(&rot, 0);
 
 		if(poppush & 0x1C && extra_rot) {
-			if(poppush & 8)
+			if(poppush & 8) {
 				phd_RotY(*extra_rot++);
+			}
 
-			if(poppush & 4)
+			if(poppush & 4) {
 				phd_RotX(*extra_rot++);
+			}
 
-			if(poppush & 0x10)
+			if(poppush & 0x10) {
 				phd_RotZ(*extra_rot++);
+			}
 		}
 
 		meshp = *meshpp;
 		phd_PushMatrix();
 
-		if(!(WorldSpace & 2))
+		if(!(WorldSpace & 2)) {
 			phd_TranslateRel(meshp[0], meshp[1], meshp[2]);
+		}
 
 		ptr->x = x + (long)mMXPtr[M03];
 		ptr->y = y + (long)mMXPtr[M13];
@@ -128,17 +136,19 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l) {
 	touch_bits = 0;
 	nItemSpheres = GetSpheres(item, Slist, 1);
 
-	if(l != lara_item)
+	if(l != lara_item) {
 		GotLaraSpheres = 0;
+	}
 
-	if(GotLaraSpheres)
+	if(GotLaraSpheres) {
 		nLaraSpheres = NumLaraSpheres;
-	else {
+	} else {
 		nLaraSpheres = GetSpheres(l, LaraSpheres, 1);
 		NumLaraSpheres = nLaraSpheres;
 
-		if(l == lara_item)
+		if(l == lara_item) {
 			GotLaraSpheres = 1;
+		}
 	}
 
 	for(int i = 0; i < nItemSpheres; i++) {
@@ -204,8 +214,9 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 
 	extra_rotation = (short*)item->data;
 
-	if(!extra_rotation)
+	if(!extra_rotation) {
 		extra_rotation = no_rotation;
+	}
 
 	bone = GetBone(currentLevel, obj->bone_index);
 
@@ -219,24 +230,29 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 		for(int i = 0; i < joint; i++) {
 			poppush = *bone;
 
-			if(poppush & 1)
+			if(poppush & 1) {
 				phd_PopMatrix_I();
+			}
 
-			if(poppush & 2)
+			if(poppush & 2) {
 				phd_PushMatrix_I();
+			}
 
 			phd_TranslateRel_I(bone[1], bone[2], bone[3]);
 			gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 
 			if(poppush & 0x1C) {
-				if(poppush & 8)
+				if(poppush & 8) {
 					phd_RotY_I(*extra_rotation++);
+				}
 
-				if(poppush & 4)
+				if(poppush & 4) {
 					phd_RotX_I(*extra_rotation++);
+				}
 
-				if(poppush & 0x10)
+				if(poppush & 0x10) {
 					phd_RotZ_I(*extra_rotation++);
+				}
 			}
 
 			bone += 4;
@@ -252,24 +268,29 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 		for(int i = 0; i < joint; i++) {
 			poppush = *bone;
 
-			if(poppush & 1)
+			if(poppush & 1) {
 				phd_PopMatrix();
+			}
 
-			if(poppush & 2)
+			if(poppush & 2) {
 				phd_PushMatrix();
+			}
 
 			phd_TranslateRel(bone[1], bone[2], bone[3]);
 			gar_RotYXZsuperpack(&rot, 0);
 
 			if(poppush & 0x1C) {
-				if(poppush & 8)
+				if(poppush & 8) {
 					phd_RotY(*extra_rotation++);
+				}
 
-				if(poppush & 4)
+				if(poppush & 4) {
 					phd_RotX(*extra_rotation++);
+				}
 
-				if(poppush & 0x10)
+				if(poppush & 0x10) {
 					phd_RotZ(*extra_rotation++);
+				}
 			}
 
 			bone += 4;
@@ -310,8 +331,9 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 
 	extra_rotation = (short*)item->data;
 
-	if(!extra_rotation)
+	if(!extra_rotation) {
 		extra_rotation = no_rotation;
+	}
 
 	bone = GetBone(currentLevel, obj->bone_index);
 
@@ -325,24 +347,29 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 		for(int i = 0; i < joint; i++) {
 			poppush = *bone;
 
-			if(poppush & 1)
+			if(poppush & 1) {
 				phd_PopMatrix_I();
+			}
 
-			if(poppush & 2)
+			if(poppush & 2) {
 				phd_PushMatrix_I();
+			}
 
 			phd_TranslateRel_I(bone[1], bone[2], bone[3]);
 			gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 
 			if(poppush & 0x1C) {
-				if(poppush & 8)
+				if(poppush & 8) {
 					phd_RotY_I(*extra_rotation++);
+				}
 
-				if(poppush & 4)
+				if(poppush & 4) {
 					phd_RotX_I(*extra_rotation++);
+				}
 
-				if(poppush & 0x10)
+				if(poppush & 0x10) {
 					phd_RotZ_I(*extra_rotation++);
+				}
 			}
 
 			bone += 4;
@@ -359,24 +386,29 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 		for(int i = 0; i < joint; i++) {
 			poppush = *bone;
 
-			if(poppush & 1)
+			if(poppush & 1) {
 				phd_PopMatrix();
+			}
 
-			if(poppush & 2)
+			if(poppush & 2) {
 				phd_PushMatrix();
+			}
 
 			phd_TranslateRel(bone[1], bone[2], bone[3]);
 			gar_RotYXZsuperpack(&rot, 0);
 
 			if(poppush & 0x1C) {
-				if(poppush & 8)
+				if(poppush & 8) {
 					phd_RotY(*extra_rotation++);
+				}
 
-				if(poppush & 4)
+				if(poppush & 4) {
 					phd_RotX(*extra_rotation++);
+				}
 
-				if(poppush & 0x10)
+				if(poppush & 0x10) {
 					phd_RotZ(*extra_rotation++);
+				}
 			}
 
 			bone += 4;

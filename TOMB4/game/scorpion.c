@@ -70,8 +70,9 @@ void ScorpionControl(short item_number) {
 	long s, c, x, z, h, h2, dist, bestdist;
 	short angle, room_number, xrot, zrot, target_num, hp;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	angle = 0;
 	item = GetItem(currentLevel, item_number);
@@ -85,8 +86,9 @@ void ScorpionControl(short item_number) {
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
 	h = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h) > 512)
+	if(abs(item->pos.y_pos - h) > 512) {
 		h = item->pos.y_pos;
+	}
 
 	x = item->pos.x_pos - s;
 	z = item->pos.z_pos - c;
@@ -94,8 +96,9 @@ void ScorpionControl(short item_number) {
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
 	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h2) > 512)
+	if(abs(item->pos.y_pos - h2) > 512) {
 		h2 = item->pos.y_pos;
+	}
 
 	xrot = (short)phd_atan(1364, h2 - h);
 
@@ -105,8 +108,9 @@ void ScorpionControl(short item_number) {
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
 	h = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h) > 512)
+	if(abs(item->pos.y_pos - h) > 512) {
 		h = item->pos.y_pos;
+	}
 
 	x = item->pos.x_pos + c;
 	z = item->pos.z_pos - s;
@@ -114,8 +118,9 @@ void ScorpionControl(short item_number) {
 	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
 	h2 = GetHeight(floor, x, item->pos.y_pos, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(abs(item->pos.y_pos - h2) > 512)
+	if(abs(item->pos.y_pos - h2) > 512) {
 		h2 = item->pos.y_pos;
+	}
 
 	zrot = (short)phd_atan(1364, h2 - h);
 
@@ -157,17 +162,18 @@ void ScorpionControl(short item_number) {
 				item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_end - 1;
 				item->status = ITEM_INVISIBLE;
 			} else if(item->current_anim_state == 6) {
-				if(item->status == ITEM_INVISIBLE)
+				if(item->status == ITEM_INVISIBLE) {
 					item->status = ITEM_ACTIVE;
+				}
 			}
 		}
 	} else {
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(scorpion);
-		else {
-			if(scorpion->hurt_by_lara && item->current_anim_state != 8)
+		} else {
+			if(scorpion->hurt_by_lara && item->current_anim_state != 8) {
 				scorpion->enemy = lara_item;
-			else {
+			} else {
 				scorpion->enemy = NULL;
 				bestdist = infinite_distance;
 
@@ -195,8 +201,9 @@ void ScorpionControl(short item_number) {
 		CreatureAIInfo(item, &info);
 		enemy = scorpion->enemy;
 
-		if(enemy != lara_item)
+		if(enemy != lara_item) {
 			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+		}
 
 		GetCreatureMood(item, &info, 1);
 		CreatureMood(item, &info, 1);
@@ -207,35 +214,39 @@ void ScorpionControl(short item_number) {
 			scorpion->maximum_turn = 0;
 			scorpion->flags = 0;
 
-			if(info.distance > 0x1C6E39)
+			if(info.distance > 0x1C6E39) {
 				item->goal_anim_state = 2;
-			else if(info.bite) {
+			} else if(info.bite) {
 				scorpion->maximum_turn = 364;
 
-				if(GetRandomControl() & 1 || enemy->object_number == TROOPS && enemy->hit_points <= 15)
+				if(GetRandomControl() & 1 || enemy->object_number == TROOPS && enemy->hit_points <= 15) {
 					item->goal_anim_state = 4;
-				else
+				} else {
 					item->goal_anim_state = 5;
-			} else if(!info.ahead)
+				}
+			} else if(!info.ahead) {
 				item->goal_anim_state = 2;
+			}
 
 			break;
 
 		case 2:
 			scorpion->maximum_turn = 364;
 
-			if(info.distance < 0x1C6E39)
+			if(info.distance < 0x1C6E39) {
 				item->goal_anim_state = 1;
-			else
+			} else {
 				item->goal_anim_state = 3;
+			}
 
 			break;
 
 		case 3:
 			scorpion->maximum_turn = 546;
 
-			if(info.distance < 0x1C6E39)
+			if(info.distance < 0x1C6E39) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
@@ -243,12 +254,13 @@ void ScorpionControl(short item_number) {
 		case 5:
 			hp = lara_item->hit_points;
 
-			if(abs(info.angle) < 364)
+			if(abs(info.angle) < 364) {
 				item->pos.y_rot += info.angle;
-			else if(info.angle < 0)
+			} else if(info.angle < 0) {
 				item->pos.y_rot -= 364;
-			else
+			} else {
 				item->pos.y_rot += 364;
+			}
 
 			if(!scorpion->flags && enemy && enemy != lara_item && info.distance < 0x1C6E39) {
 				enemy->hit_points -= 15;
@@ -268,8 +280,9 @@ void ScorpionControl(short item_number) {
 				if(item->current_anim_state == 5) {
 					lara.dpoisoned += 2048;
 					CreatureEffectT(item, &stinger, 10, item->pos.y_rot + 0x8000, DoBloodSplat);
-				} else
+				} else {
 					CreatureEffectT(item, &pincer, 10, item->pos.y_rot + 0x8000, DoBloodSplat);
+				}
 
 				scorpion->flags = 1;
 
@@ -285,8 +298,9 @@ void ScorpionControl(short item_number) {
 		case 8:
 			scorpion->maximum_turn = 0;
 
-			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end)
+			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end) {
 				item->trigger_flags++;
+			}
 
 			if(enemy && enemy->hit_points <= 0 || item->trigger_flags > 6) {
 				item->goal_anim_state = 7;
@@ -297,22 +311,25 @@ void ScorpionControl(short item_number) {
 		}
 	}
 
-	if(abs(xrot - item->pos.x_rot) < 256)
+	if(abs(xrot - item->pos.x_rot) < 256) {
 		item->pos.x_rot = xrot;
-	else if(xrot > item->pos.x_rot)
+	} else if(xrot > item->pos.x_rot) {
 		item->pos.x_rot += 256;
-	else if(xrot < item->pos.x_rot)
+	} else if(xrot < item->pos.x_rot) {
 		item->pos.x_rot -= 256;
+	}
 
-	if(abs(zrot - item->pos.z_rot) < 256)
+	if(abs(zrot - item->pos.z_rot) < 256) {
 		item->pos.z_rot = zrot;
-	else if(zrot > item->pos.z_rot)
+	} else if(zrot > item->pos.z_rot) {
 		item->pos.z_rot += 256;
-	else if(zrot < item->pos.z_rot)
+	} else if(zrot < item->pos.z_rot) {
 		item->pos.z_rot -= 256;
+	}
 
-	if(!cutseq_num)
+	if(!cutseq_num) {
 		CreatureAnimation(item_number, angle, 0);
+	}
 }
 
 void InitialiseSmlscorp(short item_number) {
@@ -333,8 +350,9 @@ void SmlscorpControl(short item_number) {
 	AI_INFO info;
 	short angle;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	angle = 0;
 	item = GetItem(currentLevel, item_number);
@@ -349,16 +367,18 @@ void SmlscorpControl(short item_number) {
 			item->current_anim_state = 6;
 		}
 	} else {
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(scorpion);
-		else
+		} else {
 			scorpion->enemy = lara_item;
+		}
 
 		CreatureAIInfo(item, &info);
 		enemy = scorpion->enemy;
 
-		if(enemy != lara_item)
+		if(enemy != lara_item) {
 			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+		}
 
 		GetCreatureMood(item, &info, 1);
 		CreatureMood(item, &info, 1);
@@ -369,35 +389,39 @@ void SmlscorpControl(short item_number) {
 			scorpion->maximum_turn = 0;
 			scorpion->flags = 0;
 
-			if(info.distance > 0x1C6E39)
+			if(info.distance > 0x1C6E39) {
 				item->goal_anim_state = 2;
-			else if(info.bite) {
+			} else if(info.bite) {
 				scorpion->maximum_turn = 1092;
 
-				if(GetRandomControl() & 1 || enemy->object_number == TROOPS && enemy->hit_points <= 2)
+				if(GetRandomControl() & 1 || enemy->object_number == TROOPS && enemy->hit_points <= 2) {
 					item->goal_anim_state = 4;
-				else
+				} else {
 					item->goal_anim_state = 5;
-			} else if(!info.ahead)
+				}
+			} else if(!info.ahead) {
 				item->goal_anim_state = 2;
+			}
 
 			break;
 
 		case 2:
 			scorpion->maximum_turn = 1092;
 
-			if(info.distance >= 0x1C639)
+			if(info.distance >= 0x1C639) {
 				item->goal_anim_state = 3;
-			else
+			} else {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
 		case 3:
 			scorpion->maximum_turn = 1456;
 
-			if(info.distance < 0x1C639)
+			if(info.distance < 0x1C639) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
@@ -405,12 +429,13 @@ void SmlscorpControl(short item_number) {
 		case 5:
 			scorpion->maximum_turn = 0;
 
-			if(abs(info.angle) < 1092)
+			if(abs(info.angle) < 1092) {
 				item->pos.y_rot += info.angle;
-			else if(info.angle < 0)
+			} else if(info.angle < 0) {
 				item->pos.y_rot -= 1092;
-			else
+			} else {
 				item->pos.y_rot += 1092;
+			}
 
 			if(!scorpion->flags && item->touch_bits & 0x1B00100) {
 				if(item->frame_number > GetAnim(currentLevel, item->anim_number)->frame_base + 20 && item->frame_number < GetAnim(currentLevel, item->anim_number)->frame_base + 32) {
@@ -421,8 +446,9 @@ void SmlscorpControl(short item_number) {
 						lara.dpoisoned += 512;
 
 						CreatureEffectT(item, &s_stinger, 3, item->pos.y_rot + 0x8000, DoBloodSplat);
-					} else
+					} else {
 						CreatureEffectT(item, &s_pincer, 3, item->pos.y_rot + 0x8000, DoBloodSplat);
+					}
 
 					scorpion->flags = 1;
 				}

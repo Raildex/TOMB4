@@ -109,8 +109,9 @@ void DoorControl(short item_number) {
 				door->Opened = 1;
 			}
 		} else {
-			if(item->pos.y_pos < item->item_flags[2])
+			if(item->pos.y_pos < item->item_flags[2]) {
 				item->pos.y_pos += 4;
+			}
 
 			if(item->pos.y_pos >= item->item_flags[2]) {
 				item->pos.y_pos = item->item_flags[2];
@@ -126,9 +127,9 @@ void DoorControl(short item_number) {
 		}
 	} else {
 		if(TriggerActive(item)) {
-			if(item->current_anim_state == 0)
+			if(item->current_anim_state == 0) {
 				item->goal_anim_state = 1;
-			else {
+			} else {
 				if(!door->Opened) {
 					OpenThatDoor(&door->d1);
 					OpenThatDoor(&door->d2);
@@ -138,9 +139,9 @@ void DoorControl(short item_number) {
 				}
 			}
 		} else {
-			if(item->current_anim_state == 1)
+			if(item->current_anim_state == 1) {
 				item->goal_anim_state = 0;
-			else if(door->Opened) {
+			} else if(door->Opened) {
 				ShutThatDoor(&door->d1);
 				ShutThatDoor(&door->d2);
 				ShutThatDoor(&door->d1flip);
@@ -164,9 +165,9 @@ void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 		if(TestLaraPosition(CrowbarDoorBounds, item, l)) {
 			if(!lara.IsMoving) {
 				if(GLOBAL_inventoryitemchosen == NO_ITEM) {
-					if(have_i_got_object(CROWBAR_ITEM))
+					if(have_i_got_object(CROWBAR_ITEM)) {
 						GLOBAL_enterinventory = CROWBAR_ITEM;
-					else {
+					} else {
 						if(OldPickupPos.x != l->pos.x_pos || OldPickupPos.y != l->pos.y_pos || OldPickupPos.z != l->pos.z_pos) {
 							OldPickupPos.x = l->pos.x_pos;
 							OldPickupPos.y = l->pos.y_pos;
@@ -213,10 +214,11 @@ void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	if(TestBoundsCollide(item, l, coll->radius)) {
 		if(TestCollision(item, l)) {
 			if(coll->enable_baddie_push) {
-				if(item->current_anim_state == item->goal_anim_state)
+				if(item->current_anim_state == item->goal_anim_state) {
 					ItemPushLara(item, l, coll, 0, 1);
-				else
+				} else {
 					ItemPushLara(item, l, coll, coll->enable_spaz, 1);
+				}
 			}
 		}
 	}
@@ -263,8 +265,9 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 					l->frame_number = GetAnim(currentLevel, ANIM_PULLDOOR)->frame_base;
 					item->goal_anim_state = 3;
 					goin = 1;
-				} else
+				} else {
 					lara.GeneralPtr = item_num;
+				}
 			} else {
 				if(item->object_number < KICK_DOOR1) {
 					if(MoveLaraPosition(&PushDoorPos, item, l)) {
@@ -272,16 +275,18 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 						l->frame_number = GetAnim(currentLevel, ANIM_PUSHDOOR)->frame_base;
 						item->goal_anim_state = 2;
 						goin = 1;
-					} else
+					} else {
 						lara.GeneralPtr = item_num;
+					}
 				} else {
 					if(MoveLaraPosition(&KickDoorPos, item, l)) {
 						l->anim_number = ANIM_KICKDOOR;
 						l->frame_number = GetAnim(currentLevel, ANIM_KICKDOOR)->frame_base;
 						item->goal_anim_state = 2;
 						goin = 1;
-					} else
+					} else {
 						lara.GeneralPtr = item_num;
+					}
 				}
 			}
 
@@ -298,10 +303,12 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 			lara.gun_status = LG_NO_ARMS;
 		}
 
-		if(pull)
+		if(pull) {
 			item->pos.y_rot ^= 0x8000;
-	} else if(!item->current_anim_state)
+		}
+	} else if(!item->current_anim_state) {
 		DoorCollision(item_num, l, coll);
+	}
 }
 
 void DoubleDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
@@ -325,8 +332,9 @@ void DoubleDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 				lara.head_y_rot = 0;
 				lara.torso_x_rot = 0;
 				lara.torso_y_rot = 0;
-			} else
+			} else {
 				lara.GeneralPtr = item_num;
+			}
 		} else if(lara.IsMoving && lara.GeneralPtr == item_num) {
 			lara.IsMoving = 0;
 			lara.gun_status = LG_NO_ARMS;
@@ -362,16 +370,18 @@ void UnderwaterDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 				AnimateItem(item);
 				lara.IsMoving = 0;
 				lara.gun_status = LG_HANDS_BUSY;
-			} else
+			} else {
 				lara.GeneralPtr = item_num;
+			}
 		} else if(lara.IsMoving && lara.GeneralPtr == item_num) {
 			lara.IsMoving = 0;
 			lara.gun_status = LG_NO_ARMS;
 		}
 
 		l->pos.y_rot ^= 0x8000;
-	} else if(item->status == ITEM_ACTIVE)
+	} else if(item->status == ITEM_ACTIVE) {
 		ObjectCollision(item_num, l, coll);
+	}
 }
 
 void SequenceDoorControl(short item_number) {
@@ -383,9 +393,9 @@ void SequenceDoorControl(short item_number) {
 
 	if(item->item_flags[0]) {
 		if(TriggerActive(item)) {
-			if(!item->current_anim_state)
+			if(!item->current_anim_state) {
 				item->goal_anim_state = 1;
-			else {
+			} else {
 				if(!door->Opened) {
 					OpenThatDoor(&door->d1);
 					OpenThatDoor(&door->d2);
@@ -406,14 +416,15 @@ void SequenceDoorControl(short item_number) {
 				}
 			}
 		} else {
-			if(item->current_anim_state == 1)
+			if(item->current_anim_state == 1) {
 				item->goal_anim_state = 0;
-			else {
+			} else {
 				if(CurrentSequence == 3 && SequenceResults[Sequences[0]][Sequences[1]][Sequences[2]] == item->trigger_flags) {
 					CurrentSequence = 4;
 
-					if(item->trigger_flags != 2)
+					if(item->trigger_flags != 2) {
 						SequenceUsed[item->trigger_flags] = 1;
+					}
 				}
 
 				if(door->Opened) {

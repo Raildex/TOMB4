@@ -50,10 +50,11 @@ void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type) {
 		fx->pos.z_pos = pos->z_pos;
 		fx->pos.x_rot = pos->x_rot;
 
-		if(type < 4)
+		if(type < 4) {
 			fx->pos.y_rot = pos->y_rot;
-		else
+		} else {
 			fx->pos.y_rot = pos->y_rot + (GetRandomControl() & 0x7FF) - 1024;
+		}
 
 		fx->pos.z_rot = 0;
 
@@ -63,8 +64,9 @@ void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type) {
 		fx->speed = (GetRandomControl() & 0x1F) + 96;
 		fx->object_number = BUBBLES;
 
-		if(type >= 4)
+		if(type >= 4) {
 			type--;
+		}
 
 		fx->frame_number = GetObjectInfo(currentLevel, BUBBLES)->mesh_index + type * 2;
 	}
@@ -79,8 +81,9 @@ void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	dx = lara_item->pos.x_pos - fx->pos.x_pos;
 	dz = lara_item->pos.z_pos - fx->pos.z_pos;
 
-	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
+	}
 
 	sptr = GetFreeSpark();
 	sptr->On = 1;
@@ -116,10 +119,11 @@ void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	sptr->Flags = 602;
 	sptr->RotAng = GetRandomControl() & 0xFFF;
 
-	if(GetRandomControl() & 1)
+	if(GetRandomControl() & 1) {
 		sptr->RotAdd = -32 - (GetRandomControl() & 0x1F);
-	else
+	} else {
 		sptr->RotAdd = (GetRandomControl() & 0x1F) + 32;
+	}
 
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
@@ -160,14 +164,16 @@ void TriggerHammerSmoke(long x, long y, long z, long num) {
 			sptr->Flags = 16;
 			sptr->RotAng = GetRandomControl() & 0xFFF;
 
-			if(GetRandomControl() & 1)
+			if(GetRandomControl() & 1) {
 				sptr->RotAdd = -64 - (GetRandomControl() & 0x3F);
-			else
+			} else {
 				sptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
-		} else if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE)
+			}
+		} else if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_NOT_INSIDE) {
 			sptr->Flags = 256;
-		else
+		} else {
 			sptr->Flags = 0;
+		}
 
 		sptr->Gravity = -4 - (GetRandomControl() & 3);
 		sptr->MaxYvel = -4 - (GetRandomControl() & 3);
@@ -206,10 +212,11 @@ void DoDemigodEffects(short item_number) {
 			pos.x_rot = angles[1];
 			pos.y_rot = angles[0];
 
-			if(item->object_number == DEMIGOD3)
+			if(item->object_number == DEMIGOD3) {
 				TriggerDemigodMissile(&pos, item->room_number, 3);
-			else
+			} else {
 				TriggerDemigodMissile(&pos, item->room_number, 5);
+			}
 		}
 	} else if(anim == 16) {
 		frame = item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base;
@@ -248,8 +255,9 @@ void InitialiseDemigod(short item_number) {
 	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
 		item2 = GetItem(currentLevel, i);
 
-		if(item != item2 && item2->object_number == DEMIGOD3 && !item2->item_flags[0])
+		if(item != item2 && item2->object_number == DEMIGOD3 && !item2->item_flags[0]) {
 			item->item_flags[0] = i;
+		}
 	}
 }
 
@@ -279,8 +287,9 @@ void DemigodControl(short item_number) {
 		}
 	}
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	god = (CREATURE_INFO*)item->data;
 	objnum = item->object_number;
@@ -321,8 +330,9 @@ void DemigodControl(short item_number) {
 			}
 		}
 	} else {
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(god);
+		}
 
 		CreatureAIInfo(item, &info);
 
@@ -337,10 +347,11 @@ void DemigodControl(short item_number) {
 			dx = abs(dx);
 			dz = abs(dz);
 
-			if(dx > dz)
+			if(dx > dz) {
 				info.x_angle = (short)phd_atan(dx + (dz >> 1), item->pos.y_pos - lara_item->pos.y_pos);
-			else
+			} else {
 				info.x_angle = (short)phd_atan(dz + (dx >> 1), item->pos.y_pos - lara_item->pos.y_pos);
+			}
 		}
 
 		GetCreatureMood(item, &info, 1);
@@ -362,8 +373,9 @@ void DemigodControl(short item_number) {
 		case 0:
 			god->maximum_turn = 0;
 
-			if(info.ahead)
+			if(info.ahead) {
 				torso_x = -info.x_angle;
+			}
 
 			if(objnum == DEMIGOD1) {
 				if(info.distance < 0x900000) {
@@ -376,10 +388,11 @@ void DemigodControl(short item_number) {
 				if(Targetable(item, &info)) {
 					god->flags = 1;
 
-					if(objnum == DEMIGOD2)
+					if(objnum == DEMIGOD2) {
 						item->goal_anim_state = 3;
-					else
+					} else {
 						item->goal_anim_state = 11;
+					}
 
 					break;
 				}
@@ -394,10 +407,11 @@ void DemigodControl(short item_number) {
 				}
 			}
 
-			if(info.distance > 0x900000 && objnum == DEMIGOD2)
+			if(info.distance > 0x900000 && objnum == DEMIGOD2) {
 				item->goal_anim_state = 5;
-			else
+			} else {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
@@ -420,10 +434,11 @@ void DemigodControl(short item_number) {
 			}
 
 			if(info.distance > 0x900000) {
-				if(objnum == DEMIGOD2)
+				if(objnum == DEMIGOD2) {
 					item->goal_anim_state = 5;
-				else
+				} else {
 					item->goal_anim_state = 2;
+				}
 			}
 
 			break;
@@ -447,32 +462,36 @@ void DemigodControl(short item_number) {
 					break;
 				}
 
-				if(info.distance < 0x900000)
+				if(info.distance < 0x900000) {
 					item->goal_anim_state = 1;
+				}
 			}
 
 			break;
 
 		case 3:
 
-			if(info.ahead)
+			if(info.ahead) {
 				torso_x = -info.x_angle;
+			}
 
 			god->maximum_turn = 0;
 
 			if(item->anim_number == GetObjectInfo(currentLevel, objnum)->anim_index + 6) {
-				if(abs(info.angle) < 1274)
+				if(abs(info.angle) < 1274) {
 					item->pos.y_rot += info.angle;
-				else if(info.angle < 0)
+				} else if(info.angle < 0) {
 					item->pos.y_rot -= 1274;
-				else
+				} else {
 					item->pos.y_rot += 1274;
+				}
 			}
 
-			if(Targetable(item, &info) || god->flags)
+			if(Targetable(item, &info) || god->flags) {
 				item->goal_anim_state = 4;
-			else
+			} else {
 				item->goal_anim_state = 0;
+			}
 
 			god->flags = 0;
 
@@ -486,16 +505,18 @@ void DemigodControl(short item_number) {
 		case 6:
 			god->maximum_turn = 1274;
 
-			if(Targetable(item, &info))
+			if(Targetable(item, &info)) {
 				item->goal_anim_state = 7;
+			}
 
 			break;
 
 		case 9:
 			god->maximum_turn = 1274;
 
-			if(!Targetable(item, &info) && info.distance < 0x1900000)
+			if(!Targetable(item, &info) && info.distance < 0x1900000) {
 				item->goal_anim_state = 10;
+			}
 
 			break;
 
@@ -503,8 +524,9 @@ void DemigodControl(short item_number) {
 			god->maximum_turn = 1274;
 			DoDemigodEffects(item_number);
 
-			if(!Targetable(item, &info) || info.distance < 0x1900000 || !(GetRandomControl() & 0xFF))
+			if(!Targetable(item, &info) || info.distance < 0x1900000 || !(GetRandomControl() & 0xFF)) {
 				item->goal_anim_state = 0;
+			}
 
 			break;
 
@@ -512,24 +534,27 @@ void DemigodControl(short item_number) {
 			torso_y = iAngle;
 			torso_z = 0;
 
-			if(info.ahead)
+			if(info.ahead) {
 				torso_x = -info.x_angle;
+			}
 
 			god->maximum_turn = 0;
 
 			if(item->anim_number == GetObjectInfo(currentLevel, objnum)->anim_index + 6) {
-				if(abs(info.angle) < 1274)
+				if(abs(info.angle) < 1274) {
 					item->pos.y_rot += info.angle;
-				else if(info.angle < 0)
+				} else if(info.angle < 0) {
 					item->pos.y_rot -= 1274;
-				else
+				} else {
 					item->pos.y_rot += 1274;
+				}
 			}
 
-			if(Targetable(item, &info) || god->flags)
+			if(Targetable(item, &info) || god->flags) {
 				item->goal_anim_state = 12;
-			else
+			} else {
 				item->goal_anim_state = 0;
+			}
 
 			god->flags = 0;
 			break;
@@ -539,17 +564,19 @@ void DemigodControl(short item_number) {
 			torso_y = iAngle;
 			torso_z = 0;
 
-			if(abs(info.angle) < 1274)
+			if(abs(info.angle) < 1274) {
 				item->pos.y_rot += info.angle;
-			else if(info.angle < 0)
+			} else if(info.angle < 0) {
 				item->pos.y_rot -= 1274;
-			else
+			} else {
 				item->pos.y_rot += 1274;
+			}
 
-			if(info.distance < 0x900000 && info.bite || ((lara_item->current_anim_state >= AS_CLIMBSTNC && lara_item->current_anim_state <= AS_CLIMBDOWN || lara_item->current_anim_state == AS_HANG) && !lara.location && lara_item->room_number > 114))
+			if(info.distance < 0x900000 && info.bite || ((lara_item->current_anim_state >= AS_CLIMBSTNC && lara_item->current_anim_state <= AS_CLIMBDOWN || lara_item->current_anim_state == AS_HANG) && !lara.location && lara_item->room_number > 114)) {
 				item->goal_anim_state = 14;
-			else
+			} else {
 				item->goal_anim_state = 0;
+			}
 
 			break;
 
@@ -564,10 +591,11 @@ void DemigodControl(short item_number) {
 				floor = GetFloor(pos.x, pos.y, pos.z, &room_number);
 				h = GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-				if(h == NO_HEIGHT)
+				if(h == NO_HEIGHT) {
 					pos.y -= 128;
-				else
+				} else {
 					pos.y = h - 128;
+				}
 
 				TriggerShockwave(&pos, 0x580018, 256, 0x20808080, 0x20000);
 				TriggerHammerSmoke(pos.x, pos.y + 128, pos.z, 8);

@@ -14,8 +14,9 @@
 void AttachedItemControl(short item_num) {
 	ITEM_INFO* item = GetItem(currentLevel, item_num);
 	ATTACHEDITEM_INFO* info = item->data;
-	if(!item)
+	if(!item) {
 		return;
+	}
 	PHD_3DPOS pos;
 	pos.x_pos = -16;
 	pos.y_pos = 64;

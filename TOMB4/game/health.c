@@ -42,9 +42,9 @@ long FlashIt() {
 	static long flash_state = 0;
 	static long flash_count = 0;
 
-	if(flash_count)
+	if(flash_count) {
 		flash_count--;
-	else {
+	} else {
 		flash_state ^= 1;
 		flash_count = 5;
 	}
@@ -63,22 +63,25 @@ void DrawGameInfo(long timed) {
 		DrawAirBar(flash_state);
 		DrawPickups();
 
-		if(DashTimer < 120)
+		if(DashTimer < 120) {
 			S_DrawDashBar(100 * DashTimer / 120);
+		}
 
 		if(lara.target_item != NO_ITEM) {
 			if(/*tomb4.enemy_bars &&*/ GetItem(currentLevel, lara.target_item)->hit_points > 0) {
-				if(GetItem(currentLevel, lara.target_item)->object_number == LARA_DOUBLE)
+				if(GetItem(currentLevel, lara.target_item)->object_number == LARA_DOUBLE) {
 					S_DrawEnemyBar(lara_item->hit_points / 10);
-				else if(GetItem(currentLevel, lara.target_item)->object_number == SKELETON)
+				} else if(GetItem(currentLevel, lara.target_item)->object_number == SKELETON) {
 					S_DrawEnemyBar(100);
-				else if(GetItem(currentLevel, lara.target_item)->object_number == HORSEMAN) {
-					if(GetItem(currentLevel, lara.target_item)->dynamic_light)
+				} else if(GetItem(currentLevel, lara.target_item)->object_number == HORSEMAN) {
+					if(GetItem(currentLevel, lara.target_item)->dynamic_light) {
 						S_DrawEnemyBar(100 * GetItem(currentLevel, lara.target_item)->hit_points / 100);
-					else
+					} else {
 						S_DrawEnemyBar(100 * GetItem(currentLevel, lara.target_item)->hit_points / GetObjectInfo(currentLevel, GetItem(currentLevel, lara.target_item)->object_number)->hit_points);
-				} else
+					}
+				} else {
 					S_DrawEnemyBar(100 * GetItem(currentLevel, lara.target_item)->hit_points / GetObjectInfo(currentLevel, GetItem(currentLevel, lara.target_item)->object_number)->hit_points);
+				}
 			}
 		}
 
@@ -93,8 +96,9 @@ void DrawGameInfo(long timed) {
 				ammo = *get_current_ammo_pointer(lara.gun_type);
 
 				if(ammo != -1) {
-					if(lara.gun_type == WEAPON_SHOTGUN)
+					if(lara.gun_type == WEAPON_SHOTGUN) {
 						ammo /= 6;
+					}
 
 					sprintf(buf, "%i", ammo);
 					length = GetStringLength(buf, 0, &btm);
@@ -107,8 +111,9 @@ void DrawGameInfo(long timed) {
 			ammo_change_timer--;
 			PrintString(phd_winwidth >> 1, font_height, 5, ammo_change_buf, 0x8000);
 
-			if(ammo_change_timer <= 0)
+			if(ammo_change_timer <= 0) {
 				ammo_change_timer = 0;
+			}
 		}
 	}
 }
@@ -119,29 +124,34 @@ void DrawHealthBar(long flash_state) {
 
 	hitpoints = lara_item->hit_points;
 
-	if(hitpoints < 0)
+	if(hitpoints < 0) {
 		hitpoints = 0;
-	else if(hitpoints > 1000)
+	} else if(hitpoints > 1000) {
 		hitpoints = 1000;
+	}
 
 	if(old_hitpoints != hitpoints) {
 		old_hitpoints = hitpoints;
 		health_bar_timer = 40;
 	}
 
-	if(health_bar_timer < 0)
+	if(health_bar_timer < 0) {
 		health_bar_timer = 0;
+	}
 
 	if(hitpoints <= 250) {
-		if(flash_state)
+		if(flash_state) {
 			S_DrawHealthBar(hitpoints / 10);
-		else
+		} else {
 			S_DrawHealthBar(0);
-	} else if(health_bar_timer > 0 || lara.gun_status == LG_READY && lara.gun_type != 8 || lara.poisoned >= 256)
+		}
+	} else if(health_bar_timer > 0 || lara.gun_status == LG_READY && lara.gun_type != 8 || lara.poisoned >= 256) {
 		S_DrawHealthBar(hitpoints / 10);
+	}
 
-	if(PoisonFlag)
+	if(PoisonFlag) {
 		PoisonFlag--;
+	}
 }
 
 void DrawAirBar(long flash_state) {
@@ -150,24 +160,28 @@ void DrawAirBar(long flash_state) {
 	if(lara.vehicle == NO_ITEM && (lara.water_status == LW_UNDERWATER || lara.water_status == LW_SURFACE)) {
 		air = lara.air;
 
-		if(air < 0)
+		if(air < 0) {
 			air = 0;
-		else if(air > 1800)
+		} else if(air > 1800) {
 			air = 1800;
+		}
 
 		if(air <= 450) {
-			if(flash_state)
+			if(flash_state) {
 				S_DrawAirBar(100 * air / 1800);
-			else
+			} else {
 				S_DrawAirBar(0);
-		} else
+			}
+		} else {
 			S_DrawAirBar(100 * air / 1800);
+		}
 	}
 }
 
 void InitialisePickUpDisplay() {
-	for(int i = 0; i < 8; i++)
+	for(int i = 0; i < 8; i++) {
 		pickups[i].life = -1;
+	}
 
 	PickupX = GetFixedScale(128);
 	FullPickupX = PickupX;
@@ -182,14 +196,16 @@ void DrawPickups() {
 	pu = &pickups[CurrentPickup];
 
 	if(pu->life > 0) {
-		if(PickupX > 0)
+		if(PickupX > 0) {
 			PickupX += -PickupX >> 3;
-		else
+		} else {
 			pu->life--;
+		}
 	} else if(!pu->life) {
 		if(PickupX < FullPickupX) {
-			if(PickupVel < FullPickupX >> 3)
+			if(PickupVel < FullPickupX >> 3) {
 				PickupVel++;
+			}
 
 			PickupX += PickupVel;
 		} else {
@@ -198,15 +214,17 @@ void DrawPickups() {
 		}
 	} else {
 		for(lp = 0; lp < 8; lp++) {
-			if(pickups[CurrentPickup].life > 0)
+			if(pickups[CurrentPickup].life > 0) {
 				break;
+			}
 
 			CurrentPickup++;
 			CurrentPickup &= 7;
 		}
 
-		if(lp == 8)
+		if(lp == 8) {
 			CurrentPickup = 0;
+		}
 	}
 }
 

@@ -45,8 +45,9 @@ void UpdateDebris() {
 		if(dptr->On) {
 			dptr->Yvel += dptr->Gravity;
 
-			if(dptr->Yvel > 8192)
+			if(dptr->Yvel > 8192) {
 				dptr->Yvel = 8192;
+			}
 
 			dptr->Speed -= dptr->Speed >> 4;
 			dptr->x += dptr->Speed * phd_sin(dptr->Dir) >> W2V_SHIFT;
@@ -66,11 +67,13 @@ void UpdateDebris() {
 			} else {
 				dptr->XRot += dptr->Yvel >> 6;
 
-				if(dptr->Yvel)
+				if(dptr->Yvel) {
 					dptr->YRot += dptr->Speed >> 5;
+				}
 
-				if(GetRoom(currentLevel, dptr->RoomNumber)->flags & ROOM_UNDERWATER)
+				if(GetRoom(currentLevel, dptr->RoomNumber)->flags & ROOM_UNDERWATER) {
 					dptr->Yvel -= dptr->Yvel >> 2;
+				}
 			}
 		}
 	}
@@ -80,10 +83,12 @@ void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels,
 	DEBRIS_STRUCT* dptr;
 
 	if(GetRandomControl() & 3) {
-		if(rgb < 0)
+		if(rgb < 0) {
 			rgb = -rgb;
-	} else if(rgb >= 0)
+		}
+	} else if(rgb >= 0) {
 		TriggerShatterSmoke(pos->pos.x, pos->pos.y, pos->pos.z);
+	}
 
 	dptr = &debris[GetFreeDebris()];
 	dptr->On = 1;
@@ -98,11 +103,13 @@ void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels,
 	} else {
 		dptr->Dir = (short)phd_atan(Vels[2], Vels[0]);
 
-		if(Vels[0] < 0)
+		if(Vels[0] < 0) {
 			Vels[0] = -Vels[0];
+		}
 
-		if(Vels[2] < 0)
+		if(Vels[2] < 0) {
 			Vels[2] = -Vels[2];
+		}
 
 		dptr->Speed = (short)((Vels[0] + Vels[2]) >> 2);
 	}
@@ -111,10 +118,11 @@ void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels,
 		dptr->Yvel = -512 - (GetRandomControl() & 0x1FF);
 		dptr->Gravity = (GetRandomControl() & 0x3F) + 64;
 
-		if(Vels[1] == -1)
+		if(Vels[1] == -1) {
 			dptr->Yvel <<= 1;
-		else if(Vels[1] == -2)
+		} else if(Vels[1] == -2) {
 			dptr->Yvel >>= 1;
+		}
 	} else {
 		dptr->Yvel = 0;
 		dptr->Gravity = (GetRandomControl() & 0x1F) + 32;
@@ -242,8 +250,9 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	nTris = mesh->ngt3;
 	nQuads = mesh->ngt4;
 
-	if(nVtx > 256)
+	if(nVtx > 256) {
 		nVtx = 256;
+	}
 
 	phd_PushUnitMatrix();
 	phd_RotY(RotY);
@@ -332,16 +341,18 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 				Vels[2] = vec.pos.z - VPos.z;
 			}
 
-			if(NoXZVel < 0)
+			if(NoXZVel < 0) {
 				Vels[1] = NoXZVel;
+			}
 
 			vec.pos.x += TPos.x;
 			vec.pos.y += TPos.y;
 			vec.pos.z += TPos.z;
 			c = rgb;
 
-			if(shatter_item && shatter_item->Flags & 0x400)
+			if(shatter_item && shatter_item->Flags & 0x400) {
 				c = -rgb;
+			}
 
 			TriggerDebris(&vec, tex, offsets, Vels, c);
 		}
@@ -404,16 +415,18 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 				Vels[2] = vec.pos.z - VPos.z;
 			}
 
-			if(NoXZVel < 0)
+			if(NoXZVel < 0) {
 				Vels[1] = NoXZVel;
+			}
 
 			vec.pos.x += TPos.x;
 			vec.pos.y += TPos.y;
 			vec.pos.z += TPos.z;
 			c = rgb;
 
-			if(shatter_item && shatter_item->Flags & 0x400)
+			if(shatter_item && shatter_item->Flags & 0x400) {
 				c = -rgb;
+			}
 
 			TriggerDebris(&vec, tex, offsets, Vels, c);
 		}

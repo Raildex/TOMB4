@@ -67,8 +67,9 @@ void ProcessRoomDynamics(ROOM_INFO* r) {
 	for(int i = 0; i < MAX_DYNAMICS; i++) {
 		d = &dynamics[i];
 
-		if(!d->on)
+		if(!d->on) {
 			continue;
+		}
 
 		falloff = (float)((d->falloff >> 1) + (d->falloff >> 3));
 		l->x = d->pos.x - r->posx;
@@ -103,10 +104,11 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 
 	clip = clipflags;
 
-	if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6)
+	if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
 		DistanceFogStart = 12.0F * 1024.0F;
-	else
+	} else {
 		DistanceFogStart = 12 * 1024.0F;
+	}
 
 	num = 255.0F / DistanceFogStart;
 
@@ -134,9 +136,9 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 
 		clipFlag = 0;
 
-		if(vPos.z < f_mznear)
+		if(vPos.z < f_mznear) {
 			clipFlag = -128;
-		else {
+		} else {
 			zv = f_mpersp / vPos.z;
 
 			if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
@@ -156,15 +158,17 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 
 			MyVertexBuffer[i].rhw = zv * f_moneopersp;
 
-			if(vPos.x < clip_left)
+			if(vPos.x < clip_left) {
 				clipFlag++;
-			else if(vPos.x > clip_right)
+			} else if(vPos.x > clip_right) {
 				clipFlag += 2;
+			}
 
-			if(vPos.y < clip_top)
+			if(vPos.y < clip_top) {
 				clipFlag += 4;
-			else if(vPos.y > clip_bottom)
+			} else if(vPos.y > clip_bottom) {
 				clipFlag += 8;
+			}
 		}
 
 		*clip++ = clipFlag;
@@ -234,8 +238,9 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 				val = (vPos.z - DistanceFogStart) / 512.0F;
 				sA -= (long)(val * (255.0F / 8.0F));
 
-				if(sA < 0)
+				if(sA < 0) {
 					sA = 0;
+				}
 			} else {
 				cR -= (long)val;
 				cG -= (long)val;
@@ -243,51 +248,57 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 			}
 		}
 
-		if(cR - 128 <= 0)
+		if(cR - 128 <= 0) {
 			cR <<= 1;
-		else {
+		} else {
 			sR = (cR - 128) >> 1;
 			cR = 255;
 		}
 
-		if(cG - 128 <= 0)
+		if(cG - 128 <= 0) {
 			cG <<= 1;
-		else {
+		} else {
 			sG = (cG - 128) >> 1;
 			cG = 255;
 		}
 
-		if(cB - 128 <= 0)
+		if(cB - 128 <= 0) {
 			cB <<= 1;
-		else {
+		} else {
 			sB = (cB - 128) >> 1;
 			cB = 255;
 		}
 
-		if(sR > 255)
+		if(sR > 255) {
 			sR = 255;
-		else if(sR < 0)
+		} else if(sR < 0) {
 			sR = 0;
-		if(sG > 255)
+		}
+		if(sG > 255) {
 			sG = 255;
-		else if(sG < 0)
+		} else if(sG < 0) {
 			sG = 0;
-		if(sB > 255)
+		}
+		if(sB > 255) {
 			sB = 255;
-		else if(sB < 0)
+		} else if(sB < 0) {
 			sB = 0;
-		if(cR > 255)
+		}
+		if(cR > 255) {
 			cR = 255;
-		else if(cR < 0)
+		} else if(cR < 0) {
 			cR = 0;
-		if(cG > 255)
+		}
+		if(cG > 255) {
 			cG = 255;
-		else if(cG < 0)
+		} else if(cG < 0) {
 			cG = 0;
-		if(cB > 255)
+		}
+		if(cB > 255) {
 			cB = 255;
-		else if(cB < 0)
+		} else if(cB < 0) {
 			cB = 0;
+		}
 
 		MyVertexBuffer[i].color = RGBA(cR, cG, cB, 0xFF);
 		MyVertexBuffer[i].specular = RGBA(sR, sG, sB, sA);
@@ -482,8 +493,9 @@ void ProcessRoomData(ROOM_INFO* r) {
 
 	for(int i = 0; i < r->gt4cnt; i++) // get quad data
 	{
-		if(faces[data_ptr[0]] & 0x8000 || faces[data_ptr[1]] & 0x8000 || faces[data_ptr[2]] & 0x8000 || faces[data_ptr[3]] & 0x8000)
+		if(faces[data_ptr[0]] & 0x8000 || faces[data_ptr[1]] & 0x8000 || faces[data_ptr[2]] & 0x8000 || faces[data_ptr[3]] & 0x8000) {
 			data_ptr[4] |= 0x4000;
+		}
 
 		data_ptr[0] = faces[data_ptr[0]] & 0x7FFF;
 		data_ptr[1] = faces[data_ptr[1]] & 0x7FFF;
@@ -567,8 +579,9 @@ void ProcessRoomData(ROOM_INFO* r) {
 				nBulbs++;
 				NumLevelFogBulbs = nBulbs;
 			} else {
-				if(!light->r && !light->g && !light->b && light->Type == LIGHT_SPOT)
+				if(!light->r && !light->g && !light->b && light->Type == LIGHT_SPOT) {
 					continue;
+				}
 
 				pclight = &r->pclight[nLights];
 				pclight->r = light->r * (1.0F / 255.0F);
@@ -576,16 +589,18 @@ void ProcessRoomData(ROOM_INFO* r) {
 				pclight->b = light->b * (1.0F / 255.0F);
 				intensity = r->light[nLights].Intensity;
 
-				if(intensity < 0)
+				if(intensity < 0) {
 					intensity = -intensity;
+				}
 
 				intensity *= 1.0F / 8191.0F;
 				pclight->r *= intensity;
 				pclight->g *= intensity;
 				pclight->b *= intensity;
 
-				if(r->light[nLights].Type)
+				if(r->light[nLights].Type) {
 					pclight->shadow = (long)(intensity * 255);
+				}
 
 				pclight->x = (float)light->x;
 				pclight->y = (float)light->y;
@@ -638,10 +653,11 @@ void S_InsertRoom(ROOM_INFO* r) {
 			pTex = GetTextInfo(currentLevel, data[4] & 0x3FFF);
 			doublesided = (data[4] >> 15) & 1;
 
-			if(!pTex->drawtype)
+			if(!pTex->drawtype) {
 				AddQuadZBuffer(MyVertexBuffer, data[0], data[1], data[2], data[3], pTex, doublesided);
-			else if(pTex->drawtype <= 2)
+			} else if(pTex->drawtype <= 2) {
 				AddQuadSorted(MyVertexBuffer, data[0], data[1], data[2], data[3], pTex, doublesided);
+			}
 		}
 
 		numTris = *data++;
@@ -650,10 +666,11 @@ void S_InsertRoom(ROOM_INFO* r) {
 			pTex = GetTextInfo(currentLevel, data[3] & 0x3FFF);
 			doublesided = (data[3] >> 15) & 1;
 
-			if(!pTex->drawtype)
+			if(!pTex->drawtype) {
 				AddTriZBuffer(MyVertexBuffer, data[0], data[1], data[2], pTex, doublesided);
-			else if(pTex->drawtype <= 2)
+			} else if(pTex->drawtype <= 2) {
 				AddTriSorted(MyVertexBuffer, data[0], data[1], data[2], pTex, doublesided);
+			}
 		}
 	}
 }
@@ -670,11 +687,13 @@ void InitBuckets() {
 }
 
 void DrawBucket(TEXTUREBUCKET* bucket) {
-	if(bucket->tpage == 1)
+	if(bucket->tpage == 1) {
 		bucket->tpage = 1;
+	}
 
-	if(!bucket->nVtx)
+	if(!bucket->nVtx) {
 		return;
+	}
 
 	if(HasRendererBumpTexture(currentLevel, bucket->tpage) && App.BumpMapping) {
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_FOGENABLE, 0);
@@ -700,8 +719,9 @@ void DrawBucket(TEXTUREBUCKET* bucket) {
 	DXAttempt(IDirect3DDevice3_SetTexture(App.dx.lpD3DDevice, 0, GetRendererTexture(currentLevel, bucket->tpage)->dxTex));
 	IDirect3DDevice3_DrawPrimitive(App.dx.lpD3DDevice, D3DPT_TRIANGLELIST, FVF, bucket->vtx, bucket->nVtx, D3DDP_DONOTUPDATEEXTENTS | D3DDP_DONOTCLIP);
 
-	if(App.BumpMapping)
+	if(App.BumpMapping) {
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
+	}
 
 	bucket->nVtx = 0;
 	bucket->tpage = -1;
@@ -846,8 +866,9 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 		mesh->nVerts = mesh_ptr[5] & 0xFF;
 		lp = 0;
 
-		if(!mesh->nVerts)
+		if(!mesh->nVerts) {
 			lp = mesh_ptr[5] >> 8;
+		}
 
 		mesh_ptr += 6;
 
@@ -870,8 +891,9 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 			mesh->nNorms = mesh_ptr[0];
 			mesh_ptr++;
 
-			if(!mesh->nNorms)
+			if(!mesh->nNorms) {
 				mesh->nNorms = mesh->nVerts;
+			}
 
 			if(mesh->nNorms > 0) {
 				mesh->Normals = (_D3DVECTOR*)calloc(mesh->nNorms, sizeof(_D3DVECTOR));
@@ -900,8 +922,9 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 			}
 
 			IDirect3DVertexBuffer_Unlock(mesh->SourceVB);
-		} else
+		} else {
 			mesh_ptr += 6 * lp + 1;
+		}
 
 		mesh->ngt4 = mesh_ptr[0];
 		mesh_ptr++;
@@ -910,8 +933,9 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 			mesh->gt4 = (short*)calloc(6 * mesh->ngt4, sizeof(short));
 			lp = 6 * mesh->ngt4;
 
-			for(int j = 0; j < lp; j++)
+			for(int j = 0; j < lp; j++) {
 				mesh->gt4[j] = mesh_ptr[j];
+			}
 
 			mesh_ptr += lp;
 		}
@@ -923,8 +947,9 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 			mesh->gt3 = (short*)calloc(5 * mesh->ngt3, sizeof(short));
 			lp = 5 * mesh->ngt3;
 
-			for(int j = 0; j < lp; j++)
+			for(int j = 0; j < lp; j++) {
 				mesh->gt3[j] = mesh_ptr[j];
+			}
 		}
 	}
 }
@@ -936,9 +961,11 @@ unsigned short GetRandom(WATERTAB* wt, long lp) {
 	do {
 		ret = rand() & 0xFC;
 
-		for(loop = 0; loop < lp; loop++)
-			if(wt[loop].random == ret)
+		for(loop = 0; loop < lp; loop++) {
+			if(wt[loop].random == ret) {
 				break;
+			}
+		}
 
 	} while(loop != lp);
 

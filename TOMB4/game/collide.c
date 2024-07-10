@@ -73,9 +73,11 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 
 	if(doors) {
 		for(int i = *doors++; i > 0; i--, doors += 16) {
-			for(j = 0; j < room_count; j++)
-				if(rooms[j] == *doors)
+			for(j = 0; j < room_count; j++) {
+				if(rooms[j] == *doors) {
 					break;
+				}
+			}
 
 			if(j == room_count) {
 				rooms[room_count] = *doors;
@@ -206,8 +208,9 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 					if(items_count >= StoredItemsSize) {
 						break;
 					}
-					if(!rad)
+					if(!rad) {
 						return 1;
+					}
 				}
 			}
 
@@ -236,8 +239,9 @@ void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INF
 			dy -= lara_item->pos.y_pos;
 			dz -= lara_item->pos.z_pos;
 
-			if((dx || dy || dz) && TriggerActive(item))
+			if((dx || dy || dz) && TriggerActive(item)) {
 				DoBloodSplat(l->pos.x_pos + (GetRandomControl() & 0x3F) - 32, l->pos.y_pos - (GetRandomControl() & 0x1FF) - 256, l->pos.z_pos + (GetRandomControl() & 0x3F) - 32, (item->item_flags[3] >> 5) + (GetRandomControl() & 0x3) + 2, (short)(2 * GetRandomControl()), l->room_number);
+			}
 
 			if(!coll->enable_baddie_push) {
 				lara_item->pos.x_pos += dx;
@@ -266,8 +270,9 @@ void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			item->pos.y_rot = y_rot;
 			DeadlyBits = *(long*)&item->item_flags[0];
 
-			if(item->item_flags[2])
+			if(item->item_flags[2]) {
 				TouchBits &= ~0x1;
+			}
 
 			if(TouchBits) {
 				sptr = Slist;
@@ -290,8 +295,9 @@ void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 							dy -= lara_item->pos.y_pos;
 							dz -= lara_item->pos.z_pos;
 
-							if((dx || dy || dz) && TriggerActive(item))
+							if((dx || dy || dz) && TriggerActive(item)) {
 								DoBloodSplat(l->pos.x_pos + (GetRandomControl() & 0x3F) - 32, sptr->y + (GetRandomControl() & 0x1F) - 16, l->pos.z_pos + (GetRandomControl() & 0x3F) - 32, (item->item_flags[3] >> 5) + (GetRandomControl() & 0x3) + 2, (short)(2 * GetRandomControl()), l->room_number);
+							}
 
 							if(!coll->enable_baddie_push) {
 								lara_item->pos.x_pos += dx;
@@ -319,9 +325,9 @@ void CreatureCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	if(TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l)) {
 		if(lara.water_status != LW_UNDERWATER && lara.water_status != LW_SURFACE) {
-			if(coll->enable_baddie_push)
+			if(coll->enable_baddie_push) {
 				ItemPushLara(item, l, coll, coll->enable_spaz, 0);
-			else if(coll->enable_spaz) {
+			} else if(coll->enable_spaz) {
 				bounds = GetBestFrame(item);
 				s = phd_sin(l->pos.y_rot);
 				c = phd_cos(l->pos.y_rot);
@@ -334,8 +340,9 @@ void CreatureCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 					lara.hit_direction = (unsigned short)((l->pos.y_rot - phd_atan(rz, rx) - 0x6000)) >> W2V_SHIFT;
 					lara.hit_frame++;
 
-					if(lara.hit_frame > 30)
+					if(lara.hit_frame > 30) {
 						lara.hit_frame = 30;
+					}
 				}
 			}
 		}
@@ -348,15 +355,17 @@ long FindGridShift(long src, long dst) {
 	srcw = src >> 10;
 	dstw = dst >> 10;
 
-	if(srcw == dstw)
+	if(srcw == dstw) {
 		return 0;
+	}
 
 	src &= 1023;
 
-	if(dstw > srcw)
+	if(dstw > srcw) {
 		return 1025 - src;
-	else
+	} else {
 		return -1 - src;
+	}
 }
 
 short GetTiltType(FLOOR_INFO* floor, long x, long y, long z) {
@@ -365,22 +374,25 @@ short GetTiltType(FLOOR_INFO* floor, long x, long y, long z) {
 	short type, t0, t1, t2, t3, tilt, x2, z2, x3, y2;
 
 	while(floor->pit_room != 255) {
-		if(CheckNoColFloorTriangle(floor, x, z) == 1)
+		if(CheckNoColFloorTriangle(floor, x, z) == 1) {
 			break;
+		}
 
 		r = GetRoom(currentLevel, floor->pit_room);
 		floor = &r->floor[((z - r->z) >> 10) + (((x - r->x) >> 10) * r->x_size)];
 	}
 
-	if(y + 512 < floor->floor << 8)
+	if(y + 512 < floor->floor << 8) {
 		return 0;
+	}
 
 	if(floor->index) {
 		data = GetFloorData(currentLevel, floor->index);
 		type = (data[0] & 0x1F);
 
-		if(type == TILT_TYPE)
+		if(type == TILT_TYPE) {
 			return data[1];
+		}
 
 		if(type == SPLIT1 || type == SPLIT2 || type == NOCOLF1T || type == NOCOLF2T || type == NOCOLF1B || type == NOCOLF2B) {
 			tilt = data[1];
@@ -440,8 +452,9 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 	if(door) {
 		for(i = *door++; i > 0; i--) {
 			for(j = 0; j < num_nearby_rooms; j++) {
-				if(nearby_rooms[j] == *door)
+				if(nearby_rooms[j] == *door) {
 					break;
+				}
 			}
 
 			if(j == num_nearby_rooms) {
@@ -460,8 +473,9 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 		for(j = r->num_meshes; j > 0; j--, mesh++) {
 			sinfo = GetStaticObject(currentLevel, mesh->static_number);
 
-			if(!(mesh->Flags & 1))
+			if(!(mesh->Flags & 1)) {
 				continue;
+			}
 
 			ymin = mesh->y + sinfo->y_minc;
 			ymax = mesh->y + sinfo->y_maxc;
@@ -488,8 +502,9 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 				zmax = mesh->z + sinfo->z_maxc;
 			}
 
-			if(lxmax <= xmin || lxmin >= xmax || lymax <= ymin || lymin >= ymax || lzmax <= zmin || lzmin >= zmax)
+			if(lxmax <= xmin || lxmin >= xmax || lymax <= ymin || lymin >= ymax || lzmax <= zmin || lzmin >= zmax) {
 				continue;
+			}
 
 			coll->hit_static = 1;
 			return 1;
@@ -513,8 +528,9 @@ void UpdateLaraRoom(ITEM_INFO* item, long height) {
 	floor = GetFloor(x, y, z, &room_number);
 	item->floor = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(item->room_number != room_number)
+	if(item->room_number != room_number) {
 		ItemNewRoom(lara.item_number, room_number);
+	}
 }
 
 void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
@@ -531,8 +547,9 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 	l->hit_status = 0;
 	lara.hit_direction = -1;
 
-	if(l->hit_points <= 0)
+	if(l->hit_points <= 0) {
 		return;
+	}
 
 	num_nearby_rooms = 1;
 	nearby_rooms[0] = l->room_number;
@@ -541,8 +558,9 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 	if(door) {
 		for(i = *door++; i > 0; i--) {
 			for(j = 0; j < num_nearby_rooms; j++) {
-				if(nearby_rooms[j] == *door)
+				if(nearby_rooms[j] == *door) {
 					break;
+				}
 			}
 
 			if(j == num_nearby_rooms) {
@@ -568,8 +586,9 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 					dy = l->pos.y_pos - item->pos.y_pos;
 					dz = l->pos.z_pos - item->pos.z_pos;
 
-					if(dx > -3072 && dx < 3072 && dy > -3072 && dy < 3072 && dz > -3072 && dz < 3072)
+					if(dx > -3072 && dx < 3072 && dy > -3072 && dy < 3072 && dz > -3072 && dz < 3072) {
 						GetObjectInfo(currentLevel, item->object_number)->collision(item_number, l, coll);
+					}
 				}
 			}
 
@@ -581,8 +600,9 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 			mesh = r->mesh;
 
 			for(j = r->num_meshes; j > 0; j--, mesh++) {
-				if(!(mesh->Flags & 1))
+				if(!(mesh->Flags & 1)) {
 					continue;
+				}
 
 				dx = l->pos.x_pos - mesh->x;
 				dy = l->pos.y_pos - mesh->y;
@@ -595,15 +615,17 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 					pos.z_pos = mesh->z;
 					pos.y_rot = mesh->y_rot;
 
-					if(TestBoundsCollideStatic(bounds, &pos, coll->radius))
+					if(TestBoundsCollideStatic(bounds, &pos, coll->radius)) {
 						ItemPushLaraStatic(l, bounds, &pos, coll);
+					}
 				}
 			}
 		}
 	}
 
-	if(lara.hit_direction == -1)
+	if(lara.hit_direction == -1) {
 		lara.hit_frame = 0;
+	}
 }
 
 void ObjectCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
@@ -611,8 +633,9 @@ void ObjectCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l) && coll->enable_baddie_push)
+	if(TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l) && coll->enable_baddie_push) {
 		ItemPushLara(item, l, coll, 0, 1);
+	}
 }
 
 void ObjectCollisionNoBigPush(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
@@ -620,8 +643,9 @@ void ObjectCollisionNoBigPush(short item_number, ITEM_INFO* l, COLL_INFO* coll) 
 
 	item = GetItem(currentLevel, item_number);
 
-	if(TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l) && coll->enable_baddie_push)
+	if(TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l) && coll->enable_baddie_push) {
 		ItemPushLara(item, l, coll, 0, 0);
+	}
 }
 
 void TrapCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
@@ -630,10 +654,12 @@ void TrapCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	item = GetItem(currentLevel, item_number);
 
 	if(item->status == ITEM_ACTIVE) {
-		if(!TestBoundsCollide(item, l, coll->radius))
+		if(!TestBoundsCollide(item, l, coll->radius)) {
 			return;
-	} else if(item->status == ITEM_INVISIBLE)
+		}
+	} else if(item->status == ITEM_INVISIBLE) {
 		return;
+	}
 
 	ObjectCollision(item_number, l, coll);
 }
@@ -651,10 +677,11 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 	x = (dx * c - dz * s) >> W2V_SHIFT;
 	z = (dx * s + dz * c) >> W2V_SHIFT;
 
-	if(BigPush & 2)
+	if(BigPush & 2) {
 		bounds = GlobalCollisionBounds;
-	else
+	} else {
 		bounds = GetBestFrame(item);
+	}
 
 	xmin = bounds[0];
 	xmax = bounds[1];
@@ -668,22 +695,24 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		zmax += coll->radius;
 	}
 
-	if(abs(dx) > 4608 || abs(dz) > 4608 || x <= xmin || x >= xmax || z <= zmin || z >= zmax)
+	if(abs(dx) > 4608 || abs(dz) > 4608 || x <= xmin || x >= xmax || z <= zmin || z >= zmax) {
 		return 0;
+	}
 
 	left = x - xmin;
 	top = zmax - z;
 	right = xmax - x;
 	bottom = z - zmin;
 
-	if(left <= right && left <= top && left <= bottom)
+	if(left <= right && left <= top && left <= bottom) {
 		x -= left;
-	else if(right <= left && right <= top && right <= bottom)
+	} else if(right <= left && right <= top && right <= bottom) {
 		x += right;
-	else if(top <= left && top <= right && top <= bottom)
+	} else if(top <= left && top <= right && top <= bottom) {
 		z += top;
-	else
+	} else {
 		z -= bottom;
+	}
 
 	l->pos.x_pos = item->pos.x_pos + ((c * x + s * z) >> W2V_SHIFT);
 	l->pos.z_pos = item->pos.z_pos + ((c * z - s * x) >> W2V_SHIFT);
@@ -695,13 +724,15 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		dz -= (c * z - s * x) >> W2V_SHIFT;
 		lara.hit_direction = (unsigned short)(l->pos.y_rot - phd_atan(dz, dx) - 24576) >> W2V_SHIFT; // hmmmmm
 
-		if(!lara.hit_frame)
+		if(!lara.hit_frame) {
 			SoundEffect(SFX_LARA_INJURY, &l->pos, SFX_DEFAULT);
+		}
 
 		lara.hit_frame++;
 
-		if(lara.hit_frame > 34)
+		if(lara.hit_frame > 34) {
 			lara.hit_frame = 34;
+		}
 	}
 
 	coll->bad_pos = -NO_HEIGHT;
@@ -738,8 +769,9 @@ long TestBoundsCollide(ITEM_INFO* item, ITEM_INFO* l, long rad) {
 	bounds = GetBestFrame(item);
 	lbounds = GetBestFrame(l);
 
-	if(item->pos.y_pos + bounds[3] <= l->pos.y_pos + lbounds[2] || item->pos.y_pos + bounds[2] >= l->pos.y_pos + lbounds[3])
+	if(item->pos.y_pos + bounds[3] <= l->pos.y_pos + lbounds[2] || item->pos.y_pos + bounds[2] >= l->pos.y_pos + lbounds[3]) {
 		return 0;
+	}
 
 	s = phd_sin(item->pos.y_rot);
 	c = phd_cos(item->pos.y_rot);
@@ -754,13 +786,15 @@ long TestBoundsCollideStatic(short* bounds, PHD_3DPOS* pos, long rad) {
 	short* lbounds;
 	long s, c, dx, dz, x, z;
 
-	if(!(bounds[0] | bounds[1] | bounds[2] | bounds[3] | bounds[4] | bounds[5]))
+	if(!(bounds[0] | bounds[1] | bounds[2] | bounds[3] | bounds[4] | bounds[5])) {
 		return 0;
+	}
 
 	lbounds = GetBestFrame(lara_item);
 
-	if(pos->y_pos + bounds[3] <= lara_item->pos.y_pos + lbounds[2] || pos->y_pos + bounds[2] >= lara_item->pos.y_pos + lbounds[3])
+	if(pos->y_pos + bounds[3] <= lara_item->pos.y_pos + lbounds[2] || pos->y_pos + bounds[2] >= lara_item->pos.y_pos + lbounds[3]) {
 		return 0;
+	}
 
 	s = phd_sin(pos->y_rot);
 	c = phd_cos(pos->y_rot);
@@ -787,22 +821,24 @@ long ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* 
 	zmin = bounds[4] - coll->radius;
 	zmax = bounds[5] + coll->radius;
 
-	if(abs(dx) > 4608 || abs(dz) > 4608 || x <= xmin || x >= xmax || z <= zmin || z >= zmax)
+	if(abs(dx) > 4608 || abs(dz) > 4608 || x <= xmin || x >= xmax || z <= zmin || z >= zmax) {
 		return 0;
+	}
 
 	left = x - xmin;
 	top = zmax - z;
 	right = xmax - x;
 	bottom = z - zmin;
 
-	if(left <= right && left <= top && left <= bottom)
+	if(left <= right && left <= top && left <= bottom) {
 		x -= left;
-	else if(right <= left && right <= top && right <= bottom)
+	} else if(right <= left && right <= top && right <= bottom) {
 		x += right;
-	else if(top <= left && top <= right && top <= bottom)
+	} else if(top <= left && top <= right && top <= bottom) {
 		z += top;
-	else
+	} else {
 		z -= bottom;
+	}
 
 	l->pos.x_pos = pos->x_pos + ((c * x + s * z) >> W2V_SHIFT);
 	l->pos.z_pos = pos->z_pos + ((c * z - s * x) >> W2V_SHIFT);
@@ -841,8 +877,9 @@ long TestLaraPosition(short* bounds, ITEM_INFO* item, ITEM_INFO* l) {
 	yrot = l->pos.y_rot - item->pos.y_rot;
 	zrot = l->pos.z_rot - item->pos.z_rot;
 
-	if(xrot < bounds[6] || xrot > bounds[7] || yrot < bounds[8] || yrot > bounds[9] || zrot < bounds[10] || zrot > bounds[11])
+	if(xrot < bounds[6] || xrot > bounds[7] || yrot < bounds[8] || yrot > bounds[9] || zrot < bounds[10] || zrot > bounds[11]) {
 		return 0;
+	}
 
 	phd_PushUnitMatrix();
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
@@ -936,30 +973,33 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 
 	adiff = dest->x_rot - pos->x_rot;
 
-	if(adiff > rotation)
+	if(adiff > rotation) {
 		pos->x_rot += rotation;
-	else if(adiff < -rotation)
+	} else if(adiff < -rotation) {
 		pos->x_rot -= rotation;
-	else
+	} else {
 		pos->x_rot = dest->x_rot;
+	}
 
 	adiff = dest->y_rot - pos->y_rot;
 
-	if(adiff > rotation)
+	if(adiff > rotation) {
 		pos->y_rot += rotation;
-	else if(adiff < -rotation)
+	} else if(adiff < -rotation) {
 		pos->y_rot -= rotation;
-	else
+	} else {
 		pos->y_rot = dest->y_rot;
+	}
 
 	adiff = dest->z_rot - pos->z_rot;
 
-	if(adiff > rotation)
+	if(adiff > rotation) {
 		pos->z_rot += rotation;
-	else if(adiff < -rotation)
+	} else if(adiff < -rotation) {
 		pos->z_rot -= rotation;
-	else
+	} else {
 		pos->z_rot = dest->z_rot;
+	}
 
 	return pos->x_pos == dest->x_pos && pos->y_pos == dest->y_pos && pos->z_pos == dest->z_pos && pos->x_rot == dest->x_rot && pos->y_rot == dest->y_rot && pos->z_rot == dest->z_rot;
 }
@@ -991,8 +1031,9 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
 				lara.gun_status = LG_NO_ARMS;
 			}
 
-			if(phd_sqrt(SQUARE(pos.x_pos - l->pos.x_pos) + SQUARE(pos.y_pos - l->pos.y_pos) + SQUARE(pos.z_pos - l->pos.z_pos)) < 192)
+			if(phd_sqrt(SQUARE(pos.x_pos - l->pos.x_pos) + SQUARE(pos.y_pos - l->pos.y_pos) + SQUARE(pos.z_pos - l->pos.z_pos)) < 192) {
 				return 1;
+			}
 			return 0;
 		}
 	}
@@ -1006,8 +1047,9 @@ long TestBoundsCollide2(ITEM_INFO* item, ITEM_INFO* l, long rad) {
 
 	bounds = GetBestFrame(l);
 
-	if(item->pos.y_pos + GlobalCollisionBounds[3] <= l->pos.y_pos + bounds[2] || item->pos.y_pos + GlobalCollisionBounds[2] >= l->pos.y_pos + bounds[3])
+	if(item->pos.y_pos + GlobalCollisionBounds[3] <= l->pos.y_pos + bounds[2] || item->pos.y_pos + GlobalCollisionBounds[2] >= l->pos.y_pos + bounds[3]) {
 		return 0;
+	}
 
 	s = phd_sin(item->pos.y_rot);
 	c = phd_cos(item->pos.y_rot);
@@ -1026,11 +1068,13 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(item->status == ITEM_INVISIBLE)
+	if(item->status == ITEM_INVISIBLE) {
 		return;
+	}
 
-	if(!TestBoundsCollide(item, l, coll->radius))
+	if(!TestBoundsCollide(item, l, coll->radius)) {
 		return;
+	}
 
 	bounds = StarGateBounds;
 
@@ -1042,22 +1086,25 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		GlobalCollisionBounds[4] = bounds[4];
 		GlobalCollisionBounds[5] = bounds[5];
 
-		if(TestBoundsCollide2(item, l, coll->radius))
+		if(TestBoundsCollide2(item, l, coll->radius)) {
 			ItemPushLara(item, l, coll, 0, 2);
+		}
 
 		bounds += 6;
 	}
 
 	touchedBits = TestCollision(item, l);
 
-	if(!touchedBits)
+	if(!touchedBits) {
 		return;
+	}
 
 	hurtfulBits = *(long*)&item->item_flags[0] & touchedBits;
 	touchedBits = *(long*)&item->item_flags[0];
 
-	if(!hurtfulBits)
+	if(!hurtfulBits) {
 		return;
+	}
 
 	sphere = Slist;
 
@@ -1098,11 +1145,13 @@ void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(item->status == ITEM_INVISIBLE)
+	if(item->status == ITEM_INVISIBLE) {
 		return;
+	}
 
-	if(!TestBoundsCollide(item, l, coll->radius))
+	if(!TestBoundsCollide(item, l, coll->radius)) {
 		return;
+	}
 
 	if(TriggerActive(item)) {
 		x = l->pos.x_pos + (GetRandomControl() & 0x3F) - 32;
@@ -1110,8 +1159,9 @@ void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		z = l->pos.z_pos + (GetRandomControl() & 0x3F) - 32;
 		DoBloodSplat(x, y, z, (GetRandomControl() & 3) + 2, (short)(GetRandomControl() << 1), l->room_number);
 		lara_item->hit_points -= 10;
-	} else if(coll->enable_baddie_push)
+	} else if(coll->enable_baddie_push) {
 		ItemPushLara(item, l, coll, 0, 0);
+	}
 }
 
 void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number, long hite) {
@@ -1142,13 +1192,15 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	floor = GetFloor(x, yT, z, &room_num);
 	h = GetHeight(floor, x, yT, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(h != NO_HEIGHT)
+	if(h != NO_HEIGHT) {
 		h -= y;
+	}
 
 	c = GetCeiling(floor, x, fspeed, z);
 
-	if(c != NO_HEIGHT)
+	if(c != NO_HEIGHT) {
 		c -= y - hite;
+	}
 
 	coll->mid_floor = h;
 	coll->mid_ceiling = c;
@@ -1211,13 +1263,15 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	floor = GetFloor(tx, yT, tz, &room_num);
 	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(h != NO_HEIGHT)
+	if(h != NO_HEIGHT) {
 		h -= y;
+	}
 
 	c = GetCeiling(floor, tx, fspeed, tz);
 
-	if(c != NO_HEIGHT)
+	if(c != NO_HEIGHT) {
 		c -= y - hite;
+	}
 
 	coll->front_ceiling = c;
 	coll->front_floor = h;
@@ -1228,15 +1282,17 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	floor = GetFloor(tx, yT, tz, &room_num);
 	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(h != NO_HEIGHT)
+	if(h != NO_HEIGHT) {
 		h -= y;
+	}
 
-	if(coll->slopes_are_walls && (coll->front_type == BIG_SLOPE || coll->front_type == DIAGONAL) && coll->front_floor < coll->mid_floor && h < coll->front_floor && coll->front_floor < 0)
+	if(coll->slopes_are_walls && (coll->front_type == BIG_SLOPE || coll->front_type == DIAGONAL) && coll->front_floor < coll->mid_floor && h < coll->front_floor && coll->front_floor < 0) {
 		coll->front_floor = -32767;
-	else if(coll->slopes_are_pits && (coll->front_type == BIG_SLOPE || coll->front_type == DIAGONAL) && coll->front_floor > coll->mid_floor)
+	} else if(coll->slopes_are_pits && (coll->front_type == BIG_SLOPE || coll->front_type == DIAGONAL) && coll->front_floor > coll->mid_floor) {
 		coll->front_floor = 512;
-	else if(coll->lava_is_pit && coll->front_floor > 0 && trigger_index && (trigger_index[0] & 0x1F) == LAVA_TYPE)
+	} else if(coll->lava_is_pit && coll->front_floor > 0 && trigger_index && (trigger_index[0] & 0x1F) == LAVA_TYPE) {
 		coll->front_floor = 512;
+	}
 
 	/*left*/
 	room_num2 = room_number;
@@ -1245,46 +1301,52 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	floor = GetFloor(tx, yT, tz, &room_num2);
 	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(h != NO_HEIGHT)
+	if(h != NO_HEIGHT) {
 		h -= y;
+	}
 
 	c = GetCeiling(floor, tx, fspeed, tz);
 
-	if(c != NO_HEIGHT)
+	if(c != NO_HEIGHT) {
 		c -= y - hite;
+	}
 
 	coll->left_ceiling = c;
 	coll->left_floor = h;
 	coll->left_type = height_type;
 
-	if(coll->slopes_are_walls == 1 && (coll->left_type == BIG_SLOPE || coll->left_type == DIAGONAL) && coll->left_floor < 0)
+	if(coll->slopes_are_walls == 1 && (coll->left_type == BIG_SLOPE || coll->left_type == DIAGONAL) && coll->left_floor < 0) {
 		coll->left_floor = -32767;
-	else if(coll->slopes_are_pits && (coll->left_type == BIG_SLOPE || coll->left_type == DIAGONAL) && coll->left_floor > 0)
+	} else if(coll->slopes_are_pits && (coll->left_type == BIG_SLOPE || coll->left_type == DIAGONAL) && coll->left_floor > 0) {
 		coll->left_floor = 512;
-	else if(coll->lava_is_pit && coll->left_floor > 0 && trigger_index && (trigger_index[0] & 0x1F) == LAVA_TYPE)
+	} else if(coll->lava_is_pit && coll->left_floor > 0 && trigger_index && (trigger_index[0] & 0x1F) == LAVA_TYPE) {
 		coll->left_floor = 512;
+	}
 
 	floor = GetFloor(tx, yT, tz, &room_num);
 	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(h != NO_HEIGHT)
+	if(h != NO_HEIGHT) {
 		h -= y;
+	}
 
 	c = GetCeiling(floor, tx, fspeed, tz);
 
-	if(c != NO_HEIGHT)
+	if(c != NO_HEIGHT) {
 		c -= y - hite;
+	}
 
 	coll->left_ceiling2 = c;
 	coll->left_floor2 = h;
 	coll->left_type2 = height_type;
 
-	if(coll->slopes_are_walls == 1 && (coll->left_type2 == BIG_SLOPE || coll->left_type2 == DIAGONAL) && coll->left_floor2 < 0)
+	if(coll->slopes_are_walls == 1 && (coll->left_type2 == BIG_SLOPE || coll->left_type2 == DIAGONAL) && coll->left_floor2 < 0) {
 		coll->left_floor2 = -32767;
-	else if(coll->slopes_are_pits && (coll->left_type2 == BIG_SLOPE || coll->left_type2 == DIAGONAL) && coll->left_floor2 > 0)
+	} else if(coll->slopes_are_pits && (coll->left_type2 == BIG_SLOPE || coll->left_type2 == DIAGONAL) && coll->left_floor2 > 0) {
 		coll->left_floor2 = 512;
-	else if(coll->lava_is_pit && coll->left_floor2 > 0 && trigger_index && (trigger_index[0] & 0x1F) == LAVA_TYPE)
+	} else if(coll->lava_is_pit && coll->left_floor2 > 0 && trigger_index && (trigger_index[0] & 0x1F) == LAVA_TYPE) {
 		coll->left_floor2 = 512;
+	}
 
 	/*right*/
 	room_num2 = room_number;
@@ -1293,46 +1355,52 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	floor = GetFloor(tx, yT, tz, &room_num2);
 	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(h != NO_HEIGHT)
+	if(h != NO_HEIGHT) {
 		h -= y;
+	}
 
 	c = GetCeiling(floor, tx, fspeed, tz);
 
-	if(c != NO_HEIGHT)
+	if(c != NO_HEIGHT) {
 		c -= y - hite;
+	}
 
 	coll->right_ceiling = c;
 	coll->right_floor = h;
 	coll->right_type = height_type;
 
-	if(coll->slopes_are_walls == 1 && (coll->right_type == BIG_SLOPE || coll->right_type == DIAGONAL) && coll->right_floor < 0)
+	if(coll->slopes_are_walls == 1 && (coll->right_type == BIG_SLOPE || coll->right_type == DIAGONAL) && coll->right_floor < 0) {
 		coll->right_floor = -32767;
-	else if(coll->slopes_are_pits && (coll->right_type == BIG_SLOPE || coll->right_type == DIAGONAL) && coll->right_floor > 0)
+	} else if(coll->slopes_are_pits && (coll->right_type == BIG_SLOPE || coll->right_type == DIAGONAL) && coll->right_floor > 0) {
 		coll->right_floor = 512;
-	else if(coll->lava_is_pit && coll->right_floor > 0 && trigger_index && (trigger_index[0] & 0x1F) == LAVA_TYPE)
+	} else if(coll->lava_is_pit && coll->right_floor > 0 && trigger_index && (trigger_index[0] & 0x1F) == LAVA_TYPE) {
 		coll->right_floor = 512;
+	}
 
 	floor = GetFloor(tx, yT, tz, &room_num);
 	h = GetHeight(floor, tx, yT, tz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
-	if(h != NO_HEIGHT)
+	if(h != NO_HEIGHT) {
 		h -= y;
+	}
 
 	c = GetCeiling(floor, tx, fspeed, tz);
 
-	if(c != NO_HEIGHT)
+	if(c != NO_HEIGHT) {
 		c -= y - hite;
+	}
 
 	coll->right_ceiling2 = c;
 	coll->right_floor2 = h;
 	coll->right_type2 = height_type;
 
-	if(coll->slopes_are_walls == 1 && (coll->right_type2 == BIG_SLOPE || coll->right_type2 == DIAGONAL) && coll->right_floor2 < 0)
+	if(coll->slopes_are_walls == 1 && (coll->right_type2 == BIG_SLOPE || coll->right_type2 == DIAGONAL) && coll->right_floor2 < 0) {
 		coll->right_floor2 = -32767;
-	else if(coll->slopes_are_pits && (coll->right_type2 == BIG_SLOPE || coll->right_type2 == DIAGONAL) && coll->right_floor2 > 0)
+	} else if(coll->slopes_are_pits && (coll->right_type2 == BIG_SLOPE || coll->right_type2 == DIAGONAL) && coll->right_floor2 > 0) {
 		coll->right_floor2 = 512;
-	else if(coll->lava_is_pit && coll->right_floor2 > 0 && trigger_index && (trigger_index[0] & 0x1F) == LAVA_TYPE)
+	} else if(coll->lava_is_pit && coll->right_floor2 > 0 && trigger_index && (trigger_index[0] & 0x1F) == LAVA_TYPE) {
 		coll->right_floor2 = 512;
+	}
 
 	room_num2 = room_number;
 	tx = x + xleft2;

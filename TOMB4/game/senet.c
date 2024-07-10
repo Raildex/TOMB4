@@ -43,14 +43,17 @@ void InitialiseSenet(short item_number) {
 	ITEM_INFO* item;
 	short lp;
 
-	if(senet_item[0])
+	if(senet_item[0]) {
 		return;
+	}
 
-	for(lp = 0; lp < 6; lp++)
+	for(lp = 0; lp < 6; lp++) {
 		senet_piece[lp] = 0;
+	}
 
-	for(lp = 1; lp < 17; lp++)
+	for(lp = 1; lp < 17; lp++) {
 		senet_board[lp] = 0;
+	}
 
 	senet_board[0] = 3;
 
@@ -85,15 +88,17 @@ void MakeMove(long piece, long displacement) {
 	spot = (short)(senet_piece[piece] + displacement);
 	num = (piece >= 3) + 1;
 
-	if(senet_piece[piece] == NO_ITEM || !displacement || spot > 16 || senet_board[spot] & num)
+	if(senet_piece[piece] == NO_ITEM || !displacement || spot > 16 || senet_board[spot] & num) {
 		return;
+	}
 
 	senet_board[senet_piece[piece]] &= ~num;
 
 	if(!senet_piece[piece]) {
 		for(lp = 3 * (piece >= 3); lp < (short)(3 * (piece >= 3)) + 3; lp++) {
-			if(lp != piece && !senet_piece[lp])
+			if(lp != piece && !senet_piece[lp]) {
 				senet_board[senet_piece[piece]] |= num;
+			}
 		}
 	}
 
@@ -111,15 +116,17 @@ void MakeMove(long piece, long displacement) {
 		}
 	}
 
-	if(spot >= 16)
+	if(spot >= 16) {
 		senet_piece[piece] = -1;
-	else
+	} else {
 		senet_board[spot] |= num;
+	}
 
-	if(spot & 3 && last_throw != 6)
+	if(spot & 3 && last_throw != 6) {
 		last_throw = -1;
-	else
+	} else {
 		last_throw = 0;
+	}
 }
 
 void SenetControl(short item_number) {
@@ -127,8 +134,9 @@ void SenetControl(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(last_throw > 0 && item->trigger_flags != 1)
+	if(last_throw > 0 && item->trigger_flags != 1) {
 		MakeMove(item->object_number - GAME_PIECE1, last_throw);
+	}
 
 	RemoveActiveItem(item_number);
 }
@@ -138,8 +146,9 @@ long CheckSenetWinner(long ourPiece) {
 
 	if(ourPiece == 1) {
 		for(lp = 0; lp < 3; lp++) {
-			if(senet_piece[lp] != NO_ITEM)
+			if(senet_piece[lp] != NO_ITEM) {
 				return 0;
+			}
 		}
 
 		trigger_item_in_room(0, RAISING_BLOCK2);
@@ -147,8 +156,9 @@ long CheckSenetWinner(long ourPiece) {
 		return 1;
 	} else {
 		for(lp = 3; lp < 6; lp++) {
-			if(senet_piece[lp] != NO_ITEM)
+			if(senet_piece[lp] != NO_ITEM) {
 				return 0;
+			}
 		}
 
 		trigger_item_in_room(20, TRAPDOOR1);
@@ -178,17 +188,20 @@ void ThrowSticks(ITEM_INFO* item) {
 		rnd = GetRandomControl() & 1;
 		last_throw += rnd;
 
-		if(rnd)
+		if(rnd) {
 			item->trigger_flags |= 1 << lp;
+		}
 	}
 
-	if(!last_throw)
+	if(!last_throw) {
 		last_throw = 6;
+	}
 
 	item->hit_points = 120;
 
-	for(lp = 0; lp < 3; lp++)
+	for(lp = 0; lp < 3; lp++) {
 		GetItem(currentLevel, senet_item[lp])->trigger_flags = 1;
+	}
 }
 
 void GameStixControl(short item_number) {
@@ -201,18 +214,20 @@ void GameStixControl(short item_number) {
 	item = GetItem(currentLevel, item_number);
 
 	if(item->trigger_flags > -1) {
-		if(item->hit_points == 100)
+		if(item->hit_points == 100) {
 			SoundEffect(SFX_SPINNING_PUZZLE, &item->pos, SFX_DEFAULT);
+		}
 
 		for(int i = 0; i < 4; i++) {
 			if(item->hit_points < 120 - (2 * i + 20)) {
 				item->item_flags[i] -= item->hit_points << 7;
 
 				if(item->hit_points < 120 - (2 * i + 80)) {
-					if(item->item_flags[i] > -4096 && item->item_flags[i] < 4096 && item->trigger_flags & 1 << i)
+					if(item->item_flags[i] > -4096 && item->item_flags[i] < 4096 && item->trigger_flags & 1 << i) {
 						item->item_flags[i] = 0;
-					else if((item->item_flags[i] > 28672 || item->item_flags[i] < -28672) && !(item->trigger_flags & 1 << i))
+					} else if((item->item_flags[i] > 28672 || item->item_flags[i] < -28672) && !(item->trigger_flags & 1 << i)) {
 						item->item_flags[i] = -0x8000;
+					}
 				}
 			}
 		}
@@ -220,8 +235,9 @@ void GameStixControl(short item_number) {
 		item->hit_points--;
 
 		if(!item->hit_points) {
-			for(int i = 0; i < 3; i++)
+			for(int i = 0; i < 3; i++) {
 				GetItem(currentLevel, senet_item[i])->trigger_flags = 0;
+			}
 
 			item->trigger_flags = NO_ITEM;
 
@@ -241,8 +257,9 @@ void GameStixControl(short item_number) {
 		piece->after_death = 48;
 		piece_num = senet_piece[piece_moving];
 
-		if(piece_num == -1)
+		if(piece_num == -1) {
 			piece_num = 16;
+		}
 
 		if(piece_num >= 5) {
 			x = SenetTargetX + 1024;
@@ -252,25 +269,28 @@ void GameStixControl(short item_number) {
 			z = SenetTargetZ + ((4 - piece_num) << 10);
 		}
 
-		if(abs(x - piece->pos.x_pos) < 128)
+		if(abs(x - piece->pos.x_pos) < 128) {
 			piece->pos.x_pos = x;
-		else if(x > piece->pos.x_pos)
+		} else if(x > piece->pos.x_pos) {
 			piece->pos.x_pos += 128;
-		else
+		} else {
 			piece->pos.x_pos -= 128;
+		}
 
-		if(abs(z - piece->pos.z_pos) < 128)
+		if(abs(z - piece->pos.z_pos) < 128) {
 			piece->pos.z_pos = z;
-		else if(z > piece->pos.z_pos)
+		} else if(z > piece->pos.z_pos) {
 			piece->pos.z_pos += 128;
-		else
+		} else {
 			piece->pos.z_pos -= 128;
+		}
 
 		room_number = piece->room_number;
 		GetFloor(piece->pos.x_pos, piece->pos.y_pos - 32, piece->pos.z_pos, &room_number);
 
-		if(piece->room_number != room_number)
+		if(piece->room_number != room_number) {
 			ItemNewRoom(senet_item[piece_moving], room_number);
+		}
 
 		if(x == piece->pos.x_pos && z == piece->pos.z_pos) {
 			piece->after_death = 0;
@@ -304,10 +324,11 @@ void GameStixControl(short item_number) {
 						piece = GetItem(currentLevel, senet_item[i]);
 
 						if(x == piece->pos.x_pos && z == piece->pos.z_pos) {
-							if(num == 1)
+							if(num == 1) {
 								ShockwaveExplosion(piece, 0xFF8020, -64);
-							else
+							} else {
 								ShockwaveExplosion(piece, 0x6060E0, -64);
+							}
 
 							piece->pos.x_pos = SenetTargetX + ((2 - num) << 12) - 1024;
 							piece->pos.z_pos = SenetTargetZ + ((i % 3) << 10);
@@ -315,13 +336,15 @@ void GameStixControl(short item_number) {
 							room_number = piece->room_number;
 							GetFloor(piece->pos.x_pos, piece->pos.y_pos - 32, piece->pos.z_pos, &room_number);
 
-							if(piece->room_number != room_number)
+							if(piece->room_number != room_number) {
 								ItemNewRoom(senet_item[i], room_number);
+							}
 
-							if(num == 1)
+							if(num == 1) {
 								ShockwaveExplosion(piece, 0xFF8020, -64);
-							else
+							} else {
 								ShockwaveExplosion(piece, 0x6060E0, -64);
+							}
 						}
 					}
 				}
@@ -344,28 +367,32 @@ void GameStixControl(short item_number) {
 		for(int i = 3; i < 6; i++) {
 			MakeMove(i, last_throw);
 
-			if(last_throw == -1 || !last_throw)
+			if(last_throw == -1 || !last_throw) {
 				break;
+			}
 		}
 
-		if(last_throw && last_throw != 6)
+		if(last_throw && last_throw != 6) {
 			last_throw = 0;
-		else
+		} else {
 			last_throw = -1;
+		}
 	} else if(!last_throw) {
 		ThrowSticks(item);
 		change = 0;
 
 		for(int i = 0; i < 3; i++) {
-			if(senet_piece[i] != -1 && last_throw && senet_piece[i] + last_throw < 17 && !(senet_board[senet_piece[i] + last_throw] & 1))
+			if(senet_piece[i] != -1 && last_throw && senet_piece[i] + last_throw < 17 && !(senet_board[senet_piece[i] + last_throw] & 1)) {
 				change = 1;
+			}
 		}
 
 		if(!change) {
-			if(last_throw == 6)
+			if(last_throw == 6) {
 				last_throw = 0;
-			else
+			} else {
 				last_throw = -1;
+			}
 		}
 	}
 }
@@ -391,13 +418,15 @@ void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				lara.gun_status = LG_HANDS_BUSY;
 				item->status = ITEM_ACTIVE;
 				AddActiveItem(item_number);
-			} else
+			} else {
 				lara.GeneralPtr = item_number;
+			}
 		}
 
 		item->pos.y_rot ^= 0x8000;
-	} else
+	} else {
 		ObjectCollision(item_number, l, coll);
+	}
 }
 
 void ShockwaveExplosion(ITEM_INFO* item, unsigned long col, long speed) {
@@ -406,10 +435,11 @@ void ShockwaveExplosion(ITEM_INFO* item, unsigned long col, long speed) {
 
 	item->pos.y_pos -= 384;
 
-	if(speed < 0)
+	if(speed < 0) {
 		InnerOuter = 0x2000280;
-	else
+	} else {
 		InnerOuter = 0xA00020;
+	}
 
 	pos.x = item->pos.x_pos;
 	pos.y = item->pos.y_pos;
@@ -446,15 +476,16 @@ void ControlGodHead(short item_number) {
 		}
 
 		if(item->item_flags[0]) {
-			if(item->item_flags[2])
+			if(item->item_flags[2]) {
 				item->item_flags[2]--;
-			else if(item->item_flags[1] < 128)
+			} else if(item->item_flags[1] < 128) {
 				KillItem(item_number);
-			else
+			} else {
 				item->item_flags[1] -= 128;
-		} else if(item->item_flags[1] < 4096)
+			}
+		} else if(item->item_flags[1] < 4096) {
 			item->item_flags[1] += 128;
-		else {
+		} else {
 			item->item_flags[0] = 1;
 			item->item_flags[1] = 4096;
 			item->item_flags[2] = 210;
@@ -493,10 +524,11 @@ void DrawGodHead(ITEM_INFO* item) {
 		oldAlpha = GlobalAlpha;
 		alpha = item->item_flags[1] >> 5;
 
-		if(alpha < 128)
+		if(alpha < 128) {
 			alpha <<= 1;
-		else
+		} else {
 			alpha = 255;
+		}
 
 		GlobalAlpha = alpha << 24;
 		phd_PutPolygons(*meshpp, rate);

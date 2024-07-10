@@ -20,8 +20,9 @@ char REG_OpenKey(LPCSTR lpSubKey) {
 char OpenRegistry(LPCSTR SubKeyName) {
 	char buffer[256];
 
-	if(!SubKeyName)
+	if(!SubKeyName) {
 		return REG_OpenKey("Software\\Core Design\\Tomb Raider IV");
+	}
 
 	sprintf(buffer, "%s\\%s", "Software\\Core Design\\Tomb Raider IV", SubKeyName);
 	return REG_OpenKey(buffer);
@@ -43,14 +44,16 @@ void REG_WriteString(char* SubKeyName, char* string, long length) {
 	long checkLength;
 
 	if(string) {
-		if(length < 0)
+		if(length < 0) {
 			checkLength = strlen(string);
-		else
+		} else {
 			checkLength = length;
+		}
 
 		RegSetValueEx(phkResult, SubKeyName, 0, REG_SZ, (CONST BYTE*)string, checkLength + 1);
-	} else
+	} else {
 		RegDeleteValue(phkResult, SubKeyName);
+	}
 }
 
 void REG_WriteFloat(char* SubKeyName, float value) {
@@ -87,8 +90,9 @@ char REG_ReadString(char* SubKeyName, char* value, long length, char* defaultVal
 
 	cbData = length;
 
-	if(RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)value, (LPDWORD)&cbData) == ERROR_SUCCESS && type == REG_SZ)
+	if(RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)value, (LPDWORD)&cbData) == ERROR_SUCCESS && type == REG_SZ) {
 		return 1;
+	}
 
 	if(defaultValue) {
 		REG_WriteString(SubKeyName, defaultValue, -1);
@@ -100,8 +104,9 @@ char REG_ReadString(char* SubKeyName, char* value, long length, char* defaultVal
 		}
 
 		memcpy(value, defaultValue, len);
-	} else
+	} else {
 		RegDeleteValue(phkResult, SubKeyName);
+	}
 
 	return 0;
 }
@@ -123,8 +128,9 @@ char LoadSettings() {
 	long key;
 	long val;
 
-	if(!OpenRegistry("System"))
+	if(!OpenRegistry("System")) {
 		return 0;
+	}
 
 	REG_ReadLongDefault((char*)"Setup", &REG_Setup, 0);
 
@@ -146,25 +152,29 @@ char LoadSettings() {
 
 		REG_ReadLongDefault("TextLow", &val, 0);
 
-		if(val)
+		if(val) {
 			App.TextureSize = 128;
+		}
 
 		REG_ReadLongDefault("BumpLow", &val, 0);
 
-		if(val)
+		if(val) {
 			App.BumpMapSize = 128;
+		}
 
 		REG_ReadLongDefault("HardWare", &val, 1);
 
-		if(val)
+		if(val) {
 			App.StartFlags |= DXF_ZBUFFER | DXF_HWR;
+		}
 
 		REG_ReadLongDefault("Window", &val, 0);
 
-		if(val)
+		if(val) {
 			App.StartFlags |= DXF_WINDOWED;
-		else
+		} else {
 			App.StartFlags |= DXF_FULLSCREEN;
+		}
 	}
 
 	CloseRegistry();

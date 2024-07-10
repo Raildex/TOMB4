@@ -79,8 +79,9 @@ void WinProcessCommandLine(LPSTR cmd) {
 	}
 
 	for(int i = 0; (unsigned long)i < strlen(cmd); i++) {
-		if(toupper(cmd[i]))
+		if(toupper(cmd[i])) {
 			cmd[i] = toupper(cmd[i]);
+		}
 	}
 
 	for(int i = 0; i < num; i++) {
@@ -94,23 +95,26 @@ void WinProcessCommandLine(LPSTR cmd) {
 				l = strlen(pCommand);
 
 				for(int j = 0; (unsigned long)j < l; j++, pCommand++) {
-					if(*pCommand != '=')
+					if(*pCommand != '=') {
 						continue;
+					}
 
 					p = pCommand + 1;
 					l = strlen(p);
 
 					for(j = 0; (unsigned long)j < l; j++, p++) {
-						if(*p != ' ')
+						if(*p != ' ') {
 							break;
+						}
 					}
 
 					last = p;
 					l = strlen(last);
 
 					for(j = 0; (unsigned long)j < l; j++, last++) {
-						if(*last == ' ')
+						if(*last == ' ') {
 							break;
+						}
 					}
 
 					strncpy(parameter, p, j);
@@ -118,8 +122,9 @@ void WinProcessCommandLine(LPSTR cmd) {
 				}
 
 				command->code(parameter);
-			} else
+			} else {
 				command->code(0);
+			}
 		}
 	}
 }
@@ -133,22 +138,25 @@ void WinClose() {
 	DXClose();
 	FreeBinkStuff();
 
-	if(!G_dxptr)
+	if(!G_dxptr) {
 		return;
+	}
 
 	DXAttempt(IDirectInputDevice_Unacquire(G_dxptr->Keyboard));
 
 	if(G_dxptr->Keyboard) {
 		Log(__func__, "Released %s @ %x - RefCnt = %d", "Keyboard", G_dxptr->Keyboard, IDirectInputDevice_Release(G_dxptr->Keyboard));
 		G_dxptr->Keyboard = 0;
-	} else
+	} else {
 		Log(__func__, "%s Attempt To Release NULL Ptr", "Keyboard");
+	}
 
 	if(G_dxptr->lpDirectInput) {
 		Log(__func__, "Released %s @ %x - RefCnt = %d", "DirectInput", G_dxptr->lpDirectInput, IDirectInput_Release(G_dxptr->lpDirectInput));
 		G_dxptr->lpDirectInput = 0;
-	} else
+	} else {
 		Log(__func__, "%s Attempt To Release NULL Ptr", "DirectInput");
+	}
 
 	DXDSClose();
 }
@@ -205,8 +213,9 @@ void WinProcessCommands(long cmd) {
 	long odm;
 
 	if(cmd == KA_ALTENTER) {
-		if(App.fmv || !(G_dxinfo->DDInfo[G_dxinfo->nDD].DDCaps.dwCaps2 & DDCAPS2_CANRENDERWINDOWED))
+		if(App.fmv || !(G_dxinfo->DDInfo[G_dxinfo->nDD].DDCaps.dwCaps2 & DDCAPS2_CANRENDERWINDOWED)) {
 			return;
+		}
 
 		Log(__func__, "KA_ALTENTER");
 		Log(__func__, "HangGameThread");
@@ -243,8 +252,9 @@ void WinProcessCommands(long cmd) {
 		if(cmd == KA_ALTP) {
 			App.DXInfo.nDisplayMode++;
 
-			if(App.DXInfo.nDisplayMode >= G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].nDisplayModes)
+			if(App.DXInfo.nDisplayMode >= G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].nDisplayModes) {
 				App.DXInfo.nDisplayMode = G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].nDisplayModes - 1;
+			}
 
 			dm = G_dxinfo->DDInfo[App.DXInfo.nDD].D3DDevices[App.DXInfo.nD3D].DisplayModes;
 
@@ -259,8 +269,9 @@ void WinProcessCommands(long cmd) {
 		} else {
 			App.DXInfo.nDisplayMode--;
 
-			if(App.DXInfo.nDisplayMode < 0)
+			if(App.DXInfo.nDisplayMode < 0) {
 				App.DXInfo.nDisplayMode = 0;
+			}
 
 			dm = G_dxinfo->DDInfo[App.DXInfo.nDD].D3DDevices[App.DXInfo.nD3D].DisplayModes;
 
@@ -310,8 +321,9 @@ LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	case WM_ACTIVATE:
 
 		if(!closing) {
-			if(App.fmv)
+			if(App.fmv) {
 				return 0;
+			}
 
 			switch(wParam & 0xFFFF) {
 			case WA_INACTIVE:
@@ -369,13 +381,15 @@ void ClearSurfaces() {
 	r.y2 = App.dx.rViewport.top + App.dx.rViewport.bottom;
 	r.x2 = App.dx.rViewport.left + App.dx.rViewport.right;
 
-	if(App.dx.Flags & DXF_HWR)
+	if(App.dx.Flags & DXF_HWR) {
 		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport, 1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
+	}
 
 	S_DumpScreen();
 
-	if(App.dx.Flags & DXF_HWR)
+	if(App.dx.Flags & DXF_HWR) {
 		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport, 1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
+	}
 
 	S_DumpScreen();
 }
@@ -393,8 +407,9 @@ bool WinRegisterWindow(HINSTANCE hinstance) {
 	App.WindowClass.cbWndExtra = 0;
 	App.WindowClass.hCursor = LoadCursor(0, IDC_ARROW);
 
-	if(!RegisterClass(&App.WindowClass))
+	if(!RegisterClass(&App.WindowClass)) {
 		return 0;
+	}
 
 	return 1;
 }
@@ -402,8 +417,9 @@ bool WinRegisterWindow(HINSTANCE hinstance) {
 bool WinCreateWindow() {
 	App.hWnd = CreateWindowEx(WS_EX_APPWINDOW, "MainGameWindow", "Tomb Raider - The Last Revelation", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, App.hInstance, 0);
 
-	if(!App.hWnd)
+	if(!App.hWnd) {
 		return 0;
+	}
 
 	return 1;
 }
@@ -413,16 +429,18 @@ void WinSetStyle(bool fullscreen, unsigned long* set) {
 
 	style = GetWindowLong(App.hWnd, GWL_STYLE);
 
-	if(fullscreen)
+	if(fullscreen) {
 		style = (style & ~WS_OVERLAPPEDWINDOW) | WS_POPUP;
-	else
+	} else {
 		style = (style & ~WS_POPUP) | WS_OVERLAPPEDWINDOW;
+	}
 
 	style &= ~(WS_THICKFRAME | WS_MAXIMIZEBOX | WS_SYSMENU);
 	SetWindowLong(App.hWnd, GWL_STYLE, style);
 
-	if(set)
+	if(set) {
 		*set = style;
+	}
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nShowCmd) {
@@ -439,8 +457,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	App.SetupComplete = 0;
 	App.AutoTarget = 0;
 
-	if(WinRunCheck((char*)"Tomb Raider - The Last Revelation", (char*)"MainGameWindow", &App.mutex))
+	if(WinRunCheck((char*)"Tomb Raider - The Last Revelation", (char*)"MainGameWindow", &App.mutex)) {
 		return 0;
+	}
 
 	LoadGameflow();
 	WinProcessCommandLine(lpCmdLine);
@@ -526,8 +545,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	S_GameMain(NULL);
 	WinProcMsg();
 
-	if(cutseqpakPtr)
+	if(cutseqpakPtr) {
 		free(cutseqpakPtr);
+	}
 
 	WinClose();
 	desktop = GetDesktopWindow();

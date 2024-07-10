@@ -39,10 +39,11 @@ void undraw_pistol_mesh_left(long weapon_type) {
 		WeaponObject(weapon_type);
 		lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_LHAND * 2);
 
-		if(weapon_type == WEAPON_PISTOLS)
+		if(weapon_type == WEAPON_PISTOLS) {
 			lara.holster = LARA_HOLSTERS_PISTOLS;
-		else if(weapon_type == WEAPON_UZI)
+		} else if(weapon_type == WEAPON_UZI) {
 			lara.holster = LARA_HOLSTERS_UZIS;
+		}
 	}
 }
 
@@ -50,12 +51,13 @@ void undraw_pistol_mesh_right(long weapon_type) {
 	WeaponObject(weapon_type);
 	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_RHAND * 2);
 
-	if(weapon_type == WEAPON_PISTOLS)
+	if(weapon_type == WEAPON_PISTOLS) {
 		lara.holster = LARA_HOLSTERS_PISTOLS;
-	else if(weapon_type == WEAPON_UZI)
+	} else if(weapon_type == WEAPON_UZI) {
 		lara.holster = LARA_HOLSTERS_UZIS;
-	else if(weapon_type == WEAPON_REVOLVER)
+	} else if(weapon_type == WEAPON_REVOLVER) {
 		lara.holster = LARA_HOLSTERS_SIXSHOOTER;
+	}
 }
 
 static void set_arm_info(LARA_ARM* arm, long frame) {
@@ -67,12 +69,14 @@ static void set_arm_info(LARA_ARM* arm, long frame) {
 
 	if(frame >= p->Draw1Anim) {
 		if(frame >= p->Draw2Anim) {
-			if(frame < p->RecoilAnim)
+			if(frame < p->RecoilAnim) {
 				anim_base += 2;
-			else
+			} else {
 				anim_base += 3;
-		} else
+			}
+		} else {
 			anim_base++;
+		}
 	}
 
 	arm->anim_number = (short)anim_base;
@@ -104,8 +108,9 @@ void draw_pistol_meshes(long weapon_type) {
 	lara.holster = LARA_HOLSTERS;
 	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, mesh_index + LM_RHAND * 2);
 
-	if(weapon_type != WEAPON_REVOLVER)
+	if(weapon_type != WEAPON_REVOLVER) {
 		lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, mesh_index + LM_LHAND * 2);
+	}
 }
 
 void draw_pistols(long weapon_type) {
@@ -115,9 +120,9 @@ void draw_pistols(long weapon_type) {
 	ani = lara.left_arm.frame_number + 1;
 	p = &PistolTable[lara.gun_type];
 
-	if(ani < p->Draw1Anim || ani > p->RecoilAnim - 1)
+	if(ani < p->Draw1Anim || ani > p->RecoilAnim - 1) {
 		ani = p->Draw1Anim;
-	else if(ani == p->Draw2Anim) {
+	} else if(ani == p->Draw2Anim) {
 		draw_pistol_meshes(weapon_type);
 		SoundEffect(SFX_LARA_DRAW, &lara_item->pos, SFX_DEFAULT);
 	} else if(ani == p->RecoilAnim - 1) {
@@ -136,9 +141,9 @@ void undraw_pistols(long weapon_type) {
 	p = &PistolTable[lara.gun_type];
 	anil = lara.left_arm.frame_number;
 
-	if(lara.left_arm.frame_number >= p->RecoilAnim)
+	if(lara.left_arm.frame_number >= p->RecoilAnim) {
 		anil = p->Draw1Anim2;
-	else if(lara.left_arm.frame_number > 0 && lara.left_arm.frame_number < p->Draw1Anim) {
+	} else if(lara.left_arm.frame_number > 0 && lara.left_arm.frame_number < p->Draw1Anim) {
 		lara.left_arm.x_rot -= lara.left_arm.x_rot / anil;
 		lara.left_arm.y_rot -= lara.left_arm.y_rot / anil;
 		anil--;
@@ -159,9 +164,9 @@ void undraw_pistols(long weapon_type) {
 	set_arm_info(&lara.left_arm, anil);
 	anir = lara.right_arm.frame_number;
 
-	if(lara.right_arm.frame_number >= p->RecoilAnim)
+	if(lara.right_arm.frame_number >= p->RecoilAnim) {
 		anir = p->Draw1Anim2;
-	else if(lara.right_arm.frame_number > 0 && lara.right_arm.frame_number < p->Draw1Anim) {
+	} else if(lara.right_arm.frame_number > 0 && lara.right_arm.frame_number < p->Draw1Anim) {
 		lara.right_arm.x_rot -= lara.right_arm.x_rot / anir;
 		lara.right_arm.y_rot -= lara.right_arm.y_rot / anir;
 		anir--;
@@ -265,9 +270,9 @@ void AnimatePistols(long weapon_type) {
 	winfo = &weapons[weapon_type];
 	anir = lara.right_arm.frame_number;
 	if(lara.right_arm.lock || input & IN_ACTION && lara.target_item == NO_ITEM) {
-		if(lara.right_arm.frame_number >= 0 && lara.right_arm.frame_number < p->Draw1Anim2)
+		if(lara.right_arm.frame_number >= 0 && lara.right_arm.frame_number < p->Draw1Anim2) {
 			anir++;
-		else if(lara.right_arm.frame_number == p->Draw1Anim2) {
+		} else if(lara.right_arm.frame_number == p->Draw1Anim2) {
 			if(input & IN_ACTION) {
 				if(weapon_type != WEAPON_REVOLVER) {
 					angles[0] = lara.right_arm.y_rot + lara_item->pos.y_rot;
@@ -282,8 +287,9 @@ void AnimatePistols(long weapon_type) {
 						SoundEffect(winfo->sample_num, &lara_item->pos, SFX_DEFAULT);
 						sound_already = 1;
 
-						if(weapon_type == WEAPON_UZI)
+						if(weapon_type == WEAPON_UZI) {
 							uzi_right = 1;
+						}
 
 						savegame.Game.AmmoUsed++;
 					}
@@ -302,14 +308,16 @@ void AnimatePistols(long weapon_type) {
 
 			anir++;
 
-			if(anir == p->RecoilAnim + winfo->recoil_frame)
+			if(anir == p->RecoilAnim + winfo->recoil_frame) {
 				anir = p->Draw1Anim2;
+			}
 		}
 	} else {
-		if(lara.right_arm.frame_number >= p->RecoilAnim)
+		if(lara.right_arm.frame_number >= p->RecoilAnim) {
 			anir = p->Draw1Anim2;
-		else if(lara.right_arm.frame_number > 0 && lara.right_arm.frame_number <= p->Draw1Anim2)
+		} else if(lara.right_arm.frame_number > 0 && lara.right_arm.frame_number <= p->Draw1Anim2) {
 			anir--;
+		}
 
 		if(uzi_right) {
 			SoundEffect(winfo->sample_num + 1, &lara_item->pos, SFX_DEFAULT);
@@ -321,9 +329,9 @@ void AnimatePistols(long weapon_type) {
 	anil = lara.left_arm.frame_number;
 
 	if(lara.left_arm.lock || input & IN_ACTION && lara.target_item == NO_ITEM) {
-		if(lara.left_arm.frame_number >= 0 && lara.left_arm.frame_number < p->Draw1Anim2)
+		if(lara.left_arm.frame_number >= 0 && lara.left_arm.frame_number < p->Draw1Anim2) {
 			anil++;
-		else if(lara.left_arm.frame_number == p->Draw1Anim2) {
+		} else if(lara.left_arm.frame_number == p->Draw1Anim2) {
 			if(input & IN_ACTION) {
 				angles[0] = lara.left_arm.y_rot + lara_item->pos.y_rot;
 				angles[1] = lara.left_arm.x_rot;
@@ -345,8 +353,9 @@ void AnimatePistols(long weapon_type) {
 						SoundEffect(winfo->sample_num, &lara_item->pos, SFX_DEFAULT);
 					}
 
-					if(weapon_type == WEAPON_UZI)
+					if(weapon_type == WEAPON_UZI) {
 						uzi_left = 1;
+					}
 
 					savegame.Game.AmmoUsed++;
 				}
@@ -364,14 +373,16 @@ void AnimatePistols(long weapon_type) {
 
 			anil++;
 
-			if(anil == p->RecoilAnim + winfo->recoil_frame)
+			if(anil == p->RecoilAnim + winfo->recoil_frame) {
 				anil = p->Draw1Anim2;
+			}
 		}
 	} else {
-		if(lara.left_arm.frame_number >= p->RecoilAnim)
+		if(lara.left_arm.frame_number >= p->RecoilAnim) {
 			anil = p->Draw1Anim2;
-		else if(lara.left_arm.frame_number > 0 && lara.left_arm.frame_number <= p->Draw1Anim2)
+		} else if(lara.left_arm.frame_number > 0 && lara.left_arm.frame_number <= p->Draw1Anim2) {
 			anil--;
+		}
 
 		if(uzi_left) {
 			SoundEffect(winfo->sample_num + 1, &lara_item->pos, SFX_DEFAULT);
@@ -390,8 +401,9 @@ void PistolHandler(long weapon_type) {
 	winfo = &weapons[weapon_type];
 	LaraGetNewTarget(winfo);
 
-	if(input & IN_ACTION)
+	if(input & IN_ACTION) {
 		LaraTargetInfo(winfo);
+	}
 
 	AimWeapon(winfo, &lara.left_arm);
 	AimWeapon(winfo, &lara.right_arm);
@@ -429,18 +441,20 @@ void PistolHandler(long weapon_type) {
 		pos.y = (GetRandomControl() & 0x7F) - 63;
 		pos.z = (GetRandomControl() & 0xFF) - 128;
 
-		if(lara.left_arm.flash_gun)
+		if(lara.left_arm.flash_gun) {
 			GetLaraJointPos(&pos, 13);
-		else
+		} else {
 			GetLaraJointPos(&pos, 14);
+		}
 
 		r = (GetRandomControl() & 0x3F) + 192;
 		g = (GetRandomControl() & 0x1F) + 128;
 		b = GetRandomControl() & 0x3F;
 
-		if(gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom)
+		if(gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom) {
 			TriggerDynamic_MIRROR(pos.x, pos.y, pos.z, 10, r, g, b);
-		else
+		} else {
 			TriggerDynamic(pos.x, pos.y, pos.z, 10, r, g, b);
+		}
 	}
 }

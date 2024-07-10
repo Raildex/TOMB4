@@ -53,8 +53,9 @@ static long BinkSurfaceType;
 bool LoadBinkStuff() {
 	hBinkW32 = LoadLibrary("binkw32.dll");
 
-	if(!hBinkW32)
+	if(!hBinkW32) {
 		return 0;
+	}
 
 	__try {
 		GET_DLL_PROC(hBinkW32, BinkCopyToBuffer, "_BinkCopyToBuffer@28");
@@ -90,8 +91,9 @@ void ShowBinkFrame() {
 	BinkCopyToBuffer(Bink, surf.lpSurface, surf.lPitch, Bink->num, 0, 0, BinkSurfaceType);
 	DXAttempt(IDirectDrawSurface4_Unlock(BinkSurface, 0));
 
-	if(App.dx.Flags & DXF_WINDOWED)
+	if(App.dx.Flags & DXF_WINDOWED) {
 		DXShowFrame();
+	}
 }
 
 long PlayFmvNow(long num) {
@@ -101,14 +103,16 @@ long PlayFmvNow(long num) {
 	char name[80];
 	char path[80];
 
-	if((1 << num) & FmvSceneTriggered)
+	if((1 << num) & FmvSceneTriggered) {
 		return 1;
+	}
 
 	FmvSceneTriggered |= 1 << num;
 	S_CDStop();
 
-	if(fmvs_disabled)
+	if(fmvs_disabled) {
 		return 0;
+	}
 
 	sprintf(name, "fmv\\fmv%02d.bik", num);
 	memset(path, 0, sizeof(path));
@@ -141,10 +145,11 @@ long PlayFmvNow(long num) {
 	BinkSetSoundSystem(BinkOpenDirectSound, lpDS);
 	Bink = (BINK_STRUCT*)BinkOpen(path, 0);
 
-	if(App.dx.Flags & DXF_WINDOWED)
+	if(App.dx.Flags & DXF_WINDOWED) {
 		BinkSurface = App.dx.lpBackBuffer;
-	else
+	} else {
 		BinkSurface = App.dx.lpPrimaryBuffer;
+	}
 
 	BinkSurfaceType = BinkDDSurfaceType(BinkSurface);
 
@@ -153,8 +158,9 @@ long PlayFmvNow(long num) {
 		S_UpdateInput();
 
 		for(int i = 0; i != Bink->num2; i++) {
-			if(input & IN_OPTION)
+			if(input & IN_OPTION) {
 				break;
+			}
 
 			BinkNextFrame(Bink);
 

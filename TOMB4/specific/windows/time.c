@@ -23,8 +23,9 @@ long S_TimeInit() {
 
 	Log(__func__, "TIME_Init");
 
-	if(!QueryPerformanceFrequency((LARGE_INTEGER*)&pfq))
+	if(!QueryPerformanceFrequency((LARGE_INTEGER*)&pfq)) {
 		return 0;
+	}
 
 	frequency = pfq / 60;
 	S_TimeReset();

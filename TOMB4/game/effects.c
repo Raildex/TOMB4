@@ -80,9 +80,9 @@ void SetFog(ITEM_INFO* item) {
 	GlobalFogOff = 0;
 
 	if(IsVolumetric()) {
-		if(TriggerTimer == 100)
+		if(TriggerTimer == 100) {
 			GlobalFogOff = 1;
-		else {
+		} else {
 			gfFog.r = CLRR(FogTableColor[TriggerTimer]);
 			gfFog.g = CLRG(FogTableColor[TriggerTimer]);
 			gfFog.b = CLRB(FogTableColor[TriggerTimer]);
@@ -132,8 +132,9 @@ void RubbleFX(ITEM_INFO* item) {
 		AddActiveItem(GetItemNum(currentLevel, eq));
 		eq->status = ITEM_ACTIVE;
 		eq->flags |= IFL_CODEBITS;
-	} else
+	} else {
 		camera.bounce = -150;
+	}
 
 	flipeffect = -1;
 }
@@ -156,10 +157,11 @@ void SwapCrowbar(ITEM_INFO* item) {
 
 	tmp = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + 2 * LM_RHAND);
 
-	if(lara.mesh_ptrs[LM_RHAND] == tmp)
+	if(lara.mesh_ptrs[LM_RHAND] == tmp) {
 		lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, CROWBAR_ANIM)->mesh_index + (2 * LM_RHAND));
-	else
+	} else {
 		lara.mesh_ptrs[LM_RHAND] = tmp;
+	}
 }
 
 void ExplosionFX(ITEM_INFO* item) {
@@ -171,8 +173,9 @@ void ExplosionFX(ITEM_INFO* item) {
 void LaraLocation(ITEM_INFO* item) {
 	lara.location = TriggerTimer;
 
-	if(TriggerTimer > lara.highest_location)
+	if(TriggerTimer > lara.highest_location) {
 		lara.highest_location = TriggerTimer;
+	}
 
 	flipeffect = -1;
 }
@@ -298,8 +301,9 @@ void swap_meshes_with_meshswap3(ITEM_INFO* item) {
 		tmp = GetMesh(currentLevel, obj->mesh_index + i * 2);
 		*GetMeshPointer(currentLevel, obj->mesh_index + i) = GetMesh(currentLevel, GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + i * 2);
 
-		if(item == lara_item)
+		if(item == lara_item) {
 			lara.mesh_ptrs[i] = GetMesh(currentLevel, GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + i * 2);
+		}
 
 		*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + i * 2) = tmp;
 	}
@@ -361,13 +365,15 @@ void WadeSplash(ITEM_INFO* item, long water, long depth) {
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if(!(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER))
+	if(!(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER)) {
 		return;
+	}
 
 	bounds = GetBestFrame(item);
 
-	if(item->pos.y_pos + bounds[2] > water || item->pos.y_pos + bounds[3] < water)
+	if(item->pos.y_pos + bounds[2] > water || item->pos.y_pos + bounds[3] < water) {
 		return;
+	}
 
 	if(item->fallspeed > 0 && depth < 474 && !SplashCount) {
 		splash_setup.pos.x = item->pos.x_pos;
@@ -387,10 +393,11 @@ void WadeSplash(ITEM_INFO* item, long water, long depth) {
 		SetupSplash(&splash_setup);
 		SplashCount = 16;
 	} else if(!(wibble & 0xF) && (!(GetRandomControl() & 0xF) || item->current_anim_state != AS_STOP)) {
-		if(item->current_anim_state == AS_STOP)
+		if(item->current_anim_state == AS_STOP) {
 			SetupRipple(item->pos.x_pos, water, item->pos.z_pos, (GetRandomControl() & 0xF) + 112, 16);
-		else
+		} else {
 			SetupRipple(item->pos.x_pos, water, item->pos.z_pos, (GetRandomControl() & 0xF) + 112, 18);
+		}
 	}
 }
 
@@ -420,10 +427,11 @@ void Splash(ITEM_INFO* item) {
 }
 
 short DoBloodSplat(long x, long y, long z, short speed, short ang, short room_number) {
-	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER)
+	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
 		TriggerUnderwaterBlood(x, y, z, speed);
-	else
+	} else {
 		TriggerBlood(x, y, z, ang >> 4, speed);
+	}
 
 	return -1;
 }
@@ -452,28 +460,33 @@ void SoundEffects() {
 		sfx = GetSoundEffect(currentLevel, i);
 
 		if(flip_status) {
-			if(sfx->flags & 0x40)
+			if(sfx->flags & 0x40) {
 				SoundEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
-		} else if(sfx->flags & 0x80)
+			}
+		} else if(sfx->flags & 0x80) {
 			SoundEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
+		}
 	}
 
-	if(flipeffect != -1)
+	if(flipeffect != -1) {
 		effect_routines[flipeffect](0);
+	}
 
-	if(!sound_active)
+	if(!sound_active) {
 		return;
+	}
 
 	for(int i = 0; i < 32; i++) {
 		slot = &LaSlot[i];
 
-		if(slot->nSampleInfo < 0)
+		if(slot->nSampleInfo < 0) {
 			continue;
+		}
 
 		if((GetSampleInfo(currentLevel, slot->nSampleInfo)->flags & 3) != 3) {
-			if(!S_SoundSampleIsPlaying(i))
+			if(!S_SoundSampleIsPlaying(i)) {
 				slot->nSampleInfo = -1;
-			else {
+			} else {
 				GetPanVolume(slot);
 				S_SoundSetPanAndVolume(i, (short)slot->nPan, (unsigned short)slot->nVolume);
 			}
@@ -501,8 +514,9 @@ long ItemNearLara(PHD_3DPOS* pos, long rad) {
 	if(dx >= -rad && dx <= rad && dz >= -rad && dz <= rad && dy >= -3072 && dy <= 3072 && SQUARE(dx) + SQUARE(dz) <= SQUARE(rad)) {
 		bounds = GetBoundsAccurate(lara_item);
 
-		if(dy >= bounds[2] && dy <= bounds[3] + 100)
+		if(dy >= bounds[2] && dy <= bounds[3] + 100) {
 			return 1;
+		}
 	}
 
 	return 0;
@@ -520,8 +534,9 @@ void AttachKeyPuzzleObject(ITEM_INFO* item) {
 			obj = obj - KEY_HOLE1 + KEY_ITEM1;
 		}
 		short attachedItem = CreateItem();
-		if(attachedItem == NO_ITEM)
+		if(attachedItem == NO_ITEM) {
 			return;
+		}
 		ITEM_INFO* attached = GetItem(currentLevel, attachedItem);
 		attached->object_number = ATTACHED_OBJECT;
 		attached->room_number = item->room_number;

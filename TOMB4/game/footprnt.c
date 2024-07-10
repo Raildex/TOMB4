@@ -46,16 +46,18 @@ void AddFootPrint(ITEM_INFO* item) {
 	pos.y = 0;
 	pos.z = 0;
 
-	if(FXType == SFX_LANDONLY)
+	if(FXType == SFX_LANDONLY) {
 		GetLaraJointPos(&pos, LM_LFOOT);
-	else
+	} else {
 		GetLaraJointPos(&pos, LM_RFOOT);
+	}
 
 	room_num = item->room_number;
 	floor = GetFloor(pos.x, pos.y, pos.z, &room_num);
 
-	if(floor->fx != 6 && floor->fx != 5 && floor->fx != 11)
+	if(floor->fx != 6 && floor->fx != 5 && floor->fx != 11) {
 		SoundEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, &lara_item->pos, SFX_DEFAULT);
+	}
 
 	long h = GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	if(floor->fx < 3 && !OnObject) {
@@ -90,10 +92,11 @@ void S_DrawFootPrints() {
 
 			print->Active--;
 
-			if(print->Active < 29)
+			if(print->Active < 29) {
 				col = print->Active << 2;
-			else
+			} else {
 				col = 112;
+			}
 
 			pos[0].x = 0;
 			pos[0].z = -64;
@@ -112,8 +115,9 @@ void S_DrawFootPrints() {
 				room_number = lara_item->room_number;
 				pos[j].y = GetHeight(GetFloor(x, print->pos.y, z, &room_number), x, print->pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) - print->pos.y;
 
-				if(abs(pos[j].y) > PRINT_HEIGHT_CORRECTION)
+				if(abs(pos[j].y) > PRINT_HEIGHT_CORRECTION) {
 					pos[j].y = 0;
+				}
 			}
 
 			phd_PopMatrix();

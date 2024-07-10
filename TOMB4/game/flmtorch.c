@@ -71,10 +71,11 @@ void TriggerTorchFlame(short item_number, long node) {
 	sptr->Flags = 4762;
 	sptr->RotAng = GetRandomControl() & 0xFFF;
 
-	if(GetRandomControl() & 1)
+	if(GetRandomControl() & 1) {
 		sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
-	else
+	} else {
 		sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
+	}
 
 	sptr->Gravity = -16 - (GetRandomControl() & 0x1F);
 	sptr->NodeNumber = (unsigned char)node;
@@ -122,9 +123,9 @@ void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		item->pos.y_rot = l->pos.y_rot;
 
 		if(TestLaraPosition(FireBounds, item, l)) {
-			if(item->object_number == SPRINKLER)
+			if(item->object_number == SPRINKLER) {
 				l->anim_number = ANIM_LIGHT_TORCH4;
-			else {
+			} else {
 				l->item_flags[3] = 1;
 				l->anim_number = (short)((abs(l->pos.y_pos - item->pos.y_pos) >> 8) + ANIM_LIGHT_TORCH1);
 			}
@@ -168,8 +169,9 @@ void DoFlameTorch() {
 			lara.left_arm.frame_number = 1;
 			lara.left_arm.anim_number = GetObjectInfo(currentLevel, TORCH_ANIM)->anim_index + 1;
 
-			if(lara.water_status == LW_UNDERWATER)
+			if(lara.water_status == LW_UNDERWATER) {
 				lara.LitTorch = 0;
+			}
 		}
 
 		break;
@@ -229,8 +231,9 @@ void DoFlameTorch() {
 		break;
 	}
 
-	if(lara.flare_control_left)
+	if(lara.flare_control_left) {
 		lara.gun_status = LG_READY;
+	}
 
 	lara.left_arm.frame_base = GetAnim(currentLevel, lara.left_arm.anim_number)->frame_ptr;
 
@@ -241,16 +244,18 @@ void DoFlameTorch() {
 		GetLaraJointPos(&pos, 14);
 		TriggerDynamic(pos.x, pos.y, pos.z, 12 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
 
-		if(!(wibble & 7))
+		if(!(wibble & 7)) {
 			TriggerTorchFlame(GetItemNum(currentLevel, lara_item), 0);
+		}
 
 		TorchItem = lara_item;
 	}
 }
 
 void GetFlameTorch() {
-	if(lara.gun_type == WEAPON_FLARE)
+	if(lara.gun_type == WEAPON_FLARE) {
 		CreateFlare(FLARE_ITEM, 0);
+	}
 
 	lara.request_gun_type = WEAPON_TORCH;
 	lara.gun_type = WEAPON_TORCH;
@@ -273,9 +278,9 @@ void FlameTorchControl(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(item->fallspeed)
+	if(item->fallspeed) {
 		item->pos.z_rot += 910;
-	else if(!item->speed) {
+	} else if(!item->speed) {
 		item->pos.x_rot = 0;
 		item->pos.z_rot = 0;
 	}
@@ -292,10 +297,12 @@ void FlameTorchControl(short item_number) {
 		item->fallspeed += (5 - item->fallspeed) >> 1;
 		item->speed += (5 - item->speed) >> 1;
 
-		if(item->item_flags[3])
+		if(item->item_flags[3]) {
 			item->item_flags[3] = 0;
-	} else
+		}
+	} else {
 		item->fallspeed += 6;
+	}
 
 	yv = item->fallspeed;
 	item->pos.y_pos += yv;
@@ -305,8 +312,9 @@ void FlameTorchControl(short item_number) {
 		mycoll.enable_baddie_push = 1;
 
 		if(itemlist[0]) {
-			if(!GetObjectInfo(currentLevel, itemlist[0]->object_number)->intelligent)
+			if(!GetObjectInfo(currentLevel, itemlist[0]->object_number)->intelligent) {
 				ObjectCollision(GetItemNum(currentLevel, itemlist[0]), item, &mycoll);
+			}
 		} else {
 			sinfo = GetStaticObject(currentLevel, meshlist[0]->static_number);
 			pos.x_pos = meshlist[0]->x;
@@ -322,8 +330,9 @@ void FlameTorchControl(short item_number) {
 	if(item->item_flags[3]) {
 		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 12 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
 
-		if(!(wibble & 7))
+		if(!(wibble & 7)) {
 			TriggerTorchFlame(item_number, 1);
+		}
 
 		TorchItem = item;
 	}

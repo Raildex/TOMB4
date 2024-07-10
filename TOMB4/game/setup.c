@@ -879,8 +879,9 @@ void BaddyObjects() {
 		obj->initialise = InitialiseVoncroy;
 		obj->control = VoncroyControl;
 
-		if(gfCurrentLevel != 1)
+		if(gfCurrentLevel != 1) {
 			obj->control = VoncroyRaceControl;
+		}
 
 		obj->collision = CreatureCollision;
 		obj->pivot_length = 0;
@@ -1004,16 +1005,18 @@ void BaddyObjects() {
 			currentLevel,
 			GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + 14);
 
-		for(int i = 0; i < 12; i++)
+		for(int i = 0; i < 12; i++) {
 			*GetMeshPointer(currentLevel, obj->mesh_index + 2 * i + 23)
 				= GetMesh(
 					currentLevel,
 					GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + 2 * i
 						+ 22);
+		}
 
-		if(GetObjectInfo(currentLevel, SUPER_RAGHEAD)->loaded)
+		if(GetObjectInfo(currentLevel, SUPER_RAGHEAD)->loaded) {
 			obj->anim_index
 				= GetObjectInfo(currentLevel, SUPER_RAGHEAD)->anim_index;
+		}
 	}
 
 	obj = GetObjectInfo(currentLevel, RAGHEAD_MIP);
@@ -1026,12 +1029,13 @@ void BaddyObjects() {
 			currentLevel,
 			GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + 14);
 
-		for(int i = 0; i < 12; i++)
+		for(int i = 0; i < 12; i++) {
 			*GetMeshPointer(currentLevel, obj->mesh_index + 2 * i + 23)
 				= GetMesh(
 					currentLevel,
 					GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + 2 * i
 						+ 22);
+		}
 	}
 
 	obj = GetObjectInfo(currentLevel, SUPER_RAGHEAD);
@@ -1064,12 +1068,13 @@ void BaddyObjects() {
 			currentLevel,
 			GetObjectInfo(currentLevel, MESHSWAP2)->mesh_index + 14);
 
-		for(int i = 0; i < 12; i++)
+		for(int i = 0; i < 12; i++) {
 			*GetMeshPointer(currentLevel, obj->mesh_index + 2 * i + 23)
 				= GetMesh(
 					currentLevel,
 					GetObjectInfo(currentLevel, MESHSWAP2)->mesh_index + 2 * i
 						+ 22);
+		}
 	}
 
 	obj = GetObjectInfo(currentLevel, SUPER_RAGHEAD_MIP);
@@ -1082,12 +1087,13 @@ void BaddyObjects() {
 			currentLevel,
 			GetObjectInfo(currentLevel, MESHSWAP2)->mesh_index + 14);
 
-		for(int i = 0; i < 12; i++)
+		for(int i = 0; i < 12; i++) {
 			*GetMeshPointer(currentLevel, obj->mesh_index + 2 * i + 23)
 				= GetMesh(
 					currentLevel,
 					GetObjectInfo(currentLevel, MESHSWAP3)->mesh_index + 2 * i
 						+ 22);
+		}
 	}
 
 	obj = GetObjectInfo(currentLevel, SCORPION);
@@ -1539,9 +1545,10 @@ void BaddyObjects() {
 			obj->save_hitpoints = 1;
 			obj->save_position = 1;
 
-			if(i)
+			if(i) {
 				obj->anim_index
 					= GetObjectInfo(currentLevel, BABOON_NORMAL)->anim_index;
+			}
 		}
 	}
 
@@ -1760,8 +1767,9 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 	for(int i = 0; i < GetNumRooms(lvl); i++) {
 		r = GetRoom(currentLevel, i);
 
-		if(r->flipped_room != -1)
+		if(r->flipped_room != -1) {
 			flipped[r->flipped_room] = 1;
+		}
 	}
 
 	r = GetRoom(currentLevel, 0);
@@ -1774,8 +1782,9 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 			for(int i = 0; i < GetNumRooms(lvl); i++) {
 				r = GetRoom(currentLevel, i);
 
-				if(flipped[i])
+				if(flipped[i]) {
 					continue;
+				}
 
 				roomx = (r->z >> 10) + 1;
 				roomy = (r->x >> 10) + 1;
@@ -1800,8 +1809,9 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 						if(pTable[j] == 255) {
 							pTable[j] = i;
 
-							if(j > max_slots)
+							if(j > max_slots) {
 								max_slots = j;
+							}
 
 							break;
 						}
@@ -1819,14 +1829,15 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 			offset = x + 27 * y;
 			pTable = (unsigned char*)&OutsideRoomTable[1728 * y + 64 * x];
 
-			while(pTable[z] != 255)
+			while(pTable[z] != 255) {
 				z++;
+			}
 
-			if(!z)
+			if(!z) {
 				OutsideRoomOffsets[offset] = -1;
-			else if(z == 1)
+			} else if(z == 1) {
 				OutsideRoomOffsets[offset] = *pTable | 0x8000;
-			else {
+			} else {
 				cTable = (unsigned char*)OutsideRoomTable;
 
 				while(cTable < oTable) {
@@ -1838,8 +1849,9 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 
 					z2 = 0;
 
-					while(cTable[z2] != 255)
+					while(cTable[z2] != 255) {
 						z2++;
+					}
 
 					cTable += z2 + 1;
 				}
@@ -1869,8 +1881,9 @@ void reset_cutseq_vars() {
 }
 
 void ClearFootPrints() {
-	for(int i = 0; i < 32; i++)
+	for(int i = 0; i < 32; i++) {
 		FootPrint[i].Active = 0;
+	}
 
 	FootPrintNum = 0;
 }
@@ -1888,8 +1901,9 @@ void InitialiseGameFlags() {
 void InitialiseLara() {
 	short item_num, gun;
 
-	if(lara.item_number == NO_ITEM)
+	if(lara.item_number == NO_ITEM) {
 		return;
+	}
 
 	lara_item->data = &lara;
 	lara_item->collidable = 0;
@@ -1909,10 +1923,11 @@ void InitialiseLara() {
 	lara_item->hit_points = 1000;
 	lara.gun_status = LG_NO_ARMS;
 
-	if(gfLevelFlags & GF_YOUNGLARA)
+	if(gfLevelFlags & GF_YOUNGLARA) {
 		gun = WEAPON_NONE;
-	else
+	} else {
 		gun = WEAPON_PISTOLS;
+	}
 
 	lara.last_gun_type = gun;
 	lara.gun_type = gun;
@@ -1925,8 +1940,9 @@ void InitialiseLara() {
 	lara.num_large_medipack = 1;
 	lara.num_pistols_ammo = -1;
 
-	if(Gameflow->DemoDisc)
+	if(Gameflow->DemoDisc) {
 		lara.crowbar = 1;
+	}
 
 	lara.beetle_uses = 3;
 	InitialiseLaraAnims(lara_item);
@@ -1969,11 +1985,13 @@ void InitialiseObjects() {
 	InitialiseHair();
 	InitialiseEffects();
 
-	for(int i = 0; i < 6; i++)
+	for(int i = 0; i < 6; i++) {
 		SequenceUsed[i] = 0;
+	}
 
-	for(int i = 0; i < 8; i++)
+	for(int i = 0; i < 8; i++) {
 		LibraryTab[i] = 0;
+	}
 
 	NumRPickups = 0;
 	CurrentSequence = 0;

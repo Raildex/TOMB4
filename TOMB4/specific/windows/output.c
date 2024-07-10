@@ -73,10 +73,11 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 
 	clip = clipflags;
 
-	if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6)
+	if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
 		DistanceFogStart = 12.0F * 1024.0F;
-	else
+	} else {
 		DistanceFogStart = 12 * 1024.0F;
+	}
 
 	num = 255.0F / DistanceFogStart;
 	IDirect3DVertexBuffer_Lock(mesh->SourceVB, DDLOCK_READONLY, (LPVOID*)&v, 0);
@@ -148,10 +149,11 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 					val = val * 0.5 + 0.5;
 					val *= val;
 #endif
-					if(!InventoryActive)
+					if(!InventoryActive) {
 						val *= 0.75F;
-					else
+					} else {
 						val += val;
+					}
 
 					fR += val * sun->r;
 					fG += val * sun->g;
@@ -175,8 +177,9 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 				val = (vPos.z - DistanceFogStart) / 512.0F;
 				sA -= (long)(val * (255.0F / 8.0F));
 
-				if(sA < 0)
+				if(sA < 0) {
 					sA = 0;
+				}
 			} else {
 				cR -= (long)val;
 				cG -= (long)val;
@@ -184,32 +187,32 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 			}
 		}
 
-		if(cR - 128 <= 0)
+		if(cR - 128 <= 0) {
 			cR <<= 1;
-		else {
+		} else {
 			sR = (cR - 128) >> 1;
 			cR = 255;
 		}
 
-		if(cG - 128 <= 0)
+		if(cG - 128 <= 0) {
 			cG <<= 1;
-		else {
+		} else {
 			sG = (cG - 128) >> 1;
 			cG = 255;
 		}
 
-		if(cB - 128 <= 0)
+		if(cB - 128 <= 0) {
 			cB <<= 1;
-		else {
+		} else {
 			sB = (cB - 128) >> 1;
 			cB = 255;
 		}
 
 		clipFlag = 0;
 
-		if(vPos.z < f_mznear)
+		if(vPos.z < f_mznear) {
 			clipFlag = -128;
-		else {
+		} else {
 			zv = f_mpersp / vPos.z;
 
 			if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
@@ -229,15 +232,17 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 
 			MyVertexBuffer[i].rhw = zv * f_moneopersp;
 
-			if(vPos.x < clip_left)
+			if(vPos.x < clip_left) {
 				clipFlag++;
-			else if(vPos.x > clip_right)
+			} else if(vPos.x > clip_right) {
 				clipFlag += 2;
+			}
 
-			if(vPos.y < clip_top)
+			if(vPos.y < clip_top) {
 				clipFlag += 4;
-			else if(vPos.y > clip_bottom)
+			} else if(vPos.y > clip_bottom) {
 				clipFlag += 8;
+			}
 		}
 
 		*clip++ = clipFlag;
@@ -253,30 +258,36 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 			}
 		}
 
-		if(sR > 255)
+		if(sR > 255) {
 			sR = 255;
-		else if(sR < 0)
+		} else if(sR < 0) {
 			sR = 0;
-		if(sG > 255)
+		}
+		if(sG > 255) {
 			sG = 255;
-		else if(sG < 0)
+		} else if(sG < 0) {
 			sG = 0;
-		if(sB > 255)
+		}
+		if(sB > 255) {
 			sB = 255;
-		else if(sB < 0)
+		} else if(sB < 0) {
 			sB = 0;
-		if(cR > 255)
+		}
+		if(cR > 255) {
 			cR = 255;
-		else if(cR < 0)
+		} else if(cR < 0) {
 			cR = 0;
-		if(cG > 255)
+		}
+		if(cG > 255) {
 			cG = 255;
-		else if(cG < 0)
+		} else if(cG < 0) {
 			cG = 0;
-		if(cB > 255)
+		}
+		if(cB > 255) {
 			cB = 255;
-		else if(cB < 0)
+		} else if(cB < 0) {
 			cB = 0;
+		}
 
 		MyVertexBuffer[i].color = GlobalAlpha | RGBONLY(cR, cG, cB);
 		MyVertexBuffer[i].specular = RGBA(sR, sG, sB, sA);
@@ -300,10 +311,11 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 
 	clip = clipflags;
 
-	if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6)
+	if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
 		DistanceFogStart = 12.0F * 1024.0F;
-	else
+	} else {
 		DistanceFogStart = 12 * 1024.0F;
+	}
 
 	num = 255.0F / DistanceFogStart;
 	pR = (StaticMeshShade & 0x1F) << 3;
@@ -338,8 +350,9 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 			for(int j = 0; j < MAX_DYNAMICS; j++) {
 				l = &dynamics[j];
 
-				if(!l->on)
+				if(!l->on) {
 					continue;
+				}
 
 				d.x = l->pos.x - lGlobalMeshPos.x;
 				d.y = l->pos.y - lGlobalMeshPos.y;
@@ -365,8 +378,9 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 				val = (vPos.z - DistanceFogStart) / 512.0F;
 				sA -= (long)(val * (255.0F / 8.0F));
 
-				if(sA < 0)
+				if(sA < 0) {
 					sA = 0;
+				}
 			} else {
 				cR -= (long)val;
 				cG -= (long)val;
@@ -374,32 +388,32 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 			}
 		}
 
-		if(cR - 128 <= 0)
+		if(cR - 128 <= 0) {
 			cR <<= 1;
-		else {
+		} else {
 			sR = (cR - 128) >> 1;
 			cR = 255;
 		}
 
-		if(cG - 128 <= 0)
+		if(cG - 128 <= 0) {
 			cG <<= 1;
-		else {
+		} else {
 			sG = (cG - 128) >> 1;
 			cG = 255;
 		}
 
-		if(cB - 128 <= 0)
+		if(cB - 128 <= 0) {
 			cB <<= 1;
-		else {
+		} else {
 			sB = (cB - 128) >> 1;
 			cB = 255;
 		}
 
 		clipFlag = 0;
 
-		if(vPos.z < f_mznear)
+		if(vPos.z < f_mznear) {
 			clipFlag = -128;
-		else {
+		} else {
 			zv = f_mpersp / vPos.z;
 
 			if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
@@ -419,15 +433,17 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 
 			MyVertexBuffer[i].rhw = zv * f_moneopersp;
 
-			if(vPos.x < clip_left)
+			if(vPos.x < clip_left) {
 				clipFlag++;
-			else if(vPos.x > clip_right)
+			} else if(vPos.x > clip_right) {
 				clipFlag += 2;
+			}
 
-			if(vPos.y < clip_top)
+			if(vPos.y < clip_top) {
 				clipFlag += 4;
-			else if(vPos.y > clip_bottom)
+			} else if(vPos.y > clip_bottom) {
 				clipFlag += 8;
+			}
 		}
 
 		*clip++ = clipFlag;
@@ -441,30 +457,36 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 			cB = (cB * water_color_B) >> 8;
 		}
 
-		if(sR > 255)
+		if(sR > 255) {
 			sR = 255;
-		else if(sR < 0)
+		} else if(sR < 0) {
 			sR = 0;
-		if(sG > 255)
+		}
+		if(sG > 255) {
 			sG = 255;
-		else if(sG < 0)
+		} else if(sG < 0) {
 			sG = 0;
-		if(sB > 255)
+		}
+		if(sB > 255) {
 			sB = 255;
-		else if(sB < 0)
+		} else if(sB < 0) {
 			sB = 0;
-		if(cR > 255)
+		}
+		if(cR > 255) {
 			cR = 255;
-		else if(cR < 0)
+		} else if(cR < 0) {
 			cR = 0;
-		if(cG > 255)
+		}
+		if(cG > 255) {
 			cG = 255;
-		else if(cG < 0)
+		} else if(cG < 0) {
 			cG = 0;
-		if(cB > 255)
+		}
+		if(cB > 255) {
 			cB = 255;
-		else if(cB < 0)
+		} else if(cB < 0) {
 			cB = 0;
+		}
 
 		MyVertexBuffer[i].color = GlobalAlpha | RGBONLY(cR, cG, cB);
 		MyVertexBuffer[i].specular = RGBA(sR, sG, sB, sA);
@@ -516,8 +538,9 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh) {
 				val = (zbak - DistanceFogStart) / 512.0F;
 				sA -= (long)(val * (255.0F / 8.0F));
 
-				if(sA < 0)
+				if(sA < 0) {
 					sA = 0;
+				}
 
 				dR = gfLevelFlags & GF_TRAIN ? 0xD2 : 0xE2;
 				dG = gfLevelFlags & GF_TRAIN ? 0xB1 : 0x97;
@@ -537,12 +560,15 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh) {
 				sG = (long)fG;
 				sB = (long)fB;
 
-				if(sR > dR)
+				if(sR > dR) {
 					sR = dR;
-				if(sG > dG)
+				}
+				if(sG > dG) {
 					sG = dG;
-				if(sB > dB)
+				}
+				if(sB > dB) {
 					sB = dB;
+				}
 			} else {
 				val = (zbak - DistanceFogStart) * num;
 				cR -= (long)val;
@@ -553,9 +579,9 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh) {
 
 		clipFlag = 0;
 
-		if(vPos.z < f_mznear)
+		if(vPos.z < f_mznear) {
 			clipFlag = -128;
-		else {
+		} else {
 			zv = f_mpersp / vPos.z;
 
 			if(vPos.z > FogEnd) {
@@ -567,15 +593,17 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh) {
 			vPos.y = vPos.y * zv + f_centery;
 			MyVertexBuffer[i].rhw = zv * f_moneopersp;
 
-			if(vPos.x < clip_left)
+			if(vPos.x < clip_left) {
 				clipFlag++;
-			else if(vPos.x > clip_right)
+			} else if(vPos.x > clip_right) {
 				clipFlag += 2;
+			}
 
-			if(vPos.y < clip_top)
+			if(vPos.y < clip_top) {
 				clipFlag += 4;
-			else if(vPos.y > clip_bottom)
+			} else if(vPos.y > clip_bottom) {
 				clipFlag += 8;
+			}
 		}
 
 		*clip++ = clipFlag;
@@ -583,30 +611,36 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh) {
 		MyVertexBuffer[i].sy = vPos.y;
 		MyVertexBuffer[i].sz = vPos.z;
 
-		if(sR > 255)
+		if(sR > 255) {
 			sR = 255;
-		else if(sR < 0)
+		} else if(sR < 0) {
 			sR = 0;
-		if(sG > 255)
+		}
+		if(sG > 255) {
 			sG = 255;
-		else if(sG < 0)
+		} else if(sG < 0) {
 			sG = 0;
-		if(sB > 255)
+		}
+		if(sB > 255) {
 			sB = 255;
-		else if(sB < 0)
+		} else if(sB < 0) {
 			sB = 0;
-		if(cR > 255)
+		}
+		if(cR > 255) {
 			cR = 255;
-		else if(cR < 0)
+		} else if(cR < 0) {
 			cR = 0;
-		if(cG > 255)
+		}
+		if(cG > 255) {
 			cG = 255;
-		else if(cG < 0)
+		} else if(cG < 0) {
 			cG = 0;
-		if(cB > 255)
+		}
+		if(cB > 255) {
 			cB = 255;
-		else if(cB < 0)
+		} else if(cB < 0) {
 			cB = 0;
+		}
 
 		MyVertexBuffer[i].color = RGBA(cR, cG, cB, 0xFF);
 		MyVertexBuffer[i].specular = RGBA(sR, sG, sB, sA);
@@ -646,46 +680,48 @@ void ProcessPickupMeshVertices(MESH_DATA* mesh) {
 		cG = ambientG;
 		cB = ambientB;
 
-		if(cR - 128 <= 0)
+		if(cR - 128 <= 0) {
 			cR <<= 1;
-		else {
+		} else {
 			sR = (cR - 128) >> 1;
 			cR = 255;
 		}
 
-		if(cG - 128 <= 0)
+		if(cG - 128 <= 0) {
 			cG <<= 1;
-		else {
+		} else {
 			sG = (cG - 128) >> 1;
 			cG = 255;
 		}
 
-		if(cB - 128 <= 0)
+		if(cB - 128 <= 0) {
 			cB <<= 1;
-		else {
+		} else {
 			sB = (cB - 128) >> 1;
 			cB = 255;
 		}
 
 		clipFlag = 0;
 
-		if(vPos.z < f_mznear)
+		if(vPos.z < f_mznear) {
 			clipFlag = -128;
-		else {
+		} else {
 			zv = f_mpersp / vPos.z;
 			vPos.x = vPos.x * zv + f_centerx;
 			vPos.y = vPos.y * zv + f_centery;
 			MyVertexBuffer[i].rhw = zv * f_moneopersp;
 
-			if(vPos.x < clip_left)
+			if(vPos.x < clip_left) {
 				clipFlag++;
-			else if(vPos.x > clip_right)
+			} else if(vPos.x > clip_right) {
 				clipFlag += 2;
+			}
 
-			if(vPos.y < clip_top)
+			if(vPos.y < clip_top) {
 				clipFlag += 4;
-			else if(vPos.y > clip_bottom)
+			} else if(vPos.y > clip_bottom) {
 				clipFlag += 8;
+			}
 		}
 
 		*clip++ = clipFlag;
@@ -693,30 +729,36 @@ void ProcessPickupMeshVertices(MESH_DATA* mesh) {
 		MyVertexBuffer[i].sy = vPos.y;
 		MyVertexBuffer[i].sz = vPos.z;
 
-		if(sR > 255)
+		if(sR > 255) {
 			sR = 255;
-		else if(sR < 0)
+		} else if(sR < 0) {
 			sR = 0;
-		if(sG > 255)
+		}
+		if(sG > 255) {
 			sG = 255;
-		else if(sG < 0)
+		} else if(sG < 0) {
 			sG = 0;
-		if(sB > 255)
+		}
+		if(sB > 255) {
 			sB = 255;
-		else if(sB < 0)
+		} else if(sB < 0) {
 			sB = 0;
-		if(cR > 255)
+		}
+		if(cR > 255) {
 			cR = 255;
-		else if(cR < 0)
+		} else if(cR < 0) {
 			cR = 0;
-		if(cG > 255)
+		}
+		if(cG > 255) {
 			cG = 255;
-		else if(cG < 0)
+		} else if(cG < 0) {
 			cG = 0;
-		if(cB > 255)
+		}
+		if(cB > 255) {
 			cB = 255;
-		else if(cB < 0)
+		} else if(cB < 0) {
 			cB = 0;
+		}
 
 		MyVertexBuffer[i].color = RGBA(cR, cG, cB, CLRA(GlobalAlpha));
 		MyVertexBuffer[i].specular = RGBA(sR, sG, sB, 0xFF);
@@ -753,13 +795,15 @@ void phd_PutPolygons(short* objptr, long clip) {
 	SetD3DViewMatrix();
 	mesh = (MESH_DATA*)objptr;
 
-	if(!objptr)
+	if(!objptr) {
 		return;
+	}
 
-	if(objptr == GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_DOUBLE)->mesh_index) || objptr == GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_DOUBLE)->mesh_index + 2))
+	if(objptr == GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_DOUBLE)->mesh_index) || objptr == GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_DOUBLE)->mesh_index + 2)) {
 		envmap_sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, SKY_GRAPHICS)->mesh_index);
-	else
+	} else {
 		envmap_sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 11);
+	}
 
 	ResetLighting();
 
@@ -768,10 +812,11 @@ void phd_PutPolygons(short* objptr, long clip) {
 		ambientG = CLRG(GlobalAmbient);
 		ambientB = CLRB(GlobalAmbient);
 		GlobalAmbient = 0;
-	} else if(mesh->prelight)
+	} else if(mesh->prelight) {
 		InitItemDynamicLighting(current_item);
-	else
+	} else {
 		InitObjectLighting(current_item);
+	}
 
 	clip_left = f_left;
 	clip_top = f_top;
@@ -779,10 +824,11 @@ void phd_PutPolygons(short* objptr, long clip) {
 	clip_bottom = f_bottom;
 
 	if(mesh->nVerts) {
-		if(mesh->prelight)
+		if(mesh->prelight) {
 			ProcessStaticMeshVertices(mesh);
-		else
+		} else {
 			ProcessObjectMeshVertices(mesh);
+		}
 	}
 
 	quad = mesh->gt4;
@@ -792,8 +838,9 @@ void phd_PutPolygons(short* objptr, long clip) {
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
-		if(quad[5] & 1)
+		if(quad[5] & 1) {
 			pTex->drawtype = 2;
+		}
 
 		if(quad[5] & 2) {
 			envmap = 1;
@@ -828,10 +875,11 @@ void phd_PutPolygons(short* objptr, long clip) {
 		}
 
 		if(GlobalAlpha == 0xFF000000) {
-			if(!pTex->drawtype)
+			if(!pTex->drawtype) {
 				AddQuadZBuffer(MyVertexBuffer, quad[0], quad[1], quad[2], quad[3], pTex, 0);
-			else if(pTex->drawtype <= 2)
+			} else if(pTex->drawtype <= 2) {
 				AddQuadSorted(MyVertexBuffer, quad[0], quad[1], quad[2], quad[3], pTex, 0);
+			}
 
 			if(envmap) {
 				clrbak[0] = MyVertexBuffer[quad[0]].color;
@@ -875,8 +923,9 @@ void phd_PutPolygons(short* objptr, long clip) {
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
-		if(tri[4] & 1)
+		if(tri[4] & 1) {
 			pTex->drawtype = 2;
+		}
 
 		if(tri[4] & 2) {
 			envmap = 1;
@@ -907,10 +956,11 @@ void phd_PutPolygons(short* objptr, long clip) {
 		}
 
 		if(GlobalAlpha == 0xFF000000) {
-			if(!pTex->drawtype)
+			if(!pTex->drawtype) {
 				AddTriZBuffer(MyVertexBuffer, tri[0], tri[1], tri[2], pTex, 0);
-			else if(pTex->drawtype <= 2)
+			} else if(pTex->drawtype <= 2) {
 				AddTriSorted(MyVertexBuffer, tri[0], tri[1], tri[2], pTex, 0);
+			}
 
 			if(envmap) {
 				clrbak[0] = MyVertexBuffer[tri[0]].color;
@@ -950,8 +1000,9 @@ void phd_PutPolygons_train(short* objptr, long x) {
 	short* tri;
 	unsigned short drawbak;
 
-	if(!objptr)
+	if(!objptr) {
 		return;
+	}
 
 	phd_PushMatrix();
 	phd_TranslateRel(x, 0, 0);
@@ -975,13 +1026,15 @@ void phd_PutPolygons_train(short* objptr, long x) {
 		pTex = GetTextInfo(currentLevel, quad[4] & 0x7FFF);
 		drawbak = pTex->drawtype;
 
-		if(quad[5] & 1)
+		if(quad[5] & 1) {
 			pTex->drawtype = 2;
+		}
 
-		if(!pTex->drawtype)
+		if(!pTex->drawtype) {
 			AddQuadZBuffer(v, quad[0], quad[1], quad[2], quad[3], pTex, 0);
-		else if(pTex->drawtype <= 2)
+		} else if(pTex->drawtype <= 2) {
 			AddQuadSorted(v, quad[0], quad[1], quad[2], quad[3], pTex, 0);
+		}
 
 		pTex->drawtype = drawbak;
 	}
@@ -993,13 +1046,15 @@ void phd_PutPolygons_train(short* objptr, long x) {
 
 		drawbak = pTex->drawtype;
 
-		if(tri[4] & 1)
+		if(tri[4] & 1) {
 			pTex->drawtype = 2;
+		}
 
-		if(!pTex->drawtype)
+		if(!pTex->drawtype) {
 			AddTriZBuffer(v, tri[0], tri[1], tri[2], pTex, 0);
-		else if(pTex->drawtype <= 2)
+		} else if(pTex->drawtype <= 2) {
 			AddTriSorted(v, tri[0], tri[1], tri[2], pTex, 0);
+		}
 	}
 }
 
@@ -1018,8 +1073,9 @@ void RenderLoadPic(long unused) {
 	camera.pos.room_number = gfLoadRoom;
 	camera.underwater = GetRoom(currentLevel, gfLoadRoom)->flags & ROOM_UNDERWATER;
 
-	if(gfLoadRoom == 255)
+	if(gfLoadRoom == 255) {
 		return;
+	}
 
 	KillActiveBaddies((ITEM_INFO*)0xABCDEF);
 	SetFade(255, 0);
@@ -1029,8 +1085,9 @@ void RenderLoadPic(long unused) {
 	GlobalFogOff = 1;
 	BinocularRange = 0;
 
-	if(App.dx.InScene)
+	if(App.dx.InScene) {
 		_EndScene();
+	}
 
 	do {
 		phd_LookAt(camera.pos.pos.x, camera.pos.pos.y, camera.pos.pos.z, camera.target.pos.x, camera.target.pos.y, camera.target.pos.z, 0);
@@ -1069,16 +1126,18 @@ void S_InitialisePolyList() {
 	rect.x2 = App.dx.rViewport.left + App.dx.rViewport.right;
 	rect.y2 = App.dx.rViewport.top + App.dx.rViewport.bottom;
 
-	if(gfLevelFlags & GF_TRAIN)
+	if(gfLevelFlags & GF_TRAIN) {
 		col = 0xD2B163;
-	else if(0 /*gfCurrentLevel == 5 || gfCurrentLevel == 6)*/) {
+	} else if(0 /*gfCurrentLevel == 5 || gfCurrentLevel == 6)*/) {
 		col = FogTableColor[19];
 		SetFogColor(CLRR(col), CLRG(col), CLRB(col));
-	} else
+	} else {
 		col = 0;
+	}
 
-	if(App.dx.Flags & DXF_HWR)
+	if(App.dx.Flags & DXF_HWR) {
 		DXAttempt(IDirect3DViewport3_Clear2(App.dx.lpViewport, 1, &rect, D3DCLEAR_TARGET, col, 1.0F, 0));
+	}
 
 	_BeginScene();
 	InitBuckets();
@@ -1118,8 +1177,9 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	f_centerx = x;
 	f_centery = y;
 
-	if(mesh->nVerts)
+	if(mesh->nVerts) {
 		ProcessPickupMeshVertices(mesh);
+	}
 
 	f_centerx = fcx;
 	f_centery = fcy;
@@ -1130,8 +1190,9 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
-		if(quad[5] & 1)
+		if(quad[5] & 1) {
 			pTex->drawtype = 2;
+		}
 
 		if(quad[5] & 2) {
 			envmap = 1;
@@ -1165,8 +1226,9 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 			envmap_texture.v4 = normals[3].y + envmap_sprite->y1 + 0.125F;
 		}
 
-		if(GlobalAlpha != 0xFF000000)
+		if(GlobalAlpha != 0xFF000000) {
 			pTex->drawtype = 3;
+		}
 
 		AddQuadSorted(MyVertexBuffer, quad[0], quad[1], quad[2], quad[3], pTex, 0);
 
@@ -1208,8 +1270,9 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
-		if(tri[4] & 1)
+		if(tri[4] & 1) {
 			pTex->drawtype = 2;
+		}
 
 		if(tri[4] & 2) {
 			envmap = 1;
@@ -1239,8 +1302,9 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 			envmap_texture.v3 = normals[2].y + envmap_sprite->y1 + 0.125F;
 		}
 
-		if(GlobalAlpha != 0xFF000000)
+		if(GlobalAlpha != 0xFF000000) {
 			pTex->drawtype = 3;
+		}
 
 		AddTriSorted(MyVertexBuffer, tri[0], tri[1], tri[2], pTex, 0);
 
@@ -1296,9 +1360,9 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus) {
 		drawbak = pTex->drawtype;
 
 		if(quad[5] & 1) {
-			if(gfLevelFlags & GF_HORIZONCOLADD)
+			if(gfLevelFlags & GF_HORIZONCOLADD) {
 				pTex->drawtype = 2;
-			else {
+			} else {
 				if(App.dx.lpZBuffer) {
 					MyVertexBuffer[quad[0]].color = 0;
 					MyVertexBuffer[quad[1]].color = 0;
@@ -1313,8 +1377,9 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus) {
 					pTex->drawtype = 0;
 				}
 			}
-		} else
+		} else {
 			pTex->drawtype = 4;
+		}
 
 		if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
 			MyVertexBuffer[quad[0]].color = 0xFFFFFFFF;
@@ -1360,8 +1425,9 @@ long S_GetObjectInfoBounds(short* bounds) {
 	FVECTOR vtx[8];
 	float xMin, xMax, yMin, yMax, zMin, zMax, numZ, xv, yv, zv;
 
-	if(mMXPtr[M23] >= f_mzfar && !outside)
+	if(mMXPtr[M23] >= f_mzfar && !outside) {
 		return 0;
+	}
 
 	xMin = bounds[0];
 	xMax = bounds[1];
@@ -1415,25 +1481,30 @@ long S_GetObjectInfoBounds(short* bounds) {
 			numZ++;
 			zv /= f_mpersp;
 
-			if(!zv)
+			if(!zv) {
 				zv = 1;
+			}
 
 			zv = 1 / zv;
 			xv = zv * (vtx[i].x * mMXPtr[M00] + vtx[i].y * mMXPtr[M01] + vtx[i].z * mMXPtr[M02] + mMXPtr[M03]);
 
-			if(xv < xMin)
+			if(xv < xMin) {
 				xMin = xv;
+			}
 
-			if(xv > xMax)
+			if(xv > xMax) {
 				xMax = xv;
+			}
 
 			yv = zv * (vtx[i].x * mMXPtr[M10] + vtx[i].y * mMXPtr[M11] + vtx[i].z * mMXPtr[M12] + mMXPtr[M13]);
 
-			if(yv < yMin)
+			if(yv < yMin) {
 				yMin = yv;
+			}
 
-			if(yv > yMax)
+			if(yv > yMax) {
 				yMax = yv;
+			}
 		}
 	}
 
@@ -1442,13 +1513,15 @@ long S_GetObjectInfoBounds(short* bounds) {
 	yMin += f_centery;
 	yMax += f_centery;
 
-	if(numZ < 8 || xMin < 0 || yMin < 0 || phd_winxmax < xMax || phd_winymax < yMax)
+	if(numZ < 8 || xMin < 0 || yMin < 0 || phd_winxmax < xMax || phd_winymax < yMax) {
 		return -1;
+	}
 
-	if(phd_right >= xMin && phd_bottom >= yMin && phd_left <= xMax && phd_top <= yMax)
+	if(phd_right >= xMin && phd_bottom >= yMin && phd_left <= xMax && phd_top <= yMax) {
 		return 1;
-	else
+	} else {
 		return 0;
+	}
 }
 
 HRESULT DDCopyBitmap(IDirectDrawSurface4* surf, HBITMAP hbm, long x, long y, long dx, long dy) {
@@ -1459,23 +1532,27 @@ HRESULT DDCopyBitmap(IDirectDrawSurface4* surf, HBITMAP hbm, long x, long y, lon
 	HRESULT result;
 	long l, t;
 
-	if(!hbm || !surf)
+	if(!hbm || !surf) {
 		return E_FAIL;
+	}
 
 	IDirectDrawSurface4_Restore(surf);
 	hdc = CreateCompatibleDC(0);
 
-	if(!hdc)
+	if(!hdc) {
 		OutputDebugString("createcompatible dc failed\n");
+	}
 
 	SelectObject(hdc, hbm);
 	GetObjectA(hbm, sizeof(BITMAP), &bitmap);
 
-	if(!dx)
+	if(!dx) {
 		dx = bitmap.bmWidth;
+	}
 
-	if(!dy)
+	if(!dy) {
 		dy = bitmap.bmHeight;
+	}
 
 	desc.dwSize = sizeof(DDSURFACEDESC2);
 	desc.dwFlags = DDSD_WIDTH | DDSD_HEIGHT;
@@ -1509,8 +1586,9 @@ HRESULT _LoadBitmap(IDirectDrawSurface4* surf, LPCSTR name) {
 
 	hBitmap = (HBITMAP)LoadImage(GetModuleHandle(0), name, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
-	if(!hBitmap)
+	if(!hBitmap) {
 		hBitmap = (HBITMAP)LoadImage(0, name, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	}
 
 	if(!hBitmap) {
 		OutputDebugString("handle is null\n");
@@ -1519,8 +1597,9 @@ HRESULT _LoadBitmap(IDirectDrawSurface4* surf, LPCSTR name) {
 
 	result = DDCopyBitmap(surf, hBitmap, 0, 0, 0, 0);
 
-	if(result != DD_OK)
+	if(result != DD_OK) {
 		OutputDebugString("ddcopybitmap failed\n");
+	}
 
 	DeleteObject(hBitmap);
 	return result;
@@ -1595,8 +1674,9 @@ void S_AnimateTextures(long n) {
 			nRangeFrames = *range++;
 
 			if(i < GetNumAnimUVRanges(currentLevel) && gfUVRotate) {
-				if(nRangeFrames > 0)
+				if(nRangeFrames > 0) {
 					range += nRangeFrames;
+				}
 			} else {
 				tex2 = *GetTextInfo(currentLevel, *range);
 				;
@@ -1669,18 +1749,21 @@ void S_OutputPolyList() {
 		WinDisplayString(8, App.dx.dwRenderHeight - 8, (char*)"%dx%d", App.dx.dwRenderWidth, App.dx.dwRenderHeight);
 		resChangeCounter -= (long)(30 / App.fps);
 
-		if(resChangeCounter < 0)
+		if(resChangeCounter < 0) {
 			resChangeCounter = 0;
+		}
 	}
 
-	if(App.dx.lpZBuffer)
+	if(App.dx.lpZBuffer) {
 		DrawBuckets();
+	}
 
 	if(!gfCurrentLevel) {
 		Fade();
 
-		if(App.dx.lpZBuffer)
+		if(App.dx.lpZBuffer) {
 			DrawSortList();
+		}
 	}
 
 	SortPolyList(SortCount, SortList);
@@ -1722,8 +1805,9 @@ void S_OutputPolyList() {
 		if(FlashFader) {
 			DrawFlash();
 
-			if(FlashFader)
+			if(FlashFader) {
 				FlashFader -= 2;
+			}
 		}
 
 		DrawSortList();
@@ -1746,8 +1830,9 @@ void StashSkinVertices(long node) {
 	d = (_D3DTLVERTEX*)&SkinVerts[node];
 
 	while(1) {
-		if(*vns < 0)
+		if(*vns < 0) {
 			break;
+		}
 
 		d->sx = MyVertexBuffer[(long)*vns].sx;
 		d->sy = MyVertexBuffer[(long)*vns].sy;
@@ -1773,8 +1858,9 @@ void SkinVerticesToScratch(long node) {
 	d = (_D3DTLVERTEX*)&SkinVerts[node];
 
 	while(1) {
-		if(*vns < 0)
+		if(*vns < 0) {
 			break;
+		}
 
 		MyVertexBuffer[(long)*vns].sx = d->sx;
 		MyVertexBuffer[(long)*vns].sy = d->sy;

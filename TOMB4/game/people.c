@@ -60,8 +60,9 @@ long TargetVisible(ITEM_INFO* item, AI_INFO* info) {
 	creature = (CREATURE_INFO*)item->data;
 	enemy = creature->enemy;
 
-	if(!enemy || enemy->hit_points <= 0 || !enemy->data || info->angle - creature->joint_rotation[2] <= -0x4000 || info->angle - creature->joint_rotation[2] >= 0x4000 || info->distance >= NO_DISTANCE)
+	if(!enemy || enemy->hit_points <= 0 || !enemy->data || info->angle - creature->joint_rotation[2] <= -0x4000 || info->angle - creature->joint_rotation[2] >= 0x4000 || info->distance >= NO_DISTANCE) {
 		return 0;
+	}
 
 	bounds = GetBestFrame(enemy);
 
@@ -86,8 +87,9 @@ long Targetable(ITEM_INFO* item, AI_INFO* info) {
 	creature = (CREATURE_INFO*)item->data;
 	enemy = creature->enemy;
 
-	if(!enemy || enemy->hit_points <= 0 || !enemy->data || !info->ahead || (info->distance >= NO_DISTANCE && item->object_number != SETHA))
+	if(!enemy || enemy->hit_points <= 0 || !enemy->data || !info->ahead || (info->distance >= NO_DISTANCE && item->object_number != SETHA)) {
 		return 0;
+	}
 
 	bounds = GetBestFrame(item);
 	start.pos.x = item->pos.x_pos;
@@ -118,8 +120,9 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotati
 		if(distance <= NO_DISTANCE) {
 			random = (NO_DISTANCE - info->distance) / 3276 + 0x2000;
 			hit = (GetRandomControl() < random);
-		} else
+		} else {
 			hit = 0;
+		}
 
 		targetable = 1;
 	} else {
@@ -133,8 +136,9 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotati
 				CreatureEffect(item, gun, GunHit);
 				lara_item->hit_points -= (short)damage;
 				lara_item->hit_status = 1;
-			} else if(targetable)
+			} else if(targetable) {
 				CreatureEffect(item, gun, GunMiss);
+			}
 		} else {
 			CreatureEffect(item, gun, GunShot);
 
@@ -143,8 +147,9 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotati
 				enemy->hit_status = 1;
 				random = GetRandomControl() & 0xF;
 
-				if(random > 14)
+				if(random > 14) {
 					random = 0;
+				}
 
 				pos.x = 0;
 				pos.y = 0;

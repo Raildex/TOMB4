@@ -43,8 +43,9 @@ void ControlBodyPart(short fx_number) {
 	oz = fx->pos.z_pos;
 	oy = fx->pos.y_pos;
 
-	if(fx->speed)
+	if(fx->speed) {
 		fx->pos.x_rot += fx->fallspeed << 2;
+	}
 
 	fx->fallspeed += 6;
 
@@ -69,24 +70,27 @@ void ControlBodyPart(short fx_number) {
 			fx->pos.y_pos = oy;
 			fx->pos.z_pos = oz;
 
-			if(fx->flag2 & 0x200)
+			if(fx->flag2 & 0x200) {
 				ExplodeFX(fx, -2, 32);
-			else
+			} else {
 				ExplodeFX(fx, -1, 32);
+			}
 
 			KillEffect(fx_number);
 
-			if(fx->flag2 & 0x800)
+			if(fx->flag2 & 0x800) {
 				SoundEffect(SFX_ROCK_FALL_LAND, &fx->pos, SFX_DEFAULT);
+			}
 
 			return;
 		}
 
 		if(oy <= height) {
-			if(fx->fallspeed <= 32)
+			if(fx->fallspeed <= 32) {
 				fx->fallspeed = 0;
-			else
+			} else {
 				fx->fallspeed = -fx->fallspeed >> 2;
+			}
 		} else {
 			fx->pos.y_rot += 32768;
 			fx->pos.x_pos = ox;
@@ -95,8 +99,9 @@ void ControlBodyPart(short fx_number) {
 
 		fx->speed -= fx->speed >> 2;
 
-		if(abs(fx->speed) < 4)
+		if(abs(fx->speed) < 4) {
 			fx->speed = 0;
+		}
 
 		fx->pos.y_pos = oy;
 	}
@@ -110,9 +115,11 @@ void ControlBodyPart(short fx_number) {
 		}
 	}
 
-	if(fx->flag2 & 2 && GetRandomControl() & 1)
+	if(fx->flag2 & 2 && GetRandomControl() & 1) {
 		DoBloodSplat((GetRandomControl() & 0x3F) + fx->pos.x_pos - 32, (GetRandomControl() & 0x1F) + fx->pos.y_pos - 16, (GetRandomControl() & 0x3F) + fx->pos.z_pos - 32, 1, (short)(GetRandomControl() << 1), fx->room_number);
+	}
 
-	if(room_number != fx->room_number)
+	if(room_number != fx->room_number) {
 		EffectNewRoom(fx_number, room_number);
+	}
 }

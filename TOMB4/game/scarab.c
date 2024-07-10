@@ -50,8 +50,9 @@ void ScarabControl(short item_number) {
 	AI_INFO info;
 	short angle;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	angle = 0;
 	item = GetItem(currentLevel, item_number);
@@ -84,33 +85,37 @@ void ScarabControl(short item_number) {
 		CreatureAIInfo(item, &info);
 		GetCreatureMood(item, &info, 1);
 
-		if(beetle->flags)
+		if(beetle->flags) {
 			beetle->mood = ESCAPE_MOOD;
+		}
 
 		CreatureMood(item, &info, 1);
 		angle = CreatureTurn(item, beetle->maximum_turn);
 
-		if(info.distance > 0x900000 || !(GetRandomControl() & 0x7F) || item->hit_status)
+		if(info.distance > 0x900000 || !(GetRandomControl() & 0x7F) || item->hit_status) {
 			beetle->flags = 0;
+		}
 
 		switch(item->current_anim_state) {
 		case 1:
 			item->pos.y_pos = item->floor;
 			beetle->maximum_turn = 182;
 
-			if(item->hit_status || info.distance < 0x900000 || beetle->hurt_by_lara || item->ai_bits == MODIFY)
+			if(item->hit_status || info.distance < 0x900000 || beetle->hurt_by_lara || item->ai_bits == MODIFY) {
 				item->goal_anim_state = 2;
+			}
 
 			break;
 
 		case 3:
 			beetle->maximum_turn = 1274;
 
-			if(item->required_anim_state)
+			if(item->required_anim_state) {
 				item->goal_anim_state = item->required_anim_state;
-			else if(info.ahead) {
-				if(info.distance < 0x10000)
+			} else if(info.ahead) {
+				if(info.distance < 0x10000) {
 					item->goal_anim_state = 9;
+				}
 			}
 
 			break;
@@ -119,15 +124,15 @@ void ScarabControl(short item_number) {
 			beetle->maximum_turn = 1274;
 
 			if(info.ahead) {
-				if(info.distance < 0x10000)
+				if(info.distance < 0x10000) {
 					item->goal_anim_state = 4;
-				else {
+				} else {
 					item->goal_anim_state = 9;
 					item->required_anim_state = 3;
 				}
-			} else if(info.distance < 0x10000)
+			} else if(info.distance < 0x10000) {
 				item->goal_anim_state = 9;
-			else {
+			} else {
 				item->goal_anim_state = 9;
 				item->required_anim_state = 3;
 			}
@@ -145,20 +150,22 @@ void ScarabControl(short item_number) {
 			beetle->flags = 0;
 			item->pos.y_pos += 51;
 
-			if(item->pos.y_pos > item->floor)
+			if(item->pos.y_pos > item->floor) {
 				item->pos.y_pos = item->floor;
+			}
 
 			break;
 
 		case 9:
 			beetle->maximum_turn = 1274;
 
-			if(item->required_anim_state)
+			if(item->required_anim_state) {
 				item->goal_anim_state = item->required_anim_state;
-			else if(item->hit_status || GetRandomControl() < 384 || item->ai_bits == MODIFY || (beetle->mood == BORED_MOOD || GetRandomControl() < 128 && !beetle->hurt_by_lara && item->ai_bits != MODIFY))
+			} else if(item->hit_status || GetRandomControl() < 384 || item->ai_bits == MODIFY || (beetle->mood == BORED_MOOD || GetRandomControl() < 128 && !beetle->hurt_by_lara && item->ai_bits != MODIFY)) {
 				item->goal_anim_state = 3;
-			else if(info.ahead && info.distance < 0x10000 && !beetle->flags)
+			} else if(info.ahead && info.distance < 0x10000 && !beetle->flags) {
 				item->goal_anim_state = 4;
+			}
 
 			break;
 		}
@@ -187,8 +194,9 @@ long GetFreeScarab() {
 
 		lp++;
 
-		if(lp >= 128)
+		if(lp >= 128) {
 			return -1;
+		}
 	}
 
 	next_scarab = (free + 1) & 0x7F;
@@ -196,8 +204,9 @@ long GetFreeScarab() {
 }
 
 void ClearScarabs() {
-	for(int i = 0; i < 128; i++)
+	for(int i = 0; i < 128; i++) {
 		Scarabs[i].On = 0;
+	}
 
 	next_scarab = 0;
 	flipeffect = -1;
@@ -213,8 +222,9 @@ void TriggerScarab(short item_number) {
 	if(item->trigger_flags && (!item->item_flags[2] || !(GetRandomControl() & 0xF))) {
 		item->trigger_flags--;
 
-		if(item->item_flags[2] && GetRandomControl() & 1)
+		if(item->item_flags[2] && GetRandomControl() & 1) {
 			item->item_flags[2]--;
+		}
 
 		fx_num = (short)GetFreeScarab();
 
@@ -276,21 +286,24 @@ void UpdateScarabs() {
 
 		if(fx->flags) {
 			if(abs(dx) + abs(dz) > 1024) {
-				if(fx->speed < (i & 0x1F) + 24)
+				if(fx->speed < (i & 0x1F) + 24) {
 					fx->speed++;
+				}
 
-				if(abs(angle) < 4096)
+				if(abs(angle) < 4096) {
 					fx->pos.y_rot += (short)((wibble - i) << 3);
-				else if(angle < 0)
+				} else if(angle < 0) {
 					fx->pos.y_rot -= 1024;
-				else
+				} else {
 					fx->pos.y_rot += 1024;
+				}
 			} else {
 				fx->pos.y_rot += fx->speed & 1 ? 512 : -512;
 				fx->speed = 48 - (lara.LitTorch << 6) - (abs(angle) >> 7);
 
-				if(fx->speed < -16)
+				if(fx->speed < -16) {
 					fx->speed = i & 0xF;
+				}
 			}
 		}
 		old_room = fx->room_number;
@@ -299,10 +312,11 @@ void UpdateScarabs() {
 
 		if(h < fx->pos.y_pos - 1280 || h == NO_HEIGHT) {
 
-			if(angle <= 0)
+			if(angle <= 0) {
 				fx->pos.y_rot -= 0x4000;
-			else
+			} else {
 				fx->pos.y_rot += 0x4000;
+			}
 
 			fx->pos.x_pos = oldx;
 			fx->pos.y_pos = oldy;
@@ -318,8 +332,9 @@ void UpdateScarabs() {
 			fx->pos.y_pos = h;
 			fx->fallspeed = 0;
 			fx->flags |= 1;
-		} else if(fx->fallspeed < 500 && fx->flags < 200)
+		} else if(fx->fallspeed < 500 && fx->flags < 200) {
 			fx->pos.x_rot = -(fx->fallspeed << 7);
+		}
 
 
 		if(GetRoom(currentLevel, fx->room_number)->flags & ROOM_UNDERWATER) {
@@ -331,8 +346,9 @@ void UpdateScarabs() {
 				// TriggerSmallSplash(fx->pos.x_pos, room[fx->room_number].maxceiling, fx->pos.z_pos, 16);
 				SetupRipple(fx->pos.x_pos, GetRoom(currentLevel, fx->room_number)->maxceiling, fx->pos.z_pos, (GetRandomControl() & 3) + 48, 2);
 				// SoundEffect(SFX_RATSPLASH, &fx->pos, 0);
-			} else if(!(GetRandomControl() & 0xF))
+			} else if(!(GetRandomControl() & 0xF)) {
 				SetupRipple(fx->pos.x_pos, GetRoom(currentLevel, fx->room_number)->maxceiling, fx->pos.z_pos, (GetRandomControl() & 3) + 48, 2);
+			}
 		}
 	}
 }
@@ -369,14 +385,16 @@ void InitialiseScarabGenerator(short item_number) {
 	item->trigger_flags %= 1000;
 
 	if(!item->item_flags[0]) {
-		if(item->pos.y_rot > 4096 && item->pos.y_rot < 28672)
+		if(item->pos.y_rot > 4096 && item->pos.y_rot < 28672) {
 			item->pos.x_pos -= 512;
-		else if(item->pos.y_rot < -4096 && item->pos.y_rot > -28672)
+		} else if(item->pos.y_rot < -4096 && item->pos.y_rot > -28672) {
 			item->pos.x_pos += 512;
+		}
 
-		if(item->pos.y_rot > -8192 && item->pos.y_rot < 8192)
+		if(item->pos.y_rot > -8192 && item->pos.y_rot < 8192) {
 			item->pos.z_pos -= 512;
-		else if(item->pos.y_rot < -20480 || item->pos.y_rot > 20480)
+		} else if(item->pos.y_rot < -20480 || item->pos.y_rot > 20480) {
 			item->pos.z_pos += 512;
+		}
 	}
 }

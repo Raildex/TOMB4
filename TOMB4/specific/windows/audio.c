@@ -188,8 +188,9 @@ void OpenStreamFile(char* name) {
 }
 
 void GetADPCMData() {
-	if(!audio_stream_fp)
+	if(!audio_stream_fp) {
 		return;
+	}
 
 	memset(audio_fp_write_ptr, 0, 0x5800);
 
@@ -200,20 +201,23 @@ void GetADPCMData() {
 
 	audio_fp_write_ptr += 0x5800;
 
-	if((long)audio_fp_write_ptr >= (long)(wav_file_buffer + 0x37000))
+	if((long)audio_fp_write_ptr >= (long)(wav_file_buffer + 0x37000)) {
 		audio_fp_write_ptr = wav_file_buffer;
+	}
 }
 
 void ACMSetVolume() {
 	long volume;
 
-	if(!MusicVolume)
+	if(!MusicVolume) {
 		volume = -10000;
-	else
+	} else {
 		volume = -4000 * (100 - MusicVolume) / 100;
+	}
 
-	if(DSBuffer)
+	if(DSBuffer) {
 		IDirectSoundBuffer_SetVolume(DSBuffer, volume);
+	}
 }
 
 void ACMEmulateCDPlay(long track, long mode) {
@@ -227,10 +231,11 @@ void ACMEmulateCDPlay(long track, long mode) {
 
 	wsprintf(name, "audio\\%s", TrackFileNames[track]);
 
-	if(mode)
+	if(mode) {
 		Log(__func__, "Playing %s %s %d", name, "Looped", track);
-	else
+	} else {
 		Log(__func__, "Playing %s %s %d", name, "", track);
+	}
 
 	XATrack = track;
 	XAReqTrack = track;
@@ -238,8 +243,9 @@ void ACMEmulateCDPlay(long track, long mode) {
 	auido_play_mode = mode;
 	OpenStreamFile(name);
 
-	if(!audio_stream_fp)
+	if(!audio_stream_fp) {
 		return;
+	}
 
 	memcpy(ADPCMBuffer, audio_fp_write_ptr, 0x5800);
 	GetADPCMData();
@@ -261,8 +267,9 @@ BOOL WINAPI ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwS
 	driver.cbStruct = sizeof(ACMDRIVERDETAILS);
 	acmDriverDetails(hadid, &driver, 0);
 
-	if(strcmp(driver.szShortName, "MS-ADPCM"))
+	if(strcmp(driver.szShortName, "MS-ADPCM")) {
 		return 1;
+	}
 
 	hACMDriverID = hadid;
 	return 0;
@@ -290,8 +297,9 @@ long ACMSetupNotifications() {
 	posNotif[4].hEventNotify = NotifyEventHandles[1];
 	NotificationThreadHandle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)ACMHandleNotifications, 0, 0, &ThreadId);
 
-	if(!NotificationThreadHandle)
+	if(!NotificationThreadHandle) {
 		Log(__func__, "Create Notification Thread failed");
+	}
 
 	result = IDirectSoundNotify_SetNotificationPositions(DSNotify, 5, posNotif);
 
@@ -300,8 +308,9 @@ long ACMSetupNotifications() {
 		CloseHandle(NotifyEventHandles[1]);
 		NotifyEventHandles[1] = 0;
 		NotifyEventHandles[0] = 0;
-	} else
+	} else {
 		Log(__func__, "Setup Notifications OK");
+	}
 
 	return result;
 }
@@ -339,9 +348,9 @@ void FillADPCMBuffer(char* p, long track) {
 	fread(p, 1, 0x5800, audio_stream_fp);
 
 	if(audio_stream_fp && feof(audio_stream_fp)) {
-		if(auido_play_mode == 1)
+		if(auido_play_mode == 1) {
 			fseek(audio_stream_fp, 90, SEEK_SET);
-		else {
+		} else {
 			audio_counter++;
 
 			if(audio_counter > 8) {
@@ -379,24 +388,27 @@ long ACMHandleNotifications() {
 		if(!wait && DSBuffer) {
 			memcpy(ADPCMBuffer, audio_fp_write_ptr, 0x5800);
 
-			if(XATrack == -1)
+			if(XATrack == -1) {
 				memset(ADPCMBuffer, 0, 0x5800);
-			else
+			} else {
 				FillADPCMBuffer((char*)audio_fp_write_ptr, XATrack);
+			}
 
 			if(continue_reading_audio_file) {
 				audio_fp_write_ptr += 0x5800;
 
-				if((long)audio_fp_write_ptr >= (long)(wav_file_buffer + 0x37000))
+				if((long)audio_fp_write_ptr >= (long)(wav_file_buffer + 0x37000)) {
 					audio_fp_write_ptr = wav_file_buffer;
+				}
 
 				IDirectSoundBuffer_Lock(DSBuffer, NextWriteOffset, NotifySize, (LPVOID*)&write, &bytes, 0, 0, 0);
 				acmStreamConvert(hACMStream, &StreamHeaders[CurrentNotify], ACM_STREAMCONVERTF_BLOCKALIGN);
 				IDirectSoundBuffer_Unlock(DSBuffer, &write, bytes, 0, 0);
 				NextWriteOffset += bytes;
 
-				if(NextWriteOffset >= audio_buffer_size)
+				if(NextWriteOffset >= audio_buffer_size) {
 					NextWriteOffset -= audio_buffer_size;
+				}
 
 				CurrentNotify = (CurrentNotify + 1) & 3;
 			}
@@ -404,8 +416,9 @@ long ACMHandleNotifications() {
 
 		LeaveCriticalSection(&audio_cs);
 
-		if(!DSBuffer)
+		if(!DSBuffer) {
 			break;
+		}
 	}
 
 	return DS_OK;
@@ -472,8 +485,9 @@ bool ACMInit() {
 }
 
 void ACMClose() {
-	if(!acm_ready)
+	if(!acm_ready) {
 		return;
+	}
 
 	EnterCriticalSection(&audio_cs);
 	S_CDStop();
@@ -489,14 +503,16 @@ void ACMClose() {
 	if(DSNotify) {
 		Log(__func__, "Released %s @ %x - RefCnt = %d", "Notification", DSNotify, IUnknown_Release(DSNotify));
 		DSNotify = 0;
-	} else
+	} else {
 		Log(__func__, "%s Attempt To Release NULL Ptr", "Notification");
+	}
 
 	if(DSBuffer) {
 		Log(__func__, "Released %s @ %x - RefCnt = %d", "Stream Buffer", DSBuffer, IDirectSoundBuffer_Release(DSBuffer));
 		DSBuffer = 0;
-	} else
+	} else {
 		Log(__func__, "%s Attempt To Release NULL Ptr", "Stream Buffer");
+	}
 
 	LeaveCriticalSection(&audio_cs);
 }

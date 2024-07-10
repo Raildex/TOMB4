@@ -126,8 +126,9 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 	phd_PushMatrix();
 	obj = GetObjectInfo(currentLevel, item->object_number);
 
-	if(lara.vehicle == NO_ITEM)
+	if(lara.vehicle == NO_ITEM) {
 		S_PrintShadow(obj->shadow_size, GLaraShadowframe, item);
+	}
 
 	if(1) {
 		if(input & IN_LOOK) {
@@ -137,27 +138,31 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 			dist = phd_sqrt(SQUARE(dx) + SQUARE(dy) + SQUARE(dz));
 			a = dist >> 2;
 
-			if(a < 0)
+			if(a < 0) {
 				a = 0;
+			}
 
-			if(a > 255)
+			if(a > 255) {
 				a = 255;
+			}
 
 			GlobalAlpha = a << 24;
 		} else {
 			if(a < 255) {
 				a += 8;
 
-				if(a > 255)
+				if(a > 255) {
 					a = 255;
+				}
 			}
 
 			GlobalAlpha = a << 24;
 		}
 	}
 
-	if(!mirror)
+	if(!mirror) {
 		CalculateObjectLightingLara();
+	}
 
 	for(int i = 0; i < 15; i++) // skin
 	{
@@ -174,18 +179,20 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 		mMXPtr[M22] = lara_matrices[i * 12 + M22];
 		mMXPtr[M23] = lara_matrices[i * 12 + M23];
 
-		if(LaraNodeUnderwater[i])
+		if(LaraNodeUnderwater[i]) {
 			bLaraUnderWater = i;
-		else
+		} else {
 			bLaraUnderWater = -1;
+		}
 
 		phd_PutPolygons(lara.mesh_ptrs[lara_mesh_sweetness_table[i]], -1); // no meshbits checks?
 
 		for(int j = 0; j < 4; j++) {
 			stash = (unsigned char)NodesToStashFromScratch[i][j];
 
-			if(stash == 255)
+			if(stash == 255) {
 				break;
+			}
 
 			StashSkinVertices(stash);
 		}
@@ -205,14 +212,15 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 		SkinVerticesToScratch(NodesToStashToScratch[i][0]);
 		SkinVerticesToScratch(NodesToStashToScratch[i][1]);
 
-		if(LaraNodeUnderwater[lara_underwater_skin_sweetness_table[i]])
+		if(LaraNodeUnderwater[lara_underwater_skin_sweetness_table[i]]) {
 			bLaraUnderWater = lara_underwater_skin_sweetness_table[i];
-		else
+		} else {
 			bLaraUnderWater = -1;
+		}
 
-		if(SkinUseMatrix[i][0] >= 255)
+		if(SkinUseMatrix[i][0] >= 255) {
 			phd_PutPolygons(*meshpp, -1);
-		else {
+		} else {
 			mMXPtr[M00] = lara_matrices[SkinUseMatrix[i][1] * 12 + M00];
 			mMXPtr[M01] = lara_matrices[SkinUseMatrix[i][1] * 12 + M01];
 			mMXPtr[M02] = lara_matrices[SkinUseMatrix[i][1] * 12 + M02];
@@ -355,11 +363,13 @@ void SetLaraUnderwaterNodes() {
 		pos.z = 0;
 		GetLaraJointPos(&pos, i);
 
-		if(lara_mesh_sweetness_table[i] == 7)
+		if(lara_mesh_sweetness_table[i] == 7) {
 			pos.y -= 120;
+		}
 
-		if(lara_mesh_sweetness_table[i] == 14)
+		if(lara_mesh_sweetness_table[i] == 14) {
 			pos.y -= 60;
+		}
 
 		room_num = lara_item->room_number;
 		GetFloor(pos.x, pos.y, pos.z, &room_num);
@@ -386,17 +396,19 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag) {
 	short* rot2;
 	short gun;
 
-	if(flag == 1)
+	if(flag == 1) {
 		matrix = lara_joint_matrices;
-	else
+	} else {
 		matrix = lara_matrices;
+	}
 
 	phd_PushMatrix();
 
-	if(!flag || flag == 2)
+	if(!flag || flag == 2) {
 		phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
-	else
+	} else {
 		phd_SetTrans(0, 0, 0);
+	}
 
 	phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
 
@@ -465,8 +477,9 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag) {
 
 	gun = WEAPON_NONE;
 
-	if(lara.gun_status == LG_READY || lara.gun_status == LG_FLARE || lara.gun_status == LG_DRAW_GUNS || lara.gun_status == LG_UNDRAW_GUNS)
+	if(lara.gun_status == LG_READY || lara.gun_status == LG_FLARE || lara.gun_status == LG_DRAW_GUNS || lara.gun_status == LG_UNDRAW_GUNS) {
 		gun = lara.gun_type;
+	}
 
 	switch(gun) {
 	case WEAPON_NONE:
@@ -496,8 +509,9 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag) {
 			rot = &lara.left_arm.frame_base[(GetAnim(currentLevel, lara.left_arm.anim_number)->interpolation >> 8) * (lara.left_arm.frame_number - GetAnim(currentLevel, lara.left_arm.anim_number)->frame_base) + 9];
 
 			gar_RotYXZsuperpack(&rot, 11);
-		} else
+		} else {
 			gar_RotYXZsuperpack(&rot, 0);
+		}
 
 		memcpy(matrix, mMXPtr, 48);
 		matrix += 12;
@@ -691,17 +705,19 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	short* rot2copy;
 	short gun;
 
-	if(flag == 1)
+	if(flag == 1) {
 		matrix = lara_joint_matrices;
-	else
+	} else {
 		matrix = lara_matrices;
+	}
 
 	phd_PushMatrix();
 
-	if(!flag || flag == 2)
+	if(!flag || flag == 2) {
 		phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
-	else
+	} else {
 		phd_SetTrans(0, 0, 0);
+	}
 
 	phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
 
@@ -802,8 +818,9 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 
 	gun = WEAPON_NONE;
 
-	if(lara.gun_status == LG_READY || lara.gun_status == LG_FLARE || lara.gun_status == LG_DRAW_GUNS || lara.gun_status == LG_UNDRAW_GUNS)
+	if(lara.gun_status == LG_READY || lara.gun_status == LG_FLARE || lara.gun_status == LG_DRAW_GUNS || lara.gun_status == LG_UNDRAW_GUNS) {
 		gun = lara.gun_type;
+	}
 
 	switch(gun) {
 	case WEAPON_NONE:
@@ -842,8 +859,9 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 			rot2 = &lara.left_arm.frame_base[(GetAnim(currentLevel, lara.left_arm.anim_number)->interpolation >> 8) * (lara.left_arm.frame_number - GetAnim(currentLevel, lara.left_arm.anim_number)->frame_base) + 9];
 			rot = rot2;
 			gar_RotYXZsuperpack_I(&rot, &rot2, 11);
-		} else
+		} else {
 			gar_RotYXZsuperpack_I(&rot, &rot2, 0);
+		}
 
 		phd_PushMatrix();
 		mInterpolateMatrix();
@@ -1032,17 +1050,18 @@ void CalcLaraMatrices(long flag) {
 		}
 	}
 
-	if(lara.hit_direction < 0)
+	if(lara.hit_direction < 0) {
 		frame = *frmptr;
-	else {
-		if(!lara.hit_direction)
+	} else {
+		if(!lara.hit_direction) {
 			spaz = lara.IsDucked ? ANIM_SPAZ_DUCKF : ANIM_SPAZ_FORWARD;
-		else if(lara.hit_direction == 1)
+		} else if(lara.hit_direction == 1) {
 			spaz = lara.IsDucked ? ANIM_SPAZ_DUCKR : ANIM_SPAZ_RIGHT;
-		else if(lara.hit_direction == 2)
+		} else if(lara.hit_direction == 2) {
 			spaz = lara.IsDucked ? ANIM_SPAZ_DUCKB : ANIM_SPAZ_BACK;
-		else
+		} else {
 			spaz = lara.IsDucked ? ANIM_SPAZ_DUCKL : ANIM_SPAZ_LEFT;
+		}
 
 		frame = &GetAnim(currentLevel, spaz)->frame_ptr[lara.hit_frame * (GetAnim(currentLevel, spaz)->interpolation >> 8)];
 	}

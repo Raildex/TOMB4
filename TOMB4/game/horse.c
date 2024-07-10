@@ -76,14 +76,16 @@ void HorsemanControl(short item_number) {
 				}
 			}
 
-			if(item->item_flags[0] == -1)
+			if(item->item_flags[0] == -1) {
 				item->item_flags[0] = 0;
+			}
 		}
 
-		if(item->item_flags[0])
+		if(item->item_flags[0]) {
 			item2 = GetItem(currentLevel, item->item_flags[0]);
-		else
+		} else {
 			item2 = NULL;
+		}
 
 		horseman = (CREATURE_INFO*)item->data;
 		angle = 0;
@@ -110,8 +112,9 @@ void HorsemanControl(short item_number) {
 					item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 					item->current_anim_state = 16;
 
-					if(item->item_flags[0])
+					if(item->item_flags[0]) {
 						GetItem(currentLevel, item->item_flags[0])->after_death = 1;
+					}
 				}
 			} else {
 				item->hit_points = 100;
@@ -125,10 +128,11 @@ void HorsemanControl(short item_number) {
 				item->dynamic_light = 1; // Flag for enemy bar to use the new health. bite me.
 			}
 		} else {
-			if(item->ai_bits)
+			if(item->ai_bits) {
 				GetAITarget(horseman);
-			else if(horseman->hurt_by_lara)
+			} else if(horseman->hurt_by_lara) {
 				horseman->enemy = lara_item;
+			}
 
 			CreatureAIInfo(item, &info);
 
@@ -154,8 +158,9 @@ void HorsemanControl(short item_number) {
 							} else if(lara.gun_type == WEAPON_REVOLVER) {
 								item->hit_points -= 20;
 								item->hit_status = 1;
-							} else
+							} else {
 								item->hit_points--;
+							}
 
 							SoundEffect(SFX_HORSEMAN_TAKEHIT, &item->pos, SFX_DEFAULT);
 							SoundEffect(SFX_HORSE_RICOCHETS, &item->pos, SFX_DEFAULT);
@@ -165,15 +170,17 @@ void HorsemanControl(short item_number) {
 							GetJointAbsPosition(item, &v, 1);
 							TriggerHorsemanRicochets(&v, item->pos.y_rot, 7);
 						} else if(!(GetRandomControl() & 7)) {
-							if(item->current_anim_state == 15)
+							if(item->current_anim_state == 15) {
 								item->goal_anim_state = 9;
+							}
 
 							ExplodeItemNode(item, 10, 1, -24);
 						}
 					}
 
-					if(!item->item_flags[1] && item->mesh_bits & 0x400)
+					if(!item->item_flags[1] && item->mesh_bits & 0x400) {
 						item->required_anim_state = 15;
+					}
 				}
 			}
 
@@ -193,10 +200,11 @@ void HorsemanControl(short item_number) {
 					if(larainfo.distance <= 0x1000000 && !horseman->reached_goal) {
 						item->ai_bits = FOLLOW;
 
-						if(item->item_flags[3] == 1)
+						if(item->item_flags[3] == 1) {
 							item->item_flags[3] = 2;
-						else
+						} else {
 							item->item_flags[3] = 1;
+						}
 					} else {
 						horseman->flags = 0;
 						horseman->enemy = lara_item;
@@ -243,12 +251,14 @@ void HorsemanControl(short item_number) {
 				if(horseman->flags) {
 					item->ai_bits = FOLLOW;
 
-					if(item->item_flags[3] == 1)
+					if(item->item_flags[3] == 1) {
 						item->item_flags[3] = 2;
-					else
+					} else {
 						item->item_flags[3] = 1;
-				} else
+					}
+				} else {
 					horseman->flags = 0;
+				}
 
 				if(item->required_anim_state) {
 					item->goal_anim_state = 1;
@@ -261,8 +271,9 @@ void HorsemanControl(short item_number) {
 				} else {
 					item->goal_anim_state = 4;
 
-					if(horseman->reached_goal)
+					if(horseman->reached_goal) {
 						item->required_anim_state = 17;
+					}
 
 					item2->flags = 0;
 				}
@@ -282,10 +293,11 @@ void HorsemanControl(short item_number) {
 					lara_item->hit_points -= 150;
 					lara_item->hit_status = 1;
 
-					if(item2->touch_bits & 0x2000)
+					if(item2->touch_bits & 0x2000) {
 						CreatureEffectT(item2, &horse_lfoot, 10, -1, DoBloodSplat);
-					else
+					} else {
 						CreatureEffectT(item2, &horse_rfoot, 10, -1, DoBloodSplat);
+					}
 
 					item2->flags = 1;
 				}
@@ -301,8 +313,9 @@ void HorsemanControl(short item_number) {
 					horseman->flags = 1;
 				}
 
-				if(item->hit_status)
+				if(item->hit_status) {
 					item->goal_anim_state = 9;
+				}
 
 				break;
 
@@ -321,14 +334,15 @@ void HorsemanControl(short item_number) {
 				horseman->maximum_turn = 0;
 				horseman->flags = 0;
 
-				if(item->ai_bits && !item->item_flags[3])
+				if(item->ai_bits && !item->item_flags[3]) {
 					item->goal_anim_state = 10;
-				else if(item->required_anim_state)
+				} else if(item->required_anim_state) {
 					item->goal_anim_state = item->required_anim_state;
-				else if(info.bite && info.distance < 0x718E4)
+				} else if(info.bite && info.distance < 0x718E4) {
 					item->goal_anim_state = 14;
-				else if(info.distance < 0x2400000 && info.distance > 0x718E4)
+				} else if(info.distance < 0x2400000 && info.distance > 0x718E4) {
 					item->goal_anim_state = 10;
+				}
 
 				break;
 
@@ -347,24 +361,27 @@ void HorsemanControl(short item_number) {
 					item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 					item->current_anim_state = 5;
 					horseman->maximum_turn = 0;
-				} else if(item->hit_status)
+				} else if(item->hit_status) {
 					item->goal_anim_state = 9;
-				else if(info.bite && info.distance < 0x718E4) {
-					if(GetRandomControl() & 1)
+				} else if(info.bite && info.distance < 0x718E4) {
+					if(GetRandomControl() & 1) {
 						item->goal_anim_state = 12;
-					else if(GetRandomControl() & 1)
+					} else if(GetRandomControl() & 1) {
 						item->goal_anim_state = 13;
-					else
+					} else {
 						item->goal_anim_state = 9;
-				} else if(info.distance < 0x1900000 && info.distance > 0x1C6E39)
+					}
+				} else if(info.distance < 0x1900000 && info.distance > 0x1C6E39) {
 					item->goal_anim_state = 11;
+				}
 
 				break;
 
 			case 11:
 
-				if(info.distance < 0x1C6E39)
+				if(info.distance < 0x1C6E39) {
 					item->goal_anim_state = 10;
+				}
 
 				break;
 
@@ -373,19 +390,21 @@ void HorsemanControl(short item_number) {
 			case 14:
 				horseman->maximum_turn = 0;
 
-				if(abs(info.angle) < 546)
+				if(abs(info.angle) < 546) {
 					item->pos.y_rot += info.angle;
-				else if(info.angle < 0)
+				} else if(info.angle < 0) {
 					item->pos.y_rot -= 546;
-				else
+				} else {
 					item->pos.y_rot += 546;
+				}
 
 				break;
 
 			case 15:
 
-				if(lara.target_item != item_number || info.bite && info.distance < 0x718E4)
+				if(lara.target_item != item_number || info.bite && info.distance < 0x718E4) {
 					item->goal_anim_state = 9;
+				}
 
 				break;
 
@@ -397,14 +416,17 @@ void HorsemanControl(short item_number) {
 					lara_item->hit_points -= 150;
 					lara_item->hit_status = 1;
 
-					if(item2->touch_bits & 0x2000)
+					if(item2->touch_bits & 0x2000) {
 						CreatureEffectT(item2, &horse_lfoot, 10, -1, DoBloodSplat);
+					}
 
-					if(item2->touch_bits & 0x20000)
+					if(item2->touch_bits & 0x20000) {
 						CreatureEffectT(item2, &horse_rfoot, 10, -1, DoBloodSplat);
+					}
 
-					if(item2->touch_bits & 0x80000)
+					if(item2->touch_bits & 0x80000) {
 						CreatureEffectT(item2, &horse_head, 10, -1, DoBloodSplat);
+					}
 
 					item2->flags = 1;
 				}
@@ -444,25 +466,28 @@ void HorsemanControl(short item_number) {
 		}
 
 		if(item2 && item->item_flags[1]) {
-			if(abs(rot - item->pos.x_rot) < 256)
+			if(abs(rot - item->pos.x_rot) < 256) {
 				item->pos.x_rot = 0;
-			else if(rot > item->pos.x_rot)
+			} else if(rot > item->pos.x_rot) {
 				item->pos.x_rot += 256;
-			else if(rot < item->pos.x_rot)
+			} else if(rot < item->pos.x_rot) {
 				item->pos.x_rot -= 256;
+			}
 
 			item2->pos = item->pos;
 
-			if(item2->room_number != item->room_number)
+			if(item2->room_number != item->room_number) {
 				ItemNewRoom(item->item_flags[0], item->room_number);
+			}
 
 			AnimateItem(item2);
 		}
 
-		if(item->item_flags[1])
+		if(item->item_flags[1]) {
 			GetObjectInfo(currentLevel, HORSEMAN)->radius = 409;
-		else
+		} else {
 			GetObjectInfo(currentLevel, HORSEMAN)->radius = 170;
+		}
 
 		CreatureAnimation(item_number, angle, 0);
 	}
@@ -526,10 +551,11 @@ void TriggerHorsemanRicochets(PHD_VECTOR* pos, long yrot, long num) {
 		sptr->Gravity = random >> 7 & 0x1F;
 		sptr->RotAng = (short)(random >> 3);
 
-		if(random & 1)
+		if(random & 1) {
 			sptr->RotAdd = 240 - (random & 0xF);
-		else
+		} else {
 			sptr->RotAdd = (random & 0xF) + 16;
+		}
 
 		sptr->Scalar = 3;
 		sptr->sSize = (random >> 5 & 0x7) + 4;

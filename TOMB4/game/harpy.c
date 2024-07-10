@@ -39,8 +39,9 @@ void TriggerHarpyMissileFlame(short fx_number, long xv, long yv, long zv) {
 	dx = lara_item->pos.x_pos - GetEffect(currentLevel, fx_number)->pos.x_pos;
 	dz = lara_item->pos.z_pos - GetEffect(currentLevel, fx_number)->pos.z_pos;
 
-	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
+	}
 
 	sptr = GetFreeSpark();
 	sptr->On = 1;
@@ -65,10 +66,11 @@ void TriggerHarpyMissileFlame(short fx_number, long xv, long yv, long zv) {
 	sptr->Flags = 602;
 	sptr->RotAng = GetRandomControl() & 0xFFF;
 
-	if(GetRandomControl() & 1)
+	if(GetRandomControl() & 1) {
 		sptr->RotAdd = -32 - (GetRandomControl() & 0x1F);
-	else
+	} else {
 		sptr->RotAdd = (GetRandomControl() & 0x1F) + 32;
+	}
 
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
@@ -109,8 +111,9 @@ void TriggerHarpySparks(long x, long y, long z, short xv, short yv, short zv) {
 	dx = lara_item->pos.x_pos - x;
 	dz = lara_item->pos.z_pos - z;
 
-	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
+	}
 
 	sptr = GetFreeSpark();
 	sptr->On = 1;
@@ -148,8 +151,9 @@ void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size) 
 	dx = lara_item->pos.x_pos - GetItem(currentLevel, item_number)->pos.x_pos;
 	dz = lara_item->pos.z_pos - GetItem(currentLevel, item_number)->pos.z_pos;
 
-	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
 		return;
+	}
 
 	sptr = GetFreeSpark();
 	sptr->On = 1;
@@ -174,10 +178,11 @@ void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size) 
 	sptr->Flags = 4762;
 	sptr->RotAng = GetRandomControl() & 0xFFF;
 
-	if(GetRandomControl() & 1)
+	if(GetRandomControl() & 1) {
 		sptr->RotAdd = -32 - (GetRandomControl() & 0x1F);
-	else
+	} else {
 		sptr->RotAdd = (GetRandomControl() & 0x1F) + 32;
+	}
 
 	sptr->MaxYvel = 0;
 	sptr->Gravity = (GetRandomControl() & 0x1F) + 16;
@@ -229,14 +234,16 @@ void DoHarpyEffects(ITEM_INFO* item, short item_number) {
 
 	size = item->item_flags[0] * 2;
 
-	if(size > 64)
+	if(size > 64) {
 		size = 64;
+	}
 
 	if(item->item_flags[0] < 80) {
-		if((wibble & 0xF) == 8)
+		if((wibble & 0xF) == 8) {
 			TriggerHarpyFlame(item_number, 4, size);
-		else if(!(wibble & 0xF))
+		} else if(!(wibble & 0xF)) {
 			TriggerHarpyFlame(item_number, 5, size);
+		}
 	}
 
 	if(item->item_flags[0] >= 61 && item->item_flags[0] <= 65 && GlobalCounter & 1) {
@@ -286,8 +293,9 @@ void HarpyControl(short item_number) {
 	long dx, dy, dz, dist, max_dist;
 	short angle, head, torso_x, torso_y;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 	harpy = (CREATURE_INFO*)item->data;
@@ -313,8 +321,9 @@ void HarpyControl(short item_number) {
 					item->pos.x_rot = 0;
 				}
 			}
-		} else
+		} else {
 			item->goal_anim_state = 10;
+		}
 
 		if(item->current_anim_state == 10) {
 			if(item->pos.y_pos >= item->floor) {
@@ -327,8 +336,9 @@ void HarpyControl(short item_number) {
 			item->pos.x_rot = 0;
 		}
 	} else {
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(harpy);
+		}
 
 		harpy->enemy = NULL;
 		max_dist = infinite_distance;
@@ -355,8 +365,9 @@ void HarpyControl(short item_number) {
 		CreatureAIInfo(item, &info);
 		enemy = harpy->enemy;
 
-		if(enemy != lara_item)
+		if(enemy != lara_item) {
 			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+		}
 
 		GetCreatureMood(item, &info, 1);
 		CreatureMood(item, &info, 1);
@@ -399,8 +410,9 @@ void HarpyControl(short item_number) {
 			if(harpy->enemy == lara_item && Targetable(item, &info) && info.distance > 0xC40000 && GetRandomControl() & 1) {
 				item->goal_anim_state = 8;
 				item->item_flags[0] = 0;
-			} else
+			} else {
 				item->goal_anim_state = 2;
+			}
 
 			break;
 
@@ -411,20 +423,22 @@ void HarpyControl(short item_number) {
 			if(item->required_anim_state) {
 				item->goal_anim_state = item->required_anim_state;
 
-				if(item->goal_anim_state == 8)
+				if(item->goal_anim_state == 8) {
 					item->item_flags[0] = 0;
-			} else if(item->hit_status)
+				}
+			} else if(item->hit_status) {
 				item->goal_anim_state = 7;
-			else if(!info.ahead) {
-				if(GetRandomControl() & 1)
+			} else if(!info.ahead) {
+				if(GetRandomControl() & 1) {
 					item->goal_anim_state = 7;
-				else if(!info.ahead)
+				} else if(!info.ahead) {
 					item->goal_anim_state = 4;
-			} else if(info.distance < 0x1C639)
+				}
+			} else if(info.distance < 0x1C639) {
 				item->goal_anim_state = 6;
-			else if(!info.ahead || info.distance < 0x400000 || info.distance <= 0xC40000 || !(GetRandomControl() & 1))
+			} else if(!info.ahead || info.distance < 0x400000 || info.distance <= 0xC40000 || !(GetRandomControl() & 1)) {
 				item->goal_anim_state = 4;
-			else {
+			} else {
 				item->goal_anim_state = 8;
 				item->item_flags[0] = 0;
 			}
@@ -434,18 +448,20 @@ void HarpyControl(short item_number) {
 		case 3:
 			dy = item->pos.y_pos + 2048;
 
-			if(!enemy || enemy->pos.y_pos < dy || item->floor < dy)
+			if(!enemy || enemy->pos.y_pos < dy || item->floor < dy) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
 		case 4:
 			harpy->maximum_turn = 364;
 
-			if(info.ahead && info.distance < 0x400000)
+			if(info.ahead && info.distance < 0x400000) {
 				item->goal_anim_state = 5;
-			else
+			} else {
 				item->goal_anim_state = 13;
+			}
 
 			break;
 
@@ -458,10 +474,11 @@ void HarpyControl(short item_number) {
 				lara_item->hit_points -= 10;
 				lara_item->hit_status = 1;
 
-				if(item->touch_bits & 0x10)
+				if(item->touch_bits & 0x10) {
 					CreatureEffectT(item, &left_hit, 5, -1, DoBloodSplat);
-				else
+				} else {
 					CreatureEffectT(item, &right_hit, 5, -1, DoBloodSplat);
+				}
 			}
 
 			break;
@@ -477,8 +494,9 @@ void HarpyControl(short item_number) {
 					lara_item->hit_status = 1;
 					CreatureEffectT(item, &tail_hit, 10, -1, DoBloodSplat);
 
-					if(enemy == lara_item)
+					if(enemy == lara_item) {
 						lara.dpoisoned += 2048;
+					}
 
 					harpy->flags = 1;
 				}
@@ -495,8 +513,9 @@ void HarpyControl(short item_number) {
 			if(info.ahead && info.distance > 0xC40000) {
 				item->goal_anim_state = 2;
 				item->required_anim_state = 8;
-			} else if(GetRandomControl() & 1)
+			} else if(GetRandomControl() & 1) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 

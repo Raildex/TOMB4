@@ -22,11 +22,13 @@ void ControlPulseLight(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(!TriggerActive(item))
+	if(!TriggerActive(item)) {
 		return;
+	}
 
-	if(!flip_stats[4] && gfLevelFlags & GF_PULSE)
+	if(!flip_stats[4] && gfLevelFlags & GF_PULSE) {
 		return;
+	}
 
 	if(item->trigger_flags == 1) {
 		item->trigger_flags = 0;
@@ -51,8 +53,9 @@ void ControlPulseLight(short item_number) {
 	item->item_flags[0] -= 2048;
 	sin = abs(phd_sin(item->item_flags[0] + ((item->pos.y_pos & 0x3FFF) << 2)) >> 6);
 
-	if(sin > 255)
+	if(sin > 255) {
 		sin = 255;
+	}
 
 	r = (sin * 64) >> 9;
 	g = (sin * 255) >> 9;
@@ -76,21 +79,23 @@ void ControlElectricalLight(short item_number) {
 		item->item_flags[0]++;
 	} else {
 		if(item->item_flags[0] >= 96) {
-			if(item->item_flags[0] >= 160)
+			if(item->item_flags[0] >= 160) {
 				shade = 255 - (GetRandomControl() & 0x1F);
-			else {
+			} else {
 				shade = 96 - (GetRandomControl() & 0x1F);
 
-				if(!(GetRandomControl() & 0x1F) && item->item_flags[0] > 128)
+				if(!(GetRandomControl() & 0x1F) && item->item_flags[0] > 128) {
 					item->item_flags[0] = 160;
-				else
+				} else {
 					item->item_flags[0]++;
+				}
 			}
 		} else {
-			if(wibble & 0x3F && GetRandomControl() & 7)
+			if(wibble & 0x3F && GetRandomControl() & 7) {
 				shade = GetRandomControl() & 0x3F;
-			else
+			} else {
 				shade = 192 - (GetRandomControl() & 0x3F);
+			}
 
 			item->item_flags[0]++;
 		}
@@ -108,14 +113,15 @@ void ControlBlinker(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(!TriggerActive(item))
+	if(!TriggerActive(item)) {
 		return;
+	}
 
 	item->trigger_flags--;
 
-	if(item->trigger_flags >= 3)
+	if(item->trigger_flags >= 3) {
 		item->mesh_bits = 1;
-	else {
+	} else {
 		pos.z = 0;
 		pos.y = 0;
 		pos.x = 0;
@@ -123,7 +129,8 @@ void ControlBlinker(short item_number) {
 		TriggerDynamic(pos.x, pos.y, pos.z, 16, 255, 192, 16);
 		item->mesh_bits = 2;
 
-		if(item->trigger_flags < 0)
+		if(item->trigger_flags < 0) {
 			item->trigger_flags = 30;
+		}
 	}
 }

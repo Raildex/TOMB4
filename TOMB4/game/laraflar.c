@@ -66,8 +66,9 @@ void undraw_flare_meshes() {
 long DoFlareLight(PHD_VECTOR* pos, long flare_age) {
 	long x, y, z, r, g, b, rnd, falloff, ret;
 
-	if(flare_age >= 900 || !flare_age)
+	if(flare_age >= 900 || !flare_age) {
 		return 0;
+	}
 
 	rnd = GetRandomControl();
 	x = pos->x + ((rnd & 0xF) << 3);
@@ -78,8 +79,9 @@ long DoFlareLight(PHD_VECTOR* pos, long flare_age) {
 	if(flare_age < 4) {
 		falloff = (rnd & 3) + 4 + flare_age * 4;
 
-		if(falloff > 16)
+		if(falloff > 16) {
 			falloff -= (rnd >> 12) & 3;
+		}
 
 		r = (rnd >> 4 & 0x1F) + 8 * flare_age + 32;
 		g = (rnd & 0x1F) + 16 * (flare_age + 10);
@@ -133,10 +135,11 @@ void DoFlareInHand(long flare_age) {
 		DoFlareLight(&pos, flare_age);
 	}
 
-	if(lara.flare_age < 900)
+	if(lara.flare_age < 900) {
 		lara.flare_age++;
-	else if(lara.gun_status == LG_NO_ARMS)
+	} else if(lara.gun_status == LG_NO_ARMS) {
 		lara.gun_status = LG_UNDRAW_GUNS;
+	}
 }
 
 void CreateFlare(short object, long thrown) {
@@ -176,10 +179,11 @@ void CreateFlare(short object, long thrown) {
 			flare->pos.z_pos = lara_item->pos.z_pos + (80 * phd_cos(flare->pos.y_rot) >> W2V_SHIFT);
 			flare->room_number = lara_item->room_number;
 		} else {
-			if(thrown)
+			if(thrown) {
 				flare->pos.y_rot = lara_item->pos.y_rot;
-			else
+			} else {
 				flare->pos.y_rot = lara_item->pos.y_rot - 0x2000;
+			}
 
 			flare->room_number = room_number;
 		}
@@ -197,16 +201,18 @@ void CreateFlare(short object, long thrown) {
 			flare->fallspeed = lara_item->fallspeed + 50;
 		}
 
-		if(collided)
+		if(collided) {
 			flare->speed >>= 1;
+		}
 
 		if(object == FLARE_ITEM) {
 			FLARE_INFO* info = (FLARE_INFO*)calloc(1, sizeof(FLARE_INFO));
 			DoFlareLight((PHD_VECTOR*)&flare->pos, lara.flare_age);
 			info->age = (lara.flare_age & 0x7FFF);
 			flare->data = info;
-		} else
+		} else {
 			flare->item_flags[3] = lara.LitTorch;
+		}
 
 		AddActiveItem(flare_item);
 		flare->status = ITEM_ACTIVE;
@@ -219,14 +225,15 @@ void set_flare_arm(long frame) {
 	anim_base = GetObjectInfo(currentLevel, FLARE_ANIM)->anim_index;
 
 	if(frame >= 1) {
-		if(frame < 33)
+		if(frame < 33) {
 			anim_base += 1;
-		else if(frame < 72)
+		} else if(frame < 72) {
 			anim_base += 2;
-		else if(frame < 95)
+		} else if(frame < 95) {
 			anim_base += 3;
-		else
+		} else {
 			anim_base += 4;
+		}
 	}
 
 	lara.left_arm.anim_number = anim_base;
@@ -257,16 +264,17 @@ void draw_flare() {
 		lara.flare_control_left = 1;
 		ani = lara.left_arm.frame_number + 1;
 
-		if(ani < 33 || ani > 94)
+		if(ani < 33 || ani > 94) {
 			ani = 33;
-		else if(ani == 46)
+		} else if(ani == 46) {
 			draw_flare_meshes();
-		else if(ani >= 72 && ani <= 93) {
+		} else if(ani >= 72 && ani <= 93) {
 			if(ani == 72) {
-				if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_UNDERWATER)
+				if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_UNDERWATER) {
 					SoundEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_WATER);
-				else
+				} else {
 					SoundEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_DEFAULT);
+				}
 
 				lara.flare_age = 1;
 			}
@@ -325,16 +333,18 @@ void undraw_flare() {
 		lara_item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 	}
 
-	if(ani >= 33 && ani < 72)
+	if(ani >= 33 && ani < 72) {
 		ani = 1;
+	}
 
-	if(!ani)
+	if(!ani) {
 		ani = 1;
-	else if(ani >= 72 && ani < 95) {
+	} else if(ani >= 72 && ani < 95) {
 		ani++;
 
-		if(ani == 94)
+		if(ani == 94) {
 			ani = 1;
+		}
 	} else if(ani >= 1 && ani < 33) {
 		ani++;
 
@@ -358,12 +368,14 @@ void undraw_flare() {
 	} else if(ani >= 95 && ani < 110) {
 		ani++;
 
-		if(ani == 110)
+		if(ani == 110) {
 			ani = 1;
+		}
 	}
 
-	if(ani >= 1 && ani < 21)
+	if(ani >= 1 && ani < 21) {
 		DoFlareInHand(lara.flare_age);
+	}
 
 	lara.left_arm.frame_number = ani;
 	set_flare_arm(lara.left_arm.frame_number);
@@ -394,8 +406,9 @@ void FlareControl(short item_number) {
 	if(GetRoom(currentLevel, flare->room_number)->flags & ROOM_UNDERWATER) {
 		flare->fallspeed += (5 - flare->fallspeed) >> 1;
 		flare->speed += (5 - flare->speed) >> 1;
-	} else
+	} else {
 		flare->fallspeed += 6;
+	}
 
 	yv = flare->fallspeed;
 	flare->pos.y_pos += yv;
@@ -407,8 +420,9 @@ void FlareControl(short item_number) {
 			KillItem(item_number);
 			return;
 		}
-	} else
+	} else {
 		flare_age++;
+	}
 
 	if(DoFlareLight((PHD_VECTOR*)&flare->pos, flare_age)) {
 		if(gfLevelFlags & GF_MIRROR && flare->room_number == gfMirrorRoom) {

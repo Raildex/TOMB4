@@ -188,9 +188,9 @@ void DoGameflow() {
 		case CMD_LEVEL:
 			gfLevelFlags = gf[1] | (gf[2] << 8);
 			gfLevelFlags &= ~GF_YOUNGLARA;
-			if(!(gfLevelFlags & GF_NOLEVEL))
+			if(!(gfLevelFlags & GF_NOLEVEL)) {
 				DoLevel(gf[3], gf[4]);
-			else {
+			} else {
 				gfStatus = 999;
 				gfCurrentLevel++;
 			}
@@ -226,16 +226,18 @@ void DoGameflow() {
 				if(gfLevelFlags & GF_RESETHUB && gfLevelComplete == gfResetHubDest || skipped_level) {
 					sgInitialiseHub(0);
 					skipped_level = 0;
-				} else
+				} else {
 					sgSaveLevel();
+				}
 
-				if(Gameflow->DemoDisc || Gameflow->nLevels == 2)
+				if(Gameflow->DemoDisc || Gameflow->nLevels == 2) {
 					gfCurrentLevel = 0;
-				else {
-					if(gfLevelComplete > Gameflow->nLevels)
+				} else {
+					if(gfLevelComplete > Gameflow->nLevels) {
 						gfCurrentLevel = 0;
-					else
+					} else {
 						gfCurrentLevel = gfLevelComplete;
+					}
 				}
 
 				break;
@@ -348,8 +350,9 @@ void DoGameflow() {
 			gfLegend = gf[0];
 			gf++;
 
-			if(gfGameMode != 4)
+			if(gfGameMode != 4) {
 				gfLegendTime = 150;
+			}
 
 			break;
 
@@ -402,20 +405,21 @@ void DoGameflow() {
 			break;
 
 		default:
-			if(n >= CMD_KEY1 && n <= CMD_KEY12)
+			if(n >= CMD_KEY1 && n <= CMD_KEY12) {
 				n -= 82;
-			else if(n >= CMD_PUZZLE1 && n <= CMD_PUZZLE12)
+			} else if(n >= CMD_PUZZLE1 && n <= CMD_PUZZLE12) {
 				n -= 122;
-			else if(n >= CMD_PICKUP1 && n <= CMD_PICKUP4)
+			} else if(n >= CMD_PICKUP1 && n <= CMD_PICKUP4) {
 				n -= 78;
-			else if(n >= CMD_EXAMINE1 && n <= CMD_EXAMINE3)
+			} else if(n >= CMD_EXAMINE1 && n <= CMD_EXAMINE3) {
 				n -= 59;
-			else if(n >= CMD_KEYCOMBO1_1 && n <= CMD_KEYCOMBO8_2)
+			} else if(n >= CMD_KEYCOMBO1_1 && n <= CMD_KEYCOMBO8_2) {
 				n -= 101;
-			else if(n >= CMD_PUZZLECOMBO1_1 && n <= CMD_PUZZLECOMBO8_2)
+			} else if(n >= CMD_PUZZLECOMBO1_1 && n <= CMD_PUZZLECOMBO8_2) {
 				n += 111;
-			else if(n >= CMD_PICKUPCOMBO1_1 && n <= CMD_PICKUPCOMBO4_2)
+			} else if(n >= CMD_PICKUPCOMBO1_1 && n <= CMD_PICKUPCOMBO4_2) {
 				n -= 113;
+			}
 
 			inventry_objects_list[n].objname = gf[0] | (gf[1] << 8);
 			inventry_objects_list[n].yoff = gf[2] | (gf[3] << 8);
@@ -465,8 +469,9 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 		gfFog.g = savegame.fog_colour.g;
 		gfFog.b = savegame.fog_colour.b;
 
-		if(IsVolumetric())
+		if(IsVolumetric()) {
 			SetFogColor(gfFog.r, gfFog.g, gfFog.b);
+		}
 	} else {
 		if(gfInitialiseGame) {
 			GameTimer = 0;
@@ -474,11 +479,13 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 			gfInitialiseGame = 0;
 			CutSceneTriggered = 0;
 			FmvSceneTriggered = 0;
-		} else
+		} else {
 			sgRestoreLevel();
+		}
 
-		if(gfLevelFlags & GF_REMOVEAMULET)
+		if(gfLevelFlags & GF_REMOVEAMULET) {
 			lara.questitems &= ~1;
+		}
 
 		savegame.Level.Timer = 0;
 		CurrentAtmosphere = Audio;
@@ -548,15 +555,17 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 				gamestatus = gfStatus;
 				SetFade(0, 255);
 				gfStatus = 0;
-			} else
+			} else {
 				break;
+			}
 		}
 
 		if(gamestatus) {
 			gfStatus = 0;
 
-			if(DoFade == 2)
+			if(DoFade == 2) {
 				gfStatus = gamestatus;
+			}
 		}
 	}
 
@@ -566,16 +575,19 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 #ifndef TIMES_LEVEL
 	if(gfStatus == 3) {
 		if(fmv_to_play[0] & 0x80) {
-			if((fmv_to_play[0] & 0x7F) == 9 && gfLevelComplete != 10)
+			if((fmv_to_play[0] & 0x7F) == 9 && gfLevelComplete != 10) {
 				fmv_to_play[0] = 0;
+			}
 
-			if((fmv_to_play[0] & 0x7F) == 8 && gfLevelComplete != 22)
+			if((fmv_to_play[0] & 0x7F) == 8 && gfLevelComplete != 22) {
 				fmv_to_play[0] = 0;
+			}
 		}
 
 		if(!fmv_to_play[0] || PlayFmvNow(fmv_to_play[0] & 0x7F) != 2) {
-			if(fmv_to_play[1])
+			if(fmv_to_play[1]) {
 				PlayFmvNow(fmv_to_play[1] & 0x7F);
+			}
 		}
 	}
 
@@ -597,8 +609,9 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 			return;
 		}
 
-		if(gfLevelComplete == 25 && skipped_level)
+		if(gfLevelComplete == 25 && skipped_level) {
 			lara.vehicle = -1;
+		}
 	}
 
 	input = 0;
@@ -631,8 +644,9 @@ long TitleOptions() {
 	}
 
 	if(bDoCredits) {
-		if(DoCredits())
+		if(DoCredits()) {
 			return 0;
+		}
 
 		bDoCredits = 0;
 	}
@@ -656,9 +670,9 @@ long TitleOptions() {
 
 			nFirst = n - 9;
 
-			if(nFirst < 1)
+			if(nFirst < 1) {
 				nFirst = 1;
-			else if(nFirst > 1) {
+			} else if(nFirst > 1) {
 				PrintString(32, 3 * font_height + phd_winymin, 6, "\x18", 0);
 				PrintString(phd_winxmax - 48, 3 * font_height + phd_winymin, 6, "\x18", 0);
 			}
@@ -712,15 +726,17 @@ long TitleOptions() {
 
 	if(menu < 2) {
 		if(dbinput & IN_FORWARD) {
-			if(selection > 1)
+			if(selection > 1) {
 				selection >>= 1;
+			}
 
 			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 		}
 
 		if(dbinput & IN_BACK) {
-			if(selection < flag)
+			if(selection < flag) {
 				selection <<= 1;
+			}
 
 			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 		}
@@ -862,8 +878,9 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 		S_InitialisePolyList();
 		gfStatus = TitleOptions(); // originally inlined
 
-		if(gfStatus)
+		if(gfStatus) {
 			break;
+		}
 
 		handle_cutseq_triggering(Name);
 		nFrames = DrawPhaseGame();
@@ -876,12 +893,14 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 	bDisableLaraControl = 0;
 
 #ifndef TIMES_LEVEL
-	if(gfLevelComplete == 1 && gfStatus != 2)
+	if(gfLevelComplete == 1 && gfStatus != 2) {
 		PlayFmvNow(12);
+	}
 #endif
 
-	if(gfStatus != 4)
+	if(gfStatus != 4) {
 		RenderLoadPic(0);
+	}
 
 	input = 0;
 }
@@ -919,8 +938,9 @@ void LoadGameflow() {
 	for(l = 0;; l++) {
 		d = 0;
 
-		if(LoadFile(s, &d))
+		if(LoadFile(s, &d)) {
 			break;
+		}
 
 		s += strlen(s) + 1;
 	}
@@ -939,8 +959,9 @@ void LoadGameflow() {
 		d = &gfStringWad[gfStringOffset[i + 1]];
 		l = d - s - 1;
 
-		for(int j = 0; j < l; j++)
+		for(int j = 0; j < l; j++) {
 			s[j] ^= 0xA5;
+		}
 	}
 
 	for(int i = 0; i < Gameflow->nLevels; i++) {
@@ -1020,10 +1041,11 @@ long DoCredits() {
 		s = CreditsTable[i];
 
 		if(y < font_height + phd_winheight + 1 && y > -font_height) {
-			if(*s == '%')
+			if(*s == '%') {
 				PrintString(phd_winwidth >> 1, y, 6, SCRIPT_TEXT(CreditGroups[atoi(s + 1)]), FF_CENTER);
-			else if(*s != '0')
+			} else if(*s != '0') {
 				PrintString(phd_winwidth >> 1, y, 2 + (i == 72 ? 4 : 0), s, FF_CENTER);
+			}
 
 			num_drawn++;
 		}
@@ -1033,8 +1055,9 @@ long DoCredits() {
 
 	StartPos--;
 
-	if(!num_drawn)
+	if(!num_drawn) {
 		init = 0;
+	}
 
 	return num_drawn;
 }

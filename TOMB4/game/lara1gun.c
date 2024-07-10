@@ -48,14 +48,16 @@
 
 
 void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item) {
-	if(baddie->flags & 0x8000)
+	if(baddie->flags & 0x8000) {
 		return;
+	}
 
 	if(baddie == lara_item && lara_item->hit_points > 0) {
 		lara_item->hit_points -= 50;
 
-		if(!(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) && lara_item->hit_points <= 50)
+		if(!(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) && lara_item->hit_points <= 50) {
 			LaraBurn();
+		}
 	} else if(!item->item_flags[2]) {
 		baddie->hit_status = 1;
 
@@ -68,8 +70,9 @@ void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item) {
 				if(baddie->hit_points <= 0) {
 					savegame.Level.Kills++;
 
-					if(baddie->object_number != BABOON_NORMAL && baddie->object_number != BABOON_INV && baddie->object_number != BABOON_SILENT)
+					if(baddie->object_number != BABOON_NORMAL && baddie->object_number != BABOON_INV && baddie->object_number != BABOON_SILENT) {
 						CreatureDie(GetItemNum(currentLevel, baddie), 1);
+					}
 				}
 			}
 		}
@@ -88,8 +91,9 @@ void FireCrossbow(PHD_3DPOS* pos) {
 
 	ammo = get_current_ammo_pointer(WEAPON_CROSSBOW);
 
-	if(!*ammo)
+	if(!*ammo) {
 		return;
+	}
 
 	lara.has_fired = 1;
 	item_number = CreateItem();
@@ -109,8 +113,9 @@ void FireCrossbow(PHD_3DPOS* pos) {
 			item->pos.y_rot = pos->y_rot;
 			item->pos.z_rot = pos->z_rot;
 		} else {
-			if(*ammo != -1)
+			if(*ammo != -1) {
 				--*ammo;
+			}
 
 			vec.x = 0;
 			vec.y = 228;
@@ -145,12 +150,13 @@ void FireCrossbow(PHD_3DPOS* pos) {
 		item->speed = 512;
 		AddActiveItem(item_number);
 
-		if(lara.crossbow_type_carried & W_AMMO1)
+		if(lara.crossbow_type_carried & W_AMMO1) {
 			item->item_flags[0] = 1;
-		else if(lara.crossbow_type_carried & W_AMMO2)
+		} else if(lara.crossbow_type_carried & W_AMMO2) {
 			item->item_flags[0] = 2;
-		else
+		} else {
 			item->item_flags[0] = 3;
+		}
 
 		SoundEffect(SFX_LARA_CROSSBOW, 0, SFX_DEFAULT);
 		savegame.Game.AmmoUsed++;
@@ -202,17 +208,19 @@ void FireShotgun() {
 
 	fired = 0;
 
-	if(lara.shotgun_type_carried & W_AMMO1)
+	if(lara.shotgun_type_carried & W_AMMO1) {
 		scatter = 1820;
-	else
+	} else {
 		scatter = 5460;
+	}
 
 	for(int i = 0; i < 6; i++) {
 		dangles[0] = (short)(angles[0] + scatter * (GetRandomControl() - 0x4000) / 0x10000);
 		dangles[1] = (short)(angles[1] + scatter * (GetRandomControl() - 0x4000) / 0x10000);
 
-		if(FireWeapon(WEAPON_SHOTGUN, GetItem(currentLevel, lara.target_item), lara_item, dangles))
+		if(FireWeapon(WEAPON_SHOTGUN, GetItem(currentLevel, lara.target_item), lara_item, dangles)) {
 			fired = 1;
+		}
 	}
 
 	if(fired) {
@@ -230,8 +238,9 @@ void FireShotgun() {
 		SmokeWeapon = WEAPON_SHOTGUN;
 
 		if(lara_item->mesh_bits) {
-			for(int i = 0; i < 7; i++)
+			for(int i = 0; i < 7; i++) {
 				TriggerGunSmoke(pos.x, pos.y, pos.z, pos2.x - pos.x, pos2.y - pos.y, pos2.z - pos.z, 1, SmokeWeapon, 32);
+			}
 
 			//	for (int i = 0; i < 12; i++)
 			// empty func call here
@@ -256,14 +265,16 @@ void FireGrenade() {
 
 	ammo = get_current_ammo_pointer(WEAPON_GRENADE);
 
-	if(!*ammo)
+	if(!*ammo) {
 		return;
+	}
 
 	lara.has_fired = 1;
 	item_number = CreateItem();
 
-	if(item_number == NO_ITEM)
+	if(item_number == NO_ITEM) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 	item->shade = -0x3DF0;
@@ -294,8 +305,9 @@ void FireGrenade() {
 	SmokeCountL = 32;
 	SmokeWeapon = 5;
 
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 5; i++) {
 		TriggerGunSmoke(pos.x, pos.y, pos.z, pos2.x - pos.x, pos2.y - pos.y, pos2.z - pos.z, 1, SmokeWeapon, SmokeCountL);
+	}
 
 	InitialiseItem(item_number);
 	item->pos.x_rot = lara.left_arm.x_rot + lara_item->pos.x_rot;
@@ -315,15 +327,17 @@ void FireGrenade() {
 	item->hit_points = 120;
 	AddActiveItem(item_number);
 
-	if(*ammo != -1)
+	if(*ammo != -1) {
 		--*ammo;
+	}
 
-	if(lara.grenade_type_carried & W_AMMO1)
+	if(lara.grenade_type_carried & W_AMMO1) {
 		item->item_flags[0] = 1;
-	else if(lara.grenade_type_carried & W_AMMO2)
+	} else if(lara.grenade_type_carried & W_AMMO2) {
 		item->item_flags[0] = 2;
-	else
+	} else {
 		item->item_flags[0] = 3;
+	}
 
 	savegame.Game.AmmoUsed++;
 }
@@ -349,8 +363,9 @@ void AnimateShotgun(long weapon_type) {
 
 		GetLaraJointPos(&pos, 11);
 
-		if(lara_item->mesh_bits)
+		if(lara_item->mesh_bits) {
 			TriggerGunSmoke(pos.x, pos.y, pos.z, 0, 0, 0, 0, SmokeWeapon, SmokeCountL);
+		}
 	}
 
 	switch(item->current_anim_state) {
@@ -362,12 +377,13 @@ void AnimateShotgun(long weapon_type) {
 			harpoon_fired = 0;
 		}
 
-		else if(lara.water_status == LW_UNDERWATER)
+		else if(lara.water_status == LW_UNDERWATER) {
 			item->goal_anim_state = 6;
-		else if(input & IN_ACTION && lara.target_item == NO_ITEM || lara.left_arm.lock)
+		} else if(input & IN_ACTION && lara.target_item == NO_ITEM || lara.left_arm.lock) {
 			item->goal_anim_state = 2;
-		else
+		} else {
 			item->goal_anim_state = 4;
+		}
 
 		break;
 
@@ -379,17 +395,19 @@ void AnimateShotgun(long weapon_type) {
 			if(lara.water_status != 1 && !harpoon_fired) {
 				if(input & IN_ACTION) {
 					if(lara.target_item == NO_ITEM || lara.left_arm.lock) {
-						if(weapon_type == WEAPON_GRENADE)
+						if(weapon_type == WEAPON_GRENADE) {
 							FireGrenade();
-						else if(weapon_type == WEAPON_CROSSBOW)
+						} else if(weapon_type == WEAPON_CROSSBOW) {
 							FireCrossbow(0);
-						else
+						} else {
 							FireShotgun();
+						}
 
 						item->goal_anim_state = 2;
 					}
-				} else if(lara.left_arm.lock)
+				} else if(lara.left_arm.lock) {
 					item->goal_anim_state = 0;
+				}
 			}
 
 			if(item->goal_anim_state != 2) {
@@ -401,10 +419,12 @@ void AnimateShotgun(long weapon_type) {
 		} else if(m16_firing) {
 			SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000000 | SFX_SETPITCH);
 			SoundEffect(SFX_MP5_FIRE, &lara_item->pos, SFX_DEFAULT);
-		} else if(weapon_type == 4 && !(input & IN_ACTION) && !lara.left_arm.lock)
+		} else if(weapon_type == 4 && !(input & IN_ACTION) && !lara.left_arm.lock) {
 			item->goal_anim_state = 4;
-		if(item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base == 12 && weapon_type == WEAPON_SHOTGUN)
+		}
+		if(item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base == 12 && weapon_type == WEAPON_SHOTGUN) {
 			TriggerGunShell(1, SHOTGUNSHELL, 4);
+		}
 
 		break;
 
@@ -414,12 +434,13 @@ void AnimateShotgun(long weapon_type) {
 		if(harpoon_fired) {
 			item->goal_anim_state = 5;
 			harpoon_fired = 0;
-		} else if(lara.water_status != LW_UNDERWATER)
+		} else if(lara.water_status != LW_UNDERWATER) {
 			item->goal_anim_state = 0;
-		else if(input & IN_ACTION && lara.target_item == NO_ITEM || lara.left_arm.lock)
+		} else if(input & IN_ACTION && lara.target_item == NO_ITEM || lara.left_arm.lock) {
 			item->goal_anim_state = 8;
-		else
+		} else {
 			item->goal_anim_state = 7;
+		}
 
 		break;
 	}
@@ -441,8 +462,9 @@ void RifleHandler(long weapon_type) {
 	winfo = &weapons[weapon_type];
 	LaraGetNewTarget(winfo);
 
-	if(input & IN_ACTION)
+	if(input & IN_ACTION) {
 		LaraTargetInfo(winfo);
+	}
 
 	AimWeapon(winfo, &lara.left_arm);
 
@@ -456,10 +478,11 @@ void RifleHandler(long weapon_type) {
 		}
 	}
 
-	if(weapon_type == WEAPON_REVOLVER)
+	if(weapon_type == WEAPON_REVOLVER) {
 		AnimatePistols(weapon_type);
-	else
+	} else {
 		AnimateShotgun(weapon_type);
+	}
 
 	if(lara.right_arm.flash_gun) {
 		r = (GetRandomControl() & 0x3F) + 192;
@@ -471,20 +494,22 @@ void RifleHandler(long weapon_type) {
 			y = ((GetRandomControl() & 0x7F) - 575) + lara_item->pos.y_pos;
 			z = (GetRandomControl() & 0xFF) + (phd_cos(lara_item->pos.y_rot) >> 4) + lara_item->pos.z_pos;
 
-			if(gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom)
+			if(gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom) {
 				TriggerDynamic_MIRROR(x, y, z, 12, r, g, b);
-			else
+			} else {
 				TriggerDynamic(x, y, z, 12, r, g, b);
+			}
 		} else if(weapon_type == WEAPON_REVOLVER) {
 			pos.x = (GetRandomControl() & 0xFF) - 128;
 			pos.y = (GetRandomControl() & 0x7F) - 63;
 			pos.z = (GetRandomControl() & 0xFF) - 128;
 			GetLaraJointPos(&pos, 11);
 
-			if(gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom)
+			if(gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom) {
 				TriggerDynamic_MIRROR(pos.x, pos.y, pos.z, 12, r, g, b);
-			else
+			} else {
 				TriggerDynamic(pos.x, pos.y, pos.z, 12, r, g, b);
+			}
 		}
 	}
 }
@@ -497,8 +522,9 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 	short TriggerItems[8];
 	short NumTrigs, room_number;
 
-	if(target->flags & IFL_SWITCH_ONESHOT && target->object_number != SKELETON)
+	if(target->flags & IFL_SWITCH_ONESHOT && target->object_number != SKELETON) {
 		return;
+	}
 
 	if(!MustHitLastNode) {
 		num1 = GetObjectInfo(currentLevel, target->object_number)->nmeshes;
@@ -530,8 +556,9 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 					ptr1++;
 				}
 
-				if(cs != -1)
+				if(cs != -1) {
 					break;
+				}
 			}
 		} else {
 			ptr1 = Slist;
@@ -573,8 +600,9 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 				}
 			}
 
-			if(target->object_number == SWITCH_TYPE7)
+			if(target->object_number == SWITCH_TYPE7) {
 				ExplodeItemNode(target, GetObjectInfo(currentLevel, SWITCH_TYPE7)->nmeshes - 1, 0, 64);
+			}
 
 			AddActiveItem(GetItemNum(currentLevel, target));
 			target->flags |= IFL_CODEBITS | IFL_SWITCH_ONESHOT;
@@ -593,14 +621,16 @@ void TriggerUnderwaterExplosion(ITEM_INFO* item, long vehicle) {
 		TriggerExplosionSparks(x, item->pos.y_pos, z, 2, -1, 1, item->room_number);
 		wh = GetWaterHeight(x, item->pos.y_pos, z, item->room_number);
 
-		if(wh != NO_HEIGHT)
+		if(wh != NO_HEIGHT) {
 			TriggerSmallSplash(x, wh, z, 8);
+		}
 	} else {
 		TriggerExplosionBubble(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 		TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, -2, 1, item->room_number);
 
-		for(int i = 0; i < 3; i++)
+		for(int i = 0; i < 3; i++) {
 			TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, -1, 1, item->room_number);
+		}
 
 		wh = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 
@@ -637,10 +667,11 @@ void draw_shotgun(long weapon_type) {
 		item = GetItem(currentLevel, lara.weapon_item);
 		item->object_number = (short)WeaponObject(weapon_type);
 
-		if(weapon_type == WEAPON_GRENADE)
+		if(weapon_type == WEAPON_GRENADE) {
 			item->anim_number = GetObjectInfo(currentLevel, GRENADE_GUN_ANIM)->anim_index;
-		else
+		} else {
 			item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 1;
+		}
 
 		item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
 		item->status = ITEM_ACTIVE;
@@ -649,17 +680,19 @@ void draw_shotgun(long weapon_type) {
 		item->room_number = 255;
 		lara.left_arm.frame_base = GetObjectInfo(currentLevel, item->object_number)->frame_base;
 		lara.right_arm.frame_base = GetObjectInfo(currentLevel, item->object_number)->frame_base;
-	} else
+	} else {
 		item = GetItem(currentLevel, lara.weapon_item);
+	}
 
 	AnimateItem(item);
 
-	if(!item->current_anim_state || item->current_anim_state == 6)
+	if(!item->current_anim_state || item->current_anim_state == 6) {
 		ready_shotgun(weapon_type);
-	else if(item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base == weapons[weapon_type].draw_frame)
+	} else if(item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base == weapons[weapon_type].draw_frame) {
 		draw_shotgun_meshes(weapon_type);
-	else if(lara.water_status == LW_UNDERWATER)
+	} else if(lara.water_status == LW_UNDERWATER) {
 		item->goal_anim_state = 6;
+	}
 
 	lara.left_arm.frame_base = GetAnim(currentLevel, item->anim_number)->frame_ptr;
 	lara.right_arm.frame_base = GetAnim(currentLevel, item->anim_number)->frame_ptr;
@@ -674,10 +707,11 @@ void undraw_shotgun(long weapon_type) {
 
 	item = GetItem(currentLevel, lara.weapon_item);
 
-	if(lara.water_status == LW_SURFACE)
+	if(lara.water_status == LW_SURFACE) {
 		item->goal_anim_state = 9;
-	else
+	} else {
 		item->goal_anim_state = 3;
+	}
 
 	AnimateItem(item);
 
@@ -690,8 +724,9 @@ void undraw_shotgun(long weapon_type) {
 		lara.weapon_item = NO_ITEM;
 		lara.right_arm.frame_number = 0;
 		lara.left_arm.frame_number = 0;
-	} else if(item->current_anim_state == 3 && GetAnim(currentLevel, item->anim_number)->frame_base == item->frame_number - (weapon_type == WEAPON_GRENADE ? 16 : 21))
+	} else if(item->current_anim_state == 3 && GetAnim(currentLevel, item->anim_number)->frame_base == item->frame_number - (weapon_type == WEAPON_GRENADE ? 16 : 21)) {
 		undraw_shotgun_meshes(weapon_type);
+	}
 
 	lara.right_arm.frame_base = GetAnim(currentLevel, item->anim_number)->frame_ptr;
 	lara.left_arm.frame_base = lara.right_arm.frame_base;
@@ -725,13 +760,16 @@ void ControlCrossbow(short item_number) {
 	oldPos.z = item->pos.z_pos;
 
 	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
-		if(item->speed > 64)
+		if(item->speed > 64) {
 			item->speed -= item->speed >> 4;
+		}
 
-		if(GlobalCounter & 1)
+		if(GlobalCounter & 1) {
 			CreateBubble(&item->pos, item->room_number, 4, 7);
-	} else
+		}
+	} else {
 		abovewater = 1;
+	}
 
 	item->pos.x_pos += (((item->speed * phd_cos(item->pos.x_rot)) >> W2V_SHIFT) * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
 	item->pos.y_pos += (item->speed * phd_sin(-item->pos.x_rot)) >> W2V_SHIFT;
@@ -745,17 +783,18 @@ void ControlCrossbow(short item_number) {
 		item->pos.y_pos = oldPos.y;
 		item->pos.z_pos = oldPos.z;
 
-		if(item->item_flags[0] == 3)
+		if(item->item_flags[0] == 3) {
 			exploded = 1;
-		else {
+		} else {
 			ExplodeItemNode(item, 0, 0, 256);
 			KillItem(item_number);
 			return;
 		}
 	}
 
-	if(item->room_number != room_number)
+	if(item->room_number != room_number) {
 		ItemNewRoom(item_number, room_number);
+	}
 
 	r = GetRoom(currentLevel, room_number);
 
@@ -764,17 +803,19 @@ void ControlCrossbow(short item_number) {
 		SetupRipple(item->pos.x_pos, r->maxceiling, item->pos.z_pos, (GetRandomControl() & 7) + 8, 0);
 	}
 
-	if(exploded)
+	if(exploded) {
 		rad = 2048;
-	else
+	} else {
 		rad = 128;
+	}
 
 	for(int i = 0; i < 2; i++) {
 
 		GetCollidedObjects(item, rad, 1, itemlist, 10, meshlist, 10, 1);
 
-		if(!*itemlist && !*meshlist)
+		if(!*itemlist && !*meshlist) {
 			break;
+		}
 
 		collided = 1;
 
@@ -792,17 +833,19 @@ void ControlCrossbow(short item_number) {
 						ExplodeItemNode(target, 0, 0, 128);
 						SmashObject(GetItemNum(currentLevel, target));
 						KillItem(GetItemNum(currentLevel, target));
-					} else if(target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8)
+					} else if(target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8) {
 						CrossbowHitSwitchType78(item, target, 0);
-					else if(GetObjectInfo(currentLevel, target->object_number)->intelligent)
+					} else if(GetObjectInfo(currentLevel, target->object_number)->intelligent) {
 						DoGrenadeDamageOnBaddie(target, item);
-				} else if(target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8 || target->object_number == SKELETON)
+					}
+				} else if(target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8 || target->object_number == SKELETON) {
 					CrossbowHitSwitchType78(item, target, 1);
-				else if(GetObjectInfo(currentLevel, target->object_number)->intelligent) {
+				} else if(GetObjectInfo(currentLevel, target->object_number)->intelligent) {
 					HitTarget(target, (GAME_VECTOR*)&item->pos, weapons[WEAPON_CROSSBOW].damage, 0);
 
-					if(item->item_flags[0] == 2 && !GetObjectInfo(currentLevel, target->object_number)->undead)
+					if(item->item_flags[0] == 2 && !GetObjectInfo(currentLevel, target->object_number)->undead) {
 						target->poisoned = 1;
+					}
 				}
 
 				j++;
@@ -840,16 +883,17 @@ void ControlCrossbow(short item_number) {
 	}
 
 	if(exploded) {
-		if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER)
+		if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 			TriggerUnderwaterExplosion(item, 0);
-		else {
+		} else {
 			item->pos.y_pos -= 128;
 			TriggerShockwave((PHD_VECTOR*)&item->pos, 0x1300030, 96, 0x18806000, 0);
 			item->pos.y_pos += 128;
 			TriggerExplosionSparks(oldPos.x, oldPos.y, oldPos.z, 3, -2, 0, item->room_number);
 
-			for(int i = 0; i < 2; i++)
+			for(int i = 0; i < 2; i++) {
 				TriggerExplosionSparks(oldPos.x, oldPos.y, oldPos.z, 3, -1, 0, item->room_number);
+			}
 		}
 
 		AlertNearbyGuards(item);
@@ -903,8 +947,9 @@ void ControlGrenade(short item_number) {
 				FlashFadeB = FlashFadeG;
 			}
 
-			if(IsVolumetric())
+			if(IsVolumetric()) {
 				FlashFader = 0;
+			}
 
 			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
@@ -933,10 +978,11 @@ void ControlGrenade(short item_number) {
 				item2->item_flags[0] = 4;
 				item2->item_flags[2] = item->item_flags[2];
 
-				if(GetRoom(currentLevel, item2->room_number)->flags & ROOM_UNDERWATER)
+				if(GetRoom(currentLevel, item2->room_number)->flags & ROOM_UNDERWATER) {
 					item2->hit_points = 1;
-				else
+				} else {
 					item2->hit_points = 3000;
+				}
 			}
 		}
 
@@ -956,10 +1002,11 @@ void ControlGrenade(short item_number) {
 		if(item->speed) {
 			item->pos.z_rot += 182 * ((item->speed >> 4) + 3);
 
-			if(item->required_anim_state)
+			if(item->required_anim_state) {
 				item->pos.y_rot += 182 * ((item->speed >> 2) + 3);
-			else
+			} else {
 				item->pos.x_rot += 182 * ((item->speed >> 2) + 3);
+			}
 		}
 	} else {
 		abovewater = 1;
@@ -968,10 +1015,11 @@ void ControlGrenade(short item_number) {
 		if(item->speed) {
 			item->pos.z_rot += 182 * ((item->speed >> 2) + 7);
 
-			if(item->required_anim_state)
+			if(item->required_anim_state) {
 				item->pos.y_rot += 182 * ((item->speed >> 1) + 7);
-			else
+			} else {
 				item->pos.x_rot += 182 * ((item->speed >> 1) + 7);
+			}
 		}
 	}
 
@@ -999,8 +1047,9 @@ void ControlGrenade(short item_number) {
 		room_number = item->room_number;
 		floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-		if(GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject) < item->pos.y_pos || GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) > item->pos.y_pos)
+		if(GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &height_type, &tiltxoff, &tiltzoff, &OnObject) < item->pos.y_pos || GetCeiling(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) > item->pos.y_pos) {
 			item->hit_points = 1;
+		}
 	} else {
 		yrot = item->pos.y_rot;
 		item->pos.y_rot = item->goal_anim_state;
@@ -1029,12 +1078,14 @@ void ControlGrenade(short item_number) {
 		splash_setup.OuterRad = 544;
 		SetupSplash(&splash_setup);
 
-		if(item->item_flags[0] == 4)
+		if(item->item_flags[0] == 4) {
 			item->hit_points = 1;
+		}
 	}
 
-	if(item->item_flags[0] == 4)
+	if(item->item_flags[0] == 4) {
 		TriggerFireFlame(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, -1, 1);
+	}
 
 	exploded = 0;
 	rad = 0;
@@ -1045,8 +1096,9 @@ void ControlGrenade(short item_number) {
 		if(!item->hit_points) {
 			rad = 2048;
 			exploded = 1;
-		} else if(item->hit_points > 118)
+		} else if(item->hit_points > 118) {
 			return;
+		}
 	}
 
 	if(item->item_flags[0] != 3 || !exploded) {
@@ -1081,14 +1133,16 @@ void ControlGrenade(short item_number) {
 							TestTriggers(trigger_index, 1, target->flags & IFL_CODEBITS);
 						}
 
-						if(target->object_number == SWITCH_TYPE7)
+						if(target->object_number == SWITCH_TYPE7) {
 							ExplodeItemNode(target, GetObjectInfo(currentLevel, SWITCH_TYPE7)->nmeshes - 1, 0, 64);
+						}
 
 						AddActiveItem(GetItemNum(currentLevel, target));
 						target->status = ITEM_ACTIVE;
 						target->flags |= IFL_SWITCH_ONESHOT | IFL_CODEBITS;
-					} else if(GetObjectInfo(currentLevel, target->object_number)->intelligent || target->object_number == LARA)
+					} else if(GetObjectInfo(currentLevel, target->object_number)->intelligent || target->object_number == LARA) {
 						DoGrenadeDamageOnBaddie(target, item);
+					}
 
 					j++;
 					target = itemlist[j];
@@ -1115,13 +1169,15 @@ void ControlGrenade(short item_number) {
 					mesh = meshlist[j];
 				}
 			} else {
-				if(!itemlist[0] && !meshlist[0])
+				if(!itemlist[0] && !meshlist[0]) {
 					break;
+				}
 
 				exploded = 1;
 
-				if(item->item_flags[0] == 3)
+				if(item->item_flags[0] == 3) {
 					break;
+				}
 
 				rad = 2048;
 			}
@@ -1142,31 +1198,33 @@ void ControlGrenade(short item_number) {
 
 			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
-		} else if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER)
+		} else if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 			TriggerUnderwaterExplosion(item, 0);
-		else {
+		} else {
 			item->pos.y_pos -= 128;
 			TriggerShockwave((PHD_VECTOR*)&item->pos, 0x1300030, 96, 0x18806000, 0);
 			item->pos.y_pos += 128;
 			TriggerExplosionSparks(oldPos.x, oldPos.y, oldPos.z, 3, -2, 0, item->room_number);
 
-			for(int i = 0; i < 2; i++)
+			for(int i = 0; i < 2; i++) {
 				TriggerExplosionSparks(oldPos.x, oldPos.y, oldPos.z, 3, -1, 0, item->room_number);
+			}
 		}
 
 		AlertNearbyGuards(item);
 		SoundEffect(SFX_EXPLOSION1, &item->pos, 0x1800004);
 		SoundEffect(SFX_EXPLOSION2, &item->pos, 0);
 
-		if(item->item_flags[0] == 1 || item->item_flags[0] == 4)
+		if(item->item_flags[0] == 1 || item->item_flags[0] == 4) {
 			KillItem(item_number);
-		else {
+		} else {
 			item->mesh_bits = 0;
 
-			if(item->item_flags[0] == 2)
+			if(item->item_flags[0] == 2) {
 				item->item_flags[1] = 4;
-			else
+			} else {
 				item->item_flags[1] = 16;
+			}
 		}
 	}
 }

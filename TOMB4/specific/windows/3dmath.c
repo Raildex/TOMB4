@@ -206,31 +206,37 @@ static void mRotYXZpack(long angles) {
 	angle = (angles >> 10) & 0x3FF;
 	angle <<= 6;
 
-	if(angle)
+	if(angle) {
 		mRotY(angle);
+	}
 
 	angle = (angles >> 20) & 0x3FF;
 	angle <<= 6;
 
-	if(angle)
+	if(angle) {
 		mRotX(angle);
+	}
 
 	angle = angles & 0x3FF;
 	angle <<= 6;
 
-	if(angle)
+	if(angle) {
 		mRotZ(angle);
+	}
 }
 
 static void mRotYXZ(short y, short x, short z) {
-	if(y)
+	if(y) {
 		mRotY(y);
+	}
 
-	if(x)
+	if(x) {
 		mRotX(x);
+	}
 
-	if(z)
+	if(z) {
 		mRotZ(z);
+	}
 }
 
 static void mTranslateAbs(long x, long y, long z) {
@@ -280,8 +286,9 @@ static void mGenerateW2V(PHD_3DPOS* viewPos) {
 	if(lara.dpoisoned != lara.poisoned) {
 		lara.poisoned += (lara.dpoisoned - lara.poisoned) >> 4;
 
-		if(abs(lara.dpoisoned - lara.poisoned) < 16)
+		if(abs(lara.dpoisoned - lara.poisoned) < 16) {
 			lara.poisoned = lara.dpoisoned;
+		}
 	}
 
 	if(lara.poisoned >= 256) {
@@ -652,8 +659,9 @@ void phd_GetVectorAngles(long x, long y, long z, short* angles) {
 
 	atan = (short)phd_atan(phd_sqrt(SQUARE(z) + SQUARE(x)), y);
 
-	if((y > 0 && atan > 0) || (y < 0 && atan < 0))
+	if((y > 0 && atan > 0) || (y < 0 && atan < 0)) {
 		atan = -atan;
+	}
 
 	angles[1] = atan;
 }
@@ -664,8 +672,9 @@ unsigned long mGetAngle(long x, long z, long x1, long z1) {
 	dx = x1 - x;
 	dz = z1 - z;
 
-	if(!dx && !dz)
+	if(!dx && !dz) {
 		return 0;
+	}
 
 	octant = 0;
 
@@ -693,8 +702,9 @@ unsigned long mGetAngle(long x, long z, long x1, long z1) {
 
 	angle = phdtan2[octant] + phdtantab[(dz << 11) / dx];
 
-	if(angle < 0)
+	if(angle < 0) {
 		angle = -angle;
+	}
 
 	return -angle & 0xFFFF;
 }
@@ -746,8 +756,9 @@ long phd_atan(long x, long y) {
 
 		result = phdtan2[octant] + phdtantab[(y << 11) / x];
 
-		if(result < 0)
+		if(result < 0) {
 			result = -result;
+		}
 	}
 
 	return result;
@@ -764,9 +775,9 @@ unsigned long phd_sqrt(unsigned long num) {
 		result += base;
 		tmp >>= 1;
 
-		if(result > num)
+		if(result > num) {
 			result = tmp;
-		else {
+		} else {
 			num -= result;
 			result = base | tmp;
 		}
@@ -873,8 +884,9 @@ void phd_GenerateW2V(PHD_3DPOS* viewPos) {
 	if(lara.dpoisoned != lara.poisoned) {
 		lara.poisoned += (lara.dpoisoned - lara.poisoned) >> 4;
 
-		if(abs(lara.dpoisoned - lara.poisoned) < 16)
+		if(abs(lara.dpoisoned - lara.poisoned) < 16) {
 			lara.poisoned = lara.dpoisoned;
+		}
 	}
 
 	if(lara.poisoned >= 256) {

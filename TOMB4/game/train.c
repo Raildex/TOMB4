@@ -151,10 +151,12 @@ void TrainJeepControl(short item_number) {
 	item2 = GetItem(currentLevel, item->item_flags[1]);
 
 	if(item->item_flags[0] == -80) {
-		if(item->item_flags[2] < 0x4000)
+		if(item->item_flags[2] < 0x4000) {
 			item->item_flags[2] += 32;
-	} else if(item->item_flags[2] > 1024)
+		}
+	} else if(item->item_flags[2] > 1024) {
 		item->item_flags[2] -= 512;
+	}
 
 	SoundEffect(SFX_JEEP_MOVE, &item->pos, (item->item_flags[2] << 9) + (0x1000000 | SFX_SETPITCH));
 	item->pos.x_pos += item->item_flags[0];
@@ -162,12 +164,15 @@ void TrainJeepControl(short item_number) {
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if(item->room_number != room_number)
+	if(item->room_number != room_number) {
 		ItemNewRoom(item_number, room_number);
+	}
 
-	if(item2->item_flags[0] > -40 || item2->hit_points < 1)
+	if(item2->item_flags[0] > -40 || item2->hit_points < 1) {
 		item->item_flags[0] += 3;
+	}
 
-	if(item->item_flags[0] > 400)
+	if(item->item_flags[0] > 400) {
 		KillItem(item_number);
+	}
 }

@@ -32,8 +32,9 @@ void HammerheadControl(short item_number) {
 	AI_INFO info;
 	short angle;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 	shark = (CREATURE_INFO*)item->data;
@@ -49,15 +50,17 @@ void HammerheadControl(short item_number) {
 
 		CreatureFloat(item_number);
 	} else {
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(shark);
-		else if(shark->hurt_by_lara)
+		} else if(shark->hurt_by_lara) {
 			shark->enemy = lara_item;
+		}
 
 		CreatureAIInfo(item, &info);
 
-		if(shark->enemy != lara_item)
+		if(shark->enemy != lara_item) {
 			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
+		}
 
 		GetCreatureMood(item, &info, 1);
 		CreatureMood(item, &info, 1);
@@ -72,17 +75,19 @@ void HammerheadControl(short item_number) {
 		case 1:
 			shark->maximum_turn = 1274;
 
-			if(info.distance > 0x100000)
+			if(info.distance > 0x100000) {
 				item->goal_anim_state = 2;
-			else if(info.distance < 0x718E4)
+			} else if(info.distance < 0x718E4) {
 				item->goal_anim_state = 3;
+			}
 
 			break;
 
 		case 2:
 
-			if(info.distance < 0x100000)
+			if(info.distance < 0x100000) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 
@@ -104,9 +109,9 @@ void HammerheadControl(short item_number) {
 		CreatureJoint(item, 2, -2 * angle);
 		CreatureJoint(item, 3, 2 * angle);
 
-		if(item->current_anim_state == 6)
+		if(item->current_anim_state == 6) {
 			AnimateItem(item);
-		else {
+		} else {
 			CreatureAnimation(item_number, angle, 0);
 			CreatureUnderwater(item, 341);
 		}

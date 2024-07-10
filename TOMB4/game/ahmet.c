@@ -63,18 +63,19 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				if(l->anim_number == ANIM_POURWATERSKIN) {
 					l->anim_number = ANIM_FILLSCALE;
 					l->frame_number = GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base;
-				} else if(l->frame_number == GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base + 51)
+				} else if(l->frame_number == GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base + 51) {
 					SoundEffect(SFX_POUR, &l->pos, SFX_DEFAULT);
-				else if(l->frame_number == GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base + 74) {
+				} else if(l->frame_number == GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base + 74) {
 					AddActiveItem(item_number);
 					item->status = ITEM_ACTIVE;
 
-					if(l->item_flags[3] < item->trigger_flags) // too little
+					if(l->item_flags[3] < item->trigger_flags) { // too little
 						item->goal_anim_state = 4;
-					else if(l->item_flags[3] == item->trigger_flags) // nice
+					} else if(l->item_flags[3] == item->trigger_flags) { // nice
 						item->goal_anim_state = 2;
-					else // too much
+					} else { // too much
 						item->goal_anim_state = 3;
+					}
 				}
 			}
 
@@ -131,8 +132,9 @@ long ReTriggerAhmet(short item_number) {
 		item->pos.z_pos = ((item->item_flags[2] & 0xFFFF) << 10) | 512;
 		IsRoomOutside(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 
-		if(item->room_number != IsRoomOutsideNo)
+		if(item->room_number != IsRoomOutsideNo) {
 			ItemNewRoom(item_number, IsRoomOutsideNo);
+		}
 
 		item->anim_number = GetObjectInfo(currentLevel, AHMET)->anim_index;
 		item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
@@ -174,8 +176,9 @@ void ScalesControl(short item_number) {
 				for(numTriggers = GetSwitchTrigger(item, itemNos, 0); numTriggers > 0; numTriggers--) {
 					item2 = GetItem(currentLevel, itemNos[numTriggers - 1]);
 
-					if(item2->object_number != FLAME_EMITTER2)
+					if(item2->object_number != FLAME_EMITTER2) {
 						item2->flags = 1024;
+					}
 				}
 
 				item->goal_anim_state = 1;
@@ -241,8 +244,9 @@ void AhmetControl(short item_number) {
 	long dx, dz;
 	short angle, head, room_number, frame, base;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 
@@ -270,8 +274,9 @@ void AhmetControl(short item_number) {
 
 		ExplodeAhmet(item);
 	} else {
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(ahmet);
+		}
 
 		CreatureAIInfo(item, &info);
 
@@ -291,8 +296,9 @@ void AhmetControl(short item_number) {
 		enemy = ahmet->enemy;
 		ahmet->enemy = lara_item;
 
-		if(larainfo.distance < 0x100000 || item->hit_status || TargetVisible(item, &larainfo))
+		if(larainfo.distance < 0x100000 || item->hit_status || TargetVisible(item, &larainfo)) {
 			AlertAllGuards(item_number);
+		}
 
 		ahmet->enemy = enemy;
 		frame = item->frame_number;
@@ -310,23 +316,26 @@ void AhmetControl(short item_number) {
 				item->goal_anim_state = 2;
 				head = 0;
 			} else if(ahmet->mood == BORED_MOOD || ahmet->mood == ESCAPE_MOOD) {
-				if(lara.target_item != item_number && info.ahead)
+				if(lara.target_item != item_number && info.ahead) {
 					item->goal_anim_state = 1;
-				else
+				} else {
 					item->goal_anim_state = 3;
-			} else if(info.bite && info.distance < 0x718E4)
+				}
+			} else if(info.bite && info.distance < 0x718E4) {
 				item->goal_anim_state = 4;
-			else if(info.angle >= 0x2000 || info.angle <= -2000 || info.distance >= 0x190000) {
-				if(item->required_anim_state)
+			} else if(info.angle >= 0x2000 || info.angle <= -2000 || info.distance >= 0x190000) {
+				if(item->required_anim_state) {
 					item->goal_anim_state = item->required_anim_state;
-				else if(info.ahead && info.distance < 0x640000)
+				} else if(info.ahead && info.distance < 0x640000) {
 					item->goal_anim_state = 2;
-				else
+				} else {
 					item->goal_anim_state = 3;
-			} else if(GetRandomControl() & 1)
+				}
+			} else if(GetRandomControl() & 1) {
 				item->goal_anim_state = 5;
-			else
+			} else {
 				item->goal_anim_state = 6;
+			}
 
 			break;
 
@@ -336,20 +345,22 @@ void AhmetControl(short item_number) {
 			if(item->ai_bits & PATROL1) {
 				item->goal_anim_state = 2;
 				head = 0;
-			} else if(info.bite && info.distance < 0x190000)
+			} else if(info.bite && info.distance < 0x190000) {
 				item->goal_anim_state = 1;
-			else
+			} else {
 				item->goal_anim_state = 3;
+			}
 
 			break;
 
 		case 3:
 			ahmet->maximum_turn = 1456;
 
-			if(item->ai_bits & GUARD || ahmet->mood == BORED_MOOD || ahmet->mood == ESCAPE_MOOD && lara.target_item != item_number && info.ahead || info.bite && info.distance < 0x190000)
+			if(item->ai_bits & GUARD || ahmet->mood == BORED_MOOD || ahmet->mood == ESCAPE_MOOD && lara.target_item != item_number && info.ahead || info.bite && info.distance < 0x190000) {
 				item->goal_anim_state = 1;
-			else if(info.distance < 0x640000 && info.ahead && (info.enemy_facing < -0x4000 || info.enemy_facing > 0x4000))
+			} else if(info.distance < 0x640000 && info.ahead && (info.enemy_facing < -0x4000 || info.enemy_facing > 0x4000)) {
 				item->goal_anim_state = 2;
+			}
 
 			ahmet->flags = 0;
 			break;
@@ -357,12 +368,13 @@ void AhmetControl(short item_number) {
 		case 4:
 			ahmet->maximum_turn = 0;
 
-			if(abs(info.angle) < 910)
+			if(abs(info.angle) < 910) {
 				item->pos.y_rot += info.angle;
-			else if(info.angle < 0)
+			} else if(info.angle < 0) {
 				item->pos.y_rot -= 910;
-			else
+			} else {
 				item->pos.y_rot += 910;
+			}
 
 			if(frame > base + 7 && !(ahmet->flags & 1) && item->touch_bits & 0x3C000) {
 				lara_item->hit_status = 1;
@@ -382,8 +394,9 @@ void AhmetControl(short item_number) {
 			ahmet->maximum_turn = 0;
 
 			if(item->anim_number == GetObjectInfo(currentLevel, AHMET)->anim_index + 3) {
-				if(abs(info.angle) < 910)
+				if(abs(info.angle) < 910) {
 					item->pos.y_rot += info.angle;
+				}
 			} else if(!ahmet->flags && item->anim_number == GetObjectInfo(currentLevel, AHMET)->anim_index + 4 && frame > base + 11 && item->touch_bits & 0xC00) {
 				lara_item->hit_status = 1;
 				lara_item->hit_points -= 120;
@@ -398,12 +411,13 @@ void AhmetControl(short item_number) {
 
 
 			if(item->anim_number == GetObjectInfo(currentLevel, AHMET)->anim_index + 7) {
-				if(abs(info.angle) < 910)
+				if(abs(info.angle) < 910) {
 					item->pos.y_rot += info.angle;
-				else if(info.angle < 0)
+				} else if(info.angle < 0) {
 					item->pos.y_rot -= 910;
-				else
+				} else {
 					item->pos.y_rot += 910;
+				}
 			} else if(frame > base + 21 && !(ahmet->flags & 1) && item->touch_bits & 0x3C000) {
 				lara_item->hit_status = 1;
 				lara_item->hit_points -= 80;

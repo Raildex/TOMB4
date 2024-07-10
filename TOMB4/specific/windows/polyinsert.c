@@ -70,8 +70,9 @@ void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, sho
 	switch(type) {
 	case 0:
 
-		if(App.dx.lpZBuffer)
+		if(App.dx.lpZBuffer) {
 			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 1);
+		}
 
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 0);
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
@@ -94,8 +95,9 @@ void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, sho
 
 	case 2:
 
-		if(App.dx.lpZBuffer)
+		if(App.dx.lpZBuffer) {
 			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 0);
+		}
 
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 0);
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
@@ -110,8 +112,9 @@ void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, sho
 
 	case 3:
 
-		if(App.dx.lpZBuffer)
+		if(App.dx.lpZBuffer) {
 			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 0);
+		}
 
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 1);
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -141,8 +144,9 @@ void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, sho
 
 	case 5:
 
-		if(App.dx.lpZBuffer)
+		if(App.dx.lpZBuffer) {
 			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 0);
+		}
 
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 1);
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_ZERO);
@@ -157,8 +161,9 @@ void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, sho
 
 	case 6:
 
-		if(App.dx.lpZBuffer)
+		if(App.dx.lpZBuffer) {
 			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 0);
+		}
 
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 0);
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_ONE);
@@ -169,8 +174,9 @@ void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, sho
 
 	case 7:
 
-		if(App.dx.lpZBuffer)
+		if(App.dx.lpZBuffer) {
 			IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 1);
+		}
 
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 1);
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -195,8 +201,9 @@ void DrawSortList() {
 
 	nVtx = 0;
 
-	if(!SortCount)
+	if(!SortCount) {
 		return;
+	}
 
 	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHATESTENABLE, 1);
 	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -208,13 +215,15 @@ void DrawSortList() {
 			pSort = SortList[i];
 			vtx = (D3DTLBUMPVERTEX*)(pSort + 1);
 
-			if(pSort->polytype == 4)
+			if(pSort->polytype == 4) {
 				IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_TEXTUREPERSPECTIVE, 0);
+			}
 
 			HWR_DrawSortList(vtx, pSort->nVtx, pSort->tpage, pSort->drawtype);
 
-			if(pSort->polytype == 4)
+			if(pSort->polytype == 4) {
 				IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_TEXTUREPERSPECTIVE, 1);
+			}
 		}
 	} else {
 		pSort = SortList[0];
@@ -222,8 +231,9 @@ void DrawSortList() {
 		for(num = 0; num < SortCount; num++) {
 			pSort = SortList[num];
 
-			if(pSort->drawtype == 0 || pSort->drawtype == 1 || pSort->drawtype == 4)
+			if(pSort->drawtype == 0 || pSort->drawtype == 1 || pSort->drawtype == 4) {
 				break;
+			}
 		}
 
 		bVtxbak = Bucket[0].vtx;
@@ -260,14 +270,16 @@ void DrawSortList() {
 			}
 		}
 
-		if(nVtx)
+		if(nVtx) {
 			HWR_DrawSortList(bVtxbak, nVtx, tpage, drawtype);
+		}
 
 		for(num = SortCount - 1; num >= 0; num--) {
 			pSort = SortList[num];
 
-			if(pSort->drawtype == 2 || pSort->drawtype == 3 || pSort->drawtype == 5 || pSort->drawtype == 6 || pSort->drawtype == 7)
+			if(pSort->drawtype == 2 || pSort->drawtype == 3 || pSort->drawtype == 5 || pSort->drawtype == 6 || pSort->drawtype == 7) {
 				break;
+			}
 		}
 
 		tpage = pSort->tpage;
@@ -304,8 +316,9 @@ void DrawSortList() {
 			}
 		}
 
-		if(nVtx)
+		if(nVtx) {
 			HWR_DrawSortList(bVtxbak, nVtx, tpage, drawtype);
+		}
 	}
 
 	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ZWRITEENABLE, 1);
@@ -320,17 +333,17 @@ void CreateFogPos(FOGBULB_STRUCT* FogBulb) {
 	short bounds[6];
 	short rad;
 
-	if(GlobalFogOff)
+	if(GlobalFogOff) {
 		FogBulb->inRange = 0;
-	else {
+	} else {
 		d.x = FogBulb->WorldPos.x - camera.pos.pos.x;
 		d.y = FogBulb->WorldPos.y - camera.pos.pos.y;
 		d.z = FogBulb->WorldPos.z - camera.pos.pos.z;
 		dist = SQUARE(d.x) + SQUARE(d.y) + SQUARE(d.z);
 
-		if(dist > 0x19000000)
+		if(dist > 0x19000000) {
 			FogBulb->inRange = 0;
-		else {
+		} else {
 			FogBulb->inRange = 1;
 
 			rad = (short)(FogBulb->rad / 2);
@@ -343,10 +356,11 @@ void CreateFogPos(FOGBULB_STRUCT* FogBulb) {
 			bounds[4] = rad;
 			bounds[5] = -rad;
 
-			if(S_GetObjectInfoBounds(bounds))
+			if(S_GetObjectInfoBounds(bounds)) {
 				NumFogBulbsInRange++;
-			else
+			} else {
 				FogBulb->inRange = 0;
+			}
 
 			phd_PopMatrix();
 
@@ -375,13 +389,15 @@ void ControlFXBulb(FOGBULB_STRUCT* FogBulb) {
 
 		FogBulb->rad += (GetRandomDraw() - 0x100) & 0x1FF;
 
-		if(FogBulb->rad > FogBulb->FXRad)
+		if(FogBulb->rad > FogBulb->FXRad) {
 			FogBulb->rad = (float)(FogBulb->FXRad + (GetRandomDraw() & 0xFF));
+		}
 	} else {
 		FogBulb->timer--;
 
-		if(FogBulb->timer < -30)
+		if(FogBulb->timer < -30) {
 			FogBulb->timer = 0;
+		}
 
 		FogBulb->rad -= 255;
 
@@ -414,8 +430,9 @@ void CreateFXBulbs() {
 }
 
 void ClearFXFogBulbs() {
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 5; i++) {
 		FXFogBulbs[i].active = 0;
+	}
 
 	NumFXFogBulbs = 0;
 }
@@ -429,8 +446,9 @@ void TriggerFXFogBulb(long x, long y, long z, long FXRad, long density, long r, 
 	while(FXFogBulbs[num].active) {
 		num++;
 
-		if(num > 4)
+		if(num > 4) {
 			return;
+		}
 	}
 
 	FogBulb = &FXFogBulbs[num];
@@ -474,11 +492,13 @@ int DistCompare(const void* a, const void* b) {
 	bulbA->dist = SQUARE(dA.x) + SQUARE(dA.y) + SQUARE(dA.z);
 	bulbB->dist = SQUARE(dB.x) + SQUARE(dB.y) + SQUARE(dB.z);
 
-	if(bulbA->dist > bulbB->dist)
+	if(bulbA->dist > bulbB->dist) {
 		return 1;
+	}
 
-	if(bulbA->dist < bulbB->dist)
+	if(bulbA->dist < bulbB->dist) {
 		return -1;
+	}
 
 	return 0;
 }
@@ -498,8 +518,9 @@ void InitialiseFogBulbs() {
 			ActiveFogBulbs[NumActiveFogBulbs] = FogBulb;
 			NumActiveFogBulbs++;
 
-			if(NumActiveFogBulbs >= 5)
+			if(NumActiveFogBulbs >= 5) {
 				return;
+			}
 		}
 	}
 }
@@ -553,14 +574,17 @@ void OmniEffect(_D3DTLVERTEX* v) {
 						g = CLRG(v->specular) + (((FogBulb->density - lVal) * FogBulb->g) >> 8);
 						b = CLRB(v->specular) + (((FogBulb->density - lVal) * FogBulb->b) >> 8);
 
-						if(r > 255)
+						if(r > 255) {
 							r = 255;
+						}
 
-						if(g > 255)
+						if(g > 255) {
 							g = 255;
+						}
 
-						if(b > 255)
+						if(b > 255) {
 							b = 255;
+						}
 
 						v->specular = b | (v->specular & 0xFF000000) | ((g | ((r | (r << 8)) << 8)) << 8);
 					}
@@ -578,8 +602,9 @@ void OmniFog(_D3DTLVERTEX* v) {
 	float val, val2;
 	long s, r, g, b, lVal;
 
-	if(InventoryActive || nPolyType == 6 || gfLevelFlags & GF_TRAIN)
+	if(InventoryActive || nPolyType == 6 || gfLevelFlags & GF_TRAIN) {
 		return;
+	}
 
 	s = (v->specular & 0xFF000000) >> 24;
 
@@ -590,8 +615,9 @@ void OmniFog(_D3DTLVERTEX* v) {
 		b = (CLRB(v->color) * s) >> 8;
 		v->color = RGBA(r, g, b, 0xFF);
 
-		if(!(v->color & 0xFFFFFF))
+		if(!(v->color & 0xFFFFFF)) {
 			return;
+		}
 	}
 
 	OmniEffect(v);
@@ -635,8 +661,9 @@ void OmniFog(_D3DTLVERTEX* v) {
 							val *= FogBulb->inv_sqrad * FogBulb->density;
 							lVal = (long)val + (v->specular >> 24) - FogBulb->density;
 
-							if(lVal < 0)
+							if(lVal < 0) {
 								lVal = 0;
+							}
 
 							v->specular = (lVal << 24) | (v->specular & 0xFFFFFF);
 						}
@@ -665,20 +692,23 @@ void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 	clip = 1;
 	sl = 0;
 
-	if(c[v0] & c[v1] & c[v2])
+	if(c[v0] & c[v1] & c[v2]) {
 		return;
+	}
 
 	if((c[v0] | c[v1] | c[v2]) & 0x8000) {
 		if(!visible_zclip(&v[v0], &v[v1], &v[v2])) {
-			if(!double_sided)
+			if(!double_sided) {
 				return;
+			}
 
 			swap = v1;
 			v1 = v2;
 			v2 = swap;
 
-			if(!visible_zclip(&v[v0], &v[v1], &v[v2]))
+			if(!visible_zclip(&v[v0], &v[v1], &v[v2])) {
 				return;
+			}
 
 			tex2.drawtype = tex->drawtype;
 			tex2.flag = tex->flag;
@@ -696,8 +726,9 @@ void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 		p = zClipperBuffer;
 	} else {
 		if(IsVisible(&v[v0], &v[v1], &v[v2])) {
-			if(!double_sided)
+			if(!double_sided) {
 				return;
+			}
 
 			swap = v1;
 			v1 = v2;
@@ -715,9 +746,9 @@ void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 			tex = &tex2;
 		}
 
-		if(c[v0] | c[v1] | c[v2])
+		if(c[v0] | c[v1] | c[v2]) {
 			p = XYUVClipperBuffer;
-		else {
+		} else {
 			clip = 0;
 			p = (D3DTLBUMPVERTEX*)(sizeof(SORTLIST) + pSortBuffer);
 			sl = (SORTLIST*)pSortBuffer;
@@ -763,10 +794,11 @@ void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 	p->tx = pV->tu;
 	p->ty = pV->tv;
 
-	if(nPolyType)
+	if(nPolyType) {
 		z += pV->sz;
-	else if(pV->sz > z)
+	} else if(pV->sz > z) {
 		z = pV->sz;
+	}
 
 	pV = &v[v1];
 	p[1].sx = pV->sx;
@@ -780,10 +812,11 @@ void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 	p[1].tx = pV->tu;
 	p[1].ty = pV->tv;
 
-	if(nPolyType)
+	if(nPolyType) {
 		z += pV->sz;
-	else if(pV->sz > z)
+	} else if(pV->sz > z) {
 		z = pV->sz;
+	}
 
 	pV = &v[v2];
 	p[2].sx = pV->sx;
@@ -797,10 +830,11 @@ void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 	p[2].tx = pV->tu;
 	p[2].ty = pV->tv;
 
-	if(nPolyType)
+	if(nPolyType) {
 		z += pV->sz;
-	else if(pV->sz > z)
+	} else if(pV->sz > z) {
 		z = pV->sz;
+	}
 
 	if(clip) {
 		num = 3;
@@ -834,10 +868,11 @@ void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 			sl->drawtype = tex->drawtype;
 			sl->nVtx = (short)(3 * num - 6);
 
-			if(nPolyType)
+			if(nPolyType) {
 				sl->zVal = z * 0.333333F;
-			else
+			} else {
 				sl->zVal = z;
+			}
 
 			sl->tpage = tex->tpage;
 			sl->polytype = (short)nPolyType;
@@ -852,10 +887,11 @@ void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 		p[1].sz = f_a - f_boo * p[1].rhw;
 		p[2].sz = f_a - f_boo * p[2].rhw;
 
-		if(nPolyType)
+		if(nPolyType) {
 			sl->zVal = z * 0.333333F;
-		else
+		} else {
 			sl->zVal = z;
+		}
 
 		SortCount++;
 		nPolys++;
@@ -882,8 +918,9 @@ void AddQuadClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, short v
 
 	c = clipflags;
 
-	if(c[v0] & c[v1] & c[v2] & c[v3])
+	if(c[v0] & c[v1] & c[v2] & c[v3]) {
 		return;
+	}
 
 	if((c[v0] | c[v1] | c[v2] | c[v3]) & 0x8000) {
 		AddTriClippedSorted(v, v0, v1, v2, tex, double_sided);
@@ -901,8 +938,9 @@ void AddQuadClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, short v
 	}
 
 	if(IsVisible(&v[v0], &v[v1], &v[v2])) {
-		if(!double_sided)
+		if(!double_sided) {
 			return;
+		}
 
 		swap = v0;
 		v0 = v2;
@@ -980,10 +1018,11 @@ void AddQuadClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, short v
 	p->tu = tex->u1;
 	p->tv = tex->v1;
 
-	if(nPolyType)
+	if(nPolyType) {
 		z += pV->sz;
-	else if(pV->sz > z)
+	} else if(pV->sz > z) {
 		z = pV->sz;
+	}
 
 	p[3].sx = p->sx;
 	p[3].sy = p->sy;
@@ -1004,10 +1043,11 @@ void AddQuadClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, short v
 	p[1].tu = tex->u2;
 	p[1].tv = tex->v2;
 
-	if(nPolyType)
+	if(nPolyType) {
 		z += pV->sz;
-	else if(pV->sz > z)
+	} else if(pV->sz > z) {
 		z = pV->sz;
+	}
 
 	pV = &v[v2];
 	p[2].sx = pV->sx;
@@ -1019,10 +1059,11 @@ void AddQuadClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, short v
 	p[2].tu = tex->u3;
 	p[2].tv = tex->v3;
 
-	if(nPolyType)
+	if(nPolyType) {
 		z += pV->sz;
-	else if(pV->sz > z)
+	} else if(pV->sz > z) {
 		z = pV->sz;
+	}
 
 	p[4].sx = p[2].sx;
 	p[4].sy = p[2].sy;
@@ -1043,13 +1084,15 @@ void AddQuadClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, short v
 	p[5].tu = tex->u4;
 	p[5].tv = tex->v4;
 
-	if(nPolyType)
+	if(nPolyType) {
 		z += pV->sz;
-	else if(pV->sz > z)
+	} else if(pV->sz > z) {
 		z = pV->sz;
+	}
 
-	if(nPolyType)
+	if(nPolyType) {
 		z *= 0.25F;
+	}
 
 	sl->zVal = z;
 	nPolys += 2;
@@ -1107,11 +1150,13 @@ void DoSort(long left, long right, SORTLIST** list) {
 	z = list[(left + right) / 2]->zVal;
 
 	do {
-		while(l < right && list[l]->zVal > z)
+		while(l < right && list[l]->zVal > z) {
 			l++;
+		}
 
-		while(r > left && list[r]->zVal < z)
+		while(r > left && list[r]->zVal < z) {
 			r--;
+		}
 
 		if(l <= r) {
 			swap = list[l];
@@ -1123,19 +1168,23 @@ void DoSort(long left, long right, SORTLIST** list) {
 
 	} while(l <= r);
 
-	if(r > left)
+	if(r > left) {
 		DoSort(left, r, list);
+	}
 
-	if(l < right)
+	if(l < right) {
 		DoSort(l, right, list);
+	}
 }
 
 void SortPolyList(long count, SORTLIST** list) {
-	if(!count)
+	if(!count) {
 		return;
+	}
 
-	for(int i = 0; i < count; i++)
+	for(int i = 0; i < count; i++) {
 		list[i]->zVal -= (float)i * 0.1F;
+	}
 
 	DoSort(0, count - 1, list);
 }
@@ -1226,20 +1275,23 @@ void AddTriClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURE
 	c = clipflags;
 	clipZ = 0;
 
-	if(c[v0] & c[v1] & c[v2])
+	if(c[v0] & c[v1] & c[v2]) {
 		return;
+	}
 
 	if((c[v0] | c[v1] | c[v2]) < 0) {
 		if(!visible_zclip(&v[v0], &v[v1], &v[v2])) {
-			if(!double_sided)
+			if(!double_sided) {
 				return;
+			}
 
 			swap = v1;
 			v1 = v2;
 			v2 = swap;
 
-			if(!visible_zclip(&v[v0], &v[v1], &v[v2]))
+			if(!visible_zclip(&v[v0], &v[v1], &v[v2])) {
 				return;
+			}
 
 			tex2.drawtype = tex->drawtype;
 			tex2.flag = tex->flag;
@@ -1258,8 +1310,9 @@ void AddTriClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURE
 		p = zClipperBuffer;
 	} else {
 		if(IsVisible(&v[v0], &v[v1], &v[v2])) {
-			if(!double_sided)
+			if(!double_sided) {
 				return;
+			}
 
 			swap = v1;
 			v1 = v2;
@@ -1400,8 +1453,9 @@ void AddQuadClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, short 
 
 	c = clipflags;
 
-	if(c[v0] & c[v1] & c[v2] & c[v3])
+	if(c[v0] & c[v1] & c[v2] & c[v3]) {
 		return;
+	}
 
 	if((c[v0] | c[v1] | c[v2] | c[v3]) < 0) {
 		AddTriClippedZBuffer(v, v0, v1, v2, tex, double_sided);
@@ -1419,8 +1473,9 @@ void AddQuadClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, short 
 	}
 
 	if(IsVisible(&v[v0], &v[v1], &v[v2])) {
-		if(!double_sided)
+		if(!double_sided) {
 			return;
+		}
 
 		swap = v0;
 		v0 = v2;
@@ -1558,23 +1613,25 @@ void SubdivideEdge(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v, short* c
 	v->tu = v->sx;
 	v->tv = v->sy;
 
-	if(v->sz < f_mznear)
+	if(v->sz < f_mznear) {
 		cf = -128;
-	else {
+	} else {
 		zv = f_mpersp / v->sz;
 		v->sx = zv * v->sx + f_centerx;
 		v->sy = zv * v->sy + f_centery;
 		v->rhw = f_moneopersp * zv;
 
-		if(v->sx < f_left)
+		if(v->sx < f_left) {
 			cf++;
-		else if(v->sx > f_right)
+		} else if(v->sx > f_right) {
 			cf += 2;
+		}
 
-		if(v->sy < f_top)
+		if(v->sy < f_top) {
 			cf += 4;
-		else if(v->sy > f_bottom)
+		} else if(v->sy > f_bottom) {
 			cf += 8;
+		}
 	}
 
 	*c = cf;
@@ -1786,13 +1843,14 @@ void AddTriSubdivide(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUC
 	long steps;
 	short c[4];
 
-	if(nPolyType || v[v2].sz >= 3500)
+	if(nPolyType || v[v2].sz >= 3500) {
 		AddTriClippedSorted(v, v0, v1, v2, tex, double_sided);
-	else {
+	} else {
 		steps = 1;
 
-		if(v[v2].sz < 2000)
+		if(v[v2].sz < 2000) {
 			steps = 2;
+		}
 
 		c[0] = clipflags[v0];
 		c[1] = clipflags[v1];
@@ -1805,13 +1863,14 @@ void AddQuadSubdivide(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, T
 	long steps;
 	short c[4];
 
-	if(nPolyType || v[v3].sz >= 3500)
+	if(nPolyType || v[v3].sz >= 3500) {
 		AddQuadClippedSorted(v, v0, v1, v2, v3, tex, double_sided);
-	else {
+	} else {
 		steps = 1;
 
-		if(v[v3].sz < 2000)
+		if(v[v3].sz < 2000) {
 			steps = 2;
+		}
 
 		c[0] = clipflags[v0];
 		c[1] = clipflags[v1];
@@ -1834,35 +1893,38 @@ void CalcColorSplit(D3DCOLOR s, D3DCOLOR* d) {
 	g -= 128;
 	b -= 128;
 
-	if(r <= 0)
+	if(r <= 0) {
 		r = CLRR(s) << 1;
-	else {
+	} else {
 		sr = r;
 		r = 255;
 	}
 
-	if(g <= 0)
+	if(g <= 0) {
 		g = CLRG(s) << 1;
-	else {
+	} else {
 		sg = g;
 		g = 255;
 	}
 
-	if(b <= 0)
+	if(b <= 0) {
 		b = CLRB(s) << 1;
-	else {
+	} else {
 		sb = b;
 		b = 255;
 	}
 
-	if(r > 255)
+	if(r > 255) {
 		r = 255;
+	}
 
-	if(g > 255)
+	if(g > 255) {
 		g = 255;
+	}
 
-	if(b > 255)
+	if(b > 255) {
 		b = 255;
+	}
 
 	d[0] = (d[0] & 0xFF000000) | RGBONLY(r, g, b); // color
 	d[0] &= 0xFFFFFF;

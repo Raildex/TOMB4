@@ -86,14 +86,15 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 			frame = GetBestFrame(lara_item);
 			frac = GetFrames(lara_item, frm, &rate); // Interpolate the frames if necessary
 		} else {
-			if(!lara.hit_direction)
+			if(!lara.hit_direction) {
 				spaz = lara.IsDucked ? ANIM_SPAZ_DUCKF : ANIM_SPAZ_FORWARD;
-			else if(lara.hit_direction == 1)
+			} else if(lara.hit_direction == 1) {
 				spaz = lara.IsDucked ? ANIM_SPAZ_DUCKR : ANIM_SPAZ_RIGHT;
-			else if(lara.hit_direction == 2)
+			} else if(lara.hit_direction == 2) {
 				spaz = lara.IsDucked ? ANIM_SPAZ_DUCKB : ANIM_SPAZ_BACK;
-			else
+			} else {
 				spaz = lara.IsDucked ? ANIM_SPAZ_DUCKL : ANIM_SPAZ_LEFT;
+			}
 
 			frame = GetAnim(currentLevel, spaz)->frame_ptr;
 			size = GetAnim(currentLevel, spaz)->interpolation >> 8;
@@ -142,8 +143,9 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		sphere[1].z = (long)mMXPtr[M23];
 		sphere[1].r = objptr[3];
 
-		if(gfLevelFlags & GF_YOUNGLARA)
+		if(gfLevelFlags & GF_YOUNGLARA) {
 			sphere[1].r -= (sphere[1].r >> 2) + (sphere[1].r >> 3);
+		}
 
 		phd_PopMatrix_I();
 
@@ -195,13 +197,14 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		sphere[5].z = (2 * sphere[2].z + sphere[1].z) / 3;
 		sphere[5].r = gfLevelFlags & GF_YOUNGLARA ? 0 : 5 * sphere[2].r / 4;
 
-		if(pigtail)
+		if(pigtail) {
 			phd_TranslateRel_I(44, -48, -50);
-		else {
-			if(gfLevelFlags & GF_YOUNGLARA)
+		} else {
+			if(gfLevelFlags & GF_YOUNGLARA) {
 				phd_TranslateRel_I(-52, -48, -50);
-			else
+			} else {
 				phd_TranslateRel_I(-4, -4, -48);
+			}
 		}
 
 		mInterpolateMatrix();
@@ -235,8 +238,9 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		sphere[1].z = (long)mMXPtr[M23];
 		sphere[1].r = objptr[3];
 
-		if(gfLevelFlags & GF_YOUNGLARA)
+		if(gfLevelFlags & GF_YOUNGLARA) {
 			sphere[1].r -= (sphere[1].r >> 2) + (sphere[1].r >> 3);
+		}
 
 		phd_PopMatrix();
 
@@ -285,13 +289,14 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		sphere[5].z = (2 * sphere[2].z + sphere[1].z) / 3;
 		sphere[5].r = gfLevelFlags & GF_YOUNGLARA ? 0 : 5 * sphere[2].r / 4;
 
-		if(pigtail)
+		if(pigtail) {
 			phd_TranslateRel(44, -48, -50);
-		else {
-			if(gfLevelFlags & GF_YOUNGLARA)
+		} else {
+			if(gfLevelFlags & GF_YOUNGLARA) {
 				phd_TranslateRel(-52, -48, -50);
-			else
+			} else {
 				phd_TranslateRel(-4, -4, -48);
+			}
 		}
 
 		pos.x = (long)mMXPtr[M03];
@@ -333,9 +338,9 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 		hair->pos.z_pos = pos.z;
 		room_num = lara_item->room_number;
 
-		if(in_cutscene)
+		if(in_cutscene) {
 			water = NO_HEIGHT;
-		else {
+		} else {
 			x = lara_item->pos.x_pos + (frame[0] + frame[1]) / 2;
 			y = lara_item->pos.y_pos + (frame[2] + frame[3]) / 2;
 			z = lara_item->pos.z_pos + (frame[4] + frame[5]) / 2;
@@ -344,17 +349,19 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 
 		hair_wind += (GetRandomControl() & 7) - 3;
 
-		if(hair_wind <= -2)
+		if(hair_wind <= -2) {
 			hair_wind++;
-		else if(hair_wind >= 9)
+		} else if(hair_wind >= 9) {
 			hair_wind--;
+		}
 
 		hair_dwind_angle = (hair_dwind_angle + 2 * (GetRandomControl() & 0x3F) - 64) & 0x1FFE;
 
-		if(hair_dwind_angle < 1024)
+		if(hair_dwind_angle < 1024) {
 			hair_dwind_angle = 2048 - hair_dwind_angle;
-		else if(hair_dwind_angle > 3072)
+		} else if(hair_dwind_angle > 3072) {
 			hair_dwind_angle += 6144 - (2 * hair_dwind_angle);
+		}
 
 		hair_wind_angle = (hair_wind_angle + ((hair_dwind_angle - hair_wind_angle) >> 3)) & 0x1FFE;
 		SmokeWindX = (hair_wind * rcossin_tbl[hair_wind_angle]) >> 12;
@@ -366,9 +373,9 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 			pos.y = hair->pos.y_pos;
 			pos.z = hair->pos.z_pos;
 
-			if(in_cutscene)
+			if(in_cutscene) {
 				height = 32767;
-			else {
+			} else {
 				floor = GetFloor(hair->pos.x_pos, hair->pos.y_pos, hair->pos.z_pos, &room_num);
 				height = GetHeight(floor, hair->pos.x_pos, hair->pos.y_pos, hair->pos.z_pos, &ht, &tiltxoff, &tiltzoff, &OnObject);
 			}
@@ -385,15 +392,17 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 			if(water == NO_HEIGHT || hair->pos.y_pos < water) {
 				hair->pos.y_pos += 10;
 
-				if(water != NO_HEIGHT && hair->pos.y_pos > water)
+				if(water != NO_HEIGHT && hair->pos.y_pos > water) {
 					hair->pos.y_pos = water;
+				}
 			}
 
 			if(hair->pos.y_pos > height) {
 				hair->pos.x_pos = pos.x;
 
-				if(hair->pos.y_pos - height <= 256) // snap to floor if it goes below, no more than 1 click to avoid hairection when going through corners
+				if(hair->pos.y_pos - height <= 256) { // snap to floor if it goes below, no more than 1 click to avoid hairection when going through corners
 					hair->pos.y_pos = height;
+				}
 
 				hair->pos.z_pos = pos.z;
 			}
@@ -408,8 +417,9 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 				if(dist < SQUARE(sphere[j].r)) {
 					dist = phd_sqrt(dist);
 
-					if(!dist)
+					if(!dist) {
 						dist = 1;
+					}
 
 					hair->pos.x_pos = sphere[j].x + x * sphere[j].r / dist;
 					hair->pos.y_pos = sphere[j].y + y * sphere[j].r / dist;
@@ -428,10 +438,11 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething) {
 			phd_SetTrans((hair - 1)->pos.x_pos, (hair - 1)->pos.y_pos, (hair - 1)->pos.z_pos);
 			phd_RotYXZ((hair - 1)->pos.y_rot, (hair - 1)->pos.x_rot, 0);
 
-			if(i == 6)
+			if(i == 6) {
 				phd_TranslateRel(bone[-3], bone[-2], bone[-1]);
-			else
+			} else {
 				phd_TranslateRel(bone[1], bone[2], bone[3]);
+			}
 
 			hair->pos.x_pos = (long)mMXPtr[M03];
 			hair->pos.y_pos = (long)mMXPtr[M13];
@@ -452,10 +463,11 @@ void GetCorrectStashPoints(long pigtail, long hair_node, long skin_node) {
 	num = 0;
 	hair = &hairs[pigtail][hair_node - 1];
 
-	if(hair_node)
+	if(hair_node) {
 		rot1 = hair->pos.y_rot;
-	else
+	} else {
 		rot1 = (unsigned short)(0x8000 - (CamRot.y << 4));
+	}
 
 	rot2 = hair[2].pos.y_rot;
 
@@ -464,8 +476,9 @@ void GetCorrectStashPoints(long pigtail, long hair_node, long skin_node) {
 		num++;
 	}
 
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 5; i++) {
 		ScratchVertNums[skin_node][i] = HairRotScratchVertNums[num][i];
+	}
 }
 
 void DrawHair() {
@@ -487,9 +500,9 @@ void DrawHair() {
 			phd_RotX(hair->pos.x_rot);
 			phd_PutPolygons(meshpp[0], -1);
 
-			if(j == 5)
+			if(j == 5) {
 				StashSkinVertices(33 + ii);
-			else {
+			} else {
 				StashSkinVertices(28 + ii + j);
 				StashSkinVertices(29 + ii + j);
 			}
@@ -506,7 +519,8 @@ void DrawHair() {
 			phd_PutPolygons(meshpp[0], -1);
 		}
 
-		if(!(gfLevelFlags & GF_YOUNGLARA))
+		if(!(gfLevelFlags & GF_YOUNGLARA)) {
 			break;
+		}
 	}
 }

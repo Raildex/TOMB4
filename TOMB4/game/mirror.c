@@ -30,8 +30,9 @@ void Draw_Mirror_Lara() {
 	for(int i = 0; i < 24; i++) {
 		gunshell = &Gunshells[i];
 
-		if(gunshell->counter)
+		if(gunshell->counter) {
 			gunshell->pos.z_pos = zplane - gunshell->pos.z_pos;
+		}
 	}
 
 	lara_item->pos.z_pos = zplane - lara_item->pos.z_pos;
@@ -86,8 +87,9 @@ void Draw_Mirror_Lara() {
 	for(int i = 0; i < 24; i++) {
 		gunshell = &Gunshells[i];
 
-		if(gunshell->counter)
+		if(gunshell->counter) {
 			gunshell->pos.z_pos = zplane - gunshell->pos.z_pos;
+		}
 	}
 
 	hair = &hairs[0][0];

@@ -14,9 +14,9 @@ void (*AddQuadZBuffer)(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, 
 void (*AddTriZBuffer)(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided);
 void (*AddLineSorted)(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, short drawtype);
 bool (*IsVisible)(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2);
-HRESULT (*_BeginScene)
+HRESULT(*_BeginScene)
 ();
-HRESULT (*_EndScene)
+HRESULT(*_EndScene)
 ();
 
 _D3DTLVERTEX MyVertexBuffer[0xFFFF];
@@ -103,8 +103,9 @@ void SetCullCCW() {
 }
 
 HRESULT HWBeginScene() {
-	if(App.dx.InScene)
+	if(App.dx.InScene) {
 		Log(__func__, "Already In Scene");
+	}
 
 	App.dx.InScene = 1;
 	App.dx.DoneBlit = 0;

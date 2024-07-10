@@ -27,15 +27,17 @@ static long slots_used = 0;
 void InitialiseLOTarray(long allocmem) {
 	CREATURE_INFO* creature;
 
-	if(allocmem)
+	if(allocmem) {
 		baddie_slots = (CREATURE_INFO*)Allocate(currentLevel, sizeof(CREATURE_INFO), 5);
+	}
 
 	for(int i = 0; i < 5; i++) {
 		creature = &baddie_slots[i];
 		creature->item_num = NO_ITEM;
 
-		if(allocmem)
+		if(allocmem) {
 			creature->LOT.node = (BOX_NODE*)Allocate(currentLevel, sizeof(BOX_NODE), GetNumBoxes(currentLevel));
+		}
 	}
 
 	slots_used = 0;
@@ -213,8 +215,9 @@ void InitialiseSlot(short item_number, long slot) {
 
 	ClearLOT(&creature->LOT);
 
-	if(item_number != lara.item_number)
+	if(item_number != lara.item_number) {
 		CreateZone(item);
+	}
 
 	slots_used++;
 }
@@ -226,8 +229,9 @@ long EnableBaddieAI(short item_number, long Always) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(item->data)
+	if(item->data) {
 		return 1;
+	}
 
 	if(slots_used < 5) {
 		for(slot = 0; slot < 5; slot++) {
@@ -240,9 +244,9 @@ long EnableBaddieAI(short item_number, long Always) {
 		}
 	}
 
-	if(Always)
+	if(Always) {
 		worstdist = 0;
-	else {
+	} else {
 		x = (item->pos.x_pos - camera.pos.pos.x) >> 8;
 		y = (item->pos.y_pos - camera.pos.pos.y) >> 8;
 		z = (item->pos.z_pos - camera.pos.pos.z) >> 8;

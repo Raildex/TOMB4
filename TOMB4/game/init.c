@@ -73,22 +73,23 @@ void InitialiseDoor(short item_number) {
 	dx = 0;
 	dy = 0;
 
-	if(!item->pos.y_rot)
+	if(!item->pos.y_rot) {
 		dx = -1;
-	else if(item->pos.y_rot == -32768)
+	} else if(item->pos.y_rot == -32768) {
 		dx = 1;
-	else if(item->pos.y_rot == 16384)
+	} else if(item->pos.y_rot == 16384) {
 		dy = -1;
-	else
+	} else {
 		dy = 1;
+	}
 
 	r = GetRoom(currentLevel, item->room_number);
 	door->d1.floor = &r->floor[(((item->pos.z_pos - r->z) >> 10) + dx) + (((item->pos.x_pos - r->x) >> 10) + dy) * r->x_size];
 	room_number = GetDoor(door->d1.floor);
 
-	if(room_number == 255)
+	if(room_number == 255) {
 		box_number = door->d1.floor->box;
-	else {
+	} else {
 		b = GetRoom(currentLevel, room_number);
 		box_number = b->floor[(((item->pos.z_pos - b->z) >> 10) + dx) + (((item->pos.x_pos - b->x) >> 10) + dy) * b->x_size].box;
 	}
@@ -96,16 +97,16 @@ void InitialiseDoor(short item_number) {
 	door->d1.block = (GetBox(currentLevel, box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
 	memcpy(&door->d1.data, door->d1.floor, sizeof(FLOOR_INFO));
 
-	if(r->flipped_room == -1)
+	if(r->flipped_room == -1) {
 		door->d1flip.floor = NULL;
-	else {
+	} else {
 		r = GetRoom(currentLevel, r->flipped_room);
 		door->d1flip.floor = &r->floor[(((item->pos.z_pos - r->z) >> 10) + dx) + (((item->pos.x_pos - r->x) >> 10) + dy) * r->x_size];
 		room_number = GetDoor(door->d1flip.floor);
 
-		if(room_number == 255)
+		if(room_number == 255) {
 			box_number = door->d1flip.floor->box;
-		else {
+		} else {
 			b = GetRoom(currentLevel, room_number);
 			box_number = b->floor[(((item->pos.z_pos - b->z) >> 10) + dx) + (((item->pos.x_pos - b->x) >> 10) + dy) * b->x_size].box;
 		}
@@ -126,9 +127,9 @@ void InitialiseDoor(short item_number) {
 		door->d2.floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + ((item->pos.x_pos - r->x) >> 10) * r->x_size];
 		room_number = GetDoor(door->d2.floor);
 
-		if(room_number == 255)
+		if(room_number == 255) {
 			box_number = door->d2.floor->box;
-		else {
+		} else {
 			b = GetRoom(currentLevel, room_number);
 			box_number = b->floor[((item->pos.z_pos - b->z) >> 10) + ((item->pos.x_pos - b->x) >> 10) * b->x_size].box;
 		}
@@ -136,16 +137,16 @@ void InitialiseDoor(short item_number) {
 		door->d2.block = (GetBox(currentLevel, box_number)->overlap_index & 0x8000) ? box_number : NO_BOX;
 		memcpy(&door->d2.data, door->d2.floor, sizeof(FLOOR_INFO));
 
-		if(r->flipped_room == -1)
+		if(r->flipped_room == -1) {
 			door->d2flip.floor = NULL;
-		else {
+		} else {
 			r = GetRoom(currentLevel, r->flipped_room);
 			door->d2flip.floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + ((item->pos.x_pos - r->x) >> 10) * r->x_size];
 			room_number = GetDoor(door->d2flip.floor);
 
-			if(room_number == 255)
+			if(room_number == 255) {
 				box_number = door->d2flip.floor->box;
-			else {
+			} else {
 				b = GetRoom(currentLevel, room_number);
 				box_number = b->floor[((item->pos.z_pos - b->z) >> 10) + ((item->pos.x_pos - b->x) >> 10) * b->x_size].box;
 			}
@@ -180,14 +181,15 @@ void InitialiseFlameEmitter(short item_number) {
 		item->item_flags[2] = 256;
 
 		if((-item->trigger_flags & 7) == 7) {
-			if(!item->pos.y_rot)
+			if(!item->pos.y_rot) {
 				item->pos.z_pos += 512;
-			else if(item->pos.y_rot == 0x4000)
+			} else if(item->pos.y_rot == 0x4000) {
 				item->pos.x_pos += 512;
-			else if(item->pos.y_rot == -0x8000)
+			} else if(item->pos.y_rot == -0x8000) {
 				item->pos.z_pos -= 512;
-			else if(item->pos.y_rot == -0x4000)
+			} else if(item->pos.y_rot == -0x4000) {
 				item->pos.x_pos -= 512;
+			}
 		}
 	}
 }
@@ -200,25 +202,29 @@ void InitialiseFlameEmitter2(short item_number) {
 
 	if(item->trigger_flags != 123) {
 		if(!item->pos.y_rot) {
-			if(item->trigger_flags == 2)
+			if(item->trigger_flags == 2) {
 				item->pos.z_pos += 80;
-			else
+			} else {
 				item->pos.z_pos += 256;
+			}
 		} else if(item->pos.y_rot == 0x4000) {
-			if(item->trigger_flags == 2)
+			if(item->trigger_flags == 2) {
 				item->pos.x_pos += 80;
-			else
+			} else {
 				item->pos.x_pos += 256;
+			}
 		} else if(item->pos.y_rot == -0x8000) {
-			if(item->trigger_flags == 2)
+			if(item->trigger_flags == 2) {
 				item->pos.z_pos -= 80;
-			else
+			} else {
 				item->pos.z_pos -= 256;
+			}
 		} else if(item->pos.y_rot == -0x4000) {
-			if(item->trigger_flags == 2)
+			if(item->trigger_flags == 2) {
 				item->pos.x_pos -= 80;
-			else
+			} else {
 				item->pos.x_pos -= 256;
+			}
 		}
 	}
 }
@@ -229,17 +235,19 @@ void InitialiseFlameEmitter3(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(item->trigger_flags < 3)
+	if(item->trigger_flags < 3) {
 		return;
+	}
 
 	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
 		item2 = GetItem(currentLevel, i);
 
 		if(item2->object_number == ANIMATING3) {
-			if(item2->trigger_flags == item->trigger_flags)
+			if(item2->trigger_flags == item->trigger_flags) {
 				item->item_flags[2] = i;
-			else if(!item2->trigger_flags)
+			} else if(!item2->trigger_flags) {
 				item->item_flags[3] = i;
+			}
 		}
 	}
 }
@@ -322,14 +330,15 @@ void InitialiseRaisingBlock(short item_number) {
 	GetBox(currentLevel, floor->box)->overlap_index &= 0xBFFF;
 
 	if(item->object_number == EXPANDING_PLATFORM) {
-		if(!item->pos.y_rot)
+		if(!item->pos.y_rot) {
 			item->pos.z_pos += 511;
-		else if(item->pos.y_rot == 0x4000)
+		} else if(item->pos.y_rot == 0x4000) {
 			item->pos.x_pos += 511;
-		else if(item->pos.y_rot == -0x8000)
+		} else if(item->pos.y_rot == -0x8000) {
 			item->pos.z_pos -= 511;
-		else if(item->pos.y_rot == -0x4000)
+		} else if(item->pos.y_rot == -0x4000) {
 			item->pos.x_pos -= 511;
+		}
 	}
 
 	if(item->trigger_flags == 2) {
@@ -371,11 +380,13 @@ void InitialiseObelisk(short item_number) {
 		for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
 			item2 = GetItem(currentLevel, i);
 
-			if(item2->object_number == OBELISK && i != item_number)
+			if(item2->object_number == OBELISK && i != item_number) {
 				*ifl++ = i;
+			}
 
-			if(item2->object_number == ANIMATING3)
+			if(item2->object_number == ANIMATING3) {
 				item->item_flags[2] = i;
+			}
 		}
 	}
 }
@@ -385,8 +396,9 @@ void InitialiseMineHelicopter(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(!item->trigger_flags)
+	if(!item->trigger_flags) {
 		item->mesh_bits = 0;
+	}
 }
 
 void InitialiseSmashObject(short item_number) {
@@ -400,8 +412,9 @@ void InitialiseSmashObject(short item_number) {
 	rinfo = GetRoom(currentLevel, item->room_number);
 	floor = &rinfo->floor[((item->pos.z_pos - rinfo->z) >> 10) + ((item->pos.x_pos - rinfo->x) >> 10) * rinfo->x_size];
 
-	if(GetBox(currentLevel, floor->box)->overlap_index & 0x8000)
+	if(GetBox(currentLevel, floor->box)->overlap_index & 0x8000) {
 		GetBox(currentLevel, floor->box)->overlap_index |= 0x4000;
+	}
 }
 
 void InitialiseStatuePlinth(short item_number) {
@@ -409,8 +422,9 @@ void InitialiseStatuePlinth(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(!item->trigger_flags)
+	if(!item->trigger_flags) {
 		item->mesh_bits = 1;
+	}
 }
 
 void InitialiseSmokeEmitter(short item_number) {
@@ -418,20 +432,22 @@ void InitialiseSmokeEmitter(short item_number) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(item->object_number != STEAM_EMITTER)
+	if(item->object_number != STEAM_EMITTER) {
 		return;
+	}
 
 	if(item->trigger_flags & 8) {
 		item->item_flags[0] = item->trigger_flags >> 4;
 
-		if(!item->pos.y_rot)
+		if(!item->pos.y_rot) {
 			item->pos.z_pos += 320;
-		else if(item->pos.y_rot == 0x4000)
+		} else if(item->pos.y_rot == 0x4000) {
 			item->pos.x_pos += 320;
-		else if(item->pos.y_rot == -0x4000)
+		} else if(item->pos.y_rot == -0x4000) {
 			item->pos.x_pos -= 320;
-		else if(item->pos.y_rot == -0x8000)
+		} else if(item->pos.y_rot == -0x8000) {
 			item->pos.z_pos -= 320;
+		}
 	} else if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER && item->trigger_flags == 1) {
 		item->item_flags[0] = 20;
 		item->item_flags[1] = 1;
@@ -460,19 +476,22 @@ void InitialisePickUp(short item_number) {
 	ocb = item->trigger_flags & 0x3F;
 	bounds = GetBoundsAccurate(item);
 
-	if(ocb == 0 || ocb == 3 || ocb == 4)
+	if(ocb == 0 || ocb == 3 || ocb == 4) {
 		item->pos.y_pos -= bounds[3];
+	}
 
 	if(item->trigger_flags & 128) {
 		RPickups[NumRPickups] = (unsigned char)item_number;
 		NumRPickups++;
 	}
 
-	if(item->trigger_flags & 256)
+	if(item->trigger_flags & 256) {
 		item->mesh_bits = 0;
+	}
 
-	if(item->status == ITEM_INVISIBLE)
+	if(item->status == ITEM_INVISIBLE) {
 		item->flags |= IFL_TRIGGERED;
+	}
 }
 
 void CreateRope(ROPE_STRUCT* rope, PHD_VECTOR* pos, PHD_VECTOR* dir, long slength, ITEM_INFO* item) {
@@ -517,18 +536,21 @@ void InitialiseRope(short item_number) {
 }
 
 void init_all_ropes() {
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 5; i++) {
 		RopeList[i].Active = 0;
+	}
 
 	nRope = 0;
 }
 
 void InitialiseEffects() {
-	for(int i = 0; i < nSpark; i++)
+	for(int i = 0; i < nSpark; i++) {
 		spark[i].Dynamic = -1;
+	}
 	next_debris = 0;
 	ClearScarabs();
 
-	for(int i = 0; i < 64; i++)
+	for(int i = 0; i < 64; i++) {
 		Locusts[i].On = 0;
+	}
 }

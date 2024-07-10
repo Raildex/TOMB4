@@ -42,8 +42,9 @@ void BatControl(short item_number) {
 	long max_dist, dist, dx, dz;
 	short angle;
 
-	if(!CreatureActive(item_number))
+	if(!CreatureActive(item_number)) {
 		return;
+	}
 
 	item = GetItem(currentLevel, item_number);
 	bat = (CREATURE_INFO*)item->data;
@@ -70,9 +71,9 @@ void BatControl(short item_number) {
 			}
 		}
 	} else {
-		if(item->ai_bits)
+		if(item->ai_bits) {
 			GetAITarget(bat);
-		else {
+		} else {
 			max_dist = infinite_distance;
 
 			for(int i = 0; i < 5; i++) {
@@ -98,8 +99,9 @@ void BatControl(short item_number) {
 		CreatureAIInfo(item, &info);
 		GetCreatureMood(item, &info, 0);
 
-		if(bat->flags)
+		if(bat->flags) {
 			bat->mood = ESCAPE_MOOD;
+		}
 
 		CreatureMood(item, &info, 0);
 		angle = CreatureTurn(item, 3640);
@@ -107,11 +109,13 @@ void BatControl(short item_number) {
 		switch(item->current_anim_state) {
 		case 2:
 
-			if(info.distance < 0x10000 || !(GetRandomControl() & 0x3F))
+			if(info.distance < 0x10000 || !(GetRandomControl() & 0x3F)) {
 				bat->flags = 0;
+			}
 
-			if(!bat->flags && (item->touch_bits || bat->enemy != lara_item && info.distance < 0x10000 && info.ahead && abs(item->pos.y_pos - bat->enemy->pos.y_pos) < 896))
+			if(!bat->flags && (item->touch_bits || bat->enemy != lara_item && info.distance < 0x10000 && info.ahead && abs(item->pos.y_pos - bat->enemy->pos.y_pos) < 896)) {
 				item->goal_anim_state = 3;
+			}
 
 			break;
 
@@ -135,8 +139,9 @@ void BatControl(short item_number) {
 
 		case 6:
 
-			if(info.distance < 0x1900000 || item->hit_status || bat->hurt_by_lara)
+			if(info.distance < 0x1900000 || item->hit_status || bat->hurt_by_lara) {
 				item->goal_anim_state = 1;
+			}
 
 			break;
 		}

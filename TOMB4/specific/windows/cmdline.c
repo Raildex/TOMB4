@@ -37,26 +37,29 @@ static long TextLow = 0;
 void CLSetup(char* cmd) {
 	Log(__func__, "CLSetup");
 
-	if(cmd)
+	if(cmd) {
 		start_setup = 0;
-	else
+	} else {
 		start_setup = 1;
+	}
 }
 
 void CLNoFMV(char* cmd) {
 	Log(__func__, "CLNoFMV");
 
-	if(cmd)
+	if(cmd) {
 		fmvs_disabled = 0;
-	else
+	} else {
 		fmvs_disabled = 1;
+	}
 }
 
 void InitDSDevice(HWND dlg, HWND hwnd) {
 	SendMessage(hwnd, CB_RESETCONTENT, 0, 0);
 
-	for(int i = 0; i < App.DXInfo.nDSInfo; i++)
+	for(int i = 0; i < App.DXInfo.nDSInfo; i++) {
 		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)App.DXInfo.DSInfo[i].About);
+	}
 
 	if(!App.DXInfo.nDSInfo) {
 		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)SCRIPT_TEXT(TXT_No_Sound_Card_Installed));
@@ -96,10 +99,11 @@ void InitTFormats(HWND dlg, HWND hwnd) {
 				SendMessage(hwnd, CB_SETCURSEL, i, 0);
 				EnableWindow(GetDlgItem(dlg, 1006), 0);
 			}
-		} else if(bpp == 16 && r == 5 && b == 5 && g == 5 && a == 1)
+		} else if(bpp == 16 && r == 5 && b == 5 && g == 5 && a == 1) {
 			SendMessage(hwnd, CB_SETCURSEL, i, 0);
-		else
+		} else {
 			SendMessage(hwnd, CB_SETCURSEL, 0, 0);
+		}
 	}
 }
 
@@ -132,17 +136,18 @@ void InitResolution(HWND dlg, HWND hwnd, long resetvms) {
 				SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)buffer);
 				SendMessage(hwnd, CB_SETITEMDATA, n, i);
 
-				if(w == 640 && h == 480)
+				if(w == 640 && h == 480) {
 					SendMessage(hwnd, CB_SETCURSEL, n, 0);
+				}
 
 				n++;
 			}
 		}
 	}
 
-	if(App.DXInfo.DDInfo[nDDDevice].DDCaps.dwCaps2 & DDCAPS2_CANRENDERWINDOWED)
+	if(App.DXInfo.DDInfo[nDDDevice].DDCaps.dwCaps2 & DDCAPS2_CANRENDERWINDOWED) {
 		EnableWindow(GetDlgItem(dlg, 1025), 1);
-	else {
+	} else {
 		EnableWindow(GetDlgItem(dlg, 1025), 0);
 		SendMessage(GetDlgItem(dlg, 1025), BM_SETCHECK, 0, 0);
 	}
@@ -152,24 +157,27 @@ void InitResolution(HWND dlg, HWND hwnd, long resetvms) {
 	if(software) {
 		EnableWindow(GetDlgItem(dlg, 1029), 0);
 		VolumetricFx = 0;
-	} else
+	} else {
 		EnableWindow(GetDlgItem(dlg, 1029), 1);
+	}
 
 	SendMessage(GetDlgItem(dlg, 1029), BM_SETCHECK, VolumetricFx, 0);
 
 	if(software) {
 		EnableWindow(GetDlgItem(dlg, 1016), 0);
 		BumpMap = 0;
-	} else
+	} else {
 		EnableWindow(GetDlgItem(dlg, 1016), 1);
+	}
 
 	SendMessage(GetDlgItem(dlg, 1016), BM_SETCHECK, BumpMap, 0);
 
 	if(software) {
 		EnableWindow(GetDlgItem(dlg, 1014), 0);
 		TextLow = 0;
-	} else
+	} else {
 		EnableWindow(GetDlgItem(dlg, 1014), 1);
+	}
 
 	SendMessage(GetDlgItem(dlg, 1014), BM_SETCHECK, TextLow, 0);
 
@@ -186,8 +194,9 @@ void InitResolution(HWND dlg, HWND hwnd, long resetvms) {
 		EnableWindow(GetDlgItem(dlg, 1015), 0);
 	}
 
-	if(resetvms)
+	if(resetvms) {
 		InitTFormats(dlg, GetDlgItem(dlg, 1006));
+	}
 }
 
 void InitD3DDevice(HWND dlg, HWND hwnd) {
@@ -196,8 +205,9 @@ void InitD3DDevice(HWND dlg, HWND hwnd) {
 	SendMessage(hwnd, CB_RESETCONTENT, 0, 0);
 	ddraw = &App.DXInfo.DDInfo[nDDDevice];
 
-	for(int i = 0; i < ddraw->nD3DDevices; i++)
+	for(int i = 0; i < ddraw->nD3DDevices; i++) {
 		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)ddraw->D3DDevices[i].About);
+	}
 
 	SendMessage(hwnd, CB_SETCURSEL, 1, 0);
 	nD3DDevice = 1;
@@ -244,8 +254,9 @@ char* MapASCIIToANSI(char* s, char* d) {
 				}
 			}
 
-			if(!found)
+			if(!found) {
 				Log(__func__, "Reqd : %x", c);
+			}
 		}
 
 		*d++ = c;
@@ -298,8 +309,9 @@ INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPar
 		switch((unsigned short)wParam) {
 		case IDOK:
 
-			if(hfont)
+			if(hfont) {
 				DeleteObject(hfont);
+			}
 
 			SaveSetup(dlg);
 			EndDialog(dlg, 1);
@@ -307,8 +319,9 @@ INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPar
 
 		case IDCANCEL:
 
-			if(hfont)
+			if(hfont) {
 				DeleteObject(hfont);
+			}
 
 			EndDialog(dlg, 0);
 			return 1;
@@ -354,10 +367,11 @@ INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPar
 		case 1012:
 
 			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
-				if(SendMessage(GetDlgItem(dlg, 1012), BM_GETCHECK, 0, 0))
+				if(SendMessage(GetDlgItem(dlg, 1012), BM_GETCHECK, 0, 0)) {
 					Filter = 1;
-				else
+				} else {
 					Filter = 0;
+				}
 
 				InitResolution(dlg, GetDlgItem(dlg, 1004), 0);
 			}
@@ -367,10 +381,11 @@ INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPar
 		case 1014:
 
 			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
-				if(SendMessage(GetDlgItem(dlg, 1014), BM_GETCHECK, 0, 0))
+				if(SendMessage(GetDlgItem(dlg, 1014), BM_GETCHECK, 0, 0)) {
 					TextLow = 1;
-				else
+				} else {
 					TextLow = 0;
+				}
 
 				InitResolution(dlg, GetDlgItem(dlg, 1004), 0);
 			}
@@ -380,10 +395,11 @@ INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPar
 		case 1016:
 
 			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
-				if(SendMessage(GetDlgItem(dlg, 1016), BM_GETCHECK, 0, 0))
+				if(SendMessage(GetDlgItem(dlg, 1016), BM_GETCHECK, 0, 0)) {
 					BumpMap = 1;
-				else
+				} else {
 					BumpMap = 0;
+				}
 
 				InitResolution(dlg, GetDlgItem(dlg, 1004), 0);
 			}
@@ -393,10 +409,11 @@ INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPar
 		case 1018:
 
 			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
-				if(SendMessage(GetDlgItem(dlg, (unsigned short)wParam), BM_GETCHECK, 0, 0))
+				if(SendMessage(GetDlgItem(dlg, (unsigned short)wParam), BM_GETCHECK, 0, 0)) {
 					EnableWindow(GetDlgItem(dlg, 1005), 0);
-				else
+				} else {
 					EnableWindow(GetDlgItem(dlg, 1005), 1);
+				}
 			}
 
 			break;
@@ -404,10 +421,11 @@ INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPar
 		case 1029:
 
 			if(((wParam >> 16) & 0xFFFF) == BN_CLICKED) {
-				if(SendMessage(GetDlgItem(dlg, 1029), BM_GETCHECK, 0, 0))
+				if(SendMessage(GetDlgItem(dlg, 1029), BM_GETCHECK, 0, 0)) {
 					VolumetricFx = 1;
-				else
+				} else {
 					VolumetricFx = 0;
+				}
 
 				InitResolution(dlg, GetDlgItem(dlg, 1004), 0);
 			}
@@ -431,8 +449,9 @@ long DXSetupDialog() {
 		return 0;
 	}
 
-	if(!ret)
+	if(!ret) {
 		return 0;
+	}
 
 	return 1;
 }
