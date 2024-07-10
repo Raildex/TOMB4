@@ -2,10 +2,6 @@
 #define TOMB4_GAME_LARAINFO_H
 #include "game/laraarm.h"
 #include "game/phdvector.h"
-
-typedef struct CREATURE_INFO CREATURE_INFO;
-typedef struct FX_INFO FX_INFO;
-typedef struct ITEM_INFO ITEM_INFO;
 #pragma pack(push, 1)
 typedef struct LARA_INFO {
 	short item_number;
