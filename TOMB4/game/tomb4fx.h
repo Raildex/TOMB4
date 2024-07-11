@@ -1,5 +1,6 @@
 #ifndef TOMB4_GAME_TOMB4FX_H
 #define TOMB4_GAME_TOMB4FX_H
+#include "game/nodeoffsetinfo.h"
 typedef struct LIGHTNING_STRUCT LIGHTNING_STRUCT;
 typedef struct PHD_VECTOR PHD_VECTOR;
 typedef struct ITEM_INFO ITEM_INFO;
@@ -62,7 +63,6 @@ void SetScreenFadeOut(short speed, short back);
 void SetScreenFadeIn(short speed);
 void Fade();
 SMOKE_SPARKS* GetFreeSmokeSpark();
-
 extern NODEOFFSET_INFO NodeOffsets[];
 extern long nLightnings;
 extern LIGHTNING_STRUCT* Lightning;

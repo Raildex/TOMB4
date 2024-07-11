@@ -428,7 +428,7 @@ void Splash(ITEM_INFO* item) {
 
 short DoBloodSplat(long x, long y, long z, short speed, short ang, short room_number) {
 	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
-		TriggerUnderwaterBlood(x, y, z, speed);
+		TriggerUnderwaterBlood(x, y - 32, z, speed);
 	} else {
 		TriggerBlood(x, y, z, ang >> 4, speed);
 	}

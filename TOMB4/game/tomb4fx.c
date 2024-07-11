@@ -1333,6 +1333,30 @@ void UpdateBlood() {
 	}
 }
 
+
+void TriggerUnderwaterBlood(long x, long y, long z, long size) {
+	BLOOD_STRUCT* bptr;
+	bptr = GetFreeBlood();
+	bptr->x = x;
+	bptr->y = y;
+	bptr->z = z;
+	bptr->dSize = size << 5;
+	bptr->sSize = bptr->Size = 0;
+	bptr->Life = (GetRandomControl() & 7) + 120;
+	bptr->sLife = bptr->Life;
+	bptr->On = 1;
+	bptr->Xvel = 0;
+	bptr->Zvel = 0;
+	bptr->Yvel = 0;
+	bptr->Gravity = 0;
+	bptr->ColFadeSpeed = 4;
+	bptr->FadeToBlack = 32;
+	bptr->sShade = 0;
+	bptr->dShade = (GetRandomControl() & 0x3F) + 48;
+	bptr->RotAng = 0;
+	bptr->RotAdd = (GetRandomControl() & 0x3F) - 32;
+}
+
 void TriggerBlood(long x, long y, long z, long angle, long num) {
 	BLOOD_STRUCT* bptr;
 	short ang, speed;

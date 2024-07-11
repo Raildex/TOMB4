@@ -35,6 +35,7 @@
 #include "global/types.h"
 #include "specific/3dmath.h"
 #include "specific/function_stubs.h"
+#include "tomb4fx.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -760,30 +761,7 @@ void SetupRipple(long x, long y, long z, long size, long flags) {
 	ripple->z += (GetRandomControl() & 0x3F) - 32;
 }
 
-void TriggerUnderwaterBlood(long x, long y, long z, long size) {
-	RIPPLE_STRUCT* ripple;
-	long n;
 
-	ripple = ripples;
-	n = 0;
-
-	while(ripple->flags & ripple_on) {
-		ripple++;
-		n++;
-
-		if(n >= 16) {
-			return;
-		}
-	}
-
-	ripple->flags = 49;
-	ripple->init = 1;
-	ripple->life = (GetRandomControl() & 7) - 16;
-	ripple->size = (unsigned char)size;
-	ripple->x = x + (GetRandomControl() & 0x3F) - 32;
-	ripple->y = y;
-	ripple->z = z + (GetRandomControl() & 0x3F) - 32;
-}
 
 void TriggerWaterfallMist(long x, long y, long z, long ang) {
 	SPARKS* sptr;
