@@ -3485,7 +3485,7 @@ void S_DrawFireSparks(long size, long life) {
 		tex.u4 = sprite->x1;
 		tex.v4 = sprite->y2;
 		AddQuadSorted(v, 0, 1, 2, 3, &tex, 0);
-		AddQuadSorted(v, 0, 1, 2, 3, &tex, 0);
+		//AddQuadSorted(v, 0, 1, 2, 3, &tex, 0);
 	}
 }
 
