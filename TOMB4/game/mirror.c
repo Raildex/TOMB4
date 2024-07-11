@@ -8,6 +8,7 @@
 #include "game/iteminfo.h"
 #include "game/lara.h"
 #include "game/larainfo.h"
+#include "game/laramesh.h"
 #include "game/tomb4fx.h"
 #include "specific/3dmath.h"
 #include "specific/function_table.h"
@@ -51,34 +52,34 @@ void Draw_Mirror_Lara() {
 	phd_PushMatrix();
 
 	if(lara.right_arm.flash_gun) {
-		mMXPtr[M00] = lara_matrices[11 * indices_count + M00];
-		mMXPtr[M01] = lara_matrices[11 * indices_count + M01];
-		mMXPtr[M02] = lara_matrices[11 * indices_count + M02];
-		mMXPtr[M03] = lara_matrices[11 * indices_count + M03];
-		mMXPtr[M10] = lara_matrices[11 * indices_count + M10];
-		mMXPtr[M11] = lara_matrices[11 * indices_count + M11];
-		mMXPtr[M12] = lara_matrices[11 * indices_count + M12];
-		mMXPtr[M13] = lara_matrices[11 * indices_count + M13];
-		mMXPtr[M20] = lara_matrices[11 * indices_count + M20];
-		mMXPtr[M21] = lara_matrices[11 * indices_count + M21];
-		mMXPtr[M22] = lara_matrices[11 * indices_count + M22];
-		mMXPtr[M23] = lara_matrices[11 * indices_count + M23];
+		mMXPtr[M00] = lara_matrices[LM_RHAND * indices_count + M00];
+		mMXPtr[M01] = lara_matrices[LM_RHAND * indices_count + M01];
+		mMXPtr[M02] = lara_matrices[LM_RHAND * indices_count + M02];
+		mMXPtr[M03] = lara_matrices[LM_RHAND * indices_count + M03];
+		mMXPtr[M10] = lara_matrices[LM_RHAND * indices_count + M10];
+		mMXPtr[M11] = lara_matrices[LM_RHAND * indices_count + M11];
+		mMXPtr[M12] = lara_matrices[LM_RHAND * indices_count + M12];
+		mMXPtr[M13] = lara_matrices[LM_RHAND * indices_count + M13];
+		mMXPtr[M20] = lara_matrices[LM_RHAND * indices_count + M20];
+		mMXPtr[M21] = lara_matrices[LM_RHAND * indices_count + M21];
+		mMXPtr[M22] = lara_matrices[LM_RHAND * indices_count + M22];
+		mMXPtr[M23] = lara_matrices[LM_RHAND * indices_count + M23];
 		SetGunFlash(lara.gun_type);
 	}
 
 	if(lara.left_arm.flash_gun) {
-		mMXPtr[M00] = lara_matrices[14 * indices_count + M00];
-		mMXPtr[M01] = lara_matrices[14 * indices_count + M01];
-		mMXPtr[M02] = lara_matrices[14 * indices_count + M02];
-		mMXPtr[M03] = lara_matrices[14 * indices_count + M03];
-		mMXPtr[M10] = lara_matrices[14 * indices_count + M10];
-		mMXPtr[M11] = lara_matrices[14 * indices_count + M11];
-		mMXPtr[M12] = lara_matrices[14 * indices_count + M12];
-		mMXPtr[M13] = lara_matrices[14 * indices_count + M13];
-		mMXPtr[M20] = lara_matrices[14 * indices_count + M20];
-		mMXPtr[M21] = lara_matrices[14 * indices_count + M21];
-		mMXPtr[M22] = lara_matrices[14 * indices_count + M22];
-		mMXPtr[M23] = lara_matrices[14 * indices_count + M23];
+		mMXPtr[M00] = lara_matrices[LM_LHAND * indices_count + M00];
+		mMXPtr[M01] = lara_matrices[LM_LHAND * indices_count + M01];
+		mMXPtr[M02] = lara_matrices[LM_LHAND * indices_count + M02];
+		mMXPtr[M03] = lara_matrices[LM_LHAND * indices_count + M03];
+		mMXPtr[M10] = lara_matrices[LM_LHAND * indices_count + M10];
+		mMXPtr[M11] = lara_matrices[LM_LHAND * indices_count + M11];
+		mMXPtr[M12] = lara_matrices[LM_LHAND * indices_count + M12];
+		mMXPtr[M13] = lara_matrices[LM_LHAND * indices_count + M13];
+		mMXPtr[M20] = lara_matrices[LM_LHAND * indices_count + M20];
+		mMXPtr[M21] = lara_matrices[LM_LHAND * indices_count + M21];
+		mMXPtr[M22] = lara_matrices[LM_LHAND * indices_count + M22];
+		mMXPtr[M23] = lara_matrices[LM_LHAND * indices_count + M23];
 		SetGunFlash(lara.gun_type);
 	}
 
