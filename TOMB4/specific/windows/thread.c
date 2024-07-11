@@ -42,7 +42,7 @@ long S_RunThread(THREAD* thrd) {
 }
 
 long S_WaitThread(THREAD* thrd) {
-	DWORD result = WaitForMultipleObjects(1, thrd->ThreadHandle, 1, INFINITE);
+	DWORD result = WaitForMultipleObjects(1, &thrd->ThreadHandle, 1, INFINITE);
 	if(result == WAIT_FAILED || result == WAIT_TIMEOUT) {
 		return 0;
 	}
