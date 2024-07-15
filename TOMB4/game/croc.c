@@ -441,18 +441,18 @@ void DrawLocusts() {
 void UpdateLocusts() {
 	LOCUST_STRUCT* fx;
 	short* lb;
-	long bounds[6];
+	short bounds[6];
 	long speed, ox, oy, oz, closestdist, closestnum;
 	short angles[2];
 	short max_turn;
 
-	lb = GetBoundsAccurate(lara_item);
-	bounds[0] = lb[0] - (lb[0] >> 2) + lara_item->pos.pos.x;
-	bounds[1] = lb[1] - (lb[1] >> 2) + lara_item->pos.pos.x;
-	bounds[2] = lb[2] - (lb[2] >> 2) + lara_item->pos.pos.y;
-	bounds[3] = lb[3] - (lb[3] >> 2) + lara_item->pos.pos.y;
-	bounds[4] = lb[4] - (lb[4] >> 2) + lara_item->pos.pos.z;
-	bounds[5] = lb[5] - (lb[5] >> 2) + lara_item->pos.pos.z;
+	GetBoundsAccurate(lara_item, bounds);
+	bounds[0] += lara_item->pos.pos.x;
+	bounds[1] += lara_item->pos.pos.x;
+	bounds[2] += lara_item->pos.pos.y;
+	bounds[3] += lara_item->pos.pos.y;
+	bounds[4] += lara_item->pos.pos.z;
+	bounds[5] += lara_item->pos.pos.z;
 	closestdist = 0xFFFFFFF;
 	closestnum = -1;
 

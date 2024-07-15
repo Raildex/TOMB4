@@ -34,9 +34,9 @@
 
 
 void DrawFlareInAir(ITEM_INFO* item) {
-	short* bounds;
+	short bounds[6];
 
-	bounds = GetBoundsAccurate(item);
+	GetBoundsAccurate(item, bounds);
 
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.pos.x, item->pos.pos.y - bounds[3], item->pos.pos.z);

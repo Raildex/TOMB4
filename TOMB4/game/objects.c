@@ -273,14 +273,14 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	FLOOR_INFO* floor;
 	height_types height_type;
 	long tiltxoff, tiltzoff, OnObject;
-	short* bounds;
+	short bounds[6];
 	short room_number, y_rot;
 
 	item = GetItem(currentLevel, item_number);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status && lara.gun_status == LG_NO_ARMS && !item->trigger_flags && !item->item_flags[0]) {
 		if(!item->item_flags[1]) {
-			bounds = GetBoundsAccurate(item);
+			GetBoundsAccurate(item, bounds);
 			StatuePlinthBounds[0] = bounds[0];
 			StatuePlinthBounds[1] = bounds[1];
 			StatuePlinthBounds[4] = bounds[4] - 200;

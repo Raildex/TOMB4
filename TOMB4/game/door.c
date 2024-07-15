@@ -85,14 +85,14 @@ void OpenThatDoor(DOORPOS_DATA* d) {
 void DoorControl(short item_number) {
 	ITEM_INFO* item;
 	DOOR_DATA* door;
-	short* bounds;
+	short bounds[6];
 
 	item = GetItem(currentLevel, item_number);
 	door = (DOOR_DATA*)item->data;
 
 	if(item->trigger_flags == 1) {
 		if(item->item_flags[0]) {
-			bounds = GetBoundsAccurate(item);
+			GetBoundsAccurate(item, bounds);
 			item->item_flags[0]--;
 			item->pos.pos.y -= 12;
 

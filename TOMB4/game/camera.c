@@ -1267,7 +1267,7 @@ void CalculateCamera() {
 	ITEM_INFO* item;
 	OBJECT_VECTOR* fixed;
 	PHD_VECTOR v;
-	short* bounds;
+	short bounds[6];
 	long shift, fixed_camera, y, dx, dz;
 	short gotit, change, tilt;
 
@@ -1322,7 +1322,7 @@ void CalculateCamera() {
 		fixed_camera = 0;
 	}
 
-	bounds = GetBoundsAccurate(item);
+	GetBoundsAccurate(item, bounds);
 
 	if(fixed_camera) {
 		y = item->pos.pos.y + (bounds[2] + bounds[3]) / 2;
@@ -1336,7 +1336,7 @@ void CalculateCamera() {
 		shift = phd_sqrt(SQUARE(dx) + SQUARE(dz));
 		gotit = (short)(phd_atan(dz, dx) - item->pos.y_rot);
 		gotit >>= 1;
-		bounds = GetBoundsAccurate(camera.item);
+		GetBoundsAccurate(camera.item, bounds);
 		tilt = (short)phd_atan(shift, y - (bounds[2] + bounds[3]) / 2 - camera.item->pos.pos.y) >> 1;
 
 		if(gotit > -9100 && gotit < 9100 && tilt > -15470 && tilt < 15470) {

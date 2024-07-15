@@ -485,7 +485,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 	PHD_VECTOR pos;
 	height_types height_type;
 	long tiltxoff, tiltzoff, OnObject;
-	short* bounds;
+	short bounds[6];
 	short room_number, yrot, quadrant;
 
 	item = GetItem(currentLevel, item_number);
@@ -499,14 +499,14 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 	}
 
 	if(input & IN_ACTION && laraitem->current_anim_state == AS_STOP && laraitem->anim_number == ANIM_BREATH
-		   && !laraitem->gravity_status && lara.gun_status == LG_NO_ARMS && item->status == ITEM_INACTIVE
-		   && item->trigger_flags >= 0
-	   || (lara.IsMoving && lara.GeneralPtr == item_number)) {
+		&& !laraitem->gravity_status && lara.gun_status == LG_NO_ARMS && item->status == ITEM_INACTIVE
+		&& item->trigger_flags >= 0
+		|| (lara.IsMoving && lara.GeneralPtr == item_number)) {
 		room_number = laraitem->room_number;
 		GetFloor(item->pos.pos.x, item->pos.pos.y - 256, item->pos.pos.z, &room_number);
 
 		if(room_number == item->room_number) {
-			bounds = GetBoundsAccurate(item);
+			GetBoundsAccurate(item, bounds);
 			MovingBlockBounds[0] = bounds[0] - 100;
 			MovingBlockBounds[1] = bounds[1] + 100;
 			MovingBlockBounds[4] = bounds[4] - 200;

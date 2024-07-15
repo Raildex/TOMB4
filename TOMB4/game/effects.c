@@ -504,7 +504,7 @@ void SoundEffects() {
 }
 
 long ItemNearLara(PHD_3DPOS* pos, long rad) {
-	short* bounds;
+	short bounds[6];
 	long dx, dy, dz;
 
 	dx = pos->pos.x - lara_item->pos.pos.x;
@@ -512,7 +512,7 @@ long ItemNearLara(PHD_3DPOS* pos, long rad) {
 	dz = pos->pos.z - lara_item->pos.pos.z;
 
 	if(dx >= -rad && dx <= rad && dz >= -rad && dz <= rad && dy >= -3072 && dy <= 3072 && SQUARE(dx) + SQUARE(dz) <= SQUARE(rad)) {
-		bounds = GetBoundsAccurate(lara_item);
+		GetBoundsAccurate(lara_item, bounds);
 
 		if(dy >= bounds[2] && dy <= bounds[3] + 100) {
 			return 1;

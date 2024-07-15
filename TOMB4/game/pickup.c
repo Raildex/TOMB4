@@ -595,7 +595,7 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
-	short* bounds;
+	short bounds[6];
 	long PuzzleType, hole, puzzle;
 	short yrot;
 
@@ -611,7 +611,7 @@ void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	}
 
 	if(((input & IN_ACTION || GLOBAL_inventoryitemchosen != NO_ITEM) && (!BinocularRange && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH)) || (lara.IsMoving && lara.GeneralPtr == item_num)) {
-		bounds = GetBoundsAccurate(item);
+		GetBoundsAccurate(item, bounds);
 		yrot = item->pos.y_rot;
 		PuzzleBounds[0] = bounds[0] - 256;
 		PuzzleBounds[1] = bounds[1] + 256;

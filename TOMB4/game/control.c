@@ -2417,7 +2417,7 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 	MESH_INFO* mesh;
 	ROOM_INFO* r;
 	PHD_3DPOS ItemPos;
-	short* bounds;
+	short bounds[6];
 	long dx, dy, dz;
 	short item_number;
 
@@ -2434,7 +2434,7 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 			item = GetItem(currentLevel, item_number);
 
 			if(item->status != ITEM_DEACTIVATED && item->status != ITEM_INVISIBLE && item->object_number != LARA) {
-				bounds = GetBoundsAccurate(item);
+				GetBoundsAccurate(item, bounds);
 				ItemPos.pos.x = item->pos.pos.x;
 				ItemPos.pos.y = item->pos.pos.y;
 				ItemPos.pos.z = item->pos.pos.z;

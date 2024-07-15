@@ -207,14 +207,14 @@ void SwitchControl(short item_number) {
 
 void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
-	short* bounds;
+	short bounds[6];
 
 	item = GetItem(currentLevel, item_number);
 
 	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS
-		   && item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && item->trigger_flags >= 0
-	   || lara.IsMoving && lara.GeneralPtr == item_number) {
-		bounds = GetBoundsAccurate(item);
+		&& item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && item->trigger_flags >= 0
+		|| lara.IsMoving && lara.GeneralPtr == item_number) {
+		GetBoundsAccurate(item, bounds);
 
 		if(item->trigger_flags == 3 && item->current_anim_state == 1) {
 			return;

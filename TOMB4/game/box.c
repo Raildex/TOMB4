@@ -49,7 +49,7 @@ void CreatureDie(short item_number, long explode) {
 	height_types height_type;
 	long tiltxoff, tiltzoff, OnObject;
 	short pickup_number, room_number;
-
+	short bounds[6];
 	item = GetItem(currentLevel, item_number);
 	item->hit_points = -16384;
 	item->collidable = 0;
@@ -86,7 +86,8 @@ void CreatureDie(short item_number, long explode) {
 
 		room_number = item->room_number;
 		pickup->pos.pos.y = GetHeight(GetFloor(pickup->pos.pos.x, item->pos.pos.y, pickup->pos.pos.z, &room_number), pickup->pos.pos.x, item->pos.pos.y, pickup->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-		pickup->pos.pos.y -= GetBoundsAccurate(pickup)[3];
+		GetBoundsAccurate(pickup, &bounds[0]);
+		pickup->pos.pos.y -= bounds[3];
 		ItemNewRoom(pickup_number, item->room_number);
 		pickup->flags |= IFL_TRIGGERED;
 		pickup_number = pickup->carried_item;
@@ -923,7 +924,7 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR oldPos;
 	short* zone;
-	short* bounds;
+	short bounds[6];
 	long box_height, y, height, next_box, next_height, x, z, wx, wz, xShift, zShift, dy;
 	short room_number, rad;
 
@@ -947,7 +948,7 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 		return 0;
 	}
 
-	bounds = GetBoundsAccurate(item);
+	GetBoundsAccurate(item, bounds);
 	y = item->pos.pos.y + bounds[2];
 	room_number = item->room_number;
 	GetFloor(oldPos.x, y, oldPos.z, &room_number);

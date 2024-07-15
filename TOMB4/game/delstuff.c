@@ -33,7 +33,7 @@
 #include <math.h>
 #include <windows.h>
 
-short* GLaraShadowframe;
+short GLaraShadowframe[6];
 float lara_matrices[indices_count * (NUM_LARA_MESHES + 12)];
 float lara_joint_matrices[indices_count * (NUM_LARA_MESHES + 12)];
 long LaraNodeAmbient[2];
@@ -719,7 +719,7 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag) {
 	phd_PopMatrix();
 	phd_PopMatrix();
 	phd_PopMatrix();
-	GLaraShadowframe = frame;
+	memcpy(&GLaraShadowframe,frame,sizeof(GLaraShadowframe));
 }
 
 void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac, long rate, long* bone, long flag) {
@@ -1071,7 +1071,7 @@ void CalcLaraMatrices(long flag) {
 
 	if(lara.hit_direction < 0) {
 		if(frac) {
-			GLaraShadowframe = GetBoundsAccurate(lara_item);
+			GetBoundsAccurate(lara_item, GLaraShadowframe);
 			Rich_CalcLaraMatrices_Interpolated(frmptr[0], frmptr[1], frac, rate, bone, flag);
 			return;
 		}

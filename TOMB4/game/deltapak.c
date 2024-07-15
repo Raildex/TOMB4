@@ -532,9 +532,9 @@ void frigup_lara() {
 	}
 
 	if(cutseq_num == 12) {
-		GLaraShadowframe = frig_jeep_shadow_bbox;
+		memcpy(&GLaraShadowframe,frig_jeep_shadow_bbox,sizeof(GLaraShadowframe));
 	} else {
-		GLaraShadowframe = frig_shadow_bbox;
+		memcpy(&GLaraShadowframe,frig_shadow_bbox,sizeof(GLaraShadowframe));
 	}
 }
 

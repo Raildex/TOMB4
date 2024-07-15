@@ -30,7 +30,7 @@ short ElementPuzzleBounds[12] = { 0, 0, -64, 0, 0, 0, -1820, 1820, -5460, 5460, 
 
 void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
-	short* bounds;
+	short bounds[6];
 	long y;
 	short mesh, rotY;
 
@@ -47,7 +47,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	}
 
 	if((l->anim_number == ANIM_POURWATERSKIN || l->anim_number == ANIM_FILLSCALE) && !item->item_flags[0]) {
-		bounds = GetBoundsAccurate(item);
+		GetBoundsAccurate(item, bounds);
 		ElementPuzzleBounds[0] = bounds[0];
 		ElementPuzzleBounds[1] = bounds[1];
 		ElementPuzzleBounds[4] = bounds[4] - 200;
@@ -81,7 +81,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		item->pos.y_rot = rotY;
 	} else if(lara.gun_type == WEAPON_TORCH && lara.gun_status == LG_READY && !lara.left_arm.lock && input & IN_ACTION && item->trigger_flags == 1 && item->item_flags[0] == 1 && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.LitTorch && !l->gravity_status) {
-		bounds = GetBoundsAccurate(item);
+		GetBoundsAccurate(item, bounds);
 		ElementPuzzleBounds[0] = bounds[0];
 		ElementPuzzleBounds[1] = bounds[1];
 		ElementPuzzleBounds[4] = bounds[4] - 200;

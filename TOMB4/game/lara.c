@@ -1252,7 +1252,7 @@ void lara_col_crawlb(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_col_crawl2hang(ITEM_INFO* item, COLL_INFO* coll) {
-	short* bounds;
+	short bounds[6];
 	long edge, edge_catch;
 	short angle;
 
@@ -1315,7 +1315,7 @@ void lara_col_crawl2hang(ITEM_INFO* item, COLL_INFO* coll) {
 		item->goal_anim_state = AS_HANG;
 	}
 
-	bounds = GetBoundsAccurate(item);
+	GetBoundsAccurate(item, bounds);
 
 	if(edge_catch <= 0) {
 		item->pos.pos.y = edge - bounds[2];
@@ -3373,7 +3373,7 @@ void lara_as_upjump(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_col_upjump(ITEM_INFO* item, COLL_INFO* coll) {
-	short* bounds;
+	short bounds[6];
 	long edge, edge_catch;
 	short angle;
 
@@ -3433,7 +3433,7 @@ void lara_col_upjump(ITEM_INFO* item, COLL_INFO* coll) {
 						item->current_anim_state = AS_HANG;
 					}
 
-					bounds = GetBoundsAccurate(item);
+					GetBoundsAccurate(item, bounds);
 
 					if(edge_catch <= 0) {
 						item->pos.pos.y = edge - bounds[2] + 4;
@@ -3581,7 +3581,7 @@ void lara_as_reach(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_col_reach(ITEM_INFO* item, COLL_INFO* coll) {
-	short* bounds;
+	short bounds[6];
 	long edge, edge_catch;
 	short angle;
 
@@ -3645,7 +3645,7 @@ void lara_col_reach(ITEM_INFO* item, COLL_INFO* coll) {
 						item->current_anim_state = AS_HANG;
 					}
 
-					bounds = GetBoundsAccurate(item);
+					GetBoundsAccurate(item, bounds);
 
 					if(edge_catch <= 0) {
 						item->pos.pos.y = edge - bounds[2] - 22;
@@ -4360,7 +4360,7 @@ static long IsValidHangPos(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll) {
-	short* bounds;
+	short bounds[6];
 	long shift, result;
 	short angle, l, r;
 
@@ -4382,7 +4382,7 @@ long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll) {
 		break;
 	}
 
-	bounds = GetBoundsAccurate(item);
+	GetBoundsAccurate(item, bounds);
 
 	if(lara.move_angle != item->pos.y_rot) {
 		r = LaraCeilingFront(item, item->pos.y_rot, 0, 0);
@@ -4924,10 +4924,10 @@ short TestMonkeyRight(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 long LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, long* edge) {
-	short* bounds;
+	short bounds[6];
 	long hdif;
 
-	bounds = GetBoundsAccurate(item);
+	GetBoundsAccurate(item, bounds);
 	hdif = coll->front_floor - bounds[2];
 
 	if((hdif >= 0 || item->fallspeed + hdif >= 0) && (hdif <= 0 || item->fallspeed + hdif <= 0)) {
@@ -5288,7 +5288,7 @@ void SnapLaraToEdgeOfBlock(ITEM_INFO* item, COLL_INFO* coll, short angle) {
 }
 
 long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
-	short* bounds;
+	short bounds[6];
 	long x, z, oldfloor, hdif, flag;
 	short angle, move, wall, ceiling, dir;
 	height_types height_type;
@@ -5372,7 +5372,7 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 			flag = 0;
 		}
 
-		bounds = GetBoundsAccurate(item);
+		GetBoundsAccurate(item, bounds);
 		oldfloor = coll->front_floor;
 		hdif = coll->front_floor - bounds[2];
 		wall = 0;
@@ -5442,7 +5442,7 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 		item->goal_anim_state = AS_UPJUMP;
 		item->anim_number = ANIM_STOPHANG;
 		item->frame_number = GetAnim(currentLevel, ANIM_STOPHANG)->frame_base + 9;
-		bounds = GetBoundsAccurate(item);
+		GetBoundsAccurate(item, bounds);
 		item->pos.pos.x += coll->shift.x;
 		item->pos.pos.y += bounds[3];
 		item->pos.pos.z += coll->shift.z;

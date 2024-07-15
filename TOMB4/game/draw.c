@@ -1326,27 +1326,21 @@ long GetFrames(ITEM_INFO* item, short* frm[], long* rate) {
 	return frac;
 }
 
-short* GetBoundsAccurate(ITEM_INFO* item) {
-	short* bptr;
+void GetBoundsAccurate(ITEM_INFO* item, short* result) {
 	short* frmptr[2];
 	long rate, frac;
-	static short interpolated_bounds[6];
 
 	frac = GetFrames(item, frmptr, &rate);
 
 	if(!frac) {
-		return frmptr[0];
+		memcpy(result, frmptr[0], sizeof(short) * 6);
 	}
 
-	bptr = interpolated_bounds;
-
 	for(int i = 0; i < 6; i++) {
-		bptr[i] = (short)(*frmptr[0] + (*frmptr[1] - *frmptr[0]) * frac / rate);
+		result[i] = (short)(*frmptr[0] + (*frmptr[1] - *frmptr[0]) * frac / rate);
 		frmptr[0]++;
 		frmptr[1]++;
 	}
-
-	return interpolated_bounds;
 }
 
 short* GetBestFrame(ITEM_INFO* item) {
@@ -1357,9 +1351,9 @@ short* GetBestFrame(ITEM_INFO* item) {
 
 	if(frac > rate >> 1) {
 		return frm[1];
-	} else {
-		return frm[0];
 	}
+	return frm[0];
+
 }
 
 void UpdateSkyLightning() {

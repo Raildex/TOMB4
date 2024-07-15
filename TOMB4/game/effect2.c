@@ -1032,10 +1032,10 @@ SPARKS* GetFreeSpark() {
 void UpdateSparks() {
 	SPARKS* sptr;
 	SP_DYNAMIC* dynamic;
-	short* bounds;
+	short bounds[6];
 	long fade, uw, rad, rnd, x, y, z, r, g, b, falloff;
 
-	bounds = GetBoundsAccurate(lara_item);
+	GetBoundsAccurate(lara_item, bounds);
 	DeadlyBounds[0] = lara_item->pos.pos.x + bounds[0];
 	DeadlyBounds[1] = lara_item->pos.pos.x + bounds[1];
 	DeadlyBounds[2] = lara_item->pos.pos.y + bounds[2];

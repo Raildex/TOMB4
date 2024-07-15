@@ -469,12 +469,12 @@ void InitialisePulley(short item_number) {
 
 void InitialisePickUp(short item_number) {
 	ITEM_INFO* item;
-	short* bounds;
+	short bounds[6];
 	short ocb;
 
 	item = GetItem(currentLevel, item_number);
 	ocb = item->trigger_flags & 0x3F;
-	bounds = GetBoundsAccurate(item);
+	GetBoundsAccurate(item, bounds);
 
 	if(ocb == 0 || ocb == 3 || ocb == 4) {
 		item->pos.pos.y -= bounds[3];

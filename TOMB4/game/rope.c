@@ -471,13 +471,13 @@ void RopeControl(short item_num) {
 void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ROPE_STRUCT* rope;
 	int i;
-	short* bounds;
+	short bounds[6];
 	long x, y, z, rad;
 
 	rope = &RopeList[GetItem(currentLevel, item_number)->trigger_flags];
 
 	if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) && l->gravity_status && l->fallspeed > 0 && rope->Active) {
-		bounds = GetBoundsAccurate(l);
+		GetBoundsAccurate(l, bounds);
 		x = l->pos.pos.x;
 		y = l->pos.pos.y + bounds[2] + 512;
 		z = l->pos.pos.z + (bounds[5] * phd_cos(l->pos.y_rot) >> W2V_SHIFT);

@@ -33,7 +33,7 @@ void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom);
 void DrawEffect(short fx_num);
 void PrintObjects(short room_number);
 long GetFrames(ITEM_INFO* item, short* frm[], long* rate);
-short* GetBoundsAccurate(ITEM_INFO* item);
+void GetBoundsAccurate(ITEM_INFO* item, short* result);
 short* GetBestFrame(ITEM_INFO* item);
 void UpdateSkyLightning();
 void mRotBoundingBoxNoPersp(short* bounds, short* rotatedBounds);
