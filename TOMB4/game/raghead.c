@@ -142,7 +142,7 @@ void RagheadControl(short item_number) {
 
 		if(item->trigger_flags % 1000 > 100) {
 			item->item_flags[0] = -80;
-			FindAITarGetObjectInfo(raghead, AI_X1);
+			FindAITargetObject(raghead, AI_X1);
 		}
 
 		item->trigger_flags = 1000 * (item->trigger_flags / 1000);

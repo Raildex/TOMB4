@@ -1571,7 +1571,7 @@ short AIGuard(CREATURE_INFO* creature) {
 	return 0;
 }
 
-void FindAITarGetObjectInfo(CREATURE_INFO* creature, short obj_num) {
+void FindAITargetObject(CREATURE_INFO* creature, short obj_num) {
 	ITEM_INFO* item;
 	ITEM_INFO* enemy;
 	AIOBJECT* aiObj;
@@ -1659,11 +1659,11 @@ void GetAITarget(CREATURE_INFO* creature) {
 			}
 		} else if(!creature->patrol2) {
 			if(enemy_object != AI_PATROL1) {
-				FindAITarGetObjectInfo(creature, AI_PATROL1);
+				FindAITargetObject(creature, AI_PATROL1);
 			}
 		} else if(creature->patrol2) {
 			if(enemy_object != AI_PATROL2) {
-				FindAITarGetObjectInfo(creature, AI_PATROL2);
+				FindAITargetObject(creature, AI_PATROL2);
 			}
 		} else if(abs(enemy->pos.pos.x - item->pos.pos.x) < 640 && abs(enemy->pos.pos.y - item->pos.pos.y) < 640 && abs(enemy->pos.pos.z - item->pos.pos.z) < 640) {
 			GetHeight(GetFloor(enemy->pos.pos.x, enemy->pos.pos.y, enemy->pos.pos.z, &enemy->room_number), enemy->pos.pos.x, enemy->pos.pos.y, enemy->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
@@ -1672,7 +1672,7 @@ void GetAITarget(CREATURE_INFO* creature) {
 		}
 	} else if(ai_bits & AMBUSH) {
 		if(enemy_object != AI_AMBUSH) {
-			FindAITarGetObjectInfo(creature, AI_AMBUSH);
+			FindAITargetObject(creature, AI_AMBUSH);
 		} else if(abs(enemy->pos.pos.x - item->pos.pos.x) < 640 && abs(enemy->pos.pos.y - item->pos.pos.y) < 640 && abs(enemy->pos.pos.z - item->pos.pos.z) < 640) {
 			GetHeight(GetFloor(enemy->pos.pos.x, enemy->pos.pos.y, enemy->pos.pos.z, &enemy->room_number), enemy->pos.pos.x, enemy->pos.pos.y, enemy->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 			TestTriggers(trigger_index, 1, 0);
@@ -1693,7 +1693,7 @@ void GetAITarget(CREATURE_INFO* creature) {
 		} else if(item->hit_status) {
 			item->ai_bits &= ~FOLLOW;
 		} else if(enemy_object != AI_FOLLOW) {
-			FindAITarGetObjectInfo(creature, AI_FOLLOW);
+			FindAITargetObject(creature, AI_FOLLOW);
 		} else if(abs(enemy->pos.pos.x - item->pos.pos.x) < 640 && abs(enemy->pos.pos.y - item->pos.pos.y) < 640 && abs(enemy->pos.pos.z - item->pos.pos.z) < 640) {
 			creature->reached_goal = 1;
 			item->ai_bits &= ~FOLLOW;

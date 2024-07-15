@@ -40,7 +40,7 @@ void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara
 void AlertAllGuards(short item_number);
 void AlertNearbyGuards(ITEM_INFO* item);
 short AIGuard(CREATURE_INFO* creature);
-void FindAITarGetObjectInfo(CREATURE_INFO* creature, short obj_num);
+void FindAITargetObject(CREATURE_INFO* creature, short obj_num);
 void GetAITarget(CREATURE_INFO* creature);
 short SameZone(CREATURE_INFO* creature, ITEM_INFO* target_item);
 void CreatureYRot(PHD_3DPOS* srcpos, short angle, short angadd);
