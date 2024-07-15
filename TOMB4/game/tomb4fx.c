@@ -430,7 +430,7 @@ void LaraBubbles(ITEM_INFO* item) {
 
 		if(gfLevelFlags & GF_MIRROR && item->room_number == gfMirrorRoom) {
 			pos.z = 2 * gfMirrorZPlane - pos.z;
-			CreateBubble((PHD_3DPOS*)&pos, item->room_number, 8, 7);
+			CreateBubble((PHD_3DPOS*)&pos, item->room_number, 8, 16);
 			pos.z = 2 * gfMirrorZPlane - pos.z;
 		}
 	}
@@ -1433,8 +1433,9 @@ void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long biggest) {
 		bubble->speed = (GetRandomControl() & 0xFF) + 64;
 		bubble->shade = 0;
 		bubble->size = (short)((size + (biggest & GetRandomControl())) << 1);
-		bubble->dsize = bubble->size << 4;
-		bubble->vel = (GetRandomControl() & 0x1F) + 32;
+		bubble->dsize = bubble->size << 6;
+		bubble->pad = GetRandomControl() & 0xFF;
+		bubble->vel = (GetRandomControl() & 0x1F) + 64;
 	}
 }
 
@@ -1455,9 +1456,9 @@ void UpdateBubbles() {
 
 		bubble->pad += 6;
 		bubble->speed += bubble->vel;
-		bubble->pos.x += (3 * phd_sin(bubble->pad << 8)) >> W2V_SHIFT;
+		bubble->pos.x += (6 * phd_sin(bubble->pad << 8)) >> W2V_SHIFT;
 		bubble->pos.y -= bubble->speed >> 8;
-		bubble->pos.z += phd_cos(bubble->pad << 8) >> W2V_SHIFT;
+		bubble->pos.z += (6 * phd_cos(bubble->pad << 8)) >> W2V_SHIFT;
 
 		room_number = bubble->room_number;
 		floor = GetFloor(bubble->pos.x, bubble->pos.y, bubble->pos.z, &room_number);
