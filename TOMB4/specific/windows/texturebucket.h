@@ -4,6 +4,6 @@
 typedef struct TEXTUREBUCKET {
 	long tpage;
 	long nVtx;
-	D3DTLBUMPVERTEX vtx[544];
+	D3DTLBUMPVERTEX vtx[2048];
 } TEXTUREBUCKET;
 #endif// TOMB4_GAME_TEXTUREBUCKET_H

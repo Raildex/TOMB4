@@ -28,8 +28,8 @@
 #include <d3dtypes.h>
 #include <math.h>
 
-
-extern TEXTUREBUCKET Bucket[20];
+extern long nBuckets;
+extern TEXTUREBUCKET* Bucket;
 D3DTLBUMPVERTEX XYUVClipperBuffer[20];
 D3DTLBUMPVERTEX zClipperBuffer[20];
 

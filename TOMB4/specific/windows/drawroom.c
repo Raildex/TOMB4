@@ -36,7 +36,8 @@ static ROOM_DYNAMIC RoomDynamics[MAX_DYNAMICS];
 static long nRoomDynamics;
 
 MESH_DATA** mesh_vtxbuf;
-TEXTUREBUCKET Bucket[20];
+long nBuckets;
+TEXTUREBUCKET* Bucket;
 float clip_left;
 float clip_top;
 float clip_right;
@@ -677,9 +678,14 @@ void S_InsertRoom(ROOM_INFO* r) {
 
 
 void InitBuckets() {
+	long oldBuckets = nBuckets;
+	if(oldBuckets != GetNumTextures(currentLevel)) {
+		nBuckets = GetNumTextures(currentLevel);
+		Bucket = (TEXTUREBUCKET*)calloc(nBuckets, sizeof(TEXTUREBUCKET));
+	}
 	TEXTUREBUCKET* bucket;
 
-	for(int i = 0; i < 20; i++) {
+	for(int i = 0; i < nBuckets; i++) {
 		bucket = &Bucket[i];
 		bucket->tpage = -1;
 		bucket->nVtx = 0;
@@ -687,9 +693,6 @@ void InitBuckets() {
 }
 
 void DrawBucket(TEXTUREBUCKET* bucket) {
-	if(bucket->tpage == 1) {
-		bucket->tpage = 1;
-	}
 
 	if(!bucket->nVtx) {
 		return;
@@ -732,16 +735,16 @@ void FindBucket(long tpage, D3DTLBUMPVERTEX** Vpp, long** nVtxpp) {
 	TEXTUREBUCKET* bucket;
 	long nVtx, biggest;
 
-	for(int i = 0; i < 20; i++) {
+	for(int i = 0; i < nBuckets; i++) {
 		bucket = &Bucket[i];
 
-		if(bucket->tpage == tpage && bucket->nVtx < 512) {
+		if(bucket->tpage == tpage && bucket->nVtx <= 2000) {
 			*Vpp = &bucket->vtx[bucket->nVtx];
 			*nVtxpp = &bucket->nVtx;
 			return;
 		}
 
-		if(bucket->nVtx > 512) {
+		if(bucket->nVtx > 2000) {
 			DrawBucket(bucket);
 			bucket->tpage = tpage;
 			bucket->nVtx = 0;
@@ -754,7 +757,7 @@ void FindBucket(long tpage, D3DTLBUMPVERTEX** Vpp, long** nVtxpp) {
 	nVtx = 0;
 	biggest = 0;
 
-	for(int i = 0; i < 20; i++) {
+	for(int i = 0; i < nBuckets; i++) {
 		bucket = &Bucket[i];
 
 		if(bucket->tpage == -1) {
@@ -791,7 +794,7 @@ void DrawBuckets() {
 		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
-		for(int i = 0; i < 20; i++) {
+		for(int i = 0; i < nBuckets; i++) {
 			bucket = &Bucket[i];
 
 			if(HasRendererBumpTexture(currentLevel, bucket->tpage) && bucket->nVtx) {
@@ -809,7 +812,7 @@ void DrawBuckets() {
 		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 		IDirect3DDevice3_SetTextureStageState(App.dx.lpD3DDevice, 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 
-		for(int i = 0; i < 20; i++) {
+		for(int i = 0; i < nBuckets; i++) {
 			bucket = &Bucket[i];
 
 			if(HasRendererBumpTexture(currentLevel, bucket->tpage) && bucket->nVtx) {
@@ -823,7 +826,7 @@ void DrawBuckets() {
 
 		IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_ALPHABLENDENABLE, 0);
 
-		for(int i = 0; i < 20; i++) {
+		for(int i = 0; i < nBuckets; i++) {
 			bucket = &Bucket[i];
 
 			if(!HasRendererBumpTexture(currentLevel, bucket->tpage) && bucket->nVtx) {
@@ -835,7 +838,7 @@ void DrawBuckets() {
 			}
 		}
 	} else {
-		for(int i = 0; i < 20; i++) {
+		for(int i = 0; i < nBuckets; i++) {
 			bucket = &Bucket[i];
 			DrawBucket(bucket);
 		}
