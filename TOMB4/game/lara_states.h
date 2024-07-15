@@ -120,7 +120,7 @@ typedef enum lara_anim_state {
 	AS_ROPEBACK = 115,
 	AS_MOVE = 116,
 	AS_TWODOOR = 117,
-
+	AS_SWANDIVE_ROLL = 118,
 	NUM_LARA_STATES
 } lara_anim_state;
 
@@ -177,6 +177,7 @@ typedef enum lara_anim {
 	ANIM_ROLL = 146,
 	ANIM_SPIKED = 149,
 	ANIM_HANG2STOP = 150,
+	ANIM_SWANDIVEROLL = 151,
 	ANIM_CLIMBING = 161,
 	ANIM_CLIMBSTNC = 164,
 	ANIM_CLIMBDOWN = 168,
