@@ -1,5 +1,5 @@
-#ifndef DYNAMIC_INCLUDED
-#define DYNAMIC_INCLUDED
+#ifndef TOMB4_GAME_DYNAMIC_H
+#define TOMB4_GAME_DYNAMIC_H
 #include "game/phdvector.h"
 typedef struct DYNAMIC {
 	PHD_VECTOR pos;
@@ -8,7 +8,5 @@ typedef struct DYNAMIC {
 	unsigned char g;
 	unsigned char b;
 	unsigned short falloff;
-	unsigned char used;
-	unsigned char pad1[1];
 } DYNAMIC;
-#endif
+#endif// TOMB4_GAME_DYNAMIC_H
