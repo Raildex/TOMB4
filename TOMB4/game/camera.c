@@ -580,6 +580,8 @@ void ChaseCamera(ITEM_INFO* item) {
 		camera.target.pos.y = last_target.pos.y;
 		camera.target.pos.z = last_target.pos.z;
 		camera.target.room_number = last_target.room_number;
+	} else {
+		TargetSnaps = 0;
 	}
 
 	for(int i = 0; i < 5; i++) {
@@ -589,61 +591,65 @@ void ChaseCamera(ITEM_INFO* item) {
 	farthest = infinite_distance;
 	farthestnum = 0;
 
-	for(int i = 0; i < 5; i++) {
-		if(i) {
-			angle = (i - 1) << 14;
+	for(int lp = 0; lp < 5; lp++) {
+		if(lp) {
+			angle = (lp - 1) * 0x4000;
 		} else {
-			angle = camera.target_angle + item->pos.y_rot;
+			angle = camera.actual_angle;
 		}
 
-		ideals[i].pos.x = camera.target.pos.x - ((distance * phd_sin(angle)) >> W2V_SHIFT);
-		ideals[i].pos.z = camera.target.pos.z - ((distance * phd_cos(angle)) >> W2V_SHIFT);
-		ideals[i].room_number = camera.target.room_number;
+		ideals[lp].pos.x = camera.target.pos.x - (distance * phd_sin(angle) >> W2V_SHIFT);
+		ideals[lp].pos.z = camera.target.pos.z - (distance * phd_cos(angle) >> W2V_SHIFT);
+		ideals[lp].room_number = camera.target.room_number;
 
-		if(mgLOS(&camera.target, &ideals[i], 200)) {
-			temp[0].pos.x = ideals[i].pos.x;
-			temp[0].pos.y = ideals[i].pos.y;
-			temp[0].pos.z = ideals[i].pos.z;
-			temp[0].room_number = ideals[i].room_number;
+		if(mgLOS(&camera.target, &ideals[lp], 200)) {
+			temp[0].pos.x = ideals[lp].pos.x;
+			temp[0].pos.y = ideals[lp].pos.y;
+			temp[0].pos.z = ideals[lp].pos.z;
+			temp[0].room_number = ideals[lp].room_number;
 			temp[1].pos.x = camera.pos.pos.x;
 			temp[1].pos.y = camera.pos.pos.y;
 			temp[1].pos.z = camera.pos.pos.z;
 			temp[1].room_number = camera.pos.room_number;
 
-			if(!i) {
-				farthestnum = 0;
-				break;
-			}
+			if(mgLOS(&temp[0], &temp[1], 0) || !lp) {
+				if(!lp) {
+					farthestnum = 0;
+					break;
+				}
 
-			if(mgLOS(&temp[0], &temp[1], 0)) {
-				dx = SQUARE(camera.pos.pos.x - ideals[i].pos.x);
-				dz = SQUARE(camera.pos.pos.z - ideals[i].pos.z);
+				dx = SQUARE(camera.pos.pos.x - ideals[lp].pos.x);
+				dz = SQUARE(camera.pos.pos.z - ideals[lp].pos.z);
 				dz += dx;
 
 				if(dz < farthest) {
 					farthest = dz;
-					farthestnum = i;
+					farthestnum = lp;
 				}
 			}
-		} else if(!i) {
-			temp[0].pos.x = ideals[i].pos.x;
-			temp[0].pos.y = ideals[i].pos.y;
-			temp[0].pos.z = ideals[i].pos.z;
-			temp[0].room_number = ideals[i].room_number;
+		} else if(!lp) {
+			temp[0].pos.x = ideals[lp].pos.x;
+			temp[0].pos.y = ideals[lp].pos.y;
+			temp[0].pos.z = ideals[lp].pos.z;
+			temp[0].room_number = ideals[lp].room_number;
 			temp[1].pos.x = camera.pos.pos.x;
 			temp[1].pos.y = camera.pos.pos.y;
 			temp[1].pos.z = camera.pos.pos.z;
 			temp[1].room_number = camera.pos.room_number;
-			dx = SQUARE(camera.target.pos.x - ideals[i].pos.x); // no mgLOS check here?
-			dz = SQUARE(camera.target.pos.z - ideals[i].pos.z);
-			dz += dx;
 
-			if(dz > 0x90000) {
-				farthestnum = 0;
-				break;
+			if(mgLOS(&temp[0], &temp[1], 0)) {
+				dx = SQUARE(camera.target.pos.x - ideals[lp].pos.x);
+				dz = SQUARE(camera.target.pos.z - ideals[lp].pos.z);
+				dz += dx;
+
+				if(dz > 0x90000) {
+					farthestnum = 0;
+					break;
+				}
 			}
 		}
 	}
+
 
 	ideal.pos.x = ideals[farthestnum].pos.x;
 	ideal.pos.y = ideals[farthestnum].pos.y;
