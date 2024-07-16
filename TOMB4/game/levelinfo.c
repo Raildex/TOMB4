@@ -621,7 +621,7 @@ char LoadBoxes(char** data, LEVEL_INFO* lvl) {
 
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 4; j++) {
-			lvl->ground_zone[j][i] = (short*)calloc(lvl->num_boxes, sizeof(short));
+			lvl->ground_zone[j][i] = (short*)calloc((size_t)lvl->num_boxes * 2, sizeof(short));
 			memcpy(lvl->ground_zone[j][i], *data, sizeof(short) * lvl->num_boxes);
 			*data += sizeof(short) * lvl->num_boxes;
 		}
