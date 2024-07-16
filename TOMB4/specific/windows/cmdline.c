@@ -11,6 +11,7 @@
 #include "specific/windows/registry.h"
 #include "specific/windows/winapp.h"
 #include "specific/windows/winmain.h"
+#include "global/types.h"
 #include <winuser.h>
 
 

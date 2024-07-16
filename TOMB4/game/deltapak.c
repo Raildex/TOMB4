@@ -44,7 +44,7 @@
 #include "game/roominfo.h"
 #include "game/rtdecode.h"
 #include "game/weapontypes.h"
-
+#include "global/types.h"
 
 static short frig_shadow_bbox[6] = { -165, 150, -777, 1, -87, 78 };
 static short frig_jeep_shadow_bbox[6] = { -600, 600, -777, 1, -600, 600 };

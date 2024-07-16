@@ -10,16 +10,13 @@
 #include "specific/drawroom.h"
 #include "specific/function_stubs.h"
 #include "specific/function_table.h"
-#include "specific/gamemain.h"
-#include "specific/loadsave.h"
 #include "specific/output.h"
 #include "specific/polyinsert.h"
-#include "specific/texture.h"
 #include "specific/windows/dxflags.h"
 #include "specific/windows/winmain.h"
 #include <d3d.h>
 #include <d3dtypes.h>
-
+#include "global/types.h"
 
 static float loadbar_pos;
 static long loadbar_maxpos;

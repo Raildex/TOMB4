@@ -35,7 +35,6 @@
 #include "game/objects.h"
 #include "game/quadrantnames.h"
 #include "game/rope.h"
-#include "game/ropestruct.h"
 #include "game/sound.h"
 #include "game/tomb4fx.h"
 #include "game/weapontypes.h"
@@ -1300,19 +1299,24 @@ void lara_col_crawl(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 long LaraDeflectEdgeDuck(ITEM_INFO* item, COLL_INFO* coll) {
-	if(coll->coll_type == CT_FRONT || coll->coll_type == CT_TOP_FRONT) {
-		ShiftItem(item, coll);
-		item->gravity_status = 0;
-		item->speed = 0;
+	switch(coll->coll_type) {
+		case CT_FRONT:
+		case CT_TOP_FRONT:
+			ShiftItem(item, coll);
+			item->gravity_status = 0;
+			item->speed = 0;
 		return 1;
-	} else if(coll->coll_type == CT_LEFT) {
-		ShiftItem(item, coll);
-		item->pos.y_rot += 364;
-	} else if(coll->coll_type == CT_RIGHT) {
-		ShiftItem(item, coll);
-		item->pos.y_rot -= 364;
+		case CT_LEFT:
+			ShiftItem(item, coll);
+			item->pos.y_rot += 364;
+			break;
+		case CT_RIGHT:
+			ShiftItem(item, coll);
+			item->pos.y_rot -= 364;
+			break;
+		default:
+		break;
 	}
-
 	return 0;
 }
 
@@ -4535,7 +4539,8 @@ static long IsValidHangPos(ITEM_INFO* item, COLL_INFO* coll) {
 long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll) {
 	short bounds[6];
 	long shift, result;
-	short angle, l, r;
+	short l, r;
+	quadrant_names angle;
 
 	if(!lara.climb_status || item->fallspeed < 0) {
 		return 0;
@@ -4585,7 +4590,8 @@ long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll) {
 
 long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 	long oldx, oldz, front, x, z, flag;
-	short oldy, angle;
+	short oldy;
+	quadrant_names angle;
 	height_types height_type;
 	long tiltxoff, tiltzoff, OnObject;
 
@@ -4735,7 +4741,8 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 
 long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 	long oldx, oldz, front, x, z, flag;
-	short oldy, angle;
+	short oldy;
+	quadrant_names angle;
 	height_types height_type;
 	long tiltxoff, tiltzoff, OnObject;
 
@@ -4914,6 +4921,8 @@ void LaraSlideEdgeJump(ITEM_INFO* item, COLL_INFO* coll) {
 			item->fallspeed = 16;
 		}
 
+		break;
+		default:
 		break;
 	}
 }
@@ -5163,19 +5172,25 @@ long TestHangSwingIn(ITEM_INFO* item, short angle) {
 }
 
 long LaraDeflectEdge(ITEM_INFO* item, COLL_INFO* coll) {
-	if(coll->coll_type == CT_FRONT || coll->coll_type == CT_TOP_FRONT) {
+
+	switch(coll->coll_type) {
+	case CT_LEFT:
+		ShiftItem(item, coll);
+		item->pos.y_rot += 910;
+		break;
+	case CT_RIGHT:
+		ShiftItem(item, coll);
+		item->pos.y_rot -= 910;
+		break;
+	case CT_FRONT:
+	case CT_TOP_FRONT:
 		ShiftItem(item, coll);
 		item->goal_anim_state = AS_STOP;
 		item->speed = 0;
 		item->gravity_status = 0;
 		return 1;
-	} else if(coll->coll_type == CT_LEFT) {
-		ShiftItem(item, coll);
-		item->pos.y_rot += 910;
-		return 0;
-	} else if(coll->coll_type == CT_RIGHT) {
-		ShiftItem(item, coll);
-		item->pos.y_rot -= 910;
+	default:
+		break;
 	}
 
 	return 0;
@@ -5185,7 +5200,7 @@ long TestLaraVault(ITEM_INFO* item, COLL_INFO* coll) {
 	long hdif, slope;
 	short angle;
 
-	if(!(input & IN_ACTION) || lara.gun_status != LG_NO_ARMS || coll->coll_type != CT_FRONT) {
+	if(!(input & IN_ACTION) || lara.gun_status != LG_NO_ARMS || coll->coll_type != CT_FRONT /*|| !(item->anim_number == 103  || item->anim_number == 11)*/ ) {
 		return 0;
 	}
 
@@ -5463,7 +5478,8 @@ void SnapLaraToEdgeOfBlock(ITEM_INFO* item, COLL_INFO* coll, short angle) {
 long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 	short bounds[6];
 	long x, z, oldfloor, hdif, flag;
-	short angle, move, wall, ceiling, dir;
+	short angle, move, wall, ceiling;
+	quadrant_names dir;
 	height_types height_type;
 	long tiltxoff, tiltzoff, OnObject;
 	move = 0;

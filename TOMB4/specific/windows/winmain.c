@@ -1,6 +1,6 @@
 
 #include "specific/windows/winmain.h"
-#include "game/commandlines.h"
+#include "specific/windows/commandlines.h"
 #include "game/gameflow.h"
 #include "game/text.h"
 #include "specific/3dmath.h"
@@ -39,7 +39,7 @@ WINAPP App;
 char* cutseqpakPtr;
 long resChangeCounter;
 
-bool WinRunCheck(LPSTR WindowName, LPSTR ClassName, HANDLE* mutex) {
+long WinRunCheck(LPSTR WindowName, LPSTR ClassName, HANDLE* mutex) {
 	HWND window;
 
 	Log(__func__, "WinRunCheck");
@@ -394,7 +394,7 @@ void ClearSurfaces() {
 	S_DumpScreen();
 }
 
-bool WinRegisterWindow(HINSTANCE hinstance) {
+long WinRegisterWindow(HINSTANCE hinstance) {
 	App.hInstance = hinstance;
 	App.WindowClass.hIcon = 0;
 	App.WindowClass.lpszMenuName = 0;
@@ -414,7 +414,7 @@ bool WinRegisterWindow(HINSTANCE hinstance) {
 	return 1;
 }
 
-bool WinCreateWindow() {
+long WinCreateWindow() {
 	App.hWnd = CreateWindowEx(WS_EX_APPWINDOW, "MainGameWindow", "Tomb Raider - The Last Revelation", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, App.hInstance, 0);
 
 	if(!App.hWnd) {
@@ -424,7 +424,7 @@ bool WinCreateWindow() {
 	return 1;
 }
 
-void WinSetStyle(bool fullscreen, unsigned long* set) {
+void WinSetStyle(long fullscreen, unsigned long* set) {
 	unsigned long style;
 
 	style = GetWindowLong(App.hWnd, GWL_STYLE);

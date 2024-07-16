@@ -59,7 +59,6 @@
 #include "game/sound.h"
 #include "game/sphere.h"
 #include "game/spotcam.h"
-#include "game/staticinfo.h"
 #include "game/switch.h"
 #include "game/text.h"
 #include "game/tomb4fx.h"
@@ -69,16 +68,17 @@
 #include "game/voncroy.h"
 #include "game/weaponinfo.h"
 #include "game/weapontypes.h"
+#include "global/types.h"
 #include "specific/3dmath.h"
 #include "specific/LoadSave.h"
 #include "specific/audio.h"
 #include "specific/file.h"
 #include "specific/function_stubs.h"
-#include "specific/gamemain.h"
 #include "specific/input.h"
 #include "specific/output.h"
 #include "specific/windows/dxshell.h"
 #include <dinput.h>
+
 
 
 short* OutsideRoomOffsets;

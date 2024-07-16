@@ -1,6 +1,5 @@
 #ifndef TOMB4_GAME_LARA_H
 #define TOMB4_GAME_LARA_H
-#include "game/heighttypes.h"
 #include "game/lara_states.h"
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;

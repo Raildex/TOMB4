@@ -1,9 +1,8 @@
-#ifndef WINAPP_INCLUDED
-#define WINAPP_INCLUDED
+#ifndef SPECIFIC_WINDOWS_WINAPP_H
+#define SPECIFIC_WINDOWS_WINAPP_H
 #include "specific/windows/dxinfo.h"
 #include "specific/windows/dxptr.h"
 #include <windows.h>
-#include "global/types.h"
 #include <d3dtypes.h>
 typedef struct WINAPP {
 	HINSTANCE hInstance;
@@ -14,7 +13,7 @@ typedef struct WINAPP {
 	HANDLE mutex;
 	float fps;
 	HACCEL hAccel;
-	bool SetupComplete;
+	long SetupComplete;
 	long BumpMapping;
 	long TextureSize;
 	long BumpMapSize;
@@ -27,4 +26,4 @@ typedef struct WINAPP {
 	long Desktopbpp;
 	long AutoTarget;
 } WINAPP;
-#endif
+#endif// SPECIFIC_WINDOWS_WINAPP_H

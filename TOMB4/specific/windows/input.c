@@ -98,7 +98,7 @@ static long joy_fire;
 static void DoWeaponHotkey() // adds extra checks and does ammo type swaps..
 {
 	short state;
-	bool goin;
+	long goin;
 
 	if(!lara_item) {
 		goin = 0;
@@ -314,8 +314,8 @@ long S_UpdateInput() {
 	static long LookCnt;
 	static long med_hotkey_timer;
 	short state;
-	static bool flare_no_db = 0;
-	bool debounce;
+	static long flare_no_db = 0;
+	long debounce;
 
 	debounce = SetDebounce;
 	DXReadKeyboard(keymap);

@@ -1,6 +1,5 @@
 #ifndef TOMB4_SPECIFIC_DXINFO_H
 #define TOMB4_SPECIFIC_DXINFO_H
-#include <stdbool.h>
 typedef struct DXDIRECTDRAWINFO DXDIRECTDRAWINFO;
 typedef struct DXDIRECTSOUNDINFO DXDIRECTSOUNDINFO;
 typedef struct DXINFO {

@@ -1,5 +1,6 @@
 #ifndef TOMB4_GAME_COLLINFO_H
 #define TOMB4_GAME_COLLINFO_H
+#include "game/collisiontypes.h"
 #include "game/heighttypes.h"
 #include "game/phdvector.h"
 typedef struct COLL_INFO {
@@ -32,7 +33,7 @@ typedef struct COLL_INFO {
 	short old_frame_number;
 	short facing;
 	short quadrant;
-	short coll_type;
+	collision_types coll_type;
 	short* trigger;
 	char tilt_x;
 	char tilt_z;
