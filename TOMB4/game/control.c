@@ -2476,6 +2476,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 	height_types height_type;
 	long tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR v;
+	PHD_VECTOR dir;
 	short item_no, hit, ricochet, room_number, TriggerItems[8], NumTrigs;
 
 	hit = 0;
@@ -2526,11 +2527,16 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 							TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 						} else if(DrawTarget && lara.gun_type == WEAPON_REVOLVER) {
 							if(GetObjectInfo(currentLevel, shotitem->object_number)->intelligent) {
-								HitTarget(shotitem, &target, weapons[lara.gun_type].damage, 0);
+								HitTarget(shotitem, src,&target, weapons[lara.gun_type].damage, 0);
 							}
 						} else {
 							if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 1) {
-								DoBloodSplat(target.pos.x, target.pos.y, target.pos.z, (GetRandomControl() & 3) + 3, shotitem->pos.y_rot, shotitem->room_number);
+								dir = dest->pos;
+								dir.x -= src->pos.x;
+								dir.y -= src->pos.y;
+								dir.z -= src->pos.z;
+								Normalise(&dir);
+								DoBloodSplat(target.pos.x, target.pos.y, target.pos.z, (GetRandomControl() & 3) + 3, shotitem->pos.y_rot, dir, shotitem->room_number);
 							} else if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 2) {
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, -5);
 							} else if(GetObjectInfo(currentLevel, shotitem->object_number)->HitEffect == 3) {

@@ -33,6 +33,7 @@
 #include "game/phd3dpos.h"
 #include "game/roomflags.h"
 #include "game/roominfo.h"
+#include "game/rope.h"
 #include "game/sphere.h"
 #include "game/tomb4fx.h"
 #include "game/weapontypes.h"
@@ -1365,24 +1366,50 @@ void CreatureUnderwater(ITEM_INFO* item, long depth) {
 	}
 }
 
-short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short (*generate)(long x, long y, long z, short speed, short yrot, short room_number)) {
+short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, creature_effect_routine generate) {
+	PHD_VECTOR bite_pos;
 	PHD_VECTOR pos;
-
-	pos.x = bite->x;
-	pos.y = bite->y;
-	pos.z = bite->z;
+	PHD_VECTOR dir;
+	bite_pos.x = bite->x;
+	bite_pos.y = bite->y;
+	bite_pos.z = bite->z;
+	GetJointAbsPosition(item, &bite_pos, bite->mesh_num);
+	pos.x = 0;
+	pos.y = 0;
+	pos.z = 0;
 	GetJointAbsPosition(item, &pos, bite->mesh_num);
-	return generate(pos.x, pos.y, pos.z, item->speed, item->pos.y_rot, item->room_number);
+	dir.x = 0;
+	dir.y = 0;
+	dir.z = 512;
+	GetJointAbsPosition(item, &dir, bite->mesh_num);
+	dir.x = dir.x - pos.x;
+	dir.y = dir.y - pos.y;
+	dir.z = dir.z - pos.z;
+	Normalise(&dir);
+	return generate(bite_pos.x, bite_pos.y, bite_pos.z, item->speed, item->pos.y_rot, dir, item->room_number);
 }
 
-short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle, short (*generate)(long x, long y, long z, short damage, short angle, short room_number)) {
+short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle, creature_effect_routine generate) {
+	PHD_VECTOR bite_pos;
 	PHD_VECTOR pos;
-
-	pos.x = bite->x;
-	pos.y = bite->y;
-	pos.z = bite->z;
+	PHD_VECTOR dir;
+	bite_pos.x = bite->x;
+	bite_pos.y = bite->y;
+	bite_pos.z = bite->z;
+	GetJointAbsPosition(item, &bite_pos, bite->mesh_num);
+	pos.x = 0;
+	pos.y = 0;
+	pos.z = 0;
 	GetJointAbsPosition(item, &pos, bite->mesh_num);
-	return generate(pos.x, pos.y, pos.z, damage, angle, item->room_number);
+	dir.x = 0;
+	dir.y = 0;
+	dir.z = 512;
+	GetJointAbsPosition(item, &dir, bite->mesh_num);
+	dir.x = dir.x - pos.x;
+	dir.y = dir.y - pos.y;
+	dir.z = dir.z - pos.z;
+	Normalise(&dir);
+	return generate(bite_pos.x, bite_pos.y, bite_pos.z, damage, item->pos.y_rot, dir, item->room_number);
 }
 
 long CreatureVault(short item_number, short angle, long vault, long shift) {

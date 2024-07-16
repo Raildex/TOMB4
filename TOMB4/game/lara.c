@@ -43,6 +43,7 @@
 #include "specific/audio.h"
 #include "specific/input.h"
 #include <stdlib.h>
+#include "game/ropestruct.h"
 
 
 void lara_void_func(ITEM_INFO* item, COLL_INFO* coll);

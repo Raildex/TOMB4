@@ -32,6 +32,7 @@
 #include "game/objectinfo.h"
 #include "game/objects.h"
 #include "game/phd3dpos.h"
+#include "game/rope.h"
 #include "game/savegame.h"
 #include "game/savegameinfo.h"
 #include "game/sound.h"
@@ -444,18 +445,17 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 		bum_vdest.pos.z = bum_vsrc.pos.z + (long)(0x5000 * mMXPtr[M22]);
 		GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1);
 		return -1;
-	} else {
-		savegame.Game.AmmoHits++;
-		bum_vdest.pos.x = bum_vsrc.pos.x + (long)(bestdist * mMXPtr[M20]);
-		bum_vdest.pos.y = bum_vsrc.pos.y + (long)(bestdist * mMXPtr[M21]);
-		bum_vdest.pos.z = bum_vsrc.pos.z + (long)(bestdist * mMXPtr[M22]);
-
-		if(!GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1)) {
-			HitTarget(target, &bum_vdest, winfo->damage, 0);
-		}
-
-		return 1;
 	}
+	savegame.Game.AmmoHits++;
+	bum_vdest.pos.x = bum_vsrc.pos.x + (long)(bestdist * mMXPtr[M20]);
+	bum_vdest.pos.y = bum_vsrc.pos.y + (long)(bestdist * mMXPtr[M21]);
+	bum_vdest.pos.z = bum_vsrc.pos.z + (long)(bestdist * mMXPtr[M22]);
+
+	if(!GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1)) {
+		HitTarget(target, &bum_vsrc, &bum_vdest, winfo->damage, 0);
+	}
+
+	return 1;
 }
 
 void AimWeapon(WEAPON_INFO* winfo, LARA_ARM* arm) {
@@ -616,8 +616,9 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 	LaraTargetInfo(winfo);
 }
 
-void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade) {
+void HitTarget(ITEM_INFO* item, GAME_VECTOR* src, GAME_VECTOR* hitpos, long damage, long grenade) {
 	OBJECT_INFO* obj;
+	PHD_VECTOR dir;
 
 	obj = GetObjectInfo(currentLevel, item->object_number);
 	item->hit_status = 1;
@@ -626,7 +627,7 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade) 
 		((CREATURE_INFO*)item->data)->hurt_by_lara = 1;
 	}
 
-	if(hitpos && obj->HitEffect) {
+	if(hitpos && src && obj->HitEffect) {
 		switch(obj->HitEffect) {
 		case 1:
 
@@ -635,8 +636,14 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade) 
 				TriggerRicochetSpark(hitpos, lara_item->pos.y_rot, 3, 0);
 				return;
 			}
-
-			DoBloodSplat(hitpos->pos.x, hitpos->pos.y, hitpos->pos.z, (GetRandomControl() & 3) + 3, item->pos.y_rot, item->room_number);
+			dir.x = src->pos.x - hitpos->pos.x;
+			dir.y = src->pos.y - hitpos->pos.y;
+			dir.z = src->pos.z - hitpos->pos.z;
+			Normalise(&dir);
+			dir.x <<= 2;
+			dir.y <<= 2;
+			dir.z <<= 2;
+			DoBloodSplat(hitpos->pos.x, hitpos->pos.y, hitpos->pos.z, (GetRandomControl() & 3) + 3, item->pos.y_rot, dir, item->room_number);
 			break;
 
 		case 2:

@@ -1,5 +1,6 @@
 
 #include "game/missile.h"
+#include "box.h"
 #include "game/camera.h"
 #include "game/control.h"
 #include "game/debris.h"
@@ -34,6 +35,7 @@ void ControlBodyPart(short fx_number) {
 	FX_INFO* fx;
 	FLOOR_INFO* floor;
 	height_types height_type;
+	PHD_VECTOR dir;
 	long tiltxoff, tiltzoff, OnObject;
 	long height, ceiling, ox, oy, oz;
 	short room_number;
@@ -116,7 +118,10 @@ void ControlBodyPart(short fx_number) {
 	}
 
 	if(fx->flag2 & 2 && GetRandomControl() & 1) {
-		DoBloodSplat((GetRandomControl() & 0x3F) + fx->pos.pos.x - 32, (GetRandomControl() & 0x1F) + fx->pos.pos.y - 16, (GetRandomControl() & 0x3F) + fx->pos.pos.z - 32, 1, (short)(GetRandomControl() << 1), fx->room_number);
+		dir.x = 0;
+		dir.y = 0;
+		dir.z = 1;
+		DoBloodSplat((GetRandomControl() & 0x3F) + fx->pos.pos.x - 32, (GetRandomControl() & 0x1F) + fx->pos.pos.y - 16, (GetRandomControl() & 0x3F) + fx->pos.pos.z - 32, 1, (short)(GetRandomControl() << 1), dir, fx->room_number);
 	}
 
 	if(room_number != fx->room_number) {

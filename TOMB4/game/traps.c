@@ -28,6 +28,7 @@
 #include "game/objects.h"
 #include "game/roomflags.h"
 #include "game/roominfo.h"
+#include "game/rope.h"
 #include "game/smokesparks.h"
 #include "game/sound.h"
 #include "game/sparks.h"
@@ -309,6 +310,7 @@ void ControlTwoBlockPlatform(short item_number) {
 
 void ControlJobySpike(short item_number) {
 	ITEM_INFO* item;
+	PHD_VECTOR dir;
 	short* frm[2];
 	long rate, y, h;
 
@@ -321,13 +323,17 @@ void ControlJobySpike(short item_number) {
 		h = item->pos.pos.y + (3328 * item->item_flags[1] >> 12);
 
 		if(lara_item->hit_points > 0 && h > y
-		   && abs(item->pos.pos.x - lara_item->pos.pos.x) < 512
-		   && abs(item->pos.pos.z - lara_item->pos.pos.z) < 512) {
+			&& abs(item->pos.pos.x - lara_item->pos.pos.x) < 512
+			&& abs(item->pos.pos.z - lara_item->pos.pos.z) < 512) {
+			dir.x = GetRandomControl() & 0x3F;
+			dir.y = -256;
+			dir.z = GetRandomControl() & 0x3F;
+			Normalise(&dir);
 			DoBloodSplat(
 				lara_item->pos.pos.x + (GetRandomControl() & 0x7F) - 64,
 				GetRandomControl() % (h - y) + y,
 				lara_item->pos.pos.z + (GetRandomControl() & 0x7F) - 64,
-				(GetRandomControl() & 3) + 2, (short)(2 * GetRandomControl()),
+				(GetRandomControl() & 3) + 2, (short)(2 * GetRandomControl()), dir,
 				item->room_number);
 			lara_item->hit_points -= 8;
 		}
@@ -2059,6 +2065,7 @@ void RollingBallCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void DartsControl(short item_number) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
+	PHD_VECTOR dir;
 	height_types height_type;
 	long tiltxoff, tiltzoff, OnObject;
 	long x, z, speed;
@@ -2070,9 +2077,12 @@ void DartsControl(short item_number) {
 		lara_item->hit_points -= 25;
 		lara_item->hit_status = 1;
 		lara.poisoned += 160;
+		dir.x = item->pos.x_rot;
+		dir.y = item->pos.y_rot;
+		dir.z = item->pos.z_rot;
 		DoBloodSplat(
 			item->pos.pos.x, item->pos.pos.y, item->pos.pos.z,
-			(GetRandomControl() & 3) + 4, lara_item->pos.y_rot,
+			(GetRandomControl() & 3) + 4, lara_item->pos.y_rot, dir,
 			lara_item->room_number);
 		KillItem(item_number);
 	} else {

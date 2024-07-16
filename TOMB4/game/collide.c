@@ -224,6 +224,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 
 void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
+	PHD_VECTOR dir;
 	long dx, dy, dz;
 
 	item = GetItem(currentLevel, item_number);
@@ -240,7 +241,10 @@ void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INF
 			dz -= lara_item->pos.pos.z;
 
 			if((dx || dy || dz) && TriggerActive(item)) {
-				DoBloodSplat(l->pos.pos.x + (GetRandomControl() & 0x3F) - 32, l->pos.pos.y - (GetRandomControl() & 0x1FF) - 256, l->pos.pos.z + (GetRandomControl() & 0x3F) - 32, (item->item_flags[3] >> 5) + (GetRandomControl() & 0x3) + 2, (short)(2 * GetRandomControl()), l->room_number);
+				dir.x = dx;
+				dir.y = dy;
+				dir.z = dz;
+				DoBloodSplat(l->pos.pos.x + (GetRandomControl() & 0x3F) - 32, l->pos.pos.y - (GetRandomControl() & 0x1FF) - 256, l->pos.pos.z + (GetRandomControl() & 0x3F) - 32, (item->item_flags[3] >> 5) + (GetRandomControl() & 0x3) + 2, (short)(2 * GetRandomControl()), dir, l->room_number);
 			}
 
 			if(!coll->enable_baddie_push) {
@@ -255,6 +259,7 @@ void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INF
 void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	SPHERE* sptr;
+	PHD_VECTOR dir;
 	long TouchBits, DeadlyBits, dx, dy, dz;
 	short y_rot;
 
@@ -296,7 +301,10 @@ void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 							dz -= lara_item->pos.pos.z;
 
 							if((dx || dy || dz) && TriggerActive(item)) {
-								DoBloodSplat(l->pos.pos.x + (GetRandomControl() & 0x3F) - 32, sptr->y + (GetRandomControl() & 0x1F) - 16, l->pos.pos.z + (GetRandomControl() & 0x3F) - 32, (item->item_flags[3] >> 5) + (GetRandomControl() & 0x3) + 2, (short)(2 * GetRandomControl()), l->room_number);
+								dir.x = dx;
+								dir.y = dy;
+								dir.z = dz;
+								DoBloodSplat(l->pos.pos.x + (GetRandomControl() & 0x3F) - 32, sptr->y + (GetRandomControl() & 0x1F) - 16, l->pos.pos.z + (GetRandomControl() & 0x3F) - 32, (item->item_flags[3] >> 5) + (GetRandomControl() & 0x3) + 2, (short)(2 * GetRandomControl()), dir, l->room_number);
 							}
 
 							if(!coll->enable_baddie_push) {
@@ -363,9 +371,8 @@ long FindGridShift(long src, long dst) {
 
 	if(dstw > srcw) {
 		return 1025 - src;
-	} else {
-		return -1 - src;
 	}
+	return -1 - src;
 }
 
 short GetTiltType(FLOOR_INFO* floor, long x, long y, long z) {
@@ -1063,6 +1070,7 @@ long TestBoundsCollide2(ITEM_INFO* item, ITEM_INFO* l, long rad) {
 void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	SPHERE* sphere;
+	PHD_VECTOR dir;
 	short* bounds;
 	long touchedBits, hurtfulBits, x, y, z;
 
@@ -1126,7 +1134,10 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 						x = l->pos.pos.x + (GetRandomControl() & 0x3F) - 32;
 						y = (GetRandomControl() & 0x1F) + sphere->y - 16;
 						z = l->pos.pos.z + (GetRandomControl() & 0x3F) - 32;
-						DoBloodSplat(x, y, z, (GetRandomControl() & 3) + 2, (short)(GetRandomControl() << 1), l->room_number);
+						dir.x = x;
+						dir.y = y;
+						dir.z = z;
+						DoBloodSplat(x, y, z, (GetRandomControl() & 3) + 2, (short)(GetRandomControl() << 1), dir, l->room_number);
 						lara_item->hit_points -= 100;
 					}
 				}
@@ -1141,6 +1152,7 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
+	PHD_VECTOR dir;
 	long x, y, z;
 
 	item = GetItem(currentLevel, item_number);
@@ -1157,7 +1169,10 @@ void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		x = l->pos.pos.x + (GetRandomControl() & 0x3F) - 32;
 		y = item->pos.pos.y + (GetRandomControl() & 0x1F) - 16;
 		z = l->pos.pos.z + (GetRandomControl() & 0x3F) - 32;
-		DoBloodSplat(x, y, z, (GetRandomControl() & 3) + 2, (short)(GetRandomControl() << 1), l->room_number);
+		dir.x = x;
+		dir.y = y;
+		dir.z = z;
+		DoBloodSplat(x, y, z, (GetRandomControl() & 3) + 2, (short)(GetRandomControl() << 1), dir, l->room_number);
 		lara_item->hit_points -= 10;
 	} else if(coll->enable_baddie_push) {
 		ItemPushLara(item, l, coll, 0, 0);

@@ -1673,7 +1673,11 @@ void special3_end() {
 
 void special3_control() {
 	if(GLOBAL_cutseq_frame >= 348 && GLOBAL_cutseq_frame <= 358 && GLOBAL_cutseq_frame & 1) {
-		DoBloodSplat(6799 - (GetRandomDraw() & 0xFF), (GetRandomDraw() & 0x1FF) - 768, 76209, 7, -1, 24);
+		PHD_VECTOR dir;
+		dir.x = 0;
+		dir.y = 0;
+		dir.z = 1;
+		DoBloodSplat(6799 - (GetRandomDraw() & 0xFF), (GetRandomDraw() & 0x1FF) - 768, 76209, 7, -1, dir, 24);
 	}
 }
 

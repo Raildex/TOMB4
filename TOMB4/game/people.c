@@ -1,5 +1,6 @@
 
 #include "game/people.h"
+#include "box.h"
 #include "game/aiinfo.h"
 #include "game/biteinfo.h"
 #include "game/box.h"
@@ -23,23 +24,23 @@ enum no_distance {
 	NO_DISTANCE = 0x40000000
 };
 
-short GunShot(long x, long y, long z, short speed, short yrot, short room_number) {
+short GunShot(long x, long y, long z, short speed, short yrot,PHD_VECTOR dir, short room_number) {
 	return -1;
 }
 
-short GunHit(long x, long y, long z, short speed, short yrot, short room_number) {
+short GunHit(long x, long y, long z, short speed, short yrot,PHD_VECTOR dir, short room_number) {
 	PHD_VECTOR pos;
 
 	pos.x = 0;
 	pos.y = 0;
 	pos.z = 0;
 	GetJointAbsPosition(lara_item, &pos, (25 * GetRandomControl()) / 0x7FFF);
-	DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 3) + 3, lara_item->pos.y_rot, lara_item->room_number);
+	DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 3) + 3, lara_item->pos.y_rot, dir, lara_item->room_number);
 	SoundEffect(SFX_LARA_INJURY, &lara_item->pos, SFX_DEFAULT);
-	return GunShot(x, y, z, speed, yrot, room_number);
+	return GunShot(x, y, z, speed, yrot, dir, room_number);
 }
 
-short GunMiss(long x, long y, long z, short speed, short yrot, short room_number) {
+short GunMiss(long x, long y, long z, short speed, short yrot, PHD_VECTOR dir, short room_number) {
 	GAME_VECTOR pos;
 
 	pos.pos.x = lara_item->pos.pos.x + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
@@ -47,7 +48,7 @@ short GunMiss(long x, long y, long z, short speed, short yrot, short room_number
 	pos.pos.z = lara_item->pos.pos.z + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
 	pos.room_number = lara_item->room_number;
 	Richochet(&pos);
-	return GunShot(x, y, z, speed, yrot, room_number);
+	return GunShot(x, y, z, speed, yrot, dir, room_number);
 }
 
 long TargetVisible(ITEM_INFO* item, AI_INFO* info) {
@@ -108,6 +109,7 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotati
 	ITEM_INFO* enemy;
 	CREATURE_INFO* creature;
 	PHD_VECTOR pos;
+	PHD_VECTOR dir;
 	long hit, targetable, random, distance;
 
 	creature = (CREATURE_INFO*)item->data;
@@ -155,7 +157,10 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotati
 				pos.y = 0;
 				pos.z = 0;
 				GetJointAbsPosition(enemy, &pos, random);
-				DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 3) + 4, enemy->pos.y_rot, enemy->room_number);
+				dir.x = 0;
+				dir.y = 0;
+				dir.z = 1;
+				DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 3) + 4, enemy->pos.y_rot, dir, enemy->room_number);
 			}
 		}
 	}

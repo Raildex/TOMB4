@@ -426,9 +426,14 @@ void Splash(ITEM_INFO* item) {
 	}
 }
 
-short DoBloodSplat(long x, long y, long z, short speed, short ang, short room_number) {
+short DoBloodSplat(long x, long y, long z, short speed, short ang, PHD_VECTOR dir, short room_number) {
+	long wh;
 	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
-		TriggerUnderwaterBlood(x, y - 32, z, speed);
+		wh = GetWaterHeight(x, y, z, room_number);
+		if(y < wh + 512) {
+			y = wh + 512;
+		}
+		TriggerUnderwaterBlood(x, y, z, speed);
 	} else {
 		TriggerBlood(x, y, z, ang >> 4, speed);
 	}
@@ -438,12 +443,15 @@ short DoBloodSplat(long x, long y, long z, short speed, short ang, short room_nu
 
 void DoLotsOfBlood(long x, long y, long z, short speed, short ang, short room_number, long num) {
 	long bx, by, bz;
-
+	PHD_VECTOR dir;
 	for(; num > 0; num--) {
 		bx = x - (GetRandomControl() << 9) / 0x8000 + 256;
 		by = y - (GetRandomControl() << 9) / 0x8000 + 256;
 		bz = z - (GetRandomControl() << 9) / 0x8000 + 256;
-		DoBloodSplat(bx, by, bz, speed, ang, room_number);
+		dir.x = bx;
+		dir.y = by;
+		dir.z = bz;
+		DoBloodSplat(bx, by, bz, speed, ang, dir, room_number);
 	}
 }
 

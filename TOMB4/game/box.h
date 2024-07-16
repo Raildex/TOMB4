@@ -4,6 +4,7 @@
 enum no_box {
 	NO_BOX = 2047
 };
+
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct AI_INFO AI_INFO;
 typedef struct LOT_INFO LOT_INFO;
@@ -12,6 +13,7 @@ typedef struct BITE_INFO BITE_INFO;
 typedef struct CREATURE_INFO CREATURE_INFO;
 typedef struct PHD_3DPOS PHD_3DPOS;
 typedef struct BOX_INFO BOX_INFO;
+typedef short (*creature_effect_routine)(long x, long y, long z, short speed_or_damage, short yRot, PHD_VECTOR direction, short room);
 void CreatureDie(short item_number, long explode);
 void InitialiseCreature(short item_number);
 long CreatureActive(short item_number);
@@ -33,8 +35,8 @@ void CreatureTilt(ITEM_INFO* item, short angle);
 void CreatureJoint(ITEM_INFO* item, short joint, short required);
 void CreatureFloat(short item_number);
 void CreatureUnderwater(ITEM_INFO* item, long depth);
-short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short (*generate)(long x, long y, long z, short speed, short yrot, short room_number));
-short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle, short (*generate)(long x, long y, long z, short damage, short angle, short room_number));
+short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, creature_effect_routine generate);
+short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle, creature_effect_routine generate);
 long CreatureVault(short item_number, short angle, long vault, long shift);
 void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara_anim);
 void AlertAllGuards(short item_number);

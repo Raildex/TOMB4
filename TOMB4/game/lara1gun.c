@@ -62,7 +62,7 @@ void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item) {
 		baddie->hit_status = 1;
 
 		if((!GetObjectInfo(currentLevel, baddie->object_number)->undead || baddie->object_number == SKELETON || baddie->object_number == MUMMY) && baddie->object_number != AHMET) {
-			HitTarget(baddie, 0, 30, 1);
+			HitTarget(baddie,NULL, NULL, 30, 1);
 
 			if(baddie != lara_item) {
 				savegame.Game.AmmoHits++;
@@ -841,7 +841,11 @@ void ControlCrossbow(short item_number) {
 				} else if(target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8 || target->object_number == SKELETON) {
 					CrossbowHitSwitchType78(item, target, 1);
 				} else if(GetObjectInfo(currentLevel, target->object_number)->intelligent) {
-					HitTarget(target, (GAME_VECTOR*)&item->pos, weapons[WEAPON_CROSSBOW].damage, 0);
+					GAME_VECTOR hit;
+					hit.pos = item->pos.pos;
+					GAME_VECTOR src;
+					src.pos = oldPos;
+					HitTarget(target,&src, &hit, weapons[WEAPON_CROSSBOW].damage, 0);
 
 					if(item->item_flags[0] == 2 && !GetObjectInfo(currentLevel, target->object_number)->undead) {
 						target->poisoned = 1;
