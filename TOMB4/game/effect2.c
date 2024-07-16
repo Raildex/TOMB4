@@ -1009,6 +1009,8 @@ void DetatchSpark(long num, long type) {
 }
 
 SPARKS* GetFreeSpark() {
+	SPARKS* newBuffer = NULL;
+	size_t oldSize = nSpark;
 	for(int i = 0; i < nSpark; ++i) {
 		if(!spark[i].On) {
 			spark[i] = (SPARKS){ 0 };
@@ -1019,7 +1021,12 @@ SPARKS* GetFreeSpark() {
 	}
 	size_t idx = nSpark;
 	nSpark = (nSpark * 2) + 4;
-	spark = realloc(spark, nSpark * sizeof(SPARKS));
+	newBuffer = realloc(spark, nSpark * sizeof(SPARKS));
+	if(!newBuffer) {
+		nSpark = oldSize;
+		return spark;
+	}
+	spark = newBuffer;
 	for(int i = idx; i < nSpark; ++i) {
 		SPARKS* sptr = &spark[i];
 		*sptr = (SPARKS){ 0 };
@@ -1044,107 +1051,106 @@ void UpdateSparks() {
 	DeadlyBounds[5] = lara_item->pos.pos.z + bounds[5];
 
 	for(int i = 0; i < nSpark; i++) {
-		sptr = &spark[i];
 
-		if(!sptr->On) {
+		if(!spark[i].On) {
 			continue;
 		}
 
-		sptr->Life--;
+		spark[i].Life--;
 
-		if(!sptr->Life) {
-			if(sptr->Dynamic != -1) {
-				spark_dynamics[sptr->Dynamic].On = 0;
+		if(!spark[i].Life) {
+			if(spark[i].Dynamic != -1) {
+				spark_dynamics[spark[i].Dynamic].On = 0;
 			}
 
-			sptr->On = 0;
+			spark[i].On = 0;
 			continue;
 		}
 
-		if(sptr->sLife - sptr->Life < sptr->ColFadeSpeed) {
-			fade = ((sptr->sLife - sptr->Life) << 16) / sptr->ColFadeSpeed;
-			sptr->R = (unsigned char)(sptr->sR + ((fade * (sptr->dR - sptr->sR)) >> 16));
-			sptr->G = (unsigned char)(sptr->sG + ((fade * (sptr->dG - sptr->sG)) >> 16));
-			sptr->B = (unsigned char)(sptr->sB + ((fade * (sptr->dB - sptr->sB)) >> 16));
-		} else if(sptr->Life < sptr->FadeToBlack) {
-			fade = ((sptr->Life - sptr->FadeToBlack) << 16) / sptr->FadeToBlack + 0x10000;
-			sptr->R = (unsigned char)((sptr->dR * fade) >> 16);
-			sptr->G = (unsigned char)((sptr->dG * fade) >> 16);
-			sptr->B = (unsigned char)((sptr->dB * fade) >> 16);
+		if(spark[i].sLife - spark[i].Life < spark[i].ColFadeSpeed) {
+			fade = ((spark[i].sLife - spark[i].Life) << 16) / spark[i].ColFadeSpeed;
+			spark[i].R = (unsigned char)(spark[i].sR + ((fade * (spark[i].dR - spark[i].sR)) >> 16));
+			spark[i].G = (unsigned char)(spark[i].sG + ((fade * (spark[i].dG - spark[i].sG)) >> 16));
+			spark[i].B = (unsigned char)(spark[i].sB + ((fade * (spark[i].dB - spark[i].sB)) >> 16));
+		} else if(spark[i].Life < spark[i].FadeToBlack) {
+			fade = ((spark[i].Life - spark[i].FadeToBlack) << 16) / spark[i].FadeToBlack + 0x10000;
+			spark[i].R = (unsigned char)((spark[i].dR * fade) >> 16);
+			spark[i].G = (unsigned char)((spark[i].dG * fade) >> 16);
+			spark[i].B = (unsigned char)((spark[i].dB * fade) >> 16);
 
-			if(sptr->R < 8 && sptr->G < 8 && sptr->B < 8) {
-				sptr->On = 0;
+			if(spark[i].R < 8 && spark[i].G < 8 && spark[i].B < 8) {
+				spark[i].On = 0;
 				continue;
 			}
 		} else {
-			sptr->R = sptr->dR;
-			sptr->G = sptr->dG;
-			sptr->B = sptr->dB;
+			spark[i].R = spark[i].dR;
+			spark[i].G = spark[i].dG;
+			spark[i].B = spark[i].dB;
 		}
 
-		if(sptr->Life == sptr->FadeToBlack && sptr->Flags & 0x800) {
-			sptr->dSize >>= 2;
+		if(spark[i].Life == spark[i].FadeToBlack && spark[i].Flags & 0x800) {
+			spark[i].dSize >>= 2;
 		}
 
-		if(sptr->Flags & 0x10) {
-			sptr->RotAng = (sptr->RotAng + sptr->RotAdd) & 0xFFF;
+		if(spark[i].Flags & 0x10) {
+			spark[i].RotAng = (spark[i].RotAng + spark[i].RotAdd) & 0xFFF;
 		}
 
-		if(sptr->sLife - sptr->Life == sptr->extras >> 3 && sptr->extras & 7) {
-			if(sptr->Flags & 0x800) {
+		if(spark[i].sLife - spark[i].Life == spark[i].extras >> 3 && spark[i].extras & 7) {
+			if(spark[i].Flags & 0x800) {
 				uw = 1;
-			} else if(sptr->Flags & 0x2000) {
+			} else if(spark[i].Flags & 0x2000) {
 				uw = 2;
 			} else {
 				uw = 0;
 			}
 
-			for(int j = 0; j < (sptr->extras & 7); j++) {
-				TriggerExplosionSparks(sptr->x, sptr->y, sptr->z, (sptr->extras & 7) - 1, sptr->Dynamic, uw, sptr->RoomNumber);
-				sptr->Dynamic = -1;
+			for(int j = 0; j < (spark[i].extras & 7); j++) {
+				TriggerExplosionSparks(spark[i].x, spark[i].y, spark[i].z, (spark[i].extras & 7) - 1, spark[i].Dynamic, uw, spark[i].RoomNumber);
+				spark[i].Dynamic = -1;
 			}
 
-			if(sptr->Flags & 0x800) {
-				TriggerExplosionBubble(sptr->x, sptr->y, sptr->z, sptr->RoomNumber);
+			if(spark[i].Flags & 0x800) {
+				TriggerExplosionBubble(spark[i].x, spark[i].y, spark[i].z, spark[i].RoomNumber);
 			}
 
-			sptr->extras = 0;
+			spark[i].extras = 0;
 		}
 
-		fade = ((sptr->sLife - sptr->Life) << 16) / sptr->sLife;
-		sptr->Yvel += sptr->Gravity;
+		fade = ((spark[i].sLife - spark[i].Life) << 16) / spark[i].sLife;
+		spark[i].Yvel += spark[i].Gravity;
 
-		if(sptr->MaxYvel) {
-			if(sptr->Yvel < 0 && sptr->Yvel < sptr->MaxYvel << 5 || sptr->Yvel > 0 && sptr->Yvel > sptr->MaxYvel << 5) {
-				sptr->Yvel = sptr->MaxYvel << 5;
+		if(spark[i].MaxYvel) {
+			if(spark[i].Yvel < 0 && spark[i].Yvel < spark[i].MaxYvel << 5 || spark[i].Yvel > 0 && spark[i].Yvel > spark[i].MaxYvel << 5) {
+				spark[i].Yvel = spark[i].MaxYvel << 5;
 			}
 		}
 
-		if(sptr->Friction & 0xF) {
-			sptr->Xvel -= sptr->Xvel >> (sptr->Friction & 0xF);
-			sptr->Zvel -= sptr->Zvel >> (sptr->Friction & 0xF);
+		if(spark[i].Friction & 0xF) {
+			spark[i].Xvel -= spark[i].Xvel >> (spark[i].Friction & 0xF);
+			spark[i].Zvel -= spark[i].Zvel >> (spark[i].Friction & 0xF);
 		}
 
-		if(sptr->Friction & 0xF0) {
-			sptr->Yvel -= sptr->Yvel >> (sptr->Friction >> 4);
+		if(spark[i].Friction & 0xF0) {
+			spark[i].Yvel -= spark[i].Yvel >> (spark[i].Friction >> 4);
 		}
 
-		sptr->x += sptr->Xvel >> 5;
-		sptr->y += sptr->Yvel >> 5;
-		sptr->z += sptr->Zvel >> 5;
+		spark[i].x += spark[i].Xvel >> 5;
+		spark[i].y += spark[i].Yvel >> 5;
+		spark[i].z += spark[i].Zvel >> 5;
 
-		if(sptr->Flags & 0x100) {
-			sptr->x += SmokeWindX >> 1;
-			sptr->z += SmokeWindZ >> 1;
+		if(spark[i].Flags & 0x100) {
+			spark[i].x += SmokeWindX >> 1;
+			spark[i].z += SmokeWindZ >> 1;
 		}
 
-		sptr->Size = (unsigned char)(sptr->sSize + ((fade * (sptr->dSize - sptr->sSize)) >> 16));
+		spark[i].Size = (unsigned char)(spark[i].sSize + ((fade * (spark[i].dSize - spark[i].sSize)) >> 16));
 
-		if(sptr->Flags & 1 && !lara.burn || sptr->Flags & 0x400) {
-			rad = sptr->Size << sptr->Scalar >> 1;
+		if(spark[i].Flags & 1 && !lara.burn || spark[i].Flags & 0x400) {
+			rad = spark[i].Size << spark[i].Scalar >> 1;
 
-			if(sptr->x + rad > DeadlyBounds[0] && sptr->x - rad < DeadlyBounds[1] && sptr->y + rad > DeadlyBounds[2] && sptr->y - rad < DeadlyBounds[3] && sptr->z + rad > DeadlyBounds[4] && sptr->z - rad < DeadlyBounds[5]) {
-				if(sptr->Flags & 1) {
+			if(spark[i].x + rad > DeadlyBounds[0] && spark[i].x - rad < DeadlyBounds[1] && spark[i].y + rad > DeadlyBounds[2] && spark[i].y - rad < DeadlyBounds[3] && spark[i].z + rad > DeadlyBounds[4] && spark[i].z - rad < DeadlyBounds[5]) {
+				if(spark[i].Flags & 1) {
 					LaraBurn();
 				} else {
 					lara_item->hit_points -= 2;
