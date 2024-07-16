@@ -41,6 +41,7 @@
 #include "specific/output.h"
 #include "specific/specificfx.h"
 #include "tomb4fx.h"
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -103,6 +104,8 @@ char tsv_buffer[16384];
 static PHD_VECTOR NodeVectors[16];
 
 SMOKE_SPARKS* GetFreeSmokeSpark() {
+	SMOKE_SPARKS* newBuffer = NULL;
+	size_t oldSize = nSmokeSparks;
 	for(int i = 0; i < nSmokeSparks; ++i) {
 		if(!smoke_spark[i].On) {
 			return &smoke_spark[i];
@@ -110,7 +113,13 @@ SMOKE_SPARKS* GetFreeSmokeSpark() {
 	}
 	size_t idx = nSmokeSparks;
 	nSmokeSparks = (nSmokeSparks * 2) + 4;
-	smoke_spark = realloc(smoke_spark, nSmokeSparks * sizeof(SMOKE_SPARKS));
+	newBuffer = realloc(smoke_spark, nSmokeSparks * sizeof(SMOKE_SPARKS));
+	if(!newBuffer) {
+		LogE(__func__, "Insufficient memory to allocate for %d smoke sparks", nSmokeSparks);
+		nSmokeSparks = oldSize;
+		return smoke_spark;
+	}
+	smoke_spark = newBuffer;
 	for(int i = idx; i < nSmokeSparks; ++i) {
 		SMOKE_SPARKS* sptr = &smoke_spark[i];
 		*sptr = (SMOKE_SPARKS){ 0 };
@@ -119,6 +128,8 @@ SMOKE_SPARKS* GetFreeSmokeSpark() {
 }
 
 LIGHTNING_STRUCT* GetFreeLightning() {
+	LIGHTNING_STRUCT* newBuffer = NULL;
+	size_t oldSize = nLightnings;
 	for(int i = 0; i < nLightnings; ++i) {
 		if(!Lightning[i].Life) {
 			return &Lightning[i];
@@ -126,7 +137,13 @@ LIGHTNING_STRUCT* GetFreeLightning() {
 	}
 	size_t idx = nLightnings;
 	nLightnings = (nLightnings * 2) + 4;
-	Lightning = realloc(Lightning, nLightnings * sizeof(LIGHTNING_STRUCT));
+	newBuffer = realloc(Lightning, nLightnings * sizeof(LIGHTNING_STRUCT));
+	if(!newBuffer) {
+		LogE(__func__, "Insufficient memory to allocate for %d lightnings", nLightnings);
+		nLightnings = oldSize;
+		return Lightning;
+	}
+	Lightning = newBuffer;
 	for(int i = idx; i < nLightnings; ++i) {
 		LIGHTNING_STRUCT* bptr = &Lightning[i];
 		*bptr = (LIGHTNING_STRUCT){ 0 };
@@ -481,6 +498,8 @@ void UpdateDrips() {
 }
 
 FIRE_SPARKS* GetFreeFireSpark() {
+	FIRE_SPARKS* newBuffer = NULL;
+	size_t oldSize = nFireSparks;
 	for(int i = 0; i < nFireSparks; ++i) {
 		if(!fire_spark[i].On) {
 			return &fire_spark[i];
@@ -488,7 +507,13 @@ FIRE_SPARKS* GetFreeFireSpark() {
 	}
 	size_t idx = nFireSparks;
 	nFireSparks = (nFireSparks * 2) + 4;
-	fire_spark = realloc(fire_spark, nFireSparks * sizeof(FIRE_SPARKS));
+	newBuffer = realloc(fire_spark, nFireSparks * sizeof(FIRE_SPARKS));
+	if(!newBuffer) {
+		LogE(__func__, "Insufficient memory to allocate for %d fire sparks", nFireSparks);
+		nFireSparks = oldSize;
+		return fire_spark;
+	}
+	fire_spark = newBuffer;
 	for(int i = idx; i < nFireSparks; ++i) {
 		FIRE_SPARKS* bptr = &fire_spark[i];
 		*bptr = (FIRE_SPARKS){ 0 };
@@ -704,6 +729,8 @@ void ClearFires() {
 }
 
 FIRE_LIST* GetFreeFire() {
+	FIRE_LIST* newBuffer = NULL;
+	size_t oldSize = nFires;
 	for(int i = 0; i < nFires; ++i) {
 		if(!fires[i].on) {
 			return &fires[i];
@@ -711,7 +738,13 @@ FIRE_LIST* GetFreeFire() {
 	}
 	size_t idx = nFires;
 	nFires = (nFires * 2) + 4;
-	fires = realloc(fires, nFires * sizeof(FIRE_LIST));
+	newBuffer = realloc(fires, nFires * sizeof(FIRE_LIST));
+	if(!newBuffer) {
+		LogE(__func__, "Insufficient memory to allocate for %d fires", nFires);
+		nFires = oldSize;
+		return fires;
+	}
+	fires = newBuffer;
 	for(int i = idx; i < nFires; ++i) {
 		FIRE_LIST* bptr = &fires[i];
 		*bptr = (FIRE_LIST){ 0 };
@@ -936,6 +969,8 @@ void DrawWeaponMissile(ITEM_INFO* item) {
 }
 
 GUNSHELL_STRUCT* GetFreeGunshell() {
+	GUNSHELL_STRUCT* newBuffer = NULL;
+	size_t oldSize = nGunshells;
 	for(int i = 0; i < nGunshells; ++i) {
 		if(!Gunshells[i].counter) {
 			return &Gunshells[i];
@@ -944,6 +979,12 @@ GUNSHELL_STRUCT* GetFreeGunshell() {
 	size_t idx = nGunshells;
 	nGunshells = (nGunshells * 2) + 4;
 	Gunshells = realloc(Gunshells, nGunshells * sizeof(GUNSHELL_STRUCT));
+	if(!newBuffer) {
+		LogE(__func__, "Insufficient memory to allocate for %d gunshells", nGunshells);
+		nGunshells = oldSize;
+		return Gunshells;
+	}
+	Gunshells = newBuffer;
 	for(int i = idx; i < nGunshells; ++i) {
 		GUNSHELL_STRUCT* bptr = &Gunshells[i];
 		*bptr = (GUNSHELL_STRUCT){ 0 };
@@ -1157,6 +1198,8 @@ void TriggerSmallSplash(long x, long y, long z, long num) {
 }
 
 GUNFLASH_STRUCT* GetFreeGunflash() {
+	GUNFLASH_STRUCT* newBuffer = NULL;
+	size_t oldSize = nGunflashes;
 	for(int i = 0; i < nGunflashes; ++i) {
 		if(!Gunflashes[i].on) {
 			return &Gunflashes[i];
@@ -1164,7 +1207,13 @@ GUNFLASH_STRUCT* GetFreeGunflash() {
 	}
 	size_t idx = nGunflashes;
 	nGunflashes = (nGunflashes * 2) + 4;
-	Gunflashes = realloc(Gunflashes, nGunflashes * sizeof(GUNFLASH_STRUCT));
+	newBuffer = realloc(Gunflashes, nGunflashes * sizeof(GUNFLASH_STRUCT));
+	if(!newBuffer) {
+		LogE(__func__, "Insufficient memory to allocate for %d gun flashes", nGunflashes);
+		nGunflashes = oldSize;
+		return Gunflashes;
+	}
+	Gunflashes = newBuffer;
 	for(int i = idx; i < nGunflashes; ++i) {
 		GUNFLASH_STRUCT* bptr = &Gunflashes[i];
 		*bptr = (GUNFLASH_STRUCT){ 0 };
@@ -1267,6 +1316,8 @@ void DrawGunflashes() {
 }
 
 BLOOD_STRUCT* GetFreeBlood() {
+	BLOOD_STRUCT* newBuffer = NULL;
+	size_t oldSize = nBlood;
 	for(int i = 0; i < nBlood; ++i) {
 		if(!blood[i].On) {
 			return &blood[i];
@@ -1274,7 +1325,13 @@ BLOOD_STRUCT* GetFreeBlood() {
 	}
 	size_t idx = nBlood;
 	nBlood = (nBlood * 2) + 4;
-	blood = realloc(blood, nBlood * sizeof(BLOOD_STRUCT));
+	newBuffer = realloc(blood, nBlood * sizeof(BLOOD_STRUCT));
+	if(!newBuffer) {
+		LogE(__func__, "Insufficient memory to allocate for %d blood", nBlood);
+		nBlood = oldSize;
+		return blood;
+	}
+	blood = newBuffer;
 	for(int i = idx; i < nBlood; ++i) {
 		BLOOD_STRUCT* bptr = &blood[i];
 		*bptr = (BLOOD_STRUCT){ 0 };
@@ -1406,6 +1463,8 @@ void TriggerBlood(long x, long y, long z, long angle, long num) {
 }
 
 BUBBLE_STRUCT* GetFreeBubble() {
+	BUBBLE_STRUCT* newBuffer = NULL;
+	size_t oldSize = nBubbles;
 	for(int i = 0; i < nBubbles; ++i) {
 		if(!Bubbles[i].size) {
 			return &Bubbles[i];
@@ -1413,7 +1472,13 @@ BUBBLE_STRUCT* GetFreeBubble() {
 	}
 	size_t idx = nBubbles;
 	nBubbles = (nBubbles * 2) + 4;
-	Bubbles = realloc(Bubbles, nBubbles * sizeof(BUBBLE_STRUCT));
+	newBuffer = realloc(Bubbles, nBubbles * sizeof(BUBBLE_STRUCT));
+	if(!newBuffer) {
+		Log(__func__, "Insufficient memory to allocate for %d bubbles", nBubbles);
+		nBubbles = oldSize;
+		return Bubbles;
+	}
+	Bubbles = newBuffer;
 	for(int i = idx; i < nBubbles; ++i) {
 		BUBBLE_STRUCT* bptr = &Bubbles[i];
 		*bptr = (BUBBLE_STRUCT){ 0 };
@@ -1497,6 +1562,8 @@ void UpdateBubbles() {
 }
 
 DRIP_STRUCT* GetFreeDrip() {
+	DRIP_STRUCT* newBuffer = NULL;
+	size_t oldSize = nDrips;
 	for(int i = 0; i < nDrips; ++i) {
 		if(!Drips[i].On) {
 			return &Drips[i];
@@ -1504,7 +1571,13 @@ DRIP_STRUCT* GetFreeDrip() {
 	}
 	size_t idx = nDrips;
 	nDrips = (nDrips * 2) + 4;
-	Drips = realloc(Drips, nDrips * sizeof(DRIP_STRUCT));
+	newBuffer = realloc(Drips, nDrips * sizeof(DRIP_STRUCT));
+	if(!newBuffer) {
+		Log(__func__, "Insufficient memory to allocate for %d drips", nDrips);
+		nDrips = oldSize;
+		return Drips;
+	}
+	Drips = newBuffer;
 	for(int i = idx; i < nDrips; ++i) {
 		DRIP_STRUCT* bptr = &Drips[i];
 		*bptr = (DRIP_STRUCT){ 0 };
@@ -1545,6 +1618,8 @@ void TriggerLaraDrips() {
 }
 
 SHOCKWAVE_STRUCT* GetFreeShockwave() {
+	SHOCKWAVE_STRUCT* newBuffer = NULL;
+	size_t oldSize = nShockWaves;
 	for(int i = 0; i < nShockWaves; ++i) {
 		if(!ShockWaves[i].life) {
 			return &ShockWaves[i];
@@ -1552,7 +1627,13 @@ SHOCKWAVE_STRUCT* GetFreeShockwave() {
 	}
 	size_t idx = nShockWaves;
 	nShockWaves = (nShockWaves * 2) + 4;
-	ShockWaves = realloc(ShockWaves, nShockWaves * sizeof(BLOOD_STRUCT));
+	newBuffer = realloc(ShockWaves, nShockWaves * sizeof(BLOOD_STRUCT));
+	if(!newBuffer) {
+		LogE(__func__, "Insufficient memory to allocate for %d shockwaves", nShockWaves);
+		nShockWaves = oldSize;
+		return ShockWaves;
+	}
+	ShockWaves = newBuffer;
 	for(int i = idx; i < nShockWaves; ++i) {
 		SHOCKWAVE_STRUCT* bptr = &ShockWaves[i];
 		*bptr = (SHOCKWAVE_STRUCT){ 0 };
