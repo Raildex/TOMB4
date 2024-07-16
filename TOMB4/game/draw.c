@@ -26,6 +26,7 @@
 #include "game/larainfo.h"
 #include "game/laramesh.h"
 #include "game/levelinfo.h"
+#include "game/matrixindices.h"
 #include "game/meshinfo.h"
 #include "game/mirror.h"
 #include "game/objectinfo.h"
@@ -46,6 +47,7 @@
 #include "specific/output.h"
 #include "specific/polyinsert.h"
 #include "specific/specificfx.h"
+#include <string.h>
 
 
 static BITE_INFO EnemyBites[2] = {
@@ -236,6 +238,10 @@ void mInterpolateMatrix() {
 		mMXPtr[M21] = (mMXPtr[M21] + mIMptr[M21]) * 0.5F;
 		mMXPtr[M22] = (mMXPtr[M22] + mIMptr[M22]) * 0.5F;
 		mMXPtr[M23] = (mMXPtr[M23] + mIMptr[M23]) * 0.5F;
+		mMXPtr[M30] = (mMXPtr[M30] + mIMptr[M30]) * 0.5F;
+		mMXPtr[M31] = (mMXPtr[M31] + mIMptr[M31]) * 0.5F;
+		mMXPtr[M32] = (mMXPtr[M32] + mIMptr[M32]) * 0.5F;
+		mMXPtr[M33] = (mMXPtr[M33] + mIMptr[M33]) * 0.5F;
 	} else if(IM_frac == 1) {
 		mMXPtr[M00] += (mIMptr[M00] - mMXPtr[M00]) * 0.25F;
 		mMXPtr[M01] += (mIMptr[M01] - mMXPtr[M01]) * 0.25F;
@@ -249,6 +255,10 @@ void mInterpolateMatrix() {
 		mMXPtr[M21] += (mIMptr[M21] - mMXPtr[M21]) * 0.25F;
 		mMXPtr[M22] += (mIMptr[M22] - mMXPtr[M22]) * 0.25F;
 		mMXPtr[M23] += (mIMptr[M23] - mMXPtr[M23]) * 0.25F;
+		mMXPtr[M30] += (mIMptr[M30] - mMXPtr[M30]) * 0.25F;
+		mMXPtr[M31] += (mIMptr[M31] - mMXPtr[M31]) * 0.25F;
+		mMXPtr[M32] += (mIMptr[M32] - mMXPtr[M32]) * 0.25F;
+		mMXPtr[M33] += (mIMptr[M33] - mMXPtr[M33]) * 0.25F;
 	} else {
 		mMXPtr[M00] = mIMptr[M00] - ((mIMptr[M00] - mMXPtr[M00]) * 0.25F);
 		mMXPtr[M01] = mIMptr[M01] - ((mIMptr[M01] - mMXPtr[M01]) * 0.25F);
@@ -262,6 +272,10 @@ void mInterpolateMatrix() {
 		mMXPtr[M21] = mIMptr[M21] - ((mIMptr[M21] - mMXPtr[M21]) * 0.25F);
 		mMXPtr[M22] = mIMptr[M22] - ((mIMptr[M22] - mMXPtr[M22]) * 0.25F);
 		mMXPtr[M23] = mIMptr[M23] - ((mIMptr[M23] - mMXPtr[M23]) * 0.25F);
+		mMXPtr[M30] = mIMptr[M30] - ((mIMptr[M30] - mMXPtr[M30]) * 0.25F);
+		mMXPtr[M31] = mIMptr[M31] - ((mIMptr[M31] - mMXPtr[M31]) * 0.25F);
+		mMXPtr[M32] = mIMptr[M32] - ((mIMptr[M32] - mMXPtr[M32]) * 0.25F);
+		mMXPtr[M33] = mIMptr[M33] - ((mIMptr[M33] - mMXPtr[M33]) * 0.25F);
 	}
 }
 
@@ -717,34 +731,12 @@ void DrawRooms(short CurrentRoom) {
 				phd_PushMatrix();
 
 				if(lara.right_arm.flash_gun) {
-					mMXPtr[M00] = lara_matrices[LM_RHAND * indices_count + M00];
-					mMXPtr[M01] = lara_matrices[LM_RHAND * indices_count + M01];
-					mMXPtr[M02] = lara_matrices[LM_RHAND * indices_count + M02];
-					mMXPtr[M03] = lara_matrices[LM_RHAND * indices_count + M03];
-					mMXPtr[M10] = lara_matrices[LM_RHAND * indices_count + M10];
-					mMXPtr[M11] = lara_matrices[LM_RHAND * indices_count + M11];
-					mMXPtr[M12] = lara_matrices[LM_RHAND * indices_count + M12];
-					mMXPtr[M13] = lara_matrices[LM_RHAND * indices_count + M13];
-					mMXPtr[M20] = lara_matrices[LM_RHAND * indices_count + M20];
-					mMXPtr[M21] = lara_matrices[LM_RHAND * indices_count + M21];
-					mMXPtr[M22] = lara_matrices[LM_RHAND * indices_count + M22];
-					mMXPtr[M23] = lara_matrices[LM_RHAND * indices_count + M23];
+					memcpy(mMXPtr, lara_matrices + (LM_RHAND * indices_count), sizeof(*mMXPtr) * indices_count);
 					SetGunFlash(lara.gun_type);
 				}
 
 				if(lara.left_arm.flash_gun) {
-					mMXPtr[M00] = lara_matrices[LM_LHAND * indices_count + M00];
-					mMXPtr[M01] = lara_matrices[LM_LHAND * indices_count + M01];
-					mMXPtr[M02] = lara_matrices[LM_LHAND * indices_count + M02];
-					mMXPtr[M03] = lara_matrices[LM_LHAND * indices_count + M03];
-					mMXPtr[M10] = lara_matrices[LM_LHAND * indices_count + M10];
-					mMXPtr[M11] = lara_matrices[LM_LHAND * indices_count + M11];
-					mMXPtr[M12] = lara_matrices[LM_LHAND * indices_count + M12];
-					mMXPtr[M13] = lara_matrices[LM_LHAND * indices_count + M13];
-					mMXPtr[M20] = lara_matrices[LM_LHAND * indices_count + M20];
-					mMXPtr[M21] = lara_matrices[LM_LHAND * indices_count + M21];
-					mMXPtr[M22] = lara_matrices[LM_LHAND * indices_count + M22];
-					mMXPtr[M23] = lara_matrices[LM_LHAND * indices_count + M23];
+					memcpy(mMXPtr, lara_matrices + (LM_LHAND * indices_count), sizeof(*mMXPtr) * indices_count);
 					SetGunFlash(lara.gun_type);
 				}
 

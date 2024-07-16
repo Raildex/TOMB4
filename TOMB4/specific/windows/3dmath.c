@@ -3,12 +3,14 @@
 #include "game/control.h"
 #include "game/lara.h"
 #include "game/larainfo.h"
+#include "game/matrixindices.h"
 #include "game/phd3dpos.h"
 #include "game/phdvector.h"
 #include "game/spotcam.h"
 #include "global/types.h"
 #include "specific/function_stubs.h"
 #include "specific/windows/d3dmatrix.h"
+#include <string.h>
 #include <d3dtypes.h>
 #include <math.h>
 
@@ -68,11 +70,11 @@ static float LfAspectCorrection;
 
 static void mInit() {
 	float* ptr;
-	float ang;
+	double ang;
 
 	for(int i = 0; i < 65536; i++) {
 		ptr = &fcossin_tbl[i];
-		ang = i * (float)(M_PI * 2.0F / 65536.0F);
+		ang = i * (M_PI * 2.0 / 65536.0);
 		*ptr = (float)sin(ang);
 	}
 
@@ -80,39 +82,16 @@ static void mInit() {
 }
 
 static void mPushMatrix() {
-	mMXPtr[indices_count + M00] = mMXPtr[M00];
-	mMXPtr[indices_count + M01] = mMXPtr[M01];
-	mMXPtr[indices_count + M02] = mMXPtr[M02];
-	mMXPtr[indices_count + M03] = mMXPtr[M03];
-	mMXPtr[indices_count + M10] = mMXPtr[M10];
-	mMXPtr[indices_count + M11] = mMXPtr[M11];
-	mMXPtr[indices_count + M12] = mMXPtr[M12];
-	mMXPtr[indices_count + M13] = mMXPtr[M13];
-	mMXPtr[indices_count + M20] = mMXPtr[M20];
-	mMXPtr[indices_count + M21] = mMXPtr[M21];
-	mMXPtr[indices_count + M22] = mMXPtr[M22];
-	mMXPtr[indices_count + M23] = mMXPtr[M23];
-	mMXPtr[indices_count + M30] = mMXPtr[M30];
-	mMXPtr[indices_count + M31] = mMXPtr[M31];
-	mMXPtr[indices_count + M32] = mMXPtr[M32];
-	mMXPtr[indices_count + M33] = mMXPtr[M33];
+	memcpy(mMXPtr + indices_count, mMXPtr, sizeof(float)* indices_count);
 	mMXPtr += indices_count;
 }
 
 static void mPushUnitMatrix() {
+	static float const unit[indices_count] = {
+		1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1
+	};
+	memcpy(mMXPtr+indices_count, &unit[0], sizeof(float)* indices_count);
 	mMXPtr += indices_count;
-	mMXPtr[M00] = 1;
-	mMXPtr[M01] = 0;
-	mMXPtr[M02] = 0;
-	mMXPtr[M03] = 0;
-	mMXPtr[M10] = 0;
-	mMXPtr[M11] = 1;
-	mMXPtr[M12] = 0;
-	mMXPtr[M13] = 0;
-	mMXPtr[M20] = 0;
-	mMXPtr[M21] = 0;
-	mMXPtr[M22] = 1;
-	mMXPtr[M23] = 0;
 }
 
 static void mSetTrans(long x, long y, long z) {
@@ -122,9 +101,10 @@ static void mSetTrans(long x, long y, long z) {
 }
 
 static void mTranslateRel(long x, long y, long z) {
-	mMXPtr[M03] += x * mMXPtr[M00] + y * mMXPtr[M01] + z * mMXPtr[M02];
-	mMXPtr[M13] += x * mMXPtr[M10] + y * mMXPtr[M11] + z * mMXPtr[M12];
-	mMXPtr[M23] += x * mMXPtr[M20] + y * mMXPtr[M21] + z * mMXPtr[M22];
+	mMXPtr[M03] += x * 	mMXPtr[M00] + y * 	mMXPtr[M01] + z * 	mMXPtr[M02];
+	mMXPtr[M13] += x * 	mMXPtr[M10] + y * 	mMXPtr[M11] + z * 	mMXPtr[M12];
+	mMXPtr[M23] += x * 	mMXPtr[M20] + y * 	mMXPtr[M21] + z * 	mMXPtr[M22];
+	mMXPtr[M33] +=		mMXPtr[M30] + 		mMXPtr[M31] + 		mMXPtr[M32];
 }
 
 static void mRotX(short angle) {
@@ -245,9 +225,10 @@ static void mTranslateAbs(long x, long y, long z) {
 	fx = x - mW2V[M03];
 	fy = y - mW2V[M13];
 	fz = z - mW2V[M23];
-	mMXPtr[M03] = fx * mMXPtr[M00] + fy * mMXPtr[M01] + fz * mMXPtr[M02];
-	mMXPtr[M13] = fx * mMXPtr[M10] + fy * mMXPtr[M11] + fz * mMXPtr[M12];
-	mMXPtr[M23] = fx * mMXPtr[M20] + fy * mMXPtr[M21] + fz * mMXPtr[M22];
+	mMXPtr[M03] = fx *	mMXPtr[M00] + fy *	mMXPtr[M01] + fz *	mMXPtr[M02];
+	mMXPtr[M13] = fx *	mMXPtr[M10] + fy *	mMXPtr[M11] + fz *	mMXPtr[M12];
+	mMXPtr[M23] = fx *	mMXPtr[M20] + fy *	mMXPtr[M21] + fz *	mMXPtr[M22];
+	mMXPtr[M33] = fx *	mMXPtr[M30] + fy *	mMXPtr[M31] + fz *	mMXPtr[M32];
 }
 
 static void mGenerateW2V(PHD_3DPOS* viewPos) {
@@ -355,59 +336,44 @@ static void mScaleCurrentMatrix(PHD_VECTOR* vec) {
 	mMXPtr[M02] = mMXPtr[M02] * z;
 	mMXPtr[M12] = mMXPtr[M12] * z;
 	mMXPtr[M22] = mMXPtr[M22] * z;
+
+	mMXPtr[M03] = mMXPtr[M03];
+	mMXPtr[M13] = mMXPtr[M13];
+	mMXPtr[M23] = mMXPtr[M23];
 }
 
 void phd_PushMatrix() {
-	phd_mxptr[indices_count + M00] = phd_mxptr[M00];
-	phd_mxptr[indices_count + M01] = phd_mxptr[M01];
-	phd_mxptr[indices_count + M02] = phd_mxptr[M02];
-	phd_mxptr[indices_count + M03] = phd_mxptr[M03];
-	phd_mxptr[indices_count + M10] = phd_mxptr[M10];
-	phd_mxptr[indices_count + M11] = phd_mxptr[M11];
-	phd_mxptr[indices_count + M12] = phd_mxptr[M12];
-	phd_mxptr[indices_count + M13] = phd_mxptr[M13];
-	phd_mxptr[indices_count + M20] = phd_mxptr[M20];
-	phd_mxptr[indices_count + M21] = phd_mxptr[M21];
-	phd_mxptr[indices_count + M22] = phd_mxptr[M22];
-	phd_mxptr[indices_count + M23] = phd_mxptr[M23];
+	memcpy(phd_mxptr + indices_count, phd_mxptr, sizeof(*phd_mxptr) * indices_count);
 	phd_mxptr += indices_count;
 
 	mPushMatrix();
 }
 
 void phd_PushUnitMatrix() {
+	static const long unit[indices_count] = {
+		1 << W2V_SHIFT, 0,0,0,
+		0, 1 << W2V_SHIFT, 0,0,
+		0,0,1 << W2V_SHIFT,0,
+		0,0,0,1 << W2V_SHIFT
+	};
+	memcpy(phd_mxptr + indices_count, &unit[0], sizeof(*phd_mxptr) * indices_count);
 	phd_mxptr += indices_count;
-	phd_mxptr[M00] = 1 << W2V_SHIFT;
-	phd_mxptr[M01] = 0;
-	phd_mxptr[M02] = 0;
-	phd_mxptr[M03] = 0;
-	phd_mxptr[M10] = 0;
-	phd_mxptr[M11] = 1 << W2V_SHIFT;
-	phd_mxptr[M12] = 0;
-	phd_mxptr[M13] = 0;
-	phd_mxptr[M20] = 0;
-	phd_mxptr[M21] = 0;
-	phd_mxptr[M22] = 1 << W2V_SHIFT;
-	phd_mxptr[M23] = 0;
-	phd_mxptr[M30] = 0;
-	phd_mxptr[M31] = 0;
-	phd_mxptr[M32] = 0;
-	phd_mxptr[M33] = 1 << W2V_SHIFT;
 
 	mPushUnitMatrix();
 }
 
 void phd_SetTrans(long x, long y, long z) {
-	phd_mxptr[M03] = x << 14;
-	phd_mxptr[M13] = y << 14;
-	phd_mxptr[M23] = z << 14;
+	phd_mxptr[M03] = x << W2V_SHIFT;
+	phd_mxptr[M13] = y << W2V_SHIFT;
+	phd_mxptr[M23] = z << W2V_SHIFT;
 	mSetTrans(x, y, z);
 }
 
 long phd_TranslateRel(long x, long y, long z) {
-	phd_mxptr[M03] += x * phd_mxptr[M00] + y * phd_mxptr[M01] + z * phd_mxptr[M02];
-	phd_mxptr[M13] += x * phd_mxptr[M10] + y * phd_mxptr[M11] + z * phd_mxptr[M12];
-	phd_mxptr[M23] += x * phd_mxptr[M20] + y * phd_mxptr[M21] + z * phd_mxptr[M22];
+	phd_mxptr[M03] += x *	phd_mxptr[M00] + y *	phd_mxptr[M01] + z *	phd_mxptr[M02];
+	phd_mxptr[M13] += x *	phd_mxptr[M10] + y *	phd_mxptr[M11] + z *	phd_mxptr[M12];
+	phd_mxptr[M23] += x *	phd_mxptr[M20] + y *	phd_mxptr[M21] + z *	phd_mxptr[M22];
+	phd_mxptr[M33] += x *	phd_mxptr[M30] + y *	phd_mxptr[M31] + z *	phd_mxptr[M32];
 
 	mTranslateRel(x, y, z);
 	return 1;
@@ -642,6 +608,7 @@ void phd_TranslateAbs(long x, long y, long z) {
 	phd_mxptr[M03] = fx * phd_mxptr[M00] + fy * phd_mxptr[M01] + fz * phd_mxptr[M02];
 	phd_mxptr[M13] = fx * phd_mxptr[M10] + fy * phd_mxptr[M11] + fz * phd_mxptr[M12];
 	phd_mxptr[M23] = fx * phd_mxptr[M20] + fy * phd_mxptr[M21] + fz * phd_mxptr[M22];
+	phd_mxptr[M33] = fx * phd_mxptr[M30] + fy * phd_mxptr[M31] + fz * phd_mxptr[M32];
 
 	mTranslateAbs(x, y, z);
 }
@@ -831,9 +798,9 @@ void InitWindow(long x, long y, long w, long h, long znear, long zfar, long fov,
 	phd_centerx = w / 2;
 	phd_centery = h / 2;
 	phd_znear = znear << W2V_SHIFT;
-	f_centerx = (float)(w / 2);
+	f_centerx = (float)(w / 2.0F);
 	phd_zfar = zfar << W2V_SHIFT;
-	f_centery = (float)(h / 2);
+	f_centery = (float)(h / 2.0F);
 	AlterFOV((short)(182 * fov));
 	SetupZRange(phd_znear, phd_zfar);
 	phd_right = phd_winxmax;

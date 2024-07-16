@@ -1,6 +1,7 @@
 #ifndef TOMB4_GAME_TOMB4FX_H
 #define TOMB4_GAME_TOMB4FX_H
 #include "game/nodeoffsetinfo.h"
+#include "game/weapontypes.h"
 typedef struct LIGHTNING_STRUCT LIGHTNING_STRUCT;
 typedef struct PHD_VECTOR PHD_VECTOR;
 typedef struct ITEM_INFO ITEM_INFO;
@@ -36,7 +37,7 @@ void UpdateSmokeSparks();
 void TriggerShatterSmoke(long x, long y, long z);
 void DrawLensFlares(ITEM_INFO* item);
 void DrawWeaponMissile(ITEM_INFO* item);
-void TriggerGunShell(short leftright, short objnum, long weapon);
+void TriggerGunShell(short leftright, short objnum, weapon_types weapon);
 void UpdateGunShells();
 void TriggerSmallSplash(long x, long y, long z, long num);
 void TriggerGunflash(PHD_VECTOR* pos);

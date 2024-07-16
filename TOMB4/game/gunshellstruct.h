@@ -9,5 +9,6 @@ typedef struct GUNSHELL_STRUCT {
 	short counter;
 	short DirXrot;
 	short object_number;
+	char sleeping;
 } GUNSHELL_STRUCT;
 #endif

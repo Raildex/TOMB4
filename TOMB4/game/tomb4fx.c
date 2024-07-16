@@ -24,6 +24,7 @@
 #include "game/larainfo.h"
 #include "game/levelinfo.h"
 #include "game/lightningstruct.h"
+#include "game/matrixindices.h"
 #include "game/nodeoffsetinfo.h"
 #include "game/objectinfo.h"
 #include "game/objects.h"
@@ -978,7 +979,7 @@ GUNSHELL_STRUCT* GetFreeGunshell() {
 	}
 	size_t idx = nGunshells;
 	nGunshells = (nGunshells * 2) + 4;
-	Gunshells = realloc(Gunshells, nGunshells * sizeof(GUNSHELL_STRUCT));
+	newBuffer = realloc(Gunshells, nGunshells * sizeof(GUNSHELL_STRUCT));
 	if(!newBuffer) {
 		LogE(__func__, "Insufficient memory to allocate for %d gunshells", nGunshells);
 		nGunshells = oldSize;
@@ -992,7 +993,7 @@ GUNSHELL_STRUCT* GetFreeGunshell() {
 	return &Gunshells[idx];
 }
 
-void TriggerGunShell(short leftright, short objnum, long weapon) {
+void TriggerGunShell(short leftright, short objnum, weapon_types weapon) {
 	GUNSHELL_STRUCT* shell;
 	PHD_VECTOR pos;
 	long shade;
@@ -1016,6 +1017,8 @@ void TriggerGunShell(short leftright, short objnum, long weapon) {
 			pos.y = 114;
 			pos.z = 32;
 			break;
+		default:
+			break;
 		}
 
 		GetLaraJointPos(&pos, 11);
@@ -1031,6 +1034,8 @@ void TriggerGunShell(short leftright, short objnum, long weapon) {
 			pos.x = -16;
 			pos.y = 35;
 			pos.z = 48;
+			break;
+		default:
 			break;
 		}
 
@@ -1058,7 +1063,8 @@ void TriggerGunShell(short leftright, short objnum, long weapon) {
 	shell->speed = (GetRandomControl() & 0x1F) + 16;
 	shell->object_number = objnum;
 	shell->fallspeed = -48 - (GetRandomControl() & 7);
-	shell->counter = (GetRandomControl() & 0x1F) + 60;
+	shell->counter = 300;
+	shell->sleeping = 0;
 
 	if(leftright) {
 		if(weapon == WEAPON_SHOTGUN) {
@@ -1090,6 +1096,10 @@ void UpdateGunShells() {
 		if(!shell->counter) {
 			continue;
 		}
+		if(shell->sleeping) {
+			shell->counter--;
+			continue;
+		}
 
 		ox = shell->pos.pos.x;
 		oy = shell->pos.pos.y;
@@ -1099,12 +1109,6 @@ void UpdateGunShells() {
 
 		if(GetRoom(currentLevel, oroom)->flags & ROOM_UNDERWATER) {
 			shell->fallspeed++;
-
-			if(shell->fallspeed > 8) {
-				shell->fallspeed = 8;
-			} else if(shell->fallspeed < 0) {
-				shell->fallspeed >>= 1;
-			}
 
 			shell->speed -= shell->speed >> 1;
 		} else {
@@ -1132,11 +1136,6 @@ void UpdateGunShells() {
 			SoundEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
 			shell->speed -= 4;
 
-			if(shell->speed < 8) {
-				shell->counter = 0;
-				continue;
-			}
-
 			shell->pos.pos.y = c;
 			shell->fallspeed = -shell->fallspeed;
 		}
@@ -1146,12 +1145,14 @@ void UpdateGunShells() {
 		if(shell->pos.pos.y >= h) {
 			SoundEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
 			shell->speed -= 8;
-
 			if(shell->speed < 8) {
-				shell->counter = 0;
-				continue;
+				shell->speed = 0;
+				shell->fallspeed =0;
+				shell->sleeping = 1;
+				shell->pos.z_rot = 0;
+				shell->pos.x_rot = 0;
+				shell->pos.pos.y = h;
 			}
-
 			if(oy <= h) {
 				shell->fallspeed = -shell->fallspeed >> 1;
 			} else {
@@ -1227,18 +1228,7 @@ void TriggerGunflash(PHD_VECTOR* pos) {
 	flash = GetFreeGunflash();
 	phd_TranslateRel(pos->x, pos->y, pos->z);
 	phd_RotX(-0x4000);
-	flash->mx[M00] = mMXPtr[M00];
-	flash->mx[M01] = mMXPtr[M01];
-	flash->mx[M02] = mMXPtr[M02];
-	flash->mx[M03] = mMXPtr[M03];
-	flash->mx[M10] = mMXPtr[M10];
-	flash->mx[M11] = mMXPtr[M11];
-	flash->mx[M12] = mMXPtr[M12];
-	flash->mx[M13] = mMXPtr[M13];
-	flash->mx[M20] = mMXPtr[M20];
-	flash->mx[M21] = mMXPtr[M21];
-	flash->mx[M22] = mMXPtr[M22];
-	flash->mx[M23] = mMXPtr[M23];
+	memcpy(flash->mx, mMXPtr,sizeof(*flash->mx) * indices_count);
 	flash->on = 1;
 }
 
@@ -1266,7 +1256,7 @@ void SetGunFlash(short weapon) {
 
 	default: // pistols
 		pos.x = 0;
-		pos.y = 180;
+		pos.y = 240;
 		pos.z = 40;
 		break;
 	}
@@ -1282,10 +1272,6 @@ void DrawGunflashes() {
 	phd_right = phd_winwidth;
 	phd_bottom = phd_winheight;
 	phd_PushMatrix();
-	GetRandomDraw();
-	GetRandomDraw();
-	GetRandomDraw();
-	GetRandomDraw();
 
 	for(int i = 0; i < nGunflashes; i++) {
 		flash = &Gunflashes[i];
@@ -1294,18 +1280,7 @@ void DrawGunflashes() {
 			break;
 		}
 
-		mMXPtr[M00] = flash->mx[M00];
-		mMXPtr[M01] = flash->mx[M01];
-		mMXPtr[M02] = flash->mx[M02];
-		mMXPtr[M03] = flash->mx[M03];
-		mMXPtr[M10] = flash->mx[M10];
-		mMXPtr[M11] = flash->mx[M11];
-		mMXPtr[M12] = flash->mx[M12];
-		mMXPtr[M13] = flash->mx[M13];
-		mMXPtr[M20] = flash->mx[M20];
-		mMXPtr[M21] = flash->mx[M21];
-		mMXPtr[M22] = flash->mx[M22];
-		mMXPtr[M23] = flash->mx[M23];
+		memcpy(mMXPtr, flash->mx, sizeof(*mMXPtr) * indices_count);
 		phd_RotZ((short)(GetRandomDraw() << 1));
 		GlobalAmbient = 0xFF2F2F00;
 		phd_PutPolygons(GetMesh(currentLevel, GetObjectInfo(currentLevel, GUN_FLASH)->mesh_index), -1);
