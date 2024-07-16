@@ -3629,7 +3629,6 @@ void DrawBlood() {
 
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
-	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 15);
 	XY = (long*)&tsv_buffer[0];
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
@@ -3703,6 +3702,11 @@ void DrawBlood() {
 		v[3].specular = 0xFF000000;
 		tex.drawtype = 2;
 		tex.flag = 0;
+		if(bptr->underwater) {
+			sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 2);
+		}else {
+			sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 15);
+		}
 		tex.tpage = sprite->tpage;
 		tex.u1 = sprite->x1;
 		tex.v1 = sprite->y1;

@@ -1355,6 +1355,7 @@ void TriggerUnderwaterBlood(long x, long y, long z, long size) {
 	bptr->dShade = (GetRandomControl() & 0x3F) + 48;
 	bptr->RotAng = 0;
 	bptr->RotAdd = (GetRandomControl() & 0x3F) - 32;
+	bptr->underwater = 1;
 }
 
 void TriggerBlood(long x, long y, long z, long angle, long num) {
@@ -1400,6 +1401,7 @@ void TriggerBlood(long x, long y, long z, long angle, long num) {
 		bptr->sSize = size;
 		bptr->Size = size;
 		bptr->dSize = size >> 2;
+		bptr->underwater = 0;
 	}
 }
 

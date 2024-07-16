@@ -22,6 +22,6 @@ typedef struct BLOOD_STRUCT {
 	unsigned char FadeToBlack;
 	char sLife;
 	char Life;
-	char Pad;
+	char underwater;
 } BLOOD_STRUCT;
 #endif
