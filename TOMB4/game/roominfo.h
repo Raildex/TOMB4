@@ -43,7 +43,6 @@ typedef struct ROOM_INFO {
 	long nWaterVerts;
 	long nShoreVerts;
 	IDirect3DVertexBuffer* SourceVB;
-	short* FaceData;
 	POLYFACE3* tris;
 	POLYFACE4* quads;
 	float posx;

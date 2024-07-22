@@ -322,7 +322,7 @@ void CalcTriFaceNormal(_D3DVECTOR* p1, _D3DVECTOR* p2, _D3DVECTOR* p3, _D3DVECTO
 	N->z = v.y * u.x - v.x * u.y;
 }
 
-void CreateVertexNormals(ROOM_INFO* r) {
+void CreateVertexNormals(ROOM_INFO* r, short* FaceData) {
 	_D3DVECTOR p1;
 	_D3DVECTOR p2;
 	_D3DVECTOR p3;
@@ -332,7 +332,7 @@ void CreateVertexNormals(ROOM_INFO* r) {
 	short nQuads;
 	short nTris;
 
-	data = r->FaceData;
+	data = FaceData;
 	r->fnormals = (_D3DVECTOR*)calloc((r->gt3cnt + r->gt4cnt), sizeof(_D3DVECTOR));
 	nQuads = *data++;
 
@@ -369,7 +369,7 @@ void CreateVertexNormals(ROOM_INFO* r) {
 
 	r->vnormals = (_D3DVECTOR*)calloc(r->nVerts, sizeof(_D3DVECTOR));
 
-	data = r->FaceData;
+	data = FaceData;
 	nQuads = *data++;
 
 	data += nQuads * 5;
@@ -380,7 +380,7 @@ void CreateVertexNormals(ROOM_INFO* r) {
 		n1.y = 0;
 		n1.z = 0;
 
-		data = r->FaceData + 1;
+		data = FaceData + 1;
 
 		for(int j = 0; j < nQuads; j++) {
 			if(data[0] == i || data[1] == i || data[2] == i || data[3] == i) {
@@ -417,6 +417,7 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 	D3DVERTEXBUFFERDESC vb;
 	short* data_ptr;
 	short* faces;
+	short* FaceData;
 	short* prelight;
 	float intensity;
 	long nWaterVerts, nShoreVerts, nRestOfVerts, nLights, nBulbs;
@@ -432,7 +433,7 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 	}
 
 	data_ptr += r->nVerts * 6;
-	r->FaceData = data_ptr;
+	FaceData = data_ptr;
 	r->gt4cnt = *data_ptr++;
 	r->quads = (POLYFACE4*)calloc(r->gt4cnt, sizeof(POLYFACE4));
 	data_ptr += r->gt4cnt * 5;
@@ -492,7 +493,7 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 		data_ptr += 6;
 	}
 
-	data_ptr = r->FaceData + 1;
+	data_ptr = FaceData + 1;
 	r->nWaterVerts = nWaterVerts;
 	r->nShoreVerts = nShoreVerts;
 
@@ -520,7 +521,7 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 	}
 
 	free(faces);
-	CreateVertexNormals(r);
+	CreateVertexNormals(r, FaceData);
 
 	r->prelight = (long*)calloc(r->nVerts, sizeof(long));
 	r->prelightwater = (long*)calloc(r->nVerts, sizeof(long));
