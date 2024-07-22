@@ -410,11 +410,9 @@ void CreateVertexNormals(ROOM_INFO* r, short* FaceData) {
 }
 
 void ProcessRoomData(ROOM_INFO* r, short* data) {
-	D3DVERTEX* vptr;
 	LIGHTINFO* light;
 	PCLIGHT_INFO* pclight;
 	FOGBULB_STRUCT* bulb;
-	D3DVERTEXBUFFERDESC vb;
 	short* data_ptr;
 	short* faces;
 	short* FaceData;
@@ -428,7 +426,6 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 
 	if(!r->nVerts) {
 		r->num_lights = 0;
-		r->SourceVB = 0;
 		return;
 	}
 
@@ -525,24 +522,12 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 	r->prelight = (long*)calloc(r->nVerts, sizeof(long));
 	r->prelightwater = (long*)calloc(r->nVerts, sizeof(long));
 	r->watercalc = 0;
-	vb.dwNumVertices = r->nVerts;
-	vb.dwSize = sizeof(D3DVERTEXBUFFERDESC);
-	vb.dwCaps = 0;
-	vb.dwFVF = D3DFVF_VERTEX;
-	DXAttempt(IDirect3D3_CreateVertexBuffer(App.dx.lpD3D, &vb, &r->SourceVB, D3DDP_DONOTCLIP, 0));
-	IDirect3DVertexBuffer_Lock(r->SourceVB, DDLOCK_WRITEONLY, (void**)&vptr, 0);
 	r->posx = (float)r->x;
 	r->posy = (float)r->y;
 	r->posz = (float)r->z;
 	data_ptr = data + 1;
 
 	for(int i = 0; i < r->nVerts; i++) {
-		vptr->x = r->verts[i].x + (float)r->x;
-		vptr->y = r->verts[i].y + (float)r->y;
-		vptr->z = r->verts[i].z + (float)r->z;
-		vptr->nx = r->vnormals[i].x;
-		vptr->ny = r->vnormals[i].y;
-		vptr->nz = r->vnormals[i].z;
 		cR = ((prelight[i] & 0x7C00) >> 10) << 3;
 		cG = ((prelight[i] & 0x3E0) >> 5) << 3;
 		cB = (prelight[i] & 0x1F) << 3;
@@ -551,11 +536,9 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 		cG = (unsigned short)((cG * water_color_G) >> 8);
 		cB = (unsigned short)((cB * water_color_B) >> 8);
 		r->prelightwater[i] = RGBA(cR, cG, cB, 0xFF);
-		vptr++;
 		data_ptr += 6;
 	}
 
-	IDirect3DVertexBuffer_Unlock(r->SourceVB);
 	free(prelight);
 	r->pclight = NULL;
 
@@ -633,7 +616,6 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 		}
 	}
 	free(faces);
-	IDirect3DVertexBuffer_Optimize(r->SourceVB, App.dx._lpD3DDevice, 0);
 }
 
 void S_InsertRoom(ROOM_INFO* r) {
