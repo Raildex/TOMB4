@@ -220,9 +220,9 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 			}
 		}
 
-		cR += (long)(fR * 128.0F);
-		cG += (long)(fG * 128.0F);
-		cB += (long)(fB * 128.0F);
+		cR += (long)(fR * 255.0F);
+		cG += (long)(fG * 255.0F);
+		cB += (long)(fB * 255.0F);
 
 		if(i < r->nWaterVerts + r->nShoreVerts) {
 			rndoff = (long)((vtx.x / 64.0F) + (vtx.y / 64.0F) + (vtx.z / 128.0F)) & 0xFC;
@@ -445,9 +445,11 @@ void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 	data_ptr = data + 1; // go to vert data
 	for(int i = 0; i < r->nVerts; i++) // get vert normals
 	{
-		memcpy(&r->vnormals[i].x, &data_ptr[15], sizeof(float));
-		memcpy(&r->vnormals[i].y, &data_ptr[17], sizeof(float));
-		memcpy(&r->vnormals[i].z, &data_ptr[19], sizeof(float));
+		FVECTOR nrm;
+		memcpy(&nrm.x, &data_ptr[14], sizeof(float));
+		memcpy(&nrm.y, &data_ptr[16], sizeof(float));
+		memcpy(&nrm.z, &data_ptr[18], sizeof(float));
+		r->vnormals[i] = nrm;
 		data_ptr += vertexSize;
 	}
 
@@ -464,7 +466,6 @@ void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 			memcpy(&col.x, &data_ptr[6], sizeof(float));
 			memcpy(&col.y, &data_ptr[8], sizeof(float));
 			memcpy(&col.z, &data_ptr[10], sizeof(float));
-			Log(__func__, "R : %.2f G : %.2f B : %.2f", col.x, col.y, col.z);
 			prelight[nWaterVerts] = col;
 			faces[i] = (short)(nWaterVerts | 0x8000);
 			nWaterVerts++;
@@ -486,7 +487,6 @@ void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 			memcpy(&col.x, &data_ptr[6], sizeof(float));
 			memcpy(&col.y, &data_ptr[8], sizeof(float));
 			memcpy(&col.z, &data_ptr[10], sizeof(float));
-			Log(__func__, "R : %.2f G : %.2f B : %.2f", col.x, col.y, col.z);
 			prelight[nShoreVerts + nWaterVerts] = col;
 			faces[i] = (short)(nShoreVerts + nWaterVerts);
 			nShoreVerts++;
@@ -508,7 +508,6 @@ void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 			memcpy(&col.x, &data_ptr[6], sizeof(float));
 			memcpy(&col.y, &data_ptr[8], sizeof(float));
 			memcpy(&col.z, &data_ptr[10], sizeof(float));
-			Log(__func__, "R : %.2f G : %.2f B : %.2f", col.x, col.y, col.z);
 
 			prelight[nRestOfVerts + nShoreVerts + nWaterVerts] = col;
 			faces[i] = (short)(nRestOfVerts + nShoreVerts + nWaterVerts);
@@ -567,7 +566,6 @@ void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 		if(cB > 255) {
 			cB = 255;
 		}
-		Log(__func__, "R : %d G : %d B : %d", cR,cG,cB);
 		r->prelight[i] = RGBA(cR, cG, cB, 0xFF);
 		cR = ((cR * water_color_R) >> 8);
 		cG = ((cG * water_color_G) >> 8);

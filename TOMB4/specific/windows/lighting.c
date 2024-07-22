@@ -335,9 +335,9 @@ void CreateLightList(ITEM_INFO* item) {
 
 	for(int i = 0; i < item->il.nCurrentLights; i++) {
 		in_range = 1;
-		dx = current_lights[i].ix - item->il.item_pos.x;
-		dy = current_lights[i].iy - item->il.item_pos.y;
-		dz = current_lights[i].iz - item->il.item_pos.z;
+		dx = current_lights[i].x - item->il.item_pos.x;
+		dy = current_lights[i].y - item->il.item_pos.y;
+		dz = current_lights[i].z - item->il.item_pos.z;
 		range = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
 
 		if(current_lights[i].Type == LIGHT_POINT || current_lights[i].Type == LIGHT_SHADOW) {

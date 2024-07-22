@@ -1,9 +1,11 @@
 struct trng2_room_vertex  // 40 bytes
 {
-	tr_vertex Vertex;
-	int16_t Lighting;   // Value is ignored!
-	uint16_t Attributes; // A set of flags for special rendering effects
-	uint16_t Colour;     // 15-bit colour
+	int16_t x; // (2 bytes)
+	int16_t y; // (2 bytes)
+	int16_t z; // (2 bytes)
+	int16_t Lighting;   // Value is ignored! (2 bytes)
+	uint16_t Attributes; // A set of flags for special rendering effects (2 bytes)
+	uint16_t Colour;     // 15-bit colour (2 bytes)
 	float_t Color[4]; // HDR 32 bit float color (16 bytes)
 	float_t Normal[3]; // Vertex Normal (12 bytes)
 };
