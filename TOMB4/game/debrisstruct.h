@@ -1,7 +1,8 @@
 #ifndef TOMB4_GAME_DEBRISSTRUCT_H
 #define TOMB4_GAME_DEBRISSTRUCT_H
+typedef struct TEXTURESTRUCT TEXTURESTRUCT;
 typedef struct DEBRIS_STRUCT {
-	void* TextInfo;
+	TEXTURESTRUCT* TextInfo;
 	long x;
 	long y;
 	long z;

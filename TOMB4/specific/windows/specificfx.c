@@ -1107,7 +1107,7 @@ void DrawDebris() {
 		v[1].specular |= 0xFF000000;
 		v[2].specular |= 0xFF000000;
 
-		tex = GetTextInfo(currentLevel, (uintptr_t)dptr->TextInfo & 0x7FFF);
+		tex = dptr->TextInfo;
 		drawbak = tex->drawtype;
 
 		if(dptr->flags & 1) {

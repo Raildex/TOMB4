@@ -79,7 +79,7 @@ void UpdateDebris() {
 	}
 }
 
-void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels, short rgb) {
+void TriggerDebris(GAME_VECTOR* pos, TEXTURESTRUCT* TextInfo, short* Offsets, long* Vels, short rgb) {
 	DEBRIS_STRUCT* dptr;
 
 	if(GetRandomControl() & 3) {
@@ -209,7 +209,8 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	GAME_VECTOR vec;
 	float* vtx;
 	long* Vels;
-	unsigned short* face_data;
+	POLYFACE3* tri;
+	POLYFACE4* quad;
 	short* meshp;
 	short* offsets;
 	short* RotVerts;
@@ -287,20 +288,20 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	vec.room_number = RoomNumber;
 	DebrisMeshAmbient = GetRoom(currentLevel, RoomNumber)->ambient;
 
-	face_data = (unsigned short*)mesh->gt3;
+	tri = mesh->gt3;
 
 	while(nTris && Num--) {
-		v1 = *face_data++;
-		v2 = *face_data++;
-		v3 = *face_data++;
+		v1 = tri->vertices[0];
+		v2 = tri->vertices[1];
+		v3 = tri->vertices[2];
 		DebrisMeshC1 = v1;
 		DebrisMeshC2 = v2;
 		DebrisMeshC3 = v3;
 		v1 *= 3;
 		v2 *= 3;
 		v3 *= 3;
-		tex = (TEXTURESTRUCT*)*face_data++;
-		DebrisMeshFlags = *face_data++;
+		tex = GetTextInfo(currentLevel, tri->textInfo);
+		DebrisMeshFlags = tri->effects;
 
 		if(v1 < 0x300 && v2 < 0x300 && v3 < 0x300 && (!rnd || rnd == 1 && GetRandomControl() & 1)) {
 			offsets[0] = RotVerts[v1];
@@ -355,26 +356,26 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 			}
 
 			TriggerDebris(&vec, tex, offsets, Vels, c);
+			tri++;
 		}
 
 		nTris--;
 	}
 
-	face_data = (unsigned short*)mesh->gt4;
+	quad = mesh->gt4;
 
 	while(nQuads && Num--) {
-		v1 = *face_data++;
-		v2 = *face_data++;
-		face_data++;
-		v3 = *face_data++;
+		v1 = quad->vertices[0];
+		v2 = quad->vertices[1];
+		v3 = quad->vertices[3];
 		DebrisMeshC1 = v1;
 		DebrisMeshC2 = v2;
 		DebrisMeshC3 = v3;
 		v1 *= 3;
 		v2 *= 3;
 		v3 *= 3;
-		tex = (TEXTURESTRUCT*)*face_data++;
-		DebrisMeshFlags = *face_data++;
+		tex = GetTextInfo(currentLevel, quad->textInfo);
+		DebrisMeshFlags = quad->effects;
 
 		if(v1 < 0x300 && v2 < 0x300 && v3 < 0x300 && (!rnd || (rnd == 1 && GetRandomControl() & 1))) {
 			offsets[0] = RotVerts[v1];
@@ -429,6 +430,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 			}
 
 			TriggerDebris(&vec, tex, offsets, Vels, c);
+			quad++;
 		}
 
 		nQuads--;
