@@ -273,7 +273,6 @@ void DestroyRoom(ROOM_INFO* r) {
 	free(r->prelightwater);
 	free(r->vnormals);
 	free(r->verts);
-	free(r->fnormals);
 	free(r->floor);
 }
 

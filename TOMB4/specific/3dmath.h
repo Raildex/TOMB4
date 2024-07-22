@@ -1,5 +1,6 @@
 #ifndef TOMB4_SPECIFIC_3DMATH_H
 #define TOMB4_SPECIFIC_3DMATH_H
+#include "game/fvector.h"
 #include "game/matrixindices.h"
 #include "global/math_tbls.h"
 typedef struct PHD_VECTOR PHD_VECTOR;
@@ -24,7 +25,8 @@ void SetupZRange(long znear, long zfar);
 void InitWindow(long x, long y, long w, long h, long znear, long zfar, long fov, long a, long b);
 void phd_GenerateW2V(PHD_3DPOS* viewPos);
 void phd_LookAt(long sx, long sy, long sz, long tx, long ty, long tz, short roll);
-
+FVECTOR VectorNormalise(FVECTOR* vec);
+float VectorMagnitude(FVECTOR* vec);
 extern float one;
 extern float mone;
 extern float FogStart;

@@ -1,5 +1,7 @@
-#ifndef ROOM_INFO_INCLUDED
-#define ROOM_INFO_INCLUDED
+#ifndef TOMB4_GAME_ROOMINFO_H
+#define TOMB4_GAME_ROOMINFO_H
+#include "game/control.h"
+#include "game/fvector.h"
 #include "polyface.h"
 typedef struct _D3DVECTOR _D3DVECTOR;
 typedef struct FLOOR_INFO FLOOR_INFO;
@@ -48,15 +50,14 @@ typedef struct ROOM_INFO {
 	float posx;
 	float posy;
 	float posz;
-	_D3DVECTOR* vnormals;
-	_D3DVECTOR* fnormals;
+	FVECTOR* vnormals;
 	long* prelight;
 	long* prelightwater;
 	long watercalc;
-	_D3DVECTOR* verts;
+	PHD_VECTOR* verts;
 	long gt3cnt;
 	long gt4cnt;
 	PCLIGHT_INFO* pclight;
 } ROOM_INFO;
 #pragma pack(pop)
-#endif
+#endif// TOMB4_GAME_ROOMINFO_H

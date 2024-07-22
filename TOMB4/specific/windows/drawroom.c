@@ -1,5 +1,6 @@
 
 #include "specific/drawroom.h"
+#include "game/box.h"
 #include "game/camera.h"
 #include "game/control.h"
 #include "game/draw.h"
@@ -308,7 +309,7 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 	}
 }
 
-void CalcTriFaceNormal(_D3DVECTOR* p1, _D3DVECTOR* p2, _D3DVECTOR* p3, _D3DVECTOR* N) {
+void CalcTriFaceNormal(PHD_VECTOR* p1, PHD_VECTOR* p2, PHD_VECTOR* p3, FVECTOR* N) {
 	FVECTOR u, v;
 
 	u.x = p1->x - p2->x;
@@ -323,17 +324,18 @@ void CalcTriFaceNormal(_D3DVECTOR* p1, _D3DVECTOR* p2, _D3DVECTOR* p3, _D3DVECTO
 }
 
 void CreateVertexNormals(ROOM_INFO* r, short* FaceData) {
-	_D3DVECTOR p1;
-	_D3DVECTOR p2;
-	_D3DVECTOR p3;
-	_D3DVECTOR n1;
-	_D3DVECTOR n2;
+	PHD_VECTOR p1;
+	PHD_VECTOR p2;
+	PHD_VECTOR p3;
+	FVECTOR n1;
+	FVECTOR n2;
+	FVECTOR* fnormals;
 	short* data;
 	short nQuads;
 	short nTris;
 
 	data = FaceData;
-	r->fnormals = (_D3DVECTOR*)calloc((r->gt3cnt + r->gt4cnt), sizeof(_D3DVECTOR));
+	fnormals = (FVECTOR*)calloc((r->gt3cnt + r->gt4cnt), sizeof(FVECTOR));
 	nQuads = *data++;
 
 	for(int i = 0; i < nQuads; i++) {
@@ -350,8 +352,7 @@ void CreateVertexNormals(ROOM_INFO* r, short* FaceData) {
 		n1.x += n2.x;
 		n1.y += n2.y;
 		n1.z += n2.z;
-		D3DNormalise(&n1);
-		r->fnormals[i] = n1;
+		fnormals[i] = VectorNormalise(&n1);
 		data += 5;
 	}
 
@@ -362,12 +363,11 @@ void CreateVertexNormals(ROOM_INFO* r, short* FaceData) {
 		p2 = r->verts[data[1]];
 		p3 = r->verts[data[2]];
 		CalcTriFaceNormal(&p1, &p2, &p3, &n1);
-		D3DNormalise(&n1);
-		r->fnormals[nQuads + i] = n1;
+		fnormals[nQuads + i] = VectorNormalise(&n1);
 		data += 4;
 	}
 
-	r->vnormals = (_D3DVECTOR*)calloc(r->nVerts, sizeof(_D3DVECTOR));
+	r->vnormals = (FVECTOR*)calloc(r->nVerts, sizeof(FVECTOR));
 
 	data = FaceData;
 	nQuads = *data++;
@@ -384,9 +384,9 @@ void CreateVertexNormals(ROOM_INFO* r, short* FaceData) {
 
 		for(int j = 0; j < nQuads; j++) {
 			if(data[0] == i || data[1] == i || data[2] == i || data[3] == i) {
-				n1.x += r->fnormals[j].x;
-				n1.y += r->fnormals[j].y;
-				n1.z += r->fnormals[j].z;
+				n1.x += fnormals[j].x;
+				n1.y += fnormals[j].y;
+				n1.z += fnormals[j].z;
 			}
 
 			data += 5;
@@ -396,17 +396,17 @@ void CreateVertexNormals(ROOM_INFO* r, short* FaceData) {
 
 		for(int j = 0; j < nTris; j++) {
 			if(data[0] == i || data[1] == i || data[2] == i) {
-				n1.x += r->fnormals[nQuads + j].x;
-				n1.y += r->fnormals[nQuads + j].y;
-				n1.z += r->fnormals[nQuads + j].z;
+				n1.x += fnormals[nQuads + j].x;
+				n1.y += fnormals[nQuads + j].y;
+				n1.z += fnormals[nQuads + j].z;
 			}
 
 			data += 4;
 		}
 
-		D3DNormalise(&n1);
-		r->vnormals[i] = n1;
+		r->vnormals[i] = VectorNormalise(&n1);
 	}
+	free(fnormals);
 }
 
 void ProcessRoomData(ROOM_INFO* r, short* data) {
@@ -439,7 +439,7 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 	data_ptr += r->gt4cnt * 5;
 	r->gt3cnt = *data_ptr;
 	r->tris = (POLYFACE3*)calloc(r->gt3cnt, sizeof(POLYFACE3));
-	r->verts = (_D3DVECTOR*)calloc(r->nVerts, sizeof(_D3DVECTOR));
+	r->verts = (PHD_VECTOR*)calloc(r->nVerts, sizeof(PHD_VECTOR));
 	faces = (short*)calloc(r->nVerts, sizeof(short));
 	prelight = (short*)calloc(r->nVerts, sizeof(short));
 	data_ptr = data + 1; // go to vert data
@@ -448,9 +448,9 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 	for(int i = 0; i < r->nVerts; i++) // get water verts
 	{
 		if(data_ptr[4] & 0x2000) {
-			r->verts[nWaterVerts].x = (float)data_ptr[0];
-			r->verts[nWaterVerts].y = (float)data_ptr[1];
-			r->verts[nWaterVerts].z = (float)data_ptr[2];
+			r->verts[nWaterVerts].x = data_ptr[0];
+			r->verts[nWaterVerts].y = data_ptr[1];
+			r->verts[nWaterVerts].z = data_ptr[2];
 			prelight[nWaterVerts] = data_ptr[5];
 			faces[i] = (short)(nWaterVerts | 0x8000);
 			nWaterVerts++;
@@ -520,7 +520,6 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 		r->tris[i].textInfo = data_ptr[3];
 	}
 
-	free(faces);
 	CreateVertexNormals(r, FaceData);
 
 	r->prelight = (long*)calloc(r->nVerts, sizeof(long));
@@ -633,7 +632,7 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 			}
 		}
 	}
-
+	free(faces);
 	IDirect3DVertexBuffer_Optimize(r->SourceVB, App.dx._lpD3DDevice, 0);
 }
 

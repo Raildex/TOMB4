@@ -1,6 +1,7 @@
 
 #include "specific/3dmath.h"
 #include "game/control.h"
+#include "game/fvector.h"
 #include "game/lara.h"
 #include "game/larainfo.h"
 #include "game/matrixindices.h"
@@ -910,4 +911,18 @@ void phd_LookAt(long sx, long sy, long sz, long tx, long ty, long tz, short roll
 	CamPos.z = sz;
 	phd_GenerateW2V(&viewPos);
 	S_Init_D3DMATRIX();
+}
+
+
+FVECTOR VectorNormalise(FVECTOR* vec) {
+	FVECTOR result = *vec;
+	float mag = VectorMagnitude(vec);
+	result.x /= mag;
+	result.y /= mag;
+	result.z /= mag;
+	return result;
+}
+
+float VectorMagnitude(FVECTOR* vec) {
+	return (float)sqrt(SQUARE((double)vec->x) + SQUARE((double)vec->y) + SQUARE((double)vec->z));
 }
