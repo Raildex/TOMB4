@@ -321,7 +321,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 	ROOM_INFO* r;
 	short* rData;
 	long size, nDoors;
-
+	unsigned short vertexSize;
 	Log(__func__, "LoadRooms");
 	wibble = 0;
 	NumLevelFogBulbs = 0;
@@ -329,12 +329,15 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 	lvl->nRooms = *(short*)*data;
 	*data += sizeof(short);
 	Log(__func__, "Number Of Rooms %d", lvl->nRooms);
-
 	if(lvl->nRooms < 0) {
 		Log(__func__, "Incorrect Number Of Rooms");
 		return 0;
 	}
 
+	vertexSize = *(unsigned short*)*data;
+	*data += sizeof(unsigned short);
+	Log(__func__, "Vertex Size: %d",vertexSize);
+	assert(vertexSize == 20);
 	lvl->rooms = (ROOM_INFO*)calloc(lvl->nRooms, sizeof(ROOM_INFO));
 
 	if(!lvl->rooms) {
@@ -440,7 +443,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 		r->bottom = 0;
 		r->item_number = NO_ITEM;
 		r->fx_number = NO_ITEM;
-		ProcessRoomData(r, rData);
+		ProcessRoomData(r, rData, vertexSize);
 		free(rData);
 	}
 

@@ -31,6 +31,7 @@
 #include "specific/windows/dxshell.h"
 #include "specific/windows/texturebucket.h"
 #include "specific/windows/winmain.h"
+#include <stdlib.h>
 #include <string.h>
 #include <d3dtypes.h>
 #include <math.h>
@@ -409,14 +410,14 @@ void CreateVertexNormals(ROOM_INFO* r, short* FaceData) {
 	free(fnormals);
 }
 
-void ProcessRoomData(ROOM_INFO* r, short* data) {
+void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 	LIGHTINFO* light;
 	PCLIGHT_INFO* pclight;
 	FOGBULB_STRUCT* bulb;
 	short* data_ptr;
 	short* faces;
 	short* FaceData;
-	short* prelight;
+	FVECTOR* prelight;
 	float intensity;
 	long nWaterVerts, nShoreVerts, nRestOfVerts, nLights, nBulbs;
 	unsigned short cR, cG, cB;
@@ -429,7 +430,7 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 		return;
 	}
 
-	data_ptr += r->nVerts * 6;
+	data_ptr += r->nVerts * vertexSize;
 	FaceData = data_ptr;
 	r->gt4cnt = *data_ptr++;
 	r->quads = (POLYFACE4*)calloc(r->gt4cnt, sizeof(POLYFACE4));
@@ -437,8 +438,19 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 	r->gt3cnt = *data_ptr;
 	r->tris = (POLYFACE3*)calloc(r->gt3cnt, sizeof(POLYFACE3));
 	r->verts = (PHD_VECTOR*)calloc(r->nVerts, sizeof(PHD_VECTOR));
+	r->vnormals = (FVECTOR*)calloc(r->nVerts, sizeof(FVECTOR));
 	faces = (short*)calloc(r->nVerts, sizeof(short));
-	prelight = (short*)calloc(r->nVerts, sizeof(short));
+	prelight = (FVECTOR*)calloc(r->nVerts, sizeof(FVECTOR));
+
+	data_ptr = data + 1; // go to vert data
+	for(int i = 0; i < r->nVerts; i++) // get vert normals
+	{
+		memcpy(&r->vnormals[i].x, &data_ptr[15], sizeof(float));
+		memcpy(&r->vnormals[i].y, &data_ptr[17], sizeof(float));
+		memcpy(&r->vnormals[i].z, &data_ptr[19], sizeof(float));
+		data_ptr += vertexSize;
+	}
+
 	data_ptr = data + 1; // go to vert data
 	nWaterVerts = 0;
 
@@ -448,12 +460,17 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 			r->verts[nWaterVerts].x = data_ptr[0];
 			r->verts[nWaterVerts].y = data_ptr[1];
 			r->verts[nWaterVerts].z = data_ptr[2];
-			prelight[nWaterVerts] = data_ptr[5];
+			FVECTOR col;
+			memcpy(&col.x, &data_ptr[6], sizeof(float));
+			memcpy(&col.y, &data_ptr[8], sizeof(float));
+			memcpy(&col.z, &data_ptr[10], sizeof(float));
+			Log(__func__, "R : %.2f G : %.2f B : %.2f", col.x, col.y, col.z);
+			prelight[nWaterVerts] = col;
 			faces[i] = (short)(nWaterVerts | 0x8000);
 			nWaterVerts++;
 		}
 
-		data_ptr += 6;
+		data_ptr += vertexSize;
 	}
 
 	data_ptr = data + 1;
@@ -462,15 +479,20 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 	for(int i = 0; i < r->nVerts; i++) // again for shore verts
 	{
 		if(data_ptr[4] & 0x4000 && !(data_ptr[4] & 0x2000)) {
-			r->verts[nShoreVerts + nWaterVerts].x = (float)data_ptr[0];
-			r->verts[nShoreVerts + nWaterVerts].y = (float)data_ptr[1];
-			r->verts[nShoreVerts + nWaterVerts].z = (float)data_ptr[2];
-			prelight[nShoreVerts + nWaterVerts] = data_ptr[5];
+			r->verts[nShoreVerts + nWaterVerts].x = data_ptr[0];
+			r->verts[nShoreVerts + nWaterVerts].y = data_ptr[1];
+			r->verts[nShoreVerts + nWaterVerts].z = data_ptr[2];
+			FVECTOR col;
+			memcpy(&col.x, &data_ptr[6], sizeof(float));
+			memcpy(&col.y, &data_ptr[8], sizeof(float));
+			memcpy(&col.z, &data_ptr[10], sizeof(float));
+			Log(__func__, "R : %.2f G : %.2f B : %.2f", col.x, col.y, col.z);
+			prelight[nShoreVerts + nWaterVerts] = col;
 			faces[i] = (short)(nShoreVerts + nWaterVerts);
 			nShoreVerts++;
 		}
 
-		data_ptr += 6;
+		data_ptr += vertexSize;
 	}
 
 	data_ptr = data + 1;
@@ -479,15 +501,21 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 	for(int i = 0; i < r->nVerts; i++) // one more for everything else
 	{
 		if(!(data_ptr[4] & 0x4000) && !(data_ptr[4] & 0x2000)) {
-			r->verts[nRestOfVerts + nShoreVerts + nWaterVerts].x = (float)data_ptr[0];
-			r->verts[nRestOfVerts + nShoreVerts + nWaterVerts].y = (float)data_ptr[1];
-			r->verts[nRestOfVerts + nShoreVerts + nWaterVerts].z = (float)data_ptr[2];
-			prelight[nRestOfVerts + nShoreVerts + nWaterVerts] = data_ptr[5];
+			r->verts[nRestOfVerts + nShoreVerts + nWaterVerts].x = data_ptr[0];
+			r->verts[nRestOfVerts + nShoreVerts + nWaterVerts].y = data_ptr[1];
+			r->verts[nRestOfVerts + nShoreVerts + nWaterVerts].z = data_ptr[2];
+			FVECTOR col;
+			memcpy(&col.x, &data_ptr[6], sizeof(float));
+			memcpy(&col.y, &data_ptr[8], sizeof(float));
+			memcpy(&col.z, &data_ptr[10], sizeof(float));
+			Log(__func__, "R : %.2f G : %.2f B : %.2f", col.x, col.y, col.z);
+
+			prelight[nRestOfVerts + nShoreVerts + nWaterVerts] = col;
 			faces[i] = (short)(nRestOfVerts + nShoreVerts + nWaterVerts);
 			nRestOfVerts++;
 		}
 
-		data_ptr += 6;
+		data_ptr += vertexSize;
 	}
 
 	data_ptr = FaceData + 1;
@@ -517,8 +545,6 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 		r->tris[i].textInfo = data_ptr[3];
 	}
 
-	CreateVertexNormals(r, FaceData);
-
 	r->prelight = (long*)calloc(r->nVerts, sizeof(long));
 	r->prelightwater = (long*)calloc(r->nVerts, sizeof(long));
 	r->watercalc = 0;
@@ -528,15 +554,26 @@ void ProcessRoomData(ROOM_INFO* r, short* data) {
 	data_ptr = data + 1;
 
 	for(int i = 0; i < r->nVerts; i++) {
-		cR = ((prelight[i] & 0x7C00) >> 10) << 3;
-		cG = ((prelight[i] & 0x3E0) >> 5) << 3;
-		cB = (prelight[i] & 0x1F) << 3;
+		FVECTOR pr = prelight[i];
+		cR = (pr.x * 255.0F);
+		cG = (pr.y * 255.0F);
+		cB = (pr.z * 255.0F);
+		if(cR > 255) {
+			cR = 255;
+		}
+		if(cG > 255) {
+			cG = 255;
+		}
+		if(cB > 255) {
+			cB = 255;
+		}
+		Log(__func__, "R : %d G : %d B : %d", cR,cG,cB);
 		r->prelight[i] = RGBA(cR, cG, cB, 0xFF);
-		cR = (unsigned short)((cR * water_color_R) >> 8);
-		cG = (unsigned short)((cG * water_color_G) >> 8);
-		cB = (unsigned short)((cB * water_color_B) >> 8);
+		cR = ((cR * water_color_R) >> 8);
+		cG = ((cG * water_color_G) >> 8);
+		cB = ((cB * water_color_B) >> 8);
 		r->prelightwater[i] = RGBA(cR, cG, cB, 0xFF);
-		data_ptr += 6;
+		data_ptr += vertexSize;
 	}
 
 	free(prelight);
