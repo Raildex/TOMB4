@@ -2304,8 +2304,8 @@ void DrawBinoculars() {
 	TEXTURESTRUCT* tex;
 	_D3DTLVERTEX* vtx;
 	short* clip;
-	short* quad;
-	short* tri;
+	POLYFACE4* quad;
+	POLYFACE3* tri;
 	unsigned short drawbak;
 	short clipdistance;
 
@@ -2346,70 +2346,70 @@ void DrawBinoculars() {
 	tri = mesh->gt3;
 
 	if(LaserSight) {
-		for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-			tex = GetTextInfo(currentLevel, quad[4] & 0x7FFF);
+		for(int i = 0; i < mesh->ngt4; i++, quad ++) {
+			tex = GetTextInfo(currentLevel, quad->textInfo & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
-			if(quad[5] & 1) {
-				vtx[quad[0]].color = 0xFF000000;
-				vtx[quad[1]].color = 0xFF000000;
-				vtx[quad[2]].color = 0;
-				vtx[quad[3]].color = 0;
+			if(quad->textInfo & 1) {
+				vtx[quad->vertices[0]].color = 0xFF000000;
+				vtx[quad->vertices[1]].color = 0xFF000000;
+				vtx[quad->vertices[2]].color = 0;
+				vtx[quad->vertices[3]].color = 0;
 				tex->drawtype = 3;
 			}
 
-			AddQuadSorted(vtx, quad[0], quad[1], quad[2], quad[3], tex, 1);
+			AddQuadSorted(vtx, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], tex, 1);
 			tex->drawtype = drawbak;
 		}
 
-		for(int i = 0, j = 0; i < mesh->ngt3; i++, tri += 5) {
-			tex = GetTextInfo(currentLevel, tri[3] & 0x7FFF);
+		for(int i = 0, j = 0; i < mesh->ngt3; i++, tri ++) {
+			tex = GetTextInfo(currentLevel, tri->effects & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
-			if(tri[4] & 1) {
-				vtx[tri[0]].color = TargetGraphColTab[j] << 24;
-				vtx[tri[1]].color = TargetGraphColTab[j + 1] << 24;
-				vtx[tri[2]].color = TargetGraphColTab[j + 2] << 24;
+			if(tri->effects & 1) {
+				vtx[tri->vertices[0]].color = TargetGraphColTab[j] << 24;
+				vtx[tri->vertices[1]].color = TargetGraphColTab[j + 1] << 24;
+				vtx[tri->vertices[2]].color = TargetGraphColTab[j + 2] << 24;
 				tex->drawtype = 3;
 				j += 3;
 			}
 
-			AddTriSorted(vtx, tri[0], tri[1], tri[2], tex, 1);
+			AddTriSorted(vtx, tri->vertices[0], tri->vertices[1], tri->vertices[2], tex, 1);
 			tex->drawtype = drawbak;
 		}
 	} else {
-		for(int i = 0; i < mesh->ngt4; i++, quad += 6) {
-			tex = GetTextInfo(currentLevel, quad[4] & 0x7FFF);
+		for(int i = 0; i < mesh->ngt4; i++, quad ++) {
+			tex = GetTextInfo(currentLevel, quad->textInfo & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
-			if(quad[5] & 1) {
-				vtx[quad[0]].color = 0xFF000000;
-				vtx[quad[1]].color = 0xFF000000;
-				vtx[quad[2]].color = 0;
-				vtx[quad[3]].color = 0;
+			if(quad->effects & 1) {
+				vtx[quad->vertices[0]].color = 0xFF000000;
+				vtx[quad->vertices[1]].color = 0xFF000000;
+				vtx[quad->vertices[2]].color = 0;
+				vtx[quad->vertices[3]].color = 0;
 				tex->drawtype = 3;
 			}
 
-			AddQuadSorted(vtx, quad[0], quad[1], quad[2], quad[3], tex, 1);
+			AddQuadSorted(vtx, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], tex, 1);
 			tex->drawtype = drawbak;
 		}
 
 		for(int i = 0; i < mesh->ngt3; i++, tri += 5) {
-			tex = GetTextInfo(currentLevel, tri[3] & 0x7FFF);
+			tex = GetTextInfo(currentLevel, tri->textInfo & 0x7FFF);
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
-			if(tri[4] & 1) {
-				vtx[tri[0]].color = 0;
-				vtx[tri[1]].color = 0xFF000000;
-				vtx[tri[2]].color = 0;
+			if(tri->effects & 1) {
+				vtx[tri->vertices[0]].color = 0;
+				vtx[tri->vertices[1]].color = 0xFF000000;
+				vtx[tri->vertices[2]].color = 0;
 				tex->drawtype = 3;
 			}
 
-			AddTriSorted(vtx, tri[0], tri[1], tri[2], tex, 1);
+			AddTriSorted(vtx, tri->vertices[0], tri->vertices[1], tri->vertices[2], tex, 1);
 			tex->drawtype = drawbak;
 		}
 	}

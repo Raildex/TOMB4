@@ -14,6 +14,7 @@
 #include "game/lighttypes.h"
 #include "game/meshdata.h"
 #include "game/pclightinfo.h"
+#include "game/polyface.h"
 #include "game/roomdynamic.h"
 #include "game/roominfo.h"
 #include "game/texturestruct.h"
@@ -29,6 +30,7 @@
 #include "specific/windows/dxshell.h"
 #include "specific/windows/texturebucket.h"
 #include "specific/windows/winmain.h"
+#include <string.h>
 #include <d3dtypes.h>
 #include <math.h>
 
@@ -635,7 +637,7 @@ void S_InsertRoom(ROOM_INFO* r) {
 	TEXTURESTRUCT* pTex;
 	short* data;
 	short numQuads, numTris;
-	bool doublesided;
+	long doublesided;
 
 	clip_left = r->left;
 	clip_right = r->right;
@@ -649,6 +651,7 @@ void S_InsertRoom(ROOM_INFO* r) {
 
 		data = r->FaceData;
 		numQuads = *data++;
+		
 
 		for(int i = 0; i < numQuads; i++, data += 5) {
 			pTex = GetTextInfo(currentLevel, data[4] & 0x3FFF);
@@ -933,13 +936,9 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 		mesh_ptr++;
 
 		if(mesh->ngt4) {
-			mesh->gt4 = (short*)calloc(6 * mesh->ngt4, sizeof(short));
+			mesh->gt4 = (POLYFACE4*)calloc(mesh->ngt4, sizeof(POLYFACE4));
 			lp = 6 * mesh->ngt4;
-
-			for(int j = 0; j < lp; j++) {
-				mesh->gt4[j] = mesh_ptr[j];
-			}
-
+			memcpy(mesh->gt4, mesh_ptr, sizeof(POLYFACE4) * mesh->ngt4);
 			mesh_ptr += lp;
 		}
 
@@ -947,12 +946,9 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 		mesh_ptr++;
 
 		if(mesh->ngt3) {
-			mesh->gt3 = (short*)calloc(5 * mesh->ngt3, sizeof(short));
+			mesh->gt3 = (POLYFACE3*)calloc(mesh->ngt3, sizeof(POLYFACE3));
 			lp = 5 * mesh->ngt3;
-
-			for(int j = 0; j < lp; j++) {
-				mesh->gt3[j] = mesh_ptr[j];
-			}
+			memcpy(mesh->gt3, mesh_ptr, sizeof(POLYFACE3) * mesh->ngt3);
 		}
 	}
 }

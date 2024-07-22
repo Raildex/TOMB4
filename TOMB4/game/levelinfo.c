@@ -888,7 +888,7 @@ char LoadTextureInfos(char** data, LEVEL_INFO* lvl) {
 		OBJECT_INFO* obj = GetObjectInfo(currentLevel, WATERFALL1 + i);
 
 		if(obj->loaded) {
-			tex = GetTextInfo(currentLevel, mesh_vtxbuf[obj->mesh_index]->gt4[4] & 0x7FFF);
+			tex = GetTextInfo(currentLevel, mesh_vtxbuf[obj->mesh_index]->gt4->textInfo & 0x7FFF);
 			lvl->AnimatingWaterfalls[i] = tex;
 			lvl->AnimatingWaterfallsV[i] = (long)tex->v1;
 		}
