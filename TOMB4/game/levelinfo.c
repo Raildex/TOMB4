@@ -264,7 +264,7 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 }
 
 void DestroyRoom(ROOM_INFO* r) {
-	free(r->data);
+	//free(r->data);
 	free(r->door);
 	free(r->pclight);
 	free(r->light);
@@ -320,6 +320,7 @@ short* GetMeshBase(LEVEL_INFO* lvl) {
 
 char LoadRooms(char** data, LEVEL_INFO* lvl) {
 	ROOM_INFO* r;
+	short* rData;
 	long size, nDoors;
 
 	Log(__func__, "LoadRooms");
@@ -360,8 +361,8 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 
 		size = *(long*)*data;
 		*data += sizeof(long);
-		r->data = (short*)calloc(size, sizeof(short));
-		memcpy(r->data, *data, size * sizeof(short));
+		rData = (short*)calloc(size, sizeof(short));
+		memcpy(rData, *data, size * sizeof(short));
 		*data += size * sizeof(short);
 
 		nDoors = *(short*)*data;
@@ -440,7 +441,8 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 		r->bottom = 0;
 		r->item_number = NO_ITEM;
 		r->fx_number = NO_ITEM;
-		ProcessRoomData(r);
+		ProcessRoomData(r, rData);
+		free(rData);
 	}
 
 	BuildOutsideTable(lvl);

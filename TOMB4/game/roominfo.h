@@ -1,5 +1,6 @@
 #ifndef ROOM_INFO_INCLUDED
 #define ROOM_INFO_INCLUDED
+#include "polyface.h"
 typedef struct _D3DVECTOR _D3DVECTOR;
 typedef struct FLOOR_INFO FLOOR_INFO;
 typedef struct LIGHTINFO LIGHTINFO;
@@ -8,7 +9,6 @@ typedef struct PCLIGHT_INFO PCLIGHT_INFO;
 typedef struct IDirect3DVertexBuffer IDirect3DVertexBuffer;
 #pragma pack(push, 1)
 typedef struct ROOM_INFO {
-	short* data;
 	short* door;
 	FLOOR_INFO* floor;
 	LIGHTINFO* light;
@@ -44,6 +44,8 @@ typedef struct ROOM_INFO {
 	long nShoreVerts;
 	IDirect3DVertexBuffer* SourceVB;
 	short* FaceData;
+	POLYFACE3* tris;
+	POLYFACE4* quads;
 	float posx;
 	float posy;
 	float posz;

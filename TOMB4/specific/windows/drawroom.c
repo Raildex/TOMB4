@@ -409,7 +409,7 @@ void CreateVertexNormals(ROOM_INFO* r) {
 	}
 }
 
-void ProcessRoomData(ROOM_INFO* r) {
+void ProcessRoomData(ROOM_INFO* r, short* data) {
 	D3DVERTEX* vptr;
 	LIGHTINFO* light;
 	PCLIGHT_INFO* pclight;
@@ -422,7 +422,7 @@ void ProcessRoomData(ROOM_INFO* r) {
 	long nWaterVerts, nShoreVerts, nRestOfVerts, nLights, nBulbs;
 	unsigned short cR, cG, cB;
 
-	data_ptr = r->data;
+	data_ptr = data;
 	r->nVerts = *data_ptr++;
 
 	if(!r->nVerts) {
@@ -434,12 +434,14 @@ void ProcessRoomData(ROOM_INFO* r) {
 	data_ptr += r->nVerts * 6;
 	r->FaceData = data_ptr;
 	r->gt4cnt = *data_ptr++;
+	r->quads = (POLYFACE4*)calloc(r->gt4cnt, sizeof(POLYFACE4));
 	data_ptr += r->gt4cnt * 5;
 	r->gt3cnt = *data_ptr;
+	r->tris = (POLYFACE3*)calloc(r->gt3cnt, sizeof(POLYFACE3));
 	r->verts = (_D3DVECTOR*)calloc(r->nVerts, sizeof(_D3DVECTOR));
 	faces = (short*)calloc(r->nVerts, sizeof(short));
 	prelight = (short*)calloc(r->nVerts, sizeof(short));
-	data_ptr = r->data + 1; // go to vert data
+	data_ptr = data + 1; // go to vert data
 	nWaterVerts = 0;
 
 	for(int i = 0; i < r->nVerts; i++) // get water verts
@@ -456,7 +458,7 @@ void ProcessRoomData(ROOM_INFO* r) {
 		data_ptr += 6;
 	}
 
-	data_ptr = r->data + 1;
+	data_ptr = data + 1;
 	nShoreVerts = 0;
 
 	for(int i = 0; i < r->nVerts; i++) // again for shore verts
@@ -473,7 +475,7 @@ void ProcessRoomData(ROOM_INFO* r) {
 		data_ptr += 6;
 	}
 
-	data_ptr = r->data + 1;
+	data_ptr = data + 1;
 	nRestOfVerts = 0;
 
 	for(int i = 0; i < r->nVerts; i++) // one more for everything else
@@ -494,31 +496,32 @@ void ProcessRoomData(ROOM_INFO* r) {
 	r->nWaterVerts = nWaterVerts;
 	r->nShoreVerts = nShoreVerts;
 
-	for(int i = 0; i < r->gt4cnt; i++) // get quad data
+	for(int i = 0; i < r->gt4cnt; data_ptr += 5, i++) // get quad data
 	{
 		if(faces[data_ptr[0]] & 0x8000 || faces[data_ptr[1]] & 0x8000 || faces[data_ptr[2]] & 0x8000 || faces[data_ptr[3]] & 0x8000) {
-			data_ptr[4] |= 0x4000;
+			r->quads->textInfo |= 0x4000;
 		}
 
-		data_ptr[0] = faces[data_ptr[0]] & 0x7FFF;
-		data_ptr[1] = faces[data_ptr[1]] & 0x7FFF;
-		data_ptr[2] = faces[data_ptr[2]] & 0x7FFF;
-		data_ptr[3] = faces[data_ptr[3]] & 0x7FFF;
-		data_ptr += 5; // onto the next quad
+		r->quads[i].vertices[0] = faces[data_ptr[0]] & 0x7FFF;
+		r->quads[i].vertices[1] = faces[data_ptr[1]] & 0x7FFF;
+		r->quads[i].vertices[2] = faces[data_ptr[2]] & 0x7FFF;
+		r->quads[i].vertices[3] = faces[data_ptr[3]] & 0x7FFF;
+		r->quads[i].textInfo |= data_ptr[4];
 	}
 
 	data_ptr++; // skip over tri count
 
-	for(int i = 0; i < r->gt3cnt; i++) // tris
+	for(int i = 0; i < r->gt3cnt; data_ptr+=4, i++) // tris
 	{
-		data_ptr[0] = faces[data_ptr[0]] & 0x7FFF;
-		data_ptr[1] = faces[data_ptr[1]] & 0x7FFF;
-		data_ptr[2] = faces[data_ptr[2]] & 0x7FFF;
-		data_ptr += 4;
+		r->tris[i].vertices[0] = faces[data_ptr[0]] & 0x7FFF;
+		r->tris[i].vertices[1] = faces[data_ptr[1]] & 0x7FFF;
+		r->tris[i].vertices[2] = faces[data_ptr[2]] & 0x7FFF;
+		r->tris[i].textInfo = data_ptr[3];
 	}
 
 	free(faces);
 	CreateVertexNormals(r);
+
 	r->prelight = (long*)calloc(r->nVerts, sizeof(long));
 	r->prelightwater = (long*)calloc(r->nVerts, sizeof(long));
 	r->watercalc = 0;
@@ -531,7 +534,7 @@ void ProcessRoomData(ROOM_INFO* r) {
 	r->posx = (float)r->x;
 	r->posy = (float)r->y;
 	r->posz = (float)r->z;
-	data_ptr = r->data + 1;
+	data_ptr = data + 1;
 
 	for(int i = 0; i < r->nVerts; i++) {
 		vptr->x = r->verts[i].x + (float)r->x;
@@ -635,8 +638,6 @@ void ProcessRoomData(ROOM_INFO* r) {
 
 void S_InsertRoom(ROOM_INFO* r) {
 	TEXTURESTRUCT* pTex;
-	short* data;
-	short numQuads, numTris;
 	long doublesided;
 
 	clip_left = r->left;
@@ -649,31 +650,26 @@ void S_InsertRoom(ROOM_INFO* r) {
 		ProcessRoomDynamics(r);
 		ProcessRoomVertices(r);
 
-		data = r->FaceData;
-		numQuads = *data++;
-		
-
-		for(int i = 0; i < numQuads; i++, data += 5) {
-			pTex = GetTextInfo(currentLevel, data[4] & 0x3FFF);
-			doublesided = (data[4] >> 15) & 1;
+		for(int i = 0; i < r->gt4cnt; i++) {
+			pTex = GetTextInfo(currentLevel, r->quads[i].textInfo & 0x3FFF);
+			doublesided = (r->quads[i].textInfo >> 15) & 1;
 
 			if(!pTex->drawtype) {
-				AddQuadZBuffer(MyVertexBuffer, data[0], data[1], data[2], data[3], pTex, doublesided);
+				AddQuadZBuffer(MyVertexBuffer, r->quads[i].vertices[0], r->quads[i].vertices[1], r->quads[i].vertices[2], r->quads[i].vertices[3], pTex, doublesided);
 			} else if(pTex->drawtype <= 2) {
-				AddQuadSorted(MyVertexBuffer, data[0], data[1], data[2], data[3], pTex, doublesided);
+				AddQuadSorted(MyVertexBuffer, r->quads[i].vertices[0], r->quads[i].vertices[1], r->quads[i].vertices[2], r->quads[i].vertices[3], pTex, doublesided);
 			}
 		}
 
-		numTris = *data++;
 
-		for(int i = 0; i < numTris; i++, data += 4) {
-			pTex = GetTextInfo(currentLevel, data[3] & 0x3FFF);
-			doublesided = (data[3] >> 15) & 1;
+		for(int i = 0; i < r->gt3cnt; i++) {
+			pTex = GetTextInfo(currentLevel, r->tris[i].textInfo & 0x3FFF);
+			doublesided = (r->tris[i].textInfo >> 15) & 1;
 
 			if(!pTex->drawtype) {
-				AddTriZBuffer(MyVertexBuffer, data[0], data[1], data[2], pTex, doublesided);
+				AddTriZBuffer(MyVertexBuffer, r->tris[i].vertices[0], r->tris[i].vertices[1], r->tris[i].vertices[2], pTex, doublesided);
 			} else if(pTex->drawtype <= 2) {
-				AddTriSorted(MyVertexBuffer, data[0], data[1], data[2], pTex, doublesided);
+				AddTriSorted(MyVertexBuffer, r->tris[i].vertices[0], r->tris[i].vertices[1], r->tris[i].vertices[2], pTex, doublesided);
 			}
 		}
 	}

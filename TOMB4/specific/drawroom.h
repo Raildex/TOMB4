@@ -7,7 +7,7 @@ typedef struct MESH_DATA MESH_DATA;
 typedef struct ROOM_INFO ROOM_INFO;
 typedef struct D3DTLBUMPVERTEX D3DTLBUMPVERTEX;
 typedef struct _D3DVECTOR _D3DVECTOR;
-void ProcessRoomData(ROOM_INFO* r);
+void ProcessRoomData(ROOM_INFO* r, short* data);
 void InitBuckets();
 void FindBucket(long tpage, D3DTLBUMPVERTEX** Vpp, long** nVtxpp);
 void DrawBuckets();
