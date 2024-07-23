@@ -358,11 +358,11 @@ void CalculateSpotCams() {
 		current_spline_position = 0x10000;
 	}
 
-	if(!(input & IN_LOOK)) {
+	if(!(S_IsActionDown(inputImpl, IN_LOOK))) {
 		bFirstLook = 0;
 	}
 
-	if(FirstCam->flags & 0x200 || !(input & IN_LOOK) || gfGameMode == 1) {
+	if(FirstCam->flags & 0x200 || !(S_IsActionDown(inputImpl, IN_LOOK)) || gfGameMode == 1) {
 		camera.pos.pos.x = cpx;
 		camera.pos.pos.y = cpy;
 		camera.pos.pos.z = cpz;

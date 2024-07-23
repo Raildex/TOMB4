@@ -223,7 +223,6 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 		ScreenFadedOut = 1;
 		bDisableLaraControl = 1;
 		item->trigger_flags++;
-		input = 0;
 
 		if(item->item_flags[3] == 14) {
 			item->anim_number = GetObjectInfo(currentLevel, VON_CROY)->anim_index + 43;
@@ -293,7 +292,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 
 	case 2:
 
-		if(input & IN_LOOK && item->item_flags[3] != 43 && item->item_flags[3] != 53) {
+		if(S_IsActionDown(inputImpl, IN_LOOK) && item->item_flags[3] != 43 && item->item_flags[3] != 53) {
 			item->meshswap_meshbits &= ~0x8000;
 			item->trigger_flags = 3;
 

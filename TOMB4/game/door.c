@@ -159,7 +159,7 @@ void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_num);
 
-	if(item->trigger_flags == 2 && item->status != ITEM_ACTIVE && ((input & IN_ACTION || GLOBAL_inventoryitemchosen == CROWBAR_ITEM) && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_num)) {
+	if(item->trigger_flags == 2 && item->status != ITEM_ACTIVE && ((S_IsActionDown(inputImpl, IN_ACTION) || GLOBAL_inventoryitemchosen == CROWBAR_ITEM) && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_num)) {
 		item->pos.y_rot ^= 0x8000;
 
 		if(TestLaraPosition(CrowbarDoorBounds, item, l)) {
@@ -248,7 +248,7 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_num);
 
-	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && item->status != ITEM_ACTIVE && !l->gravity_status && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_num) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && item->status != ITEM_ACTIVE && !l->gravity_status && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_num) {
 		pull = 0;
 
 		if(l->room_number == item->room_number) {
@@ -316,7 +316,7 @@ void DoubleDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_num);
 
-	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && item->status != ITEM_ACTIVE && !l->gravity_status && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_num) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && item->status != ITEM_ACTIVE && !l->gravity_status && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_num) {
 		item->pos.y_rot ^= 0x8000;
 
 		if(TestLaraPosition(PushPullKickDoorBounds, item, l)) {
@@ -349,7 +349,7 @@ void UnderwaterDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_num);
 
-	if(input & IN_ACTION
+	if(S_IsActionDown(inputImpl, IN_ACTION)
 		   && item->status != ITEM_ACTIVE
 		   && l->current_anim_state == AS_TREAD
 		   && lara.water_status == LW_UNDERWATER

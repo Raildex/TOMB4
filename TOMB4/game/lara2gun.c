@@ -195,7 +195,7 @@ void undraw_pistols(long weapon_type) {
 		lara.left_arm.lock = 0;
 	}
 
-	if(!(input & IN_LOOK)) {
+	if(!(S_IsActionDown(inputImpl, IN_LOOK))) {
 		lara.head_x_rot = (lara.left_arm.x_rot + lara.right_arm.x_rot) >> 2;
 		lara.torso_x_rot = lara.head_x_rot;
 		lara.head_y_rot = (lara.left_arm.y_rot + lara.right_arm.y_rot) >> 2;
@@ -269,11 +269,11 @@ void AnimatePistols(long weapon_type) {
 	p = &PistolTable[lara.gun_type];
 	winfo = &weapons[weapon_type];
 	anir = lara.right_arm.frame_number;
-	if(lara.right_arm.lock || input & IN_ACTION && lara.target_item == NO_ITEM) {
+	if(lara.right_arm.lock || S_IsActionDown(inputImpl, IN_ACTION) && lara.target_item == NO_ITEM) {
 		if(lara.right_arm.frame_number >= 0 && lara.right_arm.frame_number < p->Draw1Anim2) {
 			anir++;
 		} else if(lara.right_arm.frame_number == p->Draw1Anim2) {
-			if(input & IN_ACTION) {
+			if(S_IsActionDown(inputImpl, IN_ACTION)) {
 				if(weapon_type != WEAPON_REVOLVER) {
 					angles[0] = lara.right_arm.y_rot + lara_item->pos.y_rot;
 					angles[1] = lara.right_arm.x_rot;
@@ -328,11 +328,11 @@ void AnimatePistols(long weapon_type) {
 	set_arm_info(&lara.right_arm, anir);
 	anil = lara.left_arm.frame_number;
 
-	if(lara.left_arm.lock || input & IN_ACTION && lara.target_item == NO_ITEM) {
+	if(lara.left_arm.lock || S_IsActionDown(inputImpl, IN_ACTION) && lara.target_item == NO_ITEM) {
 		if(lara.left_arm.frame_number >= 0 && lara.left_arm.frame_number < p->Draw1Anim2) {
 			anil++;
 		} else if(lara.left_arm.frame_number == p->Draw1Anim2) {
-			if(input & IN_ACTION) {
+			if(S_IsActionDown(inputImpl, IN_ACTION)) {
 				angles[0] = lara.left_arm.y_rot + lara_item->pos.y_rot;
 				angles[1] = lara.left_arm.x_rot;
 
@@ -401,7 +401,7 @@ void PistolHandler(long weapon_type) {
 	winfo = &weapons[weapon_type];
 	LaraGetNewTarget(winfo);
 
-	if(input & IN_ACTION) {
+	if(S_IsActionDown(inputImpl, IN_ACTION)) {
 		LaraTargetInfo(winfo);
 	}
 

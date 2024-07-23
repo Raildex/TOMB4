@@ -80,7 +80,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 
 		item->pos.y_rot = rotY;
-	} else if(lara.gun_type == WEAPON_TORCH && lara.gun_status == LG_READY && !lara.left_arm.lock && input & IN_ACTION && item->trigger_flags == 1 && item->item_flags[0] == 1 && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.LitTorch && !l->gravity_status) {
+	} else if(lara.gun_type == WEAPON_TORCH && lara.gun_status == LG_READY && !lara.left_arm.lock && S_IsActionDown(inputImpl, IN_ACTION) && item->trigger_flags == 1 && item->item_flags[0] == 1 && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.LitTorch && !l->gravity_status) {
 		GetBoundsAccurate(item, bounds);
 		ElementPuzzleBounds[0] = bounds[0];
 		ElementPuzzleBounds[1] = bounds[1];

@@ -155,10 +155,10 @@ long PlayFmvNow(long num) {
 
 	if(Bink) {
 		BinkDoFrame(Bink);
-		S_UpdateInput();
+		S_UpdateInput(inputImpl);
 
 		for(int i = 0; i != Bink->num2; i++) {
-			if(input & IN_OPTION) {
+			if(S_IsActionDown(inputImpl, IN_DESELECT)) {
 				break;
 			}
 
@@ -169,7 +169,7 @@ long PlayFmvNow(long num) {
 
 			ShowBinkFrame();
 			BinkDoFrame(Bink);
-			S_UpdateInput();
+			S_UpdateInput(inputImpl);
 		}
 
 

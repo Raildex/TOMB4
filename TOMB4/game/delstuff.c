@@ -134,7 +134,7 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 	}
 
 	if(1) {
-		if(input & IN_LOOK) {
+		if(S_IsActionDown(inputImpl, IN_LOOK)) {
 			dx = lara_item->pos.pos.x - CamPos.x;
 			dy = lara_item->pos.pos.y - CamPos.y - 512;
 			dz = lara_item->pos.pos.z - CamPos.z;

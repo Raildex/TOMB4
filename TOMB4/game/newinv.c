@@ -432,8 +432,6 @@ long SaveGame() {
 	long Save;
 
 	Save = S_LoadSave(IN_SAVE, 1, 1);
-	input = 0;
-	dbinput = 0;
 
 	if(Save < 0) {
 		return -1;
@@ -540,7 +538,7 @@ void do_debounced_joystick_poo() {
 	go_select = 0;
 	go_deselect = 0;
 
-	if(input & IN_LEFT) {
+	if(S_IsActionDown(inputImpl, IN_LEFT)) {
 		if(left_repeat >= 8) {
 			go_left = 1;
 		} else {
@@ -557,7 +555,7 @@ void do_debounced_joystick_poo() {
 		left_repeat = 0;
 	}
 
-	if(input & IN_RIGHT) {
+	if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 		if(right_repeat >= 8) {
 			go_right = 1;
 		} else {
@@ -574,7 +572,7 @@ void do_debounced_joystick_poo() {
 		right_repeat = 0;
 	}
 
-	if(input & IN_FORWARD) {
+	if(S_IsActionDown(inputImpl, IN_FORWARD)) {
 		if(!up_debounce) {
 			go_up = 1;
 		}
@@ -584,7 +582,7 @@ void do_debounced_joystick_poo() {
 		up_debounce = 0;
 	}
 
-	if(input & IN_BACK) {
+	if(S_IsActionDown(inputImpl, IN_BACK)) {
 		if(!down_debounce) {
 			go_down = 1;
 		}
@@ -594,7 +592,7 @@ void do_debounced_joystick_poo() {
 		down_debounce = 0;
 	}
 
-	if(input & IN_ACTION || input & IN_SELECT) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) || S_IsActionDown(inputImpl, IN_SELECT)) {
 		select_debounce = 1;
 	} else {
 		if(select_debounce == 1 && !friggrimmer) {
@@ -605,7 +603,7 @@ void do_debounced_joystick_poo() {
 		friggrimmer = 0;
 	}
 
-	if(input & IN_DESELECT) {
+	if(S_IsActionDown(inputImpl, IN_DESELECT)) {
 		deselect_debounce = 1;
 	} else {
 		if(deselect_debounce == 1 && !friggrimmer2) {
@@ -1756,15 +1754,13 @@ void use_current_item() {
 	if(gmeobject == FLARE_INV_ITEM) {
 		if(lara.gun_status == LG_NO_ARMS && lara_item->current_anim_state != AS_ALL4S && lara_item->current_anim_state != AS_CRAWL && lara_item->current_anim_state != AS_ALL4TURNL && lara_item->current_anim_state != AS_ALL4TURNR && lara_item->current_anim_state != AS_CRAWLBACK && lara_item->current_anim_state != AS_CRAWL2HANG) {
 			if(lara.gun_type != WEAPON_FLARE) {
-				input = IN_FLARE;
 				LaraGun();
-				input = 0;
 			}
 		} else {
 			SayNo();
 		}
 	} else if(invobject == INV_BINOCULARS_ITEM) {
-		if(((lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH) || (lara.IsDucked && !(input & IN_DUCK)))) {
+		if(((lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH) || (lara.IsDucked && !(S_IsActionDown(inputImpl, IN_DUCK))))) {
 			oldLaraBusy = 1;
 			BinocularRange = 128;
 
@@ -2794,7 +2790,7 @@ long S_CallInventory2() {
 
 	val = 0;
 	oldLaraBusy = (char)lara.Busy;
-	friggrimmer = (input & IN_SELECT) != 0;
+	friggrimmer = (S_IsActionDown(inputImpl, IN_SELECT)) != 0;
 	rings[RING_INVENTORY] = &pcring1;
 	rings[RING_AMMO] = &pcring2;
 	CreateMonoScreen();
@@ -2813,12 +2809,11 @@ long S_CallInventory2() {
 
 		S_InitialisePolyList();
 		SetDebounce = 1;
-		S_UpdateInput();
-		input = inputBusy;
+		S_UpdateInput(inputImpl);
 		UpdatePulseColour();
 		GameTimer++;
 
-		if(dbinput & IN_OPTION) {
+		if(S_IsActionDownDebounced(inputImpl, IN_DESELECT)) {
 			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			val = 1;
 		}
@@ -2841,7 +2836,7 @@ long S_CallInventory2() {
 			draw_compass();
 		}
 
-		if(use_the_bitch && !input) {
+		if(use_the_bitch) {
 			val = 1;
 		}
 
@@ -2853,8 +2848,7 @@ long S_CallInventory2() {
 				flag = 0;
 				S_InitialisePolyList();
 				SetDebounce = 1;
-				S_UpdateInput();
-				input = inputBusy;
+				S_UpdateInput(inputImpl);
 				UpdatePulseColour();
 
 				if(loading_or_saving == 1) {
@@ -2870,7 +2864,8 @@ long S_CallInventory2() {
 					}
 
 					break;
-				} else if(flag) {
+				}
+				if(flag) {
 					break;
 				}
 			}

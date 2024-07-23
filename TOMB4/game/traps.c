@@ -2348,7 +2348,7 @@ void CeilingTrapDoorCollision(
 
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && item->status != ITEM_ACTIVE
+	if(S_IsActionDown(inputImpl, IN_ACTION) && item->status != ITEM_ACTIVE
 	   && l->current_anim_state == AS_UPJUMP && l->gravity_status
 	   && lara.gun_status == LG_NO_ARMS
 	   && TestLaraPosition(CeilingTrapDoorBounds, item, l)) {
@@ -2384,7 +2384,7 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if((input & IN_ACTION && item->status != ITEM_ACTIVE
+	if((S_IsActionDown(inputImpl, IN_ACTION) && item->status != ITEM_ACTIVE
 		&& l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
 		&& lara.gun_status == LG_NO_ARMS)
 	   || lara.IsMoving && lara.GeneralPtr == item_number) {
@@ -2628,7 +2628,7 @@ void ControlObelisk(short item_number) {
 		{
 			item->pos.y_rot -= 0x4000;
 
-			if(input & IN_ACTION) {
+			if(S_IsActionDown(inputImpl, IN_ACTION)) {
 				item->anim_number
 					= GetObjectInfo(currentLevel, item->object_number)
 						  ->anim_index
@@ -2646,7 +2646,7 @@ void ControlObelisk(short item_number) {
 		{
 			item->pos.y_rot += 0x4000;
 
-			if(input & IN_ACTION) {
+			if(S_IsActionDown(inputImpl, IN_ACTION)) {
 				item->anim_number
 					= GetObjectInfo(currentLevel, item->object_number)
 						  ->anim_index

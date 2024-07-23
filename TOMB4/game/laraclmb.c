@@ -29,17 +29,17 @@ void lara_as_climbstnc(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->enable_baddie_push = 0;
 	camera.target_elevation = -3640;
 
-	if(input & IN_LOOK) {
+	if(S_IsActionDown(inputImpl, IN_LOOK)) {
 		LookUpDown();
 	}
 
-	if(input & IN_LEFT || input & IN_LSTEP) {
+	if(S_IsActionDown(inputImpl, IN_LEFT) || S_IsActionDown(inputImpl, IN_LSTEP)) {
 		item->goal_anim_state = AS_CLIMBLEFT;
 		lara.move_angle = item->pos.y_rot - 16384;
-	} else if(input & IN_RIGHT || input & IN_RSTEP) {
+	} else if(S_IsActionDown(inputImpl, IN_RIGHT) || S_IsActionDown(inputImpl, IN_RSTEP)) {
 		item->goal_anim_state = AS_CLIMBRIGHT;
 		lara.move_angle = item->pos.y_rot + 16384;
-	} else if(input & IN_JUMP) {
+	} else if(S_IsActionDown(inputImpl, IN_JUMP)) {
 		if(item->anim_number == ANIM_CLIMBSTNC) {
 			item->goal_anim_state = AS_BACKJUMP;
 			lara.gun_status = LG_NO_ARMS;
@@ -54,7 +54,7 @@ void lara_as_climbleft(ITEM_INFO* item, COLL_INFO* coll) {
 	camera.target_angle = -5460;
 	camera.target_elevation = -2730;
 
-	if(!(input & (IN_LEFT | IN_LSTEP))) {
+	if(!(S_IsActionDown(inputImpl, IN_LEFT) || S_IsActionDown(inputImpl, IN_LSTEP))) {
 		item->goal_anim_state = AS_CLIMBSTNC;
 	}
 }
@@ -75,7 +75,7 @@ void lara_as_climbright(ITEM_INFO* item, COLL_INFO* coll) {
 	camera.target_angle = 5460;
 	camera.target_elevation = -2730;
 
-	if(!(input & (IN_RIGHT | IN_RSTEP))) {
+	if(!(S_IsActionDown(inputImpl, IN_RIGHT) || S_IsActionDown(inputImpl, IN_RSTEP))) {
 		item->goal_anim_state = AS_CLIMBSTNC;
 	}
 }
@@ -116,7 +116,7 @@ void lara_col_climbstnc(ITEM_INFO* item, COLL_INFO* coll) {
 		return;
 	}
 
-	if(input & IN_FORWARD) {
+	if(S_IsActionDown(inputImpl, IN_FORWARD)) {
 		if(item->goal_anim_state == AS_NULL) {
 			return;
 		}
@@ -155,7 +155,7 @@ void lara_col_climbstnc(ITEM_INFO* item, COLL_INFO* coll) {
 
 		item->goal_anim_state = AS_CLIMBING;
 		item->pos.pos.y += shift_l;
-	} else if(input & IN_BACK) {
+	} else if(S_IsActionDown(inputImpl, IN_BACK)) {
 		if(item->goal_anim_state == AS_HANG) {
 			return;
 		}
@@ -217,7 +217,7 @@ void lara_col_climbing(ITEM_INFO* item, COLL_INFO* coll) {
 	result_l = LaraTestClimbUpPos(item, coll->radius, -(coll->radius + 120), &shift_l, &ledge_l);
 	item->pos.pos.y += 256;
 
-	if(result_r && result_l && input & IN_FORWARD) {
+	if(result_r && result_l && S_IsActionDown(inputImpl, IN_FORWARD)) {
 		if(result_r < 0 || result_l < 0) {
 			item->goal_anim_state = AS_CLIMBSTNC;
 			AnimateLara(item);
@@ -267,7 +267,7 @@ void lara_col_climbdown(ITEM_INFO* item, COLL_INFO* coll) {
 	result_l = LaraTestClimbPos(item, coll->radius, -(coll->radius + 120), -512, 512, &shift_l);
 	item->pos.pos.y -= 256;
 
-	if(result_r && result_l && input & IN_BACK) {
+	if(result_r && result_l && S_IsActionDown(inputImpl, IN_BACK)) {
 		if(shift_r && shift_l && shift_r < 0 != shift_l < 0) {
 			item->goal_anim_state = AS_CLIMBSTNC;
 			AnimateLara(item);
@@ -601,7 +601,7 @@ long LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll) {
 	GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 	coll->trigger = trigger_index;
 
-	if(!(input & IN_ACTION) || item->hit_points <= 0) {
+	if(!(S_IsActionDown(inputImpl, IN_ACTION)) || item->hit_points <= 0) {
 		lara.torso_x_rot = 0;
 		lara.torso_y_rot = 0;
 		lara.head_x_rot = 0;
@@ -810,9 +810,9 @@ void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, long result, long sh
 	long flag;
 
 	if(result == 1) {
-		if(input & IN_LEFT) {
+		if(S_IsActionDown(inputImpl, IN_LEFT)) {
 			item->goal_anim_state = AS_CLIMBLEFT;
-		} else if(input & IN_RIGHT) {
+		} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 			item->goal_anim_state = AS_CLIMBRIGHT;
 		} else {
 			item->goal_anim_state = AS_CLIMBSTNC;
@@ -832,7 +832,7 @@ void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, long result, long sh
 			return;
 		}
 
-		if(input & IN_LEFT) {
+		if(S_IsActionDown(inputImpl, IN_LEFT)) {
 			flag = LaraClimbLeftCornerTest(item, coll);
 
 			if(flag) {
@@ -850,7 +850,7 @@ void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, long result, long sh
 
 				return;
 			}
-		} else if(input & IN_RIGHT) {
+		} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 			flag = LaraClimbRightCornerTest(item, coll);
 
 			if(flag) {

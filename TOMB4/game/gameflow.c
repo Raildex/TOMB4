@@ -520,7 +520,6 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 	nFrames = 2;
 	framecount = 0;
 	gfStatus = ControlPhase(2, 0);
-	dbinput = 0;
 
 	while(!gfStatus) {
 		S_InitialisePolyList();
@@ -602,7 +601,6 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 
 	if(gfStatus == 3) {
 		if(gfLevelComplete == 39) {
-			input = 0;
 			reset_flag = 0;
 			gfStatus = 1;
 			bDoCredits = 1;
@@ -614,7 +612,6 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 		}
 	}
 
-	input = 0;
 	reset_flag = 0;
 }
 
@@ -639,8 +636,7 @@ long TitleOptions() {
 			return ret;
 		}
 
-		input = 0;
-		dbinput = 0;
+
 	}
 
 	if(bDoCredits) {
@@ -687,10 +683,10 @@ long TitleOptions() {
 
 		for(lp = nFirst; lp < nLevels + nFirst; lp++) {
 			y += font_height;
-			PrintString(phd_centerx, y, selection & (1i64 << (lp - 1)) ? 1 : 2, SCRIPT_TEXT(gfLevelNames[lp]), FF_CENTER);
+			PrintString(phd_centerx, y, selection & ((long long)1 << (lp - 1)) ? 1 : 2, SCRIPT_TEXT(gfLevelNames[lp]), FF_CENTER);
 		}
 
-		flag = 1i64 << (Gameflow->nLevels - 2);
+		flag = (long long)1 << (Gameflow->nLevels - 2);
 		break;
 
 	case 2:
@@ -725,7 +721,7 @@ long TitleOptions() {
 	}
 
 	if(menu < 2) {
-		if(dbinput & IN_FORWARD) {
+		if(S_IsActionDownDebounced(inputImpl, IN_FORWARD)) {
 			if(selection > 1) {
 				selection >>= 1;
 			}
@@ -733,7 +729,7 @@ long TitleOptions() {
 			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 		}
 
-		if(dbinput & IN_BACK) {
+		if(S_IsActionDownDebounced(inputImpl, IN_BACK)) {
 			if(selection < flag) {
 				selection <<= 1;
 			}
@@ -742,14 +738,14 @@ long TitleOptions() {
 		}
 	}
 
-	if(dbinput & IN_DESELECT && menu > 0) {
+	if(S_IsActionDownDebounced(inputImpl, IN_DESELECT) && menu > 0) {
 		menu = 0;
 		selection = selection_bak;
 		S_SoundStopAllSamples();
 		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 	}
 
-	if(dbinput & IN_SELECT && !keymap[DIK_LALT] && menu < 2) {
+	if(S_IsActionDownDebounced(inputImpl, IN_SELECT) && !keymap[DIK_LALT] && menu < 2) {
 		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
 		if(!menu) {
@@ -902,7 +898,6 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 		RenderLoadPic(0);
 	}
 
-	input = 0;
 }
 
 void LoadGameflow() {

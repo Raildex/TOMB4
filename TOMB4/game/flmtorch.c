@@ -94,7 +94,7 @@ void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(lara.gun_type == WEAPON_TORCH && lara.gun_status == LG_READY && !lara.left_arm.lock && (item->status & 1) != lara.LitTorch && item->timer != -1 && input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status) {
+	if(lara.gun_type == WEAPON_TORCH && lara.gun_status == LG_READY && !lara.left_arm.lock && (item->status & 1) != lara.LitTorch && item->timer != -1 && S_IsActionDown(inputImpl, IN_ACTION) && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status) {
 		rot = item->pos.y_rot;
 
 		if(item->object_number == FLAME_EMITTER) {
@@ -164,7 +164,7 @@ void DoFlameTorch() {
 			lara.left_arm.lock = 2; // drop it
 			lara.left_arm.frame_number = 31;
 			lara.left_arm.anim_number = GetObjectInfo(currentLevel, TORCH_ANIM)->anim_index + 2;
-		} else if(input & IN_DRAW && !lara_item->gravity_status && !lara_item->fallspeed && lara_item->current_anim_state != AS_COMPRESS && lara_item->current_anim_state != AS_UPJUMP && lara_item->current_anim_state != AS_FORWARDJUMP && lara_item->current_anim_state != AS_BACKJUMP && lara_item->current_anim_state != AS_RIGHTJUMP && lara_item->current_anim_state != AS_LEFTJUMP || lara.water_status == LW_UNDERWATER) {
+		} else if(S_IsActionDown(inputImpl, IN_DRAW) && !lara_item->gravity_status && !lara_item->fallspeed && lara_item->current_anim_state != AS_COMPRESS && lara_item->current_anim_state != AS_UPJUMP && lara_item->current_anim_state != AS_FORWARDJUMP && lara_item->current_anim_state != AS_BACKJUMP && lara_item->current_anim_state != AS_RIGHTJUMP && lara_item->current_anim_state != AS_LEFTJUMP || lara.water_status == LW_UNDERWATER) {
 			lara.left_arm.lock = 1; // throw it
 			lara.left_arm.frame_number = 1;
 			lara.left_arm.anim_number = GetObjectInfo(currentLevel, TORCH_ANIM)->anim_index + 1;

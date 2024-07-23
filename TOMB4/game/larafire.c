@@ -566,11 +566,11 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 			}
 		}
 
-		if(savegame.AutoTarget || input & IN_TARGET) {
+		if(savegame.AutoTarget || S_IsActionDown(inputImpl, IN_TARGET)) {
 			if(lara.target_item == NO_ITEM) {
 				lara.target_item = bestitem;
 				LastTargets[0] = 0;
-			} else if(input & IN_TARGET) {
+			} else if(S_IsActionDown(inputImpl, IN_TARGET)) {
 				lara.target_item = NO_ITEM;
 
 				for(match = 0; match < 8; match++) {
@@ -1117,9 +1117,9 @@ void LaraGun() {
 	if(lara_item->hit_points <= 0) {
 		lara.gun_status = LG_NO_ARMS;
 	} else if(lara.gun_status == LG_NO_ARMS) {
-		if(input & IN_DRAW) {
+		if(S_IsActionDown(inputImpl, IN_DRAW)) {
 			lara.request_gun_type = lara.last_gun_type;
-		} else if(input & IN_FLARE && !(gfLevelFlags & GF_YOUNGLARA)) {
+		} else if(S_IsActionDown(inputImpl, IN_FLARE) && !(gfLevelFlags & GF_YOUNGLARA)) {
 			if(lara_item->current_anim_state == AS_DUCK && lara_item->anim_number != ANIM_DUCKBREATHE) {
 				return;
 			}
@@ -1137,7 +1137,7 @@ void LaraGun() {
 			}
 		}
 
-		if(input & IN_DRAW || lara.request_gun_type != lara.gun_type) {
+		if(S_IsActionDown(inputImpl, IN_DRAW) || lara.request_gun_type != lara.gun_type) {
 			state = lara_item->current_anim_state;
 
 			if((state == AS_DUCK || state == AS_DUCKROTL || state == AS_DUCKROTR) && (lara.request_gun_type == WEAPON_SHOTGUN || lara.request_gun_type == WEAPON_CROSSBOW || lara.request_gun_type == WEAPON_GRENADE)) {
@@ -1168,10 +1168,10 @@ void LaraGun() {
 			}
 		}
 	} else if(lara.gun_status == LG_READY) {
-		if(input & IN_DRAW || lara.request_gun_type != lara.gun_type || lara.water_status != LW_ABOVE_WATER && (lara.water_status != LW_WADE || lara.water_surface_dist < -weapons[lara.gun_type].gun_height)) {
+		if(S_IsActionDown(inputImpl, IN_DRAW) || lara.request_gun_type != lara.gun_type || lara.water_status != LW_ABOVE_WATER && (lara.water_status != LW_WADE || lara.water_surface_dist < -weapons[lara.gun_type].gun_height)) {
 			lara.gun_status = LG_UNDRAW_GUNS;
 		}
-	} else if(lara.gun_status == LG_HANDS_BUSY && input & IN_FLARE && lara_item->current_anim_state == AS_ALL4S && lara_item->anim_number == ANIM_ALL4S) {
+	} else if(lara.gun_status == LG_HANDS_BUSY && S_IsActionDown(inputImpl, IN_FLARE) && lara_item->current_anim_state == AS_ALL4S && lara_item->anim_number == ANIM_ALL4S) {
 		lara.request_gun_type = 7;
 	}
 
@@ -1275,7 +1275,7 @@ void LaraGun() {
 
 	case LG_READY:
 
-		if(input & IN_ACTION) {
+		if(S_IsActionDown(inputImpl, IN_ACTION)) {
 			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA_SCREAM)->mesh_index + LM_HEAD * 2);
 		} else {
 			lara.mesh_ptrs[LM_HEAD] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_HEAD * 2);
@@ -1285,7 +1285,7 @@ void LaraGun() {
 			camera.type = COMBAT_CAMERA;
 		}
 
-		if(input & IN_ACTION) {
+		if(S_IsActionDown(inputImpl, IN_ACTION)) {
 			if(!*get_current_ammo_pointer(lara.gun_type)) {
 				SoundEffect(SFX_SARLID_PALACES, &lara_item->pos, SFX_DEFAULT);
 				lara.request_gun_type = WEAPON_PISTOLS;

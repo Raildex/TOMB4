@@ -379,7 +379,7 @@ void AnimateShotgun(long weapon_type) {
 
 		else if(lara.water_status == LW_UNDERWATER) {
 			item->goal_anim_state = 6;
-		} else if(input & IN_ACTION && lara.target_item == NO_ITEM || lara.left_arm.lock) {
+		} else if(S_IsActionDown(inputImpl, IN_ACTION) && lara.target_item == NO_ITEM || lara.left_arm.lock) {
 			item->goal_anim_state = 2;
 		} else {
 			item->goal_anim_state = 4;
@@ -393,7 +393,7 @@ void AnimateShotgun(long weapon_type) {
 			item->goal_anim_state = 4;
 
 			if(lara.water_status != 1 && !harpoon_fired) {
-				if(input & IN_ACTION) {
+				if(S_IsActionDown(inputImpl, IN_ACTION)) {
 					if(lara.target_item == NO_ITEM || lara.left_arm.lock) {
 						if(weapon_type == WEAPON_GRENADE) {
 							FireGrenade();
@@ -419,7 +419,7 @@ void AnimateShotgun(long weapon_type) {
 		} else if(m16_firing) {
 			SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000000 | SFX_SETPITCH);
 			SoundEffect(SFX_MP5_FIRE, &lara_item->pos, SFX_DEFAULT);
-		} else if(weapon_type == 4 && !(input & IN_ACTION) && !lara.left_arm.lock) {
+		} else if(weapon_type == 4 && !(S_IsActionDown(inputImpl, IN_ACTION)) && !lara.left_arm.lock) {
 			item->goal_anim_state = 4;
 		}
 		if(item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base == 12 && weapon_type == WEAPON_SHOTGUN) {
@@ -436,7 +436,7 @@ void AnimateShotgun(long weapon_type) {
 			harpoon_fired = 0;
 		} else if(lara.water_status != LW_UNDERWATER) {
 			item->goal_anim_state = 0;
-		} else if(input & IN_ACTION && lara.target_item == NO_ITEM || lara.left_arm.lock) {
+		} else if(S_IsActionDown(inputImpl, IN_ACTION) && lara.target_item == NO_ITEM || lara.left_arm.lock) {
 			item->goal_anim_state = 8;
 		} else {
 			item->goal_anim_state = 7;
@@ -462,7 +462,7 @@ void RifleHandler(long weapon_type) {
 	winfo = &weapons[weapon_type];
 	LaraGetNewTarget(winfo);
 
-	if(input & IN_ACTION) {
+	if(S_IsActionDown(inputImpl, IN_ACTION)) {
 		LaraTargetInfo(winfo);
 	}
 

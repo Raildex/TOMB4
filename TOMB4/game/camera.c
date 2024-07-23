@@ -1074,7 +1074,7 @@ void BinocularCamera(ITEM_INFO* item) {
 	char Fire;
 
 	if(!LaserSight) {
-		if(inputBusy & IN_DRAW) {
+		if(S_IsActionDown(inputImpl, IN_DRAW)) {
 			ExittingBinos = 1;
 		} else if(ExittingBinos) {
 			ExittingBinos = 0;
@@ -1176,11 +1176,11 @@ void BinocularCamera(ITEM_INFO* item) {
 		camera.mike_pos.z = camera.pos.pos.z + (phd_cos(dx) * phd_persp >> W2V_SHIFT);
 	}
 
-	BinocStep = inputBusy & IN_WALK ? 32 : 64;
+	BinocStep = S_IsActionDown(inputImpl, IN_WALK) ? 32 : 64;
 
-	if(inputBusy & IN_SPRINT) {
+	if(S_IsActionDown(inputImpl, IN_SPRINT)) {
 		BinocularRange -= BinocStep;
-	} else if(inputBusy & IN_DUCK) {
+	} else if(S_IsActionDown(inputImpl, IN_DUCK)) {
 		BinocularRange += BinocStep;
 	}
 
@@ -1200,7 +1200,7 @@ void BinocularCamera(ITEM_INFO* item) {
 	if(LaserSight) {
 		ammo = get_current_ammo_pointer(lara.gun_type);
 
-		if(inputBusy & IN_ACTION && !WeaponDelay && ammo[0]) {
+		if(S_IsActionDown(inputImpl, IN_ACTION) && !WeaponDelay && ammo[0]) {
 			Fire = 1;
 
 			if(lara.gun_type == WEAPON_REVOLVER) {
@@ -1221,7 +1221,7 @@ void BinocularCamera(ITEM_INFO* item) {
 	} else {
 		GetTargetOnLOS(&camera.pos, &camera.target, 0, 0);
 
-		if(inputBusy & IN_ACTION) {
+		if(S_IsActionDown(inputImpl, IN_ACTION)) {
 			LaraTorch(&Soffset, &Eoffset, lara.head_y_rot, 192);
 		} else {
 			bLaraTorch = 0;
