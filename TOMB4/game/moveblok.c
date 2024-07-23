@@ -380,7 +380,7 @@ void MovableBlock(short item_number) {
 
 
 		if(lara_item->frame_number == GetAnim(currentLevel, lara_item->anim_number)->frame_end - 1) {
-			if(input & IN_ACTION) {
+			if(S_IsActionDown(inputImpl, IN_ACTION)) {
 				if(!TestBlockPush(item, 1024, quadrant)) {
 					lara_item->goal_anim_state = 2;
 				}
@@ -446,7 +446,7 @@ void MovableBlock(short item_number) {
 		}
 
 		if(lara_item->frame_number == GetAnim(currentLevel, lara_item->anim_number)->frame_end - 1) {
-			if(input & IN_ACTION) {
+			if(S_IsActionDown(inputImpl, IN_ACTION)) {
 				if(!TestBlockPull(item, 1024, quadrant)) {
 					lara_item->goal_anim_state = 2;
 				}
@@ -498,7 +498,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 		ItemNewRoom(item_number, room_number);
 	}
 
-	if(input & IN_ACTION && laraitem->current_anim_state == AS_STOP && laraitem->anim_number == ANIM_BREATH
+	if(S_IsActionDown(inputImpl, IN_ACTION) && laraitem->current_anim_state == AS_STOP && laraitem->anim_number == ANIM_BREATH
 		&& !laraitem->gravity_status && lara.gun_status == LG_NO_ARMS && item->status == ITEM_INACTIVE
 		&& item->trigger_flags >= 0
 		|| (lara.IsMoving && lara.GeneralPtr == item_number)) {
@@ -548,13 +548,13 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 		pos.z = 0;
 		quadrant = (unsigned short)(laraitem->pos.y_rot + 8192) >> W2V_SHIFT;
 
-		if(input & IN_FORWARD) {
+		if(S_IsActionDown(inputImpl, IN_FORWARD)) {
 			if(!TestBlockPush(item, 1024, quadrant)) {
 				return;
 			}
 
 			laraitem->goal_anim_state = AS_PUSHBLOCK;
-		} else if(input & IN_BACK) {
+		} else if(S_IsActionDown(inputImpl, IN_BACK)) {
 			if(!TestBlockPull(item, 1024, quadrant)) {
 				return;
 			}

@@ -92,7 +92,7 @@ static long GetOnJeep(short item_number, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION || GLOBAL_inventoryitemchosen == PUZZLE_ITEM1) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) || GLOBAL_inventoryitemchosen == PUZZLE_ITEM1) {
 		if(!(item->flags & IFL_INVISIBLE) && lara.gun_status == LG_NO_ARMS && lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH && !lara_item->gravity_status) {
 			if(abs(item->pos.pos.y - lara_item->pos.pos.y) < 256 && TestBoundsCollide(item, lara_item, 100)) {
 				room_number = item->room_number;
@@ -564,15 +564,15 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(killed) {
 				lara_item->goal_anim_state = 16;
-			} else if(((input & (IN_JUMP | IN_LEFT)) == (IN_JUMP | IN_LEFT)) && !jeep->velocity && !dont_exit_jeep) {
+			} else if(((S_IsActionDown(inputImpl, IN_JUMP) || S_IsActionDown(inputImpl, IN_LEFT)) == (IN_JUMP | IN_LEFT)) && !jeep->velocity && !dont_exit_jeep) {
 				if(CanGetOff(0)) {
 					lara_item->goal_anim_state = 10;
 				}
-			} else if(dbinput & IN_WALK) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_WALK)) {
 				if(jeep->gear) {
 					jeep->gear--;
 				}
-			} else if(dbinput & IN_SPRINT) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_SPRINT)) {
 				if(jeep->gear < 1) {
 					jeep->gear++;
 				}
@@ -580,11 +580,11 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 				if(jeep->gear == 1) {
 					lara_item->goal_anim_state = 17;
 				}
-			} else if(input & IN_ACTION && !(input & IN_JUMP)) {
+			} else if(S_IsActionDown(inputImpl, IN_ACTION) && !(S_IsActionDown(inputImpl, IN_JUMP))) {
 				lara_item->goal_anim_state = 1;
-			} else if(input & (IN_LSTEP | IN_LEFT)) {
+			} else if(S_IsActionDown(inputImpl, IN_LSTEP) || S_IsActionDown(inputImpl, IN_LEFT)) {
 				lara_item->goal_anim_state = 7;
-			} else if(input & (IN_RSTEP | IN_RIGHT)) {
+			} else if(S_IsActionDown(inputImpl, IN_RSTEP) || S_IsActionDown(inputImpl, IN_RIGHT)) {
 				lara_item->goal_anim_state = 8;
 			}
 
@@ -594,16 +594,16 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(killed) {
 				lara_item->goal_anim_state = 0;
-			} else if(jeep->velocity & 0xFFFFFF00 || input & (IN_ACTION | IN_JUMP)) {
-				if(input & IN_JUMP) {
+			} else if(jeep->velocity & 0xFFFFFF00 || S_IsActionDown(inputImpl, IN_ACTION) || S_IsActionDown(inputImpl, IN_JUMP)) {
+				if(S_IsActionDown(inputImpl, IN_JUMP)) {
 					if(jeep->velocity > 21844) {
 						lara_item->goal_anim_state = 6;
 					} else {
 						lara_item->goal_anim_state = 0;
 					}
-				} else if(input & (IN_LSTEP | IN_LEFT)) {
+				} else if(S_IsActionDown(inputImpl, IN_LSTEP) || S_IsActionDown(inputImpl, IN_LEFT)) {
 					lara_item->goal_anim_state = 7;
-				} else if(input & (IN_RSTEP | IN_RIGHT)) {
+				} else if(S_IsActionDown(inputImpl, IN_RSTEP) || S_IsActionDown(inputImpl, IN_RIGHT)) {
 					lara_item->goal_anim_state = 8;
 				}
 			} else {
@@ -619,7 +619,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(killed) {
 				lara_item->goal_anim_state = 0;
-			} else if(input & (IN_ACTION | IN_JUMP)) {
+			} else if(S_IsActionDown(inputImpl, IN_ACTION) || S_IsActionDown(inputImpl, IN_JUMP)) {
 				lara_item->goal_anim_state = 1;
 			}
 
@@ -630,9 +630,9 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 			if(killed) {
 				lara_item->goal_anim_state = 0;
 			} else if(jeep->velocity & 0xFFFFFF00) {
-				if(input & (IN_LSTEP | IN_LEFT)) {
+				if(S_IsActionDown(inputImpl, IN_LSTEP) || S_IsActionDown(inputImpl, IN_LEFT)) {
 					lara_item->goal_anim_state = 7;
-				} else if(input & (IN_RSTEP | IN_RIGHT)) {
+				} else if(S_IsActionDown(inputImpl, IN_RSTEP) || S_IsActionDown(inputImpl, IN_RIGHT)) {
 					lara_item->goal_anim_state = 8;
 				}
 			} else {
@@ -645,11 +645,11 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(killed) {
 				lara_item->goal_anim_state = 0;
-			} else if(dbinput & IN_WALK) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_WALK)) {
 				if(jeep->gear) {
 					jeep->gear--;
 				}
-			} else if(dbinput & IN_SPRINT) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_SPRINT)) {
 				if(jeep->gear < 1) {
 					jeep->gear++;
 				}
@@ -661,9 +661,9 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 					lara_item->frame_number = GetAnim(currentLevel, lara_item->anim_number)->frame_base;
 					break;
 				}
-			} else if(input & (IN_RSTEP | IN_RIGHT)) {
+			} else if(S_IsActionDown(inputImpl, IN_RSTEP) || S_IsActionDown(inputImpl, IN_RIGHT)) {
 				lara_item->goal_anim_state = 1;
-			} else if(input & (IN_LSTEP | IN_LEFT)) {
+			} else if(S_IsActionDown(inputImpl, IN_LSTEP) || S_IsActionDown(inputImpl, IN_LEFT)) {
 				lara_item->goal_anim_state = 7;
 			} else if(jeep->velocity) {
 				lara_item->goal_anim_state = 1;
@@ -687,11 +687,11 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(killed) {
 				lara_item->goal_anim_state = 0;
-			} else if(dbinput & IN_WALK) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_WALK)) {
 				if(jeep->gear) {
 					jeep->gear--;
 				}
-			} else if(dbinput & IN_SPRINT) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_SPRINT)) {
 				if(jeep->gear < 1) {
 					jeep->gear++;
 				}
@@ -703,9 +703,9 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 					lara_item->frame_number = GetAnim(currentLevel, lara_item->anim_number)->frame_base;
 					break;
 				}
-			} else if(input & (IN_LSTEP | IN_LEFT)) {
+			} else if(S_IsActionDown(inputImpl, IN_LSTEP) || S_IsActionDown(inputImpl, IN_LEFT)) {
 				lara_item->goal_anim_state = 1;
-			} else if(input & (IN_RSTEP | IN_RIGHT)) {
+			} else if(S_IsActionDown(inputImpl, IN_RSTEP) || S_IsActionDown(inputImpl, IN_RIGHT)) {
 				lara_item->goal_anim_state = 8;
 			} else if(jeep->velocity) {
 				lara_item->goal_anim_state = 1;
@@ -740,9 +740,9 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 			if(killed) {
 				lara_item->goal_anim_state = 17;
 			} else if(abs(jeep->velocity) & 0xFFFFFF00) {
-				if(input & (IN_LSTEP | IN_LEFT)) {
+				if(S_IsActionDown(inputImpl, IN_LSTEP) || S_IsActionDown(inputImpl, IN_LEFT)) {
 					lara_item->goal_anim_state = 15;
-				} else if(input & (IN_RSTEP | IN_RIGHT)) {
+				} else if(S_IsActionDown(inputImpl, IN_RSTEP) || S_IsActionDown(inputImpl, IN_RIGHT)) {
 					lara_item->goal_anim_state = 14;
 				}
 			} else {
@@ -755,7 +755,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(killed) {
 				lara_item->goal_anim_state = 17;
-			} else if(dbinput & IN_WALK) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_WALK)) {
 				if(jeep->gear) {
 					jeep->gear--;
 
@@ -767,11 +767,11 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 						break;
 					}
 				}
-			} else if(dbinput & IN_SPRINT) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_SPRINT)) {
 				if(jeep->gear < 1) {
 					jeep->gear++;
 				}
-			} else if(input & (IN_RSTEP | IN_RIGHT)) {
+			} else if(S_IsActionDown(inputImpl, IN_RSTEP) || S_IsActionDown(inputImpl, IN_RIGHT)) {
 				lara_item->goal_anim_state = 14;
 			} else {
 				lara_item->goal_anim_state = 13;
@@ -793,7 +793,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(killed) {
 				lara_item->goal_anim_state = 17;
-			} else if(dbinput & IN_WALK) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_WALK)) {
 				if(jeep->gear) {
 					jeep->gear--;
 
@@ -805,11 +805,11 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 						break;
 					}
 				}
-			} else if(dbinput & IN_SPRINT) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_SPRINT)) {
 				if(jeep->gear < 1) {
 					jeep->gear++;
 				}
-			} else if(input & (IN_LSTEP | IN_LEFT)) {
+			} else if(S_IsActionDown(inputImpl, IN_LSTEP) || S_IsActionDown(inputImpl, IN_LEFT)) {
 				lara_item->goal_anim_state = 15;
 			} else {
 				lara_item->goal_anim_state = 13;
@@ -833,11 +833,11 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 				lara_item->goal_anim_state = 0;
 			}
 
-			if(((input & (IN_JUMP | IN_LEFT)) == (IN_JUMP | IN_LEFT)) && !jeep->velocity && !dont_exit_jeep) {
+			if(((S_IsActionDown(inputImpl, IN_JUMP) || S_IsActionDown(inputImpl, IN_LEFT)) == (IN_JUMP | IN_LEFT)) && !jeep->velocity && !dont_exit_jeep) {
 				if(CanGetOff(0)) {
 					lara_item->goal_anim_state = 10;
 				}
-			} else if(dbinput & IN_WALK) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_WALK)) {
 				if(jeep->gear) {
 					jeep->gear--;
 
@@ -845,15 +845,15 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 						lara_item->goal_anim_state = 0;
 					}
 				}
-			} else if(dbinput & IN_SPRINT) {
+			} else if(S_IsActionDownDebounced(inputImpl, IN_SPRINT)) {
 				if(jeep->gear < 1) {
 					jeep->gear++;
 				}
-			} else if(input & IN_ACTION && !(input & IN_JUMP)) {
+			} else if(S_IsActionDown(inputImpl, IN_ACTION) && !(S_IsActionDown(inputImpl, IN_JUMP))) {
 				lara_item->goal_anim_state = 13;
-			} else if(input & (IN_LSTEP | IN_LEFT)) {
+			} else if(S_IsActionDown(inputImpl, IN_LSTEP) || S_IsActionDown(inputImpl, IN_LEFT)) {
 				lara_item->goal_anim_state = 15;
-			} else if(input & (IN_RSTEP | IN_RIGHT)) {
+			} else if(S_IsActionDown(inputImpl, IN_RSTEP) || S_IsActionDown(inputImpl, IN_RIGHT)) {
 				lara_item->goal_anim_state = 14;
 			}
 
@@ -874,7 +874,6 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 	long turn, maxTurn, vel;
 
 	if(lara_item->current_anim_state == 10 || lara_item->goal_anim_state == 10) {
-		input = 0;
 	}
 
 	jeep = (JEEPINFO*)item->data;
@@ -887,7 +886,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 	}
 
 	if(item->pos.pos.y >= height - 256) {
-		if(!jeep->velocity && input & IN_LOOK) {
+		if(!jeep->velocity && S_IsActionDown(inputImpl, IN_LOOK)) {
 			LookUpDown();
 		}
 
@@ -902,13 +901,13 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 		}
 
 		if(jeep->velocity > 0) {
-			if(input & (IN_LSTEP | IN_LEFT)) {
+			if(S_IsActionDown(inputImpl, IN_LSTEP) || S_IsActionDown(inputImpl, IN_LEFT)) {
 				jeep->turn_rate -= turn;
 
 				if(jeep->turn_rate < -maxTurn) {
 					jeep->turn_rate = -maxTurn;
 				}
-			} else if(input & (IN_RSTEP | IN_RIGHT)) {
+			} else if(S_IsActionDown(inputImpl, IN_RSTEP) || S_IsActionDown(inputImpl, IN_RIGHT)) {
 				jeep->turn_rate += turn;
 
 				if(jeep->turn_rate > maxTurn) {
@@ -916,13 +915,13 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 				}
 			}
 		} else if(jeep->velocity < 0) {
-			if(input & (IN_LSTEP | IN_LEFT)) {
+			if(S_IsActionDown(inputImpl, IN_LSTEP) || S_IsActionDown(inputImpl, IN_LEFT)) {
 				jeep->turn_rate += turn;
 
 				if(jeep->turn_rate > maxTurn) {
 					jeep->turn_rate = maxTurn;
 				}
-			} else if(input & (IN_RSTEP | IN_RIGHT)) {
+			} else if(S_IsActionDown(inputImpl, IN_RSTEP) || S_IsActionDown(inputImpl, IN_RIGHT)) {
 				jeep->turn_rate -= turn;
 
 				if(jeep->turn_rate < -maxTurn) {
@@ -931,7 +930,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 			}
 		}
 
-		if(input & IN_JUMP) {
+		if(S_IsActionDown(inputImpl, IN_JUMP)) {
 			if(jeep->velocity > 0) {
 				jeep->velocity -= 768;
 
@@ -945,7 +944,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 					jeep->velocity = 0;
 				}
 			}
-		} else if(input & IN_ACTION) {
+		} else if(S_IsActionDown(inputImpl, IN_ACTION)) {
 			if(!jeep->gear) {
 				if(jeep->velocity >= 0x8000) {
 					jeep->velocity = 0x8000;
@@ -967,7 +966,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 			jeep->velocity -= abs(item->pos.y_rot - jeep->move_angle) >> 6;
 		}
 
-		if(!(input & IN_ACTION)) {
+		if(!(S_IsActionDown(inputImpl, IN_ACTION))) {
 			if(jeep->velocity > 256) {
 				jeep->velocity -= 256;
 			} else if(jeep->velocity < -256) {
@@ -994,7 +993,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 		jeep->pitch1 += (0xFFFF - jeep->pitch1) >> 3;
 	}
 
-	if(input & IN_JUMP) {
+	if(S_IsActionDown(inputImpl, IN_JUMP)) {
 		pos.x = 0;
 		pos.y = -144;
 		pos.z = -1024;
@@ -1226,7 +1225,7 @@ long JeepDynamics(ITEM_INFO* item) {
 		ang = item->pos.y_rot - jeep->move_angle;
 		vel = (short)(728 - ((3 * jeep->velocity) >> 11));
 
-		if(!(input & IN_ACTION) && jeep->velocity > 0) {
+		if(!(S_IsActionDown(inputImpl, IN_ACTION)) && jeep->velocity > 0) {
 			vel -= vel >> 2;
 		}
 
@@ -1446,7 +1445,6 @@ void JeepControl(short item_number) {
 
 	if(lara_item->hit_points <= 0) {
 		killed = 1;
-		input &= ~(IN_FORWARD | IN_BACK | IN_LEFT | IN_RIGHT | IN_LSTEP | IN_RSTEP);
 	}
 
 	if(jeep->flags) {

@@ -18,12 +18,30 @@
 #include "game/sound.h"
 #include "game/spotcam.h"
 #include "game/weapontypes.h"
+#include "specific/function_stubs.h"
 #include "specific/loadsave.h"
 #include "specific/windows/dxshell.h"
 #include "specific/windows/winmain.h"
+#include <stdlib.h>
+#include <string.h>
 #include <dinput.h>
 #include <joystickapi.h>
+#include <libloaderapi.h>
+#include <minwindef.h>
 #include <stdio.h>
+#include <winbase.h>
+#include <winerror.h>
+#include <winnt.h>
+
+
+typedef struct INPUT_MANAGER {
+	IDirectInput8A* directInput;
+	IDirectInputDevice8A* keyboard;
+	IDirectInputDevice8A* gamepad;
+	short lastInput[NUM_INPUTACTIONS]; // last frame's activated actions, Bit 15 = debounced
+	input_buttons keyboardLayout[NUM_KEYBOARD_BUTTONS]; // internal button -> action
+	input_buttons gamepadLayout[NUM_GAMEPAD_BUTTONS]; // internal gamepad button -> action
+} INPUT_MANAGER;
 
 const char* KeyboardButtons[272] = {
 	0,
@@ -77,17 +95,272 @@ const char* GermanKeyboard[272] = {
 
 short layout[2][18] = {
 	{ DIK_UP, DIK_DOWN, DIK_LEFT, DIK_RIGHT, DIK_PERIOD, DIK_SLASH, DIK_RSHIFT, DIK_RALT, DIK_RCONTROL,
-	  DIK_SPACE, DIK_COMMA, DIK_NUMPAD0, DIK_END, DIK_ESCAPE, DIK_DELETE, DIK_PGDN, DIK_P, DIK_RETURN },
+		DIK_SPACE, DIK_COMMA, DIK_NUMPAD0, DIK_END, DIK_ESCAPE, DIK_DELETE, DIK_PGDN, DIK_P, DIK_RETURN },
 
 	{ DIK_UP, DIK_DOWN, DIK_LEFT, DIK_RIGHT, DIK_PERIOD, DIK_SLASH, DIK_RSHIFT, DIK_RALT, DIK_RCONTROL,
-	  DIK_SPACE, DIK_COMMA, DIK_NUMPAD0, DIK_END, DIK_ESCAPE, DIK_DELETE, DIK_PGDN, DIK_P, DIK_RETURN }
+		DIK_SPACE, DIK_COMMA, DIK_NUMPAD0, DIK_END, DIK_ESCAPE, DIK_DELETE, DIK_PGDN, DIK_P, DIK_RETURN }
+};
+
+const int DirectInputKeyMap[256] = { // DIK -> Internal
+	-1,
+	KEY_ESC,
+	KEY_0 + 1,
+	KEY_0 + 2,
+	KEY_0 + 3,
+	KEY_0 + 4,
+	KEY_0 + 5,
+	KEY_0 + 6,
+	KEY_0 + 7,
+	KEY_0 + 8,
+	KEY_0 + 9,
+	KEY_0,
+	KEY_DASH,
+	-1,
+	-1,
+	-1,
+	KEY_A + ('Q' - 'A'),
+	KEY_A + ('W' - 'A'),
+	KEY_A + ('E' - 'A'),
+	KEY_A + ('R' - 'A'),
+	KEY_A + ('T' - 'A'),
+	KEY_A + ('Y' - 'A'),
+	KEY_A + ('U' - 'A'),
+	KEY_A + ('I' - 'A'),
+	KEY_A + ('O' - 'A'),
+	KEY_A + ('P' - 'A'),
+	-1,
+	-1,
+	KEY_RETURN,
+	KEY_LCTRL,
+	KEY_A,
+	KEY_A + ('S' - 'A'),
+	KEY_A + ('D' - 'A'),
+	KEY_A + ('F' - 'A'),
+	KEY_A + ('G' - 'A'),
+	KEY_A + ('H' - 'A'),
+	KEY_A + ('J' - 'A'),
+	KEY_A + ('K' - 'A'),
+	KEY_A + ('L' - 'A'),
+	-1,
+	-1,
+	-1,
+	KEY_LSHIFT,
+	-1,
+	KEY_A + ('Z' - 'A'),
+	KEY_A + ('X' - 'A'),
+	KEY_A + ('C' - 'A'),
+	KEY_A + ('V' - 'A'),
+	KEY_A + ('B' - 'A'),
+	KEY_A + ('N' - 'A'),
+	KEY_A + ('M' - 'A'),
+	KEY_COMMA,
+	KEY_DOT,
+	KEY_DASH,
+	KEY_RSHIFT,
+	-1,
+	KEY_LALT,
+	KEY_SPACE,
+	-1,
+	KEY_F1,
+	KEY_F1 + 1,
+	KEY_F1 + 2,
+	KEY_F1 + 3,
+	KEY_F1 + 4,
+	KEY_F1 + 5,
+	KEY_F1 + 6,
+	KEY_F1 + 7,
+	KEY_F1 + 8,
+	KEY_F1 + 9,
+	-1,
+	-1,
+	KEY_NUMPAD0 + 7,
+	KEY_NUMPAD0 + 8,
+	KEY_NUMPAD0 + 9,
+	-1,
+	KEY_NUMPAD0 + 4,
+	KEY_NUMPAD0 + 5,
+	KEY_NUMPAD0 + 6,
+	-1,
+	KEY_NUMPAD0 + 1,
+	KEY_NUMPAD0 + 2,
+	KEY_NUMPAD0 + 3,
+	KEY_NUMPAD0,
+	-1,
+	-1,
+	-1,
+	-1,
+	KEY_F1 + 10,
+	KEY_F1 + 11,
+	-1, // DIK_KANA
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	KEY_LALT,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	KEY_POS1,
+	KEY_UP,
+	KEY_PGUP,
+	-1,
+	KEY_LEFT,
+	-1,
+	KEY_RIGHT,
+	-1,
+	KEY_END,
+	KEY_DOWN,
+	KEY_PGDWN,
+	KEY_INSERT,
+	KEY_DEL,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
+	-1,
 };
 
 long conflict[18];
-long input;
-long linput;
-long dbinput;
-long inputBusy;
 short ammo_change_timer = 0;
 char ammo_change_buf[12];
 
@@ -310,262 +583,54 @@ long Key(long number) {
 	return 0;
 }
 
-long S_UpdateInput() {
-	static long LookCnt;
-	static long med_hotkey_timer;
-	short state;
-	static long flare_no_db = 0;
-	long debounce;
+long S_IsActionDown(INPUT_MANAGER* manager, input_buttons button) {
+	return manager->lastInput[button] & 0x0001;
+}
 
-	debounce = SetDebounce;
-	DXReadKeyboard(keymap);
+long S_IsActionDownDebounced(INPUT_MANAGER* manager, input_buttons button) {
+	return manager->lastInput[button] & 0x0001 && !(manager->lastInput[button] & 0x8000);
+}
 
-	if(ControlMethod == 1) {
-		joy_fire = ReadJoystick(&joy_x, &joy_y);
-	}
-
-	linput = 0;
-
-	if(ControlMethod == 1) {
-		if(joy_x < -8) {
-			linput = IN_LEFT;
-		} else if(joy_x > 8) {
-			linput = IN_RIGHT;
-		}
-
-		if(joy_y > 8) {
-			linput |= IN_BACK;
-		} else if(joy_y < -8) {
-			linput |= IN_FORWARD;
+long S_MapKeyboardButton(INPUT_MANAGER *manager, keyboard_button button, input_buttons action) {
+	for(int i = 0; i < NUM_KEYBOARD_BUTTONS; ++i) {
+		if(manager->keyboardLayout[i] == action) {
+			return 0; // we have a button set to an action already
 		}
 	}
-
-	if(Key(0)) {
-		linput |= IN_FORWARD;
-	}
-
-	if(Key(1)) {
-		linput |= IN_BACK;
-	}
-
-	if(Key(2)) {
-		linput |= IN_LEFT;
-	}
-
-	if(Key(3)) {
-		linput |= IN_RIGHT;
-	}
-
-	if(Key(4)) {
-		linput |= IN_DUCK;
-	}
-
-	if(Key(5)) {
-		linput |= IN_SPRINT;
-	}
-
-	if(Key(6)) {
-		linput |= IN_WALK;
-	}
-
-	if(Key(7)) {
-		linput |= IN_JUMP;
-	}
-
-	if(Key(8)) {
-		linput |= IN_SELECT | IN_ACTION;
-	}
-
-	if(Key(9)) {
-		linput |= IN_DRAW;
-	}
-
-	if(Key(10)) {
-
-		if(!flare_no_db) {
-			state = lara_item->current_anim_state;
-
-			if(state == AS_ALL4S || state == AS_CRAWL || state == AS_ALL4TURNL || state == AS_ALL4TURNR || state == AS_CRAWLBACK || state == AS_CRAWL2HANG) {
-				SoundEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
-				flare_no_db = 1;
-			} else {
-				flare_no_db = 0;
-				linput |= IN_FLARE;
-			}
-		}
-
-	} else {
-		flare_no_db = 0;
-	}
-
-	if(Key(11)) {
-		linput |= IN_LOOK;
-	}
-
-	if(Key(12)) {
-		linput |= IN_ROLL;
-	}
-
-	if(Key(13)) {
-		linput |= IN_OPTION;
-	}
-
-	if(Key(14)) {
-		linput |= IN_WALK | IN_LEFT;
-	}
-
-	if(Key(15)) {
-		linput |= IN_WALK | IN_RIGHT;
-	}
-
-	if(Key(16)) {
-		linput |= IN_PAUSE;
-	}
-
-	if(Key(17)) {
-		linput |= IN_SELECT;
-	}
-
-	if(keymap[DIK_ESCAPE]) {
-		linput |= IN_DESELECT | IN_OPTION;
-	}
-
-	if(lara.gun_status == LG_READY) {
-		savegame.AutoTarget = (unsigned char)App.AutoTarget;
-
-		if(linput & IN_LOOK) {
-			if(LookCnt >= 6) {
-				LookCnt = 100;
-			} else {
-				linput &= ~IN_LOOK;
-				LookCnt++;
-			}
-		} else {
-			if(LookCnt && LookCnt != 100) {
-				linput |= IN_TARGET;
-			}
-
-			LookCnt = 0;
-		}
-	}
-
-	DoWeaponHotkey();
-
-	if(keymap[DIK_0]) {
-		if(!med_hotkey_timer) {
-			if(lara_item->hit_points > 0 && lara_item->hit_points < 1000 || lara.poisoned) {
-				if(lara.num_small_medipack) {
-					if(lara.num_small_medipack != -1) {
-						lara.num_small_medipack--;
-					}
-
-					lara.dpoisoned = 0;
-					lara_item->hit_points += 500;
-					SoundEffect(SFX_MENU_MEDI, 0, SFX_ALWAYS);
-					savegame.Game.HealthUsed++;
-
-					if(lara_item->hit_points > 1000) {
-						lara_item->hit_points = 1000;
-					}
-
-					if(InventoryActive && !lara.num_small_medipack) {
-						construct_object_list();
-
-						if(lara.num_large_medipack) {
-							setup_objectlist_startposition(INV_BIGMEDI_ITEM);
-						} else {
-							setup_objectlist_startposition(INV_MEMCARD_LOAD_ITEM);
-						}
-					}
-
-					med_hotkey_timer = 15;
-				}
-			}
-		}
-	} else if(keymap[DIK_9]) {
-		if(!med_hotkey_timer) {
-			if(lara_item->hit_points > 0 && lara_item->hit_points < 1000 || lara.poisoned) {
-				if(lara.num_large_medipack) {
-					if(lara.num_large_medipack != -1) {
-						lara.num_large_medipack--;
-					}
-
-					lara.dpoisoned = 0;
-					lara_item->hit_points = 1000;
-					SoundEffect(SFX_MENU_MEDI, 0, SFX_ALWAYS);
-					savegame.Game.HealthUsed++;
-					med_hotkey_timer = 15;
-
-					if(InventoryActive && !lara.num_large_medipack) {
-						construct_object_list();
-
-						if(lara.num_small_medipack) {
-							setup_objectlist_startposition(INV_SMALLMEDI_ITEM);
-						} else {
-							setup_objectlist_startposition(INV_MEMCARD_LOAD_ITEM);
-						}
-					}
-				}
-			}
-		}
-	} else if(med_hotkey_timer) {
-		med_hotkey_timer--;
-	}
-
-	if(linput & IN_WALK && !(linput & (IN_FORWARD | IN_BACK))) {
-		if(linput & IN_LEFT) {
-			linput = (linput & ~IN_LEFT) | IN_LSTEP;
-		} else if(linput & IN_RIGHT) {
-			linput = (linput & ~IN_RIGHT) | IN_RSTEP;
-		}
-	}
-
-	if(linput & IN_FORWARD && linput & IN_BACK) {
-		linput |= IN_ROLL;
-	}
-
-	if(linput & IN_ROLL && BinocularRange) {
-		linput &= ~IN_ROLL;
-	}
-
-	if((linput & (IN_RIGHT | IN_LEFT)) == (IN_RIGHT | IN_LEFT)) {
-		linput -= IN_RIGHT | IN_LEFT;
-	}
-
-	if(debounce) {
-		dbinput = inputBusy;
-	}
-
-	if(!gfGameMode && Gameflow->LoadSaveEnabled) {
-		if(keymap[DIK_F5]) {
-			linput |= IN_SAVE;
-		}
-
-		if(keymap[DIK_F6]) {
-			linput |= IN_LOAD;
-		}
-	}
-
-	if(keymap[DIK_APOSTROPHE]) {
-		DXSaveScreen(App.dx.lpBackBuffer, "Tomb");
-	}
-
-	inputBusy = linput;
-
-	if(lara.Busy) {
-		linput &= IN_PAUSE | IN_LOOK | IN_OPTION | IN_RIGHT | IN_LEFT | IN_BACK | IN_FORWARD;
-
-		if(linput & IN_FORWARD && linput & IN_BACK) {
-			linput ^= IN_BACK;
-		}
-	}
-
-	if(debounce) {
-		dbinput = inputBusy & (dbinput ^ inputBusy);
-	}
-
-	input = linput;
+	manager->keyboardLayout[button] = action;
 	return 1;
+}
+
+void S_UpdateInput(INPUT_MANAGER* manager) {
+	char keymap[NUM_KEYBOARD_BUTTONS] = {0};
+	char directInputKeymap[256];
+	short frameInput[NUM_INPUTACTIONS] = {0};
+	HRESULT state = IDirectInputDevice8_GetDeviceState(manager->keyboard, 256, directInputKeymap);
+
+	if(FAILED(state)) {
+		if(state == DIERR_INPUTLOST) {
+			IDirectInputDevice8_Acquire(manager->keyboard);
+		}
+		IDirectInputDevice8_GetDeviceState(manager->keyboard, 256, directInputKeymap);
+	}
+	for(int i = 0; i < 256; ++i) {
+		if(DirectInputKeyMap[i] == -1) {
+			continue;
+		}
+		long internalKey = DirectInputKeyMap[i];
+		keymap[internalKey] = directInputKeymap[i];
+		input_buttons action = manager->keyboardLayout[internalKey];
+		if(action == IN_NONE) {
+			continue;
+		}
+		if(keymap[internalKey]) {
+			frameInput[action] = 1;
+			if(manager->lastInput[action] & 0x1 || manager->lastInput[action] & 0x8000) {
+				frameInput[action] |= (short)0x8000;
+			}
+		}
+	}
+	memcpy(&manager->lastInput[0], &frameInput[0], sizeof(frameInput));
 }
 
 long ReadJoystick(long* x, long* y) {
@@ -597,3 +662,166 @@ long ReadJoystick(long* x, long* y) {
 	*y = (joystick.dwYpos << 5) / (caps.wYmax - caps.wYmin) - 16;
 	return joystick.dwButtons;
 }
+
+static long Check(const char* scope, HRESULT result) {
+	if(!SUCCEEDED(result)) {
+		char buffer[256];
+		long n = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, result, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), buffer, sizeof(buffer), NULL);
+		LogE(scope, "DirectInput Error: %.*s", n, buffer );
+		__debugbreak();
+		return 0;
+	}
+	return 1;
+}
+
+BOOL WINAPI EnumGamePad(const DIDEVICEINSTANCEA* instance, void* payload) {
+	Log(__func__, "Found Device: %s",instance->tszInstanceName);
+	INPUT_MANAGER* manager = (INPUT_MANAGER*)payload;
+	if(!Check(__func__, IDirectInput8_CreateDevice(manager->directInput, &instance->guidInstance, &manager->gamepad, NULL))) {
+		return DIENUM_CONTINUE;
+	}
+	if(!Check(__func__, IDirectInputDevice8_SetCooperativeLevel(manager->gamepad, App.hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE))) {
+		IUnknown_Release(manager->gamepad);
+		return DIENUM_CONTINUE;
+	}
+	if(!Check(__func__, IDirectInputDevice8_Acquire(manager->gamepad))) {
+		IUnknown_Release(manager->gamepad);
+		return DIENUM_CONTINUE;
+	}
+	Log(__func__, "Acquired Device: %s", instance->tszInstanceName);
+	return DIENUM_STOP;
+}
+
+static const input_buttons defaultLayout[NUM_KEYBOARD_BUTTONS] = {
+	IN_FORWARD,
+	IN_BACK,
+	IN_LEFT,
+	IN_RIGHT,
+	IN_JUMP,
+	IN_NONE,
+	IN_ACTION,
+	IN_NONE,
+	IN_DRAW,
+	IN_WALK,
+	IN_NONE,
+	IN_LSTEP,
+	IN_NONE,
+	IN_NONE,
+	IN_ROLL,
+	IN_NONE,
+	IN_RSTEP,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_FLARE,
+	IN_DUCK,
+	IN_SPRINT,
+	IN_SELECT,
+	IN_DESELECT,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_CHEAT,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE,
+	IN_NONE
+};
+
+long S_CreateInputManager(INPUT_MANAGER * *out) {
+	INPUT_MANAGER* manager = (INPUT_MANAGER*)calloc(1, sizeof(INPUT_MANAGER));
+	memcpy(manager->keyboardLayout, defaultLayout, sizeof(defaultLayout));
+	if(!manager) {
+		return 0;
+	}
+	HINSTANCE hinst = GetModuleHandle(NULL);
+	if(!Check(__func__, DirectInput8Create(hinst, DIRECTINPUT_VERSION, &IID_IDirectInput8A, (void**)&manager->directInput, NULL))) {
+		free(manager);
+		return 0;
+	}
+
+	if(!Check(__func__, IDirectInput8_CreateDevice(manager->directInput, &GUID_SysKeyboard, &manager->keyboard, NULL))) {
+		IUnknown_Release(manager->directInput);
+		free(manager);
+		return 0;
+	}
+
+	if(!Check(__func__, IDirectInputDevice8_SetDataFormat(manager->keyboard,&c_dfDIKeyboard))) {
+		IUnknown_Release(manager->directInput);
+		free(manager);
+		return 0;
+	}
+
+	if(!Check(__func__, IDirectInputDevice8_SetCooperativeLevel(manager->keyboard, App.hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE))) {
+		IUnknown_Release(manager->keyboard);
+		IUnknown_Release(manager->directInput);
+		free(manager);
+		return 0;
+	}
+
+	if(!Check(__func__, IDirectInputDevice8_Acquire(manager->keyboard))) {
+		IUnknown_Release(manager->keyboard);
+		IUnknown_Release(manager->directInput);
+		free(manager);
+		return 0;
+	}
+
+	if(!Check(__func__, IDirectInput8_EnumDevices(manager->directInput, DI8DEVCLASS_GAMECTRL, EnumGamePad, manager, DIEDFL_ATTACHEDONLY))) {
+		IUnknown_Release(manager->keyboard);
+		IUnknown_Release(manager->directInput);
+		free(manager);
+		return 0;
+	}
+	*out = manager;
+	return 1;
+}
+
+INPUT_MANAGER* inputImpl;

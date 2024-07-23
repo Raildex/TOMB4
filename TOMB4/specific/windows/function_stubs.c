@@ -34,7 +34,7 @@ void SeedRandomDraw(long seed) {
 }
 
 void Log(const char* scope, const char* s, ...) {
-	fprintf(stderr, "%s : ", scope);
+	fprintf(stdout, "%s : ", scope);
 	va_list list;
 	va_start(list, s);
 	vfprintf(stdout, s, list);

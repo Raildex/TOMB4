@@ -148,7 +148,7 @@ static long S_Death() {
 	while(!ret) {
 		S_InitialisePolyList();
 		SetDebounce = 1;
-		S_UpdateInput();
+		S_UpdateInput(inputImpl);
 		UpdatePulseColour();
 		lara.death_count++;
 		S_DisplayMonoScreen();
@@ -161,23 +161,23 @@ static long S_Death() {
 				PrintString(phd_centerx, phd_centery + 3 * font_height, selection == 1 ? 1 : 2, SCRIPT_TEXT(TXT_Exit_to_Title), FF_CENTER);
 
 				if(selection) {
-					if(dbinput & IN_FORWARD) {
+					if(S_IsActionDownDebounced(inputImpl, IN_FORWARD)) {
 						selection = 0;
 						SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 					}
 
-					if(dbinput & IN_SELECT) {
+					if(S_IsActionDownDebounced(inputImpl, IN_SELECT)) {
 						lara.death_count = 0;
 						ret = 1;
 						SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 					}
 				} else {
-					if(dbinput & IN_BACK) {
+					if(S_IsActionDownDebounced(inputImpl, IN_BACK)) {
 						selection = 1;
 						SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 					}
 
-					if(dbinput & IN_SELECT) {
+					if(S_IsActionDownDebounced(inputImpl, IN_SELECT)) {
 						menu = 1;
 						SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 					}
@@ -199,7 +199,7 @@ static long S_Death() {
 		} else {
 			PrintString(phd_centerx, phd_centery, 3, SCRIPT_TEXT(TXT_GAME_OVER), FF_CENTER);
 
-			if(lara.death_count > 300 || (lara.death_count > 150 && input != IN_NONE)) {
+			if(lara.death_count > 300 || (lara.death_count > 150)) {
 				return 1;
 			}
 		}
@@ -237,17 +237,19 @@ long ControlPhase(long nframes, long demo_mode) {
 	for(framecount += nframes; framecount > 0; framecount -= 2) {
 		GlobalCounter++;
 		UpdateSky();
-
-		if(S_UpdateInput() == IN_ALL) {
-			return 0;
-		}
+		input_buttons debouncing[] = {
+			IN_FORWARD,
+			IN_BACK,
+			IN_SELECT,
+			IN_DESELECT,
+		};
+		
+		S_UpdateInput(inputImpl);
 
 		if(bDisableLaraControl) {
 			if(gfCurrentLevel) {
-				dbinput = 0;
 			}
 
-			input &= IN_LOOK;
 		}
 
 		if(cutseq_trig) {
@@ -255,16 +257,14 @@ long ControlPhase(long nframes, long demo_mode) {
 				cutseq_trig = 3;
 			}
 
-			input = 0;
 
 			if(cutseq_num == 27) {
-				input = IN_ACTION;
 			}
 		}
 
 		SetDebounce = 0;
 
-		if(gfCurrentLevel && (dbinput & IN_OPTION || GLOBAL_enterinventory != -1) && !cutseq_trig && lara_item->hit_points > 0) {
+		if(gfCurrentLevel && (S_IsActionDownDebounced(inputImpl, IN_DESELECT) || GLOBAL_enterinventory != -1) && !cutseq_trig && lara_item->hit_points > 0) {
 			if(S_CallInventory2()) {
 				return 2;
 			}
@@ -280,12 +280,12 @@ long ControlPhase(long nframes, long demo_mode) {
 				return 1;
 			}
 
-			if(lara.death_count > 300 || lara.death_count > 90 && input) {
+			if(lara.death_count > 300 || lara.death_count > 90) {
 				reset_flag = 0;
 				return S_Death();
 			}
 		} else {
-			if(reset_flag || lara.death_count > 300 || lara.death_count > 60 && input) {
+			if(reset_flag || lara.death_count > 300 || lara.death_count > 60) {
 				if(Gameflow->DemoDisc && reset_flag) {
 					reset_flag = 0;
 					return 4;
@@ -296,29 +296,29 @@ long ControlPhase(long nframes, long demo_mode) {
 			}
 		}
 
-		if(demo_mode && input == IN_ALL) {
-			input = 0;
+
+		if(demo_mode) {
 		}
 
 		if(!FadeScreenHeight) {
-			if(input & IN_SAVE && lara_item->hit_points > 0) {
+			if(S_IsActionDown(inputImpl, IN_SAVE) && lara_item->hit_points > 0) {
 				S_LoadSave(IN_SAVE, 0, 0);
 			}
 
-			else if(input & IN_LOAD) {
+			else if(S_IsActionDown(inputImpl, IN_LOAD)) {
 				if(S_LoadSave(IN_LOAD, 0, 0) >= 0) {
 					return 2;
 				}
 			}
 
-			if(input & IN_PAUSE && gfGameMode == 0 && lara_item->hit_points > 0) {
+			if(S_IsActionDown(inputImpl, IN_PAUSE) && gfGameMode == 0 && lara_item->hit_points > 0) {
 				if(S_PauseMenu() == 8) {
 					return 1;
 				}
 			}
 		}
 
-		if(input & IN_LOOK && (lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH || (lara.IsDucked && !(input & IN_DUCK) && lara_item->anim_number == ANIM_DUCKBREATHE && lara_item->goal_anim_state == AS_DUCK))) {
+		if(S_IsActionDown(inputImpl, IN_LOOK) && (lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH || (lara.IsDucked && !(S_IsActionDown(inputImpl, IN_DUCK)) && lara_item->anim_number == ANIM_DUCKBREATHE && lara_item->goal_anim_state == AS_DUCK))) {
 			if(!BinocularRange) {
 				if(lara.gun_type == WEAPON_REVOLVER && lara.sixshooter_type_carried & W_LASERSIGHT && lara.gun_status == LG_READY) {
 					BinocularRange = 128;
@@ -346,7 +346,6 @@ long ControlPhase(long nframes, long demo_mode) {
 				lara.torso_y_rot = 0;
 				BinocularOn = -8;
 			} else {
-				input |= IN_LOOK;
 			}
 		}
 

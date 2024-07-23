@@ -17,7 +17,7 @@ add_packages("zlib")
 		add_packages("xaudio2redist")
 		add_syslinks("Msacm32","d3d9","ddraw","dsound","Winmm","Gdi32","Advapi32","user32","dxgi", "dxguid","dinput8","xaudio2_9redist","Ole32")
 		add_files("tomb4/tomb4.rc")
-		add_defines("XAUDIO2_HELPER_FUNCTIONS","WIN32_LEAN_AND_MEAN","NOMINMAX", "_CRT_SECURE_NO_WARNINGS")
+		add_defines("XAUDIO2_HELPER_FUNCTIONS","WIN32_LEAN_AND_MEAN","NOMINMAX", "_CRT_SECURE_NO_WARNINGS", "COBJMACROS", "CINTERFACE")
 		set_runtimes(is_mode("debug") and "MTd" or "MT")
 	end
 	if(is_mode("debug")) then 

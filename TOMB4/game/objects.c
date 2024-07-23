@@ -278,7 +278,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status && lara.gun_status == LG_NO_ARMS && !item->trigger_flags && !item->item_flags[0]) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status && lara.gun_status == LG_NO_ARMS && !item->trigger_flags && !item->item_flags[0]) {
 		if(!item->item_flags[1]) {
 			GetBoundsAccurate(item, bounds);
 			StatuePlinthBounds[0] = bounds[0];
@@ -623,7 +623,7 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_num);
 
-	if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == item_num) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == item_num) {
 		roty = item->pos.y_rot;
 		item->pos.y_rot = l->pos.y_rot;
 
@@ -645,7 +645,7 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 		}
 
 		item->pos.y_rot = roty;
-	} else if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && l->gravity_status && l->fallspeed > 0 && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP)) {
+	} else if(S_IsActionDown(inputImpl, IN_ACTION) && lara.gun_status == LG_NO_ARMS && l->gravity_status && l->fallspeed > 0 && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP)) {
 		if(TestBoundsCollide(item, l, 100) && TestCollision(item, l)) {
 			roty = item->pos.y_rot;
 			item->pos.y_rot = l->pos.y_rot;

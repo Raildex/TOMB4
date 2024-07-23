@@ -476,7 +476,7 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	rope = &RopeList[GetItem(currentLevel, item_number)->trigger_flags];
 
-	if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) && l->gravity_status && l->fallspeed > 0 && rope->Active) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) && lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) && l->gravity_status && l->fallspeed > 0 && rope->Active) {
 		GetBoundsAccurate(l, bounds);
 		x = l->pos.pos.x;
 		y = l->pos.pos.y + bounds[2] + 512;

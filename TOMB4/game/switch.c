@@ -72,7 +72,7 @@ void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) 
 
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && CurrentSequence < 3 && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == item_number) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) && item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && CurrentSequence < 3 && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(TestLaraPosition(FullBlockSwitchBounds, item, l)) {
 			if(MoveLaraPosition(&FullBlockSwitchPos, item, l)) {
 				if(item->current_anim_state == 1) {
@@ -211,7 +211,7 @@ void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS
+	if(S_IsActionDown(inputImpl, IN_ACTION) && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS
 		&& item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && item->trigger_flags >= 0
 		|| lara.IsMoving && lara.GeneralPtr == item_number) {
 		GetBoundsAccurate(item, bounds);
@@ -291,7 +291,7 @@ void SwitchCollision2(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && item->status == ITEM_INACTIVE && lara.water_status == LW_UNDERWATER && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_TREAD) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) && item->status == ITEM_INACTIVE && lara.water_status == LW_UNDERWATER && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_TREAD) {
 		if(TestLaraPosition(Switch2Bounds, item, l)) {
 			if(!item->current_anim_state || item->current_anim_state == 1) {
 				if(MoveLaraPosition(&Switch2Pos, item, l)) {
@@ -323,7 +323,7 @@ void UnderwaterSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && lara.water_status == LW_UNDERWATER && l->current_anim_state == AS_TREAD && l->anim_number == ANIM_TREAD && lara.gun_status == LG_NO_ARMS && item->current_anim_state == 0 || lara.IsMoving && lara.GeneralPtr == item_number) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) && lara.water_status == LW_UNDERWATER && l->current_anim_state == AS_TREAD && l->anim_number == ANIM_TREAD && lara.gun_status == LG_NO_ARMS && item->current_anim_state == 0 || lara.IsMoving && lara.GeneralPtr == item_number) {
 		flag = 0;
 
 		if(TestLaraPosition(UnderwaterSwitchBounds, item, l)) {
@@ -370,7 +370,7 @@ void PulleyCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(!(item->flags & IFL_INVISIBLE) && (input & IN_ACTION && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status || lara.IsMoving && lara.GeneralPtr == item_number)) {
+	if(!(item->flags & IFL_INVISIBLE) && (S_IsActionDown(inputImpl, IN_ACTION) && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status || lara.IsMoving && lara.GeneralPtr == item_number)) {
 		roty = item->pos.y_rot;
 		item->pos.y_rot = l->pos.y_rot;
 
@@ -423,7 +423,7 @@ void TurnSwitchControl(short item_number) {
 		if(item->anim_number == GetObjectInfo(currentLevel, TURN_SWITCH)->anim_index + 2) {
 			item->pos.y_rot += 0x4000;
 
-			if(input & IN_ACTION) {
+			if(S_IsActionDown(inputImpl, IN_ACTION)) {
 				l->anim_number = ANIM_TURNSWITCHCB;
 				l->frame_number = GetAnim(currentLevel, ANIM_TURNSWITCHCB)->frame_base;
 				item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 1;
@@ -442,7 +442,7 @@ void TurnSwitchControl(short item_number) {
 		if(item->anim_number == GetObjectInfo(currentLevel, TURN_SWITCH)->anim_index + 6) {
 			item->pos.y_rot -= 0x4000;
 
-			if(input & IN_ACTION) {
+			if(S_IsActionDown(inputImpl, IN_ACTION)) {
 				l->anim_number = ANIM_TURNSWITCHAB;
 				l->frame_number = GetAnim(currentLevel, ANIM_TURNSWITCHAB)->frame_base;
 				item->anim_number = GetObjectInfo(currentLevel, item->object_number)->anim_index + 5;
@@ -483,7 +483,7 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	flag = 0;
 	item = GetItem(currentLevel, item_number);
 
-	if(!item->current_anim_state && input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
+	if(!item->current_anim_state && S_IsActionDown(inputImpl, IN_ACTION) && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH
 		   && !l->gravity_status && lara.gun_status == LG_NO_ARMS
 	   || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(TestLaraPosition(TurnSwitchBoundsA, item, l)) {
@@ -573,7 +573,7 @@ void RailSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	flag = 0;
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_number) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(item->current_anim_state == 1) {
 			l->pos.y_rot ^= 0x8000;
 
@@ -632,7 +632,7 @@ void JumpSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION && lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) && l->gravity_status && l->fallspeed > 0 && !item->current_anim_state) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) && lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) && l->gravity_status && l->fallspeed > 0 && !item->current_anim_state) {
 		if(TestLaraPosition(JumpSwitchBounds, item, l)) {
 			AlignLaraPosition(&JumpSwitchPos, item, l);
 			l->anim_number = ANIM_LEAPSWITCH;
@@ -655,7 +655,7 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	flag = 0;
 	item = GetItem(currentLevel, item_number);
 
-	if(input & IN_ACTION || GLOBAL_inventoryitemchosen == CROWBAR_ITEM && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS && !item->item_flags[0] || lara.IsMoving && lara.GeneralPtr == item_number) {
+	if(S_IsActionDown(inputImpl, IN_ACTION) || GLOBAL_inventoryitemchosen == CROWBAR_ITEM && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS && !item->item_flags[0] || lara.IsMoving && lara.GeneralPtr == item_number) {
 		if(item->current_anim_state == 1) {
 			l->pos.y_rot ^= 0x8000;
 
@@ -767,7 +767,7 @@ void CogSwitchControl(short item_number) {
 	AnimateItem(item);
 
 	if(item->current_anim_state == 1) {
-		if(item->goal_anim_state == 1 && !(input & IN_ACTION)) {
+		if(item->goal_anim_state == 1 && !(S_IsActionDown(inputImpl, IN_ACTION))) {
 			lara_item->goal_anim_state = AS_STOP;
 			item->goal_anim_state = 0;
 		}
@@ -811,7 +811,7 @@ void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		return;
 	}
 
-	if(!(item->flags & IFL_INVISIBLE) && (input & IN_ACTION && lara.gun_status == LG_NO_ARMS && !l->gravity_status && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == item_number)) {
+	if(!(item->flags & IFL_INVISIBLE) && (S_IsActionDown(inputImpl, IN_ACTION) && lara.gun_status == LG_NO_ARMS && !l->gravity_status && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH || lara.IsMoving && lara.GeneralPtr == item_number)) {
 		if(TestLaraPosition(CogSwitchBounds, item, l)) {
 			if(MoveLaraPosition(&CogSwitchPos, item, l)) {
 				lara.IsMoving = 0;

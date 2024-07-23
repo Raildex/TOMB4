@@ -1,5 +1,6 @@
 
 #include "specific/windows/winmain.h"
+#include "specific/input.h"
 #include "specific/windows/commandlines.h"
 #include "game/gameflow.h"
 #include "game/text.h"
@@ -524,7 +525,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 		ShowCursor(0);
 	}
 
-	DXInitKeyboard(App.hWnd, App.hInstance);
+	if(!S_CreateInputManager(&inputImpl)) {
+		return 0;
+	}
+	//DXInitKeyboard(App.hWnd, App.hInstance);
 	App.hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
 
 	if(!App.SoundDisabled) {

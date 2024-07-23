@@ -49,10 +49,9 @@ COLL_INFO mycoll;
 static COLL_INFO* lara_coll = &mycoll;
 
 void LaraCheatyBits() {
-	return;
 
 #ifdef _DEBUG
-	if(keymap[DIK_F1]) {
+	if(S_IsActionDown(inputImpl, IN_CHEAT)) {
 		lara.num_large_medipack = -1;
 		lara.num_small_medipack = -1;
 		lara.num_revolver_ammo = -1;
@@ -131,7 +130,7 @@ void LaraCheat(ITEM_INFO* item, COLL_INFO* coll) {
 	lara_item->hit_points = 1000;
 	LaraUnderWater(item, coll);
 
-	if(input & IN_WALK && !(input & IN_LOOK)) {
+	if(S_IsActionDown(inputImpl, IN_WALK) && !(S_IsActionDown(inputImpl, IN_LOOK))) {
 		lara.water_status = LW_ABOVE_WATER;
 		item->frame_number = GetAnim(currentLevel, ANIM_STOP)->frame_base;
 		item->anim_number = ANIM_STOP;

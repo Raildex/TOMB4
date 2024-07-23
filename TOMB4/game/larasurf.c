@@ -32,13 +32,13 @@ void lara_as_surfswim(ITEM_INFO* item, COLL_INFO* coll) {
 
 	lara.dive_count = 0;
 
-	if(input & IN_LEFT) {
+	if(S_IsActionDown(inputImpl, IN_LEFT)) {
 		item->pos.y_rot -= 728;
-	} else if(input & IN_RIGHT) {
+	} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 		item->pos.y_rot += 728;
 	}
 
-	if(!(input & IN_FORWARD) || input & IN_JUMP) {
+	if(!(S_IsActionDown(inputImpl, IN_FORWARD)) || S_IsActionDown(inputImpl, IN_JUMP)) {
 		item->goal_anim_state = AS_SURFTREAD;
 	}
 
@@ -57,13 +57,13 @@ void lara_as_surfback(ITEM_INFO* item, COLL_INFO* coll) {
 
 	lara.dive_count = 0;
 
-	if(input & IN_LEFT) {
+	if(S_IsActionDown(inputImpl, IN_LEFT)) {
 		item->pos.y_rot -= 364;
-	} else if(input & IN_RIGHT) {
+	} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 		item->pos.y_rot += 364;
 	}
 
-	if(!(input & IN_BACK)) {
+	if(!(S_IsActionDown(inputImpl, IN_BACK))) {
 		item->goal_anim_state = AS_SURFTREAD;
 	}
 
@@ -82,13 +82,13 @@ void lara_as_surfleft(ITEM_INFO* item, COLL_INFO* coll) {
 
 	lara.dive_count = 0;
 
-	if(input & IN_LEFT) {
+	if(S_IsActionDown(inputImpl, IN_LEFT)) {
 		item->pos.y_rot -= 364;
-	} else if(input & IN_RIGHT) {
+	} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 		item->pos.y_rot += 364;
 	}
 
-	if(!(input & IN_LSTEP)) {
+	if(!(S_IsActionDown(inputImpl, IN_LSTEP))) {
 		item->goal_anim_state = AS_SURFTREAD;
 	}
 
@@ -107,13 +107,13 @@ void lara_as_surfright(ITEM_INFO* item, COLL_INFO* coll) {
 
 	lara.dive_count = 0;
 
-	if(input & IN_LEFT) {
+	if(S_IsActionDown(inputImpl, IN_LEFT)) {
 		item->pos.y_rot -= 364;
-	} else if(input & IN_RIGHT) {
+	} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 		item->pos.y_rot += 364;
 	}
 
-	if(!(input & IN_RSTEP)) {
+	if(!(S_IsActionDown(inputImpl, IN_RSTEP))) {
 		item->goal_anim_state = AS_SURFTREAD;
 	}
 
@@ -136,30 +136,30 @@ void lara_as_surftread(ITEM_INFO* item, COLL_INFO* coll) {
 		return;
 	}
 
-	if(input & IN_LOOK) {
+	if(S_IsActionDown(inputImpl, IN_LOOK)) {
 		LookUpDown();
 		return;
 	}
 
-	if(input & IN_LEFT) {
+	if(S_IsActionDown(inputImpl, IN_LEFT)) {
 		item->pos.y_rot -= 728;
-	} else if(input & IN_RIGHT) {
+	} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 		item->pos.y_rot += 728;
 	}
 
-	if(input & IN_FORWARD) {
+	if(S_IsActionDown(inputImpl, IN_FORWARD)) {
 		item->goal_anim_state = AS_SURFSWIM;
-	} else if(input & IN_BACK) {
+	} else if(S_IsActionDown(inputImpl, IN_BACK)) {
 		item->goal_anim_state = AS_SURFBACK;
 	}
 
-	if(input & IN_LSTEP) {
+	if(S_IsActionDown(inputImpl, IN_LSTEP)) {
 		item->goal_anim_state = AS_SURFLEFT;
-	} else if(input & IN_RSTEP) {
+	} else if(S_IsActionDown(inputImpl, IN_RSTEP)) {
 		item->goal_anim_state = AS_SURFRIGHT;
 	}
 
-	if(input & IN_JUMP) {
+	if(S_IsActionDown(inputImpl, IN_JUMP)) {
 		lara.dive_count++;
 
 		if(lara.dive_count == 10) {
@@ -222,7 +222,7 @@ void LaraSurface(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->enable_baddie_push = 0;
 	coll->enable_spaz = 0;
 
-	if(input & IN_LOOK && lara.look) {
+	if(S_IsActionDown(inputImpl, IN_LOOK) && lara.look) {
 		LookLeftRight();
 	} else {
 		ResetLook();
@@ -261,7 +261,7 @@ long LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll) {
 	long hdif;
 	short angle;
 
-	if(coll->coll_type != CT_FRONT || !(input & IN_ACTION) || abs(coll->left_floor2 - coll->right_floor2) >= 60) {
+	if(coll->coll_type != CT_FRONT || !(S_IsActionDown(inputImpl, IN_ACTION)) || abs(coll->left_floor2 - coll->right_floor2) >= 60) {
 		return 0;
 	}
 

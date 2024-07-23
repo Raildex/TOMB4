@@ -30,19 +30,19 @@
 #include <stdlib.h>
 
 static void lara_as_swimcheat(ITEM_INFO* item, COLL_INFO* coll) {
-	if(input & IN_FORWARD) {
+	if(S_IsActionDown(inputImpl, IN_FORWARD)) {
 		item->pos.x_rot -= 546;
-	} else if(input & IN_BACK) {
+	} else if(S_IsActionDown(inputImpl, IN_BACK)) {
 		item->pos.x_rot += 546;
 	}
 
-	if(input & IN_LEFT) {
+	if(S_IsActionDown(inputImpl, IN_LEFT)) {
 		lara.turn_rate -= 613;
 
 		if(lara.turn_rate < -1092) {
 			lara.turn_rate = -1092;
 		}
-	} else if(input & IN_RIGHT) {
+	} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 		lara.turn_rate += 613;
 
 		if(lara.turn_rate > 1092) {
@@ -50,15 +50,15 @@ static void lara_as_swimcheat(ITEM_INFO* item, COLL_INFO* coll) {
 		}
 	}
 
-	if(input & IN_ACTION) {
+	if(S_IsActionDown(inputImpl, IN_ACTION)) {
 		TriggerDynamic(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 31, 255, 255, 255);
 	}
 
-	if(input & IN_ROLL) {
+	if(S_IsActionDown(inputImpl, IN_ROLL)) {
 		lara.turn_rate = -2184;
 	}
 
-	if(input & IN_JUMP) {
+	if(S_IsActionDown(inputImpl, IN_JUMP)) {
 		item->fallspeed += 16;
 
 		if(item->fallspeed > 400) {
@@ -79,7 +79,7 @@ void lara_as_swim(ITEM_INFO* item, COLL_INFO* coll) {
 		return;
 	}
 
-	if(input & IN_ROLL) {
+	if(S_IsActionDown(inputImpl, IN_ROLL)) {
 		item->current_anim_state = AS_WATERROLL;
 		item->anim_number = ANIM_WATERROLL;
 		item->frame_number = GetAnim(currentLevel, ANIM_WATERROLL)->frame_base;
@@ -91,7 +91,7 @@ void lara_as_swim(ITEM_INFO* item, COLL_INFO* coll) {
 			item->fallspeed = 200;
 		}
 
-		if(!(input & IN_JUMP)) {
+		if(!(S_IsActionDown(inputImpl, IN_JUMP))) {
 			item->goal_anim_state = AS_GLIDE;
 		}
 	}
@@ -112,7 +112,7 @@ void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->enable_spaz = 0;
 	coll->enable_baddie_push = 1;
 
-	if(input & IN_LOOK && lara.look) {
+	if(S_IsActionDown(inputImpl, IN_LOOK) && lara.look) {
 		LookLeftRight();
 	} else {
 		ResetLook();
@@ -204,14 +204,14 @@ void lara_as_glide(ITEM_INFO* item, COLL_INFO* coll) {
 			return;
 		}
 
-		if(input & IN_ROLL) {
+		if(S_IsActionDown(inputImpl, IN_ROLL)) {
 			item->current_anim_state = AS_WATERROLL;
 			item->anim_number = ANIM_WATERROLL;
 			item->frame_number = GetAnim(currentLevel, ANIM_WATERROLL)->frame_base;
 		} else {
 			SwimTurn(item);
 
-			if(input & IN_JUMP) {
+			if(S_IsActionDown(inputImpl, IN_JUMP)) {
 				item->goal_anim_state = AS_SWIM;
 			}
 
@@ -234,20 +234,20 @@ void lara_as_tread(ITEM_INFO* item, COLL_INFO* coll) {
 		return;
 	}
 
-	if(input & IN_ROLL) {
+	if(S_IsActionDown(inputImpl, IN_ROLL)) {
 		item->current_anim_state = AS_WATERROLL;
 		item->anim_number = ANIM_WATERROLL;
 		item->frame_number = GetAnim(currentLevel, ANIM_WATERROLL)->frame_base;
 		return;
 	}
 
-	if(input & IN_LOOK) {
+	if(S_IsActionDown(inputImpl, IN_LOOK)) {
 		LookUpDown();
 	}
 
 	SwimTurn(item);
 
-	if(input & IN_JUMP) {
+	if(S_IsActionDown(inputImpl, IN_JUMP)) {
 		item->goal_anim_state = AS_SWIM;
 	}
 
@@ -263,7 +263,7 @@ void lara_as_tread(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_as_dive(ITEM_INFO* item, COLL_INFO* coll) {
-	if(input & IN_FORWARD) {
+	if(S_IsActionDown(inputImpl, IN_FORWARD)) {
 		item->pos.x_rot -= 182;
 	}
 }
@@ -387,13 +387,13 @@ long GetWaterDepth(long x, long y, long z, short room_number) {
 }
 
 void SwimTurn(ITEM_INFO* item) {
-	if(input & IN_FORWARD) {
+	if(S_IsActionDown(inputImpl, IN_FORWARD)) {
 		item->pos.x_rot -= 364;
-	} else if(input & IN_BACK) {
+	} else if(S_IsActionDown(inputImpl, IN_BACK)) {
 		item->pos.x_rot += 364;
 	}
 
-	if(input & IN_LEFT) {
+	if(S_IsActionDown(inputImpl, IN_LEFT)) {
 		lara.turn_rate -= 409;
 
 		if(lara.turn_rate < -1092) {
@@ -401,7 +401,7 @@ void SwimTurn(ITEM_INFO* item) {
 		}
 
 		item->pos.z_rot -= 546;
-	} else if(input & IN_RIGHT) {
+	} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 		lara.turn_rate += 409;
 
 		if(lara.turn_rate > 1092) {

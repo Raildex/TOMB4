@@ -124,7 +124,7 @@ long GetOnBike(short item_number, COLL_INFO* coll) {
 	}
 
 	if(abs(item->pos.pos.y - lara_item->pos.pos.y) > 256
-	   || (!(input & IN_ACTION) && GLOBAL_inventoryitemchosen != PUZZLE_ITEM1)) {
+	   || (!(S_IsActionDown(inputImpl, IN_ACTION)) && GLOBAL_inventoryitemchosen != PUZZLE_ITEM1)) {
 		return 0;
 	}
 
@@ -485,18 +485,18 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 				}
 			} else {
 				if(bike->velocity & 0xFFFFFF00
-				   || input & (IN_ACTION | IN_JUMP)) {
-					if(input & IN_LEFT) {
+				   || S_IsActionDown(inputImpl, IN_ACTION) || S_IsActionDown(inputImpl, IN_JUMP)) {
+					if(S_IsActionDown(inputImpl, IN_LEFT)) {
 						lara_item->goal_anim_state = 2;
-					} else if(input & IN_RIGHT) {
+					} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 						lara_item->goal_anim_state = 22;
-					} else if(input & IN_JUMP) {
+					} else if(S_IsActionDown(inputImpl, IN_JUMP)) {
 						if(bike->velocity > 21844) {
 							lara_item->goal_anim_state = 6;
 						} else {
 							lara_item->goal_anim_state = 5;
 						}
-					} else if(input & IN_BACK && bike->velocity <= 2048) {
+					} else if(S_IsActionDown(inputImpl, IN_BACK) && bike->velocity <= 2048) {
 						lara_item->goal_anim_state = 3;
 					}
 				} else {
@@ -509,7 +509,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 		case 2:
 
 			if(bike->velocity & 0xFFFFFF00) {
-				if(input & IN_RIGHT || !(input & IN_LEFT)) {
+				if(S_IsActionDown(inputImpl, IN_RIGHT) || !(S_IsActionDown(inputImpl, IN_LEFT))) {
 					lara_item->goal_anim_state = 1;
 				}
 			} else {
@@ -520,7 +520,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 
 		case 3:
 
-			if(input & IN_BACK) {
+			if(S_IsActionDown(inputImpl, IN_BACK)) {
 				lara_item->goal_anim_state = 4;
 			} else {
 				lara_item->goal_anim_state = 15;
@@ -533,9 +533,9 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 		case 18:
 
 			if(bike->velocity & 0xFFFFFF00) {
-				if(input & IN_LEFT) {
+				if(S_IsActionDown(inputImpl, IN_LEFT)) {
 					lara_item->goal_anim_state = 2;
-				} else if(input & IN_RIGHT) {
+				} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 					lara_item->goal_anim_state = 22;
 				}
 			} else {
@@ -568,7 +568,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 		case 13:
 		case 14:
 
-			if(input & (IN_ACTION | IN_JUMP)) {
+			if(S_IsActionDown(inputImpl, IN_ACTION) || S_IsActionDown(inputImpl, IN_JUMP)) {
 				lara_item->goal_anim_state = 1;
 			}
 
@@ -579,11 +579,11 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 			if(killed) {
 				lara_item->goal_anim_state = 7;
 			} else if(
-				((input & (IN_JUMP | IN_RIGHT)) != (IN_JUMP | IN_RIGHT))
+				((!S_IsActionDown(inputImpl, IN_JUMP) || !S_IsActionDown(inputImpl, IN_RIGHT)))
 				|| bike->velocity || dont_exit_bike) {
-				if(input & IN_ACTION && !(input & IN_JUMP)) {
+				if(S_IsActionDown(inputImpl, IN_ACTION) && !(S_IsActionDown(inputImpl, IN_JUMP))) {
 					lara_item->goal_anim_state = 1;
-				} else if(input & IN_BACK) {
+				} else if(S_IsActionDown(inputImpl, IN_BACK)) {
 					lara_item->goal_anim_state = 3;
 				}
 			} else if(CanGetOff(1)) {
@@ -595,7 +595,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 		case 22:
 
 			if(bike->velocity & 0xFFFFFF00) {
-				if(input & IN_LEFT || !(input & IN_RIGHT)) {
+				if(S_IsActionDown(inputImpl, IN_LEFT) || !(S_IsActionDown(inputImpl, IN_RIGHT))) {
 					lara_item->goal_anim_state = 1;
 				}
 			} else {
@@ -1022,7 +1022,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 		bike->unused1 = 0;
 	}
 
-	if(input & IN_SPRINT && input & IN_ACTION && DashTimer
+	if(S_IsActionDown(inputImpl, IN_SPRINT) && S_IsActionDown(inputImpl, IN_ACTION) && DashTimer
 	   && savegame.HaveBikeBooster) {
 		bike->flags |= 0x100;
 		DashTimer -= 2;
@@ -1042,12 +1042,12 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 			turn = (910 * bike->velocity) >> W2V_SHIFT;
 		}
 
-		if(!bike->velocity && input & IN_LOOK) {
+		if(!bike->velocity && S_IsActionDown(inputImpl, IN_LOOK)) {
 			LookUpDown();
 		}
 
 		if(bike->velocity > 0) {
-			if(input & IN_LEFT) {
+			if(S_IsActionDown(inputImpl, IN_LEFT)) {
 				if(bike->velocity > 0x4000) {
 					bike->bike_turn -= 273;
 				} else {
@@ -1058,7 +1058,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 				if(bike->bike_turn < -turn) {
 					bike->bike_turn = -turn;
 				}
-			} else if(input & IN_RIGHT) {
+			} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 				if(bike->velocity > 0x4000) {
 					bike->bike_turn += 273;
 				} else {
@@ -1071,13 +1071,13 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 				}
 			}
 		} else if(bike->velocity < 0) {
-			if(input & IN_RIGHT) {
+			if(S_IsActionDown(inputImpl, IN_RIGHT)) {
 				bike->bike_turn -= 91;
 
 				if(bike->bike_turn < -910) {
 					bike->bike_turn = -910;
 				}
-			} else if(input & IN_LEFT) {
+			} else if(S_IsActionDown(inputImpl, IN_LEFT)) {
 				bike->bike_turn += 91;
 
 				if(bike->bike_turn > 910) {
@@ -1086,7 +1086,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 			}
 		}
 
-		if(input & IN_JUMP) {
+		if(S_IsActionDown(inputImpl, IN_JUMP)) {
 			pos.x = 0;
 			pos.y = -144;
 			pos.z = -1024;
@@ -1097,7 +1097,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 			item->mesh_bits = 0x3F7;
 		}
 
-		if(input & IN_JUMP) {
+		if(S_IsActionDown(inputImpl, IN_JUMP)) {
 			if(bike->velocity > 0) {
 				bike->velocity -= 0x300;
 
@@ -1111,7 +1111,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 					bike->velocity = 0;
 				}
 			}
-		} else if(input & IN_ACTION) {
+		} else if(S_IsActionDown(inputImpl, IN_ACTION)) {
 			if(bike->velocity < 0xC000) {
 				if(bike->velocity < 0x4000) {
 					bike->velocity += ((0x4800 - bike->velocity) >> 3) + 8;
@@ -1142,7 +1142,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 			}
 		}
 
-		if(!(input & IN_ACTION)) {
+		if(!(S_IsActionDown(inputImpl, IN_ACTION))) {
 			if(bike->velocity > 384) {
 				bike->velocity -= 384;
 			} else if(bike->velocity < -384) {
@@ -1241,7 +1241,7 @@ long BikeDynamics(ITEM_INFO* item) {
 		ang = item->pos.y_rot - bike->move_angle;
 		vel = (short)(728 - ((2 * bike->velocity) >> 10));
 
-		if(!(input & IN_ACTION) && bike->velocity > 0) {
+		if(!(S_IsActionDown(inputImpl, IN_ACTION)) && bike->velocity > 0) {
 			vel += vel >> 1;
 		}
 
@@ -1481,9 +1481,6 @@ void BikeControl(short item_number) {
 
 	if(lara_item->hit_points <= 0) {
 		killed = 1;
-		input &= ~(
-			IN_FORWARD | IN_BACK | IN_LEFT
-			| IN_RIGHT); // should be IN_ACTION instead?
 	}
 
 	if(bike->flags & 0xFF) {
