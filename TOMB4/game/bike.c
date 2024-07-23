@@ -605,12 +605,6 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 			break;
 		}
 	}
-
-	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
-		lara_item->goal_anim_state = 20;
-		lara_item->hit_points = 0;
-		BikeExplode(item);
-	}
 }
 
 void BikeStart(ITEM_INFO* item, ITEM_INFO* l) {
@@ -672,7 +666,6 @@ static long BikeCheckGetOff() {
 	BIKEINFO* bike;
 	PHD_VECTOR pos;
 	short state;
-
 	item = GetItem(currentLevel, lara.vehicle);
 	bike = (BIKEINFO*)item->data;
 	state = lara_item->current_anim_state;
@@ -1616,6 +1609,11 @@ void BikeControl(short item_number) {
 				pos.x, pos.y, pos.z, item->pos.y_rot + 0x8000, smokeVel, 0);
 		}
 	}
-
+	if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
+		lara_item->goal_anim_state = 20;
+		lara_item->hit_points = 0;
+		BikeExplode(item);
+		return;
+	}
 	BikeCheckGetOff();
 }
