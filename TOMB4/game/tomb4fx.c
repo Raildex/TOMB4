@@ -1602,7 +1602,7 @@ SHOCKWAVE_STRUCT* GetFreeShockwave() {
 	}
 	size_t idx = nShockWaves;
 	nShockWaves = (nShockWaves * 2) + 4;
-	newBuffer = realloc(ShockWaves, nShockWaves * sizeof(BLOOD_STRUCT));
+	newBuffer = (SHOCKWAVE_STRUCT*)realloc(ShockWaves, nShockWaves * sizeof(SHOCKWAVE_STRUCT));
 	if(!newBuffer) {
 		LogE(__func__, "Insufficient memory to allocate for %d shockwaves", nShockWaves);
 		nShockWaves = oldSize;
