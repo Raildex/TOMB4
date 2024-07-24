@@ -107,7 +107,7 @@ void InitialiseSpotCam(short Sequence) {
 	bTrackCamInit = 0;
 	spotcam_timer = 0;
 	spotcam_loopcnt = 0;
-	bDisableLaraControl = 0;
+	EnableLaraControl();
 	LaraHealth = lara_item->hit_points;
 	LaraAir = lara.air;
 	InitialCameraTarget.x = camera.target.pos.x;
@@ -135,7 +135,7 @@ void InitialiseSpotCam(short Sequence) {
 	s = GetSpotCam(currentLevel, current_spline_camera);
 
 	if(s->flags & 0x400 || gfGameMode == 1) {
-		bDisableLaraControl = 1;
+		DisableLaraControl();
 
 		if(gfGameMode != 1) {
 			SetFadeClip(16, 1);
@@ -211,6 +211,14 @@ void InitialiseSpotCam(short Sequence) {
 
 		SetSplineData(3, cunt);
 	}
+}
+
+void EnableLaraControl() {
+	bDisableLaraControl = 0;
+}
+void DisableLaraControl() {
+	bDisableLaraControl = 1;
+	S_ClearInput(inputImpl);
 }
 
 void InitSpotCamSequences() {
@@ -443,12 +451,12 @@ void CalculateSpotCams() {
 					next_spline_camera = first_camera - 1;
 				} else {
 					if(CurrentCam->flags & 0x800) {
-						bDisableLaraControl = 0;
+						EnableLaraControl();
 					}
 
 					if(CurrentCam->flags & 0x400) {
 						SetFadeClip(16, 1);
-						bDisableLaraControl = 1;
+						DisableLaraControl();
 					}
 
 					cunt = 0;
@@ -504,7 +512,7 @@ void CalculateSpotCams() {
 
 						SetFadeClip(0, 1);
 						bUseSpotCam = 0;
-						bDisableLaraControl = 0;
+						EnableLaraControl();
 						bCheckTrigger = 0;
 						camera.old_type = FIXED_CAMERA;
 						camera.type = CHASE_CAMERA;
@@ -570,7 +578,7 @@ void CalculateSpotCams() {
 	} else {
 		SetFadeClip(0, 1);
 		bUseSpotCam = 0;
-		bDisableLaraControl = 0;
+		EnableLaraControl();
 		camera.speed = 1;
 		AlterFOV(LastFov);
 		CalculateCamera();

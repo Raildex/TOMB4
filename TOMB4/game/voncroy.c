@@ -221,7 +221,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 		ScreenFadeSpeed = 16;
 		ScreenFadeBack = 0;
 		ScreenFadedOut = 1;
-		bDisableLaraControl = 1;
+		DisableLaraControl();
 		item->trigger_flags++;
 
 		if(item->item_flags[3] == 14) {
@@ -326,7 +326,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 		S_CDStop();
 		S_CDPlay(CurrentAtmosphere, 1);
 		IsAtmospherePlaying = 1;
-		bDisableLaraControl = 0;
+		EnableLaraControl();
 		SetFadeClip(0, 1);
 		item->trigger_flags = 0;
 		VonCroyCutFlags[item->item_flags[3]] = 1;

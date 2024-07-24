@@ -462,7 +462,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 	InitialisePickUpDisplay();
 	// empty func call here
 	StopSounds();
-	bDisableLaraControl = 0;
+	EnableLaraControl();
 
 	if(gfGameMode == 4) {
 		sgRestoreGame();
@@ -893,7 +893,7 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 	S_SoundStopAllSamples();
 	S_CDStop();
 	bUseSpotCam = 0;
-	bDisableLaraControl = 0;
+	EnableLaraControl();
 
 #ifndef TIMES_LEVEL
 	if(gfLevelComplete == 1 && gfStatus != 2) {

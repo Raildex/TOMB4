@@ -21,6 +21,8 @@ typedef struct SPOTCAM {
 #pragma pack(pop)
 void SetSplineData(long num, long cam);
 void InitialiseSpotCam(short Sequence);
+void EnableLaraControl();
+void DisableLaraControl();
 void InitSpotCamSequences();
 long Spline(long x, long* knots, long nk);
 void CalculateSpotCams();

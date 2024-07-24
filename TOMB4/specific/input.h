@@ -66,8 +66,9 @@ typedef struct INPUT_MANAGER INPUT_MANAGER;
 long S_CreateInputManager(INPUT_MANAGER** out);
 void S_DestroyInputManager(INPUT_MANAGER* manager);
 void S_UpdateInput(INPUT_MANAGER* manager);
-long S_IsActionDownDebounced(INPUT_MANAGER* manager, input_buttons action);
-long S_IsActionDown(INPUT_MANAGER* manager, input_buttons action);
+void S_ClearInput(INPUT_MANAGER* manager);
+long S_IsActionDownDebounced(INPUT_MANAGER* manager, input_buttons button);
+long S_IsActionDown(INPUT_MANAGER* manager, input_buttons button);
 long S_MapKeyboardButton(INPUT_MANAGER* manager, keyboard_button button, input_buttons action);
 long S_MapGamepadButton(INPUT_MANAGER* manager, gamepad_button button, input_buttons action);
 long ReadJoystick(long* x, long* y);
@@ -81,4 +82,4 @@ extern short ammo_change_timer;
 extern char ammo_change_buf[12];
 
 extern INPUT_MANAGER* inputImpl;
-#endif// TOMB4_SPECIFIC_INPUT_H
+#endif // TOMB4_SPECIFIC_INPUT_H

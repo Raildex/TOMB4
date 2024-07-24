@@ -633,6 +633,10 @@ void S_UpdateInput(INPUT_MANAGER* manager) {
 	memcpy(&manager->lastInput[0], &frameInput[0], sizeof(frameInput));
 }
 
+void S_ClearInput(INPUT_MANAGER* manager) {
+	memset(&manager->lastInput[0],0,sizeof(manager->lastInput));
+}
+
 long ReadJoystick(long* x, long* y) {
 	JOYINFOEX joystick;
 	static JOYCAPS caps;

@@ -243,15 +243,12 @@ long ControlPhase(long nframes, long demo_mode) {
 			IN_SELECT,
 			IN_DESELECT,
 		};
-		
-		S_UpdateInput(inputImpl);
-
-		if(bDisableLaraControl) {
-			if(gfCurrentLevel) {
-			}
-
+		if(gfCurrentLevel == 0) { // We are in title
+			S_UpdateInput(inputImpl);
+		} else if(!bDisableLaraControl) {
+			S_UpdateInput(inputImpl);
 		}
-
+		
 		if(cutseq_trig) {
 			if(keymap[DIK_ESCAPE] && !ScreenFading && !bDoCredits) {
 				cutseq_trig = 3;
