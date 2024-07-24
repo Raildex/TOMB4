@@ -1202,7 +1202,7 @@ void ControlBurningFloor(short item_number) {
 			dx = abs(item->pos.pos.x + xoff - lara_item->pos.pos.x);
 			dy = abs(item->pos.pos.y - lara_item->pos.pos.y);
 			dz = abs(
-				item->pos.pos.z + xoff
+				item->pos.pos.z + zoff
 				- lara_item->pos.pos.z); // ORIGINAL BUG uses xoff instead of
 										 // zoff, only affects last test
 

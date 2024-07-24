@@ -431,6 +431,8 @@ void AhmetControl(short item_number) {
 			}
 
 			break;
+		default:
+			break;
 		}
 	}
 

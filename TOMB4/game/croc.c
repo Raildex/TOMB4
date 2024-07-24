@@ -259,6 +259,8 @@ void CrocControl(short item_number) {
 			}
 
 			break;
+		default:
+			break;
 		}
 	}
 
@@ -792,6 +794,8 @@ void CrocgodControl(short item_number) {
 				}
 			}
 
+			break;
+		default:
 			break;
 		}
 	}

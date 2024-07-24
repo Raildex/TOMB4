@@ -363,7 +363,7 @@ long EscapeBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number) {
 		return 0;
 	}
 
-	return z > 0 == item->pos.pos.z > enemy->pos.pos.z || x > 0 == item->pos.pos.x > enemy->pos.pos.x;
+	return (z > 0) == (item->pos.pos.z > enemy->pos.pos.z) || (x > 0) == (item->pos.pos.x > enemy->pos.pos.x);
 }
 
 long ValidBox(ITEM_INFO* item, short zone_number, short box_number) {
@@ -414,7 +414,7 @@ long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number) {
 		return 0;
 	}
 
-	baddie_quad = item->pos.pos.z <= enemy->pos.pos.z ? (item->pos.pos.x <= enemy->pos.pos.x ? 0 : 3) : (item->pos.pos.x > enemy->pos.pos.x) + 1;
+	baddie_quad = item->pos.pos.z <= enemy->pos.pos.z ? ((item->pos.pos.x <= enemy->pos.pos.x) ? 0 : 3) : (item->pos.pos.x > enemy->pos.pos.x) + 1;
 	return enemy_quad != baddie_quad || abs(enemy_quad - box_quad) != 2;
 }
 

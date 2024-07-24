@@ -9,7 +9,7 @@ typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
 
 void FlameEmitterControl(short item_number);
-void TwoBlockPlatformFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* ht, long* xoff, long* zoff, long* onObject);
+void TwoBlockPlatformFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* xoff, long* zoff, long* onObject);
 void TwoBlockPlatformCeiling(ITEM_INFO* item, long x, long y, long z, long* height);
 void ControlTwoBlockPlatform(short item_number);
 void ControlJobySpike(short item_number);
@@ -49,7 +49,7 @@ void FallingCeiling(short item_number);
 void ControlSmashableBikeWall(short item_number);
 void ControlFallingBlock2(short item_number);
 void FallingBlockCeiling(ITEM_INFO* item, long x, long y, long z, long* height);
-void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* ht, long* xoff, long* zoff, long* onObject);
+void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* xoff, long* zoff, long* onObject);
 void FallingBlock(short item_number);
 void FallingBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void CeilingTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
@@ -62,4 +62,4 @@ void ControlObelisk(short item_number);
 extern char LibraryTab[8];
 
 
-#endif// TOMB4_GAME_TRAPS_H
+#endif // TOMB4_GAME_TRAPS_H

@@ -1472,6 +1472,8 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 				coll->shift.x = FindGridShift(x + xfront, x);
 				coll->shift.z = coll->old.z - z;
 				break;
+			default:
+				break;
 			}
 		}
 
@@ -1502,6 +1504,8 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 			case WEST:
 				coll->shift.z = FindGridShift(z + zleft, z + zfront);
 				break;
+			default:
+				break;
 			}
 		}
 
@@ -1523,6 +1527,8 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 			case EAST:
 			case WEST:
 				coll->shift.z = FindGridShift(z + zright, z + zfront);
+				break;
+			default:
 				break;
 			}
 		}

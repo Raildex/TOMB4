@@ -254,6 +254,9 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	if(nVtx > 256) {
 		nVtx = 256;
 	}
+	if(nVtx <= 0) {
+		return;
+	}
 
 	phd_PushUnitMatrix();
 	phd_RotY(RotY);

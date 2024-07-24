@@ -731,6 +731,7 @@ void ControlEnemyMissile(short fx_number) {
 }
 
 RIPPLE_STRUCT* GetFreeRipple() {
+	RIPPLE_STRUCT* newBuffer = NULL;
 	for(int i = 0; i < nRipples; ++i) {
 		if(!(ripples[i].flags & 1)) {
 			return &ripples[i];
@@ -738,7 +739,13 @@ RIPPLE_STRUCT* GetFreeRipple() {
 	}
 	size_t idx = nRipples;
 	nRipples = (nRipples * 2) + 4;
-	ripples = realloc(ripples, nRipples * sizeof(RIPPLE_STRUCT));
+	newBuffer = (RIPPLE_STRUCT*)realloc(ripples, nRipples * sizeof(RIPPLE_STRUCT));
+	if(!newBuffer) {
+		nRipples = idx;
+		return ripples;
+	}
+	ripples = newBuffer;
+
 	for(int i = idx; i < nRipples; ++i) {
 		RIPPLE_STRUCT* bptr = &ripples[i];
 		*bptr = (RIPPLE_STRUCT){ 0 };
@@ -1147,7 +1154,7 @@ void UpdateSparks() {
 		spark[i].Size = (unsigned char)(spark[i].sSize + ((fade * (spark[i].dSize - spark[i].sSize)) >> 16));
 
 		if(spark[i].Flags & 1 && !lara.burn || spark[i].Flags & 0x400) {
-			rad = spark[i].Size << spark[i].Scalar >> 1;
+			rad = spark[i].Size << spark[i].Scalar >> 3;
 
 			if(spark[i].x + rad > DeadlyBounds[0] && spark[i].x - rad < DeadlyBounds[1] && spark[i].y + rad > DeadlyBounds[2] && spark[i].y - rad < DeadlyBounds[3] && spark[i].z + rad > DeadlyBounds[4] && spark[i].z - rad < DeadlyBounds[5]) {
 				if(spark[i].Flags & 1) {
@@ -1769,6 +1776,7 @@ void TriggerRocketSmoke(long x, long y, long z, long col) {
 }
 
 SPLASH_STRUCT* GetFreeSplash() {
+	SPLASH_STRUCT* newBuffer = NULL;
 	for(int i = 0; i < nSplashes; ++i) {
 		if(!(splashes[i].flags & 1)) {
 			return &splashes[i];
@@ -1776,7 +1784,12 @@ SPLASH_STRUCT* GetFreeSplash() {
 	}
 	size_t idx = nSplashes;
 	nSplashes = (nSplashes * 2) + 4;
-	splashes = realloc(splashes, nSplashes * sizeof(SPLASH_STRUCT));
+	newBuffer = (SPLASH_STRUCT*)realloc(splashes, nSplashes * sizeof(SPLASH_STRUCT));
+	if(!newBuffer) {
+		nSplashes = idx;
+		return splashes;
+	}
+	splashes = newBuffer;
 	for(int i = idx; i < nSplashes; ++i) {
 		SPLASH_STRUCT* bptr = &splashes[i];
 		*bptr = (SPLASH_STRUCT){ 0 };
@@ -1871,7 +1884,7 @@ void UpdateSplashes() //(and ripples)
 	for(int i = 0; i < nRipples; i++) {
 		ripple = &ripples[i];
 
-		if(!(ripple->flags & 1)) {
+		if(!(ripple->flags & ripple_on)) {
 			continue;
 		}
 
@@ -1899,7 +1912,7 @@ void UpdateSplashes() //(and ripples)
 			ripple->life -= 3;
 
 			if(ripple->life > 250) {
-				ripple->flags = 0;
+				ripple->flags = ripple_default;
 			}
 		}
 	}

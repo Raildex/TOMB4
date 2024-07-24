@@ -374,7 +374,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	sptr->Life = (GetRandomControl() & 3) + 40;
 	sptr->sLife = sptr->Life;
 
-	if((weaponType == WEAPON_PISTOLS || weaponType == WEAPON_REVOLVER || weaponType == WEAPON_UZI) && sptr->dShade > 64u) {
+	if((weaponType == WEAPON_PISTOLS || weaponType == WEAPON_REVOLVER || weaponType == WEAPON_UZI) && sptr->dShade > 64U) {
 		sptr->dShade = 64;
 	}
 
@@ -1774,7 +1774,7 @@ long LSpline(long x, long* knots, long nk) {
 	}
 
 	x -= 65536 * span;
-	k = &knots[3 * span];
+	k = &knots[3 * (ptrdiff_t)span];
 	c1 = k[3] + (k[3] >> 1) - (k[6] >> 1) - k[6] + (k[9] >> 1) + ((-k[0] - 1) >> 1);
 	ret = (long long)c1 * x >> 16;
 	c2 = ret + 2 * k[6] - 2 * k[3] - (k[3] >> 1) - (k[9] >> 1) + k[0];
@@ -1873,7 +1873,7 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number) {
 	long uw;
 
 	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
-		TriggerExplosionBubble(x, y, z, (short)room_number);
+		TriggerExplosionBubble(x, y, z, room_number);
 		uw = 1;
 	} else {
 		uw = 0;

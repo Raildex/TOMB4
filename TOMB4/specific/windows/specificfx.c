@@ -1,4 +1,3 @@
-
 #include "specific/specificfx.h"
 #include "game/bloodstruct.h"
 #include "game/bubblestruct.h"
@@ -869,8 +868,8 @@ void Draw2DSprite(long x, long y, long slot, long unused, long unused2) {
 
 	p = GetFixedScale(1);
 	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + slot);
-	x0 = (long)(x + (sprite->width >> 8) * p);
-	y0 = (long)(y + 1 + (sprite->height >> 8) * p);
+	x0 = (x + (sprite->width >> 8) * p);
+	y0 = (y + 1 + (sprite->height >> 8) * p);
 	setXY4(v, x, y, x0, y, x0, y0, x, y0, (long)f_mznear, clipflags);
 	v[0].specular = 0xFF000000;
 	v[1].specular = 0xFF000000;
@@ -2007,14 +2006,14 @@ void ShowTitle() {
 	tex.drawtype = 1;
 	tex.flag = 0;
 	tex.tpage = (unsigned short)(GetNumTextures(currentLevel) - 4);
-	tex.u1 = (float)(1.0F / 256.0F);
-	tex.v1 = (float)(1.0F / 256.0F);
-	tex.u2 = 1.0F - (float)(1.0F / 256.0F);
-	tex.v2 = (float)(1.0F / 256.0F);
-	tex.u3 = 1.0F - (float)(1.0F / 256.0F);
-	tex.v3 = 1.0F - (float)(1.0F / 256.0F);
-	tex.u4 = (float)(1.0F / 256.0F);
-	tex.v4 = 1.0F - (float)(1.0F / 256.0F);
+	tex.u1 = (1.0F / 256.0F);
+	tex.v1 = (1.0F / 256.0F);
+	tex.u2 = 1.0F - (1.0F / 256.0F);
+	tex.v2 = (1.0F / 256.0F);
+	tex.u3 = 1.0F - (1.0F / 256.0F);
+	tex.v3 = 1.0F - (1.0F / 256.0F);
+	tex.u4 = (1.0F / 256.0F);
+	tex.v4 = 1.0F - (1.0F / 256.0F);
 	AddQuadSorted(v, 0, 1, 2, 3, &tex, 0);
 
 	v[0].sx = w + x;
@@ -2048,14 +2047,14 @@ void ShowTitle() {
 	tex.drawtype = 1;
 	tex.flag = 0;
 	tex.tpage = (unsigned short)(GetNumTextures(currentLevel) - 3);
-	tex.u1 = (float)(1.0F / 256.0F);
-	tex.v1 = (float)(1.0F / 256.0F);
-	tex.u2 = 1.0F - (float)(1.0F / 256.0F);
-	tex.v2 = (float)(1.0F / 256.0F);
-	tex.u3 = 1.0F - (float)(1.0F / 256.0F);
-	tex.v3 = 1.0F - (float)(1.0F / 256.0F);
-	tex.u4 = (float)(1.0F / 256.0F);
-	tex.v4 = 1.0F - (float)(1.0F / 256.0F);
+	tex.u1 = (1.0F / 256.0F);
+	tex.v1 = (1.0F / 256.0F);
+	tex.u2 = 1.0F - (1.0F / 256.0F);
+	tex.v2 = (1.0F / 256.0F);
+	tex.u3 = 1.0F - (1.0F / 256.0F);
+	tex.v3 = 1.0F - (1.0F / 256.0F);
+	tex.u4 = (1.0F / 256.0F);
+	tex.v4 = 1.0F - (1.0F / 256.0F);
 	AddQuadSorted(v, 0, 1, 2, 3, &tex, 1);
 }
 
@@ -2094,9 +2093,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 			return;
 		}
 
-		r = (unsigned char)gfLensFlareColour.r;
-		g = (unsigned char)gfLensFlareColour.g;
-		b = (unsigned char)gfLensFlareColour.b;
+		r = gfLensFlareColour.r;
+		g = gfLensFlareColour.g;
+		b = gfLensFlareColour.b;
 		pos.x = x;
 		pos.y = y;
 		pos.z = z;
@@ -2161,9 +2160,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 
 	if(lfobj) {
-		vec[0] = (long)(pos.x - lara_item->pos.pos.x);
-		vec[1] = (long)(pos.y - lara_item->pos.pos.y);
-		vec[2] = (long)(pos.z - lara_item->pos.pos.z);
+		vec[0] = (pos.x - lara_item->pos.pos.x);
+		vec[1] = (pos.y - lara_item->pos.pos.y);
+		vec[2] = (pos.z - lara_item->pos.pos.z);
 	} else {
 		pos.x = x - lara_item->pos.pos.x;
 		pos.y = y - lara_item->pos.pos.y;
@@ -2224,7 +2223,7 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj) {
 					}
 
 					r2 = flare_table[0] + (GetRandomDraw() & 8);
-					g2 = flare_table[1];
+					g2 = (long)flare_table[1];
 					b2 = flare_table[2] + (GetRandomDraw() & 8);
 				}
 
@@ -3292,7 +3291,7 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 	}
 }
 
-bool ClipLine(long* x1, long* y1, long z1, long* x2, long* y2, long z2, long xMin, long yMin, long w, long h) {
+long ClipLine(long* x1, long* y1, long z1, long* x2, long* y2, long z2, long xMin, long yMin, long w, long h) {
 	float clip;
 
 	if(z1 < 20 || z2 < 20) {

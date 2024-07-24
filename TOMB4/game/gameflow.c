@@ -1,4 +1,3 @@
-
 #include "game/gameflow.h"
 #include "game/camera.h"
 #include "game/control.h"
@@ -244,6 +243,8 @@ void DoGameflow() {
 
 			case 4:
 				return;
+			default:
+				break;
 			}
 
 			gf = &gfScriptWad[gfScriptOffset[gfCurrentLevel]];
@@ -274,6 +275,8 @@ void DoGameflow() {
 
 			case 4:
 				return;
+			default:
+				break;
 			}
 
 			gf = &gfScriptWad[gfScriptOffset[gfCurrentLevel]];
@@ -718,6 +721,8 @@ long TitleOptions() {
 	case 3:
 		DoOptions();
 		break;
+	default:
+		break;
 	}
 
 	if(menu < 2) {
@@ -782,6 +787,8 @@ long TitleOptions() {
 
 				case 8:
 					ret = 4;
+					break;
+				default:
 					break;
 				}
 			}

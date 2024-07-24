@@ -1,6 +1,7 @@
 #ifndef TOMB4_GAME_RIPPLESTRUCT_H
 #define TOMB4_GAME_RIPPLESTRUCT_H
 enum ripple_flags {
+	ripple_default = 0,
 	ripple_on = 1 << 0,
 };
 
@@ -15,4 +16,4 @@ typedef struct RIPPLE_STRUCT {
 } RIPPLE_STRUCT;
 
 
-#endif // TOMB4_GAME_RIPPLESTRUCT_H
+#endif// TOMB4_GAME_RIPPLESTRUCT_H

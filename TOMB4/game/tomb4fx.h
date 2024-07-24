@@ -49,7 +49,7 @@ void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long biggest);
 void UpdateBubbles();
 void TriggerLaraDrips();
 SHOCKWAVE_STRUCT* GetFreeShockwave();
-void TriggerShockwave(PHD_VECTOR* pos, long InnerOuterRads, long speed, long rgb, long XRotFlags);
+void TriggerShockwave(PHD_VECTOR* pos, long InnerOuterRads, long speed, long bgrl, long XRotFlags);
 void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long speed);
 void UpdateShockwaves();
 void UpdateLightning();
