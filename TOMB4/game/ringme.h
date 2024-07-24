@@ -8,4 +8,4 @@ typedef struct RINGME {
 	long curobjinlist;
 	long numobjectsinlist;
 } RINGME;
-#endif // TOMB4_GAME_RINGME_H
+#endif// TOMB4_GAME_RINGME_H

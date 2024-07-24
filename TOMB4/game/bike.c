@@ -187,7 +187,6 @@ void DrawBikeBeam(ITEM_INFO* item) {
 
 	if(bounds) {
 		CalculateObjectLighting(item, frm[0]);
-		bounds = 1;
 		obj = GetObjectInfo(currentLevel, item->object_number);
 		meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
 		meshpp += 2;
@@ -425,7 +424,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 	state = lara_item->current_anim_state;
 
 	if(item->pos.pos.y != item->floor && state != 8 && state != 17
-	   && state != 20 && !killed) {
+		&& state != 20 && !killed) {
 		if(bike->velocity < 0) {
 			lara_item->anim_number
 				= GetObjectInfo(currentLevel, VEHICLE_EXTRA)->anim_index + 6;
@@ -485,7 +484,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed) {
 				}
 			} else {
 				if(bike->velocity & 0xFFFFFF00
-				   || S_IsActionDown(inputImpl, IN_ACTION) || S_IsActionDown(inputImpl, IN_JUMP)) {
+					|| S_IsActionDown(inputImpl, IN_ACTION) || S_IsActionDown(inputImpl, IN_JUMP)) {
 					if(S_IsActionDown(inputImpl, IN_LEFT)) {
 						lara_item->goal_anim_state = 2;
 					} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
@@ -730,19 +729,20 @@ static long DoDynamics(long height, long fallspeed, long* ypos, long zero) {
 	if(height <= *ypos) {
 		if(zero) {
 			return fallspeed;
-		} else {
-			bounce = height - *ypos;
-
-			if(height - *ypos < -80) {
-				bounce = -80;
-			}
-
-			fallspeed += ((bounce - fallspeed) >> 4);
-
-			if(*ypos > height) {
-				*ypos = height;
-			}
 		}
+		
+		bounce = height - *ypos;
+
+		if(height - *ypos < -80) {
+			bounce = -80;
+		}
+
+		fallspeed += ((bounce - fallspeed) >> 4);
+
+		if(*ypos > height) {
+			*ypos = height;
+		}
+		
 	} else {
 		*ypos += fallspeed;
 
@@ -973,11 +973,11 @@ void BikeCollideStaticObjects(
 					}
 
 					if(BikeBounds[0] > CollidedStaticBounds[1]
-					   && BikeBounds[1] < CollidedStaticBounds[0]
-					   && BikeBounds[2] > CollidedStaticBounds[3]
-					   && BikeBounds[3] < CollidedStaticBounds[2]
-					   && BikeBounds[4] > CollidedStaticBounds[5]
-					   && BikeBounds[5] < CollidedStaticBounds[4]) {
+						&& BikeBounds[1] < CollidedStaticBounds[0]
+						&& BikeBounds[2] > CollidedStaticBounds[3]
+						&& BikeBounds[3] < CollidedStaticBounds[2]
+						&& BikeBounds[4] > CollidedStaticBounds[5]
+						&& BikeBounds[5] < CollidedStaticBounds[4]) {
 						ShatterObject(0, mesh, -128, rn, 0);
 						SoundEffect(
 							SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_DEFAULT);
@@ -1016,7 +1016,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch) {
 	}
 
 	if(S_IsActionDown(inputImpl, IN_SPRINT) && S_IsActionDown(inputImpl, IN_ACTION) && DashTimer
-	   && savegame.HaveBikeBooster) {
+		&& savegame.HaveBikeBooster) {
 		bike->flags |= 0x100;
 		DashTimer -= 2;
 

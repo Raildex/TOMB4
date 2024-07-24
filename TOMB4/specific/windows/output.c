@@ -361,7 +361,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 				lPos.x = D3DLightMatrix._11 * d.x + D3DLightMatrix._12 * d.y + D3DLightMatrix._13 * d.z;
 				lPos.y = D3DLightMatrix._21 * d.x + D3DLightMatrix._22 * d.y + D3DLightMatrix._23 * d.z;
 				lPos.z = D3DLightMatrix._31 * d.x + D3DLightMatrix._32 * d.y + D3DLightMatrix._33 * d.z;
-				val = (float)sqrt(SQUARE(lPos.x - vtx.x) + SQUARE(lPos.y - vtx.y) + SQUARE(lPos.z - vtx.z)) * 1.7F;
+				val = sqrtf(SQUARE(lPos.x - vtx.x) + SQUARE(lPos.y - vtx.y) + SQUARE(lPos.z - vtx.z)) * 1.7F;
 
 				if(val <= l->falloff) {
 					val2 = (l->falloff - val) / l->falloff;
@@ -791,7 +791,7 @@ void phd_PutPolygons(short* objptr, long clip) {
 	long spcbak[4];
 	long num;
 	unsigned short drawbak;
-	bool envmap;
+	char envmap;
 
 	SetD3DViewMatrix();
 	mesh = (MESH_DATA*)objptr;
@@ -1158,7 +1158,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	long spcbak[4];
 	long num;
 	unsigned short drawbak;
-	bool envmap;
+	char envmap;
 
 	bWaterEffect = 0;
 	SetD3DViewMatrix();
@@ -1520,9 +1520,8 @@ long S_GetObjectInfoBounds(short* bounds) {
 
 	if(phd_right >= xMin && phd_bottom >= yMin && phd_left <= xMax && phd_top <= yMax) {
 		return 1;
-	} else {
-		return 0;
 	}
+	return 0;
 }
 
 HRESULT DDCopyBitmap(IDirectDrawSurface4* surf, HBITMAP hbm, long x, long y, long dx, long dy) {
@@ -1606,7 +1605,7 @@ HRESULT _LoadBitmap(IDirectDrawSurface4* surf, LPCSTR name) {
 	return result;
 }
 
-void do_boot_screen(long language) {
+void do_boot_screen(languages language) {
 	Log(__func__, "do_boot_screen");
 
 	switch(language) {
@@ -1722,8 +1721,9 @@ long S_DumpScreen() {
 	n = S_Sync();
 
 	while(n < 2) {
-		while(!S_Sync())
+		while(!S_Sync()) {
 			; // wait for sync
+		}
 		n++;
 	}
 

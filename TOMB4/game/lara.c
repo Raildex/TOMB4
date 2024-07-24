@@ -1,4 +1,3 @@
-
 #include "game/lara.h"
 #include "game/animstruct.h"
 #include "game/bike.h"
@@ -189,8 +188,6 @@ void lara_col_jumper(ITEM_INFO* item, COLL_INFO* coll);
 void lara_slide_slope(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_swandiveroll(ITEM_INFO* item, COLL_INFO* coll);
 void ResetLook();
-void LookUpDown();
-void LookLeftRight();
 long UseInventoryItems(ITEM_INFO* item);
 void LaraDeflectEdgeJump(ITEM_INFO* item, COLL_INFO* coll);
 void ApplyVelocityToRope(long node, unsigned short angle, unsigned short n);

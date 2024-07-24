@@ -1,8 +1,7 @@
 #ifndef TOMB4_GAME_LARAFIRE_H
 #define TOMB4_GAME_LARAFIRE_H
+#include "game/weaponinfo.h"
 
-
-typedef struct WEAPON_INFO WEAPON_INFO;
 typedef struct LARA_ARM LARA_ARM;
 typedef struct GAME_VECTOR GAME_VECTOR;
 typedef struct ITEM_INFO ITEM_INFO;
@@ -19,7 +18,7 @@ long WeaponObjectMesh(long weapon_type);
 void DoProperDetection(short item_number, long x, long y, long z, long xv, long yv, long zv);
 void LaraGun();
 
-extern WEAPON_INFO weapons[];
+extern WEAPON_INFO weapons[9];
 
 
 #endif// TOMB4_GAME_LARAFIRE_H

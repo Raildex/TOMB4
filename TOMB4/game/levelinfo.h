@@ -48,7 +48,6 @@ short* GetAnimFrameBase(LEVEL_INFO* lvl);
 short* GetAnimFrames(LEVEL_INFO* lvl, long offset);
 short* GetZone(LEVEL_INFO* lvl,long zone,long flip);
 unsigned short* GetOverlap(LEVEL_INFO* lvl,long overlap);
-FX_INFO* GetEffect(LEVEL_INFO* lvl, long fx);
 short GetItemNum(LEVEL_INFO* lvl, ITEM_INFO* i);
 long GetNumBoxes(LEVEL_INFO* lvl);
 SAMPLE_BUFFER* GetSampleBuffer(LEVEL_INFO* lvl, long num);

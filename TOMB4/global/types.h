@@ -14,9 +14,9 @@
 /*color*/
 #define RGBONLY(r, g, b) ((b) | (((g) | ((r) << 8)) << 8))
 #define RGBA(r, g, b, a) (RGBONLY(r, g, b) | ((a) << 24))
-#define CLRA(clr) ((clr >> 24) & 0xFF) // shift r, g, and b out of the way and 0xFF
-#define CLRR(clr) ((clr >> 16) & 0xFF) // shift g and b out of the way and 0xFF
-#define CLRG(clr) ((clr >> 8) & 0xFF) // shift b out of the way and 0xFF
+#define CLRA(clr) (((clr) >> 24) & 0xFF) // shift r, g, and b out of the way and 0xFF
+#define CLRR(clr) (((clr) >> 16) & 0xFF) // shift g and b out of the way and 0xFF
+#define CLRG(clr) (((clr) >> 8) & 0xFF) // shift b out of the way and 0xFF
 #define CLRB(clr) ((clr) & 0xFF) // and 0xFF
 
 /*misc*/
@@ -42,4 +42,4 @@
 #pragma pack(pop)
 
 
-#endif// TOMB4_GLOBAL_TYPES_H
+#endif // TOMB4_GLOBAL_TYPES_H

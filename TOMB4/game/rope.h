@@ -1,9 +1,9 @@
 #ifndef TOMB4_GAME_ROPE_H
 #define TOMB4_GAME_ROPE_H
 #include "game/pendulum.h"
+#include "game/ropestruct.h"
 
 typedef struct PHD_VECTOR PHD_VECTOR;
-typedef struct ROPE_STRUCT ROPE_STRUCT;
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
 

@@ -1,5 +1,5 @@
-#ifndef PENDULUM_INCLUDED
-#define PENDULUM_INCLUDED
+#ifndef TOMB4_GAME_PENDULUM_H
+#define TOMB4_GAME_PENDULUM_H
 #include "game/phdvector.h"
 
 typedef struct ROPE_STRUCT ROPE_STRUCT;
@@ -9,4 +9,4 @@ typedef struct PENDULUM {
 	long node;
 	ROPE_STRUCT* Rope;
 } PENDULUM;
-#endif
+#endif// TOMB4_GAME_PENDULUM_H

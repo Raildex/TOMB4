@@ -9,6 +9,9 @@ typedef struct LARA_INFO LARA_INFO;
 extern void (*lara_control_routines[NUM_LARA_STATES])(ITEM_INFO* item, COLL_INFO* coll);
 extern void (*lara_collision_routines[NUM_LARA_STATES])(ITEM_INFO* item, COLL_INFO* coll);
 
+void LookUpDown();
+void LookLeftRight();
+
 extern LARA_INFO lara;
 extern ITEM_INFO* lara_item;
 extern short DashTimer;

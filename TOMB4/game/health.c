@@ -1,4 +1,3 @@
-
 #include "game/health.h"
 #include "game/camera.h"
 #include "game/control.h"

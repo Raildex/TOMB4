@@ -12,7 +12,6 @@
 #include "game/gfleveloptions.h"
 #include "game/health.h"
 #include "game/inputbuttons.h"
-#include "game/invdrawitem.h"
 #include "game/iteminfo.h"
 #include "game/items.h"
 #include "game/lara.h"
@@ -46,7 +45,13 @@
 #include <dinput.h>
 #include <stdio.h>
 
-
+typedef struct INVDRAWITEM {
+	short xrot;
+	short yrot;
+	short zrot;
+	short object_number;
+	unsigned long mesh_bits;
+} INVDRAWITEM;
 enum meshbits {
 	ALL_MESHBITS = 0xFFFFFFFF
 };
@@ -184,6 +189,31 @@ INVOBJ inventry_objects_list[NUM_INVOBJ] = {
 	{ EXAMINE2, 14, 0x4B0, 0, 0x4000, 0, 2, TXT_Load, ALL_MESHBITS },
 	{ EXAMINE3, 14, 0x4B0, 0, 0x4000, 0, 2, TXT_Load, ALL_MESHBITS }
 };
+
+void combine_revolver_lasersight(long flag);
+void combine_crossbow_lasersight(long flag);
+void combine_PuzzleItem1(long flag);
+void combine_PuzzleItem2(long flag);
+void combine_PuzzleItem3(long flag);
+void combine_PuzzleItem4(long flag);
+void combine_PuzzleItem5(long flag);
+void combine_PuzzleItem6(long flag);
+void combine_PuzzleItem7(long flag);
+void combine_PuzzleItem8(long flag);
+void combine_KeyItem1(long flag);
+void combine_KeyItem2(long flag);
+void combine_KeyItem3(long flag);
+void combine_KeyItem4(long flag);
+void combine_KeyItem5(long flag);
+void combine_KeyItem6(long flag);
+void combine_KeyItem7(long flag);
+void combine_KeyItem8(long flag);
+void combine_PickupItem1(long flag);
+void combine_PickupItem2(long flag);
+void combine_PickupItem3(long flag);
+void combine_PickupItem4(long flag);
+void combine_ClockWorkBeetle(long flag);
+
 
 COMBINELIST dels_handy_combine_table[23] = {
 	{ combine_revolver_lasersight, INV_REVOLVER_ITEM, INV_LASERSIGHT_ITEM, INV_REVOLVER_LASER_ITEM },

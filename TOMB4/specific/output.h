@@ -1,5 +1,6 @@
 #ifndef TOMB4_SPECIFIC_OUTPUT_H
 #define TOMB4_SPECIFIC_OUTPUT_H
+#include "game/languages.h"
 typedef struct MESH_DATA MESH_DATA;
 typedef struct ROOM_INFO ROOM_INFO;
 void ProcessObjectMeshVertices(MESH_DATA* mesh);
@@ -15,7 +16,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color);
 void phd_PutPolygonSkyMesh(short* objptr, long clipstatus);
 void S_DrawPickup(short object_number);
 long S_GetObjectInfoBounds(short* bounds);
-void do_boot_screen(long language);
+void do_boot_screen(languages language);
 void S_AnimateTextures(long n);
 long S_DumpScreen();
 void S_OutputPolyList();

@@ -1,6 +1,6 @@
 #ifndef TOMB4_GAME_HEALTH_H
 #define TOMB4_GAME_HEALTH_H
-typedef struct DISPLAYPU DISPLAYPU;
+#include "game/displaypu.h"
 
 long FlashIt();
 void DrawGameInfo(long timed);
@@ -10,7 +10,7 @@ void InitialisePickUpDisplay();
 void DrawPickups();
 void AddDisplayPickup(short object_number);
 
-extern DISPLAYPU pickups[];
+extern DISPLAYPU pickups[8];
 extern long PickupX;
 extern short CurrentPickup;
 
