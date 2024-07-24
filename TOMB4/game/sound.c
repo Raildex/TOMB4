@@ -1,4 +1,3 @@
-
 #include "game/sound.h"
 #include "game/camera.h"
 #include "game/control.h"
@@ -87,7 +86,7 @@ void StopSoundEffect(long sfx) {
 	}
 }
 
-void SOUND_Init() {
+void InitialiseSounds() {
 	// empty func call here
 
 	for(int i = 0; i < 32; i++) {
@@ -97,7 +96,7 @@ void SOUND_Init() {
 	sound_active = 1;
 }
 
-void SOUND_Stop() {
+void StopSounds() {
 	if(sound_active) {
 		S_SoundStopAllSamples();
 
@@ -113,18 +112,14 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 	long lut, radius, pan, dx, dy, dz, distance, volume, OrigVolume, pitch, rnd, sample, flag, vol, slot;
 	if(sfx == SFX_LARA_NO) {
 		switch(Gameflow->Language) {
-		case 1:
+		case FRENCH:
 			sfx = SFX_LARA_NO_FRENCH;
 			break;
-
-		case 2:
-		case 3:
-		case 4:
-			sfx = SFX_LARA_NO;
-			break;
-
-		case 6:
+		case JAPAN:
 			sfx = SFX_LARA_NO_JAPAN;
+			break;
+		default:
+			sfx = SFX_LARA_NO;
 			break;
 		}
 	}

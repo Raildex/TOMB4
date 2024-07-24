@@ -461,7 +461,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 	InitSpotCamSequences();
 	InitialisePickUpDisplay();
 	// empty func call here
-	SOUND_Stop();
+	StopSounds();
 	bDisableLaraControl = 0;
 
 	if(gfGameMode == 4) {
@@ -847,7 +847,7 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 	ClearFXFogBulbs();
 	InitialisePickUpDisplay();
 	// empty func call here
-	SOUND_Stop();
+	StopSounds();
 	S_CDPlay(Audio, 1);
 	IsAtmospherePlaying = 0;
 	S_SetReverbType(1);

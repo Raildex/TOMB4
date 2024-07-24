@@ -6,8 +6,8 @@ typedef struct PHD_3DPOS PHD_3DPOS;
 typedef struct SAMPLE_INFO SAMPLE_INFO;
 void GetPanVolume(SoundSlot* slot);
 void StopSoundEffect(long sfx);
-void SOUND_Init();
-void SOUND_Stop();
+void InitialiseSounds();
+void StopSounds();
 long SoundEffect(long sfx, PHD_3DPOS* pos, long flags);
 void SayNo();
 

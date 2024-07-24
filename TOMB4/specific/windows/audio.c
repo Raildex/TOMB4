@@ -6,8 +6,13 @@
 #include "specific/loadsave.h"
 #include "specific/windows/dxshell.h"
 #include "specific/windows/winmain.h"
+// clang-format off
+#include <windows.h>
+#include <mmiscapi.h>
+#include <mmreg.h>
 #include <MSAcm.h>
 #include <dsound.h>
+// clang-format on
 
 const char* TrackFileNames[112] = {
 	"044_attack_part_i.wav",
@@ -133,10 +138,22 @@ static unsigned char source_wav_format[50] = {
 };
 #pragma warning(pop)
 
+
+void OpenStreamFile(char* name);
+void GetADPCMData();
+void ACMSetVolume();
+void ACMEmulateCDPlay(long track, long mode);
+BOOL WINAPI ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwSupport);
+long ACMSetupNotifications();
+void FillADPCMBuffer(char* p, long track);
+long ACMHandleNotifications();
+long ACMInit();
+void ACMClose();
+
 HACMDRIVER hACMDriver;
 unsigned char* wav_file_buffer = 0;
 unsigned char* ADPCMBuffer = 0;
-bool acm_ready = 0;
+long acm_ready = 0;
 
 long XATrack = -1;
 long XAFlag = 7;
@@ -160,8 +177,8 @@ static long NotifySize = 0;
 static long NextWriteOffset = 0;
 static long auido_play_mode = 0;
 static long audio_counter = 0;
-static volatile bool reading_audio_file = 0;
-static volatile bool continue_reading_audio_file = 0;
+static volatile long reading_audio_file = 0;
+static volatile long continue_reading_audio_file = 0;
 
 void OpenStreamFile(char* name) {
 	__try {
@@ -267,7 +284,7 @@ BOOL WINAPI ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwS
 	driver.cbStruct = sizeof(ACMDRIVERDETAILS);
 	acmDriverDetails(hadid, &driver, 0);
 
-	if(strcmp(driver.szShortName, "MS-ADPCM")) {
+	if(strcmp(driver.szShortName, "MS-ADPCM") != 0) {
 		return 1;
 	}
 
@@ -403,7 +420,7 @@ long ACMHandleNotifications() {
 
 				IDirectSoundBuffer_Lock(DSBuffer, NextWriteOffset, NotifySize, (LPVOID*)&write, &bytes, 0, 0, 0);
 				acmStreamConvert(hACMStream, &StreamHeaders[CurrentNotify], ACM_STREAMCONVERTF_BLOCKALIGN);
-				IDirectSoundBuffer_Unlock(DSBuffer, &write, bytes, 0, 0);
+				IDirectSoundBuffer_Unlock(DSBuffer, (void*)&write, bytes, 0, 0);
 				NextWriteOffset += bytes;
 
 				if(NextWriteOffset >= audio_buffer_size) {
@@ -424,7 +441,7 @@ long ACMHandleNotifications() {
 	return DS_OK;
 }
 
-bool ACMInit() {
+long ACMInit() {
 	DSBUFFERDESC desc;
 	static WAVEFORMATEX wav_format;
 	static unsigned long StreamSize;
@@ -475,7 +492,7 @@ bool ACMInit() {
 		StreamHeaders[i].pbSrc = ADPCMBuffer;
 		StreamHeaders[i].cbSrcLength = 0x5800;
 		StreamHeaders[i].cbDstLength = StreamSize;
-		StreamHeaders[i].pbDst = &pAudioWrite[NotifySize * i];
+		StreamHeaders[i].pbDst = (void*)&pAudioWrite[(ptrdiff_t)NotifySize * i];
 		acmStreamPrepareHeader(hACMStream, &StreamHeaders[i], 0);
 	}
 
@@ -555,4 +572,14 @@ void S_CDStop() {
 void S_StartSyncedAudio(long track) {
 	S_CDStop();
 	S_CDPlay(track, 2);
+}
+
+void S_CDClose() {
+	if(wav_file_buffer) {
+		free(wav_file_buffer);
+	}
+
+	if(ADPCMBuffer) {
+		free(ADPCMBuffer);
+	}
 }

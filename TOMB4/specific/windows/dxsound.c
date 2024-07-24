@@ -1,4 +1,3 @@
-
 #include "specific/windows/dxsound.h"
 #include "game/samplebuffer.h"
 #include "game/sound.h"
@@ -10,7 +9,6 @@
 #include "specific/windows/dxinfo.h"
 #include "specific/windows/dxshell.h"
 #include "specific/windows/winmain.h"
-#include <MSAcm.h>
 #include <dsound.h>
 #include <string.h>
 #include <xaudio2.h>
@@ -45,7 +43,7 @@ static XAUDIO2FX_REVERB_PARAMETERS reverb_type[4];
 
 static long current_reverb = -1;
 
-bool DXChangeOutputFormat(long nSamplesPerSec, bool force) {
+long DXChangeOutputFormat(long nSamplesPerSec, long force) {
 	WAVEFORMATEX pcfxFormat;
 	static long lastSPC;
 
@@ -125,7 +123,7 @@ void DSAdjustPan(long num, long pan) {
 	}
 }
 
-bool DXSetOutputFormat() {
+long DXSetOutputFormat() {
 	DSBUFFERDESC desc = { 0 };
 
 	Log(__func__, "DXSetOutputFormat");
@@ -142,7 +140,7 @@ bool DXSetOutputFormat() {
 	return 0;
 }
 
-bool DXDSCreate() {
+long DXDSCreate() {
 	XAUDIO2_EFFECT_DESCRIPTOR chaind;
 	XAUDIO2_EFFECT_CHAIN chain;
 
@@ -254,7 +252,7 @@ void DXStopSample(long num) {
 	}
 }
 
-bool DSIsChannelPlaying(long num) {
+long DSIsChannelPlaying(long num) {
 	XAUDIO2_VOICE_STATE state;
 
 	if(XA_Voices[num]) {

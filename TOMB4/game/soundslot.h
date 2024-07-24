@@ -10,4 +10,4 @@ typedef struct SoundSlot {
 	unsigned long distance;
 	PHD_VECTOR pos;
 } SoundSlot;
-#endif // TOMB4_GAME_SOUNDSLOT_H
+#endif// TOMB4_GAME_SOUNDSLOT_H

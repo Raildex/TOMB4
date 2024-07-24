@@ -1,4 +1,3 @@
-
 #include "game/effects.h"
 #include "game/attachediteminfo.h"
 #include "game/camera.h"

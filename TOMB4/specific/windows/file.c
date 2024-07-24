@@ -103,7 +103,7 @@ int LoadLevel(void* name) {
 		if(!(sfxMarker[0] == 'S' && sfxMarker[1] == 'F' && sfxMarker[2] == 'X')) {
 			Log(__func__, "Invalid Marker %c %c %c!", sfxMarker[0], sfxMarker[1], sfxMarker[2]);
 		}
-		if(acm_ready && !App.SoundDisabled) {
+		if(!App.SoundDisabled) {
 			LoadSamples(level_fp, &FileData, currentLevel);
 		}
 

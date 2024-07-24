@@ -23,17 +23,8 @@ static float unused_vert_wibble_table[256];
 
 void GameClose() {
 	Log(__func__, "GameClose");
-	ACMClose();
 	FreeLevel();
-
-	if(wav_file_buffer) {
-		free(wav_file_buffer);
-	}
-
-	if(ADPCMBuffer) {
-		free(ADPCMBuffer);
-	}
-
+	S_CDClose();
 	if(logF) {
 		fclose(logF);
 	}
@@ -56,7 +47,7 @@ void S_GameMain() {
 		ClearSurfaces();
 
 		if(!App.SoundDisabled) {
-			SOUND_Init();
+			InitialiseSounds();
 		}
 
 		DoGameflow();

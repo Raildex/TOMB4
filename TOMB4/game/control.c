@@ -274,7 +274,7 @@ long ControlPhase(long nframes, long demo_mode) {
 			return 3;
 		}
 
-		if(/*tomb4.gameover*/ true) {
+		if(/*tomb4.gameover*/ 1) {
 			if(reset_flag) {
 				reset_flag = 0;
 				return 1;
