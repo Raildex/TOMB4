@@ -1,5 +1,5 @@
-#ifndef SPLASH_STRUCT_INCLUDED
-#define SPLASH_STRUCT_INCLUDED
+#ifndef TOMB4_GAME_SPLASHSTRUCT_H
+#define TOMB4_GAME_SPLASHSTRUCT_H
 #include "game/phdvector.h"
 typedef struct SPLASH_STRUCT {
 	PHD_VECTOR pos;
@@ -19,4 +19,4 @@ typedef struct SPLASH_STRUCT {
 	char flags;
 	unsigned char life;
 } SPLASH_STRUCT;
-#endif
+#endif// TOMB4_GAME_SPLASHSTRUCT_H

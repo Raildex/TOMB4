@@ -7,4 +7,4 @@ typedef enum zone_type {
 	HUMAN_ZONE,
 	FLYER_ZONE,
 } zone_type;
-#endif // TOMB4_GAME_ZONETYPE_H
+#endif// TOMB4_GAME_ZONETYPE_H

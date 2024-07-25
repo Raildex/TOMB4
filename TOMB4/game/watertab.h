@@ -6,4 +6,4 @@ typedef struct WATERTAB {
 	unsigned char random;
 	unsigned char abs;
 } WATERTAB;
-#endif // TOMB4_GAME_WATERTAB_H
+#endif// TOMB4_GAME_WATERTAB_H

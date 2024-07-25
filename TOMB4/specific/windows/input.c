@@ -259,7 +259,7 @@ const int DirectInputKeyMap[256] = { // DIK -> Internal
 	-1,
 	-1,
 	-1,
-	-1,
+	KEY_LCTRL,
 	-1,
 	-1,
 	-1,

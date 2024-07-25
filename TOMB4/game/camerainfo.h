@@ -32,4 +32,4 @@ typedef struct CAMERA_INFO {
 	long mike_at_lara;
 	PHD_VECTOR mike_pos;
 } CAMERA_INFO;
-#endif // TOMB4_GAME_CAMERAINFO_H
+#endif// TOMB4_GAME_CAMERAINFO_H

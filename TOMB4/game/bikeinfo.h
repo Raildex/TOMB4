@@ -15,4 +15,4 @@ typedef struct BIKEINFO {
 	short flags;
 	short light_intensity;
 } BIKEINFO;
-#endif // TOMB4_GAME_BIKEINFO_H
+#endif// TOMB4_GAME_BIKEINFO_H

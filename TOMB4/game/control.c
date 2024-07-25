@@ -136,6 +136,8 @@ static short los_rooms[20];
 
 static short cdtrack = -1;
 
+SHATTER_ITEM ShatterItem;
+
 static long S_Death() {
 	long selection, menu, ret;
 
@@ -212,6 +214,31 @@ static long S_Death() {
 	FreeMonoScreen();
 	return ret;
 }
+
+void KillMoveEffects() {
+	for(int i = 0; i < ItemNewRoomNo; i++) {
+		if(ItemNewRooms[i][0] & 0x8000) {
+			KillEffect(ItemNewRooms[i][0] & 0x7FFF);
+		} else {
+			EffectNewRoom(ItemNewRooms[i][0], ItemNewRooms[i][1]);
+		}
+	}
+
+	ItemNewRoomNo = 0;
+}
+
+void KillMoveItems() {
+	for(int i = 0; i < ItemNewRoomNo; i++) {
+		if(ItemNewRooms[i][0] & 0x8000) {
+			KillItem(ItemNewRooms[i][0] & 0x7FFF);
+		} else {
+			ItemNewRoom(ItemNewRooms[i][0], ItemNewRooms[i][1]);
+		}
+	}
+
+	ItemNewRoomNo = 0;
+}
+
 
 long ControlPhase(long nframes, long demo_mode) {
 	ITEM_INFO* item;
@@ -513,6 +540,35 @@ long ControlPhase(long nframes, long demo_mode) {
 
 	return 0;
 }
+void RemoveRoomFlipItems(ROOM_INFO* r) {
+	ITEM_INFO* item;
+
+	for(short item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item) {
+		item = GetItem(currentLevel, item_num);
+
+		if(item->flags & IFL_INVISIBLE && GetObjectInfo(currentLevel, item->object_number)->intelligent) {
+			if(item->hit_points <= 0 && item->hit_points != -16384) {
+				KillItem(item_num);
+			}
+		}
+	}
+}
+
+void AddRoomFlipItems(ROOM_INFO* r) {
+	ITEM_INFO* item;
+
+	for(short item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item) {
+		item = GetItem(currentLevel, item_num);
+
+		if(GetItem(currentLevel, item_num)->object_number == RAISING_BLOCK1 && item->item_flags[1]) {
+			AlterFloorHeight(item, -1024);
+		}
+
+		if(item->object_number == RAISING_BLOCK2 && item->item_flags[1]) {
+			AlterFloorHeight(item, -2048);
+		}
+	}
+}
 
 void FlipMap(long FlipNumber) {
 	ROOM_INFO* r;
@@ -550,35 +606,50 @@ void FlipMap(long FlipNumber) {
 	}
 }
 
-void RemoveRoomFlipItems(ROOM_INFO* r) {
-	ITEM_INFO* item;
+void RefreshCamera(short type, short* data) {
+	short trigger, value, target_ok;
 
-	for(short item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item) {
-		item = GetItem(currentLevel, item_num);
+	target_ok = 2;
 
-		if(item->flags & IFL_INVISIBLE && GetObjectInfo(currentLevel, item->object_number)->intelligent) {
-			if(item->hit_points <= 0 && item->hit_points != -16384) {
-				KillItem(item_num);
+	do {
+		trigger = *data++;
+		value = trigger & 0x3FF;
+
+		if(((trigger >> 10) & 0xF) == TO_CAMERA) {
+			data++;
+
+			if(value == camera.last) {
+				camera.number = trigger & 0x3FF;
+
+				if(camera.timer >= 0 && ((camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA) || GetFixedCamera(currentLevel, camera.number)->flags & 3)) {
+					camera.type = FIXED_CAMERA;
+					target_ok = 1;
+					continue;
+				}
+
+				camera.timer = -1;
+			}
+
+			target_ok = 0;
+		} else if(((trigger >> 10) & 0xF) == TO_TARGET) {
+			if((camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA) || camera.number == NO_ITEM || GetFixedCamera(currentLevel, camera.number)->flags & 1) {
+				camera.item = GetItem(currentLevel, value);
 			}
 		}
+
+	} while(!(trigger & 0x8000));
+
+	if(camera.item) {
+		if(!target_ok || (target_ok == 2 && camera.item->looked_at && camera.item != camera.last_item)) {
+			camera.item = NULL;
+		}
+	}
+
+	if(camera.number == -1 && camera.timer > 0) {
+		camera.timer = -1;
 	}
 }
 
-void AddRoomFlipItems(ROOM_INFO* r) {
-	ITEM_INFO* item;
-
-	for(short item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item) {
-		item = GetItem(currentLevel, item_num);
-
-		if(GetItem(currentLevel, item_num)->object_number == RAISING_BLOCK1 && item->item_flags[1]) {
-			AlterFloorHeight(item, -1024);
-		}
-
-		if(item->object_number == RAISING_BLOCK2 && item->item_flags[1]) {
-			AlterFloorHeight(item, -2048);
-		}
-	}
-}
 
 void TestTriggers(short* data, long heavy, long HeavyFlags) {
 	ITEM_INFO* item;
@@ -1862,73 +1933,7 @@ void UpdateSky() {
 	}
 }
 
-void KillMoveEffects() {
-	for(int i = 0; i < ItemNewRoomNo; i++) {
-		if(ItemNewRooms[i][0] & 0x8000) {
-			KillEffect(ItemNewRooms[i][0] & 0x7FFF);
-		} else {
-			EffectNewRoom(ItemNewRooms[i][0], ItemNewRooms[i][1]);
-		}
-	}
 
-	ItemNewRoomNo = 0;
-}
-
-void KillMoveItems() {
-	for(int i = 0; i < ItemNewRoomNo; i++) {
-		if(ItemNewRooms[i][0] & 0x8000) {
-			KillItem(ItemNewRooms[i][0] & 0x7FFF);
-		} else {
-			ItemNewRoom(ItemNewRooms[i][0], ItemNewRooms[i][1]);
-		}
-	}
-
-	ItemNewRoomNo = 0;
-}
-
-void RefreshCamera(short type, short* data) {
-	short trigger, value, target_ok;
-
-	target_ok = 2;
-
-	do {
-		trigger = *data++;
-		value = trigger & 0x3FF;
-
-		if(((trigger >> 10) & 0xF) == TO_CAMERA) {
-			data++;
-
-			if(value == camera.last) {
-				camera.number = trigger & 0x3FF;
-
-				if(camera.timer >= 0 && ((camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA) || GetFixedCamera(currentLevel, camera.number)->flags & 3)) {
-					camera.type = FIXED_CAMERA;
-					target_ok = 1;
-					continue;
-				}
-
-				camera.timer = -1;
-			}
-
-			target_ok = 0;
-		} else if(((trigger >> 10) & 0xF) == TO_TARGET) {
-			if((camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA) || camera.number == NO_ITEM || GetFixedCamera(currentLevel, camera.number)->flags & 1) {
-				camera.item = GetItem(currentLevel, value);
-			}
-		}
-
-	} while(!(trigger & 0x8000));
-
-	if(camera.item) {
-		if(!target_ok || (target_ok == 2 && camera.item->looked_at && camera.item != camera.last_item)) {
-			camera.item = NULL;
-		}
-	}
-
-	if(camera.number == -1 && camera.timer > 0) {
-		camera.timer = -1;
-	}
-}
 
 long TriggerActive(ITEM_INFO* item) {
 	long reverse;
@@ -2408,6 +2413,288 @@ long IsRoomOutside(long x, long y, long z) {
 	return -2;
 }
 
+long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_VECTOR* dir, PHD_VECTOR* Coord) {
+	long planes[3];
+	long dists[3];
+	long plane;
+	char quad[3];
+	char inside;
+
+	inside = 1;
+
+	if(origin->x < min->x) {
+		quad[0] = 1;
+		planes[0] = min->x;
+		inside = 0;
+	} else if(origin->x > max->x) {
+		quad[0] = 0;
+		planes[0] = max->x;
+		inside = 0;
+	} else {
+		quad[0] = 2;
+	}
+
+	if(origin->y < min->y) {
+		quad[1] = 1;
+		planes[1] = min->y;
+		inside = 0;
+	} else if(origin->y > max->y) {
+		quad[1] = 0;
+		planes[1] = max->y;
+		inside = 0;
+	} else {
+		quad[1] = 2;
+	}
+
+	if(origin->z < min->z) {
+		quad[2] = 1;
+		planes[2] = min->z;
+		inside = 0;
+	} else if(origin->z > max->z) {
+		quad[2] = 0;
+		planes[2] = max->z;
+		inside = 0;
+	} else {
+		quad[2] = 2;
+	}
+
+	if(inside) {
+		Coord->x = origin->x >> 16;
+		Coord->y = origin->y >> 16;
+		Coord->z = origin->z >> 16;
+		return 1;
+	}
+
+	if(quad[0] == 2 || !dir->x) {
+		dists[0] = -65536;
+	} else {
+		dists[0] = ((planes[0] - origin->x) / (dir->x >> 8)) << 8;
+	}
+
+	if(quad[1] == 2 || !dir->y) {
+		dists[1] = -65536;
+	} else {
+		dists[1] = ((planes[1] - origin->y) / (dir->y >> 8)) << 8;
+	}
+
+	if(quad[2] == 2 || !dir->z) {
+		dists[2] = -65536;
+	} else {
+		dists[2] = ((planes[2] - origin->z) / (dir->z >> 8)) << 8;
+	}
+
+	plane = 0;
+
+	for(int i = 1; i < 3; i++) {
+		if(dists[plane] < dists[i]) {
+			plane = i;
+		}
+	}
+
+	if(dists[plane] < 0) {
+		return 0;
+	}
+
+	if(!plane) {
+		Coord->x = planes[0];
+	} else {
+		Coord->x = origin->x + (((long long)dir->x * (long long)dists[plane]) >> 16);
+
+		if((!quad[0] && Coord->x < min->x) || (quad[0] == 1 && Coord->x > max->x)) {
+			return 0;
+		}
+	}
+
+	if(plane == 1) {
+		Coord->y = planes[1];
+	} else {
+		Coord->y = origin->y + (((long long)dir->y * (long long)dists[plane]) >> 16);
+
+		if((!quad[1] && Coord->y < min->y) || (quad[1] == 1 && Coord->y > max->y)) {
+			return 0;
+		}
+	}
+
+	if(plane == 2) {
+		Coord->z = planes[2];
+	} else {
+		Coord->z = origin->z + (((long long)dir->z * (long long)dists[plane]) >> 16);
+
+		if((!quad[2] && Coord->z < min->z) || (quad[2] == 1 && Coord->z > max->z)) {
+			return 0;
+		}
+	}
+
+	Coord->x >>= 16;
+	Coord->y >>= 16;
+	Coord->z >>= 16;
+	return 1;
+}
+
+
+long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS* ItemPos, PHD_VECTOR* Coord, short item_number) {
+	ITEM_INFO* item;
+	OBJECT_INFO* obj;
+	SPHERE* sphere;
+	PHD_VECTOR min, max, origin, dir;
+	PHD_VECTOR spos, tpos, s, t, sp, pos;
+	short** meshpp;
+	short* ClosestMesh;
+	long x, y, z, ClosestNode, ClosestBit, bit, r, r0, r1, dist, max_dist;
+
+	min.x = bounds[0] << 16;
+	min.y = bounds[2] << 16;
+	min.z = bounds[4] << 16;
+
+	max.x = bounds[1] << 16;
+	max.y = bounds[3] << 16;
+	max.z = bounds[5] << 16;
+
+	phd_PushUnitMatrix();
+	phd_RotY(-ItemPos->y_rot);
+
+	x = target->pos.x - ItemPos->pos.x;
+	y = target->pos.y - ItemPos->pos.y;
+	z = target->pos.z - ItemPos->pos.z;
+	tpos.x = (long)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
+	tpos.y = (long)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
+	tpos.z = (long)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
+
+	x = start->pos.x - ItemPos->pos.x;
+	y = start->pos.y - ItemPos->pos.y;
+	z = start->pos.z - ItemPos->pos.z;
+	spos.x = (long)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
+	spos.y = (long)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
+	spos.z = (long)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
+
+	phd_PopMatrix();
+
+	dir.x = (tpos.x - spos.x) << 16;
+	dir.y = (tpos.y - spos.y) << 16;
+	dir.z = (tpos.z - spos.z) << 16;
+	origin.x = spos.x << 16;
+	origin.y = spos.y << 16;
+	origin.z = spos.z << 16;
+	Normalise(&dir);
+	dir.x <<= 8;
+	dir.y <<= 8;
+	dir.z <<= 8;
+
+	if(!RayBoxIntersect(&min, &max, &origin, &dir, Coord)) {
+		return 0;
+	}
+
+	if(Coord->x < bounds[0] || Coord->x > bounds[1] || Coord->y < bounds[2] || Coord->y > bounds[3] || Coord->z < bounds[4] || Coord->z > bounds[5]) {
+		return 0;
+	}
+
+	phd_PushUnitMatrix();
+	phd_RotY(ItemPos->y_rot);
+
+	x = (long)(mMXPtr[M00] * Coord->x + mMXPtr[M01] * Coord->y + mMXPtr[M02] * Coord->z);
+	y = (long)(mMXPtr[M10] * Coord->x + mMXPtr[M11] * Coord->y + mMXPtr[M12] * Coord->z);
+	z = (long)(mMXPtr[M20] * Coord->x + mMXPtr[M21] * Coord->y + mMXPtr[M22] * Coord->z);
+	Coord->x = x;
+	Coord->y = y;
+	Coord->z = z;
+
+	phd_PopMatrix();
+	max_dist = infinite_distance;
+	ClosestMesh = NULL;
+	ClosestBit = 0;
+	item = NULL;
+
+	if(item_number < 0) {
+		ClosestNode = -1;
+	} else {
+		item = GetItem(currentLevel, item_number);
+		obj = GetObjectInfo(currentLevel, item->object_number);
+		meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
+
+		GetSpheres(item, Slist, 1);
+		bit = 1;
+		ClosestNode = -2;
+
+		for(int i = 0; i < obj->nmeshes; i++, meshpp += 2, bit <<= 1) {
+			if(!(item->mesh_bits & bit)) {
+				continue;
+			}
+
+			sphere = &Slist[i];
+			s.x = start->pos.x;
+			s.y = start->pos.y;
+			s.z = start->pos.z;
+
+			t.x = target->pos.x;
+			t.y = target->pos.y;
+			t.z = target->pos.z;
+
+			sp.x = sphere->x;
+			sp.y = sphere->y;
+			sp.z = sphere->z;
+
+			r0 = ((sp.x - s.x) * (t.x - s.x)) + ((sp.y - s.y) * (t.y - s.y)) + ((sp.z - s.z) * (t.z - s.z));
+			r1 = SQUARE(t.x - s.x) + SQUARE(t.y - s.y) + SQUARE(t.z - s.z);
+
+			if((r0 >= 0 || r1 >= 0) && (r1 <= 0 || r0 <= 0) || (abs(r0) > abs(r1))) {
+				continue;
+			}
+
+			r1 >>= 16;
+
+			if(r1) {
+				r = r0 / r1;
+			} else {
+				r = 0;
+			}
+
+			pos.x = s.x + ((r * (t.x - s.x)) >> 16);
+			pos.y = s.y + ((r * (t.y - s.y)) >> 16);
+			pos.z = s.z + ((r * (t.z - s.z)) >> 16);
+
+			if(SQUARE(pos.x - sp.x) + SQUARE(pos.y - sp.y) + SQUARE(pos.z - sp.z) < SQUARE(sphere->r)) {
+				dist = SQUARE(sphere->x - start->pos.x) + SQUARE(sphere->y - start->pos.y) + SQUARE(sphere->z - start->pos.z);
+
+				if(dist < max_dist) {
+					max_dist = dist;
+					ClosestMesh = *meshpp;
+					ClosestBit = bit;
+					ClosestNode = i;
+				}
+			}
+		}
+	}
+
+	if(ClosestNode >= -1) {
+		dist = SQUARE(Coord->x + ItemPos->pos.x - start->pos.x) + SQUARE(Coord->y + ItemPos->pos.y - start->pos.y) + SQUARE(Coord->z + ItemPos->pos.z - start->pos.z);
+
+		if(dist < ClosestDist) {
+			ClosestCoord.x = Coord->x + ItemPos->pos.x;
+			ClosestCoord.y = Coord->y + ItemPos->pos.y;
+			ClosestCoord.z = Coord->z + ItemPos->pos.z;
+			ClosestItem = item_number;
+			ClosestDist = dist;
+
+			if(ClosestNode >= 0) {
+				GetSpheres(item, Slist, 3);
+				ShatterItem.YRot = item->pos.y_rot;
+				ShatterItem.meshp = ClosestMesh;
+				ShatterItem.Sphere.x = Slist[ClosestNode].x;
+				ShatterItem.Sphere.y = Slist[ClosestNode].y;
+				ShatterItem.Sphere.z = Slist[ClosestNode].z;
+				ShatterItem.Bit = ClosestBit;
+				ShatterItem.il = &item->il;
+				ShatterItem.Flags = 0;
+			}
+
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+
 long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, MESH_INFO** StaticMesh) {
 	ITEM_INFO* item;
 	MESH_INFO* mesh;
@@ -2762,285 +3049,7 @@ void AnimateItem(ITEM_INFO* item) {
 	item->pos.pos.z += (speed2 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT;
 }
 
-long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_VECTOR* dir, PHD_VECTOR* Coord) {
-	long planes[3];
-	long dists[3];
-	long plane;
-	char quad[3];
-	char inside;
 
-	inside = 1;
-
-	if(origin->x < min->x) {
-		quad[0] = 1;
-		planes[0] = min->x;
-		inside = 0;
-	} else if(origin->x > max->x) {
-		quad[0] = 0;
-		planes[0] = max->x;
-		inside = 0;
-	} else {
-		quad[0] = 2;
-	}
-
-	if(origin->y < min->y) {
-		quad[1] = 1;
-		planes[1] = min->y;
-		inside = 0;
-	} else if(origin->y > max->y) {
-		quad[1] = 0;
-		planes[1] = max->y;
-		inside = 0;
-	} else {
-		quad[1] = 2;
-	}
-
-	if(origin->z < min->z) {
-		quad[2] = 1;
-		planes[2] = min->z;
-		inside = 0;
-	} else if(origin->z > max->z) {
-		quad[2] = 0;
-		planes[2] = max->z;
-		inside = 0;
-	} else {
-		quad[2] = 2;
-	}
-
-	if(inside) {
-		Coord->x = origin->x >> 16;
-		Coord->y = origin->y >> 16;
-		Coord->z = origin->z >> 16;
-		return 1;
-	}
-
-	if(quad[0] == 2 || !dir->x) {
-		dists[0] = -65536;
-	} else {
-		dists[0] = ((planes[0] - origin->x) / (dir->x >> 8)) << 8;
-	}
-
-	if(quad[1] == 2 || !dir->y) {
-		dists[1] = -65536;
-	} else {
-		dists[1] = ((planes[1] - origin->y) / (dir->y >> 8)) << 8;
-	}
-
-	if(quad[2] == 2 || !dir->z) {
-		dists[2] = -65536;
-	} else {
-		dists[2] = ((planes[2] - origin->z) / (dir->z >> 8)) << 8;
-	}
-
-	plane = 0;
-
-	for(int i = 1; i < 3; i++) {
-		if(dists[plane] < dists[i]) {
-			plane = i;
-		}
-	}
-
-	if(dists[plane] < 0) {
-		return 0;
-	}
-
-	if(!plane) {
-		Coord->x = planes[0];
-	} else {
-		Coord->x = origin->x + (((long long)dir->x * (long long)dists[plane]) >> 16);
-
-		if((!quad[0] && Coord->x < min->x) || (quad[0] == 1 && Coord->x > max->x)) {
-			return 0;
-		}
-	}
-
-	if(plane == 1) {
-		Coord->y = planes[1];
-	} else {
-		Coord->y = origin->y + (((long long)dir->y * (long long)dists[plane]) >> 16);
-
-		if((!quad[1] && Coord->y < min->y) || (quad[1] == 1 && Coord->y > max->y)) {
-			return 0;
-		}
-	}
-
-	if(plane == 2) {
-		Coord->z = planes[2];
-	} else {
-		Coord->z = origin->z + (((long long)dir->z * (long long)dists[plane]) >> 16);
-
-		if((!quad[2] && Coord->z < min->z) || (quad[2] == 1 && Coord->z > max->z)) {
-			return 0;
-		}
-	}
-
-	Coord->x >>= 16;
-	Coord->y >>= 16;
-	Coord->z >>= 16;
-	return 1;
-}
-
-long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS* ItemPos, PHD_VECTOR* Coord, short item_number) {
-	ITEM_INFO* item;
-	OBJECT_INFO* obj;
-	SPHERE* sphere;
-	PHD_VECTOR min, max, origin, dir;
-	PHD_VECTOR spos, tpos, s, t, sp, pos;
-	short** meshpp;
-	short* ClosestMesh;
-	long x, y, z, ClosestNode, ClosestBit, bit, r, r0, r1, dist, max_dist;
-
-	min.x = bounds[0] << 16;
-	min.y = bounds[2] << 16;
-	min.z = bounds[4] << 16;
-
-	max.x = bounds[1] << 16;
-	max.y = bounds[3] << 16;
-	max.z = bounds[5] << 16;
-
-	phd_PushUnitMatrix();
-	phd_RotY(-ItemPos->y_rot);
-
-	x = target->pos.x - ItemPos->pos.x;
-	y = target->pos.y - ItemPos->pos.y;
-	z = target->pos.z - ItemPos->pos.z;
-	tpos.x = (long)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
-	tpos.y = (long)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
-	tpos.z = (long)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
-
-	x = start->pos.x - ItemPos->pos.x;
-	y = start->pos.y - ItemPos->pos.y;
-	z = start->pos.z - ItemPos->pos.z;
-	spos.x = (long)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
-	spos.y = (long)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
-	spos.z = (long)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
-
-	phd_PopMatrix();
-
-	dir.x = (tpos.x - spos.x) << 16;
-	dir.y = (tpos.y - spos.y) << 16;
-	dir.z = (tpos.z - spos.z) << 16;
-	origin.x = spos.x << 16;
-	origin.y = spos.y << 16;
-	origin.z = spos.z << 16;
-	Normalise(&dir);
-	dir.x <<= 8;
-	dir.y <<= 8;
-	dir.z <<= 8;
-
-	if(!RayBoxIntersect(&min, &max, &origin, &dir, Coord)) {
-		return 0;
-	}
-
-	if(Coord->x < bounds[0] || Coord->x > bounds[1] || Coord->y < bounds[2] || Coord->y > bounds[3] || Coord->z < bounds[4] || Coord->z > bounds[5]) {
-		return 0;
-	}
-
-	phd_PushUnitMatrix();
-	phd_RotY(ItemPos->y_rot);
-
-	x = (long)(mMXPtr[M00] * Coord->x + mMXPtr[M01] * Coord->y + mMXPtr[M02] * Coord->z);
-	y = (long)(mMXPtr[M10] * Coord->x + mMXPtr[M11] * Coord->y + mMXPtr[M12] * Coord->z);
-	z = (long)(mMXPtr[M20] * Coord->x + mMXPtr[M21] * Coord->y + mMXPtr[M22] * Coord->z);
-	Coord->x = x;
-	Coord->y = y;
-	Coord->z = z;
-
-	phd_PopMatrix();
-	max_dist = infinite_distance;
-	ClosestMesh = NULL;
-	ClosestBit = 0;
-	item = NULL;
-
-	if(item_number < 0) {
-		ClosestNode = -1;
-	} else {
-		item = GetItem(currentLevel, item_number);
-		obj = GetObjectInfo(currentLevel, item->object_number);
-		meshpp = GetMeshPointer(currentLevel, obj->mesh_index);
-
-		GetSpheres(item, Slist, 1);
-		bit = 1;
-		ClosestNode = -2;
-
-		for(int i = 0; i < obj->nmeshes; i++, meshpp += 2, bit <<= 1) {
-			if(!(item->mesh_bits & bit)) {
-				continue;
-			}
-
-			sphere = &Slist[i];
-			s.x = start->pos.x;
-			s.y = start->pos.y;
-			s.z = start->pos.z;
-
-			t.x = target->pos.x;
-			t.y = target->pos.y;
-			t.z = target->pos.z;
-
-			sp.x = sphere->x;
-			sp.y = sphere->y;
-			sp.z = sphere->z;
-
-			r0 = ((sp.x - s.x) * (t.x - s.x)) + ((sp.y - s.y) * (t.y - s.y)) + ((sp.z - s.z) * (t.z - s.z));
-			r1 = SQUARE(t.x - s.x) + SQUARE(t.y - s.y) + SQUARE(t.z - s.z);
-
-			if((r0 >= 0 || r1 >= 0) && (r1 <= 0 || r0 <= 0) || (abs(r0) > abs(r1))) {
-				continue;
-			}
-
-			r1 >>= 16;
-
-			if(r1) {
-				r = r0 / r1;
-			} else {
-				r = 0;
-			}
-
-			pos.x = s.x + ((r * (t.x - s.x)) >> 16);
-			pos.y = s.y + ((r * (t.y - s.y)) >> 16);
-			pos.z = s.z + ((r * (t.z - s.z)) >> 16);
-
-			if(SQUARE(pos.x - sp.x) + SQUARE(pos.y - sp.y) + SQUARE(pos.z - sp.z) < SQUARE(sphere->r)) {
-				dist = SQUARE(sphere->x - start->pos.x) + SQUARE(sphere->y - start->pos.y) + SQUARE(sphere->z - start->pos.z);
-
-				if(dist < max_dist) {
-					max_dist = dist;
-					ClosestMesh = *meshpp;
-					ClosestBit = bit;
-					ClosestNode = i;
-				}
-			}
-		}
-	}
-
-	if(ClosestNode >= -1) {
-		dist = SQUARE(Coord->x + ItemPos->pos.x - start->pos.x) + SQUARE(Coord->y + ItemPos->pos.y - start->pos.y) + SQUARE(Coord->z + ItemPos->pos.z - start->pos.z);
-
-		if(dist < ClosestDist) {
-			ClosestCoord.x = Coord->x + ItemPos->pos.x;
-			ClosestCoord.y = Coord->y + ItemPos->pos.y;
-			ClosestCoord.z = Coord->z + ItemPos->pos.z;
-			ClosestItem = item_number;
-			ClosestDist = dist;
-
-			if(ClosestNode >= 0) {
-				GetSpheres(item, Slist, 3);
-				ShatterItem.YRot = item->pos.y_rot;
-				ShatterItem.meshp = ClosestMesh;
-				ShatterItem.Sphere.x = Slist[ClosestNode].x;
-				ShatterItem.Sphere.y = Slist[ClosestNode].y;
-				ShatterItem.Sphere.z = Slist[ClosestNode].z;
-				ShatterItem.Bit = ClosestBit;
-				ShatterItem.il = &item->il;
-				ShatterItem.Flags = 0;
-			}
-
-			return 1;
-		}
-	}
-
-	return 0;
-}
 
 long GetMaximumFloor(FLOOR_INFO* floor, long x, long z) {
 	long height, h1, h2;

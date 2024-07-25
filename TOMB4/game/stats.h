@@ -9,4 +9,4 @@ typedef struct STATS {
 	unsigned char Secrets;
 	unsigned char HealthUsed;
 } STATS;
-#endif // TOMB4_GAME_STATS_H
+#endif// TOMB4_GAME_STATS_H

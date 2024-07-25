@@ -1,5 +1,5 @@
-#ifndef WEAPON_TYPES_INCLUDED
-#define WEAPON_TYPES_INCLUDED
+#ifndef TOMB4_GAME_WEAPONTYPES_H
+#define TOMB4_GAME_WEAPONTYPES_H
 typedef enum weapon_types {
 	WEAPON_NONE,
 	WEAPON_PISTOLS,
@@ -11,4 +11,4 @@ typedef enum weapon_types {
 	WEAPON_FLARE,
 	WEAPON_TORCH
 } weapon_types;
-#endif
+#endif// TOMB4_GAME_WEAPONTYPES_H

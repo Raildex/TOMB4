@@ -5,4 +5,4 @@ typedef struct VonCroyCutData {
 	PHD_VECTOR CameraTarget;
 	long f;
 } VonCroyCutData;
-#endif // TOMB4_GAME_VONCROYCUTDATA_H
+#endif// TOMB4_GAME_VONCROYCUTDATA_H

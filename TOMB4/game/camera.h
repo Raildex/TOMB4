@@ -11,15 +11,7 @@ typedef struct ITEM_INFO ITEM_INFO;
 typedef struct SHATTER_ITEM SHATTER_ITEM;
 
 void InitialiseCamera();
-void MoveCamera(GAME_VECTOR* ideal, long speed);
-long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push);
-long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst);
 void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long brightness);
-void ChaseCamera(ITEM_INFO* item);
-void CombatCamera(ITEM_INFO* item);
-void LookCamera(ITEM_INFO* item);
-void FixedCamera();
-void BinocularCamera(ITEM_INFO* item);
 void CalculateCamera();
 
 extern CAMERA_INFO camera;
@@ -39,7 +31,6 @@ extern long BinocularRange;
 extern long ExittingBinos;
 extern long LaserSight;
 
-extern SHATTER_ITEM ShatterItem;
 
 
 #endif// TOMB4_GAME_CAMERA_H

@@ -9,4 +9,4 @@ typedef enum anim_commands {
 	ACMD_PLAYSFX,
 	ACMD_FLIPEFFECT
 } anim_commands;
-#endif // TOMB4_GAME_ANIMCOMMANDS_H
+#endif// TOMB4_GAME_ANIMCOMMANDS_H

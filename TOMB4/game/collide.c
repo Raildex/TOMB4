@@ -44,6 +44,13 @@ static short StarGateBounds[24] = {
 
 short GlobalCollisionBounds[6];
 
+short GetTiltType(FLOOR_INFO* floor, long x, long y, long z);
+long FindGridShift(long src, long dst);
+long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_number, long hite);
+long TestBoundsCollideStatic(short* bounds, PHD_3DPOS* pos, long rad);
+long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotation);
+long TestBoundsCollide2(ITEM_INFO* item, ITEM_INFO* l, long rad);
+
 void ShiftItem(ITEM_INFO* item, COLL_INFO* coll) {
 	item->pos.pos.x += coll->shift.x;
 	item->pos.pos.y += coll->shift.y;

@@ -13,4 +13,4 @@ typedef struct AIOBJECT {
 	short box_number;
 } AIOBJECT;
 #pragma pack(pop)
-#endif // TOMB4_GAME_AIOBJECT_H
+#endif// TOMB4_GAME_AIOBJECT_H

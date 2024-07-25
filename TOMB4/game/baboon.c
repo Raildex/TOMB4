@@ -47,6 +47,70 @@ void InitialiseBaboon(short item_number) {
 	}
 }
 
+void FindCrowbarSwitch(ITEM_INFO* item, short switch_index) {
+	ITEM_INFO* item2;
+	short item_num;
+
+	for(item_num = GetRoom(currentLevel, item->room_number)->item_number; item_num != NO_ITEM; item_num = item2->next_item) {
+		item2 = GetItem(currentLevel, item_num);
+
+		if(item2->object_number == COG) {
+			item2->item_flags[0] = switch_index;
+		}
+	}
+
+	item->item_flags[2] = switch_index;
+}
+
+void ExplodeBaboon(ITEM_INFO* item) {
+	item->pos.pos.y -= 128;
+	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0);
+	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0x2000);
+	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0x4000);
+	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0x6000);
+	item->pos.pos.y += 128;
+	FlashFadeR = 255;
+	FlashFadeG = 64;
+	FlashFadeB = 0;
+	FlashFader = 32;
+}
+
+
+void ReTriggerBaboon(short item_number) {
+	ITEM_INFO* item;
+
+	item = GetItem(currentLevel, item_number);
+	ExplodeBaboon(item);
+	item->pos.pos.x = (item->item_flags[0] & 0xFF) << 10 | 0x200;
+	item->pos.pos.y = item->item_flags[1] << 8;
+	item->pos.pos.z = (item->item_flags[0] & 0xFFFFFF00) << 2 | 0x200;
+	IsRoomOutside(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
+
+	if(item->room_number != IsRoomOutsideNo) {
+		ItemNewRoom(item_number, IsRoomOutsideNo);
+	}
+
+	item->anim_number = GetObjectInfo(currentLevel, BABOON_NORMAL)->anim_index + 2;
+	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
+	item->goal_anim_state = 6;
+	item->current_anim_state = 6;
+	item->hit_points = GetObjectInfo(currentLevel, item->object_number)->hit_points;
+	RemoveActiveItem(item_number);
+	item->flags &= ~(IFL_INVISIBLE | IFL_CODEBITS);
+	item->after_death = 0;
+	item->status = ITEM_INVISIBLE;
+	DisableBaddieAI(item_number);
+
+	if(item->object_number != BABOON_NORMAL || !item->trigger_flags) {
+		if(item->object_number == BABOON_NORMAL || !item->trigger_flags) {
+			item->ai_bits = FOLLOW;
+		}
+
+		FindCrowbarSwitch(item, 0);
+	}
+}
+
+
 void BaboonControl(short item_number) {
 	height_types ht;
 	long tiltxoff, tiltzoff, OnObject;
@@ -373,6 +437,8 @@ void BaboonControl(short item_number) {
 				}
 
 				break;
+			default:
+				break;
 			}
 		}
 
@@ -382,64 +448,3 @@ void BaboonControl(short item_number) {
 	}
 }
 
-void FindCrowbarSwitch(ITEM_INFO* item, short switch_index) {
-	ITEM_INFO* item2;
-	short item_num;
-
-	for(item_num = GetRoom(currentLevel, item->room_number)->item_number; item_num != NO_ITEM; item_num = item2->next_item) {
-		item2 = GetItem(currentLevel, item_num);
-
-		if(item2->object_number == COG) {
-			item2->item_flags[0] = switch_index;
-		}
-	}
-
-	item->item_flags[2] = switch_index;
-}
-
-void ReTriggerBaboon(short item_number) {
-	ITEM_INFO* item;
-
-	item = GetItem(currentLevel, item_number);
-	ExplodeBaboon(item);
-	item->pos.pos.x = (item->item_flags[0] & 0xFF) << 10 | 0x200;
-	item->pos.pos.y = item->item_flags[1] << 8;
-	item->pos.pos.z = (item->item_flags[0] & 0xFFFFFF00) << 2 | 0x200;
-	IsRoomOutside(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z);
-
-	if(item->room_number != IsRoomOutsideNo) {
-		ItemNewRoom(item_number, IsRoomOutsideNo);
-	}
-
-	item->anim_number = GetObjectInfo(currentLevel, BABOON_NORMAL)->anim_index + 2;
-	item->frame_number = GetAnim(currentLevel, item->anim_number)->frame_base;
-	item->goal_anim_state = 6;
-	item->current_anim_state = 6;
-	item->hit_points = GetObjectInfo(currentLevel, item->object_number)->hit_points;
-	RemoveActiveItem(item_number);
-	item->flags &= ~(IFL_INVISIBLE | IFL_CODEBITS);
-	item->after_death = 0;
-	item->status = ITEM_INVISIBLE;
-	DisableBaddieAI(item_number);
-
-	if(item->object_number != BABOON_NORMAL || !item->trigger_flags) {
-		if(item->object_number == BABOON_NORMAL || !item->trigger_flags) {
-			item->ai_bits = FOLLOW;
-		}
-
-		FindCrowbarSwitch(item, 0);
-	}
-}
-
-void ExplodeBaboon(ITEM_INFO* item) {
-	item->pos.pos.y -= 128;
-	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0);
-	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0x2000);
-	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0x4000);
-	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0x6000);
-	item->pos.pos.y += 128;
-	FlashFadeR = 255;
-	FlashFadeG = 64;
-	FlashFadeB = 0;
-	FlashFader = 32;
-}

@@ -7,4 +7,4 @@ typedef struct CHANGE_STRUCT {
 	short range_index;
 } CHANGE_STRUCT;
 #pragma pack(pop)
-#endif // TOMB4_GAME_CHANGESTRUCT_H
+#endif// TOMB4_GAME_CHANGESTRUCT_H

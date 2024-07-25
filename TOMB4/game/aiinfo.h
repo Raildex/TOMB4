@@ -10,4 +10,4 @@ typedef struct AI_INFO {
 	short x_angle;
 	short enemy_facing;
 } AI_INFO;
-#endif // TOMB4_GAME_AIINFO_H
+#endif// TOMB4_GAME_AIINFO_H

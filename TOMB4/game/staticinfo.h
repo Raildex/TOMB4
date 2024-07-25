@@ -16,4 +16,4 @@ typedef struct STATIC_INFO {
 	short z_minc;
 	short z_maxc;
 } STATIC_INFO;
-#endif // TOMB4_GAME_STATICINFO_H
+#endif// TOMB4_GAME_STATICINFO_H

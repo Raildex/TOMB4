@@ -79,6 +79,39 @@ void UpdateDebris() {
 	}
 }
 
+long GetFreeDebris() {
+	DEBRIS_STRUCT* dptr;
+	long eldestage, eldestfree, free;
+
+	free = next_debris;
+	eldestfree = 0;
+	eldestage = -0x4000;
+	dptr = &debris[next_debris];
+
+	for(int i = 0; i < 256; i++) {
+		if(!dptr->On) {
+			next_debris = (free + 1) & 0xFF;
+			return free;
+		}
+
+		if(dptr->Yvel > eldestage) {
+			eldestfree = free;
+			eldestage = dptr->Yvel;
+		}
+
+		if(free == 255) {
+			dptr = debris;
+			free = 0;
+		} else {
+			free++;
+			dptr++;
+		}
+	}
+
+	next_debris = (eldestfree + 1) & 0xFF;
+	return eldestfree;
+}
+
 void TriggerDebris(GAME_VECTOR* pos, TEXTURESTRUCT* TextInfo, short* Offsets, long* Vels, short rgb) {
 	DEBRIS_STRUCT* dptr;
 
@@ -167,38 +200,7 @@ void TriggerDebris(GAME_VECTOR* pos, TEXTURESTRUCT* TextInfo, short* Offsets, lo
 	dptr->flags = DebrisMeshFlags;
 }
 
-long GetFreeDebris() {
-	DEBRIS_STRUCT* dptr;
-	long eldestage, eldestfree, free;
 
-	free = next_debris;
-	eldestfree = 0;
-	eldestage = -0x4000;
-	dptr = &debris[next_debris];
-
-	for(int i = 0; i < 256; i++) {
-		if(!dptr->On) {
-			next_debris = (free + 1) & 0xFF;
-			return free;
-		}
-
-		if(dptr->Yvel > eldestage) {
-			eldestfree = free;
-			eldestage = dptr->Yvel;
-		}
-
-		if(free == 255) {
-			dptr = debris;
-			free = 0;
-		} else {
-			free++;
-			dptr++;
-		}
-	}
-
-	next_debris = (eldestfree + 1) & 0xFF;
-	return eldestfree;
-}
 
 void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num, short RoomNumber, long NoXZVel) {
 	MESH_DATA* mesh;

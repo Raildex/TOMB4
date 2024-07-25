@@ -6,4 +6,4 @@ typedef struct BITE_INFO {
 	long z;
 	long mesh_num;
 } BITE_INFO;
-#endif // TOMB4_GAME_BITEINFO_H
+#endif// TOMB4_GAME_BITEINFO_H

@@ -1,8 +1,8 @@
-#ifndef TARGET_TYPE_INCLUDED
-#define TARGET_TYPE_INCLUDED
+#ifndef TOMB4_GAME_TARGETTYPE_H
+#define TOMB4_GAME_TARGETTYPE_H
 typedef enum target_type {
 	NO_TARGET,
 	PRIME_TARGET,
 	SECONDARY_TARGET
 } target_type;
-#endif
+#endif// TOMB4_GAME_TARGETTYPE_H

@@ -14,4 +14,4 @@ typedef struct WEAPON_INFO {
 	char draw_frame;
 	short sample_num;
 } WEAPON_INFO;
-#endif // TOMB4_GAME_WEAPONINFO_H
+#endif// TOMB4_GAME_WEAPONINFO_H

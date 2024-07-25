@@ -9,4 +9,4 @@ typedef enum collision_types {
 	CT_TOP_FRONT = 0x10,
 	CT_CLAMP = 0x20
 } collision_types;
-#endif // TOMB4_GAME_COLLISIONTYPES_H
+#endif// TOMB4_GAME_COLLISIONTYPES_H

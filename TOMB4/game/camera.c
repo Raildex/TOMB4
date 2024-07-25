@@ -52,7 +52,7 @@ long BinocularRange = 0;
 long ExittingBinos = 0;
 long LaserSight = 0;
 
-SHATTER_ITEM ShatterItem;
+
 
 static OLD_CAMERA old_cam;
 static GAME_VECTOR last_target;
@@ -90,6 +90,85 @@ void InitialiseCamera() {
 	UseForcedFixedCamera = 0;
 	CalculateCamera();
 }
+
+long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push) {
+	FLOOR_INFO* floor;
+	height_types height_type;
+	long tiltxoff, tiltzoff, OnObject;
+	long x, y, z, h, c, cdiff, hdiff, dx, dy, dz, clipped, nc, i;
+	short room_number, room_number2;
+
+	dx = (target->pos.x - start->pos.x) >> 3;
+	dy = (target->pos.y - start->pos.y) >> 3;
+	dz = (target->pos.z - start->pos.z) >> 3;
+	x = start->pos.x;
+	y = start->pos.y;
+	z = start->pos.z;
+	room_number = start->room_number;
+	room_number2 = room_number;
+	nc = 0;
+	clipped = 0;
+
+	for(i = 0; i < 8; i++) {
+		room_number = room_number2;
+		floor = GetFloor(x, y, z, &room_number2);
+		h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+		c = GetCeiling(floor, x, y, z);
+
+		if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h) {
+			if(!nc) {
+				x += dx;
+				y += dy;
+				z += dz;
+				continue;
+			}
+
+			clipped = 1;
+			break;
+		}
+
+		if(y > h) {
+			hdiff = y - h;
+
+			if(hdiff < push) {
+				y = h;
+			} else {
+				clipped = 1;
+				break;
+			}
+		}
+
+		if(y < c) {
+			cdiff = c - y;
+
+			if(cdiff < push) {
+				y = c;
+			} else {
+				clipped = 1;
+				break;
+			}
+		}
+
+		nc = 1;
+		x += dx;
+		y += dy;
+		z += dz;
+	}
+
+	if(i) {
+		x -= dx;
+		y -= dy;
+		z -= dz;
+	}
+
+	target->pos.x = x;
+	target->pos.y = y;
+	target->pos.z = z;
+	GetFloor(x, y, z, &room_number);
+	target->room_number = room_number;
+	return !clipped;
+}
+
 
 void MoveCamera(GAME_VECTOR* ideal, long speed) {
 	FLOOR_INFO* floor;
@@ -227,83 +306,6 @@ void MoveCamera(GAME_VECTOR* ideal, long speed) {
 	camera.old_type = camera.type;
 }
 
-long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push) {
-	FLOOR_INFO* floor;
-	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long x, y, z, h, c, cdiff, hdiff, dx, dy, dz, clipped, nc, i;
-	short room_number, room_number2;
-
-	dx = (target->pos.x - start->pos.x) >> 3;
-	dy = (target->pos.y - start->pos.y) >> 3;
-	dz = (target->pos.z - start->pos.z) >> 3;
-	x = start->pos.x;
-	y = start->pos.y;
-	z = start->pos.z;
-	room_number = start->room_number;
-	room_number2 = room_number;
-	nc = 0;
-	clipped = 0;
-
-	for(i = 0; i < 8; i++) {
-		room_number = room_number2;
-		floor = GetFloor(x, y, z, &room_number2);
-		h = GetHeight(floor, x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
-		c = GetCeiling(floor, x, y, z);
-
-		if(h == NO_HEIGHT || c == NO_HEIGHT || c >= h) {
-			if(!nc) {
-				x += dx;
-				y += dy;
-				z += dz;
-				continue;
-			}
-
-			clipped = 1;
-			break;
-		}
-
-		if(y > h) {
-			hdiff = y - h;
-
-			if(hdiff < push) {
-				y = h;
-			} else {
-				clipped = 1;
-				break;
-			}
-		}
-
-		if(y < c) {
-			cdiff = c - y;
-
-			if(cdiff < push) {
-				y = c;
-			} else {
-				clipped = 1;
-				break;
-			}
-		}
-
-		nc = 1;
-		x += dx;
-		y += dy;
-		z += dz;
-	}
-
-	if(i) {
-		x -= dx;
-		y -= dy;
-		z -= dz;
-	}
-
-	target->pos.x = x;
-	target->pos.y = y;
-	target->pos.z = z;
-	GetFloor(x, y, z, &room_number);
-	target->room_number = room_number;
-	return !clipped;
-}
 
 long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 	FLOOR_INFO* floor;

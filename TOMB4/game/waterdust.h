@@ -8,4 +8,4 @@ typedef struct WATER_DUST {
 	char zvel;
 	unsigned char life;
 } WATER_DUST;
-#endif // TOMB4_GAME_WATERDUST_H
+#endif// TOMB4_GAME_WATERDUST_H

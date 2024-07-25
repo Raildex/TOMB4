@@ -8,4 +8,4 @@ typedef enum camera_type {
 	CINEMATIC_CAMERA,
 	HEAVY_CAMERA,
 } camera_type;
-#endif // TOMB4_GAME_CAMERATYPE_H
+#endif// TOMB4_GAME_CAMERATYPE_H

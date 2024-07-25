@@ -7,4 +7,4 @@ typedef enum ai_bits {
 	MODIFY = 1 << 3,
 	FOLLOW = 1 << 4
 } ai_bits;
-#endif // TOMB4_GAME_AIBITS_H
+#endif// TOMB4_GAME_AIBITS_H
