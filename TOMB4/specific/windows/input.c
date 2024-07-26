@@ -714,7 +714,7 @@ static const input_buttons defaultLayout[NUM_KEYBOARD_BUTTONS] = {
 	IN_ROLL,
 	IN_NONE,
 	IN_RSTEP,
-	IN_NONE,
+	IN_LOOK,
 	IN_NONE,
 	IN_NONE,
 	IN_NONE,
@@ -779,6 +779,10 @@ static const input_buttons defaultLayout[NUM_KEYBOARD_BUTTONS] = {
 	IN_NONE,
 	IN_NONE
 };
+
+void S_ClearAction(INPUT_MANAGER *manager, input_buttons button) {
+	manager->lastInput[button] = 0;
+}
 
 long S_CreateInputManager(INPUT_MANAGER * *out) {
 	INPUT_MANAGER* manager = (INPUT_MANAGER*)calloc(1, sizeof(INPUT_MANAGER));

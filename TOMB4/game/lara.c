@@ -4302,7 +4302,7 @@ void LookUpDown() {
 		camera.type = LOOK_CAMERA;
 
 		if(S_IsActionDown(inputImpl, IN_FORWARD)) {
-
+			S_ClearAction(inputImpl, IN_FORWARD);
 			if(lara.head_x_rot > -6370) {
 				if(BinocularRange) {
 					lara.head_x_rot -= (short)(364 * (1792 - BinocularRange) / 3072);
@@ -4311,7 +4311,7 @@ void LookUpDown() {
 				}
 			}
 		} else if(S_IsActionDown(inputImpl, IN_BACK)) {
-
+			S_ClearAction(inputImpl, IN_BACK);
 			if(lara.head_x_rot < 5460) {
 				if(BinocularRange) {
 					lara.head_x_rot += (short)(364 * (1792 - BinocularRange) / 3072);
@@ -4332,7 +4332,7 @@ void LookLeftRight() {
 		camera.type = LOOK_CAMERA;
 
 		if(S_IsActionDown(inputImpl, IN_LEFT)) {
-
+			S_ClearAction(inputImpl, IN_LEFT);
 			if(lara.head_y_rot > -8008) {
 				if(BinocularRange) {
 					lara.head_y_rot -= (short)(364 * (1792 - BinocularRange) / 1536);
@@ -4341,7 +4341,7 @@ void LookLeftRight() {
 				}
 			}
 		} else if(S_IsActionDown(inputImpl, IN_RIGHT)) {
-
+			S_ClearAction(inputImpl, IN_RIGHT);
 			if(lara.head_y_rot < 8008) {
 				if(BinocularRange) {
 					lara.head_y_rot += (short)(364 * (1792 - BinocularRange) / 1536);

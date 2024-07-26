@@ -67,6 +67,7 @@ long S_CreateInputManager(INPUT_MANAGER** out);
 void S_DestroyInputManager(INPUT_MANAGER* manager);
 void S_UpdateInput(INPUT_MANAGER* manager);
 void S_ClearInput(INPUT_MANAGER* manager);
+void S_ClearAction(INPUT_MANAGER* manager, input_buttons button);
 long S_IsActionDownDebounced(INPUT_MANAGER* manager, input_buttons button);
 long S_IsActionDown(INPUT_MANAGER* manager, input_buttons button);
 long S_MapKeyboardButton(INPUT_MANAGER* manager, keyboard_button button, input_buttons action);
