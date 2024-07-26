@@ -258,7 +258,7 @@ void CreateLightList(ITEM_INFO* item) {
 	_D3DVECTOR vec;
 	void* bakPtr;
 	long bakNum, dx, dy, dz, range;
-	bool in_range;
+	long in_range;
 
 	r = GetRoom(currentLevel, item->room_number);
 

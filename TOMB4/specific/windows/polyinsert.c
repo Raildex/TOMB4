@@ -685,7 +685,7 @@ void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 	long specBak[3];
 	long num;
 	short swap;
-	bool clip, clipZ;
+	long clip, clipZ;
 
 	c = clipflags;
 	clipZ = 0;
@@ -1270,7 +1270,7 @@ void AddTriClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURE
 	long specBak[3];
 	long nPoints;
 	short swap;
-	bool clip, clipZ;
+	long clip, clipZ;
 
 	c = clipflags;
 	clipZ = 0;

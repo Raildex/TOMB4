@@ -13,7 +13,7 @@ void (*AddTriSorted)(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUC
 void (*AddQuadZBuffer)(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided);
 void (*AddTriZBuffer)(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided);
 void (*AddLineSorted)(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, short drawtype);
-bool (*IsVisible)(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2);
+long (*IsVisible)(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2);
 HRESULT(*_BeginScene)
 ();
 HRESULT(*_EndScene)
@@ -86,11 +86,11 @@ void HWInitialise() {
 	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_FOGENABLE, 1);
 }
 
-bool _NVisible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2) {
+long _NVisible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2) {
 	return (v0->sy - v1->sy) * (v2->sx - v1->sx) - (v2->sy - v1->sy) * (v0->sx - v1->sx) < 0;
 }
 
-bool _Visible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2) {
+long _Visible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2) {
 	return (v0->sy - v1->sy) * (v2->sx - v1->sx) - (v2->sy - v1->sy) * (v0->sx - v1->sx) > 0;
 }
 

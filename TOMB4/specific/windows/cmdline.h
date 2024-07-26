@@ -1,7 +1,6 @@
 #ifndef SPECIFIC_WINDOWS_CMDLINE_H
 #define SPECIFIC_WINDOWS_CMDLINE_H
 #include <windows.h>
-#include "stdbool.h"
 void CLSetup(char* cmd);
 void CLNoFMV(char* cmd);
 void InitDSDevice(HWND dlg, HWND hwnd);

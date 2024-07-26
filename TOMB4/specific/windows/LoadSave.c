@@ -62,7 +62,7 @@ void DoOptions() {
 	unsigned long nMask;
 	long f, y, i, jread, jx, jy, lp;
 	static char sfx_backup_flag; // have we backed sfx stuff up?
-	static bool waiting_for_key = 0;
+	static long waiting_for_key = 0;
 
 	if(!(sfx_backup_flag & 1)) {
 		sfx_backup_flag |= 1;

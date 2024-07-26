@@ -1,6 +1,6 @@
 #ifndef TOMB4_SPECIFIC_SPECIFICFX_H
 #define TOMB4_SPECIFIC_SPECIFICFX_H
-#include <stdbool.h>
+
 typedef struct SPARKS SPARKS;
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct PHD_VECTOR PHD_VECTOR;

@@ -50,7 +50,7 @@ static long BinkSurfaceType;
 			RaiseException(1, 2, 1, (const ULONG_PTR*)#proc); \
 	}
 
-bool LoadBinkStuff() {
+long LoadBinkStuff() {
 	hBinkW32 = LoadLibrary("binkw32.dll");
 
 	if(!hBinkW32) {

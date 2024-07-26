@@ -105,7 +105,7 @@ static void DrawColoredRect(float x0, float y0, float x1, float y1, float z, uns
 	AddQuadSorted(v, 0, 1, 2, 3, tex, 0);
 }
 
-static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, GouraudBarColourSet* colour, bool scaled) {
+static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, GouraudBarColourSet* colour, long scaled) {
 	TEXTURESTRUCT tex;
 	float bar, max, h, x0, y0, x1, y1;
 	long p, r, g, b, c0, c1, c2, c3;
@@ -198,7 +198,7 @@ static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, 
 	DrawColoredRect(x0 - (3 * p), y0 + p, x1 + (3 * p), y1 - p, f_mznear + 3, 0xFF284141, 0xFF505050, 0xFF284141, 0xFF505050, &tex);
 }
 
-static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long clr1, long clr2, bool scaled) {
+static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long clr1, long clr2, long scaled) {
 	TEXTURESTRUCT tex;
 	float r1, g1, b1, r2, g2, b2, r, g, b, mul;
 	long bar, y2, p, lr, lg, lb, c0, c1, c2, c3;
@@ -251,7 +251,7 @@ static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long c
 	DrawColoredRect((float)(x - p), (float)(y - p), (float)(x + width + p), (float)(y2 + height + p), f_mznear + 2, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, &tex);
 }
 
-static void DoBar(long x, long y, long width, long height, long pos, long c1, long c2, bool scaled) {
+static void DoBar(long x, long y, long width, long height, long pos, long c1, long c2, long scaled) {
 	TEXTURESTRUCT tex;
 	long p, xw, y2, bar;
 

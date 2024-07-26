@@ -306,7 +306,7 @@ void WinProcessCommands(long cmd) {
 }
 extern void FillADPCMBuffer(char* p, long track);
 LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	static bool closing;
+	static long closing;
 
 	switch(uMsg) {
 	case WM_CREATE:

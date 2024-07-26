@@ -77,7 +77,7 @@ void InitTFormats(HWND dlg, HWND hwnd) {
 	DXTEXTUREINFO* tex;
 	long bpp, r, g, b, a;
 	char buffer[40];
-	bool software;
+	long software;
 
 	SendMessage(hwnd, CB_RESETCONTENT, 0, 0);
 	EnableWindow(GetDlgItem(dlg, 1006), 1);
@@ -113,7 +113,7 @@ void InitResolution(HWND dlg, HWND hwnd, long resetvms) {
 	DXDISPLAYMODE* dm;
 	long bpp, w, h, n;
 	char buffer[40];
-	bool software;
+	long software;
 
 	n = 0;
 
@@ -236,7 +236,7 @@ char* MapASCIIToANSI(char* s, char* d) {
 	char* p;
 	long l;
 	unsigned char c;
-	bool found;
+	long found;
 
 	l = strlen(s);
 	p = d;

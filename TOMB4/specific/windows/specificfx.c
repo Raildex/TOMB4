@@ -42,12 +42,9 @@
 #include "specific/file.h"
 #include "specific/function_stubs.h"
 #include "specific/function_table.h"
-#include "specific/gamemain.h"
 #include "specific/output.h"
 #include "specific/polyinsert.h"
-#include "specific/texture.h"
 #include "specific/windows/winmain.h"
-#include "stdbool.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
