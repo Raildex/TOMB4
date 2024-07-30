@@ -14,7 +14,6 @@
 #include "specific/3dmath.h"
 #include "specific/function_stubs.h"
 #include "specific/sound.h"
-#include "specific/windows/dxsound.h"
 
 SoundSlot LaSlot[32];
 long sound_active = 0;
@@ -79,7 +78,7 @@ void StopSoundEffect(long sfx) {
 
 		for(int i = 0; i < 32; i++) {
 			if(LaSlot[i].nSampleInfo >= lut && LaSlot[i].nSampleInfo < (lut + ((GetSampleInfo(currentLevel, lut)->flags >> 2) & 0xF))) {
-				S_SoundStopSample(i);
+				S_SoundStopSample(soundImpl, i);
 				LaSlot[i].nSampleInfo = -1;
 			}
 		}
@@ -98,7 +97,7 @@ void InitialiseSounds() {
 
 void StopSounds() {
 	if(sound_active) {
-		S_SoundStopAllSamples();
+		S_SoundStopAllSamples(soundImpl);
 
 		for(int i = 0; i < 32; i++) {
 			LaSlot[i].nSampleInfo = -1;
@@ -234,7 +233,7 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 
 		for(int i = 0; i < 32; i++) {
 			if(LaSlot[i].nSampleInfo == lut) {
-				if(S_SoundSampleIsPlaying(i)) {
+				if(S_SoundSampleIsPlaying(soundImpl, i)) {
 					return 0;
 				}
 
@@ -248,7 +247,7 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 
 		for(int i = 0; i < 32; i++) {
 			if(LaSlot[i].nSampleInfo == lut) {
-				S_SoundStopSample(i);
+				S_SoundStopSample(soundImpl, i);
 				LaSlot[i].nSampleInfo = -1;
 				break;
 			}
@@ -280,9 +279,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 	}
 
 	if(flag == 3) {
-		dx = S_SoundPlaySampleLooped(GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
+		dx = S_SoundPlaySampleLooped(soundImpl, GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
 	} else {
-		dx = S_SoundPlaySample(GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
+		dx = S_SoundPlaySample(soundImpl, GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
 	}
 
 	if(dx >= 0) {
@@ -310,13 +309,13 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 		}
 
 		if(volume > vol) {
-			S_SoundStopSample(slot);
+			S_SoundStopSample(soundImpl, slot);
 			LaSlot[slot].nSampleInfo = -1;
 
 			if(flag == 3) {
-				dx = S_SoundPlaySampleLooped(GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
+				dx = S_SoundPlaySampleLooped(soundImpl, GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
 			} else {
-				dx = S_SoundPlaySample(GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
+				dx = S_SoundPlaySample(soundImpl, GetSampleBuffer(currentLevel, sample), (unsigned short)volume, pitch, (short)pan);
 			}
 
 			if(dx >= 0) {

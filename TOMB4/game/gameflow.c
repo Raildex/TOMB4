@@ -33,8 +33,6 @@
 #include "specific/sound.h"
 #include "specific/specificfx.h"
 #include "specific/windows/dxshell.h"
-#include "specific/windows/dxsound.h"
-#include <dinput.h>
 
 
 short CreditGroups[18] = {
@@ -571,7 +569,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 		}
 	}
 
-	S_SoundStopAllSamples();
+	S_SoundStopAllSamples(soundImpl);
 	S_CDStop();
 
 #ifndef TIMES_LEVEL
@@ -746,11 +744,11 @@ long TitleOptions() {
 	if(S_IsActionDownDebounced(inputImpl, IN_DESELECT) && menu > 0) {
 		menu = 0;
 		selection = selection_bak;
-		S_SoundStopAllSamples();
+		S_SoundStopAllSamples(soundImpl);
 		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 	}
 
-	if(S_IsActionDownDebounced(inputImpl, IN_SELECT) && !keymap[DIK_LALT] && menu < 2) {
+	if(S_IsActionDownDebounced(inputImpl, IN_SELECT) && menu < 2) {
 		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
 		if(!menu) {
@@ -850,7 +848,7 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 	StopSounds();
 	S_CDPlay(Audio, 1);
 	IsAtmospherePlaying = 0;
-	S_SetReverbType(1);
+	S_SetReverbType(soundImpl, 1);
 	InitialiseCamera();
 
 	if(bDoCredits) {
@@ -890,7 +888,7 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 		gfStatus = ControlPhase(nFrames, 0);
 	}
 
-	S_SoundStopAllSamples();
+	S_SoundStopAllSamples(soundImpl);
 	S_CDStop();
 	bUseSpotCam = 0;
 	EnableLaraControl();

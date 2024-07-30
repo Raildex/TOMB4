@@ -39,7 +39,6 @@
 #include "specific/function_table.h"
 #include "specific/polyinsert.h"
 #include "specific/sound.h"
-#include "specific/windows/dxsound.h"
 
 
 long GlobalFogOff = 0;
@@ -491,19 +490,19 @@ void SoundEffects() {
 		}
 
 		if((GetSampleInfo(currentLevel, slot->nSampleInfo)->flags & 3) != 3) {
-			if(!S_SoundSampleIsPlaying(i)) {
+			if(!S_SoundSampleIsPlaying(soundImpl, i)) {
 				slot->nSampleInfo = -1;
 			} else {
 				GetPanVolume(slot);
-				S_SoundSetPanAndVolume(i, (short)slot->nPan, (unsigned short)slot->nVolume);
+				S_SoundSetPanAndVolume(soundImpl, i, (short)slot->nPan, (unsigned short)slot->nVolume);
 			}
 		} else {
 			if(!slot->nVolume) {
-				S_SoundStopSample(i);
+				S_SoundStopSample(soundImpl, i);
 				slot->nSampleInfo = -1;
 			} else {
-				S_SoundSetPanAndVolume(i, (short)slot->nPan, (unsigned short)slot->nVolume);
-				S_SoundSetPitch(i, slot->nPitch);
+				S_SoundSetPanAndVolume(soundImpl, i, (short)slot->nPan, (unsigned short)slot->nVolume);
+				S_SoundSetPitch(soundImpl, i, slot->nPitch);
 				slot->nVolume = 0;
 			}
 		}

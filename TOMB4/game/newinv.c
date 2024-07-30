@@ -41,7 +41,6 @@
 #include "specific/sound.h"
 #include "specific/windows/d3dmatrix.h"
 #include "specific/windows/dxshell.h"
-#include "specific/windows/dxsound.h"
 #include <dinput.h>
 #include <stdio.h>
 
@@ -2828,7 +2827,7 @@ long S_CallInventory2() {
 	init_new_inventry();
 	camera.number_frames = 2;
 	return_value = 0;
-	S_SetReverbType(1);
+	S_SetReverbType(soundImpl, 1);
 
 	while(!reset_flag && !val) {
 		OBJLIST_SPACING = phd_centerx >> 1;

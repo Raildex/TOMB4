@@ -20,9 +20,14 @@
 #include "specific/windows/dxflags.h"
 #include "specific/windows/dxinfo.h"
 #include "specific/windows/dxshell.h"
-#include "specific/windows/dxsound.h"
 #include "specific/windows/winmain.h"
 #include <basetsd.h>
+// clang-format off
+#include <windows.h>
+#include <mmiscapi.h>
+#include <mmreg.h>
+#include <MSAcm.h>
+// clang-format on
 #include <dsound.h>
 #include <excpt.h>
 #include <nb30.h>
@@ -97,6 +102,7 @@ void ShowBinkFrame() {
 }
 
 long PlayFmvNow(long num) {
+	return 0;
 	DXDISPLAYMODE* modes;
 	DXDISPLAYMODE* current;
 	long dm, rm, ndms;
@@ -114,7 +120,7 @@ long PlayFmvNow(long num) {
 		return 0;
 	}
 
-	sprintf(name, "fmv\\fmv%02d.bik", num);
+	sprintf(name, "fmv\\fmv%02ld.bik", num);
 	memset(path, 0, sizeof(path));
 	strcat(path, name);
 	App.fmv = 1;
@@ -186,7 +192,7 @@ long PlayFmvNow(long num) {
 		SetD3DViewMatrix();
 	}
 
-	DXChangeOutputFormat(sfx_frequencies[SoundQuality], 1);
+	//DXChangeOutputFormat(sfx_frequencies[SoundQuality], 1);
 	HWInitialise();
 	ClearSurfaces();
 	App.fmv = 0;

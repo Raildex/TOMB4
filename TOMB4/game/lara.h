@@ -5,6 +5,7 @@ typedef struct ITEM_INFO ITEM_INFO;
 typedef struct COLL_INFO COLL_INFO;
 typedef struct LARA_INFO LARA_INFO;
 
+void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll);
 
 extern void (*lara_control_routines[NUM_LARA_STATES])(ITEM_INFO* item, COLL_INFO* coll);
 extern void (*lara_collision_routines[NUM_LARA_STATES])(ITEM_INFO* item, COLL_INFO* coll);

@@ -40,6 +40,7 @@ void Log(const char* scope, const char* s, ...) {
 	vfprintf(stdout, s, list);
 	fprintf(stdout, "\n");
 	va_end(list);
+	fflush(stdout);
 }
 
 void LogE(const char* scope, const char* s, ...) {

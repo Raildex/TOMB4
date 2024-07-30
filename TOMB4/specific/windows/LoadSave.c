@@ -29,7 +29,6 @@
 #include "specific/windows/d3dtlbumpvertex.h"
 #include "specific/windows/dxflags.h"
 #include "specific/windows/dxshell.h"
-#include "specific/windows/dxsound.h"
 #include "specific/windows/winmain.h"
 #include <ddraw.h>
 #include <dinput.h>
@@ -339,7 +338,7 @@ void DoOptions() {
 
 			sSliderCol = 0xFF3F3F3F;
 			mSliderCol = 0xFF7F7F7F;
-			ACMSetVolume();
+			//ACMSetVolume();
 		} else if(sel & 4) {
 			if(S_IsActionDown(inputImpl, IN_LEFT)) {
 				SFXVolume--;
@@ -356,13 +355,13 @@ void DoOptions() {
 			}
 
 			if(SFXVolume != sfx_bak) {
-				if(sfx_breath_db == -1 || !DSIsChannelPlaying(0)) {
-					S_SoundStopAllSamples();
+				if(sfx_breath_db == -1 ) {
+					S_SoundStopAllSamples(soundImpl);
 					sfx_bak = SFXVolume;
 					sfx_breath_db = SoundEffect(SFX_LARA_BREATH, 0, SFX_ALWAYS);
-					DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
-				} else if(sfx_breath_db != -1 && DSIsChannelPlaying(0)) {
-					DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
+					//DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
+				} else if(sfx_breath_db != -1 ) {
+					//DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
 				}
 			}
 
@@ -386,8 +385,8 @@ void DoOptions() {
 			}
 
 			if(SoundQuality != sfx_quality_bak) {
-				S_SoundStopAllSamples();
-				DXChangeOutputFormat(sfx_frequencies[SoundQuality], 0);
+				S_SoundStopAllSamples(soundImpl);
+				//DXChangeOutputFormat(sfx_frequencies[SoundQuality], 0);
 				sfx_quality_bak = SoundQuality;
 				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			}
@@ -907,7 +906,7 @@ long S_PauseMenu() {
 	CreateMonoScreen();
 	S_DisplayPauseMenu(1);
 	InventoryActive = 1;
-	S_SetReverbType(1);
+	S_SetReverbType(soundImpl, 1);
 
 	do {
 		S_InitialisePolyList();

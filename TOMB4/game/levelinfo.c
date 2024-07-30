@@ -39,7 +39,6 @@
 #include "specific/polyinsert.h"
 #include "specific/sound.h"
 #include "specific/texture.h"
-#include "specific/windows/dxsound.h"
 #include "specific/windows/winmain.h"
 #include <assert.h>
 #include <crtdbg.h>
@@ -709,7 +708,7 @@ char LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl) {
 		fread(&comp_size, 1, 4, file);
 		fread(decompression_buffer, comp_size, 1, file);
 
-		if(!S_ConvertSamples(decompression_buffer, comp_size, uncomp_size, i, lvl->sample_buffers)) {
+		if(!S_ConvertSamples(soundImpl, decompression_buffer, comp_size, uncomp_size, i, lvl->sample_buffers)) {
 			free(decompression_buffer);
 			return 0;
 		}

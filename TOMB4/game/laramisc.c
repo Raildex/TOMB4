@@ -40,7 +40,6 @@
 #include "specific/input.h"
 #include "specific/sound.h"
 #include "specific/windows/dxshell.h"
-#include "specific/windows/dxsound.h"
 #include <dinput.h>
 
 
@@ -542,7 +541,7 @@ void LaraControl(short item_number) {
 			break;
 		}
 	}
-	S_SetReverbType(GetRoom(currentLevel, camera.pos.room_number)->ReverbType);
+	S_SetReverbType(soundImpl, GetRoom(currentLevel, camera.pos.room_number)->ReverbType);
 
 	if(l->hit_points <= 0) {
 		l->hit_points = -1;

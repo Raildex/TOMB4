@@ -1,4 +1,3 @@
-
 #include "game/box.h"
 #include "distances.h"
 #include "game/aibits.h"

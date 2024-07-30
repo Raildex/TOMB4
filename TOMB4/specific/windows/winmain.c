@@ -20,7 +20,7 @@
 #include "specific/windows/dxflags.h"
 #include "specific/windows/dxinfo.h"
 #include "specific/windows/dxshell.h"
-#include "specific/windows/dxsound.h"
+#include "specific/sound.h"
 #include "specific/windows/registry.h"
 #include "specific/windows/winapp.h"
 #include "tomb4/resource.h"
@@ -159,7 +159,7 @@ void WinClose() {
 		Log(__func__, "%s Attempt To Release NULL Ptr", "DirectInput");
 	}
 
-	DXDSClose();
+	S_DestroySoundSystem(soundImpl);
 }
 
 float WinFrameRate() {
@@ -532,8 +532,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	App.hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
 
 	if(!App.SoundDisabled) {
-		DXDSCreate();
-		ACMInit();
+		S_CreateSoundSystem(&soundImpl);
 	}
 
 	cutseqpakPtr = NULL;
