@@ -241,7 +241,7 @@ static long JeepCheckGetOut() {
 		lara.gun_status = LG_NO_ARMS;
 		CurrentAtmosphere = 110;
 		IsAtmospherePlaying = 1;
-		S_CDPlay(110, 1);
+		S_PlayTrack(musicImpl, 110, 1);
 	}
 
 	return 1;
@@ -383,7 +383,7 @@ void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		item->flags |= IFL_TRIGGERED;
 		CurrentAtmosphere = 98;
 		IsAtmospherePlaying = 1;
-		S_CDPlay(98, 1);
+		S_PlayTrack(musicImpl, 98, 1);
 	} else {
 		ObjectCollision(item_number, l, coll);
 	}
@@ -564,7 +564,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 
 			if(killed) {
 				lara_item->goal_anim_state = 16;
-			} else if(((S_IsActionDown(inputImpl, IN_JUMP) || S_IsActionDown(inputImpl, IN_LEFT)) == (IN_JUMP | IN_LEFT)) && !jeep->velocity && !dont_exit_jeep) {
+			} else if(((S_IsActionDown(inputImpl, IN_JUMP) && S_IsActionDown(inputImpl, IN_LEFT))) && !jeep->velocity && !dont_exit_jeep) {
 				if(CanGetOff(0)) {
 					lara_item->goal_anim_state = 10;
 				}
@@ -833,7 +833,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 				lara_item->goal_anim_state = 0;
 			}
 
-			if(((S_IsActionDown(inputImpl, IN_JUMP) || S_IsActionDown(inputImpl, IN_LEFT)) == (IN_JUMP | IN_LEFT)) && !jeep->velocity && !dont_exit_jeep) {
+			if(((S_IsActionDown(inputImpl, IN_JUMP) && S_IsActionDown(inputImpl, IN_LEFT))) && !jeep->velocity && !dont_exit_jeep) {
 				if(CanGetOff(0)) {
 					lara_item->goal_anim_state = 10;
 				}

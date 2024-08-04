@@ -266,9 +266,9 @@ void S_SetReverbType(SOUND_SYSTEM* sys, long reverb) {
 
 static long Check(const char* scope, HRESULT res) {
 	if(FAILED(res)) {
-		char buff[512];
-		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, res, MAKELANGID(LANG_NEUTRAL,SUBLANG_NEUTRAL),&buff[0],512,NULL);
-		LogE(scope, "XAudio2 Sound Error: %s", buff);
+		char buffer[256];
+		long n = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, res, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), buffer, sizeof(buffer), NULL);
+		LogE(scope, "DirectInput Error: %.*s", n, buffer);
 		return 0;
 	}
 	return 1;

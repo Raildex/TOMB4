@@ -114,7 +114,7 @@ long PlayFmvNow(long num) {
 	}
 
 	FmvSceneTriggered |= 1 << num;
-	S_CDStop();
+	S_StopTrack(musicImpl);
 
 	if(fmvs_disabled) {
 		return 0;
