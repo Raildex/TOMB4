@@ -310,6 +310,7 @@ long S_CreateSoundSystem(SOUND_SYSTEM** out) {
 	if(!system) {
 		return 0;
 	}
+	system->reverbType = -1;
 	XAUDIO2_DEBUG_CONFIGURATION config = { 0 };
 	config.LogFunctionName = 1;
 	config.LogFileline = 1;
@@ -361,11 +362,12 @@ long S_CreateSoundSystem(SOUND_SYSTEM** out) {
 			return 0;
 		}
 	}
-	XAUDIO2FX_REVERB_I3DL2_PARAMETERS reverb_presets[4] = {
-		{ 50.0F, -1000, -500, 0.0F, 2.31F, 0.64F, -711, 0.012F, -800, 0.017F, 100.0F, 100.0F, 5000.0F },
-		{ 50.0F, -1000, -500, 0.0F, 2.31F, 0.64F, -711, 0.012F, -300, 0.017F, 100.0F, 100.0F, 5000.0F },
-		{ 50.0F, -1000, -500, 0.0F, 2.31F, 0.64F, -711, 0.012F, 200, 0.017F, 100.0F, 100.0F, 5000.0F },
-		{ 50.0F, -1000, -500, 0.0F, 2.31F, 0.64F, -711, 0.012F, 700, 0.017F, 100.0F, 100.0F, 5000.0F },
+	XAUDIO2FX_REVERB_I3DL2_PARAMETERS reverb_presets[5] = {
+		(XAUDIO2FX_REVERB_I3DL2_PARAMETERS){ 50.0F, -1000, -500, 0.0F, 2.31F, 0.64F, -711, 0.012F, -800, 0.017F, 100.0F, 100.0F, 5000.0F },
+		(XAUDIO2FX_REVERB_I3DL2_PARAMETERS){ 50.0F, -1000, -500, 0.0F, 2.31F, 0.64F, -711, 0.012F, -300, 0.017F, 100.0F, 100.0F, 5000.0F },
+		(XAUDIO2FX_REVERB_I3DL2_PARAMETERS){ 50.0F, -1000, -500, 0.0F, 2.31F, 0.64F, -711, 0.012F, 200, 0.017F, 100.0F, 100.0F, 5000.0F },
+		(XAUDIO2FX_REVERB_I3DL2_PARAMETERS){ 50.0F, -1000, -500, 0.0F, 2.31F, 0.64F, -711, 0.012F, 700, 0.017F, 100.0F, 100.0F, 5000.0F },
+		(XAUDIO2FX_REVERB_I3DL2_PARAMETERS){ 100, -200, -500, 0.0f, 0.49f, 0.10f, 0, 0.002f, 0, 0.0f, 100.0f, 100.0f, 1000.0f },
 	};
 	system->reverb_types = (XAUDIO2FX_REVERB_PARAMETERS*)calloc(16, sizeof(XAUDIO2FX_REVERB_PARAMETERS));
 	if(!system->reverb_types) {
@@ -374,8 +376,11 @@ long S_CreateSoundSystem(SOUND_SYSTEM** out) {
 		free(system);
 		return 0;
 	}
-	for(int i = 0; i < 4; ++i) {
+	for(int i = 0; i < 5; ++i) {
 		ReverbConvertI3DL2ToNative(&reverb_presets[i], &system->reverb_types[i], 0);
+		if(i == 5) {
+			system->reverb_types[i].WetDryMix = 10;
+		}
 	}
 	*out = system;
 	return 1;

@@ -541,7 +541,11 @@ void LaraControl(short item_number) {
 			break;
 		}
 	}
-	S_SetReverbType(soundImpl, GetRoom(currentLevel, camera.pos.room_number)->ReverbType);
+	if(!(GetRoom(currentLevel, camera.pos.room_number)->flags & ROOM_UNDERWATER)) {
+		S_SetReverbType(soundImpl, GetRoom(currentLevel, camera.pos.room_number)->ReverbType);
+	}else {
+		S_SetReverbType(soundImpl, 5);
+	}
 
 	if(l->hit_points <= 0) {
 		l->hit_points = -1;
