@@ -553,4 +553,5 @@ void InitialiseEffects() {
 	for(int i = 0; i < 64; i++) {
 		Locusts[i].On = 0;
 	}
+	ClearEffects();
 }

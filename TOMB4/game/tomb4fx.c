@@ -35,6 +35,7 @@
 #include "game/sound.h"
 #include "game/sparks.h"
 #include "game/sphere.h"
+#include "game/splashstruct.h"
 #include "game/weapontypes.h"
 #include "global/types.h"
 #include "specific/3dmath.h"
@@ -2134,4 +2135,15 @@ void Fade() {
 	if(ScreenFade || dScreenFade) {
 		DrawPsxTile(0, phd_winwidth | (phd_winheight << 16), RGBA(ScreenFade, ScreenFade, ScreenFade, 98), 2, 0);
 	}
+}
+
+void ClearEffects() {
+	memset(Gunshells, 0, sizeof(GUNSHELL_STRUCT) * nGunshells);
+	memset(splashes, 0, sizeof(SPLASH_STRUCT) * nSplashes);
+	memset(blood, 0, sizeof(BLOOD_STRUCT) * nBlood);
+	memset(Bubbles, 0, sizeof(BUBBLE_STRUCT) * nBubbles);
+	memset(spark, 0, sizeof(SPARKS) * nSpark);
+	memset(Lightning, 0, sizeof(LIGHTNING_STRUCT) * nLightnings);
+	memset(ShockWaves, 0, sizeof(SHOCKWAVE_STRUCT) * nShockWaves);
+	memset(Gunflashes, 0, sizeof(GUNFLASH_STRUCT) * nGunflashes);
 }

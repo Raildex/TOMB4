@@ -142,8 +142,7 @@ void WinClose() {
 	if(!G_dxptr) {
 		return;
 	}
-
-	DXAttempt(IDirectInputDevice_Unacquire(G_dxptr->Keyboard));
+	S_DestroyInputManager(inputImpl);
 
 	if(G_dxptr->Keyboard) {
 		Log(__func__, "Released %s @ %x - RefCnt = %d", "Keyboard", G_dxptr->Keyboard, IDirectInputDevice_Release(G_dxptr->Keyboard));

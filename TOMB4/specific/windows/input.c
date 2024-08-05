@@ -29,6 +29,7 @@
 #include <libloaderapi.h>
 #include <minwindef.h>
 #include <stdio.h>
+#include <unknwnbase.h>
 #include <winbase.h>
 #include <winerror.h>
 #include <winnt.h>
@@ -830,6 +831,15 @@ long S_CreateInputManager(INPUT_MANAGER * *out) {
 	}
 	*out = manager;
 	return 1;
+}
+
+void S_DestroyInputManager(INPUT_MANAGER *manager) {
+	IUnknown_Release(manager->keyboard);
+	if(manager->gamepad) {
+		IUnknown_Release(manager->gamepad);
+	}
+	IUnknown_Release(manager->directInput);
+	free(manager);
 }
 
 INPUT_MANAGER* inputImpl;

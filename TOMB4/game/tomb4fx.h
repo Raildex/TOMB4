@@ -59,6 +59,7 @@ void SetFadeClip(short height, short speed);
 void UpdateFadeClip();
 void SetScreenFadeOut(short speed, short back);
 void SetScreenFadeIn(short speed);
+void ClearEffects();
 void Fade();
 SMOKE_SPARKS* GetFreeSmokeSpark();
 extern NODEOFFSET_INFO NodeOffsets[];
