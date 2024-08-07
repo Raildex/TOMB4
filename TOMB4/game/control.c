@@ -1029,7 +1029,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags) {
 		case TO_SECRET:
 
 			if(!(savegame.Level.Secrets & 1 << value)) {
-				S_CDPlay(5, 0);
+				S_PlayTrack(musicImpl, 5, TRACK_MODE_INCIDENT_RESTORE_ATMOSPHERE);
 				savegame.Level.Secrets |= 1 << value;
 				savegame.Game.Secrets++;
 			}
@@ -1976,25 +1976,21 @@ void TriggerNormalCDTrack(short value, short flags, short type) {
 		if(CurrentAtmosphere != value) {
 			CurrentAtmosphere = (unsigned char)value;
 
-			if(IsAtmospherePlaying) {
-				S_CDPlay(value, 1);
-			}
+			S_PlayTrack(musicImpl, value, TRACK_MODE_ATMOSPHERE);
 		}
 	} else {
 		code = (flags >> 8) & 0x3F; //(IFL_CODEBITS | IFL_INVISIBLE)= 0x3F00, then >> 8, 3F
 
 		if((cd_flags[value] & code) != code) {
 			cd_flags[value] |= code;
-			S_CDPlay(value, 0);
-			IsAtmospherePlaying = 0;
+			S_PlayTrack(musicImpl, value, TRACK_MODE_INCIDENT_RESTORE_ATMOSPHERE);
 		}
 	}
 }
 
 void TriggerCDTrack(short value, short flags, short type) {
-	if(value < 128) {
-		TriggerNormalCDTrack(value, flags, type);
-	}
+	TriggerNormalCDTrack(value, flags, type);
+	
 }
 
 long ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {

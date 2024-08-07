@@ -214,7 +214,7 @@ void handle_cutseq_triggering(long name) {
 				}
 
 				if(gfCurrentLevel) {
-					S_CDStop();
+					S_StopTrack(musicImpl);
 				}
 
 				goin = cutseq_num;
@@ -232,7 +232,7 @@ void handle_cutseq_triggering(long name) {
 				AlterFOV(11488);
 
 				if(GLOBAL_cutme->audio_track != -1) {
-					S_StartSyncedAudio(GLOBAL_cutme->audio_track);
+					S_PlaySyncedTrack(musicImpl, GLOBAL_cutme->audio_track);
 				}
 			}
 		}
@@ -246,7 +246,7 @@ void handle_cutseq_triggering(long name) {
 	} else if(cutseq_trig == 4) {
 		if(ScreenFadedOut) {
 			if(gfCurrentLevel) {
-				S_CDStop();
+				S_StopTrack(musicImpl);
 			}
 
 			ScreenFadedOut = 0;
@@ -292,7 +292,7 @@ void handle_cutseq_triggering(long name) {
 				}
 
 				if(GLOBAL_cutme->audio_track != -1) {
-					S_StartSyncedAudio(GLOBAL_cutme->audio_track);
+					S_PlaySyncedTrack(musicImpl, GLOBAL_cutme->audio_track);
 				}
 			}
 #ifdef TIMES_LEVEL
@@ -329,7 +329,7 @@ void handle_cutseq_triggering(long name) {
 				AlterFOV(14560);
 
 				if(gfCurrentLevel) {
-					S_CDPlay(CurrentAtmosphere, 1);
+					S_PlayTrack(musicImpl, CurrentAtmosphere, 1);
 				}
 
 				IsAtmospherePlaying = 1;

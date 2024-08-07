@@ -24,7 +24,7 @@ static float unused_vert_wibble_table[256];
 void GameClose() {
 	Log(__func__, "GameClose");
 	FreeLevel();
-	S_CDClose();
+	S_DestroyMusicSystem(musicImpl);
 	if(logF) {
 		fclose(logF);
 	}
@@ -37,13 +37,14 @@ void S_GameMain() {
 	Log(__func__, "GameMain");
 
 	if(S_GameInitialise()) {
+		S_CreateMusicSystem(&musicImpl);
 		InitialiseFunctionTable();
 		HWInitialise();
 		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
 		InitFont();
 		S_TimeInit();
 		App.SetupComplete = 1;
-		S_CDStop();
+		S_StopTrack(musicImpl);
 		ClearSurfaces();
 
 		if(!App.SoundDisabled) {
@@ -52,7 +53,7 @@ void S_GameMain() {
 
 		DoGameflow();
 		GameClose();
-		S_CDStop();
+		S_StopTrack(musicImpl);
 		PostMessage(App.hWnd, WM_CLOSE, 0, 0);
 	}
 }

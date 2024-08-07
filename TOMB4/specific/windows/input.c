@@ -671,9 +671,8 @@ long ReadJoystick(long* x, long* y) {
 static long Check(const char* scope, HRESULT result) {
 	if(!SUCCEEDED(result)) {
 		char buffer[256];
-		long n = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, result, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), buffer, sizeof(buffer), NULL);
+		long n = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_FROM_HMODULE, NULL, result, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), buffer, sizeof(buffer), NULL);
 		LogE(scope, "DirectInput Error: %.*s", n, buffer );
-		__debugbreak();
 		return 0;
 	}
 	return 1;

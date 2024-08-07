@@ -551,7 +551,7 @@ void LaraControl(short item_number) {
 		l->hit_points = -1;
 
 		if(!lara.death_count) {
-			S_CDStop();
+			S_StopTrack(musicImpl);
 		}
 
 		lara.death_count++;

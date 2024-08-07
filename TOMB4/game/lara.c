@@ -2799,7 +2799,7 @@ void lara_as_controlled(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->enable_spaz = 0;
 
 	if(item->anim_number == ANIM_PLAYHARP && item->frame_number == GetAnim(currentLevel, ANIM_PLAYHARP)->frame_base + 120) {
-		S_CDPlay(6, 0);
+		S_PlayTrack(musicImpl, 6, 0);
 	}
 
 	if(item->anim_number == ANIM_MINEDETECT) {
@@ -2812,7 +2812,7 @@ void lara_as_controlled(ITEM_INFO* item, COLL_INFO* coll) {
 
 	if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end - 1) {
 		if(item->anim_number == ANIM_PLAYHARP) {
-			S_CDPlay(19, 0);
+			S_PlayTrack(musicImpl, 19, 0);
 		}
 
 		lara.gun_status = LG_NO_ARMS;

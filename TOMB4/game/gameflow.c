@@ -492,7 +492,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 		CurrentAtmosphere = Audio;
 	}
 
-	S_CDPlay(CurrentAtmosphere, 1);
+	S_PlayTrack(musicImpl, CurrentAtmosphere, 1);
 	IsAtmospherePlaying = 1;
 	ScreenFadedOut = 0;
 	ScreenFading = 0;
@@ -537,7 +537,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 		if(DEL_playingamefmv) {
 			DEL_playingamefmv = 0;
 #ifndef TIMES_LEVEL
-			S_CDStop();
+			S_StopTrack(musicImpl);
 			PlayFmvNow(7);
 			DelsHandyTeleportLara(54179, -8192, 50899, -32703);
 #endif
@@ -570,7 +570,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 	}
 
 	S_SoundStopAllSamples(soundImpl);
-	S_CDStop();
+	S_StopTrack(musicImpl);
 
 #ifndef TIMES_LEVEL
 	if(gfStatus == 3) {
@@ -846,9 +846,9 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 	InitialisePickUpDisplay();
 	// empty func call here
 	StopSounds();
-	S_CDPlay(Audio, 1);
+	S_PlayTrack(musicImpl, Audio, TRACK_MODE_ATMOSPHERE);
 	IsAtmospherePlaying = 0;
-	S_SetReverbType(soundImpl, 1);
+	S_SetReverbType(soundImpl, 0);
 	InitialiseCamera();
 
 	if(bDoCredits) {
@@ -857,7 +857,7 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 		ScreenFadedOut = 1;
 		ScreenFade = 255;
 		dScreenFade = 255;
-		S_CDPlay(98, 1);
+		S_PlayTrack(musicImpl, 98, 1);
 	} else {
 		InitialiseSpotCam(1);
 		ScreenFadedOut = 0;
@@ -889,7 +889,7 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 	}
 
 	S_SoundStopAllSamples(soundImpl);
-	S_CDStop();
+	S_StopTrack(musicImpl);
 	bUseSpotCam = 0;
 	EnableLaraControl();
 

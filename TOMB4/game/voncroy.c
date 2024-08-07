@@ -202,7 +202,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 
 	if(item->item_flags[3] == 8 || item->item_flags[3] == 15) {
 		if(lara_item->current_anim_state == AS_HANG || lara_item->current_anim_state == AS_HANGLEFT || lara_item->current_anim_state == AS_HANGRIGHT) {
-			S_CDPlay(VonCroyCutTracks[item->item_flags[3]], 0);
+			S_PlayTrack(musicImpl, VonCroyCutTracks[item->item_flags[3]], 0);
 			VonCroyCutFlags[item->item_flags[3]] = 1;
 			item->item_flags[2] = 2;
 		}
@@ -285,7 +285,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 			ScreenFading = 0;
 			SetScreenFadeIn(16);
 			item->trigger_flags++;
-			S_StartSyncedAudio(VonCroyCutTracks[item->item_flags[3]]);
+			S_PlaySyncedTrack(musicImpl, VonCroyCutTracks[item->item_flags[3]]);
 		}
 
 		break;
@@ -300,7 +300,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 				item->goal_anim_state = 1;
 			}
 		} else {
-			if(XATrack != VonCroyCutTracks[item->item_flags[3]]) {
+			if(/*XATrack != VonCroyCutTracks[item->item_flags[3]]*/ 1) {
 				item->trigger_flags = 3;
 			}
 
@@ -323,8 +323,8 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 
 	case 3:
 		ClearCutSceneCamera();
-		S_CDStop();
-		S_CDPlay(CurrentAtmosphere, 1);
+		S_StopTrack(musicImpl);
+		S_PlayTrack(musicImpl, CurrentAtmosphere, 1);
 		IsAtmospherePlaying = 1;
 		EnableLaraControl();
 		SetFadeClip(0, 1);
@@ -466,7 +466,7 @@ void VoncroyRaceControl(short item_number) {
 
 	angle = CreatureTurn(item, VonCroy->maximum_turn);
 
-	if(bUseSpotCam && XATrack == 80) {
+	if(bUseSpotCam /* && XATrack == 80 */) {
 		talk++;
 
 		if((talk > 0 && talk < 565) || (talk > 705 && talk < 927)) {
@@ -499,7 +499,7 @@ void VoncroyRaceControl(short item_number) {
 			torso_y = info.angle >> 1;
 		}
 
-		if(lara.location < item->item_flags[3] || XATrack == 80 && (XAFlag == 6 || XAFlag == 5)) {
+		if(lara.location < item->item_flags[3] /* || XATrack == 80 && (XAFlag == 6 || XAFlag == 5)*/) {
 			item->goal_anim_state = 1;
 			break;
 		}

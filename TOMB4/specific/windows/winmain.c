@@ -303,7 +303,6 @@ void WinProcessCommands(long cmd) {
 		resChangeCounter = 120;
 	}
 }
-extern void FillADPCMBuffer(char* p, long track);
 LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	static long closing;
 
@@ -366,7 +365,6 @@ LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		break;
 
 	case WM_APP:
-		FillADPCMBuffer((char*)lParam, wParam);
 		return 0;
 	}
 
