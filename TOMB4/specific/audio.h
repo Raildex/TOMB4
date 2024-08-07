@@ -15,7 +15,7 @@ void S_PlayTrack(MUSIC_SYSTEM* system, long track, track_modes mode);
 void S_StopTrack(MUSIC_SYSTEM* system);
 void S_PlaySyncedTrack(MUSIC_SYSTEM* system, long track);
 void S_DestroyMusicSystem(MUSIC_SYSTEM* sys);
-
+void S_ApplyMusicVolume(MUSIC_SYSTEM* sys, long volume);
 extern MUSIC_SYSTEM* musicImpl;
 
 #endif// TOMB4_SPECIFIC_AUDIO_H

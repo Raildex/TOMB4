@@ -199,6 +199,9 @@ long S_SoundPlaySampleLooped(SOUND_SYSTEM* sys, SAMPLE_BUFFER* buffer, unsigned 
 }
 
 long S_SoundSampleIsPlaying(SOUND_SYSTEM* sys, long num) {
+	if(num < 0) {
+		return 0;
+	}
 	if(sound_active && IsChannelPlaying(sys, num)) {
 		return 1;
 	}
@@ -397,4 +400,13 @@ void S_DestroySoundSystem(SOUND_SYSTEM* sys) {
 	free(sys->adpcmfmt);
 	free(sys->reverb_types);
 	free(sys);
+}
+
+void S_SetSoundVolume(SOUND_SYSTEM* sys, long volume) {
+	float v = volume / 100.0F;
+	IXAudio2MasteringVoice_SetVolume(sys->master,v,XAUDIO2_COMMIT_NOW);
+}
+
+void S_StopSampleLoop(SOUND_SYSTEM* sys, long num) {
+	IXAudio2SourceVoice_ExitLoop(sys->sourceVoices[num], XAUDIO2_COMMIT_NOW);
 }

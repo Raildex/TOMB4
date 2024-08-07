@@ -301,4 +301,10 @@ long S_CreateMusicSystem(MUSIC_SYSTEM** out) {
 	return 1;
 }
 
+void S_ApplyMusicVolume(MUSIC_SYSTEM* sys, long volume) {
+	float v = volume / 100.0F;
+
+	IXAudio2MasteringVoice_SetVolume(sys->master,v,XAUDIO2_COMMIT_NOW);
+}
+
 MUSIC_SYSTEM* musicImpl;

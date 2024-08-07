@@ -14,5 +14,7 @@ long S_SoundSampleIsPlaying(SOUND_SYSTEM* sys, long num);
 void S_SoundSetPanAndVolume(SOUND_SYSTEM* sys, long num, short pan, unsigned short volume);
 void S_SoundSetPitch(SOUND_SYSTEM* sys, long num, long pitch);
 void S_SetReverbType(SOUND_SYSTEM* sys, long reverb);
+void S_SetSoundVolume(SOUND_SYSTEM* sys, long volume);
+void S_StopSampleLoop(SOUND_SYSTEM* sys, long num);
 SOUND_SYSTEM* soundImpl;
 #endif// TOMB4_SPECIFIC_SOUND_H

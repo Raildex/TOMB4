@@ -338,7 +338,7 @@ void DoOptions() {
 
 			sSliderCol = 0xFF3F3F3F;
 			mSliderCol = 0xFF7F7F7F;
-			//ACMSetVolume();
+			S_ApplyMusicVolume(musicImpl, MusicVolume);
 		} else if(sel & 4) {
 			if(S_IsActionDown(inputImpl, IN_LEFT)) {
 				SFXVolume--;
@@ -353,16 +353,16 @@ void DoOptions() {
 			} else if(SFXVolume < 0) {
 				SFXVolume = 0;
 			}
-
+			sfx_breath_db --;
 			if(SFXVolume != sfx_bak) {
-				if(sfx_breath_db == -1 ) {
+				sfx_bak = SFXVolume;
+				if(sfx_breath_db <= 0 ) {
 					S_SoundStopAllSamples(soundImpl);
-					sfx_bak = SFXVolume;
-					sfx_breath_db = SoundEffect(SFX_LARA_BREATH, 0, SFX_ALWAYS);
-					//DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
-				} else if(sfx_breath_db != -1 ) {
+					SoundEffect(SFX_LARA_BREATH, 0, SFX_ALWAYS);
+					sfx_breath_db = 30;
 					//DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
 				}
+				S_SetSoundVolume(soundImpl, SFXVolume);
 			}
 
 			mSliderCol = 0xFF3F3F3F;
