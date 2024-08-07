@@ -74,6 +74,7 @@
 #include "specific/audio.h"
 #include "specific/file.h"
 #include "specific/function_stubs.h"
+#include "specific/gamemain.h"
 #include "specific/input.h"
 #include "specific/output.h"
 #include "specific/windows/dxshell.h"
@@ -248,7 +249,7 @@ long ControlPhase(long nframes, long demo_mode) {
 	long tiltxoff, tiltzoff, OnObject;
 	MESH_INFO* mesh;
 	short item_num, nex, fx_num;
-
+	S_HandleMessages();
 	RegeneratePickups();
 
 	if(nframes > 10) {

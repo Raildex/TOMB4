@@ -200,11 +200,9 @@ void WinProcMsg() {
 
 	Log(__func__, "WinProcMsg");
 
-	GetMessage(&msg, 0, 0, 0);
-
-	if(!TranslateAccelerator(App.hWnd, App.hAccel, &msg)) {
+	if(PeekMessageA(&msg, 0, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		DispatchMessageA(&msg);
 	}
 }
 
@@ -559,4 +557,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	ChangeDisplaySettings(&devmode, 0);
 	CoUninitialize();
 	return 0;
+}
+
+void S_HandleMessages() {
+	WinProcMsg();
 }
