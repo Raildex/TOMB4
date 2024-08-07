@@ -438,7 +438,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 void LaraBubbles(ITEM_INFO* item) {
 	PHD_VECTOR pos;
 
-	SoundEffect(SFX_LARA_BUBBLES, &item->pos, SFX_WATER);
+	SoundEffect(SFX_LARA_BUBBLES, (PHD_VECTOR*)&item->pos, SFX_WATER);
 	pos.x = 0;
 	pos.y = -4;
 	pos.z = 64;
@@ -1134,7 +1134,7 @@ void UpdateGunShells() {
 		c = GetCeiling(floor, shell->pos.pos.x, shell->pos.pos.y, shell->pos.pos.z);
 
 		if(shell->pos.pos.y < c) {
-			SoundEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
+			SoundEffect(SFX_LARA_SHOTGUN_SHELL, (PHD_VECTOR*)&shell->pos, SFX_DEFAULT);
 			shell->speed -= 4;
 
 			shell->pos.pos.y = c;
@@ -1144,7 +1144,7 @@ void UpdateGunShells() {
 		h = GetHeight(floor, shell->pos.pos.x, shell->pos.pos.y, shell->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(shell->pos.pos.y >= h) {
-			SoundEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
+			SoundEffect(SFX_LARA_SHOTGUN_SHELL, (PHD_VECTOR*)&shell->pos, SFX_DEFAULT);
 			shell->speed -= 8;
 			if(shell->speed < 8) {
 				shell->speed = 0;
@@ -1633,7 +1633,7 @@ void TriggerShockwave(PHD_VECTOR* pos, long InnerOuterRads, long speed, long bgr
 	sw->g = CLRG(bgrl);
 	sw->b = CLRR(bgrl);
 	sw->life = CLRA(bgrl);
-	SoundEffect(SFX_DEMI_SIREN_SWAVE, (PHD_3DPOS*)pos, SFX_DEFAULT);
+	SoundEffect(SFX_DEMI_SIREN_SWAVE, pos, SFX_DEFAULT);
 }
 
 void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long speed) {

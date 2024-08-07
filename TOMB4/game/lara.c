@@ -3340,7 +3340,7 @@ void lara_as_fastfall(ITEM_INFO* item, COLL_INFO* coll) {
 	item->speed = 95 * item->speed / 100;
 
 	if(item->fallspeed == 154) {
-		SoundEffect(SFX_LARA_FALL, &item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_LARA_FALL, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 	}
 
 	if(item->frame_number == GetAnim(currentLevel, 330)->frame_end - 1) { // fall off pole
@@ -4037,7 +4037,7 @@ void lara_col_poledown(ITEM_INFO* item, COLL_INFO* coll) {
 		item->item_flags[2] += 256;
 	}
 
-	SoundEffect(SFX_LARA_POLE_LOOP, &item->pos, SFX_DEFAULT);
+	SoundEffect(SFX_LARA_POLE_LOOP, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 
 	if(item->item_flags[2] <= 16384) {
 		if(item->item_flags[2] < 0) {
@@ -4983,7 +4983,7 @@ void UpdateRopeSwing(ITEM_INFO* item) {
 				LegsSwinging = 0;
 			}
 
-			SoundEffect(SFX_LARA_ROPE_CREAK, &item->pos, 0);
+			SoundEffect(SFX_LARA_ROPE_CREAK, (PHD_VECTOR*)&item->pos, 0);
 		} else if(lara.RopeLastX < 0 && lara.RopeFrame == lara.RopeDFrame) {
 			LegsSwinging = 0;
 			lara.RopeDFrame = (15 * lara.RopeMaxXBackward / 18000 + GetAnim(currentLevel, ANIM_SWINGFWD)->frame_base + 47) << 8;
@@ -5003,7 +5003,7 @@ void UpdateRopeSwing(ITEM_INFO* item) {
 			LegsSwinging = 0;
 		}
 
-		SoundEffect(SFX_LARA_ROPE_CREAK, &item->pos, 0);
+		SoundEffect(SFX_LARA_ROPE_CREAK, (PHD_VECTOR*)&item->pos, 0);
 	} else if(lara.RopeLastX > 0 && lara.RopeFrame == lara.RopeDFrame) {
 		LegsSwinging = 0;
 		lara.RopeDFrame = (GetAnim(currentLevel, ANIM_SWINGFWD)->frame_base - 15 * lara.RopeMaxXForward / 18000 + 17) << 8;

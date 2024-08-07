@@ -31,7 +31,6 @@
 #include "game/staticinfo.h"
 #include "global/types.h"
 #include "specific/3dmath.h"
-#include "specific/file.h"
 #include "specific/function_stubs.h"
 #include <stdlib.h>
 
@@ -102,11 +101,11 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 				if(mesh->Flags & 1) {
 					bounds = GetStaticObjectBounds(currentLevel, mesh->static_number);
 
-					if(item->pos.pos.y + rad + 128 >= mesh->y + bounds[2] && item->pos.pos.y - rad - 128 <= mesh->y + bounds[3]) {
+					if(item->pos.pos.y + rad + 128 >= mesh->pos.y + bounds[2] && item->pos.pos.y - rad - 128 <= mesh->pos.y + bounds[3]) {
 						sy = phd_sin(mesh->y_rot);
 						cy = phd_cos(mesh->y_rot);
-						dx = item->pos.pos.x - mesh->x;
-						dz = item->pos.pos.z - mesh->z;
+						dx = item->pos.pos.x - mesh->pos.x;
+						dz = item->pos.pos.z - mesh->pos.z;
 						num = (dx * cy - sy * dz) >> W2V_SHIFT;
 
 						if(rad + num + 128 >= bounds[0] && num - rad - 128 <= bounds[1]) {
@@ -491,29 +490,29 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 				continue;
 			}
 
-			ymin = mesh->y + sinfo->y_minc;
-			ymax = mesh->y + sinfo->y_maxc;
+			ymin = mesh->pos.y + sinfo->y_minc;
+			ymax = mesh->pos.y + sinfo->y_maxc;
 
 			if(mesh->y_rot == -0x8000) {
-				xmin = mesh->x - sinfo->x_maxc;
-				xmax = mesh->x - sinfo->x_minc;
-				zmin = mesh->z - sinfo->z_maxc;
-				zmax = mesh->z - sinfo->z_minc;
+				xmin = mesh->pos.x - sinfo->x_maxc;
+				xmax = mesh->pos.x - sinfo->x_minc;
+				zmin = mesh->pos.z - sinfo->z_maxc;
+				zmax = mesh->pos.z - sinfo->z_minc;
 			} else if(mesh->y_rot == -0x4000) {
-				xmin = mesh->x - sinfo->z_maxc;
-				xmax = mesh->x - sinfo->z_minc;
-				zmin = mesh->z + sinfo->x_minc;
-				zmax = mesh->z + sinfo->x_maxc;
+				xmin = mesh->pos.x - sinfo->z_maxc;
+				xmax = mesh->pos.x - sinfo->z_minc;
+				zmin = mesh->pos.z + sinfo->x_minc;
+				zmax = mesh->pos.z + sinfo->x_maxc;
 			} else if(mesh->y_rot == 0x4000) {
-				xmin = mesh->x + sinfo->z_minc;
-				xmax = mesh->x + sinfo->z_maxc;
-				zmin = mesh->z - sinfo->x_maxc;
-				zmax = mesh->z - sinfo->x_minc;
+				xmin = mesh->pos.x + sinfo->z_minc;
+				xmax = mesh->pos.x + sinfo->z_maxc;
+				zmin = mesh->pos.z - sinfo->x_maxc;
+				zmax = mesh->pos.z - sinfo->x_minc;
 			} else {
-				xmin = mesh->x + sinfo->x_minc;
-				xmax = mesh->x + sinfo->x_maxc;
-				zmin = mesh->z + sinfo->z_minc;
-				zmax = mesh->z + sinfo->z_maxc;
+				xmin = mesh->pos.x + sinfo->x_minc;
+				xmax = mesh->pos.x + sinfo->x_maxc;
+				zmin = mesh->pos.z + sinfo->z_minc;
+				zmax = mesh->pos.z + sinfo->z_maxc;
 			}
 
 			if(lxmax <= xmin || lxmin >= xmax || lymax <= ymin || lymin >= ymax || lzmax <= zmin || lzmin >= zmax) {
@@ -618,15 +617,15 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 					continue;
 				}
 
-				dx = l->pos.pos.x - mesh->x;
-				dy = l->pos.pos.y - mesh->y;
-				dz = l->pos.pos.z - mesh->z;
+				dx = l->pos.pos.x - mesh->pos.x;
+				dy = l->pos.pos.y - mesh->pos.y;
+				dz = l->pos.pos.z - mesh->pos.z;
 
 				if(dx > -3072 && dx < 3072 && dy > -3072 && dy < 3072 && dz > -3072 && dz < 3072) {
 					bounds = GetStaticObjectBounds(currentLevel, mesh->static_number);
-					pos.pos.x = mesh->x;
-					pos.pos.y = mesh->y;
-					pos.pos.z = mesh->z;
+					pos.pos.x = mesh->pos.x;
+					pos.pos.y = mesh->pos.y;
+					pos.pos.z = mesh->pos.z;
 					pos.y_rot = mesh->y_rot;
 
 					if(TestBoundsCollideStatic(bounds, &pos, coll->radius)) {
@@ -739,7 +738,7 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		lara.hit_direction = (unsigned short)(l->pos.y_rot - phd_atan(dz, dx) - 24576) >> W2V_SHIFT; // hmmmmm
 
 		if(!lara.hit_frame) {
-			SoundEffect(SFX_LARA_INJURY, &l->pos, SFX_DEFAULT);
+			SoundEffect(SFX_LARA_INJURY, (PHD_VECTOR*)&l->pos, SFX_DEFAULT);
 		}
 
 		lara.hit_frame++;

@@ -247,8 +247,8 @@ void FireShotgun() {
 		}
 
 		lara.right_arm.flash_gun = weapons[WEAPON_SHOTGUN].flash_time;
-		SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x1400000 | SFX_SETPITCH);
-		SoundEffect(weapons[WEAPON_SHOTGUN].sample_num, &lara_item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, 0x1400000 | SFX_SETPITCH);
+		SoundEffect(weapons[WEAPON_SHOTGUN].sample_num, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
 		savegame.Game.AmmoUsed++;
 	}
 }
@@ -412,13 +412,13 @@ void AnimateShotgun(long weapon_type) {
 
 			if(item->goal_anim_state != 2) {
 				if(m16_firing) {
-					SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000000 | SFX_SETPITCH);
+					SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, 0x5000000 | SFX_SETPITCH);
 					m16_firing = 0;
 				}
 			}
 		} else if(m16_firing) {
-			SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000000 | SFX_SETPITCH);
-			SoundEffect(SFX_MP5_FIRE, &lara_item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, 0x5000000 | SFX_SETPITCH);
+			SoundEffect(SFX_MP5_FIRE, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
 		} else if(weapon_type == 4 && !(S_IsActionDown(inputImpl, IN_ACTION)) && !lara.left_arm.lock) {
 			item->goal_anim_state = 4;
 		}
@@ -862,10 +862,10 @@ void ControlCrossbow(short item_number) {
 			while(mesh) {
 				if(mesh->static_number >= SHATTER0 && mesh->static_number < SHATTER8) {
 					if(exploded) {
-						TriggerExplosionSparks(mesh->x, mesh->y, mesh->z, 3, -2, 0, item->room_number);
-						mesh->y -= 128;
-						TriggerShockwave((PHD_VECTOR*)&mesh->x, 0xB00028, 64, 0x10806000, 0);
-						mesh->y += 128;
+						TriggerExplosionSparks(mesh->pos.x, mesh->pos.y, mesh->pos.z, 3, -2, 0, item->room_number);
+						mesh->pos.y -= 128;
+						TriggerShockwave((PHD_VECTOR*)&mesh->pos, 0xB00028, 64, 0x10806000, 0);
+						mesh->pos.y += 128;
 					}
 
 					ShatterObject(0, mesh, -128, item->room_number, 0);
@@ -901,8 +901,8 @@ void ControlCrossbow(short item_number) {
 		}
 
 		AlertNearbyGuards(item);
-		SoundEffect(SFX_EXPLOSION1, &item->pos, 0x1800000 | SFX_SETPITCH);
-		SoundEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&item->pos, 0x1800000 | SFX_SETPITCH);
+		SoundEffect(SFX_EXPLOSION2, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 	}
 
 	if(collided || exploded) {
@@ -1158,10 +1158,10 @@ void ControlGrenade(short item_number) {
 				while(mesh) {
 					if(mesh->static_number >= SHATTER0 && mesh->static_number < SHATTER8) {
 						Log(__func__, "Shatter");
-						TriggerExplosionSparks(mesh->x, mesh->y, mesh->z, 3, -2, 0, item->room_number);
-						mesh->y -= 128;
-						TriggerShockwave((PHD_VECTOR*)&mesh->x, 0xB00028, 64, 0x10806000, 0);
-						mesh->y += 128;
+						TriggerExplosionSparks(mesh->pos.x, mesh->pos.y, mesh->pos.z, 3, -2, 0, item->room_number);
+						mesh->pos.y -= 128;
+						TriggerShockwave((PHD_VECTOR*)&mesh->pos, 0xB00028, 64, 0x10806000, 0);
+						mesh->pos.y += 128;
 						ShatterObject(0, mesh, -128, item->room_number, 0);
 						SmashedMeshRoom[SmashedMeshCount] = item->room_number;
 						SmashedMesh[SmashedMeshCount] = mesh;
@@ -1216,8 +1216,8 @@ void ControlGrenade(short item_number) {
 		}
 
 		AlertNearbyGuards(item);
-		SoundEffect(SFX_EXPLOSION1, &item->pos, 0x1800004);
-		SoundEffect(SFX_EXPLOSION2, &item->pos, 0);
+		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&item->pos, 0x1800004);
+		SoundEffect(SFX_EXPLOSION2, (PHD_VECTOR*)&item->pos, 0);
 
 		if(item->item_flags[0] == 1 || item->item_flags[0] == 4) {
 			KillItem(item_number);

@@ -16,7 +16,7 @@ void LaraDoubleControl(short item_number) {
 	ITEM_INFO* item;
 
 	item = GetItem(currentLevel, item_number);
-	SoundEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_DEFAULT);
+	SoundEffect(SFX_METAL_SCRAPE_LOOP1, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 
 	if(!CreatureActive(item_number)) {
 		return;

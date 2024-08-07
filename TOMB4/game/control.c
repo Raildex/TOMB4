@@ -473,8 +473,8 @@ long ControlPhase(long nframes, long demo_mode) {
 		while(SmashedMeshCount) {
 			SmashedMeshCount--;
 			mesh = SmashedMesh[SmashedMeshCount];
-			floor = GetFloor(mesh->x, mesh->y, mesh->z, &SmashedMeshRoom[SmashedMeshCount]);
-			GetHeight(floor, mesh->x, mesh->y, mesh->z, &ht, &tiltxoff, &tiltzoff, &OnObject);
+			floor = GetFloor(mesh->pos.x, mesh->pos.y, mesh->pos.z, &SmashedMeshRoom[SmashedMeshCount]);
+			GetHeight(floor, mesh->pos.x, mesh->pos.y, mesh->pos.z, &ht, &tiltxoff, &tiltzoff, &OnObject);
 			TestTriggers(trigger_index, 1, 0);
 			floor->stopper = 0;
 			SmashedMesh[SmashedMeshCount] = NULL;
@@ -2320,7 +2320,7 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits) {
 	if(bits == 256) {
 		bits = -64;
 	} else {
-		SoundEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_HIT_ROCK, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 	}
 
 	GetSpheres(item, Slist, 3);
@@ -2729,9 +2729,9 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 			mesh = &r->mesh[j];
 
 			if(mesh->Flags & 1) {
-				ItemPos.pos.x = mesh->x;
-				ItemPos.pos.y = mesh->y;
-				ItemPos.pos.z = mesh->z;
+				ItemPos.pos.x = mesh->pos.x;
+				ItemPos.pos.y = mesh->pos.y;
+				ItemPos.pos.z = mesh->pos.z;
 				ItemPos.y_rot = mesh->y_rot;
 
 				if(DoRayBox(start, target, GetStaticObjectBounds(currentLevel, mesh->static_number), &ItemPos, Coord, -1 - mesh->static_number)) {
@@ -2791,7 +2791,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 						SmashedMesh[SmashedMeshCount] = Mesh;
 						SmashedMeshCount++;
 						Mesh->Flags &= ~1;
-						SoundEffect(SFX_HIT_ROCK, (PHD_3DPOS*)Mesh, SFX_DEFAULT);
+						SoundEffect(SFX_HIT_ROCK, (PHD_VECTOR*)Mesh, SFX_DEFAULT);
 					}
 
 					TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
@@ -2977,21 +2977,21 @@ void AnimateItem(ITEM_INFO* item) {
 
 					if(GetObjectInfo(currentLevel, item->object_number)->water_creature) {
 						if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
-							SoundEffect(num, &item->pos, SFX_WATER);
+							SoundEffect(num, (PHD_VECTOR*)&item->pos, SFX_WATER);
 						} else {
-							SoundEffect(num, &item->pos, SFX_DEFAULT);
+							SoundEffect(num, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 						}
 					} else if(item->room_number == 255) {
 						item->pos.pos.x = lara_item->pos.pos.x;
 						item->pos.pos.y = lara_item->pos.pos.y - 762;
 						item->pos.pos.z = lara_item->pos.pos.z;
-						SoundEffect(num, &item->pos, SFX_DEFAULT);
+						SoundEffect(num, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 					} else if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 						if(type == SFX_LANDANDWATER || type == SFX_WATERONLY) {
-							SoundEffect(num, &item->pos, SFX_DEFAULT);
+							SoundEffect(num, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 						}
 					} else if(type == SFX_LANDANDWATER || type == SFX_LANDONLY) {
-						SoundEffect(num, &item->pos, SFX_DEFAULT);
+						SoundEffect(num, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 					}
 				}
 

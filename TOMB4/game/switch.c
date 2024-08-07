@@ -436,7 +436,7 @@ void TurnSwitchControl(short item_number) {
 		}
 
 		if(l->frame_number >= GetAnim(currentLevel, ANIM_TURNSWITCHCB)->frame_base && l->frame_number <= GetAnim(currentLevel, ANIM_TURNSWITCHCB)->frame_base + 43 || l->frame_number >= GetAnim(currentLevel, ANIM_TURNSWITCHCB)->frame_base + 58 && l->frame_number <= GetAnim(currentLevel, ANIM_TURNSWITCHCB)->frame_base + 115) {
-			SoundEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
+			SoundEffect(SFX_PUSHABLE_SOUND, (PHD_VECTOR*)&item->pos, SFX_ALWAYS);
 		}
 	} else {
 		if(item->anim_number == GetObjectInfo(currentLevel, TURN_SWITCH)->anim_index + 6) {
@@ -455,7 +455,7 @@ void TurnSwitchControl(short item_number) {
 		}
 
 		if(l->frame_number >= GetAnim(currentLevel, ANIM_TURNSWITCHAB)->frame_base && l->frame_number <= GetAnim(currentLevel, ANIM_TURNSWITCHAB)->frame_base + 43 || l->frame_number >= GetAnim(currentLevel, ANIM_TURNSWITCHAB)->frame_base + 58 && l->frame_number <= GetAnim(currentLevel, ANIM_TURNSWITCHAB)->frame_base + 115) {
-			SoundEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
+			SoundEffect(SFX_PUSHABLE_SOUND, (PHD_VECTOR*)&item->pos, SFX_ALWAYS);
 		}
 	}
 

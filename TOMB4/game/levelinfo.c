@@ -569,8 +569,8 @@ char LoadItems(char** data, LEVEL_INFO* lvl) {
 		r = GetRoom(currentLevel, i);
 
 		for(int j = 0; j < r->num_meshes; j++) {
-			x = (r->mesh[j].x - r->x) >> 10;
-			z = (r->mesh[j].z - r->z) >> 10;
+			x = (r->mesh[j].pos.x - r->x) >> 10;
+			z = (r->mesh[j].pos.z - r->z) >> 10;
 
 			floor = &(r->floor[x * r->x_size + z]);
 
@@ -578,10 +578,10 @@ char LoadItems(char** data, LEVEL_INFO* lvl) {
 				stat = GetStaticObject(currentLevel, r->mesh[j].static_number);
 				y = floor->floor << 8;
 
-				if(y <= (r->mesh[j].y - stat->y_maxc + 512) && y < r->mesh[j].y - stat->y_minc) {
+				if(y <= (r->mesh[j].pos.y - stat->y_maxc + 512) && y < r->mesh[j].pos.y - stat->y_minc) {
 					if(!stat->x_maxc || !stat->x_minc || !stat->z_maxc || !stat->z_minc || ((stat->x_maxc ^ stat->x_minc) & 0x8000 && (stat->z_maxc ^ stat->z_minc) & 0x8000)) {
-						x = (r->mesh[j].x - r->x) >> 10;
-						z = (r->mesh[j].z - r->z) >> 10;
+						x = (r->mesh[j].pos.x - r->x) >> 10;
+						z = (r->mesh[j].pos.z - r->z) >> 10;
 						r->floor[x * r->x_size + z].stopper = 1;
 					}
 				}

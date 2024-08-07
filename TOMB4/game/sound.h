@@ -2,13 +2,13 @@
 #define TOMB4_GAME_SOUND_H
 #include "game/soundslot.h"
 typedef struct SoundSlot SoundSlot;
-typedef struct PHD_3DPOS PHD_3DPOS;
+typedef struct PHD_VECTOR PHD_VECTOR;
 typedef struct SAMPLE_INFO SAMPLE_INFO;
 void GetPanVolume(SoundSlot* slot);
 void StopSoundEffect(long sfx);
 void InitialiseSounds();
 void StopSounds();
-long SoundEffect(long sfx, PHD_3DPOS* pos, long flags);
+long SoundEffect(long sfx, PHD_VECTOR* pos, long flags);
 void SayNo();
 
 extern SAMPLE_INFO* sample_infos;

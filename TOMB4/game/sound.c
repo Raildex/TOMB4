@@ -105,9 +105,9 @@ void StopSounds() {
 	}
 }
 
-long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
+long SoundEffect(long sfx, PHD_VECTOR* pos, long flags) {
 	SAMPLE_INFO* info;
-	PHD_3DPOS pos2;
+	PHD_VECTOR pos2;
 	long lut, radius, pan, dx, dy, dz, distance, volume, OrigVolume, pitch, rnd, sample, flag, vol, slot;
 	if(sfx == SFX_LARA_NO) {
 		switch(Gameflow->Language) {
@@ -151,9 +151,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 	pan = 0;
 
 	if(pos) {
-		dx = pos->pos.x - camera.pos.pos.x;
-		dy = pos->pos.y - camera.pos.pos.y;
-		dz = pos->pos.z - camera.pos.pos.z;
+		dx = pos->x - camera.pos.pos.x;
+		dy = pos->y - camera.pos.pos.y;
+		dz = pos->z - camera.pos.pos.z;
 
 		if(dx < -radius || dx > radius || dy < -radius || dy > radius || dz < -radius || dz > radius) {
 			return 0;
@@ -176,9 +176,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 		}
 	} else {
 		distance = 0;
-		pos2.pos.x = 0;
-		pos2.pos.y = 0;
-		pos2.pos.z = 0;
+		pos2.x = 0;
+		pos2.y = 0;
+		pos2.z = 0;
 		pos = &pos2;
 	}
 
@@ -265,9 +265,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 					LaSlot[i].nPan = pan;
 					LaSlot[i].nPitch = pitch;
 					LaSlot[i].distance = distance;
-					LaSlot[i].pos.x = pos->pos.x;
-					LaSlot[i].pos.y = pos->pos.y;
-					LaSlot[i].pos.z = pos->pos.z;
+					LaSlot[i].pos.x = pos->x;
+					LaSlot[i].pos.y = pos->y;
+					LaSlot[i].pos.z = pos->z;
 					return 1;
 				}
 
@@ -291,9 +291,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 		LaSlot[dx].nPitch = pitch;
 		LaSlot[dx].nSampleInfo = lut;
 		LaSlot[dx].distance = distance;
-		LaSlot[dx].pos.x = pos->pos.x;
-		LaSlot[dx].pos.y = pos->pos.y;
-		LaSlot[dx].pos.z = pos->pos.z;
+		LaSlot[dx].pos.x = pos->x;
+		LaSlot[dx].pos.y = pos->y;
+		LaSlot[dx].pos.z = pos->z;
 		return 1;
 	}
 
@@ -325,9 +325,9 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags) {
 				LaSlot[dx].nPitch = pitch;
 				LaSlot[dx].nSampleInfo = lut;
 				LaSlot[dx].distance = distance;
-				LaSlot[dx].pos.x = pos->pos.x;
-				LaSlot[dx].pos.y = pos->pos.y;
-				LaSlot[dx].pos.z = pos->pos.z;
+				LaSlot[dx].pos.x = pos->x;
+				LaSlot[dx].pos.y = pos->y;
+				LaSlot[dx].pos.z = pos->z;
 				return 1;
 			}
 		}

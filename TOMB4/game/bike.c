@@ -879,7 +879,7 @@ long BikeBaddieCollision(ITEM_INFO* bike) {
 
 							if(item->hit_points) {
 								SoundEffect(
-									SFX_BIKE_HIT_ENEMIES, &item->pos,
+									SFX_BIKE_HIT_ENEMIES, (PHD_VECTOR*)&item->pos,
 									SFX_DEFAULT);
 							}
 
@@ -947,29 +947,29 @@ void BikeCollideStaticObjects(
 			if(mesh->Flags & 1) {
 				if(mesh->static_number >= SHATTER0
 				   && mesh->static_number <= SHATTER9) {
-					CollidedStaticBounds[2] = mesh->y + sinfo->y_maxc;
-					CollidedStaticBounds[3] = mesh->y + sinfo->y_minc;
+					CollidedStaticBounds[2] = mesh->pos.y + sinfo->y_maxc;
+					CollidedStaticBounds[3] = mesh->pos.y + sinfo->y_minc;
 
 					if(mesh->y_rot == -0x8000) {
-						CollidedStaticBounds[0] = mesh->x - sinfo->x_minc;
-						CollidedStaticBounds[1] = mesh->x - sinfo->x_maxc;
-						CollidedStaticBounds[4] = mesh->z - sinfo->z_minc;
-						CollidedStaticBounds[5] = mesh->z - sinfo->z_maxc;
+						CollidedStaticBounds[0] = mesh->pos.x - sinfo->x_minc;
+						CollidedStaticBounds[1] = mesh->pos.x - sinfo->x_maxc;
+						CollidedStaticBounds[4] = mesh->pos.z - sinfo->z_minc;
+						CollidedStaticBounds[5] = mesh->pos.z - sinfo->z_maxc;
 					} else if(mesh->y_rot == -0x4000) {
-						CollidedStaticBounds[0] = mesh->x - sinfo->z_minc;
-						CollidedStaticBounds[1] = mesh->x - sinfo->z_maxc;
-						CollidedStaticBounds[4] = mesh->z + sinfo->x_maxc;
-						CollidedStaticBounds[5] = mesh->z + sinfo->x_minc;
+						CollidedStaticBounds[0] = mesh->pos.x - sinfo->z_minc;
+						CollidedStaticBounds[1] = mesh->pos.x - sinfo->z_maxc;
+						CollidedStaticBounds[4] = mesh->pos.z + sinfo->x_maxc;
+						CollidedStaticBounds[5] = mesh->pos.z + sinfo->x_minc;
 					} else if(mesh->y_rot == 0x4000) {
-						CollidedStaticBounds[0] = mesh->x + sinfo->z_maxc;
-						CollidedStaticBounds[1] = mesh->x + sinfo->z_minc;
-						CollidedStaticBounds[4] = mesh->z - sinfo->x_minc;
-						CollidedStaticBounds[5] = mesh->z - sinfo->x_maxc;
+						CollidedStaticBounds[0] = mesh->pos.x + sinfo->z_maxc;
+						CollidedStaticBounds[1] = mesh->pos.x + sinfo->z_minc;
+						CollidedStaticBounds[4] = mesh->pos.z - sinfo->x_minc;
+						CollidedStaticBounds[5] = mesh->pos.z - sinfo->x_maxc;
 					} else {
-						CollidedStaticBounds[0] = mesh->x + sinfo->x_maxc;
-						CollidedStaticBounds[1] = mesh->x + sinfo->x_minc;
-						CollidedStaticBounds[4] = mesh->z + sinfo->z_maxc;
-						CollidedStaticBounds[5] = mesh->z + sinfo->z_minc;
+						CollidedStaticBounds[0] = mesh->pos.x + sinfo->x_maxc;
+						CollidedStaticBounds[1] = mesh->pos.x + sinfo->x_minc;
+						CollidedStaticBounds[4] = mesh->pos.z + sinfo->z_maxc;
+						CollidedStaticBounds[5] = mesh->pos.z + sinfo->z_minc;
 					}
 
 					if(BikeBounds[0] > CollidedStaticBounds[1]
@@ -980,7 +980,7 @@ void BikeCollideStaticObjects(
 						&& BikeBounds[5] < CollidedStaticBounds[4]) {
 						ShatterObject(0, mesh, -128, rn, 0);
 						SoundEffect(
-							SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_DEFAULT);
+							SFX_HIT_ROCK, &pos, SFX_DEFAULT);
 						SmashedMeshRoom[SmashedMeshCount] = rn;
 						SmashedMesh[SmashedMeshCount] = mesh;
 						SmashedMeshCount++;
@@ -1500,13 +1500,13 @@ void BikeControl(short item_number) {
 		}
 
 		SoundEffect(
-			SFX_BIKE_MOVING, &item->pos,
+			SFX_BIKE_MOVING, (PHD_VECTOR*)&item->pos,
 			(bike->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
 	} else {
 		if(driving != -1) {
-			SoundEffect(SFX_BIKE_IDLE, &item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_BIKE_IDLE, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 			SoundEffect(
-				SFX_BIKE_MOVING, &item->pos,
+				SFX_BIKE_MOVING, (PHD_VECTOR*)&item->pos,
 				(bike->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
 		}
 

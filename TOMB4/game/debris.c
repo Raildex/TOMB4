@@ -239,9 +239,9 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 		rgb = 0;
 	} else {
 		meshp = GetMesh(currentLevel, GetStaticObject(currentLevel, StaticMesh->static_number)->mesh_number);
-		TPos.x = StaticMesh->x;
-		TPos.y = StaticMesh->y;
-		TPos.z = StaticMesh->z;
+		TPos.x = StaticMesh->pos.x;
+		TPos.y = StaticMesh->pos.y;
+		TPos.z = StaticMesh->pos.z;
 		RotY = StaticMesh->y_rot;
 		rgb = StaticMesh->shade;
 	}

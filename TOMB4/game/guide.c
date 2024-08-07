@@ -86,7 +86,7 @@ void GuideControl(short item_number) {
 		pos.z = guide_hit.z;
 		GetJointAbsPosition(item, &pos, guide_hit.mesh_num);
 		AddFire(pos.x, pos.y, pos.z, 0, item->room_number, 0);
-		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 		TriggerFireFlame(pos.x, pos.y - 40, pos.z, -1, 7);
 		TriggerDynamic(pos.x, pos.y, pos.z, 15, r, g, b);
 
@@ -555,7 +555,7 @@ void GuideControl(short item_number) {
 		} else if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_base + 70 && item->room_number == 70) {
 			item->required_anim_state = 3;
 			item->meshswap_meshbits |= 0x200000;
-			SoundEffect(SFX_GUIDE_SCARE, &item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_GUIDE_SCARE, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 		}
 
 		break;

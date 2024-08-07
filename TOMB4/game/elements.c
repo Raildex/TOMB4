@@ -141,7 +141,7 @@ void ControlElementPuzzle(short item_number) {
 	}
 
 	if(item->trigger_flags == 1) {
-		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 		r = (GetRandomControl() & 0x3F) + 192;
 		g = (GetRandomControl() & 0x1F) + 96;
 
@@ -165,7 +165,7 @@ void ControlElementPuzzle(short item_number) {
 		TriggerDynamic(item->pos.pos.x, item->pos.pos.y - 768, item->pos.pos.z, 12, r, g, 0);
 	} else if(item->trigger_flags == 3) {
 		if(item->item_flags[1] > 90) {
-			SoundEffect(SFX_JOBY_WIND, &item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_JOBY_WIND, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 		}
 
 		if(item->item_flags[1] < 60) {

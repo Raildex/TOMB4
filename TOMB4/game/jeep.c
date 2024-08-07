@@ -1120,34 +1120,34 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 
 			if(mesh->Flags & 1) {
 				if(mesh->static_number >= SHATTER0 && mesh->static_number <= SHATTER9) {
-					CollidedStaticBounds[2] = mesh->y + sinfo->y_maxc;
-					CollidedStaticBounds[3] = mesh->y + sinfo->y_minc;
+					CollidedStaticBounds[2] = mesh->pos.y + sinfo->y_maxc;
+					CollidedStaticBounds[3] = mesh->pos.y + sinfo->y_minc;
 
 					if(mesh->y_rot == -0x8000) {
-						CollidedStaticBounds[0] = mesh->x - sinfo->x_minc;
-						CollidedStaticBounds[1] = mesh->x - sinfo->x_maxc;
-						CollidedStaticBounds[4] = mesh->z - sinfo->z_minc;
-						CollidedStaticBounds[5] = mesh->z - sinfo->z_maxc;
+						CollidedStaticBounds[0] = mesh->pos.x - sinfo->x_minc;
+						CollidedStaticBounds[1] = mesh->pos.x - sinfo->x_maxc;
+						CollidedStaticBounds[4] = mesh->pos.z - sinfo->z_minc;
+						CollidedStaticBounds[5] = mesh->pos.z - sinfo->z_maxc;
 					} else if(mesh->y_rot == -0x4000) {
-						CollidedStaticBounds[0] = mesh->x - sinfo->z_minc;
-						CollidedStaticBounds[1] = mesh->x - sinfo->z_maxc;
-						CollidedStaticBounds[4] = mesh->z + sinfo->x_maxc;
-						CollidedStaticBounds[5] = mesh->z + sinfo->x_minc;
+						CollidedStaticBounds[0] = mesh->pos.x - sinfo->z_minc;
+						CollidedStaticBounds[1] = mesh->pos.x - sinfo->z_maxc;
+						CollidedStaticBounds[4] = mesh->pos.z + sinfo->x_maxc;
+						CollidedStaticBounds[5] = mesh->pos.z + sinfo->x_minc;
 					} else if(mesh->y_rot == 0x4000) {
-						CollidedStaticBounds[0] = mesh->x + sinfo->z_maxc;
-						CollidedStaticBounds[1] = mesh->x + sinfo->z_minc;
-						CollidedStaticBounds[4] = mesh->z - sinfo->x_minc;
-						CollidedStaticBounds[5] = mesh->z - sinfo->x_maxc;
+						CollidedStaticBounds[0] = mesh->pos.x + sinfo->z_maxc;
+						CollidedStaticBounds[1] = mesh->pos.x + sinfo->z_minc;
+						CollidedStaticBounds[4] = mesh->pos.z - sinfo->x_minc;
+						CollidedStaticBounds[5] = mesh->pos.z - sinfo->x_maxc;
 					} else {
-						CollidedStaticBounds[0] = mesh->x + sinfo->x_maxc;
-						CollidedStaticBounds[1] = mesh->x + sinfo->x_minc;
-						CollidedStaticBounds[4] = mesh->z + sinfo->z_maxc;
-						CollidedStaticBounds[5] = mesh->z + sinfo->z_minc;
+						CollidedStaticBounds[0] = mesh->pos.x + sinfo->x_maxc;
+						CollidedStaticBounds[1] = mesh->pos.x + sinfo->x_minc;
+						CollidedStaticBounds[4] = mesh->pos.z + sinfo->z_maxc;
+						CollidedStaticBounds[5] = mesh->pos.z + sinfo->z_minc;
 					}
 
 					if(JeepBounds[0] > CollidedStaticBounds[1] && JeepBounds[1] < CollidedStaticBounds[0] && JeepBounds[2] > CollidedStaticBounds[3] && JeepBounds[3] < CollidedStaticBounds[2] && JeepBounds[4] > CollidedStaticBounds[5] && JeepBounds[5] < CollidedStaticBounds[4]) {
 						ShatterObject(0, mesh, -128, rn, 0);
-						SoundEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_DEFAULT);
+						SoundEffect(SFX_HIT_ROCK, &pos, SFX_DEFAULT);
 						SmashedMeshRoom[SmashedMeshCount] = rn;
 						SmashedMesh[SmashedMeshCount] = mesh;
 						SmashedMeshCount++;
@@ -1467,10 +1467,10 @@ void JeepControl(short item_number) {
 			jeep->pitch2 = 0xA000;
 		}
 
-		SoundEffect(SFX_JEEP_MOVE, &item->pos, (jeep->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
+		SoundEffect(SFX_JEEP_MOVE, (PHD_VECTOR*)&item->pos, (jeep->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
 	} else {
 		if(driving != -1) {
-			SoundEffect(SFX_JEEP_IDLE, &item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_JEEP_IDLE, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 		}
 
 		jeep->pitch2 = 0;
@@ -1955,5 +1955,5 @@ void EnemyJeepControl(short item_number) {
 		item->gravity_status = 0;
 	}
 
-	SoundEffect(SFX_JEEP_MOVE, &item->pos, (item->item_flags[0] << 10) + (SFX_SETPITCH | 0x1000000));
+	SoundEffect(SFX_JEEP_MOVE, (PHD_VECTOR*)&item->pos, (item->item_flags[0] << 10) + (SFX_SETPITCH | 0x1000000));
 }

@@ -22,9 +22,7 @@
 #include "game/sound.h"
 #include "global/types.h"
 #include "specific/3dmath.h"
-#include "specific/function_stubs.h"
 #include "specific/input.h"
-#include <stdlib.h>
 
 
 static short DeathSlideBounds[12] = { -256, 256, -100, 100, 256, 512, 0, 0, -4550, 4550, 0, 0 };
@@ -129,12 +127,12 @@ void ControlDeathSlide(short item_number) {
 				lara_item->fallspeed = item->fallspeed >> 2;
 			}
 
-			SoundEffect(SFX_VONCROY_KNIFE_SWISH, &item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_VONCROY_KNIFE_SWISH, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 			RemoveActiveItem(item_number);
 			item->status = ITEM_INACTIVE;
 			item->flags -= IFL_INVISIBLE;
 		} else {
-			SoundEffect(SFX_TRAIN_DOOR_CLOSE, &item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_TRAIN_DOOR_CLOSE, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 		}
 	} else {
 		old = (GAME_VECTOR*)item->data;

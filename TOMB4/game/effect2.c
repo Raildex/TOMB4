@@ -1819,7 +1819,7 @@ void SetupSplash(SPLASH_SETUP* setup) {
 	splash->OuterRad = setup->MiddleYVel;
 	splash->OuterSize = setup->pad2;
 	splash->OuterRadVel = setup->OuterRad;
-	SoundEffect(SFX_LARA_SPLASH, (PHD_3DPOS*)setup, SFX_DEFAULT);
+	SoundEffect(SFX_LARA_SPLASH, (PHD_VECTOR*)setup, SFX_DEFAULT);
 }
 
 void UpdateSplashes() //(and ripples)

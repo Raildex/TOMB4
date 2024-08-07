@@ -352,7 +352,7 @@ void WaterFall(short item_number) {
 			TriggerWaterfallMist(item->pos.pos.x + dx, item->pos.pos.y, item->pos.pos.z + dz, item->pos.y_rot >> 4);
 		}
 
-		SoundEffect(SFX_WATERFALL_LOOP, &item->pos, 0);
+		SoundEffect(SFX_WATERFALL_LOOP, (PHD_VECTOR*)&item->pos, 0);
 	}
 }
 
@@ -455,7 +455,7 @@ void DoLotsOfBlood(long x, long y, long z, short speed, short ang, short room_nu
 
 void Richochet(GAME_VECTOR* pos) {
 	TriggerRicochetSpark(pos, mGetAngle(pos->pos.z, pos->pos.x, lara_item->pos.pos.z, lara_item->pos.pos.x) >> 4, 3, 0);
-	SoundEffect(SFX_LARA_RICOCHET, (PHD_3DPOS*)pos, SFX_DEFAULT);
+	SoundEffect(SFX_LARA_RICOCHET, (PHD_VECTOR*)pos, SFX_DEFAULT);
 }
 
 void SoundEffects() {
@@ -467,10 +467,10 @@ void SoundEffects() {
 
 		if(flip_status) {
 			if(sfx->flags & 0x40) {
-				SoundEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
+				SoundEffect(sfx->data, (PHD_VECTOR*)sfx, 0);
 			}
 		} else if(sfx->flags & 0x80) {
-			SoundEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
+			SoundEffect(sfx->data, (PHD_VECTOR*)sfx, 0);
 		}
 	}
 

@@ -222,7 +222,7 @@ short* FindPlinth(ITEM_INFO* item) {
 	mesh = r->mesh;
 
 	for(i = r->num_meshes; i > 0; i--) {
-		if(mesh->Flags & 1 && item->pos.pos.x == mesh->x && item->pos.pos.z == mesh->z) {
+		if(mesh->Flags & 1 && item->pos.pos.x == mesh->pos.x && item->pos.pos.z == mesh->pos.z) {
 			p = GetBestFrame(item);
 			o = GetStaticObjectBounds(currentLevel, mesh->static_number);
 

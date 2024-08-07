@@ -1227,13 +1227,13 @@ void PrintObjects(short room_number) {
 	for(int i = r->num_meshes; i > 0; i--, mesh++) {
 		if(mesh->Flags & 1) {
 			phd_PushMatrix();
-			phd_TranslateAbs(mesh->x, mesh->y, mesh->z);
+			phd_TranslateAbs(mesh->pos.x, mesh->pos.y, mesh->pos.z);
 			phd_RotY(mesh->y_rot);
 			sinfo = GetStaticObject(currentLevel, mesh->static_number);
 			clip = S_GetObjectInfoBounds(&sinfo->x_minp);
 
 			if(clip) {
-				S_CalculateStaticMeshLight(mesh->x, mesh->y, mesh->z, mesh->shade, r);
+				S_CalculateStaticMeshLight(mesh->pos.x, mesh->pos.y, mesh->pos.z, mesh->shade, r);
 				phd_PutPolygons(GetMesh(currentLevel, sinfo->mesh_number), clip);
 			}
 

@@ -162,8 +162,8 @@ void HorsemanControl(short item_number) {
 								item->hit_points--;
 							}
 
-							SoundEffect(SFX_HORSEMAN_TAKEHIT, &item->pos, SFX_DEFAULT);
-							SoundEffect(SFX_HORSE_RICOCHETS, &item->pos, SFX_DEFAULT);
+							SoundEffect(SFX_HORSEMAN_TAKEHIT, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+							SoundEffect(SFX_HORSE_RICOCHETS, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
 							v.x = 0;
 							v.y = -128;
 							v.z = 80;
@@ -196,7 +196,7 @@ void HorsemanControl(short item_number) {
 				if(item->required_anim_state) {
 					item->goal_anim_state = 17;
 					item2->goal_anim_state = 5;
-				} else if(horseman->flags || horseman->reached_goal || item->hit_status && !GetRandomControl) {
+				} else if(horseman->flags || horseman->reached_goal || item->hit_status && !GetRandomControl()) {
 					if(larainfo.distance <= 0x1000000 && !horseman->reached_goal) {
 						item->ai_bits = FOLLOW;
 
