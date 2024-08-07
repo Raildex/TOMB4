@@ -105,9 +105,9 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
 		sun->vec.x = (D3DLightMatrix._11 * x + D3DLightMatrix._12 * y + D3DLightMatrix._13 * z) * num;
 		sun->vec.y = (D3DLightMatrix._21 * x + D3DLightMatrix._22 * y + D3DLightMatrix._23 * z) * num;
 		sun->vec.z = (D3DLightMatrix._31 * x + D3DLightMatrix._32 * y + D3DLightMatrix._33 * z) * num;
-		sun->r = light->r * 255.0F;
-		sun->g = light->g * 255.0F;
-		sun->b = light->b * 255.0F;
+		sun->r = light->r * 512.0F;
+		sun->g = light->g * 512.0F;
+		sun->b = light->b * 512.0F;
 		nSunLights++;
 		nTotalLights++;
 		break;
@@ -130,9 +130,9 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
 		point->vec.x = (D3DLightMatrix._11 * x + D3DLightMatrix._12 * y + D3DLightMatrix._13 * z) * num;
 		point->vec.y = (D3DLightMatrix._21 * x + D3DLightMatrix._22 * y + D3DLightMatrix._23 * z) * num;
 		point->vec.z = (D3DLightMatrix._31 * x + D3DLightMatrix._32 * y + D3DLightMatrix._33 * z) * num;
-		point->r = light->r * 255.0F;
-		point->g = light->g * 255.0F;
-		point->b = light->b * 255.0F;
+		point->r = light->r * 512.0F;
+		point->g = light->g * 512.0F;
+		point->b = light->b * 512.0F;
 		point->rad = (light->Outer - num2) / light->Outer;
 
 		if(point->rad < 0) {
@@ -187,9 +187,9 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
 		point->vec.x = (D3DLightMatrix._11 * x + D3DLightMatrix._12 * y + D3DLightMatrix._13 * z) * num;
 		point->vec.y = (D3DLightMatrix._21 * x + D3DLightMatrix._22 * y + D3DLightMatrix._23 * z) * num;
 		point->vec.z = (D3DLightMatrix._31 * x + D3DLightMatrix._32 * y + D3DLightMatrix._33 * z) * num;
-		point->r = light->r * 255.0F;
-		point->g = light->g * 255.0F;
-		point->b = light->b * 255.0F;
+		point->r = light->r * 512.0F;
+		point->g = light->g * 512.0F;
+		point->b = light->b * 512.0F;
 		point->rad = 1.0F - num2 / light->Cutoff;
 
 		if(point->rad < 0) {
