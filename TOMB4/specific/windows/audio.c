@@ -118,6 +118,11 @@ void WINAPI StreamEnded(IXAudio2VoiceCallback* cb) {
 
 void WINAPI BufferStarted(IXAudio2VoiceCallback* cb, void* ctx) {
 	STREAM_PLAYER_DATA* player = (STREAM_PLAYER_DATA*)ctx;
+	long current = atomic_load(&player->state);
+	if(current == STREAM_STOP) {
+		cnd_signal(&player->wakeCondition);
+		return;
+	}
 	atomic_store(&player->state, STREAM_NEEDS_MORE_DATA);
 	cnd_signal(&player->wakeCondition);
 }
