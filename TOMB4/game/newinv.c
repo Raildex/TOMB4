@@ -2837,7 +2837,6 @@ long S_CallInventory2() {
 		}
 
 		S_InitialisePolyList();
-		SetDebounce = 1;
 		S_UpdateInput(inputImpl);
 		UpdatePulseColour();
 		GameTimer++;
@@ -2876,7 +2875,6 @@ long S_CallInventory2() {
 			while(1) {
 				flag = 0;
 				S_InitialisePolyList();
-				SetDebounce = 1;
 				S_UpdateInput(inputImpl);
 				UpdatePulseColour();
 

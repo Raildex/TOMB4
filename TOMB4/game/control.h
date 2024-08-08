@@ -50,7 +50,6 @@ extern long flipmap[10];
 extern long flip_stats[10];
 extern long flip_status;
 extern long flipeffect;
-extern long fliptimer;
 
 extern short* trigger_index;
 
@@ -64,7 +63,6 @@ extern char cd_flags[128];
 
 extern unsigned long FmvSceneTriggered;
 extern unsigned long CutSceneTriggered;
-extern long SetDebounce;
 extern long framecount;
 extern long reset_flag;
 extern long WeaponDelay;

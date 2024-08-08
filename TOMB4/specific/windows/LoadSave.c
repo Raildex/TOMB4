@@ -617,7 +617,6 @@ long S_LoadSave(long load_or_save, long mono, long inv_active) {
 			S_UpdateInput(inputImpl);
 		}
 
-		SetDebounce = 1;
 		S_DisplayMonoScreen();
 		ret = DoLoadSave(load_or_save);
 		UpdatePulseColour();
@@ -917,7 +916,6 @@ long S_PauseMenu() {
 			S_UpdateInput(inputImpl);
 		}
 
-		SetDebounce = 1;
 		S_DisplayMonoScreen();
 		ret = S_DisplayPauseMenu(0);
 		UpdatePulseColour();
