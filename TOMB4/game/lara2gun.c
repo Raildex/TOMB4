@@ -22,11 +22,9 @@
 #include "game/savegame.h"
 #include "game/savegameinfo.h"
 #include "game/sound.h"
-#include "game/targettype.h"
 #include "game/tomb4fx.h"
 #include "game/weaponinfo.h"
 #include "game/weapontypes.h"
-#include "global/types.h"
 #include "specific/function_stubs.h"
 #include "specific/input.h"
 
@@ -124,7 +122,7 @@ void draw_pistols(long weapon_type) {
 		ani = p->Draw1Anim;
 	} else if(ani == p->Draw2Anim) {
 		draw_pistol_meshes(weapon_type);
-		SoundEffect(SFX_LARA_DRAW, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_LARA_DRAW, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_DEFAULT);
 	} else if(ani == p->RecoilAnim - 1) {
 		ready_pistols(weapon_type);
 		ani = 0;
@@ -157,7 +155,7 @@ void undraw_pistols(long weapon_type) {
 
 		if(anil == p->Draw2Anim - 1) {
 			undraw_pistol_mesh_left(weapon_type);
-			SoundEffect(SFX_LARA_HOLSTER, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_LARA_HOLSTER, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_DEFAULT);
 		}
 	}
 
@@ -180,7 +178,7 @@ void undraw_pistols(long weapon_type) {
 
 		if(anir == p->Draw2Anim - 1) {
 			undraw_pistol_mesh_right(weapon_type);
-			SoundEffect(SFX_LARA_HOLSTER, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_LARA_HOLSTER, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_DEFAULT);
 		}
 	}
 
@@ -283,8 +281,8 @@ void AnimatePistols(long weapon_type) {
 						SmokeWeapon = weapon_type;
 						TriggerGunShell(1, GUNSHELL, weapon_type);
 						lara.right_arm.flash_gun = winfo->flash_time;
-						SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, 0x2000000 | SFX_SETPITCH);
-						SoundEffect(winfo->sample_num, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+						SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, 0x2000000 | SFX_SETPITCH | SFX_ALWAYS);
+						SoundEffect(winfo->sample_num, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_ALWAYS);
 						sound_already = 1;
 
 						if(weapon_type == WEAPON_UZI) {
@@ -297,12 +295,12 @@ void AnimatePistols(long weapon_type) {
 
 				anir = p->RecoilAnim;
 			} else if(uzi_right) {
-				SoundEffect(winfo->sample_num + 1, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+				SoundEffect(winfo->sample_num + 1, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_ALWAYS);
 				uzi_right = 0;
 			}
 		} else if(lara.right_arm.frame_number >= p->RecoilAnim) {
 			if(weapon_type == WEAPON_UZI) {
-				SoundEffect(winfo->sample_num, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+				SoundEffect(winfo->sample_num, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_ALWAYS);
 				uzi_right = 1;
 			}
 
@@ -320,7 +318,7 @@ void AnimatePistols(long weapon_type) {
 		}
 
 		if(uzi_right) {
-			SoundEffect(winfo->sample_num + 1, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+			SoundEffect(winfo->sample_num + 1, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_ALWAYS);
 			uzi_right = 0;
 		}
 	}
@@ -349,8 +347,8 @@ void AnimatePistols(long weapon_type) {
 					}
 
 					if(!sound_already) {
-						SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, 0x2000000 | SFX_SETPITCH);
-						SoundEffect(winfo->sample_num, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+						SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, 0x2000000 | SFX_SETPITCH | SFX_ALWAYS);
+						SoundEffect(winfo->sample_num, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_ALWAYS);
 					}
 
 					if(weapon_type == WEAPON_UZI) {
@@ -362,12 +360,12 @@ void AnimatePistols(long weapon_type) {
 
 				anil = p->RecoilAnim;
 			} else if(uzi_left) {
-				SoundEffect(winfo->sample_num + 1, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+				SoundEffect(winfo->sample_num + 1, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_ALWAYS);
 				uzi_left = 0;
 			}
 		} else if(lara.left_arm.frame_number >= p->RecoilAnim) {
 			if(weapon_type == WEAPON_UZI) {
-				SoundEffect(winfo->sample_num, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+				SoundEffect(winfo->sample_num, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_ALWAYS);
 				uzi_left = 1;
 			}
 
@@ -385,7 +383,7 @@ void AnimatePistols(long weapon_type) {
 		}
 
 		if(uzi_left) {
-			SoundEffect(winfo->sample_num + 1, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+			SoundEffect(winfo->sample_num + 1, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_ALWAYS);
 			uzi_left = 0;
 		}
 	}

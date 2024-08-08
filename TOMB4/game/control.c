@@ -166,23 +166,23 @@ static long S_Death() {
 				if(selection) {
 					if(S_IsActionDownDebounced(inputImpl, IN_FORWARD)) {
 						selection = 0;
-						SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+						SoundEffect(SFX_MENU_SELECT, 0,-1, SFX_ALWAYS);
 					}
 
 					if(S_IsActionDownDebounced(inputImpl, IN_SELECT)) {
 						lara.death_count = 0;
 						ret = 1;
-						SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+						SoundEffect(SFX_MENU_CHOOSE, 0, -1, SFX_ALWAYS);
 					}
 				} else {
 					if(S_IsActionDownDebounced(inputImpl, IN_BACK)) {
 						selection = 1;
-						SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+						SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 					}
 
 					if(S_IsActionDownDebounced(inputImpl, IN_SELECT)) {
 						menu = 1;
-						SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+						SoundEffect(SFX_MENU_CHOOSE, 0, -1, SFX_ALWAYS);
 					}
 				}
 			} else if(menu == 1) // reload
@@ -2321,7 +2321,7 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits) {
 	if(bits == 256) {
 		bits = -64;
 	} else {
-		SoundEffect(SFX_HIT_ROCK, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_HIT_ROCK, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 	}
 
 	GetSpheres(item, Slist, 3);
@@ -2768,7 +2768,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 
 	if(firing && LaserSight) {
 		if(lara.gun_type == WEAPON_REVOLVER) {
-			SoundEffect(SFX_DESERT_EAGLE_FIRE, 0, SFX_DEFAULT);
+			SoundEffect(SFX_DESERT_EAGLE_FIRE, 0,lara_item->room_number, SFX_DEFAULT);
 		}
 	}
 
@@ -2792,7 +2792,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 						SmashedMesh[SmashedMeshCount] = Mesh;
 						SmashedMeshCount++;
 						Mesh->Flags &= ~1;
-						SoundEffect(SFX_HIT_ROCK, (PHD_VECTOR*)Mesh, SFX_DEFAULT);
+						SoundEffect(SFX_HIT_ROCK, (PHD_VECTOR*)Mesh, target.room_number, SFX_DEFAULT);
 					}
 
 					TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
@@ -2978,21 +2978,21 @@ void AnimateItem(ITEM_INFO* item) {
 
 					if(GetObjectInfo(currentLevel, item->object_number)->water_creature) {
 						if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
-							SoundEffect(num, (PHD_VECTOR*)&item->pos, SFX_WATER);
+							SoundEffect(num, (PHD_VECTOR*)&item->pos, item->room_number, SFX_WATER);
 						} else {
-							SoundEffect(num, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+							SoundEffect(num, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 						}
 					} else if(item->room_number == 255) {
 						item->pos.pos.x = lara_item->pos.pos.x;
 						item->pos.pos.y = lara_item->pos.pos.y - 762;
 						item->pos.pos.z = lara_item->pos.pos.z;
-						SoundEffect(num, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+						SoundEffect(num, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 					} else if(GetRoom(currentLevel, item->room_number)->flags & ROOM_UNDERWATER) {
 						if(type == SFX_LANDANDWATER || type == SFX_WATERONLY) {
-							SoundEffect(num, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+							SoundEffect(num, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 						}
 					} else if(type == SFX_LANDANDWATER || type == SFX_LANDONLY) {
-						SoundEffect(num, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+						SoundEffect(num, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 					}
 				}
 

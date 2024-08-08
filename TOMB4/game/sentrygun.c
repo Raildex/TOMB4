@@ -126,8 +126,8 @@ void AutogunControl(short item_number) {
 			TriggerExplosionSparks(item->pos.pos.x, item->pos.pos.y - 768, item->pos.pos.z, 3, -1, 0, item->room_number);
 		}
 
-		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&item->pos, 0x1800000 | SFX_SETPITCH);
-		SoundEffect(SFX_EXPLOSION2, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&item->pos, item->room_number, 0x1800000 | SFX_SETPITCH);
+		SoundEffect(SFX_EXPLOSION2, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 	} else {
 		if(item->item_flags[0]) {
 			pos.x = AGOffsets.x;
@@ -161,7 +161,7 @@ void AutogunControl(short item_number) {
 					if(info.distance > 0x400000) {
 						item->item_flags[0] = 2;
 						ShotLara(item, &info, &AGOffsets, autogun->joint_rotation[0], 5);
-						SoundEffect(SFX_AUTOGUNS, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+						SoundEffect(SFX_AUTOGUNS, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 						item->item_flags[2] += 256;
 
 						if(item->item_flags[2] > 6144) {

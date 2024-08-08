@@ -117,7 +117,7 @@ void floor_shake_effect(ITEM_INFO* item) {
 }
 
 void SoundFlipEffect(ITEM_INFO* item) {
-	SoundEffect(TriggerTimer, 0, SFX_DEFAULT);
+	SoundEffect(TriggerTimer, 0, item->room_number, SFX_DEFAULT);
 	flipeffect = -1;
 }
 
@@ -138,7 +138,7 @@ void RubbleFX(ITEM_INFO* item) {
 }
 
 void PoseidonSFX(ITEM_INFO* item) {
-	SoundEffect(SFX_WATER_FLUSHES, 0, SFX_DEFAULT);
+	SoundEffect(SFX_WATER_FLUSHES, 0, item->room_number, SFX_DEFAULT);
 	flipeffect = -1;
 }
 
@@ -163,7 +163,7 @@ void SwapCrowbar(ITEM_INFO* item) {
 }
 
 void ExplosionFX(ITEM_INFO* item) {
-	SoundEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
+	SoundEffect(SFX_EXPLOSION1, 0, item->room_number, SFX_DEFAULT);
 	camera.bounce = -75;
 	flipeffect = -1;
 }
@@ -352,7 +352,7 @@ void WaterFall(short item_number) {
 			TriggerWaterfallMist(item->pos.pos.x + dx, item->pos.pos.y, item->pos.pos.z + dz, item->pos.y_rot >> 4);
 		}
 
-		SoundEffect(SFX_WATERFALL_LOOP, (PHD_VECTOR*)&item->pos, 0);
+		SoundEffect(SFX_WATERFALL_LOOP, (PHD_VECTOR*)&item->pos, item->room_number, 0);
 	}
 }
 
@@ -455,7 +455,7 @@ void DoLotsOfBlood(long x, long y, long z, short speed, short ang, short room_nu
 
 void Richochet(GAME_VECTOR* pos) {
 	TriggerRicochetSpark(pos, mGetAngle(pos->pos.z, pos->pos.x, lara_item->pos.pos.z, lara_item->pos.pos.x) >> 4, 3, 0);
-	SoundEffect(SFX_LARA_RICOCHET, (PHD_VECTOR*)pos, SFX_DEFAULT);
+	SoundEffect(SFX_LARA_RICOCHET, (PHD_VECTOR*)pos,pos->room_number, SFX_DEFAULT);
 }
 
 void SoundEffects() {
@@ -467,10 +467,10 @@ void SoundEffects() {
 
 		if(flip_status) {
 			if(sfx->flags & 0x40) {
-				SoundEffect(sfx->data, (PHD_VECTOR*)sfx, 0);
+				SoundEffect(sfx->data, (PHD_VECTOR*)sfx,-1, 0);
 			}
 		} else if(sfx->flags & 0x80) {
-			SoundEffect(sfx->data, (PHD_VECTOR*)sfx, 0);
+			SoundEffect(sfx->data, (PHD_VECTOR*)sfx,-1, 0);
 		}
 	}
 

@@ -174,7 +174,7 @@ void WraithControl(short item_number) {
 	short rotY, rotX, speed, room_number;
 
 	item = GetItem(currentLevel, item_number);
-	SoundEffect(SFX_WRAITH_WHISPERS, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+	SoundEffect(SFX_WRAITH_WHISPERS, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 
 	if(item->hit_points) {
 		target = GetItem(currentLevel, item->hit_points);

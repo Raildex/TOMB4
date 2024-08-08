@@ -158,7 +158,7 @@ void FireCrossbow(PHD_3DPOS* pos) {
 			item->item_flags[0] = 3;
 		}
 
-		SoundEffect(SFX_LARA_CROSSBOW, 0, SFX_DEFAULT);
+		SoundEffect(SFX_LARA_CROSSBOW, 0,-1, SFX_DEFAULT);
 		savegame.Game.AmmoUsed++;
 	}
 }
@@ -247,8 +247,8 @@ void FireShotgun() {
 		}
 
 		lara.right_arm.flash_gun = weapons[WEAPON_SHOTGUN].flash_time;
-		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, 0x1400000 | SFX_SETPITCH);
-		SoundEffect(weapons[WEAPON_SHOTGUN].sample_num, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, 0x1400000 | SFX_SETPITCH | SFX_ALWAYS);
+		SoundEffect(weapons[WEAPON_SHOTGUN].sample_num, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_ALWAYS);
 		savegame.Game.AmmoUsed++;
 	}
 }
@@ -412,13 +412,13 @@ void AnimateShotgun(long weapon_type) {
 
 			if(item->goal_anim_state != 2) {
 				if(m16_firing) {
-					SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, 0x5000000 | SFX_SETPITCH);
+					SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, 0x5000000 | SFX_SETPITCH | SFX_ALWAYS);
 					m16_firing = 0;
 				}
 			}
 		} else if(m16_firing) {
-			SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, 0x5000000 | SFX_SETPITCH);
-			SoundEffect(SFX_MP5_FIRE, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, 0x5000000 | SFX_SETPITCH | SFX_ALWAYS);
+			SoundEffect(SFX_MP5_FIRE, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_DEFAULT);
 		} else if(weapon_type == 4 && !(S_IsActionDown(inputImpl, IN_ACTION)) && !lara.left_arm.lock) {
 			item->goal_anim_state = 4;
 		}
@@ -901,8 +901,8 @@ void ControlCrossbow(short item_number) {
 		}
 
 		AlertNearbyGuards(item);
-		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&item->pos, 0x1800000 | SFX_SETPITCH);
-		SoundEffect(SFX_EXPLOSION2, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&item->pos, item->room_number, 0x1800000 | SFX_SETPITCH | SFX_ALWAYS);
+		SoundEffect(SFX_EXPLOSION2, (PHD_VECTOR*)&item->pos, item->room_number, SFX_ALWAYS);
 	}
 
 	if(collided || exploded) {
@@ -1216,8 +1216,8 @@ void ControlGrenade(short item_number) {
 		}
 
 		AlertNearbyGuards(item);
-		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&item->pos, 0x1800004);
-		SoundEffect(SFX_EXPLOSION2, (PHD_VECTOR*)&item->pos, 0);
+		SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&item->pos,item->room_number, 0x1800004 | SFX_ALWAYS);
+		SoundEffect(SFX_EXPLOSION2, (PHD_VECTOR*)&item->pos,item->room_number, SFX_ALWAYS);
 
 		if(item->item_flags[0] == 1 || item->item_flags[0] == 4) {
 			KillItem(item_number);

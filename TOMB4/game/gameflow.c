@@ -703,7 +703,7 @@ long TitleOptions() {
 			break;
 		}
 
-		SoundEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
+		SoundEffect(SFX_LARA_NO, 0,-1, SFX_ALWAYS);
 		menu = 0;
 
 	case 0:
@@ -729,7 +729,7 @@ long TitleOptions() {
 				selection >>= 1;
 			}
 
-			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_CHOOSE, 0,-1, SFX_ALWAYS);
 		}
 
 		if(S_IsActionDownDebounced(inputImpl, IN_BACK)) {
@@ -737,7 +737,7 @@ long TitleOptions() {
 				selection <<= 1;
 			}
 
-			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_CHOOSE, 0,-1, SFX_ALWAYS);
 		}
 	}
 
@@ -745,11 +745,11 @@ long TitleOptions() {
 		menu = 0;
 		selection = selection_bak;
 		S_SoundStopAllSamples(soundImpl);
-		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+		SoundEffect(SFX_MENU_SELECT, 0,-1, SFX_ALWAYS);
 	}
 
 	if(S_IsActionDownDebounced(inputImpl, IN_SELECT) && menu < 2) {
-		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+		SoundEffect(SFX_MENU_SELECT, 0,-1, SFX_ALWAYS);
 
 		if(!menu) {
 			if(selection > 0 && selection <= 8) {

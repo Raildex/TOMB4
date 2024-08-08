@@ -1305,7 +1305,7 @@ void CalculateCamera() {
 	}
 
 	if(GetRoom(currentLevel, camera.pos.room_number)->flags & ROOM_UNDERWATER) {
-		SoundEffect(SFX_UNDERWATER, 0, SFX_ALWAYS);
+		SoundEffect(SFX_UNDERWATER, 0, -1, SFX_ALWAYS);
 
 		if(!camera.underwater) {
 			// empty func call here

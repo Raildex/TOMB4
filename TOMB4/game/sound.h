@@ -8,7 +8,7 @@ void GetPanVolume(SoundSlot* slot);
 void StopSoundEffect(long sfx);
 void InitialiseSounds();
 void StopSounds();
-long SoundEffect(long sfx, PHD_VECTOR* pos, long flags);
+long SoundEffect(long sfx, PHD_VECTOR* pos,short room, long flags);
 void SayNo();
 
 extern SAMPLE_INFO* sample_infos;
@@ -17,10 +17,10 @@ extern short* sample_lut;
 extern long sound_active;
 
 enum sfx_options {
-	SFX_DEFAULT = 0,
 	SFX_WATER = 1,
 	SFX_ALWAYS = 2,
-	SFX_SETPITCH = 4
+	SFX_SETPITCH = 4,
+	SFX_DEFAULT = SFX_WATER | SFX_ALWAYS,
 };
 
 enum sound_effect_names {

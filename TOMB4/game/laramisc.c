@@ -268,7 +268,7 @@ void AnimateLara(ITEM_INFO* item) {
 					type = cmd[1] & 0xC000;
 
 					if(type == SFX_LANDANDWATER || (type == SFX_LANDONLY && (lara.water_surface_dist >= 0 || lara.water_surface_dist == NO_HEIGHT)) || (type == SFX_WATERONLY && lara.water_surface_dist < 0 && lara.water_surface_dist != NO_HEIGHT)) {
-						SoundEffect(cmd[1] & 0x3FFF, (PHD_VECTOR*)&item->pos, SFX_ALWAYS);
+						SoundEffect(cmd[1] & 0x3FFF, (PHD_VECTOR*)&item->pos, item->room_number, SFX_ALWAYS);
 					}
 				}
 
@@ -486,7 +486,7 @@ void LaraControl(short item_number) {
 					lara.head_x_rot = 0;
 					lara.head_y_rot = 0;
 					UpdateLaraRoom(l, -381);
-					SoundEffect(SFX_LARA_BREATH, (PHD_VECTOR*)&l->pos, SFX_ALWAYS);
+					SoundEffect(SFX_LARA_BREATH, (PHD_VECTOR*)&l->pos, l->room_number, SFX_ALWAYS);
 				} else {
 					lara.water_status = LW_ABOVE_WATER;
 					l->anim_number = ANIM_FALLDOWN;

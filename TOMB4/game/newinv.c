@@ -1653,7 +1653,7 @@ void do_examine_mode() {
 	}
 
 	if(go_deselect) {
-		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+		SoundEffect(SFX_MENU_SELECT, 0,-1, SFX_ALWAYS);
 		go_deselect = 0;
 		examine_mode = 0;
 	}
@@ -1820,7 +1820,7 @@ void use_current_item() {
 			lara_item->hit_points = 1000;
 		}
 
-		SoundEffect(SFX_MENU_MEDI, 0, SFX_ALWAYS);
+		SoundEffect(SFX_MENU_MEDI, 0,-1, SFX_ALWAYS);
 		savegame.Game.HealthUsed++;
 	} else if(invobject == INV_BIGMEDI_ITEM) {
 		if((lara_item->hit_points <= 0 || lara_item->hit_points >= 1000) && !lara.poisoned) {
@@ -1839,7 +1839,7 @@ void use_current_item() {
 			lara_item->hit_points = 1000;
 		}
 
-		SoundEffect(SFX_MENU_MEDI, 0, SFX_ALWAYS);
+		SoundEffect(SFX_MENU_MEDI, 0,-1, SFX_ALWAYS);
 		savegame.Game.HealthUsed++;
 	} else {
 		GLOBAL_inventoryitemchosen = gmeobject;
@@ -2210,7 +2210,7 @@ void handle_inventry_menu() {
 				if(do_special_waterskin_combine_bullshit(0)) {
 					combine_type_flag = 2;
 					combine_ring_fade_dir = 2;
-					SoundEffect(SFX_MENU_COMBINE, 0, SFX_ALWAYS);
+					SoundEffect(SFX_MENU_COMBINE, 0,-1, SFX_ALWAYS);
 				}
 			} else if(ammo_item >= INV_WATERSKIN1_EMPTY_ITEM && ammo_item <= INV_WATERSKIN1_3_ITEM && // big one selected
 					  inv_item >= INV_WATERSKIN2_EMPTY_ITEM && inv_item <= INV_WATERSKIN2_5_ITEM) // combining with small one
@@ -2218,14 +2218,14 @@ void handle_inventry_menu() {
 				if(do_special_waterskin_combine_bullshit(1)) {
 					combine_type_flag = 2;
 					combine_ring_fade_dir = 2;
-					SoundEffect(SFX_MENU_COMBINE, 0, SFX_ALWAYS);
+					SoundEffect(SFX_MENU_COMBINE, 0,-1, SFX_ALWAYS);
 				}
 			} else if(do_these_objects_combine(inv_item, ammo_item)) {
 				combine_ring_fade_dir = 2;
 				combine_type_flag = 1;
 				combine_obj1 = inv_item;
 				combine_obj2 = ammo_item;
-				SoundEffect(SFX_MENU_COMBINE, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_COMBINE, 0,-1, SFX_ALWAYS);
 			} else {
 				SayNo();
 				combine_ring_fade_dir = 2;
@@ -2233,7 +2233,7 @@ void handle_inventry_menu() {
 		}
 
 		if(go_deselect) {
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0,-1, SFX_ALWAYS);
 			combine_ring_fade_dir = 2;
 			go_deselect = 0;
 		}
@@ -2349,23 +2349,23 @@ void handle_inventry_menu() {
 
 		if(go_up && current_selected_option) {
 			current_selected_option--;
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0,-1, SFX_ALWAYS);
 		}
 
 		if(go_down && current_selected_option < num - 1) {
 			current_selected_option++;
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0,-1, SFX_ALWAYS);
 		}
 
 		if(ammo_active) {
 			if(go_left && current_selected_option > 0) {
 				current_selected_option--;
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0, -1,SFX_ALWAYS);
 			}
 
 			if(go_right && current_selected_option < num - 1) {
 				current_selected_option++;
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0,-1, SFX_ALWAYS);
 			}
 
 			*current_ammo_type = current_selected_option;
@@ -2375,7 +2375,7 @@ void handle_inventry_menu() {
 			type = current_options[current_selected_option].type;
 
 			if(type != 5 && type != 1) {
-				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_CHOOSE, 0,-1, SFX_ALWAYS);
 			}
 
 			switch(type) {
@@ -2436,7 +2436,7 @@ void handle_inventry_menu() {
 
 		if(go_deselect) {
 			if(ammo_active) {
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0,-1, SFX_ALWAYS);
 				go_deselect = 0;
 				ammo_active = 0;
 				rings[RING_INVENTORY]->ringactive = 1;
@@ -2765,7 +2765,7 @@ void draw_current_object_list(long ringnum) {
 
 			if(go_left) {
 				if(!rings[ringnum]->objlistmovement) {
-					SoundEffect(SFX_MENU_ROTATE, 0, SFX_ALWAYS);
+					SoundEffect(SFX_MENU_ROTATE, 0,-1, SFX_ALWAYS);
 					rings[ringnum]->objlistmovement += 8192;
 
 					if(ammo_selector_flag) {
@@ -2776,7 +2776,7 @@ void draw_current_object_list(long ringnum) {
 
 			if(go_right) {
 				if(!rings[ringnum]->objlistmovement) {
-					SoundEffect(SFX_MENU_ROTATE, 0, SFX_ALWAYS);
+					SoundEffect(SFX_MENU_ROTATE, 0,-1, SFX_ALWAYS);
 					rings[ringnum]->objlistmovement -= 8192;
 
 					if(ammo_selector_flag) {
@@ -2843,7 +2843,7 @@ long S_CallInventory2() {
 		GameTimer++;
 
 		if(S_IsActionDownDebounced(inputImpl, IN_DESELECT)) {
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0,-1, SFX_ALWAYS);
 			val = 1;
 		}
 

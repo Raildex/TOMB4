@@ -162,8 +162,8 @@ void HorsemanControl(short item_number) {
 								item->hit_points--;
 							}
 
-							SoundEffect(SFX_HORSEMAN_TAKEHIT, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
-							SoundEffect(SFX_HORSE_RICOCHETS, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+							SoundEffect(SFX_HORSEMAN_TAKEHIT, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
+							SoundEffect(SFX_HORSE_RICOCHETS, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 							v.x = 0;
 							v.y = -128;
 							v.z = 80;

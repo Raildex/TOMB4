@@ -128,12 +128,12 @@ void DoOptions() {
 
 		if(ControlMethod < 2 && !waiting_for_key) {
 			if(S_IsActionDownDebounced(inputImpl, IN_FORWARD)) {
-				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_CHOOSE, 0, -1, SFX_ALWAYS);
 				sel >>= 1;
 			}
 
 			if(S_IsActionDownDebounced(inputImpl, IN_BACK)) {
-				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_CHOOSE, 0, -1, SFX_ALWAYS);
 				sel <<= 1;
 			}
 		}
@@ -142,7 +142,7 @@ void DoOptions() {
 			i = 0;
 
 			if(S_IsActionDownDebounced(inputImpl, IN_DESELECT)) {
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 				sel2 = 0;
 				waiting_for_key = 0;
 				return;
@@ -195,26 +195,26 @@ void DoOptions() {
 		}
 
 		if(S_IsActionDownDebounced(inputImpl, IN_SELECT) && sel > 1 && ControlMethod < 2) {
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 			sel2 = sel;
 			waiting_for_key = 1;
 			memset(keymap, 0, sizeof(keymap));
 		}
 
 		if(S_IsActionDownDebounced(inputImpl, IN_SELECT) && ControlMethod == 2) {
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 			ControlMethod = 0;
 			memcpy(layout[1], layout, sizeof(*layout));
 		}
 
 		if(sel & 1) {
 			if(S_IsActionDownDebounced(inputImpl, IN_LEFT)) {
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 				ControlMethod--;
 			}
 
 			if(S_IsActionDownDebounced(inputImpl, IN_RIGHT)) {
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 				ControlMethod++;
 			}
 
@@ -250,7 +250,7 @@ void DoOptions() {
 		}
 
 		if(S_IsActionDownDebounced(inputImpl, IN_DESELECT)) {
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 
 			if(ControlMethod < 2) {
 				menu = 0;
@@ -288,22 +288,22 @@ void DoOptions() {
 		PrintString(phd_centerx, (font_height >> 1) + f + 7 * font_height, sel & 0x20 ? 1 : 2, "tomb4 options", FF_CENTER);
 
 		if(S_IsActionDownDebounced(inputImpl, IN_FORWARD)) {
-			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_CHOOSE, 0, -1, SFX_ALWAYS);
 			sel >>= 1;
 		}
 
 		if(S_IsActionDownDebounced(inputImpl, IN_BACK)) {
-			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_CHOOSE, 0, -1, SFX_ALWAYS);
 			sel <<= 1;
 		}
 
 		if(S_IsActionDownDebounced(inputImpl, IN_SELECT) && sel & 1) {
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 			menu = 1;
 		}
 
 		if(S_IsActionDownDebounced(inputImpl, IN_SELECT) && sel & 0x20) {
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 			sel = 1;
 			menu = 200;
 		}
@@ -358,7 +358,7 @@ void DoOptions() {
 				sfx_bak = SFXVolume;
 				if(sfx_breath_db <= 0 ) {
 					S_SoundStopAllSamples(soundImpl);
-					SoundEffect(SFX_LARA_BREATH, 0, SFX_ALWAYS);
+					SoundEffect(SFX_LARA_BREATH, 0, -1, SFX_ALWAYS);
 					sfx_breath_db = 30;
 					//DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
 				}
@@ -388,7 +388,7 @@ void DoOptions() {
 				S_SoundStopAllSamples(soundImpl);
 				//DXChangeOutputFormat(sfx_frequencies[SoundQuality], 0);
 				sfx_quality_bak = SoundQuality;
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 			}
 		} else if(sel & 16) {
 			if(S_IsActionDownDebounced(inputImpl, IN_LEFT)) {
@@ -396,7 +396,7 @@ void DoOptions() {
 					App.AutoTarget = 0;
 				}
 
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 			}
 
 			if(S_IsActionDownDebounced(inputImpl, IN_RIGHT)) {
@@ -404,7 +404,7 @@ void DoOptions() {
 					App.AutoTarget = 1;
 				}
 
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 			}
 
 			savegame.AutoTarget = (char)App.AutoTarget;
@@ -471,7 +471,7 @@ long S_DisplayPauseMenu(long reset) {
 					selection >>= 1;
 				}
 
-				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_CHOOSE, 0, -1, SFX_ALWAYS);
 			}
 
 			if(S_IsActionDownDebounced(inputImpl, IN_BACK)) {
@@ -479,16 +479,16 @@ long S_DisplayPauseMenu(long reset) {
 					selection <<= 1;
 				}
 
-				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_CHOOSE, 0, -1, SFX_ALWAYS);
 			}
 
 			if(S_IsActionDownDebounced(inputImpl, IN_DESELECT)) {
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 				return 1;
 			}
 
 			if(S_IsActionDownDebounced(inputImpl, IN_SELECT) && !keymap[DIK_LALT]) {
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 
 				if(selection & 1) {
 					menu = 2;
@@ -504,14 +504,14 @@ long S_DisplayPauseMenu(long reset) {
 
 		if(S_IsActionDownDebounced(inputImpl, IN_DESELECT)) {
 			menu = 0;
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 		}
 	} else if(menu == 2) {
 		DisplayStatsUCunt();
 
 		if(S_IsActionDownDebounced(inputImpl, IN_DESELECT)) {
 			menu = 0;
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SoundEffect(SFX_MENU_SELECT, 0, -1, SFX_ALWAYS);
 		}
 	}
 
@@ -569,12 +569,12 @@ long DoLoadSave(long LoadSave) {
 
 	if(S_IsActionDownDebounced(inputImpl, IN_FORWARD)) {
 		selection--;
-		SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+		SoundEffect(SFX_MENU_CHOOSE, 0, -1, SFX_ALWAYS);
 	}
 
 	if(S_IsActionDownDebounced(inputImpl, IN_BACK)) {
 		selection++;
-		SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+		SoundEffect(SFX_MENU_CHOOSE, 0, -1, SFX_ALWAYS);
 	}
 
 	if(selection < 0) {
@@ -588,7 +588,7 @@ long DoLoadSave(long LoadSave) {
 			return selection;
 		}
 
-		SoundEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
+		SoundEffect(SFX_LARA_NO, 0, -1, SFX_ALWAYS);
 	}
 
 	return -1;

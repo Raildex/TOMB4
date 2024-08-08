@@ -382,8 +382,10 @@ long S_CreateSoundSystem(SOUND_SYSTEM** out) {
 	}
 	for(int i = 0; i < 5; ++i) {
 		ReverbConvertI3DL2ToNative(&reverb_presets[i], &system->reverb_types[i], 0);
-		if(i == 5) {
-			system->reverb_types[i].WetDryMix = 10;
+		if(i == 4) {
+			system->reverb_types[i].WetDryMix = 100;
+			system->reverb_types[i].RoomFilterFreq = 200;
+			system->reverb_types[i].DisableLateField = 1;
 		}
 	}
 	*out = system;

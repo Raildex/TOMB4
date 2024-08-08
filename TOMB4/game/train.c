@@ -158,7 +158,7 @@ void TrainJeepControl(short item_number) {
 		item->item_flags[2] -= 512;
 	}
 
-	SoundEffect(SFX_JEEP_MOVE, (PHD_VECTOR*)&item->pos, (item->item_flags[2] << 9) + (0x1000000 | SFX_SETPITCH));
+	SoundEffect(SFX_JEEP_MOVE, (PHD_VECTOR*)&item->pos, item->room_number, (item->item_flags[2] << 9) + (0x1000000 | SFX_SETPITCH));
 	item->pos.pos.x += item->item_flags[0];
 	AnimateItem(item);
 	room_number = item->room_number;

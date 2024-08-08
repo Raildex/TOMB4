@@ -64,7 +64,7 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 					l->anim_number = ANIM_FILLSCALE;
 					l->frame_number = GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base;
 				} else if(l->frame_number == GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base + 51) {
-					SoundEffect(SFX_POUR, (PHD_VECTOR*)&l->pos, SFX_DEFAULT);
+					SoundEffect(SFX_POUR, (PHD_VECTOR*)&l->pos, l->room_number, SFX_DEFAULT);
 				} else if(l->frame_number == GetAnim(currentLevel, ANIM_FILLSCALE)->frame_base + 74) {
 					AddActiveItem(item_number);
 					item->status = ITEM_ACTIVE;
@@ -215,7 +215,7 @@ void ExplodeAhmet(ITEM_INFO* item) {
 	}
 
 	TriggerDynamic(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, 13, (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
-	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 }
 
 void InitialiseAhmet(short item_number) {

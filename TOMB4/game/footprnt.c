@@ -54,7 +54,7 @@ void AddFootPrint(ITEM_INFO* item) {
 	floor = GetFloor(pos.x, pos.y, pos.z, &room_num);
 
 	if(floor->fx != 6 && floor->fx != 5 && floor->fx != 11) {
-		SoundEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+		SoundEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_DEFAULT);
 	}
 
 	long h = GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);

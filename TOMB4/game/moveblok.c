@@ -330,11 +330,11 @@ void MovableBlock(short item_number) {
 		if((frame < base + 30 || frame > base + 67) && (frame < base + 78 || frame > base + 125)
 		   && (frame < base + 140 || frame > base + 160)) {
 			if(sfx) {
-				SoundEffect(SFX_PUSH_BLOCK_END, (PHD_VECTOR*)&item->pos, SFX_ALWAYS);
+				SoundEffect(SFX_PUSH_BLOCK_END, (PHD_VECTOR*)&item->pos, item->room_number, SFX_ALWAYS);
 				sfx = 0;
 			}
 		} else {
-			SoundEffect(SFX_PUSHABLE_SOUND, (PHD_VECTOR*)&item->pos, SFX_ALWAYS);
+			SoundEffect(SFX_PUSHABLE_SOUND, (PHD_VECTOR*)&item->pos, item->room_number, SFX_ALWAYS);
 			sfx = 1;
 		}
 
@@ -397,11 +397,11 @@ void MovableBlock(short item_number) {
 
 		if((frame < base + 40 || frame > base + 122) && (frame < base + 130 || frame > base + 170)) {
 			if(sfx) {
-				SoundEffect(SFX_PUSH_BLOCK_END, (PHD_VECTOR*)&item->pos, SFX_ALWAYS);
+				SoundEffect(SFX_PUSH_BLOCK_END, (PHD_VECTOR*)&item->pos, item->room_number, SFX_ALWAYS);
 				sfx = 0;
 			}
 		} else {
-			SoundEffect(SFX_PUSHABLE_SOUND, (PHD_VECTOR*)&item->pos, SFX_ALWAYS);
+			SoundEffect(SFX_PUSHABLE_SOUND, (PHD_VECTOR*)&item->pos, item->room_number, SFX_ALWAYS);
 			sfx = 1;
 		}
 
@@ -686,7 +686,7 @@ void ControlPlanetEffect(short item_number) {
 				}
 
 				TriggerLightningGlow(pos.x, pos.y, pos.z, RGBA(0, g, b, (GetRandomControl() & 0x1F) + 48));
-				SoundEffect(SFX_ELEC_ARCING_LOOP, &pos, SFX_DEFAULT);
+				SoundEffect(SFX_ELEC_ARCING_LOOP, &pos, item->room_number, SFX_DEFAULT);
 				pos = pos2;
 			}
 

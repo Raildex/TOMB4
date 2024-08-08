@@ -738,7 +738,7 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		lara.hit_direction = (unsigned short)(l->pos.y_rot - phd_atan(dz, dx) - 24576) >> W2V_SHIFT; // hmmmmm
 
 		if(!lara.hit_frame) {
-			SoundEffect(SFX_LARA_INJURY, (PHD_VECTOR*)&l->pos, SFX_DEFAULT);
+			SoundEffect(SFX_LARA_INJURY, (PHD_VECTOR*)&l->pos, l->room_number, SFX_DEFAULT);
 		}
 
 		lara.hit_frame++;

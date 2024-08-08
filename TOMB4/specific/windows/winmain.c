@@ -329,9 +329,6 @@ LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 				if(App.SetupComplete) {
 					Log(__func__, "Change Video Mode");
 					Log(__func__, "HangGameThread");
-					while(App.dx.InScene) { };
-					App.dx.WaitAtBeginScene = 1;
-					while(!App.dx.InScene) { };
 					Log(__func__, "Game Thread Suspended");
 				}
 

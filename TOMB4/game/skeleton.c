@@ -411,7 +411,7 @@ void SkeletonControl(short item_number) {
 
 					if(mesh->pos.z >> 10 == pos.z >> 10 && mesh->pos.x >> 10 == pos.x >> 10 && mesh->static_number >= SHATTER0) {
 						ShatterObject(0, mesh, -64, lara_item->room_number, 0);
-						SoundEffect(SFX_HIT_ROCK, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+						SoundEffect(SFX_HIT_ROCK, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 						mesh->Flags &= ~1;
 						floor->stopper = 0;
 						GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
@@ -424,7 +424,7 @@ void SkeletonControl(short item_number) {
 				lara_item->hit_points -= 80;
 				lara_item->hit_status = 1;
 				CreatureEffectT(item, &skelly_hit, 10, item->pos.y_rot, DoBloodSplat);
-				SoundEffect(SFX_LARA_THUD, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+				SoundEffect(SFX_LARA_THUD, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 				skelly->flags = 1;
 			}
 		}
@@ -446,7 +446,7 @@ void SkeletonControl(short item_number) {
 			lara_item->hit_points -= 80;
 			lara_item->hit_status = 1;
 			CreatureEffectT(item, &skelly_hit, 15, -1, DoBloodSplat);
-			SoundEffect(SFX_LARA_THUD, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_LARA_THUD, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 			skelly->flags = 1;
 		}
 

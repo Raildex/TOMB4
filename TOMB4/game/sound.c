@@ -105,7 +105,7 @@ void StopSounds() {
 	}
 }
 
-long SoundEffect(long sfx, PHD_VECTOR* pos, long flags) {
+long SoundEffect(long sfx, PHD_VECTOR* pos, short room, long flags) {
 	SAMPLE_INFO* info;
 	PHD_VECTOR pos2;
 	long lut, radius, pan, dx, dy, dz, distance, volume, OrigVolume, pitch, rnd, sample, flag, vol, slot;
@@ -122,10 +122,14 @@ long SoundEffect(long sfx, PHD_VECTOR* pos, long flags) {
 			break;
 		}
 	}
-
-	if(!sound_active || (!(flags & SFX_ALWAYS) && (flags & SFX_WATER) != (GetRoom(currentLevel, camera.pos.room_number)->flags & ROOM_UNDERWATER))) {
-		return 0;
+	if(room != -1) {
+		if(!(GetRoom(currentLevel, camera.pos.room_number)->flags & ROOM_UNDERWATER)) {
+			if(GetRoom(currentLevel, room)->flags & ROOM_UNDERWATER && !(flags & SFX_ALWAYS) ) {
+				return 0;
+			}
+		}
 	}
+
 
 	lut = *GetSampleLookup(currentLevel, sfx);
 
@@ -353,5 +357,5 @@ void SayNo() {
 		fx = SFX_LARA_NO_JAPAN;
 	}
 
-	SoundEffect(fx, 0, SFX_ALWAYS);
+	SoundEffect(fx, 0, -1, SFX_ALWAYS);
 }

@@ -64,7 +64,7 @@ void ControlMapper(short item_number) {
 	}
 
 	if(item->frame_number - GetAnim(currentLevel, item->anim_number)->frame_base >= 200) {
-		SoundEffect(SFX_MAPPER_LAZER, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_MAPPER_LAZER, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 		item->mesh_bits |= 2;
 		pos.x = 0;
 		pos.y = 0;
@@ -144,7 +144,7 @@ void ControlLightningConductor(short item_number) {
 	}
 
 	if(item->item_flags[0]) {
-		SoundEffect(SFX_ELEC_ARCING_LOOP, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_ELEC_ARCING_LOOP, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 		item->item_flags[0]--;
 		b = (GetRandomControl() & 0x3F) + 192;
 		g = b - (GetRandomControl() & 0x1F);
@@ -192,7 +192,7 @@ void ControlLightningConductor(short item_number) {
 			}
 		}
 	} else if(!(GetRandomControl() & 0x3F)) {
-		SoundEffect(SFX_THUNDER_CRACK, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+		SoundEffect(SFX_THUNDER_CRACK, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 		item->item_flags[0] = (GetRandomControl() & 3) + 4;
 		item->item_flags[1] = (GetRandomControl() & 0x3FF) - 512;
 	}
@@ -507,7 +507,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 		if(dx < sphere->r && dy < sphere->r && dz < sphere->r) {
 			if(0 /*gfCurrentLevel == 27)*/) {
-				SoundEffect(SFX_BOULDER_FALL, 0, SFX_DEFAULT);
+				SoundEffect(SFX_BOULDER_FALL, 0, item->room_number, SFX_DEFAULT);
 				TestTriggersAtXYZ(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number, 1, 0);
 			}
 
@@ -532,9 +532,9 @@ void ControlWaterfall(short item_number) {
 		item->status = ITEM_ACTIVE;
 
 		if(item->trigger_flags == 668) {
-			SoundEffect(SFX_SAND_LOOP, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_SAND_LOOP, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 		} else if(item->trigger_flags == 777) {
-			SoundEffect(SFX_WATERFALL_LOOP, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+			SoundEffect(SFX_WATERFALL_LOOP, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 		}
 	} else {
 		if(item->trigger_flags == 2 || item->trigger_flags == 668) {
@@ -689,7 +689,7 @@ void ControlAnimatingSlots(short item_number) {
 			pos.y = 0;
 			pos.z = 0;
 			GetJointAbsPosition(item, &pos, 0);
-			SoundEffect(SFX_HELICOPTER_LOOP, (PHD_VECTOR*)&pos, SFX_DEFAULT);
+			SoundEffect(SFX_HELICOPTER_LOOP, (PHD_VECTOR*)&pos, item->room_number, SFX_DEFAULT);
 
 			if(item->frame_number == GetAnim(currentLevel, item->anim_number)->frame_end) {
 				item->flags &= ~IFL_CODEBITS;
@@ -739,8 +739,8 @@ void SmashObject(short item_number) {
 		box->overlap_index &= ~0x4000;
 	}
 
-	SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
-	SoundEffect(SFX_EXPLOSION2, (PHD_VECTOR*)&item->pos, SFX_DEFAULT);
+	SoundEffect(SFX_EXPLOSION1, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
+	SoundEffect(SFX_EXPLOSION2, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
 	item->collidable = 0;
 	item->mesh_bits = 0xFFFE;
 	ExplodingDeath2(item_number, -1, 256);
@@ -766,11 +766,11 @@ void EarthQuake(short item_number) {
 
 	if(item->trigger_flags == 888) {
 		camera.bounce = -64 - (GetRandomControl() & 0x1F);
-		SoundEffect(SFX_EARTHQUAKE_LOOP, 0, SFX_DEFAULT);
+		SoundEffect(SFX_EARTHQUAKE_LOOP, 0,-1, SFX_DEFAULT);
 		item->item_flags[3]++;
 
 		if(item->item_flags[3] > 150) {
-			SoundEffect(SFX_DOOR_GEN_THUD, 0, SFX_DEFAULT);
+			SoundEffect(SFX_DOOR_GEN_THUD, 0,-1, SFX_DEFAULT);
 			KillItem(item_number);
 		}
 	} else if(item->trigger_flags == 333) {
@@ -778,7 +778,7 @@ void EarthQuake(short item_number) {
 			KillItem(item_number);
 		} else {
 			item->item_flags[0]++;
-			SoundEffect(SFX_EARTHQUAKE_LOOP, 0, SFX_DEFAULT);
+			SoundEffect(SFX_EARTHQUAKE_LOOP, 0, -1,SFX_DEFAULT);
 		}
 	} else {
 		if(!item->item_flags[1]) {
@@ -808,7 +808,7 @@ void EarthQuake(short item_number) {
 		}
 
 		pitch = (item->item_flags[0] << 16) + 0x1000000;
-		SoundEffect(SFX_EARTHQUAKE_LOOP, 0, pitch | SFX_SETPITCH);
+		SoundEffect(SFX_EARTHQUAKE_LOOP, 0, -1, pitch | SFX_SETPITCH);
 		camera.bounce = -item->item_flags[0];
 
 		if(GetRandomControl() < 1024) {

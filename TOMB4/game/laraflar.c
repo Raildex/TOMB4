@@ -271,9 +271,9 @@ void draw_flare() {
 		} else if(ani >= 72 && ani <= 93) {
 			if(ani == 72) {
 				if(GetRoom(currentLevel, lara_item->room_number)->flags & ROOM_UNDERWATER) {
-					SoundEffect(SFX_OBJ_GEM_SMASH, (PHD_VECTOR*)&lara_item->pos, SFX_WATER);
+					SoundEffect(SFX_OBJ_GEM_SMASH, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_WATER);
 				} else {
-					SoundEffect(SFX_OBJ_GEM_SMASH, (PHD_VECTOR*)&lara_item->pos, SFX_DEFAULT);
+					SoundEffect(SFX_OBJ_GEM_SMASH, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_DEFAULT);
 				}
 
 				lara.flare_age = 1;
