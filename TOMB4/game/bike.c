@@ -104,8 +104,6 @@ void TriggerBikeBeam(ITEM_INFO* item) {
 
 	if(intensity > 0) {
 		LaraTorch(&s, &d, item->pos.y_rot, intensity);
-	} else {
-		bLaraTorch = 0;
 	}
 }
 

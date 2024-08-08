@@ -40,12 +40,6 @@ CAMERA_INFO camera;
 GAME_VECTOR ForcedFixedCamera;
 char UseForcedFixedCamera;
 
-PHD_VECTOR LaraTorchStart;
-PHD_VECTOR LaraTorchEnd;
-long bLaraTorch;
-long LaraTorchIntensity;
-long LaraTorchYRot;
-
 camera_type BinocularOldCamera = CHASE_CAMERA;
 long BinocularOn = 0;
 long BinocularRange = 0;
@@ -1088,7 +1082,6 @@ void BinocularCamera(ITEM_INFO* item) {
 			lara.head_x_rot = 0;
 			lara.torso_y_rot = 0;
 			lara.torso_x_rot = 0;
-			bLaraTorch = 0;
 			camera.type = BinocularOldCamera;
 			return;
 		}
@@ -1225,8 +1218,6 @@ void BinocularCamera(ITEM_INFO* item) {
 
 		if(S_IsActionDown(inputImpl, IN_ACTION)) {
 			LaraTorch(&Soffset, &Eoffset, lara.head_y_rot, 192);
-		} else {
-			bLaraTorch = 0;
 		}
 	}
 }
