@@ -555,6 +555,62 @@ void ClearDynamics() {
 	}
 }
 
+void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv) {
+	SPARKS* sptr;
+	long dx, dz;
+
+	dx = lara_item->pos.pos.x - GetEffect(currentLevel, fx_number)->pos.pos.x;
+	dz = lara_item->pos.pos.z - GetEffect(currentLevel, fx_number)->pos.pos.z;
+
+	if(dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000) {
+		return;
+	}
+
+	sptr = GetFreeSpark();
+	sptr->On = 1;
+	sptr->sR = 0;
+	sptr->sG = (GetRandomControl() & 0x7F) + 32;
+	sptr->sB = sptr->dG + 64; // uhm
+	sptr->dR = 0;
+	sptr->dB = (GetRandomControl() & 0x7F) + 32;
+	sptr->dG = sptr->dB + 64;
+	sptr->FadeToBlack = 8;
+	sptr->ColFadeSpeed = (GetRandomControl() & 3) + 4;
+	sptr->TransType = 2;
+	sptr->Life = (GetRandomControl() & 3) + 16;
+	sptr->sLife = sptr->Life;
+	sptr->x = (GetRandomControl() & 0xF) - 8;
+	sptr->y = 0;
+	sptr->z = (GetRandomControl() & 0xF) - 8;
+	sptr->Xvel = (short)xv;
+	sptr->Yvel = (short)yv;
+	sptr->Zvel = (short)zv;
+	sptr->Friction = 68;
+	sptr->Flags = 602;
+	sptr->RotAng = GetRandomControl() & 0xFFF;
+
+	if(GetRandomControl() & 1) {
+		sptr->RotAdd = -32 - (GetRandomControl() & 0x1F);
+	} else {
+		sptr->RotAdd = (GetRandomControl() & 0x1F) + 32;
+	}
+
+	sptr->Gravity = 0;
+	sptr->MaxYvel = 0;
+	sptr->FxObj = (unsigned char)fx_number;
+
+	if(GetEffect(currentLevel, fx_number)->flag1 == 1) {
+		sptr->Scalar = 3;
+	} else {
+		sptr->Scalar = 2;
+	}
+
+	sptr->Size = (GetRandomControl() & 7) + 64;
+	sptr->sSize = sptr->Size;
+	sptr->dSize = sptr->Size >> 5;
+}
+
+
 void ControlEnemyMissile(short fx_number) {
 	FX_INFO* fx;
 	FLOOR_INFO* floor;
