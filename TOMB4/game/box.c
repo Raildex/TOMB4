@@ -141,7 +141,9 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info) {
 	obj = GetObjectInfo(currentLevel, item->object_number);
 
 	if(item->poisoned) {
-		if(!obj->undead && !(wibble & 0x3F) && item->hit_points > 1) {
+		// undead enemies can't be poisoned in the first place, check unnecessary
+		// kill enemies when poisoned
+		if(/*!obj->undead && */ !(wibble & 0x3F) /*&& item->hit_points > 1*/) {
 			item->hit_points--;
 		}
 	}
