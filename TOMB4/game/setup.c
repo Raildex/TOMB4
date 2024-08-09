@@ -1774,7 +1774,7 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 
 	r = GetRoom(currentLevel, 0);
 	printf(
-		"X %d, Y %d, Z %d, Xs %d, Ys %d\n", r->x, r->y, r->z, r->x_size,
+		"X %ld, Y %ld, Z %ld, Xs %d, Ys %d\n", r->x, r->y, r->z, r->x_size,
 		r->y_size);
 
 	for(int y = 0; y < 108; y += 4) {
@@ -1843,7 +1843,7 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 				while(cTable < oTable) {
 					if(!memcmp(cTable, pTable, z)) {
 						OutsideRoomOffsets[offset]
-							= (short)((long)cTable - (long)OutsideRoomTable);
+							= (short)((uintptr_t)cTable - (uintptr_t)OutsideRoomTable);
 						break;
 					}
 
@@ -1858,7 +1858,7 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 
 				if(cTable >= oTable) {
 					OutsideRoomOffsets[offset]
-						= (short)((long)oTable - (long)OutsideRoomTable);
+						= (short)((uintptr_t)oTable - (uintptr_t)OutsideRoomTable);
 					memcpy(oTable, pTable, z);
 					oTable += z;
 					*oTable++ = -1;
@@ -1868,8 +1868,8 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 	}
 
 	printf(
-		"Ouside room table = %d bytes, max_slots = %d\n",
-		oTable - (unsigned char*)OutsideRoomTable, max_slots);
+		"Ouside room table = %zu bytes, max_slots = %ld\n",
+		(size_t)((unsigned char*)oTable - (unsigned char*)OutsideRoomTable), max_slots);
 }
 
 void reset_cutseq_vars() {
@@ -1974,8 +1974,7 @@ void InitialiseObjects() {
 		obj->hit_points = -16384;
 		obj->explodable_meshbits = 0;
 		obj->draw_routine_extra = NULL;
-		obj->frame_base = (short*)((long)obj->frame_base
-								   + (char*)GetAnimFrameBase(currentLevel));
+		obj->frame_base = (short*)((uintptr_t)obj->frame_base + (char*)GetAnimFrameBase(currentLevel));
 		obj->object_mip = 0;
 	}
 

@@ -528,7 +528,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 					laraitem->goal_anim_state = AS_PPREADY;
 					lara.IsMoving = 0;
 					lara.gun_status = LG_HANDS_BUSY;
-					lara.CornerX = (long)item;
+					lara.GeneralPtr = item_number;
 				} else {
 					lara.GeneralPtr = item_number;
 				}
@@ -542,7 +542,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 	} else if(
 		laraitem->current_anim_state == AS_PPREADY
 		&& laraitem->frame_number == GetAnim(currentLevel, ANIM_PPREADY)->frame_base + 19
-		&& (ITEM_INFO*)lara.CornerX == item) {
+		&& lara.GeneralPtr == item_number) {
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;

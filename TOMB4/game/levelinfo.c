@@ -42,6 +42,7 @@
 #include "specific/windows/winmain.h"
 #include <assert.h>
 #include <crtdbg.h>
+#include <stdint.h>
 #include <ddraw.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -178,7 +179,7 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 	*data += sizeof(short) * size;
 
 	for(int i = 0; i < num_anims; i++) {
-		lvl->anims[i].frame_ptr = (short*)((long)lvl->anims[i].frame_ptr + (long)lvl->frames);
+		lvl->anims[i].frame_ptr = (short*)((uintptr_t)lvl->anims[i].frame_ptr + (uintptr_t)lvl->frames);
 	}
 
 	num = *(long*)*data;
