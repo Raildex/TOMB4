@@ -1,4 +1,20 @@
-add_requires("miniaudio","zlib", "xaudio2redist")
+add_requires("miniaudio","zlib", "cmake 3")
+if(is_plat("windows")) then
+	add_requires("xaudio2redist")
+end
+
+package("FAudio")
+    set_urls("https://github.com/FNA-XNA/FAudio.git")
+    add_deps("cmake", "libsdl3")
+    on_install(function (package)
+        local configs = {}
+        table.insert(configs, "-DBUILD_SHARED_LIBS=" .. (package:config("shared") and "ON" or "OFF"))
+        import("package.tools.cmake").install(package,configs)
+    end)
+package_end()
+if(is_plat("linux")) then 
+	add_requires("FAudio")
+end
 target("trng2")
 	add_packages("zlib")
 	set_kind("binary")
@@ -20,7 +36,12 @@ target("trng2")
 		target:add("syslinks","Msacm32","d3d9","ddraw","dsound","Winmm","Gdi32","Advapi32","user32","dxgi", "dxguid","dinput8","xaudio2_9redist","Ole32")
 		target:add("defines","XAUDIO2_HELPER_FUNCTIONS","WIN32_LEAN_AND_MEAN","NOMINMAX", "_CRT_SECURE_NO_WARNINGS", "COBJMACROS", "CINTERFACE")
 		target:set("runtimes",is_mode("debug") and "MTd" or "MT")
-		target:add("packages","xaudio2redist")
+		target:add("packages","xaudio2redist","zlib")
+		
+	end)
+	on_load("linux", function(target)
+		target:add("packages", "FAudio")
+		target:add("syslinks","zlib","atomics")
 	end)
 	if(is_mode("debug")) then 
 		add_defines("DO_LOG")
