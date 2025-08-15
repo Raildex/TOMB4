@@ -288,7 +288,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	phd_PopMatrix();
 
 	RotVerts = (short*)&tsv_buffer[0];
-	Vels = (long*)&tsv_buffer[1536];
+	Vels = (int*)&tsv_buffer[1536];
 	offsets = (short*)&tsv_buffer[1548];
 	vec.room_number = RoomNumber;
 	DebrisMeshAmbient = GetRoom(currentLevel, RoomNumber)->ambient;

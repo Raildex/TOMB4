@@ -363,7 +363,7 @@ void TriggerLocust(ITEM_INFO* item) {
 		vec.x = item->pos.pos.x;
 		vec.y = item->pos.pos.y;
 		vec.z = item->pos.pos.z;
-		*(long*)angles = item->pos.y_rot + 0x8000;
+		*(int*)angles = item->pos.y_rot + 0x8000;
 	} else {
 		vec2.x = 0;
 		vec2.y = -96;

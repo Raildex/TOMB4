@@ -279,7 +279,7 @@ void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			item->pos.y_rot = 0;
 			GetSpheres(item, Slist, 1);
 			item->pos.y_rot = y_rot;
-			DeadlyBits = *(long*)&item->item_flags[0];
+			DeadlyBits = *(int*)&item->item_flags[0];
 
 			if(item->item_flags[2]) {
 				TouchBits &= ~0x1;
@@ -1113,8 +1113,8 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 		return;
 	}
 
-	hurtfulBits = *(long*)&item->item_flags[0] & touchedBits;
-	touchedBits = *(long*)&item->item_flags[0];
+	hurtfulBits = *(int*)&item->item_flags[0] & touchedBits;
+	touchedBits = *(int*)&item->item_flags[0];
 
 	if(!hurtfulBits) {
 		return;

@@ -996,9 +996,9 @@ void DrawDebris() {
 	unsigned short drawbak;
 
 	v = MyVertexBuffer;
-	XY = (long*)&tsv_buffer[0];
-	Z = (long*)&tsv_buffer[512];
-	offsets = (long*)&tsv_buffer[1024];
+	XY = (int*)&tsv_buffer[0];
+	Z = (int*)&tsv_buffer[512];
+	offsets = (int*)&tsv_buffer[1024];
 
 	for(int i = 0; i < 256; i++) {
 		dptr = &debris[i];
@@ -1874,9 +1874,9 @@ void DrawLaserSightSprite() {
 	int s;
 
 	v = MyVertexBuffer;
-	XY = (long*)&tsv_buffer[0];
-	Z = (long*)&tsv_buffer[512];
-	pos = (long*)&tsv_buffer[1024];
+	XY = (int*)&tsv_buffer[0];
+	Z = (int*)&tsv_buffer[512];
+	pos = (int*)&tsv_buffer[1024];
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 	pos[0] = LaserSightX - lara_item->pos.pos.x;
@@ -2149,9 +2149,9 @@ void SetUpLensFlare(int x, int y, int z, GAME_VECTOR* lfobj) {
 		return;
 	}
 
-	vec = (long*)&tsv_buffer[0];
-	XY = (long*)&tsv_buffer[32];
-	Z = (long*)&tsv_buffer[64];
+	vec = (int*)&tsv_buffer[0];
+	XY = (int*)&tsv_buffer[32];
+	Z = (int*)&tsv_buffer[64];
 
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
@@ -2438,9 +2438,9 @@ void DrawWraithTrail(ITEM_INFO* item) {
 			phd_RotZ(1092);
 		}
 
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[512];
-		offsets = (long*)&tsv_buffer[1024];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[512];
+		offsets = (int*)&tsv_buffer[1024];
 		wraith = (WRAITH_STRUCT*)item->data;
 
 		for(int j = 0; j < 8; j++, XY += 2, Z += 2, wraith++) {
@@ -2462,8 +2462,8 @@ void DrawWraithTrail(ITEM_INFO* item) {
 			}
 		}
 
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[512];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[512];
 
 		for(int j = 0; j < 7; j++, XY += 2, Z += 2) {
 			if(Z[0] <= f_mznear || Z[0] >= 20480) {
@@ -2537,9 +2537,9 @@ void DrawDrips() {
 			continue;
 		}
 
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[512];
-		pos = (long*)&tsv_buffer[1024];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[512];
+		pos = (int*)&tsv_buffer[1024];
 		pos[0] = drip->pos.x - lara_item->pos.pos.x;
 		pos[1] = drip->pos.y - lara_item->pos.pos.y;
 		pos[2] = drip->pos.z - lara_item->pos.pos.z;
@@ -2637,9 +2637,9 @@ void DrawBubbles() {
 	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 	bubble = Bubbles;
 
-	XY = (long*)&tsv_buffer[0];
-	Z = (long*)&tsv_buffer[512];
-	offsets = (long*)&tsv_buffer[1024];
+	XY = (int*)&tsv_buffer[0];
+	Z = (int*)&tsv_buffer[512];
+	offsets = (int*)&tsv_buffer[1024];
 
 	for(int i = 0; i < nBubbles; i++) {
 		if(!bubble->size) {
@@ -2745,7 +2745,7 @@ void DrawShockwaves() {
 	vtx = MyVertexBuffer;
 
 	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 8);
-	offsets = (long*)&tsv_buffer[1024];
+	offsets = (int*)&tsv_buffer[1024];
 
 	for(int i = 0; i < nShockWaves; i++) {
 		wave = &ShockWaves[i];
@@ -2754,8 +2754,8 @@ void DrawShockwaves() {
 			continue;
 		}
 
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[512];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[512];
 		phd_PushMatrix();
 		phd_TranslateAbs(wave->x, wave->y, wave->z);
 		phd_RotX(wave->XRot);
@@ -2814,8 +2814,8 @@ void DrawShockwaves() {
 		}
 
 		phd_PopMatrix();
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[512];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[512];
 
 		for(int j = 0; j < 16; j++) {
 			x1 = XY[0];
@@ -2898,8 +2898,8 @@ void DrawTrainFloorStrip(int x, int z, TEXTURESTRUCT* tex, int y_and_flags) {
 	offsets[2].x = x;
 
 	for(int i = 0; i < 2; i++) {
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[984];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[984];
 		XY -= 6;
 		Z -= 3;
 
@@ -2938,8 +2938,8 @@ void DrawTrainFloorStrip(int x, int z, TEXTURESTRUCT* tex, int y_and_flags) {
 		offsets[0].x -= 512;
 		offsets[1].x -= 512;
 		offsets[2].x -= 512;
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[984];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[984];
 
 		for(int j = num; j < num + 20; j++, XY += 12, Z += 6) {
 			z1 = Z[0];
@@ -3002,7 +3002,7 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 	short yVals[6];
 
 	v = MyVertexBuffer;
-	offsets = (long*)&tsv_buffer[1024];
+	offsets = (int*)&tsv_buffer[1024];
 
 	for(int i = 0; i < nSplashes; i++) {
 		splash = &splashes[i];
@@ -3013,8 +3013,8 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 
 		phd_PushMatrix();
 		phd_TranslateAbs(splash->pos.x, splash->pos.y, splash->pos.z);
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[512];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[512];
 
 		rads[0] = splash->InnerRad;
 		rads[1] = splash->InnerRad + splash->InnerSize;
@@ -3043,8 +3043,8 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 		}
 
 		phd_PopMatrix();
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[512];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[512];
 
 		for(int j = 0; j < 3; j++) {
 			if(j == 2 || (!j && splash->flags & 4) || (j == 1 && splash->flags & 8)) {
@@ -3149,8 +3149,8 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 		phd_PushMatrix();
 		phd_TranslateAbs(ripple->x, ripple->y, ripple->z);
 
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[512];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[512];
 
 		offsets[0] = -ripple->size;
 		offsets[1] = 0;
@@ -3186,8 +3186,8 @@ void S_DrawSplashes() //	(also draws ripples and underwater blood (which is a ri
 
 		phd_PopMatrix();
 
-		XY = (long*)&tsv_buffer[0];
-		Z = (long*)&tsv_buffer[512];
+		XY = (int*)&tsv_buffer[0];
+		Z = (int*)&tsv_buffer[512];
 
 		if(ripple->flags & 0x20) {
 			sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index);
@@ -3370,9 +3370,9 @@ void S_DrawFireSparks(int size, int life) {
 	short ang;
 
 	v = MyVertexBuffer;
-	XY = (long*)&tsv_buffer[0];
-	Z = (long*)&tsv_buffer[512];
-	offsets = (long*)&tsv_buffer[1024];
+	XY = (int*)&tsv_buffer[0];
+	Z = (int*)&tsv_buffer[512];
+	offsets = (int*)&tsv_buffer[1024];
 
 	for(int i = 0; i < nFireSparks; i++) {
 		sptr = &fire_spark[i];
@@ -3625,9 +3625,9 @@ void DrawBlood() {
 
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
-	XY = (long*)&tsv_buffer[0];
-	Z = (long*)&tsv_buffer[512];
-	offsets = (long*)&tsv_buffer[1024];
+	XY = (int*)&tsv_buffer[0];
+	Z = (int*)&tsv_buffer[512];
+	offsets = (int*)&tsv_buffer[1024];
 
 	for(int i = 0; i < nBlood; i++) {
 		bptr = &blood[i];
@@ -3736,9 +3736,9 @@ void S_DrawSmokeSparks() {
 
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
-	XY = (long*)&tsv_buffer[0];
-	Z = (long*)&tsv_buffer[512];
-	offsets = (long*)&tsv_buffer[1024];
+	XY = (int*)&tsv_buffer[0];
+	Z = (int*)&tsv_buffer[512];
+	offsets = (int*)&tsv_buffer[1024];
 	is_mirror = 0;
 
 	for(int i = 0; i < nSmokeSparks; i++) {
@@ -3936,9 +3936,9 @@ void DoUwEffect() {
 	}
 
 	sprite = GetSpriteInfo(currentLevel, GetObjectInfo(currentLevel, DEFAULT_SPRITES)->mesh_index + 10);
-	XY = (long*)&tsv_buffer[0];
-	Z = (long*)&tsv_buffer[512];
-	offsets = (long*)&tsv_buffer[1024];
+	XY = (int*)&tsv_buffer[0];
+	Z = (int*)&tsv_buffer[512];
+	offsets = (int*)&tsv_buffer[1024];
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
 
@@ -4061,8 +4061,8 @@ void DrawLightning() {
 		}
 
 		offsets = (PHD_VECTOR*)&tsv_buffer[0];
-		XY = (long*)&tsv_buffer[1024];
-		Z = (long*)&tsv_buffer[2048];
+		XY = (int*)&tsv_buffer[1024];
+		Z = (int*)&tsv_buffer[2048];
 		CalcLightningSpline(vec, offsets, pL);
 
 		if(vec[0].x > 0x6000 || vec[0].y > 0x6000 || vec[0].z > 0x6000) {
@@ -4099,8 +4099,8 @@ void DrawLightning() {
 			Z += 3;
 		}
 
-		XY = (long*)&tsv_buffer[1024];
-		Z = (long*)&tsv_buffer[2048];
+		XY = (int*)&tsv_buffer[1024];
+		Z = (int*)&tsv_buffer[2048];
 
 		for(int j = 0; j < 3 * pL->Segments - 1; j++) {
 			if(pL->Life < 16) {

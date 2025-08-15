@@ -413,15 +413,15 @@ void DrawChar(int x, int y, unsigned short col, CHARDEF* def) {
 	x2 = x1 + def->w;
 	setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, (int)f_mznear, clipflags);
 
-	top = *(long*)&FontShades[col][2 * def->TopShade];
-	bottom = *(long*)&FontShades[col][2 * def->BottomShade];
+	top = *(int*)&FontShades[col][2 * def->TopShade];
+	bottom = *(int*)&FontShades[col][2 * def->BottomShade];
 	v[0].color = top;
 	v[1].color = top;
 	v[2].color = bottom;
 	v[3].color = bottom;
 
-	top = *(long*)&FontShades[col][(2 * def->TopShade) + 1];
-	bottom = *(long*)&FontShades[col][(2 * def->BottomShade) + 1];
+	top = *(int*)&FontShades[col][(2 * def->TopShade) + 1];
+	bottom = *(int*)&FontShades[col][(2 * def->BottomShade) + 1];
 	v[0].specular = top;
 	v[1].specular = top;
 	v[2].specular = bottom;

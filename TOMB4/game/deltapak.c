@@ -1413,7 +1413,7 @@ int Load_and_Init_Cutseq(int num) {
 	Log(__func__, "Initialising Cut Scene");
 	SetCutPlayed(num);
 
-	headerbuf = (long*)cutseqpakPtr + (2 * num); // cutseq.pak header is offsets then lengths, go to current num
+	headerbuf = (int*)cutseqpakPtr + (2 * num); // cutseq.pak header is offsets then lengths, go to current num
 	Offset = headerbuf[0]; // first long, offset
 	Length = headerbuf[1]; // second long, length
 

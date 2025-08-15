@@ -1,10 +1,10 @@
 
 #include "specific/function_stubs.h"
 #include <windows.h>
-static int int counter, frequency;
+static int counter, frequency;
 
 int S_Sync() {
-	int int PerformanceCount, f;
+	int PerformanceCount, f;
 	int n;
 
 	QueryPerformanceCounter((LARGE_INTEGER*)&PerformanceCount);
@@ -19,7 +19,7 @@ void S_TimeReset() {
 }
 
 int S_TimeInit() {
-	int int pfq;
+	int pfq;
 
 	Log(__func__, "TIME_Init");
 

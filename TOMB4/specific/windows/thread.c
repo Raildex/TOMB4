@@ -3,7 +3,7 @@
 #include <windows.h>
 
 typedef struct THREAD {
-	Uint Win32Handle;
+	UINT Win32Handle;
 	HANDLE ThreadHandle;
 } THREAD;
 
@@ -12,7 +12,7 @@ typedef struct WIN32PAYLOAD {
 	THREADFUNC func;
 } WIN32PAYLOAD;
 
-Uint WINAPI Win32ThreadFunc(void* arg) {
+UINT WINAPI Win32ThreadFunc(void* arg) {
 	WIN32PAYLOAD* payload = (WIN32PAYLOAD*)(arg);
 	int status = payload->func(payload->arg);
 	free(payload);

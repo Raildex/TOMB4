@@ -791,7 +791,7 @@ void ControlSethBlade(short item_number) {
 	short frame;
 
 	item = GetItem(currentLevel, item_number);
-	*(long*)&item->item_flags[0] = 0;
+	*(int*)&item->item_flags[0] = 0;
 
 	if(!TriggerActive(item)) {
 		return;
@@ -811,11 +811,11 @@ void ControlSethBlade(short item_number) {
 			- GetAnim(currentLevel, item->anim_number)->frame_base;
 
 		if(frame && frame <= 6) {
-			*(long*)&item->item_flags[0] = -1;
+			*(int*)&item->item_flags[0] = -1;
 		} else if(frame >= 7 && frame <= 15) {
-			*(long*)&item->item_flags[0] = 448;
+			*(int*)&item->item_flags[0] = 448;
 		} else {
-			*(long*)&item->item_flags[0] = 0;
+			*(int*)&item->item_flags[0] = 0;
 		}
 
 		item->item_flags[3] = 1000;
@@ -893,16 +893,16 @@ void ControlBirdBlade(short item_number) {
 			- GetAnim(currentLevel, item->anim_number)->frame_base;
 
 		if(frame <= 14 || frame >= 31) {
-			*(long*)&item->item_flags[0] = 0;
+			*(int*)&item->item_flags[0] = 0;
 		} else {
-			*(long*)&item->item_flags[0] = 6;
+			*(int*)&item->item_flags[0] = 6;
 		}
 
 		AnimateItem(item);
 	} else {
 		item->frame_number
 			= GetAnim(currentLevel, item->anim_number)->frame_base;
-		*(long*)&item->item_flags[0] = 0;
+		*(int*)&item->item_flags[0] = 0;
 	}
 }
 
@@ -917,7 +917,7 @@ void Control4xFloorRoofBlade(short item_number) {
 			- GetAnim(currentLevel, item->anim_number)->frame_base;
 
 		if(frame <= 5 || frame >= 58 || frame >= 8 && frame <= 54) {
-			*(long*)&item->item_flags[0] = 0;
+			*(int*)&item->item_flags[0] = 0;
 		} else {
 			if(frame > 7) {
 				item->item_flags[3] = 200;
@@ -925,14 +925,14 @@ void Control4xFloorRoofBlade(short item_number) {
 				item->item_flags[3] = 20;
 			}
 
-			*(long*)&item->item_flags[0] = 30;
+			*(int*)&item->item_flags[0] = 30;
 		}
 
 		AnimateItem(item);
 	} else {
 		item->frame_number
 			= GetAnim(currentLevel, item->anim_number)->frame_base;
-		*(long*)&item->item_flags[0] = 0;
+		*(int*)&item->item_flags[0] = 0;
 	}
 }
 
@@ -947,21 +947,21 @@ void ControlSpikeball(short item_number) {
 	if(TriggerActive(item)) {
 		if((frame <= 14 || frame >= 24) && (frame < 138 || frame > 140)) {
 			if(frame < 141) {
-				*(long*)&item->item_flags[0] = 0;
+				*(int*)&item->item_flags[0] = 0;
 			} else {
 				item->item_flags[3] = 50;
-				*(long*)&item->item_flags[0] = 0x7FF800;
+				*(int*)&item->item_flags[0] = 0x7FF800;
 			}
 		} else {
 			item->item_flags[3] = 150;
-			*(long*)&item->item_flags[0] = 0x7FF800;
+			*(int*)&item->item_flags[0] = 0x7FF800;
 		}
 
 		AnimateItem(item);
 	} else {
 		item->frame_number
 			= GetAnim(currentLevel, item->anim_number)->frame_base;
-		*(long*)&item->item_flags[0] = 0;
+		*(int*)&item->item_flags[0] = 0;
 	}
 }
 
@@ -977,7 +977,7 @@ void ControlHammer(short item_number) {
 	item->item_flags[3] = 150;
 
 	if(!TriggerActive(item)) {
-		*(long*)&item->item_flags[0] = 0;
+		*(int*)&item->item_flags[0] = 0;
 		return;
 	}
 
@@ -985,9 +985,9 @@ void ControlHammer(short item_number) {
 
 	if(!item->trigger_flags) {
 		if(frame < 52) {
-			*(long*)&item->item_flags[0] = 0xE0;
+			*(int*)&item->item_flags[0] = 0xE0;
 		} else {
-			*(long*)&item->item_flags[0] = 0;
+			*(int*)&item->item_flags[0] = 0;
 		}
 	} else if(item->current_anim_state == 1 && item->goal_anim_state == 1) {
 		if(item->item_flags[2]) {
@@ -1012,9 +1012,9 @@ void ControlHammer(short item_number) {
 		item->goal_anim_state = 1;
 
 		if(frame < 52) {
-			*(long*)&item->item_flags[0] = 0x7E0;
+			*(int*)&item->item_flags[0] = 0x7E0;
 		} else {
-			*(long*)&item->item_flags[0] = 0;
+			*(int*)&item->item_flags[0] = 0;
 		}
 
 		if(frame == 8) {
@@ -1089,10 +1089,10 @@ void ControlStargate(short item_number) {
 
 	if(TriggerActive(item)) {
 		SoundEffect(SFX_STARGATE_SWIRL, (PHD_VECTOR*)&item->pos, item->room_number, SFX_DEFAULT);
-		*(long*)&item->item_flags[0] = 0x36DB600;
+		*(int*)&item->item_flags[0] = 0x36DB600;
 		AnimateItem(item);
 	} else {
-		*(long*)&item->item_flags[0] = 0;
+		*(int*)&item->item_flags[0] = 0;
 	}
 }
 
@@ -1103,10 +1103,10 @@ void ControlPlough(short item_number) {
 	item->item_flags[3] = 50;
 
 	if(TriggerActive(item)) {
-		*(long*)&item->item_flags[0] = 0x3F000;
+		*(int*)&item->item_flags[0] = 0x3F000;
 		AnimateItem(item);
 	} else {
-		*(long*)&item->item_flags[0] = 0;
+		*(int*)&item->item_flags[0] = 0;
 	}
 }
 
@@ -1120,7 +1120,7 @@ void ControlChain(short item_number) {
 		item->item_flags[3] = 75;
 
 		if(TriggerActive(item)) {
-			*(long*)&item->item_flags[0] = 0x3F000;
+			*(int*)&item->item_flags[0] = 0x3F000;
 			AnimateItem(item);
 			return;
 		}
@@ -1128,13 +1128,13 @@ void ControlChain(short item_number) {
 		item->item_flags[3] = 25;
 
 		if(TriggerActive(item)) {
-			*(long*)&item->item_flags[0] = 0x780;
+			*(int*)&item->item_flags[0] = 0x780;
 			AnimateItem(item);
 			return;
 		}
 	}
 
-	*(long*)&item->item_flags[0] = 0;
+	*(int*)&item->item_flags[0] = 0;
 }
 
 void ControlBurningFloor(short item_number) {

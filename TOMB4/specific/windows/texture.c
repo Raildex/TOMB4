@@ -55,7 +55,7 @@ void ConvertFormat(void** destination, void* source, TEXTURE_FORMAT tfmt, TEXTUR
 	}
 	switch(tfmt) {
 	case b8g8r8a8: {
-		int* dst = (long*)(*destination);
+		int* dst = (int*)(*destination);
 		*(dst++) = RGBA(sr, sg, sb, sa);
 		*destination = dst;
 	}

@@ -832,7 +832,7 @@ void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 				if(!door->Opened) {
 					AddActiveItem(GetItemNum(currentLevel, door_item));
 					door_item->status = ITEM_ACTIVE;
-					*(long*)&door_item->item_flags[2] = door_item->pos.pos.y;
+					*(int*)&door_item->item_flags[2] = door_item->pos.pos.y;
 				}
 			} else {
 				lara.GeneralPtr = item_number;

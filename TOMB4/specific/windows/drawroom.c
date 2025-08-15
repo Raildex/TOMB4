@@ -544,8 +544,8 @@ void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 		r->tris[i].textInfo = data_ptr[3];
 	}
 
-	r->prelight = (long*)calloc(r->nVerts, sizeof(int));
-	r->prelightwater = (long*)calloc(r->nVerts, sizeof(int));
+	r->prelight = (int*)calloc(r->nVerts, sizeof(int));
+	r->prelightwater = (int*)calloc(r->nVerts, sizeof(int));
 	r->watercalc = 0;
 	r->posx = (float)r->x;
 	r->posy = (float)r->y;
@@ -931,7 +931,7 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, int i) 
 				mesh->prelight = 0;
 			} else {
 				mesh->Normals = 0;
-				mesh->prelight = (long*)calloc(mesh->nVerts, sizeof(int));
+				mesh->prelight = (int*)calloc(mesh->nVerts, sizeof(int));
 
 				for(int j = 0; j < mesh->nVerts; j++) {
 					c = 255 - (mesh_ptr[0] >> 5);

@@ -29,11 +29,11 @@ int ZClipper(int n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out) {
 		inZ = f_mznear - pIn->sz;
 		lastZ = f_mznear - last->sz;
 
-		if(((*(long*)&lastZ) | (*(long*)&inZ)) >= 0) {
+		if(((*(int*)&lastZ) | (*(int*)&inZ)) >= 0) {
 			continue;
 		}
 
-		if(((*(long*)&lastZ) ^ (*(long*)&inZ)) < 0) {
+		if(((*(int*)&lastZ) ^ (*(int*)&inZ)) < 0) {
 			dz = inZ / (last->sz - pIn->sz);
 			pOut->sx = ((last->tx - pIn->tx) * dz + pIn->tx) * f_mperspoznear + f_centerx;
 			pOut->sy = ((last->ty - pIn->ty) * dz + pIn->ty) * f_mperspoznear + f_centery;
@@ -85,7 +85,7 @@ int ZClipper(int n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out) {
 			nPoints++;
 		}
 
-		if((*(long*)&inZ) < 0) {
+		if((*(int*)&inZ) < 0) {
 			pOut->sx = pIn->sx;
 			pOut->sy = pIn->sy;
 			pOut->rhw = pIn->rhw;

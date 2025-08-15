@@ -124,13 +124,13 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 	int size, num, slot;
 	static int num_meshes, num_anims;
 
-	size = *(long*)*data;
+	size = *(int*)*data;
 	*data += sizeof(int);
 	lvl->mesh_base = (short*)calloc(size, sizeof(short));
 	memcpy(lvl->mesh_base, *data, size * sizeof(short));
 	*data += size * sizeof(short);
 
-	size = *(long*)*data;
+	size = *(int*)*data;
 	*data += sizeof(int);
 	lvl->meshes = (short**)calloc(2 * size, sizeof(short*));
 	memcpy(lvl->meshes, *data, size * sizeof(short*));
@@ -142,37 +142,37 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 
 	num_meshes = size;
 
-	num_anims = *(long*)*data;
+	num_anims = *(int*)*data;
 	*data += sizeof(int);
 	lvl->anims = (ANIM_STRUCT*)calloc(num_anims, sizeof(ANIM_STRUCT));
 	memcpy(lvl->anims, *data, sizeof(ANIM_STRUCT) * num_anims);
 	*data += sizeof(ANIM_STRUCT) * num_anims;
 
-	size = *(long*)*data;
+	size = *(int*)*data;
 	*data += sizeof(int);
 	lvl->changes = (CHANGE_STRUCT*)calloc(size, sizeof(CHANGE_STRUCT));
 	memcpy(lvl->changes, *data, sizeof(CHANGE_STRUCT) * size);
 	*data += sizeof(CHANGE_STRUCT) * size;
 
-	size = *(long*)*data;
+	size = *(int*)*data;
 	*data += sizeof(int);
 	lvl->ranges = (RANGE_STRUCT*)calloc(size, sizeof(RANGE_STRUCT));
 	memcpy(lvl->ranges, *data, sizeof(RANGE_STRUCT) * size);
 	*data += sizeof(RANGE_STRUCT) * size;
 
-	size = *(long*)*data;
+	size = *(int*)*data;
 	*data += sizeof(int);
 	lvl->commands = (short*)calloc(size, sizeof(short));
 	memcpy(lvl->commands, *data, sizeof(short) * size);
 	*data += sizeof(short) * size;
 
-	size = *(long*)*data;
+	size = *(int*)*data;
 	*data += sizeof(int);
-	lvl->bones = (long*)calloc(size, sizeof(int));
+	lvl->bones = (int*)calloc(size, sizeof(int));
 	memcpy(lvl->bones, *data, sizeof(int) * size);
 	*data += sizeof(int) * size;
 
-	size = *(long*)*data;
+	size = *(int*)*data;
 	*data += sizeof(int);
 	lvl->frames = (short*)calloc(size, sizeof(short));
 	memcpy(lvl->frames, *data, sizeof(short) * size);
@@ -182,11 +182,11 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 		lvl->anims[i].frame_ptr = (short*)((uintptr_t)lvl->anims[i].frame_ptr + (uintptr_t)lvl->frames);
 	}
 
-	num = *(long*)*data;
+	num = *(int*)*data;
 	*data += sizeof(int);
 
 	for(int i = 0; i < num; i++) {
-		slot = *(long*)*data;
+		slot = *(int*)*data;
 		*data += sizeof(int);
 		obj = GetObjectInfo(currentLevel, slot);
 
@@ -196,7 +196,7 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 		obj->mesh_index = *(short*)*data;
 		*data += sizeof(short);
 
-		obj->bone_index = *(long*)*data;
+		obj->bone_index = *(int*)*data;
 		*data += sizeof(int);
 
 		obj->frame_base = (short*)(*(short**)*data);
@@ -227,11 +227,11 @@ char LoadObjects(char** data, LEVEL_INFO* lvl) {
 
 	InitialiseObjects();
 
-	num = *(long*)*data; // statics
+	num = *(int*)*data; // statics
 	*data += sizeof(int);
 
 	for(int i = 0; i < num; i++) {
-		slot = *(long*)*data;
+		slot = *(int*)*data;
 		*data += sizeof(int);
 		stat = GetStaticObject(currentLevel, slot);
 
@@ -347,21 +347,21 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 	for(int i = 0; i < lvl->nRooms; i++) {
 		r = GetRoom(currentLevel, i);
 
-		r->x = *(long*)*data;
+		r->x = *(int*)*data;
 		*data += sizeof(int);
 
 		r->y = 0;
 
-		r->z = *(long*)*data;
+		r->z = *(int*)*data;
 		*data += sizeof(int);
 
-		r->minfloor = *(long*)*data;
+		r->minfloor = *(int*)*data;
 		*data += sizeof(int);
 
-		r->maxceiling = *(long*)*data;
+		r->maxceiling = *(int*)*data;
 		*data += sizeof(int);
 
-		size = *(long*)*data;
+		size = *(int*)*data;
 		*data += sizeof(int);
 		rData = (short*)calloc(size, sizeof(short));
 		memcpy(rData, *data, size * sizeof(short));
@@ -390,7 +390,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 		memcpy(r->floor, *data, size * sizeof(FLOOR_INFO));
 		*data += size * sizeof(FLOOR_INFO);
 
-		r->ambient = *(long*)*data;
+		r->ambient = *(int*)*data;
 		*data += sizeof(int);
 
 		r->num_lights = *(short*)*data;
@@ -448,7 +448,7 @@ char LoadRooms(char** data, LEVEL_INFO* lvl) {
 	}
 
 	BuildOutsideTable(lvl);
-	size = *(long*)*data;
+	size = *(int*)*data;
 	*data += sizeof(int);
 	lvl->floor_data = (short*)calloc(size, sizeof(short));
 	memcpy(lvl->floor_data, *data, 2 * size);
@@ -521,7 +521,7 @@ char LoadItems(char** data, LEVEL_INFO* lvl) {
 	int num_items, x, y, z;
 
 	Log(__func__, "LoadItems");
-	num_items = *(long*)*data;
+	num_items = *(int*)*data;
 	*data += 4;
 
 	if(!num_items) {
@@ -540,13 +540,13 @@ char LoadItems(char** data, LEVEL_INFO* lvl) {
 		item->room_number = *(short*)*data;
 		*data += sizeof(short);
 
-		item->pos.pos.x = *(long*)*data;
+		item->pos.pos.x = *(int*)*data;
 		*data += sizeof(int);
 
-		item->pos.pos.y = *(long*)*data;
+		item->pos.pos.y = *(int*)*data;
 		*data += sizeof(int);
 
-		item->pos.pos.z = *(long*)*data;
+		item->pos.pos.z = *(int*)*data;
 		*data += sizeof(int);
 
 		item->pos.y_rot = *(short*)*data;
@@ -610,14 +610,14 @@ char LoadBoxes(char** data, LEVEL_INFO* lvl) {
 	int size;
 
 	Log(__func__, "LoadBoxes");
-	lvl->num_boxes = *(long*)*data;
+	lvl->num_boxes = *(int*)*data;
 	*data += sizeof(int);
 
 	lvl->boxes = (BOX_INFO*)calloc(lvl->num_boxes, sizeof(BOX_INFO));
 	memcpy(lvl->boxes, *data, sizeof(BOX_INFO) * lvl->num_boxes);
 	*data += sizeof(BOX_INFO) * lvl->num_boxes;
 
-	size = *(long*)*data;
+	size = *(int*)*data;
 	*data += sizeof(int);
 	lvl->overlaps = (unsigned short*)calloc(size, sizeof(unsigned short));
 	memcpy(lvl->overlaps, *data, sizeof(unsigned short) * size);
@@ -674,7 +674,7 @@ char LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl) {
 	lvl->sample_lut = (short*)calloc(sample_lookuptable_size, sizeof(short));
 	memcpy(lvl->sample_lut, *data, sample_lookuptable_size * sizeof(short));
 	*data += sample_lookuptable_size * sizeof(short);
-	lvl->num_sample_infos = *(long*)*data;
+	lvl->num_sample_infos = *(int*)*data;
 	*data += sizeof(int);
 	Log(__func__, "Number Of Sample Infos %d", lvl->num_sample_infos);
 
@@ -686,7 +686,7 @@ char LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl) {
 	lvl->sample_infos = (SAMPLE_INFO*)calloc(lvl->num_sample_infos, sizeof(SAMPLE_INFO));
 	memcpy(lvl->sample_infos, *data, sizeof(SAMPLE_INFO) * lvl->num_sample_infos);
 	*data += sizeof(SAMPLE_INFO) * lvl->num_sample_infos;
-	lvl->num_samples = *(long*)*data;
+	lvl->num_samples = *(int*)*data;
 	*data += sizeof(int);
 
 	if(!lvl->num_samples) {
@@ -863,7 +863,7 @@ char LoadTextureInfos(char** data, LEVEL_INFO* lvl) {
 	Log(__func__, "LoadTextureInfos");
 	*data += 3;
 
-	val = *(long*)*data;
+	val = *(int*)*data;
 	*data += sizeof(int);
 	Log(__func__, "Texture Infos : %d", val);
 	lvl->textinfo = (TEXTURESTRUCT*)calloc(val, sizeof(TEXTURESTRUCT));
@@ -945,7 +945,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	}
 	lvl->nTextures = count;
 	for(int i = 0; i < RTPages + OTPages; ++i) {
-		int* src = (long*)Uncompressed32Data + i * ((256 * 256));
+		int* src = (int*)Uncompressed32Data + i * ((256 * 256));
 		TEXTURE* tex = &lvl->Textures[i + 1];
 		tex->width = (unsigned short)App.TextureSize;
 		tex->height = (unsigned short)App.TextureSize;
@@ -958,7 +958,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	Log(__func__, "Create bump maps");
 	int offset = RTPages + OTPages;
 	for(int i = 0; i < BTPages / 2; ++i) {
-		int* src = (long*)Uncompressed32Data + (i + offset) * ((256 * 256));
+		int* src = (int*)Uncompressed32Data + (i + offset) * ((256 * 256));
 		TEXTURE* tex = &lvl->Textures[offset + i + 1];
 		tex->width = (unsigned short)App.TextureSize;
 		tex->height = (unsigned short)App.TextureSize;
@@ -972,7 +972,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	}
 	offset = RTPages + OTPages + (BTPages / 2);
 	for(int i = 0; i < BTPages / 2; ++i) {
-		int* src = (long*)Uncompressed32Data + (i + offset) * ((256 * 256));
+		int* src = (int*)Uncompressed32Data + (i + offset) * ((256 * 256));
 		TEXTURE* tex = &lvl->Textures[offset + i + 1];
 		tex->width = (unsigned short)App.BumpMapSize;
 		tex->height = (unsigned short)App.BumpMapSize;
@@ -990,14 +990,14 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		char* pComp;
 		char* logoCompressed = NULL;
 		int size = LoadFile("data/uslogo.pak", &logoCompressed);
-		int uncompSize = *(long*)logoCompressed; // logo files contain uncompSize, compSize, compData
+		int uncompSize = *(int*)logoCompressed; // logo files contain uncompSize, compSize, compData
 		pComp = (char*)calloc(uncompSize, 1);
 		if(!S_Decompress(pComp, logoCompressed + 4, size - 4, uncompSize)) {
 			Log(__func__, "Error decompressing logo! Filesize: %d Decompression size: %d", size, uncompSize);
 		}
 		for(int i = 0; i < 2; ++i) {
 			for(int i = 0; i < 2; ++i) {
-				int* data = (long*)calloc(uncompSize, 1);
+				int* data = (int*)calloc(uncompSize, 1);
 				char* source = pComp + (i * 768);
 				int* d = data;
 				for(int y = 0; y < 256; y++) {
@@ -1049,7 +1049,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		return 0;
 	}
 	for(int i = 0; i < 2; i++) {
-		int* src = (long*)miscUncompressed32Data + (i) * ((256 * 256));
+		int* src = (int*)miscUncompressed32Data + (i) * ((256 * 256));
 		TEXTURE* tex = &lvl->Textures[i + offset + 1];
 		tex->width = 256;
 		tex->height = 256;
@@ -1094,7 +1094,7 @@ char LoadSprites(char** data, LEVEL_INFO* lvl) {
 
 	Log(__func__, "LoadSprites");
 	*data += 3;
-	num_sprites = *(long*)*data;
+	num_sprites = *(int*)*data;
 	*data += sizeof(int);
 	lvl->spriteinfo = (SPRITESTRUCT*)calloc(num_sprites, sizeof(SPRITESTRUCT));
 
@@ -1117,7 +1117,7 @@ char LoadSprites(char** data, LEVEL_INFO* lvl) {
 		sptr->tpage++;
 	}
 
-	num_slots = *(long*)*data;
+	num_slots = *(int*)*data;
 	*data += sizeof(int);
 
 	if(num_slots <= 0) {
@@ -1125,7 +1125,7 @@ char LoadSprites(char** data, LEVEL_INFO* lvl) {
 	}
 
 	for(int i = 0; i < num_slots; i++) {
-		slot = *(long*)*data;
+		slot = *(int*)*data;
 		*data += sizeof(int);
 
 		if(slot >= NUMBER_OBJECTS) {
@@ -1155,7 +1155,7 @@ SPRITESTRUCT* GetSpriteInfo(LEVEL_INFO* lvl, int num) {
 char LoadAIInfo(char** data, LEVEL_INFO* lvl) {
 	int num_ai;
 
-	num_ai = *(long*)*data;
+	num_ai = *(int*)*data;
 	*data += sizeof(int);
 
 	if(num_ai) {
@@ -1179,7 +1179,7 @@ int GetNumAIObjects(LEVEL_INFO* lvl) {
 char LoadAnimatedTextures(char** data, LEVEL_INFO* lvl) {
 	int num_anim_ranges;
 
-	num_anim_ranges = *(long*)*data;
+	num_anim_ranges = *(int*)*data;
 	*data += sizeof(int);
 	lvl->aranges = (short*)calloc(num_anim_ranges, sizeof(short));
 	memcpy(lvl->aranges, *data, num_anim_ranges * 2);
@@ -1219,7 +1219,7 @@ int GetNumAnimUVRanges(LEVEL_INFO* lvl) {
 
 char LoadCameras(char** data, LEVEL_INFO* lvl) {
 	Log(__func__, "LoadCameras");
-	lvl->number_cameras = *(long*)*data;
+	lvl->number_cameras = *(int*)*data;
 	*data += sizeof(int);
 
 	if(lvl->number_cameras) {
@@ -1251,7 +1251,7 @@ int GetNumSpotcams(LEVEL_INFO* lvl) {
 
 char LoadSoundEffects(char** data, LEVEL_INFO* lvl) {
 	Log(__func__, "LoadSoundEffects");
-	lvl->number_sound_effects = *(long*)*data;
+	lvl->number_sound_effects = *(int*)*data;
 	*data += sizeof(int);
 	Log(__func__, "Number of SFX %d", lvl->number_sound_effects);
 

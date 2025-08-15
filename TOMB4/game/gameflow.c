@@ -624,9 +624,9 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 }
 
 int TitleOptions() {
-	static int int selection = 1;
-	static int int selection_bak = 0;
-	int int flag, sel;
+	static int selection = 1;
+	static int selection_bak = 0;
+	int flag, sel;
 	int nLevels, nFirst, lp;
 	int ret, n, load, y;
 	static int load_or_new;

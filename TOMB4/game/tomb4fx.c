@@ -186,7 +186,7 @@ LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation,
 	}
 
 	lptr->Flags = flags;
-	*(long*)&lptr->r = rgb;
+	*(int*)&lptr->r = rgb;
 	lptr->Segments = segments;
 	lptr->Rand = variation;
 	lptr->Size = size;
@@ -1729,7 +1729,7 @@ void UpdateShockwaves() {
 
 			if(sw->y > lara_item->pos.pos.y + bounds[2] && sw->y < bounds[3] + lara_item->pos.pos.y + 256 && dist > sw->InnerRad && dist < sw->OuterRad) {
 				dir = (short)phd_atan(dz, dx);
-				TriggerShockwaveHitEffect(lara_item->pos.pos.x, sw->y, lara_item->pos.pos.z, *(long*)&sw->r, dir, sw->Speed);
+				TriggerShockwaveHitEffect(lara_item->pos.pos.x, sw->y, lara_item->pos.pos.z, *(int*)&sw->r, dir, sw->Speed);
 				lara_item->hit_points -= sw->Speed >> (((sw->Flags & 2) != 0) + 2);
 			} else {
 				sw->Temp = 0;
@@ -1947,9 +1947,9 @@ void S_DrawSparks() {
 
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.pos.x, lara_item->pos.pos.y, lara_item->pos.pos.z);
-	XY = (long*)&tsv_buffer[0];
-	Z = (long*)&tsv_buffer[512];
-	offsets = (long*)&tsv_buffer[1024];
+	XY = (int*)&tsv_buffer[0];
+	Z = (int*)&tsv_buffer[512];
+	offsets = (int*)&tsv_buffer[1024];
 
 	for(int i = 0; i < nSpark; i++) {
 		sptr = &spark[i];
