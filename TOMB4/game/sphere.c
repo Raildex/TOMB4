@@ -19,9 +19,9 @@ SPHERE Slist[34];
 char GotLaraSpheres;
 
 static SPHERE LaraSpheres[15];
-static long NumLaraSpheres;
+static int NumLaraSpheres;
 
-long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
+int GetSpheres(ITEM_INFO* item, SPHERE* ptr, int WorldSpace) {
 	OBJECT_INFO* obj;
 	short** meshpp;
 	long* bone;
@@ -29,7 +29,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 	short* frame;
 	short* rot;
 	short* extra_rot;
-	long x, y, z, poppush;
+	int x, y, z, poppush;
 
 	if(!item) {
 		return 0;
@@ -66,9 +66,9 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 		phd_TranslateRel(meshp[0], meshp[1], meshp[2]);
 	}
 
-	ptr->x = x + (long)mMXPtr[M03];
-	ptr->y = y + (long)mMXPtr[M13];
-	ptr->z = z + (long)mMXPtr[M23];
+	ptr->x = x + (int)mMXPtr[M03];
+	ptr->y = y + (int)mMXPtr[M13];
+	ptr->z = z + (int)mMXPtr[M23];
 	ptr->r = meshp[3];
 	ptr++;
 	phd_PopMatrix();
@@ -110,9 +110,9 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 			phd_TranslateRel(meshp[0], meshp[1], meshp[2]);
 		}
 
-		ptr->x = x + (long)mMXPtr[M03];
-		ptr->y = y + (long)mMXPtr[M13];
-		ptr->z = z + (long)mMXPtr[M23];
+		ptr->x = x + (int)mMXPtr[M03];
+		ptr->y = y + (int)mMXPtr[M13];
+		ptr->z = z + (int)mMXPtr[M23];
 		ptr->r = meshp[3];
 		ptr++;
 		phd_PopMatrix();
@@ -125,13 +125,13 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace) {
 	return obj->nmeshes;
 }
 
-long TestCollision(ITEM_INFO* item, ITEM_INFO* l) {
+int TestCollision(ITEM_INFO* item, ITEM_INFO* l) {
 	SPHERE* itemSpheres;
 	SPHERE* laraSpheres;
 	PHD_VECTOR ip;
 	PHD_VECTOR lp;
-	unsigned long touch_bits;
-	long nItemSpheres, nLaraSpheres, ir, lr;
+	unsigned int touch_bits;
+	int nItemSpheres, nLaraSpheres, ir, lr;
 
 	touch_bits = 0;
 	nItemSpheres = GetSpheres(item, Slist, 1);
@@ -183,14 +183,14 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l) {
 	return touch_bits;
 }
 
-void InitInterpolate2(long frac, long rate) {
+void InitInterpolate2(int frac, int rate) {
 	IM_frac = frac;
 	IM_rate = rate;
 	mIMptr = &mIMstack[384];
 	memcpy(mIMptr, mMXPtr, 48);
 }
 
-void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
+void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, int joint) {
 	OBJECT_INFO* obj;
 	float* mMx;
 	float* mIMx;
@@ -200,7 +200,7 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 	short* extra_rotation;
 	short* rot;
 	short* rot2;
-	long frac, rate, poppush;
+	int frac, rate, poppush;
 
 	mMx = mMXPtr;
 	mIMx = mIMptr;
@@ -299,15 +299,15 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint) {
 		phd_TranslateRel(pos->x, pos->y, pos->z);
 	}
 
-	pos->x = item->pos.pos.x + (long)mMXPtr[M03];
-	pos->y = item->pos.pos.y + (long)mMXPtr[M13];
-	pos->z = item->pos.pos.z + (long)mMXPtr[M23];
+	pos->x = item->pos.pos.x + (int)mMXPtr[M03];
+	pos->y = item->pos.pos.y + (int)mMXPtr[M13];
+	pos->z = item->pos.pos.z + (int)mMXPtr[M23];
 	mMXPtr = mMx;
 	mIMptr = mIMx;
 	phd_mxptr = iMx;
 }
 
-void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
+void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, int joint) {
 	OBJECT_INFO* obj;
 	float* mMx;
 	float* mIMx;
@@ -317,7 +317,7 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 	short* extra_rotation;
 	short* rot;
 	short* rot2;
-	long frac, rate, poppush;
+	int frac, rate, poppush;
 
 	mMx = mMXPtr;
 	mIMx = mIMptr;
@@ -419,9 +419,9 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint) {
 	vec->y_rot = (short)atan2(mMXPtr[M10], mMXPtr[M00]) * 16384;
 	vec->x_rot = (short)asin(-mMXPtr[M20]) * 16384;
 	vec->z_rot = (short)atan2(-mMXPtr[M21], mMXPtr[M22]) * 16384;
-	vec->pos.x = item->pos.pos.x + (long)mMXPtr[M03];
-	vec->pos.y = item->pos.pos.y + (long)mMXPtr[M13];
-	vec->pos.z = item->pos.pos.z + (long)mMXPtr[M23];
+	vec->pos.x = item->pos.pos.x + (int)mMXPtr[M03];
+	vec->pos.y = item->pos.pos.y + (int)mMXPtr[M13];
+	vec->pos.z = item->pos.pos.z + (int)mMXPtr[M23];
 	mMXPtr = mMx;
 	mIMptr = mIMx;
 	phd_mxptr = iMx;

@@ -7,7 +7,7 @@ void DrawTrainFloor();
 void InitialiseTrainJeep(short item_number);
 void TrainJeepControl(short item_number);
 
-extern long trainmappos;
+extern int trainmappos;
 
 
 #endif// TOMB4_GAME_TRAIN_H

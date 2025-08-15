@@ -1,19 +1,19 @@
 #ifndef TOMB4_GAME_SPHERE_H
 #define TOMB4_GAME_SPHERE_H
 typedef struct SPHERE {
-	long x;
-	long y;
-	long z;
-	long r;
+	int x;
+	int y;
+	int z;
+	int r;
 } SPHERE;
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct PHD_VECTOR PHD_VECTOR;
 typedef struct PHD_3DPOS PHD_3DPOS;
-long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace);
-long TestCollision(ITEM_INFO* item, ITEM_INFO* l);
-void InitInterpolate2(long frac, long rate);
-void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint);
-void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, long joint);
+int GetSpheres(ITEM_INFO* item, SPHERE* ptr, int WorldSpace);
+int TestCollision(ITEM_INFO* item, ITEM_INFO* l);
+void InitInterpolate2(int frac, int rate);
+void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, int joint);
+void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, int joint);
 
 extern SPHERE Slist[34];
 extern char GotLaraSpheres;

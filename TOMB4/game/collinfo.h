@@ -4,28 +4,28 @@
 #include "game/heighttypes.h"
 #include "game/phdvector.h"
 typedef struct COLL_INFO {
-	long mid_floor;
-	long mid_ceiling;
+	int mid_floor;
+	int mid_ceiling;
 	height_types mid_type;
-	long front_floor;
-	long front_ceiling;
+	int front_floor;
+	int front_ceiling;
 	height_types front_type;
-	long left_floor;
-	long left_ceiling;
+	int left_floor;
+	int left_ceiling;
 	height_types left_type;
-	long right_floor;
-	long right_ceiling;
+	int right_floor;
+	int right_ceiling;
 	height_types right_type;
-	long left_floor2;
-	long left_ceiling2;
+	int left_floor2;
+	int left_ceiling2;
 	height_types left_type2;
-	long right_floor2;
-	long right_ceiling2;
+	int right_floor2;
+	int right_ceiling2;
 	height_types right_type2;
-	long radius;
-	long bad_pos;
-	long bad_neg;
-	long bad_ceiling;
+	int radius;
+	int bad_pos;
+	int bad_neg;
+	int bad_ceiling;
 	PHD_VECTOR shift;
 	PHD_VECTOR old;
 	short old_anim_state;

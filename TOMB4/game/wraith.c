@@ -48,7 +48,7 @@ void InitialiseWraith(short item_number) {
 	}
 }
 
-void TriggerWraithFlame(long x, long y, long z, short xv, short yv, short zv, long objnum) {
+void TriggerWraithFlame(int x, int y, int z, short xv, short yv, short zv, int objnum) {
 	SPARKS* sptr;
 	unsigned char col;
 
@@ -100,10 +100,10 @@ void TriggerWraithFlame(long x, long y, long z, short xv, short yv, short zv, lo
 	sptr->sSize = sptr->Size;
 }
 
-void TriggerWraithEffect(long x, long y, long z, short vel, long objnum) {
+void TriggerWraithEffect(int x, int y, int z, short vel, int objnum) {
 	SPARKS* sptr;
-	unsigned long scol, dcol;
-	long rad, ang;
+	unsigned int scol, dcol;
+	int rad, ang;
 	unsigned char sr, sg, sb, dr, dg, db, col;
 
 	if(objnum == WRAITH1) {
@@ -168,9 +168,9 @@ void WraithControl(short item_number) {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	WRAITH_STRUCT* wraith;
-	long x, y, z, dx, dy, dz, dist, oob, h, c;
+	int x, y, z, dx, dy, dz, dist, oob, h, c;
 	short rotY, rotX, speed, room_number;
 
 	item = GetItem(currentLevel, item_number);

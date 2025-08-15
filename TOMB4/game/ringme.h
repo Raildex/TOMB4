@@ -3,9 +3,9 @@
 #include "game/objlist.h"
 typedef struct RINGME {
 	OBJLIST current_object_list[119];
-	long ringactive;
-	long objlistmovement;
-	long curobjinlist;
-	long numobjectsinlist;
+	int ringactive;
+	int objlistmovement;
+	int curobjinlist;
+	int numobjectsinlist;
 } RINGME;
 #endif// TOMB4_GAME_RINGME_H

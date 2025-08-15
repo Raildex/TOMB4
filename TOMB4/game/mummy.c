@@ -46,7 +46,7 @@ void MummyControl(short item_number) {
 	ITEM_INFO* item;
 	CREATURE_INFO* mummy;
 	AI_INFO info;
-	long stop;
+	int stop;
 	short angle, head, torso_x, torso_y;
 
 	if(!CreatureActive(item_number)) {

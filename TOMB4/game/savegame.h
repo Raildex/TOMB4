@@ -1,21 +1,21 @@
 #ifndef TOMB4_GAME_SAVEGAME_H
 #define TOMB4_GAME_SAVEGAME_H
 typedef struct SAVEGAME_INFO SAVEGAME_INFO;
-long CheckSumValid(char* buffer);
-void sgInitialiseHub(long dont_save_lara);
+int CheckSumValid(char* buffer);
+void sgInitialiseHub(int dont_save_lara);
 void SaveLaraData();
-void WriteSG(void* pointer, long size);
-void ReadSG(void* pointer, long size);
-void SaveHubData(long index);
-void RestoreLaraData(long FullSave);
+void WriteSG(void* pointer, int size);
+void ReadSG(void* pointer, int size);
+void SaveHubData(int index);
+void RestoreLaraData(int FullSave);
 void sgRestoreLevel();
 void CreateCheckSum();
 void sgSaveLevel();
 void sgSaveGame();
 void sgRestoreGame();
-long OpenSaveGame(unsigned char current_level, long saving);
-void SaveLevelData(long FullSave);
-void RestoreLevelData(long FullSave);
+int OpenSaveGame(unsigned char current_level, int saving);
+void SaveLevelData(int FullSave);
+void RestoreLevelData(int FullSave);
 
 extern SAVEGAME_INFO savegame;
 

@@ -257,8 +257,8 @@ void LaraSurface(ITEM_INFO* item, COLL_INFO* coll) {
 	TestTriggers(coll->trigger, 0, 0);
 }
 
-long LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll) {
-	long hdif;
+int LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll) {
+	int hdif;
 	short angle;
 
 	if(coll->coll_type != CT_FRONT || !(S_IsActionDown(inputImpl, IN_ACTION)) || abs(coll->left_floor2 - coll->right_floor2) >= 60) {
@@ -336,7 +336,7 @@ long LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll) {
 	return 1;
 }
 
-long LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll) {
+int LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll) {
 	if(coll->coll_type == CT_FRONT || coll->mid_type == BIG_SLOPE || coll->mid_type == DIAGONAL || coll->mid_floor >= 0) {
 		return 0;
 	}

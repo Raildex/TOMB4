@@ -90,15 +90,15 @@ MESH_INFO* SmashedMesh[16];
 short SmashedMeshRoom[16];
 short SmashedMeshCount = 0;
 
-long flipmap[10];
-long flip_stats[10];
-long flip_status;
-long flipeffect = -1;
-long fliptimer = 0;
+int flipmap[10];
+int flip_stats[10];
+int flip_status;
+int flipeffect = -1;
+int fliptimer = 0;
 
 short* trigger_index;
 
-long InItemControlLoop = 0;
+int InItemControlLoop = 0;
 short ItemNewRooms[256][2];
 short ItemNewRoomNo = 0;
 
@@ -106,15 +106,15 @@ unsigned char CurrentAtmosphere;
 unsigned char IsAtmospherePlaying;
 char cd_flags[128];
 
-unsigned long FmvSceneTriggered;
-unsigned long CutSceneTriggered;
-long SetDebounce;
-long framecount = 0;
-long reset_flag = 0;
-long WeaponDelay = 0;
-long LaserSightX;
-long LaserSightY;
-long LaserSightZ;
+unsigned int FmvSceneTriggered;
+unsigned int CutSceneTriggered;
+int SetDebounce;
+int framecount = 0;
+int reset_flag = 0;
+int WeaponDelay = 0;
+int LaserSightX;
+int LaserSightY;
+int LaserSightZ;
 unsigned short GlobalCounter = 0;
 short XSoff1;
 short XSoff2;
@@ -129,18 +129,18 @@ char LaserSightActive = 0;
 char DeathMenuActive;
 
 static PHD_VECTOR ClosestCoord;
-static long ClosestItem;
-static long ClosestDist;
+static int ClosestItem;
+static int ClosestDist;
 
-static long number_los_rooms = 0;
+static int number_los_rooms = 0;
 static short los_rooms[20];
 
 static short cdtrack = -1;
 
 SHATTER_ITEM ShatterItem;
 
-static long S_Death() {
-	long selection, menu, ret;
+static int S_Death() {
+	int selection, menu, ret;
 
 	CreateMonoScreen();
 	selection = 0;
@@ -241,12 +241,12 @@ void KillMoveItems() {
 }
 
 
-long ControlPhase(long nframes, long demo_mode) {
+int ControlPhase(int nframes, int demo_mode) {
 	ITEM_INFO* item;
 	FX_INFO* fx;
 	FLOOR_INFO* floor;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	MESH_INFO* mesh;
 	short item_num, nex, fx_num;
 	S_HandleMessages();
@@ -571,7 +571,7 @@ void AddRoomFlipItems(ROOM_INFO* r) {
 	}
 }
 
-void FlipMap(long FlipNumber) {
+void FlipMap(int FlipNumber) {
 	ROOM_INFO* r;
 	ROOM_INFO* flipped;
 	CREATURE_INFO* cinfo;
@@ -652,10 +652,10 @@ void RefreshCamera(short type, short* data) {
 }
 
 
-void TestTriggers(short* data, long heavy, long HeavyFlags) {
+void TestTriggers(short* data, int heavy, int HeavyFlags) {
 	ITEM_INFO* item;
 	ITEM_INFO* camera_item;
-	long switch_off, flip, flip_available, neweffect, key, quad;
+	int switch_off, flip, flip_available, neweffect, key, quad;
 	short camera_flags, camera_timer, type, trigger, value, flags, state;
 	unsigned char HeavyTriggered;
 	char timer;
@@ -1158,7 +1158,7 @@ short GetDoor(FLOOR_INFO* floor) {
 	return 255;
 }
 
-long CheckNoColFloorTriangle(FLOOR_INFO* floor, long x, long z) {
+int CheckNoColFloorTriangle(FLOOR_INFO* floor, int x, int z) {
 	short type;
 
 	if(!floor->index) {
@@ -1211,7 +1211,7 @@ long CheckNoColFloorTriangle(FLOOR_INFO* floor, long x, long z) {
 	return 0;
 }
 
-long CheckNoColCeilingTriangle(FLOOR_INFO* floor, long x, long z) {
+int CheckNoColCeilingTriangle(FLOOR_INFO* floor, int x, int z) {
 	short* data;
 	short type;
 
@@ -1274,10 +1274,10 @@ long CheckNoColCeilingTriangle(FLOOR_INFO* floor, long x, long z) {
 	return 0;
 }
 
-FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
+FLOOR_INFO* GetFloor(int x, int y, int z, short* room_number) {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
-	long x_floor, y_floor;
+	int x_floor, y_floor;
 	short door;
 
 	r = GetRoom(currentLevel, *room_number);
@@ -1360,10 +1360,10 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number) {
 	return floor;
 }
 
-long GetWaterHeight(long x, long y, long z, short room_number) {
+int GetWaterHeight(int x, int y, int z, short room_number) {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
-	long x_floor, y_floor;
+	int x_floor, y_floor;
 	short data;
 
 	r = GetRoom(currentLevel, room_number);
@@ -1438,11 +1438,11 @@ long GetWaterHeight(long x, long y, long z, short room_number) {
 	return NO_HEIGHT;
 }
 
-long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject) {
+int GetHeight(FLOOR_INFO* floor, int x, int y, int z, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	ITEM_INFO* item;
 	ROOM_INFO* r;
 	short* data;
-	long height;
+	int height;
 	unsigned short trigger;
 	short type, dx, dz, xoff, yoff, tilt, hadj, tilt0, tilt1, tilt2, tilt3;
 
@@ -1654,11 +1654,11 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z, height_types* ht, long
 	return height;
 }
 
-long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
+int GetCeiling(FLOOR_INFO* floor, int x, int y, int z) {
 	ITEM_INFO* item;
 	ROOM_INFO* r;
 	FLOOR_INFO* f;
-	long xoff, yoff, height, h1, h2;
+	int xoff, yoff, height, h1, h2;
 	short *data, type, trigger, dx, dz, t0, t1, t2, t3, hadj, ended;
 
 	f = floor;
@@ -1847,7 +1847,7 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z) {
 	return height;
 }
 
-void AlterFloorHeight(ITEM_INFO* item, long height) {
+void AlterFloorHeight(ITEM_INFO* item, int height) {
 	FLOOR_INFO* floor;
 	FLOOR_INFO* ceiling;
 	short room_num;
@@ -1876,7 +1876,7 @@ void AlterFloorHeight(ITEM_INFO* item, long height) {
 }
 
 void TranslateItem(ITEM_INFO* item, short x, short y, short z) {
-	long s, c;
+	int s, c;
 
 	c = phd_cos(item->pos.y_rot);
 	s = phd_sin(item->pos.y_rot);
@@ -1885,7 +1885,7 @@ void TranslateItem(ITEM_INFO* item, short x, short y, short z) {
 	item->pos.pos.z += (z * c - x * s) >> W2V_SHIFT;
 }
 
-long GetChange(ITEM_INFO* item, ANIM_STRUCT* anim) {
+int GetChange(ITEM_INFO* item, ANIM_STRUCT* anim) {
 	CHANGE_STRUCT* change;
 	RANGE_STRUCT* range;
 
@@ -1936,8 +1936,8 @@ void UpdateSky() {
 
 
 
-long TriggerActive(ITEM_INFO* item) {
-	long reverse;
+int TriggerActive(ITEM_INFO* item) {
+	int reverse;
 
 	reverse = (item->flags & IFL_REVERSE) ? 1 : 0;
 
@@ -1971,7 +1971,7 @@ long TriggerActive(ITEM_INFO* item) {
 }
 
 void TriggerNormalCDTrack(short value, short flags, short type) {
-	long code;
+	int code;
 
 	if((value >= 105 && value <= 111) || value == 102 || value == 97) {
 		if(CurrentAtmosphere != value) {
@@ -1994,11 +1994,11 @@ void TriggerCDTrack(short value, short flags, short type) {
 	
 }
 
-long ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {
+int ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {
 	GAME_VECTOR src;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
-	long dx, dy, dz;
+	int tiltxoff, tiltzoff, OnObject;
+	int dx, dy, dz;
 	short room_no;
 
 	room_no = target->room_number;
@@ -2052,11 +2052,11 @@ long ClipTarget(GAME_VECTOR* start, GAME_VECTOR* target) {
 	return 1;
 }
 
-long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
+int xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long dx, dy, dz, x, y, z;
+	int tiltxoff, tiltzoff, OnObject;
+	int dx, dy, dz, x, y, z;
 	short room_number, last_room;
 
 	dx = target->pos.x - start->pos.x;
@@ -2162,11 +2162,11 @@ long xLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 	return 1;
 }
 
-long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
+int zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	FLOOR_INFO* floor;
-	long dx, dy, dz, x, y, z;
+	int dx, dy, dz, x, y, z;
 	short room_number, last_room;
 
 	dz = target->pos.z - start->pos.z;
@@ -2272,8 +2272,8 @@ long zLOS(GAME_VECTOR* start, GAME_VECTOR* target) {
 	return 1;
 }
 
-long LOS(GAME_VECTOR* start, GAME_VECTOR* target) {
-	long los1, los2;
+int LOS(GAME_VECTOR* start, GAME_VECTOR* target) {
+	int los1, los2;
 
 	target->room_number = start->room_number;
 
@@ -2310,7 +2310,7 @@ void FireCrossBowFromLaserSight(GAME_VECTOR* start, GAME_VECTOR* target) {
 	FireCrossbow(&pos);
 }
 
-long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits) {
+int ExplodeItemNode(ITEM_INFO* item, int Node, int NoXZVel, int bits) {
 	OBJECT_INFO* object;
 	short** meshpp;
 
@@ -2340,13 +2340,13 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits) {
 	return 1;
 }
 
-long IsRoomOutside(long x, long y, long z) {
+int IsRoomOutside(int x, int y, int z) {
 	ROOM_INFO* r;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	FLOOR_INFO* floor;
 	unsigned char* pTable;
-	long h, c;
+	int h, c;
 	short offset, room_no;
 
 	if(x < 0 || z < 0) {
@@ -2410,10 +2410,10 @@ long IsRoomOutside(long x, long y, long z) {
 	return -2;
 }
 
-long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_VECTOR* dir, PHD_VECTOR* Coord) {
-	long planes[3];
-	long dists[3];
-	long plane;
+int RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_VECTOR* dir, PHD_VECTOR* Coord) {
+	int planes[3];
+	int dists[3];
+	int plane;
 	char quad[3];
 	char inside;
 
@@ -2495,7 +2495,7 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 	if(!plane) {
 		Coord->x = planes[0];
 	} else {
-		Coord->x = origin->x + (((long long)dir->x * (long long)dists[plane]) >> 16);
+		Coord->x = origin->x + (((int long)dir->x * (int long)dists[plane]) >> 16);
 
 		if((!quad[0] && Coord->x < min->x) || (quad[0] == 1 && Coord->x > max->x)) {
 			return 0;
@@ -2505,7 +2505,7 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 	if(plane == 1) {
 		Coord->y = planes[1];
 	} else {
-		Coord->y = origin->y + (((long long)dir->y * (long long)dists[plane]) >> 16);
+		Coord->y = origin->y + (((int long)dir->y * (int long)dists[plane]) >> 16);
 
 		if((!quad[1] && Coord->y < min->y) || (quad[1] == 1 && Coord->y > max->y)) {
 			return 0;
@@ -2515,7 +2515,7 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 	if(plane == 2) {
 		Coord->z = planes[2];
 	} else {
-		Coord->z = origin->z + (((long long)dir->z * (long long)dists[plane]) >> 16);
+		Coord->z = origin->z + (((int long)dir->z * (int long)dists[plane]) >> 16);
 
 		if((!quad[2] && Coord->z < min->z) || (quad[2] == 1 && Coord->z > max->z)) {
 			return 0;
@@ -2529,7 +2529,7 @@ long RayBoxIntersect(PHD_VECTOR* min, PHD_VECTOR* max, PHD_VECTOR* origin, PHD_V
 }
 
 
-long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS* ItemPos, PHD_VECTOR* Coord, short item_number) {
+int DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS* ItemPos, PHD_VECTOR* Coord, short item_number) {
 	ITEM_INFO* item;
 	OBJECT_INFO* obj;
 	SPHERE* sphere;
@@ -2537,7 +2537,7 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	PHD_VECTOR spos, tpos, s, t, sp, pos;
 	short** meshpp;
 	short* ClosestMesh;
-	long x, y, z, ClosestNode, ClosestBit, bit, r, r0, r1, dist, max_dist;
+	int x, y, z, ClosestNode, ClosestBit, bit, r, r0, r1, dist, max_dist;
 
 	min.x = bounds[0] << 16;
 	min.y = bounds[2] << 16;
@@ -2553,16 +2553,16 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	x = target->pos.x - ItemPos->pos.x;
 	y = target->pos.y - ItemPos->pos.y;
 	z = target->pos.z - ItemPos->pos.z;
-	tpos.x = (long)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
-	tpos.y = (long)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
-	tpos.z = (long)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
+	tpos.x = (int)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
+	tpos.y = (int)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
+	tpos.z = (int)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
 
 	x = start->pos.x - ItemPos->pos.x;
 	y = start->pos.y - ItemPos->pos.y;
 	z = start->pos.z - ItemPos->pos.z;
-	spos.x = (long)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
-	spos.y = (long)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
-	spos.z = (long)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
+	spos.x = (int)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
+	spos.y = (int)(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
+	spos.z = (int)(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
 
 	phd_PopMatrix();
 
@@ -2588,9 +2588,9 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	phd_PushUnitMatrix();
 	phd_RotY(ItemPos->y_rot);
 
-	x = (long)(mMXPtr[M00] * Coord->x + mMXPtr[M01] * Coord->y + mMXPtr[M02] * Coord->z);
-	y = (long)(mMXPtr[M10] * Coord->x + mMXPtr[M11] * Coord->y + mMXPtr[M12] * Coord->z);
-	z = (long)(mMXPtr[M20] * Coord->x + mMXPtr[M21] * Coord->y + mMXPtr[M22] * Coord->z);
+	x = (int)(mMXPtr[M00] * Coord->x + mMXPtr[M01] * Coord->y + mMXPtr[M02] * Coord->z);
+	y = (int)(mMXPtr[M10] * Coord->x + mMXPtr[M11] * Coord->y + mMXPtr[M12] * Coord->z);
+	z = (int)(mMXPtr[M20] * Coord->x + mMXPtr[M21] * Coord->y + mMXPtr[M22] * Coord->z);
 	Coord->x = x;
 	Coord->y = y;
 	Coord->z = z;
@@ -2692,13 +2692,13 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 }
 
 
-long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, MESH_INFO** StaticMesh) {
+int ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, MESH_INFO** StaticMesh) {
 	ITEM_INFO* item;
 	MESH_INFO* mesh;
 	ROOM_INFO* r;
 	PHD_3DPOS ItemPos;
 	short bounds[6];
-	long dx, dy, dz;
+	int dx, dy, dz;
 	short item_number;
 
 	dx = target->pos.x - start->pos.x;
@@ -2749,12 +2749,12 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 	return ClosestItem;
 }
 
-long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long firing) {
+int GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, int DrawTarget, int firing) {
 	ITEM_INFO* shotitem;
 	MESH_INFO* Mesh;
 	GAME_VECTOR target;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR v;
 	PHD_VECTOR dir;
 	short item_no, hit, ricochet, room_number, TriggerItems[8], NumTrigs;
@@ -2889,7 +2889,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 void AnimateItem(ITEM_INFO* item) {
 	ANIM_STRUCT* anim;
 	short* cmd;
-	long speed, speed2;
+	int speed, speed2;
 	unsigned short type, num;
 
 	anim = GetAnim(currentLevel, item->anim_number);
@@ -3048,8 +3048,8 @@ void AnimateItem(ITEM_INFO* item) {
 
 
 
-long GetMaximumFloor(FLOOR_INFO* floor, long x, long z) {
-	long height, h1, h2;
+int GetMaximumFloor(FLOOR_INFO* floor, int x, int z) {
+	int height, h1, h2;
 	short *data, type, dx, dz, t0, t1, t2, t3, hadj;
 
 	height = floor->floor << 8;
@@ -3108,8 +3108,8 @@ long GetMaximumFloor(FLOOR_INFO* floor, long x, long z) {
 	return height;
 }
 
-long GetMinimumCeiling(FLOOR_INFO* floor, long x, long z) {
-	long height, h1, h2;
+int GetMinimumCeiling(FLOOR_INFO* floor, int x, int z) {
+	int height, h1, h2;
 	short *data, type, dx, dz, t0, t1, t2, t3, hadj, ended;
 
 	height = floor->ceiling << 8;

@@ -32,9 +32,9 @@ static BITE_INFO right_hit = { 0, 0, 0, 2 };
 static BITE_INFO left_hit = { 0, 0, 0, 4 };
 static BITE_INFO tail_hit = { 0, 0, 0, 15 };
 
-void TriggerHarpyMissileFlame(short fx_number, long xv, long yv, long zv) {
+void TriggerHarpyMissileFlame(short fx_number, int xv, int yv, int zv) {
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	dx = lara_item->pos.pos.x - GetEffect(currentLevel, fx_number)->pos.pos.x;
 	dz = lara_item->pos.pos.z - GetEffect(currentLevel, fx_number)->pos.pos.z;
@@ -104,9 +104,9 @@ void TriggerHarpyMissile(PHD_3DPOS* pos, short room_number, short mesh) {
 	}
 }
 
-void TriggerHarpySparks(long x, long y, long z, short xv, short yv, short zv) {
+void TriggerHarpySparks(int x, int y, int z, short xv, short yv, short zv) {
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	dx = lara_item->pos.pos.x - x;
 	dz = lara_item->pos.pos.z - z;
@@ -146,7 +146,7 @@ void TriggerHarpySparks(long x, long y, long z, short xv, short yv, short zv) {
 
 void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size) {
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	dx = lara_item->pos.pos.x - GetItem(currentLevel, item_number)->pos.pos.x;
 	dz = lara_item->pos.pos.z - GetItem(currentLevel, item_number)->pos.pos.z;
@@ -290,7 +290,7 @@ void HarpyControl(short item_number) {
 	CREATURE_INFO* harpy;
 	CREATURE_INFO* baddie;
 	AI_INFO info;
-	long dx, dy, dz, dist, max_dist;
+	int dx, dy, dz, dist, max_dist;
 	short angle, head, torso_x, torso_y;
 
 	if(!CreatureActive(item_number)) {

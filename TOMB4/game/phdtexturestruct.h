@@ -13,10 +13,10 @@ typedef struct PHDTEXTURESTRUCT {
 	unsigned short v3;
 	unsigned short u4;
 	unsigned short v4;
-	unsigned long xoff;
-	unsigned long yoff;
-	unsigned long width;
-	unsigned long height;
+	unsigned int xoff;
+	unsigned int yoff;
+	unsigned int width;
+	unsigned int height;
 } PHDTEXTURESTRUCT;
 #pragma pack(pop)
 #endif // TOMB4_GAME_PHDTEXTURESTRUCT_H

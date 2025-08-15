@@ -39,7 +39,7 @@ void BatControl(short item_number) {
 	CREATURE_INFO* bat;
 	CREATURE_INFO* baddie;
 	AI_INFO info;
-	long max_dist, dist, dx, dz;
+	int max_dist, dist, dx, dz;
 	short angle;
 
 	if(!CreatureActive(item_number)) {

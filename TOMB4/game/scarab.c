@@ -31,7 +31,7 @@ static BITE_INFO beetle_bite = { 0, 0, 0, 12 };
 
 SCARAB_STRUCT Scarabs[128];
 
-static long next_scarab = 0;
+static int next_scarab = 0;
 
 void InitialiseScarab(short item_number) {
 	ITEM_INFO* item;
@@ -175,9 +175,9 @@ void ScarabControl(short item_number) {
 	CreatureAnimation(item_number, angle, angle);
 }
 
-long GetFreeScarab() {
+int GetFreeScarab() {
 	SCARAB_STRUCT* fx;
-	long lp, free;
+	int lp, free;
 
 	free = next_scarab;
 	lp = 0;
@@ -256,8 +256,8 @@ void UpdateScarabs() {
 	SCARAB_STRUCT* fx;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long h, dx, dy, dz, oldx, oldy, oldz;
+	int tiltxoff, tiltzoff, OnObject;
+	int h, dx, dy, dz, oldx, oldy, oldz;
 	short angle, old_room;
 
 	for(int i = 0; i < 128; i++) {

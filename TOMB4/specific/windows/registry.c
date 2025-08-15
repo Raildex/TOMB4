@@ -11,7 +11,7 @@
 
 static HKEY phkResult;
 static DWORD dwDisposition;
-static long REG_Setup;
+static int REG_Setup;
 
 char REG_OpenKey(LPCSTR lpSubKey) {
 	return RegCreateKeyEx(HKEY_CURRENT_USER, lpSubKey, 0, (CHAR*)"", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, 0, &phkResult, &dwDisposition) == ERROR_SUCCESS;
@@ -36,12 +36,12 @@ void CloseRegistry() {
 	REG_CloseKey();
 }
 
-void REG_WriteLong(char* SubKeyName, long value) {
+void REG_WriteLong(char* SubKeyName, int value) {
 	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*)&value, sizeof(value));
 }
 
-void REG_WriteString(char* SubKeyName, char* string, long length) {
-	long checkLength;
+void REG_WriteString(char* SubKeyName, char* string, int length) {
+	int checkLength;
 
 	if(string) {
 		if(length < 0) {
@@ -57,22 +57,22 @@ void REG_WriteString(char* SubKeyName, char* string, long length) {
 }
 
 void REG_WriteFloat(char* SubKeyName, float value) {
-	long length;
+	int length;
 	char buf[64];
 
 	length = sprintf(buf, "%.5f", value);
 	REG_WriteString(SubKeyName, buf, length);
 }
 
-char REG_ReadLongDefault(char* SubKeyName, long* value, long defaultValue) {
-	unsigned long type;
-	unsigned long cbData;
+char REG_ReadLongDefault(char* SubKeyName, long* value, int defaultValue) {
+	unsigned int type;
+	unsigned int cbData;
 
 	cbData = sizeof(*value);
 	unsigned char buffer[sizeof(*value)];
 
 	if(RegQueryValueEx(phkResult, SubKeyName, 0, &type, (LPBYTE)&buffer[0], &cbData) == ERROR_SUCCESS && type == REG_DWORD && cbData == sizeof(*value)) {
-		long readValue;
+		int readValue;
 		memcpy(&readValue, buffer, sizeof(*value));
 		*value = readValue;
 		return 1;
@@ -83,10 +83,10 @@ char REG_ReadLongDefault(char* SubKeyName, long* value, long defaultValue) {
 	return 0;
 }
 
-char REG_ReadString(char* SubKeyName, char* value, long length, char* defaultValue) {
-	unsigned long type;
-	unsigned long cbData;
-	long len;
+char REG_ReadString(char* SubKeyName, char* value, int length, char* defaultValue) {
+	unsigned int type;
+	unsigned int cbData;
+	int len;
 
 	cbData = length;
 
@@ -125,8 +125,8 @@ char REG_ReadFloatDefault(char* SubKeyName, float* value, float defaultValue) {
 }
 
 char LoadSettings() {
-	long key;
-	long val;
+	int key;
+	int val;
 
 	if(!OpenRegistry("System")) {
 		return 0;

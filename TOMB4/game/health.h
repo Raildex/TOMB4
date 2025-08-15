@@ -2,19 +2,19 @@
 #define TOMB4_GAME_HEALTH_H
 #include "game/displaypu.h"
 
-long FlashIt();
-void DrawGameInfo(long timed);
-void DrawHealthBar(long flash_state);
-void DrawAirBar(long flash_state);
+int FlashIt();
+void DrawGameInfo(int timed);
+void DrawHealthBar(int flash_state);
+void DrawAirBar(int flash_state);
 void InitialisePickUpDisplay();
 void DrawPickups();
 void AddDisplayPickup(short object_number);
 
 extern DISPLAYPU pickups[8];
-extern long PickupX;
+extern int PickupX;
 extern short CurrentPickup;
 
-extern long health_bar_timer;
+extern int health_bar_timer;
 
 
 #endif// TOMB4_GAME_HEALTH_H

@@ -24,7 +24,7 @@ short next_item_active;
 static short next_fx_free;
 static short next_item_free;
 
-void InitialiseItemArray(short num, long count) {
+void InitialiseItemArray(short num, int count) {
 	ITEM_INFO* item;
 
 	item = GetItem(currentLevel, count);

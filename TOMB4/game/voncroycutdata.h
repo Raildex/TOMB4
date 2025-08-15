@@ -3,6 +3,6 @@
 typedef struct VonCroyCutData {
 	PHD_VECTOR CameraPos;
 	PHD_VECTOR CameraTarget;
-	long f;
+	int f;
 } VonCroyCutData;
 #endif// TOMB4_GAME_VONCROYCUTDATA_H

@@ -38,7 +38,7 @@ void WildboarControl(short item_number) {
 	CREATURE_INFO* boar;
 	CREATURE_INFO* baddie;
 	AI_INFO info;
-	long dx, dz, ldist, dist, max_dist;
+	int dx, dz, ldist, dist, max_dist;
 	short angle, neckX, neckY, headX, headY;
 
 	if(!CreatureActive(item_number)) {

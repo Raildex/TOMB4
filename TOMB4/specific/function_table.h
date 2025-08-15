@@ -6,27 +6,27 @@
 typedef struct TEXTURESTRUCT TEXTURESTRUCT;
 typedef struct _D3DTLVERTEX _D3DTLVERTEX;
 
-void SetFogColor(long r, long g, long b);
+void SetFogColor(int r, int g, int b);
 void HWInitialise();
-long _NVisible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2);
-long _Visible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2);
+int _NVisible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2);
+int _Visible(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2);
 void SetCullCW();
 void SetCullCCW();
 HRESULT HWBeginScene();
 HRESULT HWEndScene();
 void InitialiseFunctionTable();
 
-extern void (*AddQuadSorted)(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided);
-extern void (*AddTriSorted)(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided);
-extern void (*AddQuadZBuffer)(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided);
-extern void (*AddTriZBuffer)(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided);
+extern void (*AddQuadSorted)(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, int double_sided);
+extern void (*AddTriSorted)(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, int double_sided);
+extern void (*AddQuadZBuffer)(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, int double_sided);
+extern void (*AddTriZBuffer)(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, int double_sided);
 extern void (*AddLineSorted)(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, short drawtype);
-extern long (*IsVisible)(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2);
+extern int (*IsVisible)(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2);
 extern HRESULT (*_BeginScene)();
 extern HRESULT (*_EndScene)();
 
 extern _D3DTLVERTEX MyVertexBuffer[];
-extern long CurrentFog;
+extern int CurrentFog;
 
 
 #endif// TOMB4_SPECIFIC_FUNCTION_TABLE_H

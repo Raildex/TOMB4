@@ -2,12 +2,12 @@
 #define TOMB4_GAME_SPOTCAM_H
 #pragma pack(push, 1)
 typedef struct SPOTCAM {
-	long x;
-	long y;
-	long z;
-	long tx;
-	long ty;
-	long tz;
+	int x;
+	int y;
+	int z;
+	int tx;
+	int ty;
+	int tz;
 	unsigned char sequence;
 	unsigned char camera;
 	short fov;
@@ -19,19 +19,19 @@ typedef struct SPOTCAM {
 	short pad;
 } SPOTCAM;
 #pragma pack(pop)
-void SetSplineData(long num, long cam);
+void SetSplineData(int num, int cam);
 void InitialiseSpotCam(short Sequence);
 void EnableLaraControl();
 void DisableLaraControl();
 void InitSpotCamSequences();
-long Spline(long x, long* knots, long nk);
+int Spline(int x, long* knots, int nk);
 void CalculateSpotCams();
 
-extern long bTrackCamInit;
+extern int bTrackCamInit;
 extern short LastSequence;
 extern short CurrentFov;
-extern long bUseSpotCam;
-extern long bDisableLaraControl;
+extern int bUseSpotCam;
+extern int bDisableLaraControl;
 
 typedef enum spotcam_flags {
 	SP_SNAPCAMERA = (1 << 0), // snaps the camera to the first spline

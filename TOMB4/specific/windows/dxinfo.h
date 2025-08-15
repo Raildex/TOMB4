@@ -3,14 +3,14 @@
 typedef struct DXDIRECTDRAWINFO DXDIRECTDRAWINFO;
 typedef struct DXDIRECTSOUNDINFO DXDIRECTSOUNDINFO;
 typedef struct DXINFO {
-	long nDDInfo;
-	long nDSInfo;
+	int nDDInfo;
+	int nDSInfo;
 	DXDIRECTDRAWINFO* DDInfo;
 	DXDIRECTSOUNDINFO* DSInfo;
-	long nDD;
-	long nD3D;
-	long nDisplayMode;
-	long nTexture;
-	long nDS;
+	int nDD;
+	int nD3D;
+	int nDisplayMode;
+	int nTexture;
+	int nDS;
 } DXINFO;
 #endif// TOMB4_SPECIFIC_DXINFO_H

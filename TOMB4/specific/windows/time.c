@@ -1,16 +1,16 @@
 
 #include "specific/function_stubs.h"
 #include <windows.h>
-static long long counter, frequency;
+static int int counter, frequency;
 
-long S_Sync() {
-	long long PerformanceCount, f;
-	long n;
+int S_Sync() {
+	int int PerformanceCount, f;
+	int n;
 
 	QueryPerformanceCounter((LARGE_INTEGER*)&PerformanceCount);
 	f = (PerformanceCount - counter) / frequency;
 	counter += frequency * f;
-	n = (long)f;
+	n = (int)f;
 	return n;
 }
 
@@ -18,8 +18,8 @@ void S_TimeReset() {
 	QueryPerformanceCounter((LARGE_INTEGER*)&counter);
 }
 
-long S_TimeInit() {
-	long long pfq;
+int S_TimeInit() {
+	int int pfq;
 
 	Log(__func__, "TIME_Init");
 

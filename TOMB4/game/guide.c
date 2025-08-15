@@ -61,7 +61,7 @@ void GuideControl(short item_number) {
 	CREATURE_INFO* guide;
 	PHD_VECTOR pos;
 	AI_INFO info;
-	long rnd, r, g, b, x, y, z, iAhead, iDistance, dist, bestdist;
+	int rnd, r, g, b, x, y, z, iAhead, iDistance, dist, bestdist;
 	short got_torch, tilt, head, torso_x, torso_y, iAngle, xAngle, angle, dy, candidate_num, frame;
 
 	if(!CreatureActive(item_number)) {

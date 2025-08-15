@@ -7,7 +7,7 @@ typedef struct PCLIGHT_INFO {
 	float r;
 	float g;
 	float b;
-	long shadow;
+	int shadow;
 	float Inner;
 	float Outer;
 	float InnerAngle;
@@ -16,12 +16,12 @@ typedef struct PCLIGHT_INFO {
 	float nx;
 	float ny;
 	float nz;
-	long ix;
-	long iy;
-	long iz;
-	long inx;
-	long iny;
-	long inz;
+	int ix;
+	int iy;
+	int iz;
+	int inx;
+	int iny;
+	int inz;
 	unsigned char Type;
 	unsigned char Pad;
 } PCLIGHT_INFO;

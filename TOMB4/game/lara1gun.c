@@ -83,10 +83,10 @@ void FireCrossbow(PHD_3DPOS* pos) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR vec;
 	short* ammo;
-	long h;
+	int h;
 	short item_number;
 
 	ammo = get_current_ammo_pointer(WEAPON_CROSSBOW);
@@ -163,17 +163,17 @@ void FireCrossbow(PHD_3DPOS* pos) {
 	}
 }
 
-void draw_shotgun_meshes(long weapon_type) {
+void draw_shotgun_meshes(int weapon_type) {
 	lara.back_gun = 0;
 	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, WeaponObjectMesh(weapon_type))->mesh_index + 2 * LM_RHAND);
 }
 
-void undraw_shotgun_meshes(long weapon_type) {
+void undraw_shotgun_meshes(int weapon_type) {
 	lara.back_gun = (short)WeaponObject(weapon_type);
 	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + 2 * LM_RHAND);
 }
 
-void ready_shotgun(long weapon_type) {
+void ready_shotgun(int weapon_type) {
 	lara.gun_status = LG_READY;
 	lara.target_item = NO_ITEM;
 
@@ -195,7 +195,7 @@ void ready_shotgun(long weapon_type) {
 void FireShotgun() {
 	PHD_VECTOR pos;
 	PHD_VECTOR pos2;
-	long fired, scatter;
+	int fired, scatter;
 	short angles[2];
 	short dangles[2];
 	angles[0] = lara.left_arm.y_rot + lara_item->pos.y_rot;
@@ -258,9 +258,9 @@ void FireGrenade() {
 	PHD_VECTOR pos;
 	PHD_VECTOR pos2;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	short* ammo;
-	long h;
+	int h;
 	short item_number;
 
 	ammo = get_current_ammo_pointer(WEAPON_GRENADE);
@@ -342,11 +342,11 @@ void FireGrenade() {
 	savegame.Game.AmmoUsed++;
 }
 
-void AnimateShotgun(long weapon_type) {
+void AnimateShotgun(int weapon_type) {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
-	static long m16_firing = 0;
-	static long harpoon_fired = 0;
+	static int m16_firing = 0;
+	static int harpoon_fired = 0;
 
 	item = GetItem(currentLevel, lara.weapon_item);
 
@@ -454,10 +454,10 @@ void AnimateShotgun(long weapon_type) {
 	lara.left_arm.anim_number = lara.right_arm.anim_number;
 }
 
-void RifleHandler(long weapon_type) {
+void RifleHandler(int weapon_type) {
 	WEAPON_INFO* winfo;
 	PHD_VECTOR pos;
-	long x, y, z, r, g, b;
+	int x, y, z, r, g, b;
 
 	winfo = &weapons[weapon_type];
 	LaraGetNewTarget(winfo);
@@ -514,11 +514,11 @@ void RifleHandler(long weapon_type) {
 	}
 }
 
-void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLastNode) {
+void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, int MustHitLastNode) {
 	SPHERE* ptr1;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long dx, dy, dz, num1, cs, cd, speed;
+	int tiltxoff, tiltzoff, OnObject;
+	int dx, dy, dz, num1, cs, cd, speed;
 	short TriggerItems[8];
 	short NumTrigs, room_number;
 
@@ -611,8 +611,8 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 	}
 }
 
-void TriggerUnderwaterExplosion(ITEM_INFO* item, long vehicle) {
-	long x, y, z, wh;
+void TriggerUnderwaterExplosion(ITEM_INFO* item, int vehicle) {
+	int x, y, z, wh;
 
 	if(vehicle) {
 		x = (GetRandomControl() & 0x1FF) + item->pos.pos.x - 256;
@@ -659,7 +659,7 @@ void TriggerUnderwaterExplosion(ITEM_INFO* item, long vehicle) {
 	}
 }
 
-void draw_shotgun(long weapon_type) {
+void draw_shotgun(int weapon_type) {
 	ITEM_INFO* item;
 
 	if(lara.weapon_item == NO_ITEM) {
@@ -702,7 +702,7 @@ void draw_shotgun(long weapon_type) {
 	lara.right_arm.anim_number = item->anim_number;
 }
 
-void undraw_shotgun(long weapon_type) {
+void undraw_shotgun(int weapon_type) {
 	ITEM_INFO* item;
 
 	item = GetItem(currentLevel, lara.weapon_item);
@@ -743,11 +743,11 @@ void ControlCrossbow(short item_number) {
 	ITEM_INFO* target;
 	MESH_INFO* mesh;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	FLOOR_INFO* floor;
 	ROOM_INFO* r;
 	PHD_VECTOR oldPos;
-	long abovewater, exploded, collided, rad, j;
+	int abovewater, exploded, collided, rad, j;
 	short room_number;
 
 	abovewater = 0;
@@ -920,10 +920,10 @@ void ControlGrenade(short item_number) {
 	MESH_INFO* mesh;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR oldPos;
 	PHD_VECTOR pos;
-	long abovewater, xv, yv, zv, exploded, rad, j;
+	int abovewater, xv, yv, zv, exploded, rad, j;
 	short new_num, yrot, room_number, NumTrigs;
 	short TriggerItems[8];
 
@@ -1032,9 +1032,9 @@ void ControlGrenade(short item_number) {
 		phd_SetTrans(0, 0, 0);
 		phd_RotYXZ(item->pos.y_rot + 0x8000, item->pos.x_rot, item->pos.z_rot);
 		phd_TranslateRel(0, 0, -64);
-		pos.x = (long)mMXPtr[M03];
-		pos.y = (long)mMXPtr[M13];
-		pos.z = (long)mMXPtr[M23];
+		pos.x = (int)mMXPtr[M03];
+		pos.y = (int)mMXPtr[M13];
+		pos.z = (int)mMXPtr[M23];
 		phd_PopMatrix();
 
 		TriggerRocketSmoke(item->pos.pos.x + pos.x, item->pos.pos.y + pos.y, item->pos.pos.z + pos.z, -1);

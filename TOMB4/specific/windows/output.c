@@ -53,8 +53,8 @@
 
 _D3DTLVERTEX SkinVerts[40][12];
 short SkinClip[40][12];
-long GlobalAlpha = 0xFF000000;
-long GlobalAmbient;
+int GlobalAlpha = 0xFF000000;
+int GlobalAmbient;
 
 float AnimatingTexturesV[16][8][3];
 static short AnimatingTexturesVOffset;
@@ -69,7 +69,7 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 	short* clip;
 	static float DistanceFogStart;
 	float zv, fR, fG, fB, val, num;
-	long lp, cR, cG, cB, sA, sR, sG, sB;
+	int lp, cR, cG, cB, sA, sR, sG, sB;
 	short clipFlag;
 
 	clip = clipflags;
@@ -162,9 +162,9 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 				}
 			}
 
-			cR = (long)fR;
-			cG = (long)fG;
-			cB = (long)fB;
+			cR = (int)fR;
+			cG = (int)fG;
+			cB = (int)fB;
 		} else {
 			cR = ambientR;
 			cG = ambientG;
@@ -176,15 +176,15 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 
 			if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
 				val = (vPos.z - DistanceFogStart) / 512.0F;
-				sA -= (long)(val * (255.0F / 8.0F));
+				sA -= (int)(val * (255.0F / 8.0F));
 
 				if(sA < 0) {
 					sA = 0;
 				}
 			} else {
-				cR -= (long)val;
-				cG -= (long)val;
-				cB -= (long)val;
+				cR -= (int)val;
+				cG -= (int)val;
+				cB -= (int)val;
 			}
 		}
 
@@ -227,8 +227,8 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 			vPos.y = vPos.y * zv + f_centery;
 
 			if(camera.underwater) {
-				vPos.x += vert_wibble_table[((wibble + (long)vPos.y) >> 3) & 0x1F];
-				vPos.y += vert_wibble_table[((wibble + (long)vPos.x) >> 3) & 0x1F];
+				vPos.x += vert_wibble_table[((wibble + (int)vPos.y) >> 3) & 0x1F];
+				vPos.y += vert_wibble_table[((wibble + (int)vPos.x) >> 3) & 0x1F];
 			}
 
 			MyVertexBuffer[i].rhw = zv * f_moneopersp;
@@ -307,7 +307,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 	short* clip;
 	static float DistanceFogStart;
 	float zv, val, val2, num;
-	long sA, sR, sG, sB, cR, cG, cB, pR, pG, pB;
+	int sA, sR, sG, sB, cR, cG, cB, pR, pG, pB;
 	short clipFlag;
 
 	clip = clipflags;
@@ -365,9 +365,9 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 
 				if(val <= l->falloff) {
 					val2 = (l->falloff - val) / l->falloff;
-					cR += (long)(val2 * l->r);
-					cG += (long)(val2 * l->g);
-					cB += (long)(val2 * l->b);
+					cR += (int)(val2 * l->r);
+					cG += (int)(val2 * l->g);
+					cB += (int)(val2 * l->b);
 				}
 			}
 		}
@@ -377,15 +377,15 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 
 			if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
 				val = (vPos.z - DistanceFogStart) / 512.0F;
-				sA -= (long)(val * (255.0F / 8.0F));
+				sA -= (int)(val * (255.0F / 8.0F));
 
 				if(sA < 0) {
 					sA = 0;
 				}
 			} else {
-				cR -= (long)val;
-				cG -= (long)val;
-				cB -= (long)val;
+				cR -= (int)val;
+				cG -= (int)val;
+				cB -= (int)val;
 			}
 		}
 
@@ -428,8 +428,8 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh) {
 			vPos.y = vPos.y * zv + f_centery;
 
 			if(camera.underwater) {
-				vPos.x += vert_wibble_table[((wibble + (long)vPos.y) >> 3) & 0x1F];
-				vPos.y += vert_wibble_table[((wibble + (long)vPos.x) >> 3) & 0x1F];
+				vPos.x += vert_wibble_table[((wibble + (int)vPos.y) >> 3) & 0x1F];
+				vPos.y += vert_wibble_table[((wibble + (int)vPos.x) >> 3) & 0x1F];
 			}
 
 			MyVertexBuffer[i].rhw = zv * f_moneopersp;
@@ -504,7 +504,7 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh) {
 	static float DistanceFogStart;
 	static float DistanceFogEnd;
 	float zv, val, zbak, num, fR, fG, fB;
-	long sA, sR, sG, sB, cR, cG, cB, dR, dG, dB;
+	int sA, sR, sG, sB, cR, cG, cB, dR, dG, dB;
 	short clipFlag;
 
 	clip = clipflags;
@@ -537,7 +537,7 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh) {
 		if(zbak > DistanceFogStart) {
 			if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
 				val = (zbak - DistanceFogStart) / 512.0F;
-				sA -= (long)(val * (255.0F / 8.0F));
+				sA -= (int)(val * (255.0F / 8.0F));
 
 				if(sA < 0) {
 					sA = 0;
@@ -557,9 +557,9 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh) {
 				fR *= 255;
 				fG *= 255;
 				fB *= 255;
-				sR = (long)fR;
-				sG = (long)fG;
-				sB = (long)fB;
+				sR = (int)fR;
+				sG = (int)fG;
+				sB = (int)fB;
 
 				if(sR > dR) {
 					sR = dR;
@@ -572,9 +572,9 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh) {
 				}
 			} else {
 				val = (zbak - DistanceFogStart) * num;
-				cR -= (long)val;
-				cG -= (long)val;
-				cB -= (long)val;
+				cR -= (int)val;
+				cG -= (int)val;
+				cB -= (int)val;
 			}
 		}
 
@@ -656,7 +656,7 @@ void ProcessPickupMeshVertices(MESH_DATA* mesh) {
 	float* v;
 	short* clip;
 	float zv;
-	long cR, cG, cB, sR, sG, sB;
+	int cR, cG, cB, sR, sG, sB;
 	short clipFlag;
 
 	clip = clipflags;
@@ -768,9 +768,9 @@ void ProcessPickupMeshVertices(MESH_DATA* mesh) {
 	IDirect3DVertexBuffer_Unlock(mesh->SourceVB);
 }
 
-static void RGB_M(unsigned long* c, long m) // Original was a macro.
+static void RGB_M(unsigned long* c, int m) // Original was a macro.
 {
-	long r, g, b, a;
+	int r, g, b, a;
 
 	a = CLRA(*c);
 	r = (CLRR(*c) * m) >> 8;
@@ -779,7 +779,7 @@ static void RGB_M(unsigned long* c, long m) // Original was a macro.
 	*c = RGBA(r, g, b, a);
 }
 
-void phd_PutPolygons(short* objptr, long clip) {
+void phd_PutPolygons(short* objptr, int clip) {
 	MESH_DATA* mesh;
 	SPRITESTRUCT* envmap_sprite;
 	TEXTURESTRUCT* pTex;
@@ -787,9 +787,9 @@ void phd_PutPolygons(short* objptr, long clip) {
 	TEXTURESTRUCT envmap_texture;
 	POLYFACE4* quad;
 	POLYFACE3* tri;
-	long clrbak[4];
-	long spcbak[4];
-	long num;
+	int clrbak[4];
+	int spcbak[4];
+	int num;
 	unsigned short drawbak;
 	char envmap;
 
@@ -993,7 +993,7 @@ void phd_PutPolygons(short* objptr, long clip) {
 	}
 }
 
-void phd_PutPolygons_train(short* objptr, long x) {
+void phd_PutPolygons_train(short* objptr, int x) {
 	MESH_DATA* mesh;
 	_D3DTLVERTEX* v;
 	TEXTURESTRUCT* pTex;
@@ -1059,7 +1059,7 @@ void phd_PutPolygons_train(short* objptr, long x) {
 	}
 }
 
-void RenderLoadPic(long unused) {
+void RenderLoadPic(int unused) {
 	short poisoned;
 
 	camera.pos.pos.y = gfLoadCam.y;
@@ -1096,7 +1096,7 @@ void RenderLoadPic(long unused) {
 		RenderIt(camera.pos.room_number);
 
 		if(1) {
-			PrintString(phd_centerx, (long)((float)(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1), 5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
+			PrintString(phd_centerx, (int)((float)(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1), 5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
 		}
 
 		S_OutputPolyList();
@@ -1109,7 +1109,7 @@ void RenderLoadPic(long unused) {
 	RenderIt(camera.pos.room_number);
 
 	if(1) {
-		PrintString(phd_centerx, (long)((float)(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1), 5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
+		PrintString(phd_centerx, (int)((float)(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1), 5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
 	}
 
 	S_OutputPolyList();
@@ -1120,7 +1120,7 @@ void RenderLoadPic(long unused) {
 
 void S_InitialisePolyList() {
 	D3DRECT rect;
-	long col;
+	int col;
 
 	rect.x1 = App.dx.rViewport.left;
 	rect.y1 = App.dx.rViewport.top;
@@ -1145,7 +1145,7 @@ void S_InitialisePolyList() {
 	InitialiseSortList();
 }
 
-void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
+void phd_PutPolygonsPickup(short* objptr, float x, float y, int color) {
 	MESH_DATA* mesh;
 	SPRITESTRUCT* envmap_sprite;
 	TEXTURESTRUCT* pTex;
@@ -1154,9 +1154,9 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	POLYFACE4* quad;
 	POLYFACE3* tri;
 	float fcx, fcy;
-	long clrbak[4];
-	long spcbak[4];
-	long num;
+	int clrbak[4];
+	int spcbak[4];
+	int num;
 	unsigned short drawbak;
 	char envmap;
 
@@ -1335,7 +1335,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color) {
 	}
 }
 
-void phd_PutPolygonSkyMesh(short* objptr, long clipstatus) {
+void phd_PutPolygonSkyMesh(short* objptr, int clipstatus) {
 	TEXTURESTRUCT* pTex;
 	MESH_DATA* mesh;
 	POLYFACE4* quad;
@@ -1412,7 +1412,7 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus) {
 }
 
 void S_DrawPickup(short object_number) {
-	long x, y;
+	int x, y;
 
 	phd_LookAt(0, 1024, 0, 0, 0, 0, 0);
 	SetD3DViewMatrix();
@@ -1422,7 +1422,7 @@ void S_DrawPickup(short object_number) {
 	DrawThreeDeeObject2D(x, y, convert_obj_to_invobj(object_number), 128, 0, (GnFrameCounter & 0x7F) << 9, 0, 0, 1);
 }
 
-long S_GetObjectInfoBounds(short* bounds) {
+int S_GetObjectInfoBounds(short* bounds) {
 	FVECTOR vtx[8];
 	float xMin, xMax, yMin, yMax, zMin, zMax, numZ, xv, yv, zv;
 
@@ -1524,13 +1524,13 @@ long S_GetObjectInfoBounds(short* bounds) {
 	return 0;
 }
 
-HRESULT DDCopyBitmap(IDirectDrawSurface4* surf, HBITMAP hbm, long x, long y, long dx, long dy) {
+HRESULT DDCopyBitmap(IDirectDrawSurface4* surf, HBITMAP hbm, int x, int y, int dx, int dy) {
 	HDC hdc;
 	HDC hdc2;
 	BITMAP bitmap;
 	DDSURFACEDESC2 desc;
 	HRESULT result;
-	long l, t;
+	int l, t;
 
 	if(!hbm || !surf) {
 		return E_FAIL;
@@ -1658,12 +1658,12 @@ void do_boot_screen(languages language) {
 #endif
 }
 
-void S_AnimateTextures(long n) {
+void S_AnimateTextures(int n) {
 	TEXTURESTRUCT* tex;
 	TEXTURESTRUCT tex2;
 	short* range;
 	float voff;
-	static long comp;
+	static int comp;
 	short nRanges, nRangeFrames;
 
 	for(comp += n; comp > 5; comp -= 5) {
@@ -1715,8 +1715,8 @@ void S_AnimateTextures(long n) {
 	}
 }
 
-long S_DumpScreen() {
-	long n;
+int S_DumpScreen() {
+	int n;
 
 	n = S_Sync();
 
@@ -1736,7 +1736,7 @@ long S_DumpScreen() {
 
 void S_OutputPolyList() {
 	D3DRECT r;
-	long h;
+	int h;
 
 	WinFrameRate();
 	nPolys = 0;
@@ -1748,7 +1748,7 @@ void S_OutputPolyList() {
 
 	if(resChangeCounter) {
 		WinDisplayString(8, App.dx.dwRenderHeight - 8, (char*)"%dx%d", App.dx.dwRenderWidth, App.dx.dwRenderHeight);
-		resChangeCounter -= (long)(30 / App.fps);
+		resChangeCounter -= (int)(30 / App.fps);
 
 		if(resChangeCounter < 0) {
 			resChangeCounter = 0;
@@ -1795,7 +1795,7 @@ void S_OutputPolyList() {
 	InitialiseSortList();
 
 	if(FadeScreenHeight) {
-		h = (long)((float)phd_winymax / 256.0F) * FadeScreenHeight;
+		h = (int)((float)phd_winymax / 256.0F) * FadeScreenHeight;
 		DrawPsxTile(0, phd_winwidth | (h << 16), 0x62FFFFFF, 0, 0);
 		DrawPsxTile(phd_winheight - h, phd_winwidth | (h << 16), 0x62FFFFFF, 0, 0);
 	}
@@ -1821,7 +1821,7 @@ void S_OutputPolyList() {
 	}
 }
 
-void StashSkinVertices(long node) {
+void StashSkinVertices(int node) {
 	_D3DTLVERTEX* d;
 	short* cf;
 	char* vns;
@@ -1835,21 +1835,21 @@ void StashSkinVertices(long node) {
 			break;
 		}
 
-		d->sx = MyVertexBuffer[(long)*vns].sx;
-		d->sy = MyVertexBuffer[(long)*vns].sy;
-		d->sz = MyVertexBuffer[(long)*vns].sz;
-		d->rhw = MyVertexBuffer[(long)*vns].rhw;
-		d->color = MyVertexBuffer[(long)*vns].color;
-		d->specular = MyVertexBuffer[(long)*vns].specular;
-		d->tu = MyVertexBuffer[(long)*vns].tu;
-		d->tv = MyVertexBuffer[(long)*vns].tv;
-		*cf++ = clipflags[(long)*vns];
+		d->sx = MyVertexBuffer[(int)*vns].sx;
+		d->sy = MyVertexBuffer[(int)*vns].sy;
+		d->sz = MyVertexBuffer[(int)*vns].sz;
+		d->rhw = MyVertexBuffer[(int)*vns].rhw;
+		d->color = MyVertexBuffer[(int)*vns].color;
+		d->specular = MyVertexBuffer[(int)*vns].specular;
+		d->tu = MyVertexBuffer[(int)*vns].tu;
+		d->tv = MyVertexBuffer[(int)*vns].tv;
+		*cf++ = clipflags[(int)*vns];
 		d++;
 		vns++;
 	}
 }
 
-void SkinVerticesToScratch(long node) {
+void SkinVerticesToScratch(int node) {
 	_D3DTLVERTEX* d;
 	short* cf;
 	char* vns;
@@ -1863,34 +1863,34 @@ void SkinVerticesToScratch(long node) {
 			break;
 		}
 
-		MyVertexBuffer[(long)*vns].sx = d->sx;
-		MyVertexBuffer[(long)*vns].sy = d->sy;
-		MyVertexBuffer[(long)*vns].sz = d->sz;
-		MyVertexBuffer[(long)*vns].rhw = d->rhw;
-		MyVertexBuffer[(long)*vns].color = d->color;
-		MyVertexBuffer[(long)*vns].specular = d->specular;
-		MyVertexBuffer[(long)*vns].tu = d->tu;
-		MyVertexBuffer[(long)*vns].tv = d->tv;
-		clipflags[(long)*vns] = *cf++;
+		MyVertexBuffer[(int)*vns].sx = d->sx;
+		MyVertexBuffer[(int)*vns].sy = d->sy;
+		MyVertexBuffer[(int)*vns].sz = d->sz;
+		MyVertexBuffer[(int)*vns].rhw = d->rhw;
+		MyVertexBuffer[(int)*vns].color = d->color;
+		MyVertexBuffer[(int)*vns].specular = d->specular;
+		MyVertexBuffer[(int)*vns].tu = d->tu;
+		MyVertexBuffer[(int)*vns].tv = d->tv;
+		clipflags[(int)*vns] = *cf++;
 		d++;
 		vns++;
 	}
 }
 
-long GetRenderScale(long unit) // User selected scale
+int GetRenderScale(int unit) // User selected scale
 {
-	long w, h, x, y;
+	int w, h, x, y;
 
-	w = (long)(640.0F / 1);
-	h = (long)(480.0F / 1);
+	w = (int)(640.0F / 1);
+	h = (int)(480.0F / 1);
 	x = (phd_winwidth > w) ? MulDiv(phd_winwidth, unit, w) : unit;
 	y = (phd_winheight > h) ? MulDiv(phd_winheight, unit, h) : unit;
 	return x < y ? x : y;
 }
 
-long GetFixedScale(long unit) // Fixed scale
+int GetFixedScale(int unit) // Fixed scale
 {
-	long w, h, x, y;
+	int w, h, x, y;
 
 	w = 640;
 	h = 480;

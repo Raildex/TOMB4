@@ -16,9 +16,9 @@
 #include <dinput.h>
 
 
-long bTrackCamInit = 0;
-long bUseSpotCam = 0;
-long bDisableLaraControl = 0;
+int bTrackCamInit = 0;
+int bUseSpotCam = 0;
+int bDisableLaraControl = 0;
 short LastSequence;
 short CurrentFov;
 
@@ -26,22 +26,22 @@ static PHD_VECTOR LaraFixedPosition;
 static PHD_VECTOR InitialCameraPosition;
 static PHD_VECTOR InitialCameraTarget;
 
-static long camera_xposition[18];
-static long camera_yposition[18];
-static long camera_zposition[18];
-static long camera_xtarget[18];
-static long camera_ytarget[18];
-static long camera_ztarget[18];
-static long camera_roll[18];
-static long camera_fov[18];
-static long camera_speed[18];
-static long CameraFade;
-static long LaraHealth;
-static long LaraAir;
-static long spline_to_camera;
-static long spline_from_camera;
-static long bCheckTrigger = 0;
-static long current_spline_position;
+static int camera_xposition[18];
+static int camera_yposition[18];
+static int camera_zposition[18];
+static int camera_xtarget[18];
+static int camera_ytarget[18];
+static int camera_ztarget[18];
+static int camera_roll[18];
+static int camera_fov[18];
+static int camera_speed[18];
+static int CameraFade;
+static int LaraHealth;
+static int LaraAir;
+static int spline_to_camera;
+static int spline_from_camera;
+static int bCheckTrigger = 0;
+static int current_spline_position;
 static short current_sequence;
 static short current_spline_camera;
 static short current_camera_cnt;
@@ -54,7 +54,7 @@ static short spotcam_loopcnt;
 static unsigned char SpotRemap[8];
 static unsigned char CameraCnt[8];
 
-void SetSplineData(long num, long cam) {
+void SetSplineData(int num, int cam) {
 	SPOTCAM* spotcam;
 	ITEM_INFO* item;
 
@@ -94,7 +94,7 @@ void SetSplineData(long num, long cam) {
 
 void InitialiseSpotCam(short Sequence) {
 	SPOTCAM* s;
-	long next_spline_camera, cunt;
+	int next_spline_camera, cunt;
 
 	if(bTrackCamInit && Sequence == LastSequence) {
 		bTrackCamInit = 0;
@@ -248,9 +248,9 @@ void InitSpotCamSequences() {
 	}
 }
 
-long Spline(long x, long* knots, long nk) {
+int Spline(int x, long* knots, int nk) {
 	long* k;
-	long span, c1, c2;
+	int span, c1, c2;
 
 	span = x * (nk - 3) >> 16;
 
@@ -262,7 +262,7 @@ long Spline(long x, long* knots, long nk) {
 	x = x * (nk - 3) - span * 65536;
 	c1 = (k[1] >> 1) - (k[2] >> 1) - k[2] + k[1] + (k[3] >> 1) + ((-k[0] - 1) >> 1);
 	c2 = 2 * k[2] - 2 * k[1] - (k[1] >> 1) - (k[3] >> 1) + k[0];
-	return ((long long)x * (((long long)x * (((long long)x * c1 >> 16) + c2) >> 16) + (k[2] >> 1) + ((-k[0] - 1) >> 1)) >> 16) + k[1];
+	return ((int long)x * (((int long)x * (((int long)x * c1 >> 16) + c2) >> 16) + (k[2] >> 1) + ((-k[0] - 1) >> 1)) >> 16) + k[1];
 }
 
 void CalculateSpotCams() {
@@ -271,9 +271,9 @@ void CalculateSpotCams() {
 	ITEM_INFO* item;
 	CAMERA_INFO backup;
 	camera_type ctype;
-	long cpx, cpy, cpz, ctx, cty, ctz, cspeed, cfov, croll, next_spline_camera, cunt;
-	long cs, cp, clen, tlen, cx, cy, cz, lx, ly, lz, sp;
-	static long bFirstLook = 0;
+	int cpx, cpy, cpz, ctx, cty, ctz, cspeed, cfov, croll, next_spline_camera, cunt;
+	int cs, cp, clen, tlen, cx, cy, cz, lx, ly, lz, sp;
+	static int bFirstLook = 0;
 	short spline_cnt;
 
 	if(bDisableLaraControl) {

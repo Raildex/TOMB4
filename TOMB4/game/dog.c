@@ -44,7 +44,7 @@ void DogControl(short item_number) {
 	ITEM_INFO* item;
 	CREATURE_INFO* dog;
 	AI_INFO info, lara_info;
-	long lara_dx, lara_dz;
+	int lara_dx, lara_dz;
 	short angle, head, head_x, torso_y, random, frame;
 
 	if(!CreatureActive(item_number)) {

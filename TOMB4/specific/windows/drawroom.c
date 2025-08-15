@@ -37,17 +37,17 @@
 #include <math.h>
 
 static ROOM_DYNAMIC RoomDynamics[MAX_DYNAMICS];
-static long nRoomDynamics;
+static int nRoomDynamics;
 
 MESH_DATA** mesh_vtxbuf;
-long nBuckets;
+int nBuckets;
 TEXTUREBUCKET* Bucket;
 float clip_left;
 float clip_top;
 float clip_right;
 float clip_bottom;
-long bWaterEffect;
-long num_level_meshes;
+int bWaterEffect;
+int num_level_meshes;
 WATERTAB WaterTable[22][64];
 short clipflags[8192];
 float vert_wibble_table[32];
@@ -55,9 +55,9 @@ static unsigned char water_abs[4] = { 4, 8, 12, 16 };
 static short water_shimmer[4] = { 31, 63, 95, 127 };
 static short water_choppy[4] = { 16, 53, 90, 127 };
 
-long water_color_R = 128;
-long water_color_G = 224;
-long water_color_B = 255;
+int water_color_R = 128;
+int water_color_G = 224;
+int water_color_B = 255;
 
 void ProcessRoomDynamics(ROOM_INFO* r) {
 	// Collect dynamic lights for room lighting
@@ -102,7 +102,7 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 	short* clip;
 	static float DistanceFogStart;
 	float zv, fR, fG, fB, val, val2, num;
-	long cR, cG, cB, sA, sR, sG, sB, rndoff, col;
+	int cR, cG, cB, sA, sR, sG, sB, rndoff, col;
 	short clipFlag;
 	unsigned char rnd, abs;
 	char shimmer;
@@ -125,7 +125,7 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 		n.y = r->vnormals[i].y;
 		n.z = r->vnormals[i].z;
 
-		rndoff = (long)((vtx.x / 64.0F) + (vtx.y / 64.0F) + (vtx.z / 128.0F)) & 0xFC;
+		rndoff = (int)((vtx.x / 64.0F) + (vtx.y / 64.0F) + (vtx.z / 128.0F)) & 0xFC;
 
 		if(i < r->nWaterVerts) {
 			rnd = WaterTable[r->MeshEffect][rndoff & 0x3F].random;
@@ -157,8 +157,8 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 			vPos.y = vPos.y * zv + f_centery;
 
 			if(i >= r->nWaterVerts && camera.underwater) {
-				vPos.x += vert_wibble_table[((wibble + (long)vPos.y) >> 3) & 0x1F];
-				vPos.y += vert_wibble_table[((wibble + (long)vPos.x) >> 3) & 0x1F];
+				vPos.x += vert_wibble_table[((wibble + (int)vPos.y) >> 3) & 0x1F];
+				vPos.y += vert_wibble_table[((wibble + (int)vPos.x) >> 3) & 0x1F];
 			}
 
 			MyVertexBuffer[i].rhw = zv * f_moneopersp;
@@ -220,12 +220,12 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 			}
 		}
 
-		cR += (long)(fR * 255.0F);
-		cG += (long)(fG * 255.0F);
-		cB += (long)(fB * 255.0F);
+		cR += (int)(fR * 255.0F);
+		cG += (int)(fG * 255.0F);
+		cB += (int)(fB * 255.0F);
 
 		if(i < r->nWaterVerts + r->nShoreVerts) {
-			rndoff = (long)((vtx.x / 64.0F) + (vtx.y / 64.0F) + (vtx.z / 128.0F)) & 0xFC;
+			rndoff = (int)((vtx.x / 64.0F) + (vtx.y / 64.0F) + (vtx.z / 128.0F)) & 0xFC;
 
 			rnd = WaterTable[r->MeshEffect][rndoff & 0x3C].random;
 			shimmer = WaterTable[r->MeshEffect][((wibble >> 2) + rnd) & 0x3F].shimmer;
@@ -241,15 +241,15 @@ void ProcessRoomVertices(ROOM_INFO* r) {
 
 			if(gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6) {
 				val = (vPos.z - DistanceFogStart) / 512.0F;
-				sA -= (long)(val * (255.0F / 8.0F));
+				sA -= (int)(val * (255.0F / 8.0F));
 
 				if(sA < 0) {
 					sA = 0;
 				}
 			} else {
-				cR -= (long)val;
-				cG -= (long)val;
-				cB -= (long)val;
+				cR -= (int)val;
+				cG -= (int)val;
+				cB -= (int)val;
 			}
 		}
 
@@ -419,7 +419,7 @@ void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 	short* FaceData;
 	FVECTOR* prelight;
 	float intensity;
-	long nWaterVerts, nShoreVerts, nRestOfVerts, nLights, nBulbs;
+	int nWaterVerts, nShoreVerts, nRestOfVerts, nLights, nBulbs;
 	unsigned short cR, cG, cB;
 
 	data_ptr = data;
@@ -544,8 +544,8 @@ void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 		r->tris[i].textInfo = data_ptr[3];
 	}
 
-	r->prelight = (long*)calloc(r->nVerts, sizeof(long));
-	r->prelightwater = (long*)calloc(r->nVerts, sizeof(long));
+	r->prelight = (long*)calloc(r->nVerts, sizeof(int));
+	r->prelightwater = (long*)calloc(r->nVerts, sizeof(int));
 	r->watercalc = 0;
 	r->posx = (float)r->x;
 	r->posy = (float)r->y;
@@ -623,7 +623,7 @@ void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 				pclight->b *= intensity;
 
 				if(r->light[nLights].Type) {
-					pclight->shadow = (long)(intensity * 255);
+					pclight->shadow = (int)(intensity * 255);
 				}
 
 				pclight->x = (float)light->x;
@@ -655,7 +655,7 @@ void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize) {
 
 void S_InsertRoom(ROOM_INFO* r) {
 	TEXTURESTRUCT* pTex;
-	long doublesided;
+	int doublesided;
 
 	clip_left = r->left;
 	clip_right = r->right;
@@ -694,7 +694,7 @@ void S_InsertRoom(ROOM_INFO* r) {
 
 
 void InitBuckets() {
-	long oldBuckets = nBuckets;
+	int oldBuckets = nBuckets;
 	if(oldBuckets != GetNumTextures(currentLevel)) {
 		nBuckets = GetNumTextures(currentLevel);
 		Bucket = (TEXTUREBUCKET*)calloc(nBuckets, sizeof(TEXTUREBUCKET));
@@ -747,9 +747,9 @@ void DrawBucket(TEXTUREBUCKET* bucket) {
 	DrawPrimitiveCnt++;
 }
 
-void FindBucket(long tpage, D3DTLBUMPVERTEX** Vpp, long** nVtxpp) {
+void FindBucket(int tpage, D3DTLBUMPVERTEX** Vpp, long** nVtxpp) {
 	TEXTUREBUCKET* bucket;
-	long nVtx, biggest;
+	int nVtx, biggest;
 
 	for(int i = 0; i < nBuckets; i++) {
 		bucket = &Bucket[i];
@@ -862,11 +862,11 @@ void DrawBuckets() {
 }
 
 
-void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i) {
+void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, int i) {
 	MESH_DATA* mesh;
 	D3DVERTEXBUFFERDESC buf;
 	D3DVERTEX* vtx;
-	long lp;
+	int lp;
 	char c;
 	if(mesh_ptr == last_mesh_ptr) {
 
@@ -931,7 +931,7 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 				mesh->prelight = 0;
 			} else {
 				mesh->Normals = 0;
-				mesh->prelight = (long*)calloc(mesh->nVerts, sizeof(long));
+				mesh->prelight = (long*)calloc(mesh->nVerts, sizeof(int));
 
 				for(int j = 0; j < mesh->nVerts; j++) {
 					c = 255 - (mesh_ptr[0] >> 5);
@@ -966,8 +966,8 @@ void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i)
 	}
 }
 
-unsigned short GetRandom(WATERTAB* wt, long lp) {
-	long loop;
+unsigned short GetRandom(WATERTAB* wt, int lp) {
+	int loop;
 	unsigned short ret;
 
 	do {

@@ -6,7 +6,7 @@
 #pragma pack(push, 1)
 typedef struct SAVEGAME_INFO {
 	LARA_INFO Lara;
-	long cutscene_triggered;
+	int cutscene_triggered;
 	unsigned char HubLevels[10]; // saved level indices. highest one that isn't 0 is the one we are currently in
 	unsigned short HubOffsets[10]; // offset of each level's data inside the savegame buffer
 	unsigned short HubSizes[10]; // size of each level's data inside the savegame buffer

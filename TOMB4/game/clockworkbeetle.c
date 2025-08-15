@@ -21,10 +21,10 @@
 #include "specific/function_stubs.h"
 #include <stdlib.h>
 
-ITEM_INFO* TriggerClockworkBeetle(long flag) {
+ITEM_INFO* TriggerClockworkBeetle(int flag) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
-	long dx, dy, dz;
+	int dx, dy, dz;
 	short item_number;
 
 	if(flag || (lara_item->current_anim_state == AS_STOP && lara_item->anim_number == ANIM_BREATH && !lara_item->gravity_status && lara.gun_status == LG_NO_ARMS)) {
@@ -91,9 +91,9 @@ void ControlClockworkBeetle(short item_number) {
 	ITEM_INFO* item2;
 	FLOOR_INFO* floor;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
-	long bounce, h, x, z, dx, dy, dz;
+	int bounce, h, x, z, dx, dy, dz;
 	short frame, base, room_number, rotY, angle;
 
 	bounce = 0;

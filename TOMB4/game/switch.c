@@ -102,7 +102,7 @@ void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) 
 	}
 }
 
-long SwitchTrigger(short item_number, short timer) {
+int SwitchTrigger(short item_number, short timer) {
 	ITEM_INFO* item;
 
 	item = GetItem(currentLevel, item_number);
@@ -136,12 +136,12 @@ long SwitchTrigger(short item_number, short timer) {
 	return 0;
 }
 
-long GetSwitchTrigger(ITEM_INFO* item, short* ItemNos, long AttatchedToSwitch) {
+int GetSwitchTrigger(ITEM_INFO* item, short* ItemNos, int AttatchedToSwitch) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	short* data;
-	long num;
+	int num;
 
 	floor = GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &item->room_number);
 	GetHeight(floor, item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
@@ -179,9 +179,9 @@ long GetSwitchTrigger(ITEM_INFO* item, short* ItemNos, long AttatchedToSwitch) {
 	return num;
 }
 
-void TestTriggersAtXYZ(long x, long y, long z, short room_number, short heavy, short flags) {
+void TestTriggersAtXYZ(int x, int y, int z, short room_number, short heavy, short flags) {
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	GetHeight(GetFloor(x, y, z, &room_number), x, y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	TestTriggers(trigger_index, heavy, flags);
 }
@@ -319,7 +319,7 @@ void SwitchType78Collision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 void UnderwaterSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
-	long flag;
+	int flag;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -477,7 +477,7 @@ void TurnSwitchControl(short item_number) {
 
 void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
-	long flag;
+	int flag;
 	short Triggers[8];
 
 	flag = 0;
@@ -568,7 +568,7 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 void RailSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
-	long flag;
+	int flag;
 
 	flag = 0;
 	item = GetItem(currentLevel, item_number);
@@ -650,7 +650,7 @@ void JumpSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 
 void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
-	long flag;
+	int flag;
 
 	flag = 0;
 	item = GetItem(currentLevel, item_number);
@@ -792,7 +792,7 @@ void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	ITEM_INFO* door_item;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	DOOR_DATA* door;
 	short* data;
 

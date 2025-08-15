@@ -15,14 +15,14 @@ typedef struct ROOM_INFO {
 	FLOOR_INFO* floor;
 	LIGHTINFO* light;
 	MESH_INFO* mesh;
-	long x;
-	long y;
-	long z;
-	long minfloor;
-	long maxceiling;
+	int x;
+	int y;
+	int z;
+	int minfloor;
+	int maxceiling;
 	short x_size;
 	short y_size;
-	long ambient;
+	int ambient;
 	short num_lights;
 	short num_meshes;
 	unsigned char ReverbType;
@@ -41,9 +41,9 @@ typedef struct ROOM_INFO {
 	short fx_number;
 	short flipped_room;
 	unsigned short flags;
-	long nVerts;
-	long nWaterVerts;
-	long nShoreVerts;
+	int nVerts;
+	int nWaterVerts;
+	int nShoreVerts;
 	POLYFACE3* tris;
 	POLYFACE4* quads;
 	float posx;
@@ -52,10 +52,10 @@ typedef struct ROOM_INFO {
 	FVECTOR* vnormals;
 	long* prelight;
 	long* prelightwater;
-	long watercalc;
+	int watercalc;
 	PHD_VECTOR* verts;
-	long gt3cnt;
-	long gt4cnt;
+	int gt3cnt;
+	int gt4cnt;
 	PCLIGHT_INFO* pclight;
 } ROOM_INFO;
 #pragma pack(pop)

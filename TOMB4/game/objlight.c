@@ -18,7 +18,7 @@
 
 void ControlPulseLight(short item_number) {
 	ITEM_INFO* item;
-	long sin, r, g, b;
+	int sin, r, g, b;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -65,7 +65,7 @@ void ControlPulseLight(short item_number) {
 
 void ControlElectricalLight(short item_number) {
 	ITEM_INFO* item;
-	long shade, r, g, b;
+	int shade, r, g, b;
 
 	item = GetItem(currentLevel, item_number);
 

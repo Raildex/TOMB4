@@ -14,12 +14,12 @@
 		result.tv = clipper * (v2->tv - v1->tv) + v1->tv;     \
 	}
 
-long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out) {
+int ZClipper(int n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out) {
 	D3DTLBUMPVERTEX* pIn;
 	D3DTLBUMPVERTEX* pOut;
 	D3DTLBUMPVERTEX* last;
 	float lastZ, inZ, dz, iR, iG, iB, iA, lR, lG, lB, lA, fR, fG, fB, fA;
-	long nPoints, r, g, b, a;
+	int nPoints, r, g, b, a;
 
 	pIn = in;
 	last = &in[n - 1];
@@ -55,10 +55,10 @@ long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out) {
 			fR = iR + (lR - iR) * dz;
 			fG = iG + (lG - iG) * dz;
 			fB = iB + (lB - iB) * dz;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			pOut->color = RGBA(r, g, b, a);
 
 			iR = (float)CLRR(pIn->specular);
@@ -75,10 +75,10 @@ long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out) {
 			fR = iR + (lR - iR) * dz;
 			fG = iG + (lG - iG) * dz;
 			fB = iB + (lB - iB) * dz;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			pOut->specular = RGBA(r, g, b, a);
 
 			pOut++;
@@ -105,14 +105,14 @@ long ZClipper(long n, D3DTLBUMPVERTEX* in, D3DTLBUMPVERTEX* out) {
 	return nPoints;
 }
 
-long visible_zclip(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2) {
+int visible_zclip(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2) {
 	return (v2->tu * v0->sz - v2->sz * v0->tu) * v1->tv
 		+ (v2->sz * v0->tv - v2->tv * v0->sz) * v1->tu
 		+ (v2->tv * v0->tu - v2->tu * v0->tv) * v1->sz
 		< 0;
 }
 
-long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
+int XYUVGClipper(int n, D3DTLBUMPVERTEX* in) {
 	D3DTLBUMPVERTEX* v1;
 	D3DTLBUMPVERTEX* v2;
 	D3DTLBUMPVERTEX output[8];
@@ -121,7 +121,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 	float cr2, cg2, cb2, ca2;
 	float sr2, sg2, sb2, sa2;
 	float clipper, fR, fG, fB, fA;
-	long nPoints, r, g, b, a;
+	int nPoints, r, g, b, a;
 
 	v2 = &in[n - 1];
 	cr2 = (float)(CLRR(v2->color));
@@ -168,20 +168,20 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			fR = cr2 + (cr1 - cr2) * clipper;
 			fG = cg2 + (cg1 - cg2) * clipper;
 			fB = cb2 + (cb1 - cb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			output[nPoints].color = RGBA(r, g, b, a);
 
 			fA = sa2 + (sa1 - sa2) * clipper;
 			fR = sr2 + (sr1 - sr2) * clipper;
 			fG = sg2 + (sg1 - sg2) * clipper;
 			fB = sb2 + (sb1 - sb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			output[nPoints].specular = RGBA(r, g, b, a);
 
 			output[nPoints].sx = f_left;
@@ -199,20 +199,20 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			fR = cr2 + (cr1 - cr2) * clipper;
 			fG = cg2 + (cg1 - cg2) * clipper;
 			fB = cb2 + (cb1 - cb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			output[nPoints].color = RGBA(r, g, b, a);
 
 			fA = sa2 + (sa1 - sa2) * clipper;
 			fR = sr2 + (sr1 - sr2) * clipper;
 			fG = sg2 + (sg1 - sg2) * clipper;
 			fB = sb2 + (sb1 - sb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			output[nPoints].specular = RGBA(r, g, b, a);
 
 			output[nPoints].sx = f_right;
@@ -229,20 +229,20 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			fR = cr2 + (cr1 - cr2) * clipper;
 			fG = cg2 + (cg1 - cg2) * clipper;
 			fB = cb2 + (cb1 - cb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			output[nPoints].color = RGBA(r, g, b, a);
 
 			fA = sa2 + (sa1 - sa2) * clipper;
 			fR = sr2 + (sr1 - sr2) * clipper;
 			fG = sg2 + (sg1 - sg2) * clipper;
 			fB = sb2 + (sb1 - sb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			output[nPoints].specular = RGBA(r, g, b, a);
 
 			output[nPoints].sx = f_left;
@@ -256,20 +256,20 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			fR = cr2 + (cr1 - cr2) * clipper;
 			fG = cg2 + (cg1 - cg2) * clipper;
 			fB = cb2 + (cb1 - cb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			output[nPoints].color = RGBA(r, g, b, a);
 
 			fA = sa2 + (sa1 - sa2) * clipper;
 			fR = sr2 + (sr1 - sr2) * clipper;
 			fG = sg2 + (sg1 - sg2) * clipper;
 			fB = sb2 + (sb1 - sb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			output[nPoints].specular = RGBA(r, g, b, a);
 
 			output[nPoints].sx = f_right;
@@ -339,20 +339,20 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			fR = cr2 + (cr1 - cr2) * clipper;
 			fG = cg2 + (cg1 - cg2) * clipper;
 			fB = cb2 + (cb1 - cb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			in[nPoints].color = RGBA(r, g, b, a);
 
 			fA = sa2 + (sa1 - sa2) * clipper;
 			fR = sr2 + (sr1 - sr2) * clipper;
 			fG = sg2 + (sg1 - sg2) * clipper;
 			fB = sb2 + (sb1 - sb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			in[nPoints].specular = RGBA(r, g, b, a);
 
 			in[nPoints].sx = clipper * (v1->sx - v2->sx) + v2->sx;
@@ -370,20 +370,20 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			fR = cr2 + (cr1 - cr2) * clipper;
 			fG = cg2 + (cg1 - cg2) * clipper;
 			fB = cb2 + (cb1 - cb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			in[nPoints].color = RGBA(r, g, b, a);
 
 			fA = sa2 + (sa1 - sa2) * clipper;
 			fR = sr2 + (sr1 - sr2) * clipper;
 			fG = sg2 + (sg1 - sg2) * clipper;
 			fB = sb2 + (sb1 - sb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			in[nPoints].specular = RGBA(r, g, b, a);
 
 			in[nPoints].sx = clipper * (v1->sx - v2->sx) + v2->sx;
@@ -399,20 +399,20 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			fR = cr2 + (cr1 - cr2) * clipper;
 			fG = cg2 + (cg1 - cg2) * clipper;
 			fB = cb2 + (cb1 - cb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			in[nPoints].color = RGBA(r, g, b, a);
 
 			fA = sa2 + (sa1 - sa2) * clipper;
 			fR = sr2 + (sr1 - sr2) * clipper;
 			fG = sg2 + (sg1 - sg2) * clipper;
 			fB = sb2 + (sb1 - sb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			in[nPoints].specular = RGBA(r, g, b, a);
 
 			in[nPoints].sx = clipper * (v1->sx - v2->sx) + v2->sx;
@@ -426,20 +426,20 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in) {
 			fR = cr2 + (cr1 - cr2) * clipper;
 			fG = cg2 + (cg1 - cg2) * clipper;
 			fB = cb2 + (cb1 - cb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			in[nPoints].color = RGBA(r, g, b, a);
 
 			fA = sa2 + (sa1 - sa2) * clipper;
 			fR = sr2 + (sr1 - sr2) * clipper;
 			fG = sg2 + (sg1 - sg2) * clipper;
 			fB = sb2 + (sb1 - sb2) * clipper;
-			a = (long)fA;
-			r = (long)fR;
-			g = (long)fG;
-			b = (long)fB;
+			a = (int)fA;
+			r = (int)fR;
+			g = (int)fG;
+			b = (int)fB;
 			in[nPoints].specular = RGBA(r, g, b, a);
 
 			in[nPoints].sx = clipper * (v1->sx - v2->sx) + v2->sx;

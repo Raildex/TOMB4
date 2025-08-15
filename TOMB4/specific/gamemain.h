@@ -1,12 +1,12 @@
 #ifndef TOMB4_SPECIFIC_GAMEMAIN_H
 #define TOMB4_SPECIFIC_GAMEMAIN_H
 void S_GameClose();
-long S_GameInitialise();
-long S_SaveGame(long slot_num);
-long S_LoadGame(long slot_num);
+int S_GameInitialise();
+int S_SaveGame(int slot_num);
+int S_LoadGame(int slot_num);
 void S_GameMain();
 void S_HandleMessages();
-extern long SaveCounter;
+extern int SaveCounter;
 
 
 #endif// TOMB4_SPECIFIC_GAMEMAIN_H

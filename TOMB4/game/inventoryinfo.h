@@ -9,7 +9,7 @@ typedef struct INV_SLOT {
 } INV_SLOT;
 
 typedef struct INVENTORYINFO {
-	long nSlots;
+	int nSlots;
 	INV_SLOT* slots;
 } INVENTORYINFO;
 
@@ -19,7 +19,7 @@ void AddInventoryItem(INVENTORYINFO* inventory, enum object_types obj, unsigned 
 
 void RemoveInventoryItem(INVENTORYINFO* inventory, enum object_types obj, unsigned short amnt);
 
-long HasItemInInventory(INVENTORYINFO* inventory, enum object_types obj);
+int HasItemInInventory(INVENTORYINFO* inventory, enum object_types obj);
 
 void TrimInventory(INVENTORYINFO* inv);
 

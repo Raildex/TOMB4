@@ -5,9 +5,9 @@
 #include "game/phd3dpos.h"
 #pragma pack(push, 1)
 typedef struct ITEM_INFO {
-	long floor;
-	unsigned long touch_bits;
-	unsigned long mesh_bits;
+	int floor;
+	unsigned int touch_bits;
+	unsigned int mesh_bits;
 	enum object_types object_number;
 	short current_anim_state;
 	short goal_anim_state;
@@ -32,16 +32,16 @@ typedef struct ITEM_INFO {
 	void* data;
 	PHD_3DPOS pos;
 	ITEM_LIGHT il;
-	unsigned long active : 1;
-	unsigned long status : 2;
-	unsigned long gravity_status : 1;
-	unsigned long hit_status : 1;
-	unsigned long collidable : 1;
-	unsigned long looked_at : 1;
-	unsigned long dynamic_light : 1;
-	unsigned long poisoned : 1;
-	unsigned long ai_bits : 5;
-	unsigned long meshswap_meshbits;
+	unsigned int active : 1;
+	unsigned int status : 2;
+	unsigned int gravity_status : 1;
+	unsigned int hit_status : 1;
+	unsigned int collidable : 1;
+	unsigned int looked_at : 1;
+	unsigned int dynamic_light : 1;
+	unsigned int poisoned : 1;
+	unsigned int ai_bits : 5;
+	unsigned int meshswap_meshbits;
 } ITEM_INFO;
 #pragma pack(pop)
 #endif// TOMB4_GAME_ITEMINFO_H

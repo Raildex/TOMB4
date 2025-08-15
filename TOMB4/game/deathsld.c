@@ -73,8 +73,8 @@ void ControlDeathSlide(short item_number) {
 	FLOOR_INFO* floor;
 	GAME_VECTOR* old;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
-	long x, y, z, h, c;
+	int tiltxoff, tiltzoff, OnObject;
+	int x, y, z, h, c;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);

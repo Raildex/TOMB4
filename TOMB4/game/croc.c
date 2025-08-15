@@ -39,7 +39,7 @@
 LOCUST_STRUCT Locusts[64];
 
 static BITE_INFO croc_bite = { 0, -100, 500, 9 };
-static long next_locust = 0;
+static int next_locust = 0;
 
 void InitialiseCroc(short item_number) {
 	ITEM_INFO* item;
@@ -65,9 +65,9 @@ void CrocControl(short item_number) {
 	CREATURE_INFO* croc;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	AI_INFO info;
-	long s, c, x, z, h, h2;
+	int s, c, x, z, h, h2;
 	short room_number, angle, rot, roll;
 
 	if(!CreatureActive(item_number)) {
@@ -321,7 +321,7 @@ void CrocControl(short item_number) {
 	}
 }
 
-long GetFreeLocust() {
+int GetFreeLocust() {
 	LOCUST_STRUCT* fx;
 
 	fx = &Locusts[next_locust];
@@ -348,7 +348,7 @@ void TriggerLocust(ITEM_INFO* item) {
 	LOCUST_STRUCT* fx;
 	PHD_VECTOR vec;
 	PHD_VECTOR vec2;
-	long fx_number;
+	int fx_number;
 	short angles[2];
 
 	fx_number = GetFreeLocust();
@@ -444,7 +444,7 @@ void UpdateLocusts() {
 	LOCUST_STRUCT* fx;
 	short* lb;
 	short bounds[6];
-	long speed, ox, oy, oz, closestdist, closestnum;
+	int speed, ox, oy, oz, closestdist, closestnum;
 	short angles[2];
 	short max_turn;
 
@@ -588,10 +588,10 @@ void TriggerCrocgodMissile(PHD_3DPOS* pos, short room_number, short num) {
 	}
 }
 
-void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv) {
+void TriggerCrocgodMissileFlame(short fx_number, int xv, int yv, int zv) {
 	FX_INFO* fx;
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	fx = GetEffect(currentLevel, fx_number);
 	dx = lara_item->pos.pos.x - fx->pos.pos.x;

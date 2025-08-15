@@ -17,7 +17,7 @@
 #include <process.h>
 
 
-long SaveCounter;
+int SaveCounter;
 
 static float unused_vert_wibble_table[256];
 
@@ -58,15 +58,15 @@ void S_GameMain() {
 	}
 }
 
-long S_GameInitialise() {
+int S_GameInitialise() {
 	S_InitRoomDraw();
 	return 1;
 }
 
-long S_SaveGame(long slot_num) {
+int S_SaveGame(int slot_num) {
 	HANDLE file;
-	unsigned long bytes;
-	long days, hours, minutes, seconds;
+	unsigned int bytes;
+	int days, hours, minutes, seconds;
 	char buffer[80], counter[16];
 
 	memset(buffer, 0, sizeof(buffer));
@@ -77,7 +77,7 @@ long S_SaveGame(long slot_num) {
 		memset(buffer, 0, sizeof(buffer));
 		wsprintf(buffer, "%s", SCRIPT_TEXT(gfLevelNames[gfCurrentLevel]));
 		WriteFile(file, buffer, 75, &bytes, 0);
-		WriteFile(file, &SaveCounter, sizeof(long), &bytes, 0);
+		WriteFile(file, &SaveCounter, sizeof(int), &bytes, 0);
 		days = savegame.Game.Timer / 30 / 86400;
 		hours = savegame.Game.Timer / 30 % 86400 / 3600;
 		minutes = savegame.Game.Timer / 30 / 60 % 60;
@@ -96,10 +96,10 @@ long S_SaveGame(long slot_num) {
 	return 0;
 }
 
-long S_LoadGame(long slot_num) {
+int S_LoadGame(int slot_num) {
 	HANDLE file;
-	unsigned long bytes;
-	long value;
+	unsigned int bytes;
+	int value;
 	char buffer[80];
 
 	wsprintf(buffer, "savegame.%d", slot_num);
@@ -107,9 +107,9 @@ long S_LoadGame(long slot_num) {
 
 	if(file != INVALID_HANDLE_VALUE) {
 		ReadFile(file, buffer, 75, &bytes, 0);
-		ReadFile(file, &value, sizeof(long), &bytes, 0);
-		ReadFile(file, &value, sizeof(long), &bytes, 0);
-		ReadFile(file, &value, sizeof(long), &bytes, 0);
+		ReadFile(file, &value, sizeof(int), &bytes, 0);
+		ReadFile(file, &value, sizeof(int), &bytes, 0);
+		ReadFile(file, &value, sizeof(int), &bytes, 0);
 		ReadFile(file, &savegame, sizeof(SAVEGAME_INFO), &bytes, 0);
 		CloseHandle(file);
 		return 1;

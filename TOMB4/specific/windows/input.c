@@ -361,18 +361,18 @@ const int DirectInputKeyMap[256] = { // DIK -> Internal
 	-1,
 };
 
-long conflict[18];
+int conflict[18];
 short ammo_change_timer = 0;
 char ammo_change_buf[12];
 
-static long joy_x;
-static long joy_y;
-static long joy_fire;
+static int joy_x;
+static int joy_y;
+static int joy_fire;
 
 static void DoWeaponHotkey() // adds extra checks and does ammo type swaps..
 {
 	short state;
-	long goin;
+	int goin;
 
 	if(!lara_item) {
 		goin = 0;
@@ -518,7 +518,7 @@ static void DoWeaponHotkey() // adds extra checks and does ammo type swaps..
 	}
 }
 
-long Key(long number) {
+int Key(int number) {
 	short key;
 
 	key = layout[1][number];
@@ -584,15 +584,15 @@ long Key(long number) {
 	return 0;
 }
 
-long S_IsActionDown(INPUT_MANAGER* manager, input_buttons button) {
+int S_IsActionDown(INPUT_MANAGER* manager, input_buttons button) {
 	return manager->lastInput[button] & 0x0001;
 }
 
-long S_IsActionDownDebounced(INPUT_MANAGER* manager, input_buttons button) {
+int S_IsActionDownDebounced(INPUT_MANAGER* manager, input_buttons button) {
 	return manager->lastInput[button] & 0x0001 && !(manager->lastInput[button] & 0x8000);
 }
 
-long S_MapKeyboardButton(INPUT_MANAGER *manager, keyboard_button button, input_buttons action) {
+int S_MapKeyboardButton(INPUT_MANAGER *manager, keyboard_button button, input_buttons action) {
 	for(int i = 0; i < NUM_KEYBOARD_BUTTONS; ++i) {
 		if(manager->keyboardLayout[i] == action) {
 			return 0; // we have a button set to an action already
@@ -618,7 +618,7 @@ void S_UpdateInput(INPUT_MANAGER* manager) {
 		if(DirectInputKeyMap[i] == -1) {
 			continue;
 		}
-		long internalKey = DirectInputKeyMap[i];
+		int internalKey = DirectInputKeyMap[i];
 		keymap[internalKey] = directInputKeymap[i];
 		input_buttons action = manager->keyboardLayout[internalKey];
 		if(action == IN_NONE) {
@@ -638,10 +638,10 @@ void S_ClearInput(INPUT_MANAGER* manager) {
 	memset(&manager->lastInput[0],0,sizeof(manager->lastInput));
 }
 
-long ReadJoystick(long* x, long* y) {
+int ReadJoystick(long* x, long* y) {
 	JOYINFOEX joystick;
 	static JOYCAPS caps;
-	static long unavailable = 1;
+	static int unavailable = 1;
 
 	joystick.dwSize = sizeof(JOYINFOEX);
 	joystick.dwFlags = JOY_RETURNX | JOY_RETURNY | JOY_RETURNBUTTONS;
@@ -668,10 +668,10 @@ long ReadJoystick(long* x, long* y) {
 	return joystick.dwButtons;
 }
 
-static long Check(const char* scope, HRESULT result) {
+static int Check(const char* scope, HRESULT result) {
 	if(!SUCCEEDED(result)) {
 		char buffer[256];
-		long n = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_FROM_HMODULE, NULL, result, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), buffer, sizeof(buffer), NULL);
+		int n = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_FROM_HMODULE, NULL, result, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), buffer, sizeof(buffer), NULL);
 		LogE(scope, "DirectInput Error: %.*s", n, buffer );
 		return 0;
 	}
@@ -784,7 +784,7 @@ void S_ClearAction(INPUT_MANAGER *manager, input_buttons button) {
 	manager->lastInput[button] = 0;
 }
 
-long S_CreateInputManager(INPUT_MANAGER * *out) {
+int S_CreateInputManager(INPUT_MANAGER * *out) {
 	INPUT_MANAGER* manager = (INPUT_MANAGER*)calloc(1, sizeof(INPUT_MANAGER));
 	memcpy(manager->keyboardLayout, defaultLayout, sizeof(defaultLayout));
 	if(!manager) {

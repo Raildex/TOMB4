@@ -9,14 +9,14 @@ typedef struct FOGBULB_STRUCT {
 	float sqrad;
 	float inv_sqrad;
 	float dist;
-	long density;
-	long inRange;
-	long timer;
-	long active;
-	long FXRad;
-	long room_number;
-	long r;
-	long g;
-	long b;
+	int density;
+	int inRange;
+	int timer;
+	int active;
+	int FXRad;
+	int room_number;
+	int r;
+	int g;
+	int b;
 } FOGBULB_STRUCT;
 #endif // TOMB4_GAME_FOGBULBSTRUCT_H

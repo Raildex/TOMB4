@@ -117,7 +117,7 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	}
 }
 
-long ReTriggerAhmet(short item_number) {
+int ReTriggerAhmet(short item_number) {
 	ITEM_INFO* item;
 
 	item = GetItem(currentLevel, item_number);
@@ -159,8 +159,8 @@ void ScalesControl(short item_number) {
 	ITEM_INFO* item2;
 	FLOOR_INFO* floor;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
-	long flags, numTriggers;
+	int tiltxoff, tiltzoff, OnObject;
+	int flags, numTriggers;
 	short itemNos[8];
 	short room_number;
 
@@ -205,7 +205,7 @@ void ScalesControl(short item_number) {
 
 void ExplodeAhmet(ITEM_INFO* item) {
 	SPHERE* sphere;
-	long spheres;
+	int spheres;
 
 	if(!(wibble & 7)) {
 		for(spheres = GetSpheres(item, Slist, 1); spheres > 0; spheres--) {
@@ -238,10 +238,10 @@ void AhmetControl(short item_number) {
 	CREATURE_INFO* ahmet;
 	FLOOR_INFO* floor;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	AI_INFO info;
 	AI_INFO larainfo;
-	long dx, dz;
+	int dx, dz;
 	short angle, head, room_number, frame, base;
 
 	if(!CreatureActive(item_number)) {

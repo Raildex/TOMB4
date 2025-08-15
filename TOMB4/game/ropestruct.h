@@ -7,8 +7,8 @@ typedef struct ROPE_STRUCT {
 	PHD_VECTOR NormalisedSegment[24];
 	PHD_VECTOR MeshSegment[24];
 	PHD_VECTOR Position;
-	long Coords[24][3];
-	long SegmentLength;
-	long Active;
+	int Coords[24][3];
+	int SegmentLength;
+	int Active;
 } ROPE_STRUCT;
 #endif // TOMB4_GAME_ROPESTRUCT_H

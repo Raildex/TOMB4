@@ -295,7 +295,7 @@ void lara_as_waterroll(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_col_uwdeath(ITEM_INFO* item, COLL_INFO* coll) {
-	long wh;
+	int wh;
 
 	item->hit_points = -1;
 	lara.air = -1;
@@ -309,12 +309,12 @@ void lara_col_uwdeath(ITEM_INFO* item, COLL_INFO* coll) {
 	LaraSwimCollision(item, coll);
 }
 
-long GetWaterDepth(long x, long y, long z, short room_number) {
+int GetWaterDepth(int x, int y, int z, short room_number) {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
-	long x_floor, y_floor, h;
+	int tiltxoff, tiltzoff, OnObject;
+	int x_floor, y_floor, h;
 	short door;
 
 	r = GetRoom(currentLevel, room_number);
@@ -415,8 +415,8 @@ void SwimTurn(ITEM_INFO* item) {
 void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll) {
 	FLOOR_INFO* floor;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
-	long wd;
+	int tiltxoff, tiltzoff, OnObject;
+	int wd;
 	short room_number;
 
 	room_number = item->room_number;
@@ -445,7 +445,7 @@ void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll) {
 
 void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll) {
 	COLL_INFO coll2, coll3;
-	long height;
+	int height;
 	short oxr, hit;
 
 	hit = 0;
@@ -559,7 +559,7 @@ void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void LaraWaterCurrent(COLL_INFO* coll) {
-	long angle, speed, sinkval, shifter, absvel;
+	int angle, speed, sinkval, shifter, absvel;
 
 	if(lara.current_active) {
 		sinkval = lara.current_active - 1;

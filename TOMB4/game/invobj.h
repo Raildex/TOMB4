@@ -9,6 +9,6 @@ typedef struct INVOBJ {
 	unsigned short zrot;
 	short flags;
 	short objname;
-	unsigned long meshbits;
+	unsigned int meshbits;
 } INVOBJ;
 #endif // TOMB4_GAME_INVOBJ_H

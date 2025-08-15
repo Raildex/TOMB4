@@ -17,7 +17,7 @@ if(is_plat("linux")) then
 end
 target("trng2")
 	set_kind("binary")
-	add_languages("c23")
+	set_languages("c23")
 	add_files("game/*.c")
 	add_files("global/*.c")
 	add_includedirs("./")

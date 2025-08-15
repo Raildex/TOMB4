@@ -55,16 +55,16 @@ static BITE_INFO EnemyBites[2] = {
 	{ 0, -20, 180, 11 }
 };
 
-long IM_rate;
-long IM_frac;
+int IM_rate;
+int IM_frac;
 
 float* mIMptr;
 float mIMstack[indices_count * 64];
 
-long current_room;
+int current_room;
 short no_rotation[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-long outside;
+int outside;
 
 short SkyPos;
 short SkyPos2;
@@ -77,21 +77,21 @@ short dLightningRand;
 static short LightningRand;
 static short LightningSFXDelay = 0;
 
-static long outside_top;
-static long outside_left;
-static long outside_right;
-static long outside_bottom;
+static int outside_top;
+static int outside_left;
+static int outside_right;
+static int outside_bottom;
 
-static long draw_room_list[128];
-static long room_list_start = 0;
-static long room_list_end = 0;
-static long number_draw_rooms;
+static int draw_room_list[128];
+static int room_list_start = 0;
+static int room_list_end = 0;
+static int number_draw_rooms;
 static short draw_rooms[200];
 static short ClipRoomNum;
 
-static long camera_underwater;
+static int camera_underwater;
 
-void InitInterpolate(long frac, long rate) {
+void InitInterpolate(int frac, int rate) {
 	IM_rate = rate;
 	IM_frac = frac;
 	mIMptr = mIMstack;
@@ -139,7 +139,7 @@ void phd_RotZ_I(short ang) {
 	mMXPtr = mPtr;
 }
 
-void phd_TranslateRel_I(long x, long y, long z) {
+void phd_TranslateRel_I(int x, int y, int z) {
 	float* mPtr;
 
 	phd_TranslateRel(x, y, z);
@@ -149,7 +149,7 @@ void phd_TranslateRel_I(long x, long y, long z) {
 	mMXPtr = mPtr;
 }
 
-void phd_TranslateRel_ID(long x, long y, long z, long x2, long y2, long z2) {
+void phd_TranslateRel_ID(int x, int y, int z, int x2, int y2, int z2) {
 	float* mPtr;
 
 	phd_TranslateRel(x, y, z);
@@ -169,7 +169,7 @@ void phd_RotYXZ_I(short y, short x, short z) {
 	mMXPtr = mPtr;
 }
 
-void gar_RotYXZsuperpack_I(short** pprot1, short** pprot2, long skip) {
+void gar_RotYXZsuperpack_I(short** pprot1, short** pprot2, int skip) {
 	float* mPtr;
 
 	gar_RotYXZsuperpack(pprot1, skip);
@@ -179,7 +179,7 @@ void gar_RotYXZsuperpack_I(short** pprot1, short** pprot2, long skip) {
 	mMXPtr = mPtr;
 }
 
-void gar_RotYXZsuperpack(short** pprot, long skip) {
+void gar_RotYXZsuperpack(short** pprot, int skip) {
 	unsigned short* prot;
 
 	while(skip) {
@@ -217,7 +217,7 @@ void gar_RotYXZsuperpack(short** pprot, long skip) {
 	++*pprot;
 }
 
-void phd_PutPolygons_I(short* ptr, long clip) {
+void phd_PutPolygons_I(short* ptr, int clip) {
 	phd_PushMatrix();
 	mInterpolateMatrix();
 	phd_PutPolygons(ptr, clip);
@@ -319,7 +319,7 @@ void InsertRoom(short room_number) {
 }
 
 void CalculateObjectLighting(ITEM_INFO* item, short* frame) {
-	long x, y, z;
+	int x, y, z;
 
 	if(item->shade >= 0) {
 		S_CalculateStaticMeshLight(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->shade & 0x7FFF, GetRoom(currentLevel, item->room_number));
@@ -328,9 +328,9 @@ void CalculateObjectLighting(ITEM_INFO* item, short* frame) {
 		phd_SetTrans(0, 0, 0);
 		phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 		phd_TranslateRel((frame[0] + frame[1]) >> 1, (frame[2] + frame[3]) >> 1, (frame[4] + frame[5]) >> 1);
-		x = item->pos.pos.x + (long)mMXPtr[M03];
-		y = item->pos.pos.y + (long)mMXPtr[M13];
-		z = item->pos.pos.z + (long)mMXPtr[M23];
+		x = item->pos.pos.x + (int)mMXPtr[M03];
+		y = item->pos.pos.y + (int)mMXPtr[M13];
+		z = item->pos.pos.z + (int)mMXPtr[M23];
 		phd_PopMatrix();
 		current_item = item;
 		item->il.item_pos.x = x;
@@ -388,7 +388,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 	short* data;
 	short* rot;
 	short* rot2;
-	long frac, rate, clip, bit, rnd;
+	int frac, rate, clip, bit, rnd;
 
 	frac = GetFrames(item, frm, &rate);
 	obj = GetObjectInfo(currentLevel, item->object_number);
@@ -617,7 +617,7 @@ static void DoMirrorStuff() {
 
 void DrawRooms(short CurrentRoom) {
 	ROOM_INFO* r;
-	long lx, ly, lz;
+	int lx, ly, lz;
 	short lr;
 
 	current_room = CurrentRoom;
@@ -916,7 +916,7 @@ void RenderIt(short CurrentRoom) {
 	}
 }
 
-long DrawPhaseGame() {
+int DrawPhaseGame() {
 	CalcLaraMatrices(0);
 	phd_PushUnitMatrix();
 	CalcLaraMatrices(1);
@@ -938,7 +938,7 @@ long DrawPhaseGame() {
 void GetRoomBounds() {
 	ROOM_INFO* r;
 	short* door;
-	long rn, drn;
+	int rn, drn;
 
 	while(room_list_start != room_list_end) {
 		rn = draw_room_list[room_list_start % 128];
@@ -998,7 +998,7 @@ void GetRoomBounds() {
 			for(drn = *door++; drn > 0; drn--) {
 				rn = *door++;
 
-				if(door[0] * (long)(r->x + door[3] - mW2V[M03]) + door[1] * (long)(r->y + door[4] - mW2V[M13]) + door[2] * (long)(r->z + door[5] - mW2V[M23]) < 0) {
+				if(door[0] * (int)(r->x + door[3] - mW2V[M03]) + door[1] * (int)(r->y + door[4] - mW2V[M13]) + door[2] * (int)(r->z + door[5] - mW2V[M23]) < 0) {
 					SetRoomBounds(door, rn, r);
 				}
 
@@ -1010,7 +1010,7 @@ void GetRoomBounds() {
 	}
 }
 
-void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom) {
+void SetRoomBounds(short* door, int rn, ROOM_INFO* actualRoom) {
 	ROOM_INFO* r;
 	FVECTOR* v;
 	FVECTOR* lastV;
@@ -1200,7 +1200,7 @@ void PrintObjects(short room_number) {
 	ITEM_INFO* item;
 	OBJECT_INFO* obj;
 	FX_INFO* fx;
-	long clip;
+	int clip;
 	short item_number, fx_number;
 
 	current_room = room_number;
@@ -1291,9 +1291,9 @@ void PrintObjects(short room_number) {
 	r->bottom = 0;
 }
 
-long GetFrames(ITEM_INFO* item, short* frm[], long* rate) {
+int GetFrames(ITEM_INFO* item, short* frm[], long* rate) {
 	ANIM_STRUCT* anim;
-	long frame, size, frac, num;
+	int frame, size, frac, num;
 
 	anim = GetAnim(currentLevel, item->anim_number);
 	frm[0] = anim->frame_ptr;
@@ -1320,7 +1320,7 @@ long GetFrames(ITEM_INFO* item, short* frm[], long* rate) {
 
 void GetBoundsAccurate(ITEM_INFO* item, short* result) {
 	short* frmptr[2];
-	long rate, frac;
+	int rate, frac;
 
 	frac = GetFrames(item, frmptr, &rate);
 
@@ -1337,7 +1337,7 @@ void GetBoundsAccurate(ITEM_INFO* item, short* result) {
 
 short* GetBestFrame(ITEM_INFO* item) {
 	short* frm[2];
-	long rate, frac;
+	int rate, frac;
 
 	frac = GetFrames(item, frm, &rate);
 
@@ -1378,7 +1378,7 @@ void UpdateSkyLightning() {
 
 void mRotBoundingBoxNoPersp(short* bounds, short* rotatedBounds) {
 	PHD_VECTOR pos[8];
-	long x, y, z;
+	int x, y, z;
 	short xMin, xMax, yMin, yMax, zMin, zMax;
 
 	xMin = bounds[0];
@@ -1468,9 +1468,9 @@ void mRotBoundingBoxNoPersp(short* bounds, short* rotatedBounds) {
 void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds) {
 	ROOM_INFO* r;
 	short* door;
-	long xMin, xMax, yMin, yMax, zMin, zMax; // object bounds
-	long xMinR, xMaxR, yMinR, yMaxR, zMinR, zMaxR; // room bounds
-	long xMinD, xMaxD, yMinD, yMaxD, zMinD, zMaxD; // door bounds
+	int xMin, xMax, yMin, yMax, zMin, zMax; // object bounds
+	int xMinR, xMaxR, yMinR, yMaxR, zMinR, zMaxR; // room bounds
+	int xMinD, xMaxD, yMinD, yMaxD, zMinD, zMaxD; // door bounds
 	short rotatedBounds[6];
 	short nDoors;
 

@@ -11,9 +11,9 @@ typedef struct PACKNODE {
 	RTDECODE decode_x;
 	RTDECODE decode_y;
 	RTDECODE decode_z;
-	unsigned long xlength;
-	unsigned long ylength;
-	unsigned long zlength;
+	unsigned int xlength;
+	unsigned int ylength;
+	unsigned int zlength;
 	char* xpacked;
 	char* ypacked;
 	char* zpacked;

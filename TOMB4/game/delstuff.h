@@ -2,18 +2,18 @@
 #define TOMB4_GAME_DELSTUFF_H
 typedef struct ITEM_INFO ITEM_INFO;
 typedef struct PHD_VECTOR PHD_VECTOR;
-void DrawLara(ITEM_INFO* item, long mirror);
-void GetLaraJointPos(PHD_VECTOR* pos, long node);
+void DrawLara(ITEM_INFO* item, int mirror);
+void GetLaraJointPos(PHD_VECTOR* pos, int node);
 void SetLaraUnderwaterNodes();
-void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag);
-void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac, long rate, long* bone, long flag);
-void CalcLaraMatrices(long flag);
+void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, int flag);
+void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, int frac, int rate, long* bone, int flag);
+void CalcLaraMatrices(int flag);
 
 extern short GLaraShadowframe[6];
 extern float lara_matrices[];
 extern float lara_joint_matrices[];
-extern long LaraNodeAmbient[];
-extern long bLaraUnderWater;
+extern int LaraNodeAmbient[];
+extern int bLaraUnderWater;
 extern unsigned char LaraNodeUnderwater[];
 extern char SkinVertNums[40][12];
 extern char ScratchVertNums[40][12];

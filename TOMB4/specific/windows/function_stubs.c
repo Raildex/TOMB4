@@ -10,26 +10,26 @@ FILE* logF = 0;
 PHD_VECTOR CamPos;
 PHD_VECTOR CamRot;
 
-long nPolyType;
+int nPolyType;
 
-static long rand_1 = 0xD371F947;
-static long rand_2 = 0xD371F947;
+static int rand_1 = 0xD371F947;
+static int rand_2 = 0xD371F947;
 
-long GetRandomControl() {
+int GetRandomControl() {
 	rand_1 = 0x41C64E6D * rand_1 + 12345;
 	return (rand_1 >> 10) & 0x7FFF;
 }
 
-void SeedRandomControl(long seed) {
+void SeedRandomControl(int seed) {
 	rand_1 = seed;
 }
 
-long GetRandomDraw() {
+int GetRandomDraw() {
 	rand_2 = 0x41C64E6D * rand_2 + 12345;
 	return (rand_2 >> 10) & 0x7FFF;
 }
 
-void SeedRandomDraw(long seed) {
+void SeedRandomDraw(int seed) {
 	rand_2 = seed;
 }
 

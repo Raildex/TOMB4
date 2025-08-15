@@ -75,7 +75,7 @@ void InjuredSasControl(short item_number) {
 
 void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
-	long x, z;
+	int x, z;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -118,10 +118,10 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	PHD_VECTOR oPos;
-	long h;
+	int h;
 	short item_number;
 
 	item_number = CreateItem();
@@ -198,7 +198,7 @@ void SasControl(short item_number) {
 	CREATURE_INFO* sas;
 	AI_INFO info;
 	PHD_VECTOR pos;
-	long iDistance, dx, dz;
+	int iDistance, dx, dz;
 	short angle, tilt, head, torso_x, torso_y, iAngle, xrot, yrot;
 
 	if(!CreatureActive(item_number)) {

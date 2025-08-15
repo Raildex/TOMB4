@@ -72,10 +72,10 @@ void TriggerDemigodMissile(PHD_3DPOS* pos, short room_number, short type) {
 	}
 }
 
-void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv) {
+void TriggerDemigodMissileFlame(short fx_number, int xv, int yv, int zv) {
 	FX_INFO* fx;
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	fx = GetEffect(currentLevel, fx_number);
 	dx = lara_item->pos.pos.x - fx->pos.pos.x;
@@ -134,9 +134,9 @@ void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv) {
 	sptr->dSize = sptr->Size >> 5;
 }
 
-void TriggerHammerSmoke(long x, long y, long z, long num) {
+void TriggerHammerSmoke(int x, int y, int z, int num) {
 	SMOKE_SPARKS* sptr;
-	long angle, step, off;
+	int angle, step, off;
 
 	angle = GetRandomControl() << 1;
 	step = 0x10000 / num;
@@ -268,11 +268,11 @@ void DemigodControl(short item_number) {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	AI_INFO info;
 	PHD_VECTOR pos;
 	short* zone;
-	long dx, dz, h;
+	int dx, dz, h;
 	short objnum, angle, torso_x, torso_y, torso_z, head, iAngle, iAhead, room_number;
 
 	item = GetItem(currentLevel, item_number);

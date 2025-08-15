@@ -29,17 +29,17 @@
 #include <stdio.h>
 
 DISPLAYPU pickups[8];
-long PickupX;
+int PickupX;
 short CurrentPickup;
 
-long health_bar_timer = 0;
+int health_bar_timer = 0;
 
-static long FullPickupX;
+static int FullPickupX;
 static short PickupVel;
 
-long FlashIt() {
-	static long flash_state = 0;
-	static long flash_count = 0;
+int FlashIt() {
+	static int flash_state = 0;
+	static int flash_count = 0;
 
 	if(flash_count) {
 		flash_count--;
@@ -51,8 +51,8 @@ long FlashIt() {
 	return flash_state;
 }
 
-void DrawGameInfo(long timed) {
-	long flash_state, seconds, length, btm;
+void DrawGameInfo(int timed) {
+	int flash_state, seconds, length, btm;
 	short ammo;
 	char buf[80];
 
@@ -117,9 +117,9 @@ void DrawGameInfo(long timed) {
 	}
 }
 
-void DrawHealthBar(long flash_state) {
-	static long old_hitpoints;
-	long hitpoints;
+void DrawHealthBar(int flash_state) {
+	static int old_hitpoints;
+	int hitpoints;
 
 	hitpoints = lara_item->hit_points;
 
@@ -153,8 +153,8 @@ void DrawHealthBar(long flash_state) {
 	}
 }
 
-void DrawAirBar(long flash_state) {
-	long air;
+void DrawAirBar(int flash_state) {
+	int air;
 
 	if(lara.vehicle == NO_ITEM && (lara.water_status == LW_UNDERWATER || lara.water_status == LW_SURFACE)) {
 		air = lara.air;
@@ -190,7 +190,7 @@ void InitialisePickUpDisplay() {
 
 void DrawPickups() {
 	DISPLAYPU* pu;
-	long lp;
+	int lp;
 
 	pu = &pickups[CurrentPickup];
 

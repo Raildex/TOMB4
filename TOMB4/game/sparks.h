@@ -1,9 +1,9 @@
 #ifndef TOMB4_GAME_SPARKS_H
 #define TOMB4_GAME_SPARKS_H
 typedef struct SPARKS {
-	long x;
-	long y;
-	long z;
+	int x;
+	int y;
+	int z;
 	short Xvel;
 	short Yvel;
 	short Zvel;

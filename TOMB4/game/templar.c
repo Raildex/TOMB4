@@ -44,7 +44,7 @@ void TemplarControl(short item_number) {
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	FLOOR_INFO* floor;
 	PHD_VECTOR pos;
 	AI_INFO info;

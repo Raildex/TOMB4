@@ -1,9 +1,9 @@
 #ifndef TOMB4_GAME_BINKSTRUCT_H
 #define TOMB4_GAME_BINKSTRUCT_H
 typedef struct BINK_STRUCT {
-	long pad;
-	long num;
+	int pad;
+	int num;
 	char padfuck[8];
-	long num2;
+	int num2;
 } BINK_STRUCT;
 #endif // TOMB4_GAME_BINKSTRUCT_H

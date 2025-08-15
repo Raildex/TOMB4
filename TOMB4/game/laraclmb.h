@@ -16,14 +16,14 @@ void lara_as_climbend(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_climbstnc(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_climbing(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_climbdown(ITEM_INFO* item, COLL_INFO* coll);
-short GetClimbTrigger(long x, long y, long z, short room_number);
-long LaraTestClimb(long x, long y, long z, long xfront, long zfront, long item_height, short item_room, long* shift);
-long LaraTestClimbPos(ITEM_INFO* item, long front, long right, long origin, long height, long* shift);
-long LaraTestClimbUpPos(ITEM_INFO* item, long front, long right, long* shift, long* ledge);
-long LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll);
-long LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll);
-long LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll);
-void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, long result, long shift);
+short GetClimbTrigger(int x, int y, int z, short room_number);
+int LaraTestClimb(int x, int y, int z, int xfront, int zfront, int item_height, short item_room, long* shift);
+int LaraTestClimbPos(ITEM_INFO* item, int front, int right, int origin, int height, long* shift);
+int LaraTestClimbUpPos(ITEM_INFO* item, int front, int right, long* shift, long* ledge);
+int LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll);
+int LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll);
+int LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll);
+void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, int result, int shift);
 
 
 #endif// TOMB4_GAME_LARACLMB_H

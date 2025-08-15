@@ -43,11 +43,11 @@
 #include <stdlib.h>
 
 
-void CreatureDie(short item_number, long explode) {
+void CreatureDie(short item_number, int explode) {
 	ITEM_INFO* item;
 	ITEM_INFO* pickup;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	short pickup_number, room_number;
 	short bounds[6];
 	item = GetItem(currentLevel, item_number);
@@ -102,7 +102,7 @@ void InitialiseCreature(short item_number) {
 	item->data = NULL;
 }
 
-long CreatureActive(short item_number) {
+int CreatureActive(short item_number) {
 	ITEM_INFO* item;
 
 	item = GetItem(currentLevel, item_number);
@@ -129,7 +129,7 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info) {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
 	short* zone;
-	long x, y, z;
+	int x, y, z;
 	short pivot, ang, state;
 
 	creature = (CREATURE_INFO*)item->data;
@@ -226,12 +226,12 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info) {
 	}
 }
 
-long SearchLOT(LOT_INFO* LOT, long expansion) {
+int SearchLOT(LOT_INFO* LOT, int expansion) {
 	BOX_NODE* node;
 	BOX_NODE* expand;
 	BOX_INFO* box;
 	short* zone;
-	long index, done, box_number, overlap_flags, change;
+	int index, done, box_number, overlap_flags, change;
 	short search_zone;
 
 	zone = GetZone(currentLevel, LOT->zone, flip_status);
@@ -312,7 +312,7 @@ long SearchLOT(LOT_INFO* LOT, long expansion) {
 	return 1;
 }
 
-long UpdateLOT(LOT_INFO* LOT, long expansion) {
+int UpdateLOT(LOT_INFO* LOT, int expansion) {
 	BOX_NODE* expand;
 
 	if(LOT->required_box != NO_BOX && LOT->required_box != LOT->target_box) {
@@ -352,9 +352,9 @@ void TargetBox(LOT_INFO* LOT, short box_number) {
 	}
 }
 
-long EscapeBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number) {
+int EscapeBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number) {
 	BOX_INFO* box;
-	long x, z;
+	int x, z;
 
 	box = GetBox(currentLevel, box_number);
 	x = (((unsigned long)box->bottom + (unsigned long)box->top) << 9) - enemy->pos.pos.x;
@@ -367,7 +367,7 @@ long EscapeBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number) {
 	return (z > 0) == (item->pos.pos.z > enemy->pos.pos.z) || (x > 0) == (item->pos.pos.x > enemy->pos.pos.x);
 }
 
-long ValidBox(ITEM_INFO* item, short zone_number, short box_number) {
+int ValidBox(ITEM_INFO* item, short zone_number, short box_number) {
 	CREATURE_INFO* creature;
 	BOX_INFO* box;
 
@@ -390,9 +390,9 @@ long ValidBox(ITEM_INFO* item, short zone_number, short box_number) {
 	return 1;
 }
 
-long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number) {
+int StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number) {
 	BOX_INFO* box;
-	long x, z, xrange, zrange, enemy_quad, box_quad, baddie_quad;
+	int x, z, xrange, zrange, enemy_quad, box_quad, baddie_quad;
 
 	if(!enemy) {
 		return 0;
@@ -421,8 +421,8 @@ long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number) {
 
 target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT) {
 	BOX_INFO* box;
-	long box_number, box_left, box_right, box_top, box_bottom;
-	long left, right, top, bottom, prime_free;
+	int box_number, box_left, box_right, box_top, box_bottom;
+	int left, right, top, bottom, prime_free;
 
 	UpdateLOT(LOT, 5);
 	target->x = item->pos.pos.x;
@@ -638,7 +638,7 @@ target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT) 
 	return NO_TARGET;
 }
 
-void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
+void CreatureMood(ITEM_INFO* item, AI_INFO* info, int violent) {
 	CREATURE_INFO* creature;
 	ITEM_INFO* enemy;
 	LOT_INFO* LOT;
@@ -743,7 +743,7 @@ void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 	}
 }
 
-void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
+void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, int violent) {
 	CREATURE_INFO* creature;
 	ITEM_INFO* enemy;
 	LOT_INFO* LOT;
@@ -854,9 +854,9 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent) {
 	}
 }
 
-long CreatureCreature(short item_number) {
+int CreatureCreature(short item_number) {
 	ITEM_INFO* item;
-	long x, z, dx, dz, dist;
+	int x, z, dx, dz, dist;
 	short yrot, rad, item_num;
 
 	item = GetItem(currentLevel, item_number);
@@ -882,7 +882,7 @@ long CreatureCreature(short item_number) {
 	return 0;
 }
 
-long BadFloor(long x, long y, long z, long box_height, long next_height, short room_number, LOT_INFO* LOT) {
+int BadFloor(int x, int y, int z, int box_height, int next_height, short room_number, LOT_INFO* LOT) {
 	FLOOR_INFO* floor;
 	BOX_INFO* box;
 
@@ -917,17 +917,17 @@ long BadFloor(long x, long y, long z, long box_height, long next_height, short r
 	return 0;
 }
 
-long CreatureAnimation(short item_number, short angle, short tilt) {
+int CreatureAnimation(short item_number, short angle, short tilt) {
 	ITEM_INFO* item;
 	CREATURE_INFO* creature;
 	LOT_INFO* LOT;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR oldPos;
 	short* zone;
 	short bounds[6];
-	long box_height, y, height, next_box, next_height, x, z, wx, wz, xShift, zShift, dy;
+	int box_height, y, height, next_box, next_height, x, z, wx, wz, xShift, zShift, dy;
 	short room_number, rad;
 
 	item = GetItem(currentLevel, item_number);
@@ -1211,7 +1211,7 @@ long CreatureAnimation(short item_number, short angle, short tilt) {
 short CreatureTurn(ITEM_INFO* item, short maximum_turn) {
 	CREATURE_INFO* creature;
 	ROOM_INFO* r;
-	long x, z, feelxplus, feelzplus, feelxminus, feelzminus, feelxmid, feelzmid, feelplus, feelminus, feelmid;
+	int x, z, feelxplus, feelzplus, feelxminus, feelzminus, feelxmid, feelzmid, feelplus, feelminus, feelmid;
 	short angle;
 
 	creature = (CREATURE_INFO*)item->data;
@@ -1307,8 +1307,8 @@ void CreatureJoint(ITEM_INFO* item, short joint, short required) {
 void CreatureFloat(short item_number) {
 	ITEM_INFO* item;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long water_level;
+	int tiltxoff, tiltzoff, OnObject;
+	int water_level;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -1342,11 +1342,11 @@ void CreatureFloat(short item_number) {
 	}
 }
 
-void CreatureUnderwater(ITEM_INFO* item, long depth) {
-	long water_level, floorheight;
+void CreatureUnderwater(ITEM_INFO* item, int depth) {
+	int water_level, floorheight;
 	short room_number;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 
 	water_level = GetWaterHeight(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number);
 
@@ -1413,9 +1413,9 @@ short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angl
 	return generate(bite_pos.x, bite_pos.y, bite_pos.z, damage, item->pos.y_rot, dir, item->room_number);
 }
 
-long CreatureVault(short item_number, short angle, long vault, long shift) {
+int CreatureVault(short item_number, short angle, int vault, int shift) {
 	ITEM_INFO* item;
-	long x, y, z, x_floor, z_floor;
+	int x, y, z, x_floor, z_floor;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -1537,7 +1537,7 @@ void AlertAllGuards(short item_number) {
 void AlertNearbyGuards(ITEM_INFO* item) {
 	ITEM_INFO* target;
 	CREATURE_INFO* creature;
-	long dx, dy, dz, dist;
+	int dx, dy, dz, dist;
 
 	for(int i = 0; i < 5; i++) {
 		creature = &baddie_slots[i];
@@ -1565,7 +1565,7 @@ void AlertNearbyGuards(ITEM_INFO* item) {
 }
 
 short AIGuard(CREATURE_INFO* creature) {
-	long rnd;
+	int rnd;
 
 	if(GetItem(currentLevel, creature->item_num)->ai_bits & MODIFY) {
 		return 0;
@@ -1655,7 +1655,7 @@ void GetAITarget(CREATURE_INFO* creature) {
 	ITEM_INFO* item;
 	ITEM_INFO* enemy;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	short enemy_object;
 	char ai_bits;
 
@@ -1756,8 +1756,8 @@ void CreatureYRot(PHD_3DPOS* srcpos, short angle, short angadd) {
 	}
 }
 
-long MoveCreature3DPos(PHD_3DPOS* srcpos, PHD_3DPOS* destpos, long velocity, short angdif, long angadd) {
-	long x, y, z, dist;
+int MoveCreature3DPos(PHD_3DPOS* srcpos, PHD_3DPOS* destpos, int velocity, short angdif, int angadd) {
+	int x, y, z, dist;
 
 	x = destpos->pos.x - srcpos->pos.x;
 	y = destpos->pos.y - srcpos->pos.y;

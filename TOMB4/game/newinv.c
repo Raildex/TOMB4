@@ -49,7 +49,7 @@ typedef struct INVDRAWITEM {
 	short yrot;
 	short zrot;
 	short object_number;
-	unsigned long mesh_bits;
+	unsigned int mesh_bits;
 } INVDRAWITEM;
 enum meshbits {
 	ALL_MESHBITS = 0xFFFFFFFF
@@ -189,29 +189,29 @@ INVOBJ inventry_objects_list[NUM_INVOBJ] = {
 	{ EXAMINE3, 14, 0x4B0, 0, 0x4000, 0, 2, TXT_Load, ALL_MESHBITS }
 };
 
-void combine_revolver_lasersight(long flag);
-void combine_crossbow_lasersight(long flag);
-void combine_PuzzleItem1(long flag);
-void combine_PuzzleItem2(long flag);
-void combine_PuzzleItem3(long flag);
-void combine_PuzzleItem4(long flag);
-void combine_PuzzleItem5(long flag);
-void combine_PuzzleItem6(long flag);
-void combine_PuzzleItem7(long flag);
-void combine_PuzzleItem8(long flag);
-void combine_KeyItem1(long flag);
-void combine_KeyItem2(long flag);
-void combine_KeyItem3(long flag);
-void combine_KeyItem4(long flag);
-void combine_KeyItem5(long flag);
-void combine_KeyItem6(long flag);
-void combine_KeyItem7(long flag);
-void combine_KeyItem8(long flag);
-void combine_PickupItem1(long flag);
-void combine_PickupItem2(long flag);
-void combine_PickupItem3(long flag);
-void combine_PickupItem4(long flag);
-void combine_ClockWorkBeetle(long flag);
+void combine_revolver_lasersight(int flag);
+void combine_crossbow_lasersight(int flag);
+void combine_PuzzleItem1(int flag);
+void combine_PuzzleItem2(int flag);
+void combine_PuzzleItem3(int flag);
+void combine_PuzzleItem4(int flag);
+void combine_PuzzleItem5(int flag);
+void combine_PuzzleItem6(int flag);
+void combine_PuzzleItem7(int flag);
+void combine_PuzzleItem8(int flag);
+void combine_KeyItem1(int flag);
+void combine_KeyItem2(int flag);
+void combine_KeyItem3(int flag);
+void combine_KeyItem4(int flag);
+void combine_KeyItem5(int flag);
+void combine_KeyItem6(int flag);
+void combine_KeyItem7(int flag);
+void combine_KeyItem8(int flag);
+void combine_PickupItem1(int flag);
+void combine_PickupItem2(int flag);
+void combine_PickupItem3(int flag);
+void combine_PickupItem4(int flag);
+void combine_ClockWorkBeetle(int flag);
 
 
 COMBINELIST dels_handy_combine_table[23] = {
@@ -364,10 +364,10 @@ static short options_table[NUM_INVOBJ] = {
 
 static short optmessages[9] = { TXT_USE, TXT_CHOOSE_AMMO, TXT_COMBINE, TXT_SEPERATE, TXT_EQUIP, TXT_COMBINE_WITH, TXT_LOAD_GAME, TXT_SAVE_GAME, TXT_EXAMINE };
 
-long GLOBAL_enterinventory = NO_ITEM;
-long GLOBAL_inventoryitemchosen = NO_ITEM;
-long GLOBAL_lastinvitem = NO_ITEM;
-long InventoryActive = 0;
+int GLOBAL_enterinventory = NO_ITEM;
+int GLOBAL_inventoryitemchosen = NO_ITEM;
+int GLOBAL_lastinvitem = NO_ITEM;
+int InventoryActive = 0;
 
 static RINGME* rings[2];
 static RINGME pcring1;
@@ -376,7 +376,7 @@ static RINGME pcring2;
 static AMMOLIST ammo_object_list[3];
 static MENUTHANG current_options[3];
 
-static long compass_settle_thang;
+static int compass_settle_thang;
 static short examine_mode = 0;
 static short stats_mode;
 static unsigned char current_selected_option;
@@ -411,8 +411,8 @@ static char StashedCurrentCrossBowAmmoType = 0;
 static char Stashedcurrent_selected_option = 0;
 static char num_ammo_slots;
 
-static long combine_obj1;
-static long combine_obj2;
+static int combine_obj1;
+static int combine_obj2;
 static short ammo_selector_fade_val;
 static short ammo_selector_fade_dir;
 static short combine_ring_fade_val;
@@ -423,10 +423,10 @@ static char ammo_selector_flag;
 static char combine_type_flag;
 static char seperate_type_flag;
 
-static long xoffset;
-static long yoffset;
-static long OBJLIST_SPACING;
-static long pcbright = 0x7F7F7F;
+static int xoffset;
+static int yoffset;
+static int OBJLIST_SPACING;
+static int pcbright = 0x7F7F7F;
 static short inventry_xpos = 0;
 static short inventry_ypos = 0;
 
@@ -449,7 +449,7 @@ static unsigned char friggrimmer2;
 static char loading_or_saving;
 static char use_the_bitch;
 
-long LoadGame() {
+int LoadGame() {
 	if(S_LoadSave(IN_LOAD, 1, 1) < 0) {
 		return -1;
 	} else {
@@ -457,8 +457,8 @@ long LoadGame() {
 	}
 }
 
-long SaveGame() {
-	long Save;
+int SaveGame() {
+	int Save;
 
 	Save = S_LoadSave(IN_SAVE, 1, 1);
 
@@ -644,7 +644,7 @@ void do_debounced_joystick_poo() {
 	}
 }
 
-void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagflag) {
+void DrawInventoryItemMe(INVDRAWITEM* item, int shade, int overlay, int shagflag) {
 	ANIM_STRUCT* anim;
 	OBJECT_INFO* object;
 	PHD_VECTOR vec;
@@ -652,8 +652,8 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 	long* bone;
 	short* rotation1;
 	short* frmptr;
-	unsigned long bit;
-	long poppush, alpha, compass;
+	unsigned int bit;
+	int poppush, alpha, compass;
 
 	anim = GetAnim(currentLevel, GetObjectInfo(currentLevel, item->object_number)->anim_index);
 	frmptr = anim->frame_ptr;
@@ -806,7 +806,7 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 	phd_PopMatrix();
 }
 
-void DrawThreeDeeObject2D(long x, long y, long num, long shade, long xrot, long yrot, long zrot, long bright, long overlay) {
+void DrawThreeDeeObject2D(int x, int y, int num, int shade, int xrot, int yrot, int zrot, int bright, int overlay) {
 	INVOBJ* objme;
 	INVDRAWITEM item;
 
@@ -837,11 +837,11 @@ void DrawThreeDeeObject2D(long x, long y, long num, long shade, long xrot, long 
 	yoffset = phd_centery;
 }
 
-long go_and_load_game() {
+int go_and_load_game() {
 	return LoadGame();
 }
 
-long go_and_save_game() {
+int go_and_save_game() {
 	return SaveGame();
 }
 
@@ -1144,8 +1144,8 @@ void construct_object_list() {
 	ammo_active = 0;
 }
 
-void handle_object_changeover(long ringnum) {
-	long opts;
+void handle_object_changeover(int ringnum) {
+	int opts;
 	unsigned char num;
 
 	current_selected_option = 0;
@@ -1335,7 +1335,7 @@ void update_laras_weapons_status() {
 	}
 }
 
-long have_i_got_item(short obj) {
+int have_i_got_item(short obj) {
 	for(int i = 0; i < NUM_INVOBJ; i++) {
 		if(rings[RING_INVENTORY]->current_object_list[i].invitem == obj) {
 			return 1;
@@ -1345,7 +1345,7 @@ long have_i_got_item(short obj) {
 	return 0;
 }
 
-void combine_revolver_lasersight(long flag) {
+void combine_revolver_lasersight(int flag) {
 	if(flag) {
 		lara.lasersight = 1;
 		lara.sixshooter_type_carried &= ~W_LASERSIGHT;
@@ -1360,7 +1360,7 @@ void combine_revolver_lasersight(long flag) {
 	}
 }
 
-void combine_crossbow_lasersight(long flag) {
+void combine_crossbow_lasersight(int flag) {
 	if(flag) {
 		lara.lasersight = 1;
 		lara.crossbow_type_carried &= ~W_LASERSIGHT;
@@ -1375,112 +1375,112 @@ void combine_crossbow_lasersight(long flag) {
 	}
 }
 
-void combine_PuzzleItem1(long flag) {
+void combine_PuzzleItem1(int flag) {
 	lara.puzzleitemscombo &= ~3;
 	lara.puzzleitems[0] = 1;
 }
 
-void combine_PuzzleItem2(long flag) {
+void combine_PuzzleItem2(int flag) {
 	lara.puzzleitemscombo &= ~0xC;
 	lara.puzzleitems[1] = 1;
 }
 
-void combine_PuzzleItem3(long flag) {
+void combine_PuzzleItem3(int flag) {
 	lara.puzzleitemscombo &= ~0x30;
 	lara.puzzleitems[2] = 1;
 }
 
-void combine_PuzzleItem4(long flag) {
+void combine_PuzzleItem4(int flag) {
 	lara.puzzleitemscombo &= ~0xC0;
 	lara.puzzleitems[3] = 1;
 }
 
-void combine_PuzzleItem5(long flag) {
+void combine_PuzzleItem5(int flag) {
 	lara.puzzleitemscombo &= ~0x300;
 	lara.puzzleitems[4] = 1;
 }
 
-void combine_PuzzleItem6(long flag) {
+void combine_PuzzleItem6(int flag) {
 	lara.puzzleitemscombo &= ~0xC00;
 	lara.puzzleitems[5] = 1;
 }
 
-void combine_PuzzleItem7(long flag) {
+void combine_PuzzleItem7(int flag) {
 	lara.puzzleitemscombo &= ~0x3000;
 	lara.puzzleitems[6] = 1;
 }
 
-void combine_PuzzleItem8(long flag) {
+void combine_PuzzleItem8(int flag) {
 	lara.puzzleitemscombo &= ~0xC000;
 	lara.puzzleitems[7] = 1;
 }
 
-void combine_KeyItem1(long flag) {
+void combine_KeyItem1(int flag) {
 	lara.keyitems |= 1;
 	lara.keyitemscombo &= ~3;
 }
 
-void combine_KeyItem2(long flag) {
+void combine_KeyItem2(int flag) {
 	lara.keyitems |= 2;
 	lara.keyitemscombo &= ~0xC;
 }
 
-void combine_KeyItem3(long flag) {
+void combine_KeyItem3(int flag) {
 	lara.keyitems |= 4;
 	lara.keyitemscombo &= ~0x30;
 }
 
-void combine_KeyItem4(long flag) {
+void combine_KeyItem4(int flag) {
 	lara.keyitems |= 8;
 	lara.keyitemscombo &= ~0xC0;
 }
 
-void combine_KeyItem5(long flag) {
+void combine_KeyItem5(int flag) {
 	lara.keyitems |= 0x10;
 	lara.keyitemscombo &= ~0x300;
 }
 
-void combine_KeyItem6(long flag) {
+void combine_KeyItem6(int flag) {
 	lara.keyitems |= 0x20;
 	lara.keyitemscombo &= ~0xC00;
 }
 
-void combine_KeyItem7(long flag) {
+void combine_KeyItem7(int flag) {
 	lara.keyitems |= 0x40;
 	lara.keyitemscombo &= ~0x3000;
 }
 
-void combine_KeyItem8(long flag) {
+void combine_KeyItem8(int flag) {
 	lara.keyitems |= 0x80;
 	lara.keyitemscombo &= ~0xC000;
 }
 
-void combine_PickupItem1(long flag) {
+void combine_PickupItem1(int flag) {
 	lara.pickupitems |= 1;
 	lara.pickupitemscombo &= ~3;
 }
 
-void combine_PickupItem2(long flag) {
+void combine_PickupItem2(int flag) {
 	lara.pickupitems |= 2;
 	lara.pickupitemscombo &= ~0xC;
 }
 
-void combine_PickupItem3(long flag) {
+void combine_PickupItem3(int flag) {
 	lara.pickupitems |= 4;
 	lara.pickupitemscombo &= ~0x30;
 }
 
-void combine_PickupItem4(long flag) {
+void combine_PickupItem4(int flag) {
 	lara.pickupitems |= 8;
 	lara.pickupitemscombo &= ~0xC0;
 }
 
-void combine_ClockWorkBeetle(long flag) {
+void combine_ClockWorkBeetle(int flag) {
 	lara.mechanical_scarab = 1;
 }
 
-long do_special_waterskin_combine_bullshit(long flag) {
-	long lp;
+int do_special_waterskin_combine_bullshit(int flag) {
+	int lp;
 	short small_liters, big_liters, small_capacity, big_capacity;
 
 	small_liters = lara.small_water_skin - 1;
@@ -1537,7 +1537,7 @@ void setup_objectlist_startposition2(short newobj) {
 	}
 }
 
-long have_i_got_object(short object_number) {
+int have_i_got_object(short object_number) {
 	if(object_number >= PUZZLE_ITEM1_COMBO1 && object_number <= PUZZLE_ITEM8_COMBO2) {
 		return (lara.puzzleitemscombo >> (object_number - PUZZLE_ITEM1_COMBO1)) & 1;
 	}
@@ -1593,7 +1593,7 @@ void remove_inventory_item(short object_number) {
 	}
 }
 
-long convert_obj_to_invobj(short obj) {
+int convert_obj_to_invobj(short obj) {
 	for(int i = 0; i < NUM_INVOBJ; i++) {
 		if(inventry_objects_list[i].object_number == obj) {
 			return i;
@@ -1604,13 +1604,13 @@ long convert_obj_to_invobj(short obj) {
 }
 
 void draw_compass() {
-	DrawThreeDeeObject2D((long)((float)phd_centerx / 256.0F * 60.0F + inventry_xpos), phd_centery + inventry_ypos, INV_COMPASS_ITEM, 128, 0, 0, 0, 0, 0);
+	DrawThreeDeeObject2D((int)((float)phd_centerx / 256.0F * 60.0F + inventry_xpos), phd_centery + inventry_ypos, INV_COMPASS_ITEM, 128, 0, 0, 0, 0, 0);
 }
 
 void do_examine_mode() {
 	INVOBJ* objme;
-	static long WANK_RULES_YPOS;
-	static long WANK_SCROL_YPOS;
+	static int WANK_RULES_YPOS;
+	static int WANK_SCROL_YPOS;
 	short saved_scale, invitem;
 
 	WANK_RULES_YPOS = font_height;
@@ -1630,14 +1630,14 @@ void do_examine_mode() {
 	case INV_EXAMINE1_ITEM:
 		saved_scale = objme->scale1;
 		objme->scale1 = 300;
-		DrawThreeDeeObject2D((long)(((float)phd_centerx / 256) * 256 + inventry_xpos), (long)(((float)phd_centery / 120 * 256 + inventry_ypos) / 2), INV_EXAMINE1_ITEM, examine_mode, 0x8000, 0x4000, 0x4000, 96, 0);
+		DrawThreeDeeObject2D((int)(((float)phd_centerx / 256) * 256 + inventry_xpos), (int)(((float)phd_centery / 120 * 256 + inventry_ypos) / 2), INV_EXAMINE1_ITEM, examine_mode, 0x8000, 0x4000, 0x4000, 96, 0);
 		objme->scale1 = saved_scale;
 		break;
 
 	case INV_EXAMINE2_ITEM:
 		saved_scale = objme->scale1;
 		objme->scale1 = 300;
-		DrawThreeDeeObject2D((long)(((float)phd_centerx / 256) * 256 + inventry_xpos), (long)(((float)phd_centery / 120 * 256 + inventry_ypos) / 2), INV_EXAMINE2_ITEM, examine_mode, 0, 0, 0, 0, 0);
+		DrawThreeDeeObject2D((int)(((float)phd_centerx / 256) * 256 + inventry_xpos), (int)(((float)phd_centery / 120 * 256 + inventry_ypos) / 2), INV_EXAMINE2_ITEM, examine_mode, 0, 0, 0, 0, 0);
 		objme->scale1 = saved_scale;
 		PrintString(phd_centerx, WANK_RULES_YPOS, 5, SCRIPT_TEXT(TXT_RULES1), FF_CENTER);
 		PrintString(phd_centerx, WANK_RULES_YPOS + phd_winheight / 2, 5, SCRIPT_TEXT(TXT_RULES2), FF_CENTER);
@@ -1646,7 +1646,7 @@ void do_examine_mode() {
 	case INV_EXAMINE3_ITEM:
 		saved_scale = objme->scale1;
 		objme->scale1 = 400;
-		DrawThreeDeeObject2D((long)(((float)phd_centerx / 256) * 256 + inventry_xpos), (long)(((float)phd_centery / 120 * 256 + inventry_ypos) / 2 - 8), INV_EXAMINE3_ITEM, examine_mode, 0x8000, 0x4000, 0x4000, 96, 0);
+		DrawThreeDeeObject2D((int)(((float)phd_centerx / 256) * 256 + inventry_xpos), (int)(((float)phd_centery / 120 * 256 + inventry_ypos) / 2 - 8), INV_EXAMINE3_ITEM, examine_mode, 0x8000, 0x4000, 0x4000, 96, 0);
 		objme->scale1 = saved_scale;
 		PrintString(phd_centerx, WANK_SCROL_YPOS, 8, SCRIPT_TEXT(TXT_PETEPOO), FF_CENTER);
 		break;
@@ -1660,7 +1660,7 @@ void do_examine_mode() {
 }
 
 void dels_give_lara_items_cheat() {
-	long piss;
+	int piss;
 
 	if(GetObjectInfo(currentLevel, CROWBAR_ITEM)->loaded) {
 		lara.crowbar = 1;
@@ -1708,7 +1708,7 @@ void dels_give_lara_items_cheat() {
 }
 
 void use_current_item() {
-	long OldBinocular;
+	int OldBinocular;
 	short invobject, gmeobject;
 
 	OldBinocular = BinocularRange;
@@ -1848,7 +1848,7 @@ void use_current_item() {
 
 void DEL_picked_up_object(short objnum) // notice fallthroughs
 {
-	long lf;
+	int lf;
 
 	switch(objnum) {
 	case WATERSKIN1_EMPTY:
@@ -2063,7 +2063,7 @@ void DEL_picked_up_object(short objnum) // notice fallthroughs
 	}
 }
 
-long is_item_currently_combinable(short obj) {
+int is_item_currently_combinable(short obj) {
 	if(obj < INV_WATERSKIN1_EMPTY_ITEM || obj > INV_WATERSKIN2_5_ITEM) {
 		for(int i = 0; i < 23; i++) {
 			if(dels_handy_combine_table[i].item1 == obj && have_i_got_item(dels_handy_combine_table[i].item2)) {
@@ -2091,7 +2091,7 @@ long is_item_currently_combinable(short obj) {
 	return 0;
 }
 
-long do_these_objects_combine(long obj1, long obj2) {
+int do_these_objects_combine(int obj1, int obj2) {
 	for(int i = 0; i < 23; i++) {
 		if(dels_handy_combine_table[i].item1 == obj1 && dels_handy_combine_table[i].item2 == obj2) {
 			return 1;
@@ -2106,7 +2106,7 @@ long do_these_objects_combine(long obj1, long obj2) {
 }
 
 void combine_these_two_objects(short obj1, short obj2) {
-	long i;
+	int i;
 
 	for(i = 0; i < 23; i++) {
 		if(dels_handy_combine_table[i].item1 == obj1 && dels_handy_combine_table[i].item2 == obj2) {
@@ -2125,7 +2125,7 @@ void combine_these_two_objects(short obj1, short obj2) {
 }
 
 void seperate_object(short obj) {
-	long i;
+	int i;
 
 	for(i = 0; i < 23; i++) {
 		if(dels_handy_combine_table[i].combined_item == obj) {
@@ -2140,7 +2140,7 @@ void seperate_object(short obj) {
 
 void draw_ammo_selector() {
 	INVOBJ* objme;
-	long xpos;
+	int xpos;
 	short yrot;
 	char cunter[256];
 
@@ -2180,9 +2180,9 @@ void draw_ammo_selector() {
 				PrintString(phd_centerx, font_height + phd_centery + 2 * font_height - 9, 8, cunter, FF_CENTER);
 			}
 
-			DrawThreeDeeObject2D((long)((float)phd_centerx / 256.0F * 64.0F + inventry_xpos + xpos), (long)((float)phd_centery / 120.0F * 190.0F + inventry_ypos), ammo_object_list[i].invitem, ammo_selector_fade_val, 0, yrot, 0, 0, 0);
+			DrawThreeDeeObject2D((int)((float)phd_centerx / 256.0F * 64.0F + inventry_xpos + xpos), (int)((float)phd_centery / 120.0F * 190.0F + inventry_ypos), ammo_object_list[i].invitem, ammo_selector_fade_val, 0, yrot, 0, 0, 0);
 		} else {
-			DrawThreeDeeObject2D((long)((float)phd_centerx / 256.0F * 64.0F + inventry_xpos + xpos), (long)((float)phd_centery / 120.0F * 190.0F + inventry_ypos), ammo_object_list[i].invitem, ammo_selector_fade_val, 0, yrot, 0, 1, 0);
+			DrawThreeDeeObject2D((int)((float)phd_centerx / 256.0F * 64.0F + inventry_xpos + xpos), (int)((float)phd_centery / 120.0F * 190.0F + inventry_ypos), ammo_object_list[i].invitem, ammo_selector_fade_val, 0, yrot, 0, 1, 0);
 		}
 
 		xpos += OBJLIST_SPACING;
@@ -2190,7 +2190,7 @@ void draw_ammo_selector() {
 }
 
 void handle_inventry_menu() {
-	long num, opts, ypos, type;
+	int num, opts, ypos, type;
 	short inv_item, ammo_item;
 
 	if(rings[RING_AMMO]->ringactive) {
@@ -2452,9 +2452,9 @@ void handle_inventry_menu() {
 	}
 }
 
-void draw_current_object_list(long ringnum) {
+void draw_current_object_list(int ringnum) {
 	INVOBJ* objme;
-	long n, maxobj, xoff, shade, minobj, objmeup, nummeup, activenum;
+	int n, maxobj, xoff, shade, minobj, objmeup, nummeup, activenum;
 	short ymeup, yrot;
 	char textbufme[128];
 
@@ -2695,9 +2695,9 @@ void draw_current_object_list(long ringnum) {
 			}
 
 			if(ringnum == RING_INVENTORY) {
-				objmeup = (long)(phd_centery - (float)(phd_winymax + 1) / 16.0F * 3.0F);
+				objmeup = (int)(phd_centery - (float)(phd_winymax + 1) / 16.0F * 3.0F);
 			} else {
-				objmeup = (long)(phd_centery + (float)(phd_winymax + 1) / 16.0F * 3.0F);
+				objmeup = (int)(phd_centery + (float)(phd_winymax + 1) / 16.0F * 3.0F);
 			}
 
 			PrintString(phd_centerx, objmeup, 8, textbufme, FF_CENTER);
@@ -2738,7 +2738,7 @@ void draw_current_object_list(long ringnum) {
 			}
 		}
 
-		DrawThreeDeeObject2D((long)((((float)phd_centerx / 256.0F) * 256 + inventry_xpos) + xoff + i * OBJLIST_SPACING), (long)((float)phd_centery / 120.0F * ymeup + inventry_ypos), rings[ringnum]->current_object_list[n].invitem, shade, 0, yrot, 0, rings[ringnum]->current_object_list[n].bright, 0);
+		DrawThreeDeeObject2D((int)((((float)phd_centerx / 256.0F) * 256 + inventry_xpos) + xoff + i * OBJLIST_SPACING), (int)((float)phd_centery / 120.0F * ymeup + inventry_ypos), rings[ringnum]->current_object_list[n].invitem, shade, 0, yrot, 0, rings[ringnum]->current_object_list[n].bright, 0);
 
 		n++;
 
@@ -2814,8 +2814,8 @@ void draw_current_object_list(long ringnum) {
 	}
 }
 
-long S_CallInventory2() {
-	long val, return_value, flag;
+int S_CallInventory2() {
+	int val, return_value, flag;
 
 	val = 0;
 	oldLaraBusy = (char)lara.Busy;

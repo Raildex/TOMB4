@@ -42,11 +42,11 @@ void SphinxControl(short item_number) {
 	CREATURE_INFO* sphinx;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
 	AI_INFO info;
-	long s, c, x, z, h1, h2;
+	int s, c, x, z, h1, h2;
 	short room_number, angle;
 
 	if(!CreatureActive(item_number)) {

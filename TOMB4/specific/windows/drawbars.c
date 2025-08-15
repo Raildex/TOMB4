@@ -19,7 +19,7 @@
 #include "global/types.h"
 
 static float loadbar_pos;
-static long loadbar_maxpos;
+static int loadbar_maxpos;
 
 static GouraudBarColourSet healthBarColourSet = {
 	{ 64, 96, 128, 96, 64 },
@@ -75,7 +75,7 @@ static GouraudBarColourSet enemyBarColourSet = {
 	{ 0, 0, 0, 0, 0 }
 };
 
-static void DrawColoredRect(float x0, float y0, float x1, float y1, float z, unsigned long c0, unsigned long c1, unsigned long c2, unsigned long c3, TEXTURESTRUCT* tex) {
+static void DrawColoredRect(float x0, float y0, float x1, float y1, float z, unsigned int c0, unsigned int c1, unsigned int c2, unsigned int c3, TEXTURESTRUCT* tex) {
 	_D3DTLVERTEX* v;
 
 	v = MyVertexBuffer;
@@ -105,10 +105,10 @@ static void DrawColoredRect(float x0, float y0, float x1, float y1, float z, uns
 	AddQuadSorted(v, 0, 1, 2, 3, tex, 0);
 }
 
-static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, GouraudBarColourSet* colour, long scaled) {
+static void S_DrawGouraudBar(int x, int y, int width, int height, int pos, GouraudBarColourSet* colour, int scaled) {
 	TEXTURESTRUCT tex;
 	float bar, max, h, x0, y0, x1, y1;
-	long p, r, g, b, c0, c1, c2, c3;
+	int p, r, g, b, c0, c1, c2, c3;
 
 	nPolyType = 6;
 	clipflags[0] = 0;
@@ -135,9 +135,9 @@ static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, 
 	b -= b >> 2;
 	c2 = RGBONLY(r, g, b);
 
-	r = (long)((1 - max) * colour->abLeftRed[0] + max * colour->abRightRed[0]);
-	g = (long)((1 - max) * colour->abLeftGreen[0] + max * colour->abRightGreen[0]);
-	b = (long)((1 - max) * colour->abLeftBlue[0] + max * colour->abRightBlue[0]);
+	r = (int)((1 - max) * colour->abLeftRed[0] + max * colour->abRightRed[0]);
+	g = (int)((1 - max) * colour->abLeftGreen[0] + max * colour->abRightGreen[0]);
+	b = (int)((1 - max) * colour->abLeftBlue[0] + max * colour->abRightBlue[0]);
 	r -= r >> 2;
 	g -= g >> 2;
 	b -= b >> 2;
@@ -147,14 +147,14 @@ static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, 
 
 	for(int i = 0; i < 4; i++) {
 		c0 = RGBONLY(colour->abLeftRed[i], colour->abLeftGreen[i], colour->abLeftBlue[i]);
-		r = (long)((1 - max) * colour->abLeftRed[i] + max * colour->abRightRed[i]);
-		g = (long)((1 - max) * colour->abLeftGreen[i] + max * colour->abRightGreen[i]);
-		b = (long)((1 - max) * colour->abLeftBlue[i] + max * colour->abRightBlue[i]);
+		r = (int)((1 - max) * colour->abLeftRed[i] + max * colour->abRightRed[i]);
+		g = (int)((1 - max) * colour->abLeftGreen[i] + max * colour->abRightGreen[i]);
+		b = (int)((1 - max) * colour->abLeftBlue[i] + max * colour->abRightBlue[i]);
 		c1 = RGBONLY(r, g, b);
 		c2 = RGBONLY(colour->abLeftRed[i + 1], colour->abLeftGreen[i + 1], colour->abLeftBlue[i + 1]);
-		r = (long)((1 - max) * colour->abLeftRed[i + 1] + max * colour->abRightRed[i + 1]);
-		g = (long)((1 - max) * colour->abLeftGreen[i + 1] + max * colour->abRightGreen[i + 1]);
-		b = (long)((1 - max) * colour->abLeftBlue[i + 1] + max * colour->abRightBlue[i + 1]);
+		r = (int)((1 - max) * colour->abLeftRed[i + 1] + max * colour->abRightRed[i + 1]);
+		g = (int)((1 - max) * colour->abLeftGreen[i + 1] + max * colour->abRightGreen[i + 1]);
+		b = (int)((1 - max) * colour->abLeftBlue[i + 1] + max * colour->abRightBlue[i + 1]);
 		c3 = RGBONLY(r, g, b);
 
 		y0 += h;
@@ -170,9 +170,9 @@ static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, 
 	b -= b >> 2;
 	c0 = RGBONLY(r, g, b);
 
-	r = (long)((1 - max) * colour->abLeftRed[4] + max * colour->abRightRed[4]);
-	g = (long)((1 - max) * colour->abLeftGreen[4] + max * colour->abRightGreen[4]);
-	b = (long)((1 - max) * colour->abLeftBlue[4] + max * colour->abRightBlue[4]);
+	r = (int)((1 - max) * colour->abLeftRed[4] + max * colour->abRightRed[4]);
+	g = (int)((1 - max) * colour->abLeftGreen[4] + max * colour->abRightGreen[4]);
+	b = (int)((1 - max) * colour->abLeftBlue[4] + max * colour->abRightBlue[4]);
 	r -= r >> 2;
 	g -= g >> 2;
 	b -= b >> 2;
@@ -198,10 +198,10 @@ static void S_DrawGouraudBar(long x, long y, long width, long height, long pos, 
 	DrawColoredRect(x0 - (3 * p), y0 + p, x1 + (3 * p), y1 - p, f_mznear + 3, 0xFF284141, 0xFF505050, 0xFF284141, 0xFF505050, &tex);
 }
 
-static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long clr1, long clr2, long scaled) {
+static void S_DoTR5Bar(int x, int y, int width, int height, int pos, int clr1, int clr2, int scaled) {
 	TEXTURESTRUCT tex;
 	float r1, g1, b1, r2, g2, b2, r, g, b, mul;
-	long bar, y2, p, lr, lg, lb, c0, c1, c2, c3;
+	int bar, y2, p, lr, lg, lb, c0, c1, c2, c3;
 
 	nPolyType = 6;
 	clipflags[0] = 0;
@@ -232,15 +232,15 @@ static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long c
 	g = g1 + ((g2 - g1) * mul);
 	b = b1 + ((b2 - b1) * mul);
 
-	lr = (long)r1;
-	lg = (long)g1;
-	lb = (long)b1;
+	lr = (int)r1;
+	lg = (int)g1;
+	lb = (int)b1;
 	c0 = RGBONLY(lr >> 1, lg >> 1, lb >> 1);
 	c2 = RGBONLY(lr, lg, lb);
 
-	lr = (long)r;
-	lg = (long)g;
-	lb = (long)b;
+	lr = (int)r;
+	lg = (int)g;
+	lb = (int)b;
 	c1 = RGBONLY(lr >> 1, lg >> 1, lb >> 1);
 	c3 = RGBONLY(lr, lg, lb);
 
@@ -251,9 +251,9 @@ static void S_DoTR5Bar(long x, long y, long width, long height, long pos, long c
 	DrawColoredRect((float)(x - p), (float)(y - p), (float)(x + width + p), (float)(y2 + height + p), f_mznear + 2, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, &tex);
 }
 
-static void DoBar(long x, long y, long width, long height, long pos, long c1, long c2, long scaled) {
+static void DoBar(int x, int y, int width, int height, int pos, int c1, int c2, int scaled) {
 	TEXTURESTRUCT tex;
-	long p, xw, y2, bar;
+	int p, xw, y2, bar;
 
 	nPolyType = 6;
 	clipflags[0] = 0;
@@ -280,8 +280,8 @@ static void DoBar(long x, long y, long width, long height, long pos, long c1, lo
 	DrawColoredRect((float)(x - p), (float)(y - p), (float)(xw + p), (float)(y2 + height + p), f_mznear + 2, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, &tex);
 }
 
-static void S_DrawHealthBar2(long pos) {
-	long x, y, w, h;
+static void S_DrawHealthBar2(int pos) {
+	int x, y, w, h;
 
 	w = GetFixedScale(150);
 	h = GetFixedScale(6);
@@ -291,8 +291,8 @@ static void S_DrawHealthBar2(long pos) {
 	S_DoTR5Bar(x, y, w, h, pos, 0xA00000, lara.poisoned ? 0xA0A000 : 0x00A000, 0);
 }
 
-static void S_DrawEnemyBar2(long pos) {
-	long x, y, w, h;
+static void S_DrawEnemyBar2(int pos) {
+	int x, y, w, h;
 
 	w = GetFixedScale(150);
 	h = GetFixedScale(6);
@@ -302,8 +302,8 @@ static void S_DrawEnemyBar2(long pos) {
 	S_DoTR5Bar(x, y, w, h, pos, 0xA00000, 0xA0A000, 0);
 }
 
-void S_DrawHealthBar(long pos) {
-	long x, y, w, h;
+void S_DrawHealthBar(int pos) {
+	int x, y, w, h;
 
 	if(!gfCurrentLevel) {
 		return;
@@ -331,8 +331,8 @@ void S_DrawHealthBar(long pos) {
 	S_DoTR5Bar(x, y, w, h, pos, 0xA00000, lara.poisoned ? 0xA0A000 : 0x00A000, 1);
 }
 
-void S_DrawAirBar(long pos) {
-	long x, y, w, h;
+void S_DrawAirBar(int pos) {
+	int x, y, w, h;
 
 	if(!gfCurrentLevel) {
 		return;
@@ -350,8 +350,8 @@ void S_DrawAirBar(long pos) {
 	S_DoTR5Bar(x, y, w, h, pos, 0x0000A0, 0x0050A0, 1);
 }
 
-void S_DrawDashBar(long pos) {
-	long x, y, w, h;
+void S_DrawDashBar(int pos) {
+	int x, y, w, h;
 
 	if(!gfCurrentLevel) {
 		return;
@@ -370,8 +370,8 @@ void S_DrawDashBar(long pos) {
 	S_DoTR5Bar(x, y, w, h, pos, 0xA0A000, 0x00A000, 1);
 }
 
-void S_DrawEnemyBar(long pos) {
-	long x, y, w, h;
+void S_DrawEnemyBar(int pos) {
+	int x, y, w, h;
 
 	if(BinocularRange) {
 		S_DrawEnemyBar2(pos);
@@ -390,7 +390,7 @@ void S_DrawEnemyBar(long pos) {
 	S_DoTR5Bar(x, y, w, h, pos, 0xA00000, 0xA0A000, 1);
 }
 
-void S_DoSlider(long x, long y, long width, long height, long pos, long c1, long c2, long c3) {
+void S_DoSlider(int x, int y, int width, int height, int pos, int c1, int c2, int c3) {
 	TEXTURESTRUCT tex;
 	float sx, sy, w, h;
 	static float V;
@@ -434,13 +434,13 @@ void S_DoSlider(long x, long y, long width, long height, long pos, long c1, long
 	DrawColoredRect(sx, sy, sx + w + 1, sy + (h * 2), f_mznear + 1, c3, c3, c3, c3, &tex);
 }
 
-void S_InitLoadBar(long maxpos) {
+void S_InitLoadBar(int maxpos) {
 	loadbar_pos = 0;
 	loadbar_maxpos = maxpos;
 }
 
 void S_LoadBar() {
-	long x, y, w, h;
+	int x, y, w, h;
 
 	if(gfCurrentLevel || App.dx.Flags & DXF_HWR) {
 		_BeginScene();
@@ -458,7 +458,7 @@ void S_LoadBar() {
 			y = phd_winheight - h - GetFixedScale(20);
 
 
-			S_DoTR5Bar(x, y, w, h, (long)loadbar_pos, 0xFF7F007F, 0xFF007F7F, 0);
+			S_DoTR5Bar(x, y, w, h, (int)loadbar_pos, 0xFF7F007F, 0xFF007F7F, 0);
 		}
 
 		SortPolyList(SortCount, SortList);

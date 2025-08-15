@@ -3,6 +3,6 @@
 #include <ddraw.h>
 typedef struct DXZBUFFERINFO {
 	DDPIXELFORMAT ddpf;
-	unsigned long bpp;
+	unsigned int bpp;
 } DXZBUFFERINFO;
 #endif// TOMB4_SPECIFIC_DXZBUFFERINFO_H

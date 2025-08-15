@@ -109,12 +109,12 @@ void RagheadControl(short item_number) {
 	CREATURE_INFO* raghead;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	AI_INFO info;
 	AI_INFO larainfo;
-	long x, y, z, Xoffset, Zoffset, nearheight, midheight, farheight, jump_ahead, long_jump_ahead;
-	long dx, dz, h1, h2, can_jump, can_roll, h, c;
+	int x, y, z, Xoffset, Zoffset, nearheight, midheight, farheight, jump_ahead, long_jump_ahead;
+	int dx, dz, h1, h2, can_jump, can_roll, h, c;
 	short obj_num, angle, tilt, head, torso_x, torso_y, room_number, target_num, state;
 
 	if(!CreatureActive(item_number)) {

@@ -30,7 +30,7 @@ static char* CompressedData;
 
 int LoadLevel(void* name) {
 	char* pData;
-	long version, size, compressedSize;
+	int version, size, compressedSize;
 
 	Log(__func__, "LoadLevel");
 	FreeLevel();
@@ -129,7 +129,7 @@ int LoadLevel(void* name) {
 	return 1;
 }
 
-long S_LoadLevelFile(long num) {
+int S_LoadLevelFile(int num) {
 	char name[80];
 
 	Log(__func__, "S_LoadLevelFile");
@@ -146,9 +146,9 @@ void FreeLevel() {
 	currentLevel = NULL;
 }
 
-long FindCDDrive() {
+int FindCDDrive() {
 	HANDLE file;
-	unsigned long drives, type;
+	unsigned int drives, type;
 	char path[14];
 	char root[5];
 	static char cd_drive;
@@ -202,8 +202,8 @@ void FileClose(FILE* file) {
 	fclose(file);
 }
 
-long FileSize(FILE* file) {
-	long size;
+int FileSize(FILE* file) {
+	int size;
 
 	fseek(file, 0, SEEK_END);
 	size = ftell(file);
@@ -211,9 +211,9 @@ long FileSize(FILE* file) {
 	return size;
 }
 
-long LoadFile(const char* name, char** dest) {
+int LoadFile(const char* name, char** dest) {
 	FILE* file;
-	long size, count;
+	int size, count;
 
 	Log(__func__, "LoadFile");
 	Log(__func__, "File - %s", name);
@@ -249,7 +249,7 @@ char LoadCinematic(char** data, LEVEL_INFO* lvl) {
 	return 1;
 }
 
-char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size) {
+char S_Decompress(char* pDest, char* pCompressed, int compressedSize, int size) {
 	z_stream stream = { 0 };
 
 	Log(__func__, "Decompress");

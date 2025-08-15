@@ -9,21 +9,21 @@ typedef struct D3DTLBUMPVERTEX D3DTLBUMPVERTEX;
 typedef struct _D3DVECTOR _D3DVECTOR;
 void ProcessRoomData(ROOM_INFO* r, short* data, short vertexSize);
 void InitBuckets();
-void FindBucket(long tpage, D3DTLBUMPVERTEX** Vpp, long** nVtxpp);
+void FindBucket(int tpage, D3DTLBUMPVERTEX** Vpp, long** nVtxpp);
 void DrawBuckets();
-void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, long i);
+void ProcessMesh(LEVEL_INFO* lvl, short* mesh_ptr, short* last_mesh_ptr, int i);
 void S_InitRoomDraw();
 extern MESH_DATA** mesh_vtxbuf;
 extern float clip_left;
 extern float clip_top;
 extern float clip_right;
 extern float clip_bottom;
-extern long bWaterEffect;
-extern long num_level_meshes;
+extern int bWaterEffect;
+extern int num_level_meshes;
 
-extern long water_color_R;
-extern long water_color_G;
-extern long water_color_B;
+extern int water_color_R;
+extern int water_color_G;
+extern int water_color_B;
 extern short clipflags[8192];
 extern float vert_wibble_table[32];
 

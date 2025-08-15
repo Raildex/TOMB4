@@ -6,7 +6,7 @@ void InitialiseInventory(INVENTORYINFO* inv) {
 }
 
 void AddInventoryItem(INVENTORYINFO* inventory, enum object_types obj, unsigned short amnt) {
-	long free = -1; // first slot without an amount
+	int free = -1; // first slot without an amount
 	for(int i = 0; i < inventory->nSlots; ++i) {
 		if(free == -1 && inventory->slots[i].amount == 0) {
 			free = i;
@@ -46,7 +46,7 @@ void RemoveInventoryItem(INVENTORYINFO* inventory, enum object_types obj, unsign
 	}
 }
 
-long HasItemInInventory(INVENTORYINFO* inventory, enum object_types obj) {
+int HasItemInInventory(INVENTORYINFO* inventory, enum object_types obj) {
 	for(int i = 0; i < inventory->nSlots; ++i) {
 		if(inventory->slots[i].object == obj) {
 			if(inventory->slots[i].amount >= 1) {

@@ -244,7 +244,7 @@ void PushPullKickDoorControl(short item_number) {
 
 void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
-	long pull, goin;
+	int pull, goin;
 
 	item = GetItem(currentLevel, item_num);
 

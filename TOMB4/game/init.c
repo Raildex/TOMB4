@@ -42,7 +42,7 @@ void InitialiseMapper(short item_number) {
 
 void InitialiseLightningConductor(short item_number) {
 	ITEM_INFO* item;
-	long pack;
+	int pack;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -63,7 +63,7 @@ void InitialiseDoor(short item_number) {
 	ROOM_INFO* r;
 	ROOM_INFO* b;
 	DOOR_DATA* door;
-	long dx, dy;
+	int dx, dy;
 	short two_room, box_number, room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -256,8 +256,8 @@ void InitialiseJobySpike(short item_number) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
-	long h, c;
+	int tiltxoff, tiltzoff, OnObject;
+	int h, c;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -494,7 +494,7 @@ void InitialisePickUp(short item_number) {
 	}
 }
 
-void CreateRope(ROPE_STRUCT* rope, PHD_VECTOR* pos, PHD_VECTOR* dir, long slength, ITEM_INFO* item) {
+void CreateRope(ROPE_STRUCT* rope, PHD_VECTOR* pos, PHD_VECTOR* dir, int slength, ITEM_INFO* item) {
 	rope->Position = *pos;
 	rope->SegmentLength = slength << 16;
 	dir->x <<= (W2V_SHIFT + 2);
@@ -503,9 +503,9 @@ void CreateRope(ROPE_STRUCT* rope, PHD_VECTOR* pos, PHD_VECTOR* dir, long slengt
 	Normalise(dir);
 
 	for(int n = 0; n < 24; ++n) {
-		rope->Segment[n].x = (long long)(rope->SegmentLength * n) * dir->x >> (W2V_SHIFT + 2);
-		rope->Segment[n].y = (long long)(rope->SegmentLength * n) * dir->y >> (W2V_SHIFT + 2);
-		rope->Segment[n].z = (long long)(rope->SegmentLength * n) * dir->z >> (W2V_SHIFT + 2);
+		rope->Segment[n].x = (int long)(rope->SegmentLength * n) * dir->x >> (W2V_SHIFT + 2);
+		rope->Segment[n].y = (int long)(rope->SegmentLength * n) * dir->y >> (W2V_SHIFT + 2);
+		rope->Segment[n].z = (int long)(rope->SegmentLength * n) * dir->z >> (W2V_SHIFT + 2);
 		rope->Velocity[n].x = 0;
 		rope->Velocity[n].y = 0;
 		rope->Velocity[n].z = 0;

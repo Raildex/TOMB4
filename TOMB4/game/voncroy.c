@@ -76,12 +76,12 @@ char bVoncroyCutScene;
 
 static PHD_VECTOR actualCameraPos;
 static PHD_VECTOR actualCameraTarget;
-static long actualFOV;
-static long actualRoomNumber;
+static int actualFOV;
+static int actualRoomNumber;
 
 void SetCutSceneCamera(ITEM_INFO* item) {
 	VonCroyCutData* cut;
-	long f;
+	int f;
 
 	bVoncroyCutScene = 1;
 	camera.old_type = FIXED_CAMERA;
@@ -157,7 +157,7 @@ void ClearCutSceneCamera() {
 	AlterFOV((short)actualFOV);
 }
 
-void GetAIEnemy(CREATURE_INFO* info, long tfl) {
+void GetAIEnemy(CREATURE_INFO* info, int tfl) {
 	AIOBJECT* ai;
 
 	for(int aiObjNum = 0; aiObjNum < GetNumAIObjects(currentLevel); aiObjNum++) {
@@ -186,8 +186,8 @@ void GetAIEnemy(CREATURE_INFO* info, long tfl) {
 void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long h;
+	int tiltxoff, tiltzoff, OnObject;
+	int h;
 	short ang, room_number;
 
 	if(lara.locationPad != 8 && lara.locationPad != 15) {
@@ -373,12 +373,12 @@ void VoncroyRaceControl(short item_number) {
 	CREATURE_INFO* VonCroy;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	AI_INFO info;
-	long Xoffset, Zoffset, x, y, z, nearheight, midheight, farheight, dx, dz, distance, ahead, iAngle, h, c;
+	int Xoffset, Zoffset, x, y, z, nearheight, midheight, farheight, dx, dz, distance, ahead, iAngle, h, c;
 	short tilt, angle, torso_x, torso_y, head, room_number, jump_ahead, long_jump_ahead, ifl3;
 	short* meshpp = GetMesh(currentLevel, GetObjectInfo(currentLevel, VON_CROY)->mesh_index + 42);
-	static long talk = 0;
+	static int talk = 0;
 
 	if(!CreatureActive(item_number)) {
 		return;
@@ -929,10 +929,10 @@ void VoncroyControl(short item_number) {
 	CREATURE_INFO* baddie;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	static AI_INFO VonCroyAI;
 	static AI_INFO VonCroyLaraAI;
-	long Xoffset, Zoffset, x, y, z, nearheight, midheight, farheight, dx, dz, dist, max_dist, h, c;
+	int Xoffset, Zoffset, x, y, z, nearheight, midheight, farheight, dx, dz, dist, max_dist, h, c;
 	short tilt, angle, torso_x, torso_y, head, room_number, jump_ahead, long_jump_ahead, ifl3;
 
 	if(!CreatureActive(item_number)) {

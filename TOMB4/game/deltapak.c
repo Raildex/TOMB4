@@ -120,10 +120,10 @@ static CUTSEQ_ROUTINES cutseq_control_routines[] = {
 #endif
 };
 
-long cutseq_trig = 0;
-long cutseq_num = 0;
-long GLOBAL_playing_cutseq = 0;
-long GLOBAL_cutseq_frame;
+int cutseq_trig = 0;
+int cutseq_num = 0;
+int GLOBAL_playing_cutseq = 0;
+int GLOBAL_cutseq_frame;
 
 static NEW_CUTSCENE* GLOBAL_cutme;
 static ITEM_INFO* horus_item_thing;
@@ -132,11 +132,11 @@ static PACKNODE* actor_pnodes[10];
 static ITEM_INFO duff_item[10];
 static char* GLOBAL_resident_depack_buffers; // not really used
 static camera_type GLOBAL_oldcamtype;
-static unsigned long cutseq_meshbits[10];
-static unsigned long cutseq_meshswapbits[10];
-static long GLOBAL_numcutseq_frames;
-static long lastcamnum;
-static long numnailed;
+static unsigned int cutseq_meshbits[10];
+static unsigned int cutseq_meshswapbits[10];
+static int GLOBAL_numcutseq_frames;
+static int lastcamnum;
+static int numnailed;
 static short old_lara_holster;
 static short temp_rotation_buffer[160];
 static char cutseq_busy_timeout = 0;
@@ -144,8 +144,8 @@ static char lara_chat_cnt = 0;
 static char actor_chat_cnt = 0;
 static char old_status_flags[16];
 
-void handle_cutseq_triggering(long name) {
-	long n, goin, fuck;
+void handle_cutseq_triggering(int name) {
+	int n, goin, fuck;
 
 	if(!cutseq_num) {
 		return;
@@ -375,8 +375,8 @@ void do_new_cutscene_camera() {
 	}
 }
 
-void InitPackNodes(NODELOADHEADER* lnode, PACKNODE* pnode, char* packed, long numnodes) {
-	long offset, xoff, yoff, zoff;
+void InitPackNodes(NODELOADHEADER* lnode, PACKNODE* pnode, char* packed, int numnodes) {
+	int offset, xoff, yoff, zoff;
 
 	offset = ((numnodes << 3) - numnodes) << 1;
 
@@ -402,7 +402,7 @@ void InitPackNodes(NODELOADHEADER* lnode, PACKNODE* pnode, char* packed, long nu
 	}
 }
 
-void DecodeAnim(PACKNODE* node, long num_nodes, long frame, long flags) {
+void DecodeAnim(PACKNODE* node, int num_nodes, int frame, int flags) {
 	if(frame) {
 		node->xrot_run += DecodeTrack(node->xpacked, &node->decode_x);
 		node->yrot_run += DecodeTrack(node->ypacked, &node->decode_y);
@@ -497,8 +497,8 @@ short DecodeTrack(char* packed, RTDECODE* decode) {
 	}
 }
 
-short GetTrackWord(long off, char* packed, long packmethod) {
-	long offset, offset2;
+short GetTrackWord(int off, char* packed, int packmethod) {
+	int offset, offset2;
 	short ret;
 
 	offset = packmethod * off;
@@ -552,7 +552,7 @@ void updateAnimFrame(PACKNODE* node, int flags, short* frame) {
 	}
 }
 
-void* cutseq_malloc(long size) {
+void* cutseq_malloc(int size) {
 	return Allocate(currentLevel, size, 1);
 }
 
@@ -566,7 +566,7 @@ void DrawCutSeqActors() {
 	short** mesh;
 	long* bone;
 	short* rot;
-	long n;
+	int n;
 
 	phd_PushMatrix();
 
@@ -651,9 +651,9 @@ void GetJointAbsPositionCutSeq(ITEM_INFO* item, OBJECT_INFO* obj, short* rot, PH
 	phd_TranslateRel(rot[6], rot[7], rot[8]);
 	rot2 = rot + 9;
 	gar_RotYXZsuperpack(&rot2, 0);
-	pos->x = (long)mMXPtr[M03];
-	pos->y = (long)mMXPtr[M13];
-	pos->z = (long)mMXPtr[M23];
+	pos->x = (int)mMXPtr[M03];
+	pos->y = (int)mMXPtr[M13];
+	pos->z = (int)mMXPtr[M23];
 	pos->x += item->pos.pos.x;
 	pos->y += item->pos.pos.y;
 	pos->z += item->pos.pos.z;
@@ -706,7 +706,7 @@ void fourth_cutseq_init() {
 }
 
 void fourth_cutseq_control() {
-	long frame;
+	int frame;
 
 	frame = GLOBAL_cutseq_frame;
 
@@ -833,7 +833,7 @@ void tenth_cutseq_init() {
 }
 
 void tenth_cutseq_control() {
-	long frame, r, g, b;
+	int frame, r, g, b;
 
 	frame = GLOBAL_cutseq_frame;
 
@@ -897,7 +897,7 @@ void eleventh_cutseq_init() {
 }
 
 void eleventh_cutseq_control() {
-	long frame, r, g, b;
+	int frame, r, g, b;
 
 	frame = GLOBAL_cutseq_frame;
 
@@ -994,7 +994,7 @@ void fifteen_init() {
 }
 
 void fifteen_control() {
-	long frame;
+	int frame;
 
 	frame = GLOBAL_cutseq_frame;
 
@@ -1052,7 +1052,7 @@ void sixteen_init() {
 }
 
 void sixteen_control() {
-	long frame;
+	int frame;
 
 	frame = GLOBAL_cutseq_frame;
 
@@ -1319,7 +1319,7 @@ void do_key_meshswap() {
 	*GetMeshPointer(currentLevel, GetObjectInfo(currentLevel, MESHSWAP1)->mesh_index + LM_RHAND * 2) = temp;
 }
 
-void cutseq_shoot_pistols(long left_or_right) {
+void cutseq_shoot_pistols(int left_or_right) {
 	if(left_or_right == 14) {
 		lara.left_arm.flash_gun = 4;
 		SmokeCountL = 16;
@@ -1329,7 +1329,7 @@ void cutseq_shoot_pistols(long left_or_right) {
 	}
 }
 
-void trigger_weapon_dynamics(long left_or_right) {
+void trigger_weapon_dynamics(int left_or_right) {
 	PHD_VECTOR pos;
 
 	pos.x = (GetRandomControl() & 0xFF) - 128;
@@ -1369,7 +1369,7 @@ void deal_with_pistols() {
 	}
 }
 
-void cutseq_kill_item(long num) {
+void cutseq_kill_item(int num) {
 	ITEM_INFO* item;
 
 	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
@@ -1383,7 +1383,7 @@ void cutseq_kill_item(long num) {
 	}
 }
 
-ITEM_INFO* cutseq_restore_item(long num) {
+ITEM_INFO* cutseq_restore_item(int num) {
 	ITEM_INFO* item;
 
 	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {
@@ -1399,11 +1399,11 @@ ITEM_INFO* cutseq_restore_item(long num) {
 	return 0;
 }
 
-long Load_and_Init_Cutseq(long num) {
+int Load_and_Init_Cutseq(int num) {
 	ACTORME* actor;
 	long* headerbuf;
 	char* packed;
-	long Offset, Length;
+	int Offset, Length;
 
 	Log(__func__, "Initialising Cut Scene");
 	SetCutPlayed(num);
@@ -1430,11 +1430,11 @@ long Load_and_Init_Cutseq(long num) {
 	return 0;
 }
 
-void init_cutseq_actors(char* data, long resident) {
+void init_cutseq_actors(char* data, int resident) {
 	ITEM_INFO* item;
 	char* packed;
 	char* resident_addr;
-	long pda_nodes, offset;
+	int pda_nodes, offset;
 
 	resident_addr = GLOBAL_resident_depack_buffers;
 	lastcamnum = -1;
@@ -1492,11 +1492,11 @@ void init_cutseq_actors(char* data, long resident) {
 	InitialiseHair();
 }
 
-void init_voncroy_meshbits(long num) {
+void init_voncroy_meshbits(int num) {
 	cutseq_meshswapbits[num] = 0x240080;
 }
 
-void DelsHandyTeleportLara(long x, long y, long z, long yrot) {
+void DelsHandyTeleportLara(int x, int y, int z, int yrot) {
 	lara_item->pos.pos.x = x;
 	lara_item->pos.pos.y = y;
 	lara_item->pos.pos.z = z;
@@ -1539,7 +1539,7 @@ void nail_intelligent_object(short num) {
 }
 
 void handle_lara_chatting(short* _ranges) {
-	long r1, r2, f;
+	int r1, r2, f;
 
 	lara_chat_cnt = (lara_chat_cnt - 1) & 1;
 	f = GLOBAL_cutseq_frame;
@@ -1565,8 +1565,8 @@ void handle_lara_chatting(short* _ranges) {
 	}
 }
 
-void handle_actor_chatting(long speechslot, long node, long slot, long objslot, short* _ranges) {
-	long r1, r2, f, rnd;
+void handle_actor_chatting(int speechslot, int node, int slot, int objslot, short* _ranges) {
+	int r1, r2, f, rnd;
 
 	rnd = GetRandomControl() & 1;
 	f = GLOBAL_cutseq_frame;
@@ -1597,7 +1597,7 @@ void handle_actor_chatting(long speechslot, long node, long slot, long objslot, 
 	}
 }
 
-void trigger_item_in_room(long room_number, long object_number) {
+void trigger_item_in_room(int room_number, int object_number) {
 	ITEM_INFO* item;
 	short item_number;
 
@@ -1616,7 +1616,7 @@ void trigger_item_in_room(long room_number, long object_number) {
 	}
 }
 
-void untrigger_item_in_room(long room_number, long object_number) {
+void untrigger_item_in_room(int room_number, int object_number) {
 	ITEM_INFO* item;
 	short item_number;
 
@@ -1631,7 +1631,7 @@ void untrigger_item_in_room(long room_number, long object_number) {
 	}
 }
 
-ITEM_INFO* find_a_fucking_item(long object_number) {
+ITEM_INFO* find_a_fucking_item(int object_number) {
 	ITEM_INFO* item;
 
 	for(int i = 0; i < GetNumLevelItems(currentLevel); i++) {

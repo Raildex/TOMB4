@@ -214,7 +214,7 @@ short* FindPlinth(ITEM_INFO* item) {
 	MESH_INFO* mesh;
 	short* p;
 	short* o;
-	long i;
+	int i;
 	short item_num;
 
 	o = 0;
@@ -257,9 +257,9 @@ short* FindPlinth(ITEM_INFO* item) {
 	return GetBestFrame(GetItem(currentLevel, item_num));
 }
 
-long KeyTrigger(short item_num) {
+int KeyTrigger(short item_num) {
 	ITEM_INFO* item;
-	long oldkey;
+	int oldkey;
 
 	item = GetItem(currentLevel, item_num);
 
@@ -277,7 +277,7 @@ long KeyTrigger(short item_num) {
 	return oldkey;
 }
 
-long PickupTrigger(short item_num) {
+int PickupTrigger(short item_num) {
 	ITEM_INFO* item;
 
 	item = GetItem(currentLevel, item_num);
@@ -334,7 +334,7 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	ITEM_INFO* itemme;
 	short* bounds;
-	long flag;
+	int flag;
 	short rotx, roty, rotz, ocb;
 
 	item = GetItem(currentLevel, item_number);
@@ -596,7 +596,7 @@ void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 	short bounds[6];
-	long PuzzleType, hole, puzzle;
+	int PuzzleType, hole, puzzle;
 	short yrot;
 
 	PuzzleType = 0;

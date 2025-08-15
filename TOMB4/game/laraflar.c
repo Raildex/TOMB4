@@ -63,8 +63,8 @@ void undraw_flare_meshes() {
 	lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_LHAND * 2);
 }
 
-long DoFlareLight(PHD_VECTOR* pos, long flare_age) {
-	long x, y, z, r, g, b, rnd, falloff, ret;
+int DoFlareLight(PHD_VECTOR* pos, int flare_age) {
+	int x, y, z, r, g, b, rnd, falloff, ret;
 
 	if(flare_age >= 900 || !flare_age) {
 		return 0;
@@ -121,7 +121,7 @@ long DoFlareLight(PHD_VECTOR* pos, long flare_age) {
 	return ret;
 }
 
-void DoFlareInHand(long flare_age) {
+void DoFlareInHand(int flare_age) {
 	PHD_VECTOR pos;
 
 	pos.x = 11;
@@ -142,15 +142,15 @@ void DoFlareInHand(long flare_age) {
 	}
 }
 
-void CreateFlare(short object, long thrown) {
+void CreateFlare(short object, int thrown) {
 	ITEM_INFO* itemlist[6] = { 0 };
 	MESH_INFO* meshlist[6] = { 0 };
 	ITEM_INFO* flare;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
-	long collided;
+	int collided;
 	short flare_item, room_number;
 
 	flare_item = CreateItem();
@@ -219,7 +219,7 @@ void CreateFlare(short object, long thrown) {
 	}
 }
 
-void set_flare_arm(long frame) {
+void set_flare_arm(int frame) {
 	short anim_base;
 
 	anim_base = GetObjectInfo(currentLevel, FLARE_ANIM)->anim_index;
@@ -383,7 +383,7 @@ void undraw_flare() {
 
 void FlareControl(short item_number) {
 	ITEM_INFO* flare;
-	long x, y, z, xv, yv, zv, flare_age;
+	int x, y, z, xv, yv, zv, flare_age;
 
 	flare = GetItem(currentLevel, item_number);
 	FLARE_INFO* data = flare->data;

@@ -16,10 +16,10 @@
 #include "specific/sound.h"
 
 SoundSlot LaSlot[32];
-long sound_active = 0;
+int sound_active = 0;
 
 void GetPanVolume(SoundSlot* slot) {
-	long dx, dy, dz, radius, distance, nPan, nVolume;
+	int dx, dy, dz, radius, distance, nPan, nVolume;
 
 	if(slot->distance || slot->pos.x || slot->pos.y || slot->pos.z) {
 		dx = slot->pos.x - camera.pos.pos.x;
@@ -70,8 +70,8 @@ void GetPanVolume(SoundSlot* slot) {
 	}
 }
 
-void StopSoundEffect(long sfx) {
-	long lut;
+void StopSoundEffect(int sfx) {
+	int lut;
 
 	if(sound_active) {
 		lut = *GetSampleLookup(currentLevel, sfx);
@@ -105,10 +105,10 @@ void StopSounds() {
 	}
 }
 
-long SoundEffect(long sfx, PHD_VECTOR* pos, short room, long flags) {
+int SoundEffect(int sfx, PHD_VECTOR* pos, short room, int flags) {
 	SAMPLE_INFO* info;
 	PHD_VECTOR pos2;
-	long lut, radius, pan, dx, dy, dz, distance, volume, OrigVolume, pitch, rnd, sample, flag, vol, slot;
+	int lut, radius, pan, dx, dy, dz, distance, volume, OrigVolume, pitch, rnd, sample, flag, vol, slot;
 	if(sfx == SFX_LARA_NO) {
 		switch(Gameflow->Language) {
 		case FRENCH:
@@ -347,7 +347,7 @@ long SoundEffect(long sfx, PHD_VECTOR* pos, short room, long flags) {
 }
 
 void SayNo() {
-	long fx;
+	int fx;
 
 	fx = SFX_LARA_NO;
 

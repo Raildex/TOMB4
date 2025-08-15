@@ -16,8 +16,8 @@ void lara_col_surfleft(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_surfright(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_surftread(ITEM_INFO* item, COLL_INFO* coll);
 void LaraSurface(ITEM_INFO* item, COLL_INFO* coll);
-long LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll);
-long LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll);
+int LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll);
+int LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll);
 void LaraSurfaceCollision(ITEM_INFO* item, COLL_INFO* coll);
 
 

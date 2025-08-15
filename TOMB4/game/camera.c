@@ -41,10 +41,10 @@ GAME_VECTOR ForcedFixedCamera;
 char UseForcedFixedCamera;
 
 camera_type BinocularOldCamera = CHASE_CAMERA;
-long BinocularOn = 0;
-long BinocularRange = 0;
-long ExittingBinos = 0;
-long LaserSight = 0;
+int BinocularOn = 0;
+int BinocularRange = 0;
+int ExittingBinos = 0;
+int LaserSight = 0;
 
 
 
@@ -85,11 +85,11 @@ void InitialiseCamera() {
 	CalculateCamera();
 }
 
-long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push) {
+int mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, int push) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long x, y, z, h, c, cdiff, hdiff, dx, dy, dz, clipped, nc, i;
+	int tiltxoff, tiltzoff, OnObject;
+	int x, y, z, h, c, cdiff, hdiff, dx, dy, dz, clipped, nc, i;
 	short room_number, room_number2;
 
 	dx = (target->pos.x - start->pos.x) >> 3;
@@ -164,13 +164,13 @@ long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push) {
 }
 
 
-void MoveCamera(GAME_VECTOR* ideal, long speed) {
+void MoveCamera(GAME_VECTOR* ideal, int speed) {
 	FLOOR_INFO* floor;
 	GAME_VECTOR temp1;
 	GAME_VECTOR temp2;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long height, ceiling, shake, rndval, wx, wy, wz, dx, dy, dz;
+	int tiltxoff, tiltzoff, OnObject;
+	int height, ceiling, shake, rndval, wx, wy, wz, dx, dy, dz;
 	short room_number;
 
 	if(BinocularOn < 0) {
@@ -301,11 +301,11 @@ void MoveCamera(GAME_VECTOR* ideal, long speed) {
 }
 
 
-long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
+int CameraCollisionBounds(GAME_VECTOR* ideal, int push, int yfirst) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long wx, wy, wz, h, c;
+	int tiltxoff, tiltzoff, OnObject;
+	int wx, wy, wz, h, c;
 	short room_number;
 
 	wx = ideal->pos.x;
@@ -394,12 +394,12 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst) {
 	return 0;
 }
 
-void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long brightness) {
+void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, int brightness) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long x, y, z, sx, sy, sz, dx, dy, dz, falloff, counter, h, c, j;
-	long offs[5];
+	int tiltxoff, tiltzoff, OnObject;
+	int x, y, z, sx, sy, sz, dx, dy, dz, falloff, counter, h, c, j;
+	int offs[5];
 	short room_number;
 
 	counter = 0;
@@ -524,11 +524,11 @@ void UpdateCameraElevation() {
 void ChaseCamera(ITEM_INFO* item) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	GAME_VECTOR ideal;
 	GAME_VECTOR ideals[5];
 	GAME_VECTOR temp[2];
-	long distance, dx, dz, farthest, farthestnum, h, c, wx, wy, wz;
+	int distance, dx, dz, farthest, farthestnum, h, c, wx, wy, wz;
 	short angle, room_number;
 
 	if(!camera.target_elevation) {
@@ -663,11 +663,11 @@ void ChaseCamera(ITEM_INFO* item) {
 void CombatCamera(ITEM_INFO* item) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	GAME_VECTOR ideal;
 	GAME_VECTOR ideals[9];
 	GAME_VECTOR temp[2];
-	long distance, dx, dz, farthest, farthestnum, h, c, wx, wy, wz;
+	int distance, dx, dz, farthest, farthestnum, h, c, wx, wy, wz;
 	short angle, room_number;
 
 	camera.target.pos.x = item->pos.pos.x;
@@ -803,12 +803,12 @@ void CombatCamera(ITEM_INFO* item) {
 void LookCamera(ITEM_INFO* item) {
 	GAME_VECTOR ideal;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos1;
 	PHD_VECTOR pos2;
 	PHD_VECTOR pos3;
 	FLOOR_INFO* floor;
-	long shake, dx, dy, dz, wx, wy, wz, h, c, rndval, lp;
+	int shake, dx, dy, dz, wx, wy, wz, h, c, rndval, lp;
 	short room_number, room_number2, hxrot, txrot, hyrot, tyrot;
 
 	hxrot = lara.head_x_rot;
@@ -1065,7 +1065,7 @@ void BinocularCamera(ITEM_INFO* item) {
 	PHD_VECTOR Soffset;
 	PHD_VECTOR Eoffset;
 	short* ammo;
-	long shake, speed, c, BinocStep, rndval, dx, dz;
+	int shake, speed, c, BinocStep, rndval, dx, dz;
 	short room_number, hxrot, hyrot;
 	char Fire;
 
@@ -1225,9 +1225,9 @@ void BinocularCamera(ITEM_INFO* item) {
 void ConfirmCameraTargetPos() {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
-	long wx, wy, wz, c, h;
+	int wx, wy, wz, c, h;
 	short room_number;
 
 	pos.z = 0;
@@ -1267,7 +1267,7 @@ void CalculateCamera() {
 	OBJECT_VECTOR* fixed;
 	PHD_VECTOR v;
 	short bounds[6];
-	long shift, fixed_camera, y, dx, dz;
+	int shift, fixed_camera, y, dx, dz;
 	short gotit, change, tilt;
 
 	if(BinocularRange) {

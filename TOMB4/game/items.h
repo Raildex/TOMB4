@@ -4,7 +4,7 @@ enum no_item {
 	NO_ITEM = -1,
 };
 
-void InitialiseItemArray(short num, long count);
+void InitialiseItemArray(short num, int count);
 void KillItem(short item_num);
 short CreateItem();
 void InitialiseItem(short item_num);

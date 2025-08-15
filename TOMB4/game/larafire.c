@@ -187,7 +187,7 @@ static GAME_VECTOR bum_vsrc;
 static short TargetList[8] = { NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM };
 static short LastTargets[8] = { NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM, NO_ITEM };
 
-static long CheckForHoldingState(long state) {
+static int CheckForHoldingState(int state) {
 	short* holds;
 
 	holds = HoldStates;
@@ -260,7 +260,7 @@ void InitialiseNewWeapon() {
 }
 
 static void find_target_point(ITEM_INFO* item, GAME_VECTOR* target) {
-	long x, y, z, c, s;
+	int x, y, z, c, s;
 	short* bounds;
 
 	bounds = GetBestFrame(item);
@@ -331,7 +331,7 @@ void LaraTargetInfo(WEAPON_INFO* winfo) {
 	lara.target_angles[1] = ang[1];
 }
 
-short* get_current_ammo_pointer(long weapon_type) {
+short* get_current_ammo_pointer(int weapon_type) {
 	short* ammo;
 
 	switch(weapon_type) {
@@ -385,11 +385,11 @@ short* get_current_ammo_pointer(long weapon_type) {
 	return ammo;
 }
 
-long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angles) {
+int FireWeapon(int weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angles) {
 	WEAPON_INFO* winfo;
 	SPHERE* sptr;
 	short* ammo;
-	long r, nSpheres, bestdist, best;
+	int r, nSpheres, bestdist, best;
 	short room_number;
 
 	bum_view.pos.x = 0;
@@ -440,16 +440,16 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 	bum_vsrc.room_number = room_number;
 
 	if(best < 0) {
-		bum_vdest.pos.x = bum_vsrc.pos.x + (long)(0x5000 * mMXPtr[M20]);
-		bum_vdest.pos.y = bum_vsrc.pos.y + (long)(0x5000 * mMXPtr[M21]);
-		bum_vdest.pos.z = bum_vsrc.pos.z + (long)(0x5000 * mMXPtr[M22]);
+		bum_vdest.pos.x = bum_vsrc.pos.x + (int)(0x5000 * mMXPtr[M20]);
+		bum_vdest.pos.y = bum_vsrc.pos.y + (int)(0x5000 * mMXPtr[M21]);
+		bum_vdest.pos.z = bum_vsrc.pos.z + (int)(0x5000 * mMXPtr[M22]);
 		GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1);
 		return -1;
 	}
 	savegame.Game.AmmoHits++;
-	bum_vdest.pos.x = bum_vsrc.pos.x + (long)(bestdist * mMXPtr[M20]);
-	bum_vdest.pos.y = bum_vsrc.pos.y + (long)(bestdist * mMXPtr[M21]);
-	bum_vdest.pos.z = bum_vsrc.pos.z + (long)(bestdist * mMXPtr[M22]);
+	bum_vdest.pos.x = bum_vsrc.pos.x + (int)(bestdist * mMXPtr[M20]);
+	bum_vdest.pos.y = bum_vsrc.pos.y + (int)(bestdist * mMXPtr[M21]);
+	bum_vdest.pos.z = bum_vsrc.pos.z + (int)(bestdist * mMXPtr[M22]);
 
 	if(!GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1)) {
 		HitTarget(target, &bum_vsrc, &bum_vdest, winfo->damage, 0);
@@ -495,7 +495,7 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 	short bestitem;
 	CREATURE_INFO* creature;
 	GAME_VECTOR src, target;
-	long x, y, z, slot, dist, maxdist, maxdist2, bestdist;
+	int x, y, z, slot, dist, maxdist, maxdist2, bestdist;
 	short ang[2];
 	short bestyrot, targets, match;
 
@@ -616,7 +616,7 @@ void LaraGetNewTarget(WEAPON_INFO* winfo) {
 	LaraTargetInfo(winfo);
 }
 
-void HitTarget(ITEM_INFO* item, GAME_VECTOR* src, GAME_VECTOR* hitpos, long damage, long grenade) {
+void HitTarget(ITEM_INFO* item, GAME_VECTOR* src, GAME_VECTOR* hitpos, int damage, int grenade) {
 	OBJECT_INFO* obj;
 	PHD_VECTOR dir;
 
@@ -665,7 +665,7 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* src, GAME_VECTOR* hitpos, long dama
 	}
 }
 
-long WeaponObject(long weapon_type) {
+int WeaponObject(int weapon_type) {
 	switch(weapon_type) {
 	case WEAPON_REVOLVER:
 		return SIXSHOOTER_ANIM;
@@ -687,7 +687,7 @@ long WeaponObject(long weapon_type) {
 	}
 }
 
-long WeaponObjectMesh(long weapon_type) {
+int WeaponObjectMesh(int weapon_type) {
 	switch(weapon_type) {
 	case WEAPON_REVOLVER:
 
@@ -719,12 +719,12 @@ long WeaponObjectMesh(long weapon_type) {
 	}
 }
 
-void DoProperDetection(short item_number, long x, long y, long z, long xv, long yv, long zv) {
+void DoProperDetection(short item_number, int x, int y, int z, int xv, int yv, int zv) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
-	long ceiling, height, oldtype, oldonobj, oldheight, bs, yang, xs;
+	int tiltxoff, tiltzoff, OnObject;
+	int ceiling, height, oldtype, oldonobj, oldheight, bs, yang, xs;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);

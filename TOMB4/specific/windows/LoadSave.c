@@ -36,11 +36,11 @@
 #include <stdio.h>
 
 
-long sfx_frequencies[3] = { 11025, 22050, 44100 };
-long SoundQuality = 1;
-long MusicVolume = 40;
-long SFXVolume = 80;
-long ControlMethod;
+int sfx_frequencies[3] = { 11025, 22050, 44100 };
+int SoundQuality = 1;
+int MusicVolume = 40;
+int SFXVolume = 80;
+int ControlMethod;
 char MonoScreenOn;
 
 static MONOSCREEN_STRUCT MonoScreen;
@@ -50,18 +50,18 @@ void DoOptions() {
 	JOYINFOEX joy;
 	char** keyboard_buttons;
 	char* txt;
-	static long menu;
-	static unsigned long sel = 1; // selection
-	static unsigned long sel2; // selection for when mapping keys
-	static long mSliderCol = 0xFF3F3F3F;
-	static long sSliderCol = 0xFF3F3F3F;
-	static long sfx_bak;
-	static long sfx_quality_bak;
-	static long sfx_breath_db = -1;
-	unsigned long nMask;
-	long f, y, i, jread, jx, jy, lp;
+	static int menu;
+	static unsigned int sel = 1; // selection
+	static unsigned int sel2; // selection for when mapping keys
+	static int mSliderCol = 0xFF3F3F3F;
+	static int sSliderCol = 0xFF3F3F3F;
+	static int sfx_bak;
+	static int sfx_quality_bak;
+	static int sfx_breath_db = -1;
+	unsigned int nMask;
+	int f, y, i, jread, jx, jy, lp;
 	static char sfx_backup_flag; // have we backed sfx stuff up?
-	static long waiting_for_key = 0;
+	static int waiting_for_key = 0;
 
 	if(!(sfx_backup_flag & 1)) {
 		sfx_backup_flag |= 1;
@@ -413,7 +413,7 @@ void DoOptions() {
 }
 
 void DisplayStatsUCunt() {
-	long sec, days, hours, min, y;
+	int sec, days, hours, min, y;
 	char buf[40];
 
 	y = phd_centery - (font_height << 2);
@@ -451,9 +451,9 @@ void DisplayStatsUCunt() {
 	PrintString(phd_centerx + (phd_centerx >> 2), y + 7 * font_height, 6, buf, 0);
 }
 
-long S_DisplayPauseMenu(long reset) {
-	static long menu, selection = 1;
-	long y;
+int S_DisplayPauseMenu(int reset) {
+	static int menu, selection = 1;
+	int y;
 
 	if(!menu) {
 		if(reset) {
@@ -518,10 +518,10 @@ long S_DisplayPauseMenu(long reset) {
 	return 0;
 }
 
-long DoLoadSave(long LoadSave) {
+int DoLoadSave(int LoadSave) {
 	SAVEFILE_INFO* pSave;
-	static long selection;
-	long txt, l;
+	static int selection;
+	int txt, l;
 	unsigned char color;
 	char string[80];
 	char name[41];
@@ -555,10 +555,10 @@ long DoLoadSave(long LoadSave) {
 
 		if(pSave->valid) {
 			wsprintf(string, "%03d", pSave->num);
-			PrintString(phd_centerx - (long)((float)phd_winwidth / 640.0F * 310.0), font_height + font_height * (i + 2), color, string, 0);
-			PrintString(phd_centerx - (long)((float)phd_winwidth / 640.0F * 270.0), font_height + font_height * (i + 2), color, name, 0);
+			PrintString(phd_centerx - (int)((float)phd_winwidth / 640.0F * 310.0), font_height + font_height * (i + 2), color, string, 0);
+			PrintString(phd_centerx - (int)((float)phd_winwidth / 640.0F * 270.0), font_height + font_height * (i + 2), color, name, 0);
 			wsprintf(string, "%d %s %02d:%02d:%02d", pSave->days, SCRIPT_TEXT(TXT_days), pSave->hours, pSave->minutes, pSave->seconds);
-			PrintString(phd_centerx - (long)((float)phd_winwidth / 640.0F * -135.0), font_height + font_height * (i + 2), color, string, 0);
+			PrintString(phd_centerx - (int)((float)phd_winwidth / 640.0F * -135.0), font_height + font_height * (i + 2), color, string, 0);
 		} else {
 			wsprintf(string, "%s", pSave->name);
 			PrintString(phd_centerx, font_height + font_height * (i + 2), color, string, FF_CENTER);
@@ -594,8 +594,8 @@ long DoLoadSave(long LoadSave) {
 	return -1;
 }
 
-long S_LoadSave(long load_or_save, long mono, long inv_active) {
-	long fade, ret;
+int S_LoadSave(int load_or_save, int mono, int inv_active) {
+	int fade, ret;
 
 	fade = 0;
 
@@ -665,7 +665,7 @@ long S_LoadSave(long load_or_save, long mono, long inv_active) {
 	return ret;
 }
 
-static void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, long c0, long c1, long c2, long c3) {
+static void S_DrawTile(int x, int y, int w, int h, IDirect3DTexture2* t, int c0, int c1, int c2, int c3) {
 	D3DTLBUMPVERTEX v[4];
 	float u1, v1, u2, v2;
 
@@ -724,7 +724,7 @@ static void S_DrawTile(long x, long y, long w, long h, IDirect3DTexture2* t, lon
 }
 
 void S_DisplayMonoScreen() {
-	unsigned long col = 0xFFFFFF80;
+	unsigned int col = 0xFFFFFF80;
 
 	S_DrawTile(0, 0, phd_winwidth, phd_winheight, MonoScreen.hal.dxTex, col, col, col, col);
 }
@@ -754,8 +754,8 @@ void RGBM_Mono(unsigned char* r, unsigned char* g, unsigned char* b) {
 	*b = c;
 }
 
-static void BitMaskGetNumberOfBits(unsigned long bitMask, unsigned long* bitDepth, unsigned long* bitOffset) {
-	long i;
+static void BitMaskGetNumberOfBits(unsigned int bitMask, unsigned long* bitDepth, unsigned long* bitOffset) {
+	int i;
 
 	if(!bitMask) {
 		*bitOffset = 0;
@@ -788,13 +788,13 @@ static void WinVidGetColorBitMasks(COLOR_BIT_MASKS* bm, LPDDPIXELFORMAT pixelFor
 	BitMaskGetNumberOfBits(bm->dwRGBAlphaBitMask, &bm->dwRGBAlphaBitDepth, &bm->dwRGBAlphaBitOffset);
 }
 
-static void CustomBlt(DDSURFACEDESC2* dst, unsigned long dstX, unsigned long dstY, DDSURFACEDESC2* src, LPRECT srcRect) {
+static void CustomBlt(DDSURFACEDESC2* dst, unsigned int dstX, unsigned int dstY, DDSURFACEDESC2* src, LPRECT srcRect) {
 	COLOR_BIT_MASKS srcMask, dstMask;
 	unsigned char* srcLine;
 	unsigned char* dstLine;
 	unsigned char* srcPtr;
 	unsigned char* dstPtr;
-	unsigned long srcX, srcY, width, height, srcBpp, dstBpp, color, high, low, r, g, b;
+	unsigned int srcX, srcY, width, height, srcBpp, dstBpp, color, high, low, r, g, b;
 
 	srcX = srcRect->left;
 	srcY = srcRect->top;
@@ -807,11 +807,11 @@ static void CustomBlt(DDSURFACEDESC2* dst, unsigned long dstX, unsigned long dst
 	srcLine = (unsigned char*)src->lpSurface + srcY * src->lPitch + srcX * srcBpp;
 	dstLine = (unsigned char*)dst->lpSurface + dstY * dst->lPitch + dstX * dstBpp;
 
-	for(unsigned long j = 0; j < height; j++) {
+	for(unsigned int j = 0; j < height; j++) {
 		srcPtr = srcLine;
 		dstPtr = dstLine;
 
-		for(unsigned long i = 0; i < width; i++) {
+		for(unsigned int i = 0; i < width; i++) {
 			color = 0;
 			memcpy(&color, srcPtr, srcBpp);
 			r = (color & srcMask.dwRBitMask) >> srcMask.dwRBitOffset;
@@ -898,8 +898,8 @@ void CheckKeyConflicts() {
 	}
 }
 
-long S_PauseMenu() {
-	long fade, ret;
+int S_PauseMenu() {
+	int fade, ret;
 
 	fade = 0;
 	CreateMonoScreen();
@@ -945,11 +945,11 @@ long S_PauseMenu() {
 	return ret;
 }
 
-long GetSaveLoadFiles() {
+int GetSaveLoadFiles() {
 	FILE* file;
 	SAVEFILE_INFO* pSave;
 	SAVEGAME_INFO save_info;
-	static long nSaves;
+	static int nSaves;
 	char name[75];
 
 	SaveCounter = 0;
@@ -966,7 +966,7 @@ long GetSaveLoadFiles() {
 		}
 
 		fread(&pSave->name, sizeof(char), 75, file);
-		fread(&pSave->num, sizeof(long), 1, file);
+		fread(&pSave->num, sizeof(int), 1, file);
 		fread(&pSave->days, sizeof(short), 1, file);
 		fread(&pSave->hours, sizeof(short), 1, file);
 		fread(&pSave->minutes, sizeof(short), 1, file);

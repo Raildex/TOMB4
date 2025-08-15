@@ -6,9 +6,9 @@ enum ripple_flags {
 };
 
 typedef struct RIPPLE_STRUCT {
-	long x;
-	long y;
-	long z;
+	int x;
+	int y;
+	int z;
 	enum ripple_flags flags;
 	unsigned char life;
 	unsigned char size;

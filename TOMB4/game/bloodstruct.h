@@ -1,9 +1,9 @@
 #ifndef BLOOD_STRUCT_INCLUDED
 #define BLOOD_STRUCT_INCLUDED
 typedef struct BLOOD_STRUCT {
-	long x;
-	long y;
-	long z;
+	int x;
+	int y;
+	int z;
 	short Xvel;
 	short Yvel;
 	short Zvel;

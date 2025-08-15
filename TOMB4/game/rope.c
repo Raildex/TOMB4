@@ -22,7 +22,7 @@ static PENDULUM NullPendulum = { { 0, 0, 0 }, { 0, 0, 0 }, 0, 0 };
 
 ROPE_STRUCT RopeList[64];
 PENDULUM CurrentPendulum;
-long nRope = 0;
+int nRope = 0;
 
 void DrawRopeList() {
 	for(int i = 0; i < nRope; i++) {
@@ -48,16 +48,16 @@ void ProjectRopePoints(ROPE_STRUCT* Rope) {
 		Output.y = (float)(t.x * phd_mxptr[M10] + t.y * phd_mxptr[M11] + t.z * phd_mxptr[M12] + phd_mxptr[M13]);
 		Output.z = (float)(t.x * phd_mxptr[M20] + t.y * phd_mxptr[M21] + t.z * phd_mxptr[M22] + phd_mxptr[M23]);
 		zv = phd_persp / Output.z;
-		Rope->Coords[i][0] = (long)(Output.x * zv + f_centerx);
-		Rope->Coords[i][1] = (long)(Output.y * zv + f_centery);
-		Rope->Coords[i][2] = (long)Output.z;
+		Rope->Coords[i][0] = (int)(Output.x * zv + f_centerx);
+		Rope->Coords[i][1] = (int)(Output.y * zv + f_centery);
+		Rope->Coords[i][2] = (int)Output.z;
 	}
 
 	phd_PopMatrix();
 }
 
 PHD_VECTOR* Normalise(PHD_VECTOR* v) {
-	long mod, a, b, c, d, e;
+	int mod, a, b, c, d, e;
 
 	a = v->x >> 16;
 	b = v->y >> 16;
@@ -70,19 +70,19 @@ PHD_VECTOR* Normalise(PHD_VECTOR* v) {
 	d = abs(SQUARE(a) + SQUARE(b) + SQUARE(c));
 	e = phd_sqrt(d);
 	mod = 65536 / e;
-	v->x = (long long)mod * v->x >> 16;
-	v->y = (long long)mod * v->y >> 16;
-	v->z = (long long)mod * v->z >> 16;
+	v->x = (int long)mod * v->x >> 16;
+	v->y = (int long)mod * v->y >> 16;
+	v->z = (int long)mod * v->z >> 16;
 	return v;
 }
 
-void vMul(PHD_VECTOR* v, long scale, PHD_VECTOR* d) {
+void vMul(PHD_VECTOR* v, int scale, PHD_VECTOR* d) {
 	d->x = scale * v->x >> W2V_SHIFT;
 	d->y = scale * v->y >> W2V_SHIFT;
 	d->z = scale * v->z >> W2V_SHIFT;
 }
 
-long mDotProduct(PHD_VECTOR* a, PHD_VECTOR* b) {
+int mDotProduct(PHD_VECTOR* a, PHD_VECTOR* b) {
 	return (a->x * b->x + a->y * b->y + a->z * b->z) >> W2V_SHIFT;
 }
 
@@ -98,7 +98,7 @@ void mCrossProduct(PHD_VECTOR* a, PHD_VECTOR* b, PHD_VECTOR* n) {
 }
 
 void phd_GetMatrixAngles(long* m, short* dest) {
-	long sy, cy;
+	int sy, cy;
 	short roll, pitch, yaw;
 
 	pitch = (short)phd_atan(phd_sqrt(SQUARE(m[M22]) + SQUARE(m[M02])), m[M12]);
@@ -116,8 +116,8 @@ void phd_GetMatrixAngles(long* m, short* dest) {
 	dest[2] = roll;
 }
 
-void GetRopePos(ROPE_STRUCT* rope, long pos, long* x, long* y, long* z) {
-	long segment;
+void GetRopePos(ROPE_STRUCT* rope, int pos, long* x, long* y, long* z) {
+	int segment;
 
 	segment = pos >> 7;
 	pos &= 0x7F;
@@ -131,9 +131,9 @@ void AlignLaraToRope(ITEM_INFO* l) {
 	PHD_VECTOR n, v, u, n2, up;
 	PHD_VECTOR v1, v2;
 	short* frame;
-	long temp[indices_count];
-	static long ropematrix[indices_count];
-	long i, x, y, z, x1, y1, z1;
+	int temp[indices_count];
+	static int ropematrix[indices_count];
+	int i, x, y, z, x1, y1, z1;
 	short xyz[3];
 	static short ropeangle;
 
@@ -199,18 +199,18 @@ void AlignLaraToRope(ITEM_INFO* l) {
 	l->pos.pos.z = rope->Position.z + (rope->MeshSegment[i].z >> (W2V_SHIFT + 2));
 	phd_PushUnitMatrix();
 	phd_RotYXZ(xyz[1], xyz[0], xyz[2]);
-	l->pos.pos.x += (long)(-112 * mMXPtr[M02]);
-	l->pos.pos.y += (long)(-112 * mMXPtr[M12]);
-	l->pos.pos.z += (long)(-112 * mMXPtr[M22]);
+	l->pos.pos.x += (int)(-112 * mMXPtr[M02]);
+	l->pos.pos.y += (int)(-112 * mMXPtr[M12]);
+	l->pos.pos.z += (int)(-112 * mMXPtr[M22]);
 	phd_PopMatrix();
 	l->pos.x_rot = xyz[0];
 	l->pos.y_rot = xyz[1];
 	l->pos.z_rot = xyz[2];
 }
 
-void ModelRigid(PHD_VECTOR* pa, PHD_VECTOR* pb, PHD_VECTOR* va, PHD_VECTOR* vb, long rlength) {
+void ModelRigid(PHD_VECTOR* pa, PHD_VECTOR* pb, PHD_VECTOR* va, PHD_VECTOR* vb, int rlength) {
 	PHD_VECTOR delta, d, a, b;
-	long length, scale;
+	int length, scale;
 
 	a.x = pb->x - pa->x;
 	a.y = pb->y - pa->y;
@@ -224,9 +224,9 @@ void ModelRigid(PHD_VECTOR* pa, PHD_VECTOR* pb, PHD_VECTOR* va, PHD_VECTOR* vb, 
 	length = phd_sqrt(abs(SQUARE(d.x >> (W2V_SHIFT + 2)) + SQUARE(d.y >> 16) + SQUARE(d.z >> 16)));
 	scale = ((length << (W2V_SHIFT + 2)) - rlength) >> 1;
 	Normalise(&d);
-	delta.x = (long long)scale * d.x >> (W2V_SHIFT + 2);
-	delta.y = (long long)scale * d.y >> (W2V_SHIFT + 2);
-	delta.z = (long long)scale * d.z >> (W2V_SHIFT + 2);
+	delta.x = (int long)scale * d.x >> (W2V_SHIFT + 2);
+	delta.y = (int long)scale * d.y >> (W2V_SHIFT + 2);
+	delta.z = (int long)scale * d.z >> (W2V_SHIFT + 2);
 	va->x += delta.x;
 	va->y += delta.y;
 	va->z += delta.z;
@@ -235,9 +235,9 @@ void ModelRigid(PHD_VECTOR* pa, PHD_VECTOR* pb, PHD_VECTOR* va, PHD_VECTOR* vb, 
 	vb->z -= delta.z;
 }
 
-void ModelRigidRope(PHD_VECTOR* pa, PHD_VECTOR* pb, PHD_VECTOR* va, PHD_VECTOR* vb, long rlength) {
+void ModelRigidRope(PHD_VECTOR* pa, PHD_VECTOR* pb, PHD_VECTOR* va, PHD_VECTOR* vb, int rlength) {
 	PHD_VECTOR delta, d, a, b;
-	long length, scale;
+	int length, scale;
 
 	a.x = pb->x - pa->x;
 	a.y = pb->y - pa->y;
@@ -251,15 +251,15 @@ void ModelRigidRope(PHD_VECTOR* pa, PHD_VECTOR* pb, PHD_VECTOR* va, PHD_VECTOR* 
 	length = phd_sqrt(abs(SQUARE(d.x >> (W2V_SHIFT + 2)) + SQUARE(d.y >> (W2V_SHIFT + 2)) + SQUARE(d.z >> (W2V_SHIFT + 2))));
 	scale = (length << (W2V_SHIFT + 2)) - rlength;
 	Normalise(&d);
-	delta.x = (long long)scale * d.x >> (W2V_SHIFT + 2);
-	delta.y = (long long)scale * d.y >> (W2V_SHIFT + 2);
-	delta.z = (long long)scale * d.z >> (W2V_SHIFT + 2);
+	delta.x = (int long)scale * d.x >> (W2V_SHIFT + 2);
+	delta.y = (int long)scale * d.y >> (W2V_SHIFT + 2);
+	delta.z = (int long)scale * d.z >> (W2V_SHIFT + 2);
 	vb->x -= delta.x;
 	vb->y -= delta.y;
 	vb->z -= delta.z;
 }
 
-void SetPendulumPoint(ROPE_STRUCT* Rope, long node) {
+void SetPendulumPoint(ROPE_STRUCT* Rope, int node) {
 	CurrentPendulum.Position.x = Rope->Segment[node].x;
 	CurrentPendulum.Position.y = Rope->Segment[node].y;
 	CurrentPendulum.Position.z = Rope->Segment[node].z;
@@ -274,14 +274,14 @@ void SetPendulumPoint(ROPE_STRUCT* Rope, long node) {
 	CurrentPendulum.node = node;
 }
 
-void SetPendulumVelocity(long x, long y, long z) {
-	long scale;
+void SetPendulumVelocity(int x, int y, int z) {
+	int scale;
 
 	if(2 * (CurrentPendulum.node >> 1) < 24) {
 		scale = 4096 / (24 - 2 * (CurrentPendulum.node >> 1)) * 256;
-		x = (long long)scale * x >> (W2V_SHIFT + 2);
-		y = (long long)scale * y >> (W2V_SHIFT + 2);
-		z = (long long)scale * z >> (W2V_SHIFT + 2);
+		x = (int long)scale * x >> (W2V_SHIFT + 2);
+		y = (int long)scale * y >> (W2V_SHIFT + 2);
+		z = (int long)scale * z >> (W2V_SHIFT + 2);
 	}
 
 	CurrentPendulum.Velocity.x += x;
@@ -292,7 +292,7 @@ void SetPendulumVelocity(long x, long y, long z) {
 void CalculateRope(ROPE_STRUCT* Rope) {
 	PENDULUM* Pendulum;
 	PHD_VECTOR dir;
-	long n, bSetFlag;
+	int n, bSetFlag;
 
 	bSetFlag = 0;
 
@@ -331,9 +331,9 @@ void CalculateRope(ROPE_STRUCT* Rope) {
 		Normalise(&dir);
 
 		for(n = Pendulum->node; n >= 0; n--) {
-			Rope->Segment[n].x = Rope->MeshSegment[n - 1].x + ((long long)Rope->SegmentLength * dir.x >> (W2V_SHIFT + 2));
-			Rope->Segment[n].y = Rope->MeshSegment[n - 1].y + ((long long)Rope->SegmentLength * dir.y >> (W2V_SHIFT + 2));
-			Rope->Segment[n].z = Rope->MeshSegment[n - 1].z + ((long long)Rope->SegmentLength * dir.z >> (W2V_SHIFT + 2));
+			Rope->Segment[n].x = Rope->MeshSegment[n - 1].x + ((int long)Rope->SegmentLength * dir.x >> (W2V_SHIFT + 2));
+			Rope->Segment[n].y = Rope->MeshSegment[n - 1].y + ((int long)Rope->SegmentLength * dir.y >> (W2V_SHIFT + 2));
+			Rope->Segment[n].z = Rope->MeshSegment[n - 1].z + ((int long)Rope->SegmentLength * dir.z >> (W2V_SHIFT + 2));
 			Rope->Velocity[n].x = 0;
 			Rope->Velocity[n].y = 0;
 			Rope->Velocity[n].z = 0;
@@ -406,27 +406,27 @@ void CalculateRope(ROPE_STRUCT* Rope) {
 		Rope->MeshSegment[0].x = Rope->Segment[0].x;
 		Rope->MeshSegment[0].y = Rope->Segment[0].y;
 		Rope->MeshSegment[0].z = Rope->Segment[0].z;
-		Rope->MeshSegment[1].x = Rope->Segment[0].x + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[0].x >> 16);
-		Rope->MeshSegment[1].y = Rope->Segment[0].y + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[0].y >> 16);
-		Rope->MeshSegment[1].z = Rope->Segment[0].z + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[0].z >> 16);
+		Rope->MeshSegment[1].x = Rope->Segment[0].x + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[0].x >> 16);
+		Rope->MeshSegment[1].y = Rope->Segment[0].y + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[0].y >> 16);
+		Rope->MeshSegment[1].z = Rope->Segment[0].z + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[0].z >> 16);
 
 		for(n = 2; n < 24; n++) {
-			Rope->MeshSegment[n].x = Rope->MeshSegment[n - 1].x + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].x >> (W2V_SHIFT + 2));
-			Rope->MeshSegment[n].y = Rope->MeshSegment[n - 1].y + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].y >> (W2V_SHIFT + 2));
-			Rope->MeshSegment[n].z = Rope->MeshSegment[n - 1].z + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].z >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n].x = Rope->MeshSegment[n - 1].x + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].x >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n].y = Rope->MeshSegment[n - 1].y + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].y >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n].z = Rope->MeshSegment[n - 1].z + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[n - 1].z >> (W2V_SHIFT + 2));
 		}
 	} else {
 		Rope->MeshSegment[Pendulum->node].x = Rope->Segment[Pendulum->node].x;
 		Rope->MeshSegment[Pendulum->node].y = Rope->Segment[Pendulum->node].y;
 		Rope->MeshSegment[Pendulum->node].z = Rope->Segment[Pendulum->node].z;
-		Rope->MeshSegment[Pendulum->node + 1].x = Rope->Segment[Pendulum->node].x + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].x >> (W2V_SHIFT + 2));
-		Rope->MeshSegment[Pendulum->node + 1].y = Rope->Segment[Pendulum->node].y + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].y >> (W2V_SHIFT + 2));
-		Rope->MeshSegment[Pendulum->node + 1].z = Rope->Segment[Pendulum->node].z + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].z >> (W2V_SHIFT + 2));
+		Rope->MeshSegment[Pendulum->node + 1].x = Rope->Segment[Pendulum->node].x + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].x >> (W2V_SHIFT + 2));
+		Rope->MeshSegment[Pendulum->node + 1].y = Rope->Segment[Pendulum->node].y + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].y >> (W2V_SHIFT + 2));
+		Rope->MeshSegment[Pendulum->node + 1].z = Rope->Segment[Pendulum->node].z + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[Pendulum->node].z >> (W2V_SHIFT + 2));
 
 		for(n = Pendulum->node + 1; n < 23; n++) {
-			Rope->MeshSegment[n + 1].x = Rope->MeshSegment[n].x + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n].x >> (W2V_SHIFT + 2));
-			Rope->MeshSegment[n + 1].y = Rope->MeshSegment[n].y + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n].y >> (W2V_SHIFT + 2));
-			Rope->MeshSegment[n + 1].z = Rope->MeshSegment[n].z + ((long long)Rope->SegmentLength * Rope->NormalisedSegment[n].z >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n + 1].x = Rope->MeshSegment[n].x + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[n].x >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n + 1].y = Rope->MeshSegment[n].y + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[n].y >> (W2V_SHIFT + 2));
+			Rope->MeshSegment[n + 1].z = Rope->MeshSegment[n].z + ((int long)Rope->SegmentLength * Rope->NormalisedSegment[n].z >> (W2V_SHIFT + 2));
 		}
 
 		for(n = 0; n < Pendulum->node; n++) {
@@ -437,8 +437,8 @@ void CalculateRope(ROPE_STRUCT* Rope) {
 	}
 }
 
-long RopeNodeCollision(ROPE_STRUCT* rope, long x, long y, long z, long rad) {
-	long rx, ry, rz;
+int RopeNodeCollision(ROPE_STRUCT* rope, int x, int y, int z, int rad) {
+	int rx, ry, rz;
 
 	for(int i = 0; i < 22; ++i) {
 		if(y > rope->Position.y + (rope->MeshSegment[i].y >> (W2V_SHIFT + 2)) && y < rope->Position.y + (rope->MeshSegment[i + 1].y >> (W2V_SHIFT + 2))) {
@@ -472,7 +472,7 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ROPE_STRUCT* rope;
 	int i;
 	short bounds[6];
-	long x, y, z, rad;
+	int x, y, z, rad;
 
 	rope = &RopeList[GetItem(currentLevel, item_number)->trigger_flags];
 

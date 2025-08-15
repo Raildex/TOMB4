@@ -18,7 +18,7 @@
 void Draw_Mirror_Lara() {
 	HAIR_STRUCT* hair;
 	GUNSHELL_STRUCT* gunshell;
-	long zplane;
+	int zplane;
 
 	zplane = gfMirrorZPlane << 1;
 	hair = &hairs[0][0];

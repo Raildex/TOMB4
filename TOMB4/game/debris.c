@@ -22,22 +22,22 @@
 #include <d3d.h>
 
 DEBRIS_STRUCT debris[256];
-long next_debris;
+int next_debris;
 short DebrisFlags;
 
 static MESH_DATA* DebrisMesh;
-static long DebrisMeshC1;
-static long DebrisMeshC2;
-static long DebrisMeshC3;
-static long DebrisMeshAmbient;
-static long DebrisMeshFlags;
+static int DebrisMeshC1;
+static int DebrisMeshC2;
+static int DebrisMeshC3;
+static int DebrisMeshAmbient;
+static int DebrisMeshFlags;
 
 void UpdateDebris() {
 	DEBRIS_STRUCT* dptr;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	FLOOR_INFO* floor;
-	long height, ceiling;
+	int height, ceiling;
 
 	for(int i = 0; i < 256; i++) {
 		dptr = &debris[i];
@@ -79,9 +79,9 @@ void UpdateDebris() {
 	}
 }
 
-long GetFreeDebris() {
+int GetFreeDebris() {
 	DEBRIS_STRUCT* dptr;
-	long eldestage, eldestfree, free;
+	int eldestage, eldestfree, free;
 
 	free = next_debris;
 	eldestfree = 0;
@@ -202,7 +202,7 @@ void TriggerDebris(GAME_VECTOR* pos, TEXTURESTRUCT* TextInfo, short* Offsets, lo
 
 
 
-void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num, short RoomNumber, long NoXZVel) {
+void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num, short RoomNumber, int NoXZVel) {
 	MESH_DATA* mesh;
 	TEXTURESTRUCT* tex;
 	PHD_VECTOR TPos;
@@ -216,7 +216,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	short* meshp;
 	short* offsets;
 	short* RotVerts;
-	long lp, nVtx, nTris, nQuads, x, y, z;
+	int lp, nVtx, nTris, nQuads, x, y, z;
 	unsigned short v1, v2, v3, c;
 	short rnd, RotY, rgb;
 
@@ -266,9 +266,9 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	offsets = (short*)&tsv_buffer[0];
 
 	for(lp = 0; lp < nVtx; lp++) {
-		x = (long)*vtx++;
-		y = (long)*vtx++;
-		z = (long)*vtx++;
+		x = (int)*vtx++;
+		y = (int)*vtx++;
+		z = (int)*vtx++;
 		vtx += 5;
 
 		offsets[0] = (short)(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z + mMXPtr[M03]);

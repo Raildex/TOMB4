@@ -1,7 +1,7 @@
 #ifndef ACTORME_INCLUDED
 #define ACTORME_INCLUDED
 typedef struct ACTORME {
-	long offset;
+	int offset;
 	short objslot;
 	short nodes;
 } ACTORME;

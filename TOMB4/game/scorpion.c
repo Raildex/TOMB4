@@ -64,10 +64,10 @@ void ScorpionControl(short item_number) {
 	ITEM_INFO* enemy;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	CREATURE_INFO* scorpion;
 	AI_INFO info;
-	long s, c, x, z, h, h2, dist, bestdist;
+	int s, c, x, z, h, h2, dist, bestdist;
 	short angle, room_number, xrot, zrot, target_num, hp;
 
 	if(!CreatureActive(item_number)) {

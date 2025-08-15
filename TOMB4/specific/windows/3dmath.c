@@ -26,8 +26,8 @@ float mMXStack[20 * indices_count];
 float fcossin_tbl[65536];
 
 long* phd_mxptr;
-long w2v_matrix[indices_count];
-long matrix_stack[20 * indices_count];
+int w2v_matrix[indices_count];
+int matrix_stack[20 * indices_count];
 
 float f_centerx;
 float f_centery;
@@ -50,17 +50,17 @@ float f_a;
 float f_b;
 float f_boo;
 
-long phd_winheight;
-long phd_winwidth;
-long phd_centerx;
-long phd_centery;
-long phd_top;
-long phd_left;
-long phd_bottom;
-long phd_right;
-long phd_znear;
-long phd_zfar;
-long phd_persp;
+int phd_winheight;
+int phd_winwidth;
+int phd_centerx;
+int phd_centery;
+int phd_top;
+int phd_left;
+int phd_bottom;
+int phd_right;
+int phd_znear;
+int phd_zfar;
+int phd_persp;
 short phd_winxmax;
 short phd_winxmin;
 short phd_winymax;
@@ -95,13 +95,13 @@ static void mPushUnitMatrix() {
 	mMXPtr += indices_count;
 }
 
-static void mSetTrans(long x, long y, long z) {
+static void mSetTrans(int x, int y, int z) {
 	mMXPtr[M03] = (float)x;
 	mMXPtr[M13] = (float)y;
 	mMXPtr[M23] = (float)z;
 }
 
-static void mTranslateRel(long x, long y, long z) {
+static void mTranslateRel(int x, int y, int z) {
 	mMXPtr[M03] += x * 	mMXPtr[M00] + y * 	mMXPtr[M01] + z * 	mMXPtr[M02];
 	mMXPtr[M13] += x * 	mMXPtr[M10] + y * 	mMXPtr[M11] + z * 	mMXPtr[M12];
 	mMXPtr[M23] += x * 	mMXPtr[M20] + y * 	mMXPtr[M21] + z * 	mMXPtr[M22];
@@ -181,7 +181,7 @@ static void mRotZ(short angle) {
 	}
 }
 
-static void mRotYXZpack(long angles) {
+static void mRotYXZpack(int angles) {
 	short angle;
 
 	angle = (angles >> 10) & 0x3FF;
@@ -220,7 +220,7 @@ static void mRotYXZ(short y, short x, short z) {
 	}
 }
 
-static void mTranslateAbs(long x, long y, long z) {
+static void mTranslateAbs(int x, int y, int z) {
 	float fx, fy, fz;
 
 	fx = x - mW2V[M03];
@@ -351,7 +351,7 @@ void phd_PushMatrix() {
 }
 
 void phd_PushUnitMatrix() {
-	static const long unit[indices_count] = {
+	static const int unit[indices_count] = {
 		1 << W2V_SHIFT, 0,0,0,
 		0, 1 << W2V_SHIFT, 0,0,
 		0,0,1 << W2V_SHIFT,0,
@@ -363,14 +363,14 @@ void phd_PushUnitMatrix() {
 	mPushUnitMatrix();
 }
 
-void phd_SetTrans(long x, long y, long z) {
+void phd_SetTrans(int x, int y, int z) {
 	phd_mxptr[M03] = x << W2V_SHIFT;
 	phd_mxptr[M13] = y << W2V_SHIFT;
 	phd_mxptr[M23] = z << W2V_SHIFT;
 	mSetTrans(x, y, z);
 }
 
-long phd_TranslateRel(long x, long y, long z) {
+int phd_TranslateRel(int x, int y, int z) {
 	phd_mxptr[M03] += x *	phd_mxptr[M00] + y *	phd_mxptr[M01] + z *	phd_mxptr[M02];
 	phd_mxptr[M13] += x *	phd_mxptr[M10] + y *	phd_mxptr[M11] + z *	phd_mxptr[M12];
 	phd_mxptr[M23] += x *	phd_mxptr[M20] + y *	phd_mxptr[M21] + z *	phd_mxptr[M22];
@@ -381,7 +381,7 @@ long phd_TranslateRel(long x, long y, long z) {
 }
 
 void phd_RotX(short angle) {
-	long sin, cos, mx1, mx2;
+	int sin, cos, mx1, mx2;
 
 	if(angle) {
 		sin = phd_sin(angle);
@@ -407,7 +407,7 @@ void phd_RotX(short angle) {
 }
 
 void phd_RotY(short angle) {
-	long sin, cos, mx1, mx2;
+	int sin, cos, mx1, mx2;
 
 	if(angle) {
 		sin = phd_sin(angle);
@@ -433,7 +433,7 @@ void phd_RotY(short angle) {
 }
 
 void phd_RotZ(short angle) {
-	long sin, cos, mx1, mx2;
+	int sin, cos, mx1, mx2;
 
 	if(angle) {
 		sin = phd_sin(angle);
@@ -458,8 +458,8 @@ void phd_RotZ(short angle) {
 	mRotZ(angle);
 }
 
-void phd_RotYXZpack(long angles) {
-	long sin, cos, mx1, mx2;
+void phd_RotYXZpack(int angles) {
+	int sin, cos, mx1, mx2;
 	short angle;
 
 	angle = (angles >> 10) & 0x3FF;
@@ -535,7 +535,7 @@ void phd_RotYXZpack(long angles) {
 }
 
 void phd_RotYXZ(short y, short x, short z) {
-	long sin, cos, mx1, mx2;
+	int sin, cos, mx1, mx2;
 
 	if(y) {
 		sin = phd_sin(y);
@@ -600,8 +600,8 @@ void phd_RotYXZ(short y, short x, short z) {
 	mRotYXZ(y, x, z);
 }
 
-void phd_TranslateAbs(long x, long y, long z) {
-	long fx, fy, fz;
+void phd_TranslateAbs(int x, int y, int z) {
+	int fx, fy, fz;
 
 	fx = x - w2v_matrix[M03];
 	fy = y - w2v_matrix[M13];
@@ -614,7 +614,7 @@ void phd_TranslateAbs(long x, long y, long z) {
 	mTranslateAbs(x, y, z);
 }
 
-void phd_GetVectorAngles(long x, long y, long z, short* angles) {
+void phd_GetVectorAngles(int x, int y, int z, short* angles) {
 	short atan;
 
 	angles[0] = (short)phd_atan(z, x);
@@ -634,8 +634,8 @@ void phd_GetVectorAngles(long x, long y, long z, short* angles) {
 	angles[1] = atan;
 }
 
-unsigned long mGetAngle(long x, long z, long x1, long z1) {
-	long dx, dz, octant, swap, angle;
+unsigned int mGetAngle(int x, int z, int x1, int z1) {
+	int dx, dz, octant, swap, angle;
 
 	dx = x1 - x;
 	dz = z1 - z;
@@ -678,7 +678,7 @@ unsigned long mGetAngle(long x, long z, long x1, long z1) {
 }
 
 void AlterFOV(short fov) {
-	long fov_width;
+	int fov_width;
 
 	CurrentFov = fov;
 	fov /= 2;
@@ -693,8 +693,8 @@ void AlterFOV(short fov) {
 	f_mperspoznear = f_persp / f_mznear;
 }
 
-long phd_atan(long x, long y) {
-	long octant, n, result;
+int phd_atan(int x, int y) {
+	int octant, n, result;
 
 	result = 0;
 	octant = 0;
@@ -732,8 +732,8 @@ long phd_atan(long x, long y) {
 	return result;
 }
 
-unsigned long phd_sqrt(unsigned long num) {
-	unsigned long base, result, tmp;
+unsigned int phd_sqrt(unsigned int num) {
+	unsigned int base, result, tmp;
 
 	base = 0x40000000;
 	result = 0;
@@ -773,7 +773,7 @@ void ScaleCurrentMatrix(PHD_VECTOR* vec) {
 	mScaleCurrentMatrix(vec);
 }
 
-void SetupZRange(long znear, long zfar) {
+void SetupZRange(int znear, int zfar) {
 	phd_znear = znear;
 	phd_zfar = zfar;
 	f_zfar = (float)zfar;
@@ -789,7 +789,7 @@ void SetupZRange(long znear, long zfar) {
 	f_boo = f_b / mone;
 }
 
-void InitWindow(long x, long y, long w, long h, long znear, long zfar, long fov, long a, long b) {
+void InitWindow(int x, int y, int w, int h, int znear, int zfar, int fov, int a, int b) {
 	phd_winwidth = w;
 	phd_winxmax = (short)(w - 1);
 	phd_winxmin = (short)x;
@@ -818,7 +818,7 @@ void InitWindow(long x, long y, long w, long h, long znear, long zfar, long fov,
 
 void phd_GenerateW2V(PHD_3DPOS* viewPos) {
 	PHD_VECTOR scalar;
-	long sx, cx, sy, cy, sz, cz;
+	int sx, cx, sy, cy, sz, cz;
 
 	sx = phd_sin(viewPos->x_rot);
 	cx = phd_cos(viewPos->x_rot);
@@ -878,18 +878,18 @@ void phd_GenerateW2V(PHD_3DPOS* viewPos) {
 	phd_mxptr[M13] = w2v_matrix[M13];
 	phd_mxptr[M23] = w2v_matrix[M23];
 
-	w2v_matrix[M10] = (long)(LfAspectCorrection * (float)(phd_mxptr[M10]));
-	w2v_matrix[M11] = (long)(LfAspectCorrection * (float)(phd_mxptr[M11]));
-	w2v_matrix[M12] = (long)(LfAspectCorrection * (float)(phd_mxptr[M12]));
+	w2v_matrix[M10] = (int)(LfAspectCorrection * (float)(phd_mxptr[M10]));
+	w2v_matrix[M11] = (int)(LfAspectCorrection * (float)(phd_mxptr[M11]));
+	w2v_matrix[M12] = (int)(LfAspectCorrection * (float)(phd_mxptr[M12]));
 	phd_mxptr[M10] = w2v_matrix[M10];
 	phd_mxptr[M11] = w2v_matrix[M11];
 	phd_mxptr[M12] = w2v_matrix[M12];
 	mGenerateW2V(viewPos);
 }
 
-void phd_LookAt(long sx, long sy, long sz, long tx, long ty, long tz, short roll) {
+void phd_LookAt(int sx, int sy, int sz, int tx, int ty, int tz, short roll) {
 	PHD_3DPOS viewPos;
-	long dx, dy, dz, val;
+	int dx, dy, dz, val;
 	short angles[2];
 
 	phd_GetVectorAngles(tx - sx, ty - sy, tz - sz, angles);

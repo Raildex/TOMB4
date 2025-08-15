@@ -189,7 +189,7 @@ void LaraInitialiseMeshes() {
 void AnimateLara(ITEM_INFO* item) {
 	ANIM_STRUCT* anim;
 	short* cmd;
-	long speed;
+	int speed;
 	unsigned short type;
 
 	item->frame_number++;
@@ -317,8 +317,8 @@ void AnimateLara(ITEM_INFO* item) {
 
 void LaraControl(short item_number) {
 	ITEM_INFO* l;
-	long oldx, oldy, oldz;
-	long wh, wd, hfw, room_water_state;
+	int oldx, oldy, oldz;
+	int wh, wd, hfw, room_water_state;
 
 	l = lara_item;
 

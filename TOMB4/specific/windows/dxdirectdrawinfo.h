@@ -12,9 +12,9 @@ typedef struct DXDIRECTDRAWINFO {
 	GUID Guid;
 	DDCAPS DDCaps;
 	DDDEVICEIDENTIFIER DDIdentifier;
-	long nDisplayModes;
+	int nDisplayModes;
 	DXDISPLAYMODE* DisplayModes;
-	long nD3DDevices;
+	int nD3DDevices;
 	DXD3DDEVICE* D3DDevices;
 } DXDIRECTDRAWINFO;
 #endif// TOMB4_SPECIFIC_DXDIRECTDRAWINFO_H

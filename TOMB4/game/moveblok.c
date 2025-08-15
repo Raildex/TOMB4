@@ -40,7 +40,7 @@ static short MovingBlockBounds[12] = { 0, 0, -256, 0, 0, 0, -1820, 1820, -5460, 
 
 static PHD_VECTOR MovingBlockPos = { 0, 0, 0 };
 
-static void ClearMovableBlockSplitters(long x, long y, long z, short room_number) {
+static void ClearMovableBlockSplitters(int x, int y, int z, short room_number) {
 	FLOOR_INFO* floor;
 	short room_num, height;
 
@@ -95,14 +95,14 @@ void InitialiseMovingBlock(short item_number) {
 	ClearMovableBlockSplitters(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, item->room_number);
 }
 
-static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant) {
+static int TestBlockPush(ITEM_INFO* item, int height, unsigned short quadrant) {
 	ITEM_INFO* itemlist[6] = { 0 };
 	ITEM_INFO* collided;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	ROOM_INFO* r;
-	long x, y, z, rx, rz;
+	int x, y, z, rx, rz;
 	short room_number;
 
 	x = item->pos.pos.x;
@@ -177,13 +177,13 @@ static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 	return 1;
 }
 
-static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant) {
+static int TestBlockPull(ITEM_INFO* item, int height, unsigned short quadrant) {
 	ITEM_INFO* collided;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	ROOM_INFO* r;
-	long x, y, z, destx, destz, rx, rz, ignore;
+	int x, y, z, destx, destz, rx, rz, ignore;
 	short room_number;
 	ITEM_INFO* itemlist[6] = { 0 };
 	destx = 0;
@@ -310,8 +310,8 @@ void MovableBlock(short item_number) {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long offset;
+	int tiltxoff, tiltzoff, OnObject;
+	int offset;
 	unsigned short quadrant;
 	short frame, base, room_number;
 	static char sfx = 0;
@@ -484,7 +484,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	short bounds[6];
 	short room_number, yrot, quadrant;
 
@@ -631,7 +631,7 @@ void ControlPlanetEffect(short item_number) {
 	PHD_VECTOR pos;
 	PHD_VECTOR pos2;
 	char* pifl;
-	long b, g;
+	int b, g;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -701,7 +701,7 @@ void DrawPlanetEffect(ITEM_INFO* item) {
 	long* bone;
 	short* frm[2];
 	short* rot;
-	long poppush;
+	int poppush;
 
 	if(!item->mesh_bits) {
 		return;

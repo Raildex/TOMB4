@@ -39,7 +39,7 @@
 #include "miniaudio.h"
 
 typedef struct STREAM_PLAYER_DATA STREAM_PLAYER_DATA;
-long DecodeFrame(STREAM_PLAYER_DATA* player);
+int DecodeFrame(STREAM_PLAYER_DATA* player);
 
 enum {
 	STREAM_NEEDS_MORE_DATA,
@@ -51,7 +51,7 @@ typedef struct STREAM_PLAYER_DATA {
 	char bufferedData[3][1024 * 85]; // 256KiB in total
 	char currentWrittenBuffer;
 	MUSIC_SYSTEM* sys;
-	_Atomic(long) state;
+	_Atomic(int) state;
 	thrd_t decoderThread;
 	IXAudio2SourceVoice* audioVoice;
 	IXAudio2VoiceCallback callback;
@@ -70,10 +70,10 @@ typedef struct MUSIC_SYSTEM {
 	size_t memorizedFrame;
 } MUSIC_SYSTEM;
 
-static long Check(const char* scope, HRESULT result) {
+static int Check(const char* scope, HRESULT result) {
 	if(FAILED(result)) {
 		char buffer[256];
-		long n = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, result, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), buffer, sizeof(buffer), NULL);
+		int n = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, result, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), buffer, sizeof(buffer), NULL);
 		LogE(scope, "XAudio2 Error: %.*s", n, buffer);
 		return 0;
 	}
@@ -100,7 +100,7 @@ void DestroyPlayer(MUSIC_SYSTEM* sys) {
 int DecodeThreadFunc(void* arg) {
 	STREAM_PLAYER_DATA* player = (STREAM_PLAYER_DATA*)arg;
 	do {
-		long state = atomic_load(&player->state);
+		int state = atomic_load(&player->state);
 		if(state == STREAM_NEEDS_MORE_DATA) {
 			DecodeFrame(player);
 		} else if(state == STREAM_STOP) {
@@ -118,7 +118,7 @@ void WINAPI StreamEnded(IXAudio2VoiceCallback* cb) {
 
 void WINAPI BufferStarted(IXAudio2VoiceCallback* cb, void* ctx) {
 	STREAM_PLAYER_DATA* player = (STREAM_PLAYER_DATA*)ctx;
-	long current = atomic_load(&player->state);
+	int current = atomic_load(&player->state);
 	if(current == STREAM_STOP) {
 		cnd_signal(&player->wakeCondition);
 		return;
@@ -144,7 +144,7 @@ void WINAPI BufferEnded(IXAudio2VoiceCallback* cb, void* context) {
 
 }
 
-long CreatePlayer(MUSIC_SYSTEM* sys, STREAM_PLAYER_DATA** out, const char* filepath) {
+int CreatePlayer(MUSIC_SYSTEM* sys, STREAM_PLAYER_DATA** out, const char* filepath) {
 	STREAM_PLAYER_DATA* player = calloc(1, sizeof(STREAM_PLAYER_DATA));
 	if(!player) {
 		return 0;
@@ -195,7 +195,7 @@ long CreatePlayer(MUSIC_SYSTEM* sys, STREAM_PLAYER_DATA** out, const char* filep
 	return 1;
 }
 
-void S_PlayTrack(MUSIC_SYSTEM* sys, long track, track_modes mode) {
+void S_PlayTrack(MUSIC_SYSTEM* sys, int track, track_modes mode) {
 	if(sys->player) {
 		if(mode == TRACK_MODE_INCIDENT_RESTORE_ATMOSPHERE) {
 			ma_int64 cursor;
@@ -216,7 +216,7 @@ void S_PlayTrack(MUSIC_SYSTEM* sys, long track, track_modes mode) {
 		return;
 	}
 	char dir[256];
-	long pathSize = GetCurrentDirectoryA(256,dir);
+	int pathSize = GetCurrentDirectoryA(256,dir);
 	char fullPath[256];
 	snprintf(fullPath, 256, "%s/audio/%s",dir,findData.cFileName);
 	if(!CreatePlayer(sys, &sys->player, fullPath)) {
@@ -235,7 +235,7 @@ void S_StopTrack(MUSIC_SYSTEM* system) {
 	
 }
 
-void S_PlaySyncedTrack(MUSIC_SYSTEM* system, long track) {
+void S_PlaySyncedTrack(MUSIC_SYSTEM* system, int track) {
 	S_StopTrack(system);
 	S_PlayTrack(system, track, 2);
 }
@@ -243,7 +243,7 @@ void S_PlaySyncedTrack(MUSIC_SYSTEM* system, long track) {
 void S_DestroyMusicSystem(MUSIC_SYSTEM* sys) {
 }
 
-long DecodeFrame(STREAM_PLAYER_DATA* player) {
+int DecodeFrame(STREAM_PLAYER_DATA* player) {
 	char* destination = &player->bufferedData[player->currentWrittenBuffer][0];
 	player->currentWrittenBuffer = (player->currentWrittenBuffer + 1) % 3; // looping through buffers
 	ma_uint64 frameSize = ma_get_bytes_per_sample(player->minidecoder.outputFormat) * player->minidecoder.outputChannels;
@@ -269,7 +269,7 @@ long DecodeFrame(STREAM_PLAYER_DATA* player) {
 	return 1;
 }
 
-long S_CreateMusicSystem(MUSIC_SYSTEM** out) {
+int S_CreateMusicSystem(MUSIC_SYSTEM** out) {
 	MUSIC_SYSTEM* sys = calloc(1, sizeof(MUSIC_SYSTEM));
 	if(!sys) {
 		return 0;
@@ -306,7 +306,7 @@ long S_CreateMusicSystem(MUSIC_SYSTEM** out) {
 	return 1;
 }
 
-void S_ApplyMusicVolume(MUSIC_SYSTEM* sys, long volume) {
+void S_ApplyMusicVolume(MUSIC_SYSTEM* sys, int volume) {
 	float v = volume / 100.0F;
 
 	IXAudio2MasteringVoice_SetVolume(sys->master,v,XAUDIO2_COMMIT_NOW);

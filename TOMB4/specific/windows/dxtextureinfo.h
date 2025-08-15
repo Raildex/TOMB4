@@ -3,9 +3,9 @@
 #include <ddraw.h>
 typedef struct DXTEXTUREINFO {
 	DDPIXELFORMAT ddpf;
-	unsigned long bpp;
-	long bPalette;
-	long bAlpha;
+	unsigned int bpp;
+	int bPalette;
+	int bAlpha;
 	unsigned char rbpp;
 	unsigned char gbpp;
 	unsigned char bbpp;

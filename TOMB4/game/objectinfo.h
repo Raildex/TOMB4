@@ -6,12 +6,12 @@ typedef struct COLL_INFO COLL_INFO;
 typedef struct OBJECT_INFO {
 	short nmeshes;
 	short mesh_index;
-	long bone_index;
+	int bone_index;
 	short* frame_base;
 	void (*initialise)(short item_number);
 	void (*control)(short item_number);
-	void (*floor)(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject);
-	void (*ceiling)(ITEM_INFO* item, long x, long y, long z, long* height);
+	void (*floor)(ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject);
+	void (*ceiling)(ITEM_INFO* item, int x, int y, int z, long* height);
 	void (*draw_routine)(ITEM_INFO* item);
 	void (*collision)(short item_num, ITEM_INFO* laraitem, COLL_INFO* coll);
 	short object_mip;
@@ -35,7 +35,7 @@ typedef struct OBJECT_INFO {
 	unsigned short undead : 1;
 	unsigned short save_mesh : 1;
 	void (*draw_routine_extra)(ITEM_INFO* item);
-	unsigned long explodable_meshbits;
-	unsigned long padfuck;
+	unsigned int explodable_meshbits;
+	unsigned int padfuck;
 } OBJECT_INFO;
 #endif

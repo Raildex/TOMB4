@@ -11,7 +11,7 @@ typedef struct ITEM_INFO ITEM_INFO;
 typedef struct SHATTER_ITEM SHATTER_ITEM;
 
 void InitialiseCamera();
-void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long brightness);
+void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, int brightness);
 void CalculateCamera();
 
 extern CAMERA_INFO camera;
@@ -20,10 +20,10 @@ extern GAME_VECTOR ForcedFixedCamera;
 extern char UseForcedFixedCamera;
 
 extern camera_type BinocularOldCamera;
-extern long BinocularOn;
-extern long BinocularRange;
-extern long ExittingBinos;
-extern long LaserSight;
+extern int BinocularOn;
+extern int BinocularRange;
+extern int ExittingBinos;
+extern int LaserSight;
 
 
 

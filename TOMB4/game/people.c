@@ -24,11 +24,11 @@ enum no_distance {
 	NO_DISTANCE = 0x40000000
 };
 
-short GunShot(long x, long y, long z, short speed, short yrot,PHD_VECTOR dir, short room_number) {
+short GunShot(int x, int y, int z, short speed, short yrot,PHD_VECTOR dir, short room_number) {
 	return -1;
 }
 
-short GunHit(long x, long y, long z, short speed, short yrot,PHD_VECTOR dir, short room_number) {
+short GunHit(int x, int y, int z, short speed, short yrot,PHD_VECTOR dir, short room_number) {
 	PHD_VECTOR pos;
 
 	pos.x = 0;
@@ -40,7 +40,7 @@ short GunHit(long x, long y, long z, short speed, short yrot,PHD_VECTOR dir, sho
 	return GunShot(x, y, z, speed, yrot, dir, room_number);
 }
 
-short GunMiss(long x, long y, long z, short speed, short yrot, PHD_VECTOR dir, short room_number) {
+short GunMiss(int x, int y, int z, short speed, short yrot, PHD_VECTOR dir, short room_number) {
 	GAME_VECTOR pos;
 
 	pos.pos.x = lara_item->pos.pos.x + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
@@ -51,7 +51,7 @@ short GunMiss(long x, long y, long z, short speed, short yrot, PHD_VECTOR dir, s
 	return GunShot(x, y, z, speed, yrot, dir, room_number);
 }
 
-long TargetVisible(ITEM_INFO* item, AI_INFO* info) {
+int TargetVisible(ITEM_INFO* item, AI_INFO* info) {
 	ITEM_INFO* enemy;
 	CREATURE_INFO* creature;
 	GAME_VECTOR start;
@@ -78,7 +78,7 @@ long TargetVisible(ITEM_INFO* item, AI_INFO* info) {
 	return LOS(&start, &target);
 }
 
-long Targetable(ITEM_INFO* item, AI_INFO* info) {
+int Targetable(ITEM_INFO* item, AI_INFO* info) {
 	ITEM_INFO* enemy;
 	CREATURE_INFO* creature;
 	GAME_VECTOR start;
@@ -105,12 +105,12 @@ long Targetable(ITEM_INFO* item, AI_INFO* info) {
 	return LOS(&start, &target);
 }
 
-long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotation, long damage) {
+int ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotation, int damage) {
 	ITEM_INFO* enemy;
 	CREATURE_INFO* creature;
 	PHD_VECTOR pos;
 	PHD_VECTOR dir;
-	long hit, targetable, random, distance;
+	int hit, targetable, random, distance;
 
 	creature = (CREATURE_INFO*)item->data;
 	enemy = creature->enemy;

@@ -43,7 +43,7 @@ void TriggerRiseEffect(ITEM_INFO* item) {
 	FX_INFO* fx;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	SPARKS* sptr;
 	short fx_number, room_number;
 
@@ -141,14 +141,14 @@ void SkeletonControl(short item_number) {
 	CREATURE_INFO* skelly;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
 	AI_INFO info;
 	AI_INFO larainfo;
 	PHD_VECTOR pos;
-	long x, y, z, Xoffset, Zoffset, nearheight, midheight, farheight, jump_ahead, long_jump_ahead;
-	long dx, dz, jump_left, jump_right, h1, h2, h;
+	int x, y, z, Xoffset, Zoffset, nearheight, midheight, farheight, jump_ahead, long_jump_ahead;
+	int dx, dz, jump_left, jump_right, h1, h2, h;
 	short angle, room_number, state;
 
 	if(!CreatureActive(item_number)) {

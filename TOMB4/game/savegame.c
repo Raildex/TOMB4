@@ -48,9 +48,9 @@
 SAVEGAME_INFO savegame;
 
 static char* SGpoint = 0;
-static long SGcount = 0;
+static int SGcount = 0;
 
-long CheckSumValid(char* buffer) {
+int CheckSumValid(char* buffer) {
 	char checksum;
 
 	checksum = 0;
@@ -62,7 +62,7 @@ long CheckSumValid(char* buffer) {
 	return !checksum;
 }
 
-void sgInitialiseHub(long dont_save_lara) {
+void sgInitialiseHub(int dont_save_lara) {
 	for(int i = 0; i < 10; i++) {
 		savegame.HubLevels[i] = 0;
 		savegame.HubOffsets[i] = 0;
@@ -96,19 +96,19 @@ void SaveLaraData() {
 	ITEM_INFO* item;
 
 	for(int i = 0; i < 15; i++)
-		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] - (long)GetMeshBase(currentLevel));
+		lara.mesh_ptrs[i] = (short*)((int)lara.mesh_ptrs[i] - (int)GetMeshBase(currentLevel));
 
-	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base - (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
-	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base - (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
-	lara.GeneralPtr = ((long)lara.GeneralPtr - (long)malloc_buffer);
+	lara.left_arm.frame_base = (short*)((int)lara.left_arm.frame_base - (int)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
+	lara.right_arm.frame_base = (short*)((int)lara.right_arm.frame_base - (int)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
+	lara.GeneralPtr = ((int)lara.GeneralPtr - (int)malloc_buffer);
 	memcpy(&savegame.Lara, &lara, sizeof(savegame.Lara));
 
 	for(int i = 0; i < 15; i++)
-		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)GetMeshBase(currentLevel));
+		lara.mesh_ptrs[i] = (short*)((int)lara.mesh_ptrs[i] + (int)GetMeshBase(currentLevel));
 
-	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
-	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
-	lara.GeneralPtr = ((long)lara.GeneralPtr + (long)malloc_buffer);
+	lara.left_arm.frame_base = (short*)((int)lara.left_arm.frame_base + (int)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
+	lara.right_arm.frame_base = (short*)((int)lara.right_arm.frame_base + (int)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
+	lara.GeneralPtr = ((int)lara.GeneralPtr + (int)malloc_buffer);
 
 	if(lara.weapon_item != NO_ITEM) {
 		item = GetItem(currentLevel,lara.weapon_item);
@@ -123,7 +123,7 @@ void SaveLaraData() {
 	*/
 }
 
-void WriteSG(void* pointer, long size) {
+void WriteSG(void* pointer, int size) {
 	char* data;
 
 	SGcount += size;
@@ -133,7 +133,7 @@ void WriteSG(void* pointer, long size) {
 	}
 }
 
-void ReadSG(void* pointer, long size) {
+void ReadSG(void* pointer, int size) {
 	char* data;
 
 	SGcount += size;
@@ -143,7 +143,7 @@ void ReadSG(void* pointer, long size) {
 	}
 }
 
-void SaveHubData(long index) {
+void SaveHubData(int index) {
 	savegame.HubSizes[index] = (unsigned short)(SGcount - savegame.HubOffsets[index]);
 
 	if(index < 10) {
@@ -151,7 +151,7 @@ void SaveHubData(long index) {
 	}
 }
 
-void RestoreLaraData(long FullSave) {
+void RestoreLaraData(int FullSave) {
 	/*
 	TODO:
 	ITEM_INFO* item;
@@ -161,9 +161,9 @@ void RestoreLaraData(long FullSave) {
 
 	memcpy(&lara, &savegame.Lara, sizeof(lara));
 	lara.target_item = NO_ITEM;
-	lara.left_arm.frame_base = (short*)((long)lara.left_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
-	lara.right_arm.frame_base = (short*)((long)lara.right_arm.frame_base + (long)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
-	lara.GeneralPtr = ((long)lara.GeneralPtr + (long)malloc_buffer);
+	lara.left_arm.frame_base = (short*)((int)lara.left_arm.frame_base + (int)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
+	lara.right_arm.frame_base = (short*)((int)lara.right_arm.frame_base + (int)GetObjectInfo(currentLevel,PISTOLS_ANIM)->frame_base);
+	lara.GeneralPtr = ((int)lara.GeneralPtr + (int)malloc_buffer);
 
 	if(lara.burn) {
 		lara.burn = 0;
@@ -195,7 +195,7 @@ void RestoreLaraData(long FullSave) {
 		}
 	} else {
 		for(int i = 0; i < 15; i++)
-			lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] + (long)GetMeshBase(currentLevel));
+			lara.mesh_ptrs[i] = (short*)((int)lara.mesh_ptrs[i] + (int)GetMeshBase(currentLevel));
 	}
 
 	CutSceneTriggered = savegame.cutscene_triggered;
@@ -271,7 +271,7 @@ void CreateCheckSum() {
 }
 
 void sgSaveLevel() {
-	long level_index;
+	int level_index;
 
 	level_index = OpenSaveGame(gfCurrentLevel, 1);
 	SaveLevelData(0);
@@ -280,7 +280,7 @@ void sgSaveLevel() {
 }
 
 void sgSaveGame() {
-	long level_index;
+	int level_index;
 
 	level_index = OpenSaveGame(gfCurrentLevel, 1);
 	savegame.Game.Timer = GameTimer;
@@ -299,10 +299,10 @@ void sgRestoreGame() {
 	RestoreLaraData(1);
 }
 
-long OpenSaveGame(unsigned char current_level, long saving) {
+int OpenSaveGame(unsigned char current_level, int saving) {
 	unsigned short* curOffset;
 	unsigned short* nexOffset;
-	long index, i, j;
+	int index, i, j;
 
 	index = 0;
 
@@ -355,7 +355,7 @@ long OpenSaveGame(unsigned char current_level, long saving) {
 	return -1;
 }
 
-void SaveLevelData(long FullSave) {
+void SaveLevelData(int FullSave) {
 	/*
 	TODO:
 
@@ -364,15 +364,15 @@ void SaveLevelData(long FullSave) {
 	OBJECT_INFO* obj;
 	MESH_INFO* mesh;
 	CREATURE_INFO* creature;
-	unsigned long flags;
-	long k, flare_age;
+	unsigned int flags;
+	int k, flare_age;
 	unsigned short packed;
 	short pos, word;
 	unsigned char byte;
 	char lflags;
 
-	WriteSG(&FmvSceneTriggered, sizeof(long));
-	WriteSG(&GLOBAL_lastinvitem, sizeof(long));
+	WriteSG(&FmvSceneTriggered, sizeof(int));
+	WriteSG(&GLOBAL_lastinvitem, sizeof(int));
 	word = 0;
 
 	for(int i = 0; i < 10; i++) {
@@ -387,9 +387,9 @@ void SaveLevelData(long FullSave) {
 		WriteSG(&word, sizeof(short));
 	}
 
-	WriteSG(&flipeffect, sizeof(long));
-	WriteSG(&fliptimer, sizeof(long));
-	WriteSG(&flip_status, sizeof(long));
+	WriteSG(&flipeffect, sizeof(int));
+	WriteSG(&fliptimer, sizeof(int));
+	WriteSG(&flip_status, sizeof(int));
 	WriteSG(cd_flags, 128);
 	WriteSG(&CurrentAtmosphere, sizeof(unsigned char));
 	word = 0;
@@ -586,9 +586,9 @@ void SaveLevelData(long FullSave) {
 					if(flags & 0x80000000) {
 						creature = (CREATURE_INFO*)item->data;
 
-						creature->enemy = (ITEM_INFO*)((long)creature->enemy - (long)malloc_buffer);
+						creature->enemy = (ITEM_INFO*)((int)creature->enemy - (int)malloc_buffer);
 						WriteSG(item->data, 22);
-						creature->enemy = (ITEM_INFO*)((long)creature->enemy + (long)malloc_buffer);
+						creature->enemy = (ITEM_INFO*)((int)creature->enemy + (int)malloc_buffer);
 
 						WriteSG(&creature->ai_target.object_number, sizeof(short));
 						WriteSG(&creature->ai_target.room_number, sizeof(short));
@@ -626,8 +626,8 @@ void SaveLevelData(long FullSave) {
 		WriteSG(senet_piece, sizeof(char) * 6);
 		WriteSG(senet_board, sizeof(char) * 17);
 		WriteSG(&last_throw, sizeof(char));
-		WriteSG(&SenetTargetX, sizeof(long));
-		WriteSG(&SenetTargetZ, sizeof(long));
+		WriteSG(&SenetTargetX, sizeof(int));
+		WriteSG(&SenetTargetZ, sizeof(int));
 		WriteSG(&piece_moving, sizeof(char));
 	}
 
@@ -659,8 +659,8 @@ void SaveLevelData(long FullSave) {
 				WriteSG(&item->fallspeed, sizeof(short));
 
 				if(item->object_number == FLARE_ITEM) {
-					flare_age = (long)item->data;
-					WriteSG(&flare_age, sizeof(long));
+					flare_age = (int)item->data;
+					WriteSG(&flare_age, sizeof(int));
 				} else
 					WriteSG(&item->item_flags[3], sizeof(short));
 			}
@@ -752,13 +752,13 @@ if(lara.RopePtr != -1) {
   CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope - (char*)RopeList);
 
   WriteSG(&CurrentPendulum, sizeof(PENDULUM));
-  CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (long)RopeList);
+  CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (int)RopeList);
 }
 }
 */
 }
 
-void RestoreLevelData(long FullSave) {
+void RestoreLevelData(int FullSave) {
 	/*
 	TODO:
 	ROOM_INFO* r;
@@ -767,15 +767,15 @@ void RestoreLevelData(long FullSave) {
 	FLOOR_INFO* floor;
 	OBJECT_INFO* obj;
 	MESH_INFO* mesh;
-	unsigned long flags;
-	long k, flare_age;
+	unsigned int flags;
+	int k, flare_age;
 	unsigned short word, packed, uroom_number, uword;
 	short sword, item_number, room_number, req, goal, current;
 	unsigned char numberof;
 	char byte, anim, lflags;
 
-	ReadSG(&FmvSceneTriggered, sizeof(long));
-	ReadSG(&GLOBAL_lastinvitem, sizeof(long));
+	ReadSG(&FmvSceneTriggered, sizeof(int));
+	ReadSG(&GLOBAL_lastinvitem, sizeof(int));
 	ReadSG(&sword, sizeof(short));
 
 	for(int i = 0; i < 10; i++) {
@@ -786,9 +786,9 @@ void RestoreLevelData(long FullSave) {
 		flipmap[i] = uword << 8;
 	}
 
-	ReadSG(&flipeffect, sizeof(long));
-	ReadSG(&fliptimer, sizeof(long));
-	ReadSG(&flip_status, sizeof(long));
+	ReadSG(&flipeffect, sizeof(int));
+	ReadSG(&fliptimer, sizeof(int));
+	ReadSG(&flip_status, sizeof(int));
 	ReadSG(cd_flags, 128);
 	ReadSG(&CurrentAtmosphere, sizeof(unsigned char));
 	k = 16;
@@ -958,7 +958,7 @@ void RestoreLevelData(long FullSave) {
 
 					if(creature) {
 						ReadSG(creature, 22);
-						creature->enemy = (ITEM_INFO*)((long)creature->enemy + (long)malloc_buffer);
+						creature->enemy = (ITEM_INFO*)((int)creature->enemy + (int)malloc_buffer);
 
 						if((int)creature->enemy < 0)
 							creature->enemy = NULL;
@@ -1014,8 +1014,8 @@ void RestoreLevelData(long FullSave) {
 		ReadSG(senet_piece, sizeof(char) * 6);
 		ReadSG(senet_board, sizeof(char) * 17);
 		ReadSG(&last_throw, sizeof(char));
-		ReadSG(&SenetTargetX, sizeof(long));
-		ReadSG(&SenetTargetZ, sizeof(long));
+		ReadSG(&SenetTargetX, sizeof(int));
+		ReadSG(&SenetTargetZ, sizeof(int));
 		ReadSG(&piece_moving, sizeof(char));
 	}
 
@@ -1045,7 +1045,7 @@ void RestoreLevelData(long FullSave) {
 				break;
 
 			case FLARE_ITEM:
-				ReadSG(&flare_age, sizeof(long));
+				ReadSG(&flare_age, sizeof(int));
 				item->data = (void*)flare_age;
 				break;
 			}
@@ -1101,7 +1101,7 @@ void RestoreLevelData(long FullSave) {
 if(lara.RopePtr != -1) {
   ReadSG(&RopeList[lara.RopePtr], sizeof(ROPE_STRUCT));
   ReadSG(&CurrentPendulum, sizeof(PENDULUM));
-  CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (long)RopeList);
+  CurrentPendulum.Rope = (ROPE_STRUCT*)((char*)CurrentPendulum.Rope + (int)RopeList);
 }
 }
 */

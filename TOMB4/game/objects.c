@@ -51,10 +51,10 @@ void ControlMapper(short item_number) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	SPARKS* sptr;
 	PHD_VECTOR pos;
-	long rg, h;
+	int rg, h;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -198,7 +198,7 @@ void ControlLightningConductor(short item_number) {
 	}
 }
 
-void BridgeFlatFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
+void BridgeFlatFloor(ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	if(item->pos.pos.y >= y) {
 		*height = item->pos.pos.y;
 		*height_type = WALL;
@@ -206,13 +206,13 @@ void BridgeFlatFloor(ITEM_INFO* item, long x, long y, long z, long* height, heig
 	}
 }
 
-void BridgeFlatCeiling(ITEM_INFO* item, long x, long y, long z, long* height) {
+void BridgeFlatCeiling(ITEM_INFO* item, int x, int y, int z, long* height) {
 	if(item->pos.pos.y < y) {
 		*height = item->pos.pos.y + 256;
 	}
 }
 
-long GetOffset(ITEM_INFO* item, long x, long z) {
+int GetOffset(ITEM_INFO* item, int x, int z) {
 	if(!item->pos.y_rot) {
 		return ~x & 0x3FF;
 	} else if(item->pos.y_rot == -0x8000) {
@@ -224,8 +224,8 @@ long GetOffset(ITEM_INFO* item, long x, long z) {
 	}
 }
 
-void BridgeTilt1Floor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
-	long level;
+void BridgeTilt1Floor(ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
+	int level;
 
 	level = item->pos.pos.y + (GetOffset(item, x, z) >> 2);
 
@@ -236,8 +236,8 @@ void BridgeTilt1Floor(ITEM_INFO* item, long x, long y, long z, long* height, hei
 	}
 }
 
-void BridgeTilt1Ceiling(ITEM_INFO* item, long x, long y, long z, long* height) {
-	long level;
+void BridgeTilt1Ceiling(ITEM_INFO* item, int x, int y, int z, long* height) {
+	int level;
 
 	level = item->pos.pos.y + (GetOffset(item, x, z) >> 2);
 
@@ -246,8 +246,8 @@ void BridgeTilt1Ceiling(ITEM_INFO* item, long x, long y, long z, long* height) {
 	}
 }
 
-void BridgeTilt2Floor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
-	long level;
+void BridgeTilt2Floor(ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
+	int level;
 
 	level = item->pos.pos.y + (GetOffset(item, x, z) >> 1);
 
@@ -258,8 +258,8 @@ void BridgeTilt2Floor(ITEM_INFO* item, long x, long y, long z, long* height, hei
 	}
 }
 
-void BridgeTilt2Ceiling(ITEM_INFO* item, long x, long y, long z, long* height) {
-	long level;
+void BridgeTilt2Ceiling(ITEM_INFO* item, int x, int y, int z, long* height) {
+	int level;
 
 	level = item->pos.pos.y + (GetOffset(item, x, z) >> 1);
 
@@ -272,7 +272,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	short bounds[6];
 	short room_number, y_rot;
 
@@ -388,7 +388,7 @@ void ControlBurningRope(short item_number) {
 	ITEM_INFO* item;
 	SPHERE* sphere;
 	PHD_VECTOR pos;
-	long passes;
+	int passes;
 	short nmeshes;
 
 	item = GetItem(currentLevel, item_number);
@@ -477,7 +477,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	SPHERE* sphere;
 	PHD_VECTOR pos;
-	long nSpheres, dx, dy, dz;
+	int nSpheres, dx, dy, dz;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -547,7 +547,7 @@ void AnimateWaterfalls() {
 	TEXTURESTRUCT* tex;
 	OBJECT_INFO* obj;
 	float off;
-	static long vOff = 0;
+	static int vOff = 0;
 
 	vOff -= 7;
 	vOff &= 0x3F;
@@ -575,7 +575,7 @@ void AnimateWaterfalls() {
 void ControlTriggerTriggerer(short item_number) {
 	ITEM_INFO* item;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	short* data;
 
 	item = GetItem(currentLevel, item_number);
@@ -702,7 +702,7 @@ void ControlAnimatingSlots(short item_number) {
 
 void SmashObjectControl(short item_number) {
 	ITEM_INFO* item;
-	long speed;
+	int speed;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -728,7 +728,7 @@ void SmashObject(short item_number) {
 	ITEM_INFO* item;
 	ROOM_INFO* r;
 	BOX_INFO* box;
-	long sector;
+	int sector;
 
 	item = GetItem(currentLevel, item_number);
 	r = GetRoom(currentLevel, item->room_number);
@@ -755,7 +755,7 @@ void SmashObject(short item_number) {
 
 void EarthQuake(short item_number) {
 	ITEM_INFO* item;
-	long pitch;
+	int pitch;
 	short earth_item;
 
 	item = GetItem(currentLevel, item_number);

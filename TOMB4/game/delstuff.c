@@ -36,8 +36,8 @@
 short GLaraShadowframe[6];
 float lara_matrices[indices_count * (NUM_LARA_MESHES + 12)];
 float lara_joint_matrices[indices_count * (NUM_LARA_MESHES + 12)];
-long LaraNodeAmbient[2];
-long bLaraUnderWater;
+int LaraNodeAmbient[2];
+int bLaraUnderWater;
 unsigned char LaraNodeUnderwater[15];
 char SkinVertNums[40][12];
 char ScratchVertNums[40][12];
@@ -51,7 +51,7 @@ char HairRotScratchVertNums[5][12] = {
 	{ 4, 5, 6, 7, -1, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-static long lara_mesh_sweetness_table[15] = { 0, 1, 2, 3, 4, 5, 6, 7, 14, 8, 9, 10, 11, 12, 13 };
+static int lara_mesh_sweetness_table[15] = { 0, 1, 2, 3, 4, 5, 6, 7, 14, 8, 9, 10, 11, 12, 13 };
 static char lara_underwater_skin_sweetness_table[15] = { 0, 2, 3, 0, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 0 };
 
 static char NodesToStashToScratch[14][2] = {
@@ -106,17 +106,17 @@ static unsigned char SkinUseMatrix[14][2] = {
 	{ 255, 255 }
 };
 
-static long in_joints;
+static int in_joints;
 
-void DrawLara(ITEM_INFO* item, long mirror) {
+void DrawLara(ITEM_INFO* item, int mirror) {
 	OBJECT_INFO* obj;
 	FVECTOR v0;
 	FVECTOR v1;
 	short** meshpp;
 	long* bone;
 	short* rot;
-	long top, bottom, left, right, dx, dy, dz, dist, stash, xRot;
-	static long a = 255;
+	int top, bottom, left, right, dx, dy, dz, dist, stash, xRot;
+	static int a = 255;
 
 	top = phd_top;
 	bottom = phd_bottom;
@@ -251,7 +251,7 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 			v1.x = lara_matrices[16 * SkinUseMatrix[i][1] + M01];
 			v1.y = lara_matrices[16 * SkinUseMatrix[i][1] + M11];
 			v1.z = lara_matrices[16 * SkinUseMatrix[i][1] + M21];
-			xRot = (long)(32768.0F / (float)M_PI * acosf(v0.x * v1.x + v0.y * v1.y + v0.z * v1.z));
+			xRot = (int)(32768.0F / (float)M_PI * acosf(v0.x * v1.x + v0.y * v1.y + v0.z * v1.z));
 			phd_RotX((short)(xRot >> 1));
 			phd_PutPolygons(*meshpp, -1);
 			phd_PopMatrix();
@@ -343,7 +343,7 @@ void DrawLara(ITEM_INFO* item, long mirror) {
 	GlobalAlpha = 0xFF000000;
 }
 
-void GetLaraJointPos(PHD_VECTOR* pos, long node) {
+void GetLaraJointPos(PHD_VECTOR* pos, int node) {
 	phd_PushMatrix();
 	mMXPtr[M00] = lara_joint_matrices[node * indices_count + M00];
 	mMXPtr[M01] = lara_joint_matrices[node * indices_count + M01];
@@ -362,9 +362,9 @@ void GetLaraJointPos(PHD_VECTOR* pos, long node) {
 	mMXPtr[M32] = lara_joint_matrices[node * indices_count + M32];
 	mMXPtr[M33] = lara_joint_matrices[node * indices_count + M33];
 	phd_TranslateRel(pos->x, pos->y, pos->z);
-	pos->x = (long)mMXPtr[M03];
-	pos->y = (long)mMXPtr[M13];
-	pos->z = (long)mMXPtr[M23];
+	pos->x = (int)mMXPtr[M03];
+	pos->y = (int)mMXPtr[M13];
+	pos->z = (int)mMXPtr[M23];
 	pos->x += lara_item->pos.pos.x;
 	pos->y += lara_item->pos.pos.y;
 	pos->z += lara_item->pos.pos.z;
@@ -373,7 +373,7 @@ void GetLaraJointPos(PHD_VECTOR* pos, long node) {
 
 void SetLaraUnderwaterNodes() {
 	PHD_VECTOR pos;
-	long bit;
+	int bit;
 	short room_num;
 
 	pos.x = lara_item->pos.pos.x;
@@ -416,7 +416,7 @@ void SetLaraUnderwaterNodes() {
 	}
 }
 
-void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag) {
+void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, int flag) {
 	PHD_VECTOR vec;
 	float* matrix;
 	short* rot;
@@ -722,7 +722,7 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag) {
 	memcpy(&GLaraShadowframe,frame,sizeof(GLaraShadowframe));
 }
 
-void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac, long rate, long* bone, long flag) {
+void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, int frac, int rate, long* bone, int flag) {
 	PHD_VECTOR vec;
 	float* matrix;
 	float* arms;
@@ -1059,11 +1059,11 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	phd_PopMatrix();
 }
 
-void CalcLaraMatrices(long flag) {
+void CalcLaraMatrices(int flag) {
 	long* bone;
 	short* frame;
 	short* frmptr[2];
-	long rate, frac;
+	int rate, frac;
 	short spaz;
 
 	bone = GetBone(currentLevel, GetObjectInfo(currentLevel, lara_item->object_number)->bone_index);

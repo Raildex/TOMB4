@@ -30,13 +30,13 @@
 static char footsounds[14] = { 0, 5, 3, 2, 1, 9, 9, 4, 6, 5, 3, 9, 4, 6 };
 
 FOOTPRINT FootPrint[32];
-long FootPrintNum;
+int FootPrintNum;
 
 void AddFootPrint(ITEM_INFO* item) {
 	FOOTPRINT* print;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	short room_num;
 
@@ -57,7 +57,7 @@ void AddFootPrint(ITEM_INFO* item) {
 		SoundEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, (PHD_VECTOR*)&lara_item->pos, lara_item->room_number, SFX_DEFAULT);
 	}
 
-	long h = GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
+	int h = GetHeight(floor, pos.x, pos.y, pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 	if(floor->fx < 3 && !OnObject) {
 		print = &FootPrint[FootPrintNum];
 		print->pos.x = pos.x;
@@ -72,13 +72,13 @@ void AddFootPrint(ITEM_INFO* item) {
 void S_DrawFootPrints() {
 	FOOTPRINT* print;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	SPRITESTRUCT* sprite;
 	_D3DTLVERTEX* v;
 	PHD_VECTOR pos[3];
 	TEXTURESTRUCT tex;
 	float u1, v1, u2, v2;
-	long x, z, x1, y1, z1, x2, y2, z2, x3, y3, z3, col;
+	int x, z, x1, y1, z1, x2, y2, z2, x3, y3, z3, col;
 	short room_number;
 
 	v = MyVertexBuffer;
@@ -108,8 +108,8 @@ void S_DrawFootPrints() {
 			phd_RotY(print->YRot);
 
 			for(int j = 0; j < 3; j++) {
-				x = (long)(pos[j].x * mMXPtr[M00] + pos[j].z * mMXPtr[M02] + mMXPtr[M03]);
-				z = (long)(pos[j].x * mMXPtr[M20] + pos[j].z * mMXPtr[M22] + mMXPtr[M23]);
+				x = (int)(pos[j].x * mMXPtr[M00] + pos[j].z * mMXPtr[M02] + mMXPtr[M03]);
+				z = (int)(pos[j].x * mMXPtr[M20] + pos[j].z * mMXPtr[M22] + mMXPtr[M23]);
 				room_number = lara_item->room_number;
 				pos[j].y = GetHeight(GetFloor(x, print->pos.y, z, &room_number), x, print->pos.y, z, &height_type, &tiltxoff, &tiltzoff, &OnObject) - print->pos.y;
 

@@ -122,8 +122,8 @@ unsigned char* gfScriptFile;
 unsigned char* gfLanguageFile;
 char* gfStringWad;
 char* gfFilenameWad;
-long gfMirrorZPlane;
-long gfStatus = 0;
+int gfMirrorZPlane;
+int gfStatus = 0;
 unsigned short gfLevelFlags;
 unsigned char gfCurrentLevel;
 unsigned char gfLevelComplete;
@@ -137,7 +137,7 @@ char gfUVRotate;
 char gfLayer1Vel;
 char gfLayer2Vel;
 
-unsigned long GameTimer;
+unsigned int GameTimer;
 unsigned char bDoCredits = 0;
 char DEL_playingamefmv = 0;
 char skipped_level = 0;
@@ -147,7 +147,7 @@ char title_controls_locked_out;
 static unsigned short* gfScriptOffset;
 static unsigned char* gfScriptWad = NULL;
 static char* gfExtensions = NULL;
-static long nFrames = 1;
+static int nFrames = 1;
 static unsigned char gfLegend;
 static unsigned char gfLegendTime = 0;
 static unsigned char gfInitialiseGame = 1;
@@ -436,7 +436,7 @@ void DoGameflow() {
 }
 
 void DoLevel(unsigned char Name, unsigned char Audio) {
-	long gamestatus;
+	int gamestatus;
 
 	gamestatus = 0;
 	SetFade(255, 0);
@@ -616,15 +616,15 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 	reset_flag = 0;
 }
 
-long TitleOptions() {
-	static long long selection = 1;
-	static long long selection_bak = 0;
-	long long flag, sel;
-	long nLevels, nFirst, lp;
-	long ret, n, load, y;
-	static long load_or_new;
-	static long goto_level;
-	static long menu = 0; // 0 main menu, 1 level select, 2 the reload menu, 3 the options menu
+int TitleOptions() {
+	static int int selection = 1;
+	static int int selection_bak = 0;
+	int int flag, sel;
+	int nLevels, nFirst, lp;
+	int ret, n, load, y;
+	static int load_or_new;
+	static int goto_level;
+	static int menu = 0; // 0 main menu, 1 level select, 2 the reload menu, 3 the options menu
 
 	ret = 0;
 
@@ -684,10 +684,10 @@ long TitleOptions() {
 
 		for(lp = nFirst; lp < nLevels + nFirst; lp++) {
 			y += font_height;
-			PrintString(phd_centerx, y, selection & ((long long)1 << (lp - 1)) ? 1 : 2, SCRIPT_TEXT(gfLevelNames[lp]), FF_CENTER);
+			PrintString(phd_centerx, y, selection & ((int long)1 << (lp - 1)) ? 1 : 2, SCRIPT_TEXT(gfLevelNames[lp]), FF_CENTER);
 		}
 
-		flag = (long long)1 << (Gameflow->nLevels - 2);
+		flag = (int long)1 << (Gameflow->nLevels - 2);
 		break;
 
 	case 2:
@@ -910,7 +910,7 @@ void LoadGameflow() {
 	unsigned char* n;
 	char* s;
 	char* d;
-	long l, end;
+	int l, end;
 
 	s = 0;
 	LoadFile("SCRIPT.DAT", &s);
@@ -1022,11 +1022,11 @@ void LoadGameflow() {
 	}
 }
 
-long DoCredits() {
+int DoCredits() {
 	const char* s;
-	static unsigned long StartPos = 0;
-	static long init = 0;
-	long y, num_drawn;
+	static unsigned int StartPos = 0;
+	static int init = 0;
+	int y, num_drawn;
 
 	num_drawn = 0;
 

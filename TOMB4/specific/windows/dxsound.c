@@ -34,11 +34,11 @@ typedef struct SOUND_SYSTEM {
 	IUnknown* reverb;
 	WAVEFORMATEX* adpcmfmt;
 	WAVEFORMATEX pcmfmt;
-	long reverbType;
+	int reverbType;
 	XAUDIO2FX_REVERB_PARAMETERS* reverb_types;
 } SOUND_SYSTEM;
 
-long S_ConvertSamples(SOUND_SYSTEM* sys, unsigned char* data, long comp_size, long uncomp_size, long num, SAMPLE_BUFFER* buffers) {
+int S_ConvertSamples(SOUND_SYSTEM* sys, unsigned char* data, int comp_size, int uncomp_size, int num, SAMPLE_BUFFER* buffers) {
 	HACMSTREAM hACMStream;
 
 	MMRESULT mmresult = acmStreamOpen(&hACMStream, NULL, sys->adpcmfmt, &sys->pcmfmt, 0, 0, 0, 0);
@@ -101,14 +101,14 @@ long S_ConvertSamples(SOUND_SYSTEM* sys, unsigned char* data, long comp_size, lo
 	return 1;
 }
 
-void StopSample(SOUND_SYSTEM* sys, long num) {
+void StopSample(SOUND_SYSTEM* sys, int num) {
 	if(num >= 0 && sys->sourceVoices[num]) {
 		DXAttempt(IXAudio2SourceVoice_Stop(sys->sourceVoices[num], 0, XAUDIO2_COMMIT_NOW));
 		DXAttempt(IXAudio2SourceVoice_FlushSourceBuffers(sys->sourceVoices[num]));
 	}
 }
 
-long IsChannelPlaying(SOUND_SYSTEM* sys, long num) {
+int IsChannelPlaying(SOUND_SYSTEM* sys, int num) {
 	XAUDIO2_VOICE_STATE state;
 
 	if(sys->sourceVoices[num]) {
@@ -122,7 +122,7 @@ long IsChannelPlaying(SOUND_SYSTEM* sys, long num) {
 	return 0;
 }
 
-long GetFreeChannel(SOUND_SYSTEM* sys) {
+int GetFreeChannel(SOUND_SYSTEM* sys) {
 	for(int i = 0; i < 32; i++) {
 		if(!IsChannelPlaying(sys, i)) {
 			return i;
@@ -131,10 +131,10 @@ long GetFreeChannel(SOUND_SYSTEM* sys) {
 	return -1;
 }
 
-long S_StartSample(SOUND_SYSTEM* sys, SAMPLE_BUFFER* data, long volume, long pitch, long pan, unsigned long flags) {
+int S_StartSample(SOUND_SYSTEM* sys, SAMPLE_BUFFER* data, int volume, int pitch, int pan, unsigned int flags) {
 	IXAudio2SourceVoice* voice;
 	XAUDIO2_BUFFER* buffer;
-	long channel;
+	int channel;
 
 	channel = GetFreeChannel(sys);
 
@@ -156,10 +156,10 @@ long S_StartSample(SOUND_SYSTEM* sys, SAMPLE_BUFFER* data, long volume, long pit
 	return channel;
 }
 
-long CalcVolume(long volume) {
-	long result;
+int CalcVolume(int volume) {
+	int result;
 
-	result = 8000 - (long)((float)(0x7FFF - volume) * 0.30518511F);
+	result = 8000 - (int)((float)(0x7FFF - volume) * 0.30518511F);
 
 	if(result > 0) {
 		result = 0;
@@ -186,19 +186,19 @@ void S_SoundStopAllSamples(SOUND_SYSTEM* sys) {
 	}
 }
 
-void S_SoundStopSample(SOUND_SYSTEM* sys, long num) {
+void S_SoundStopSample(SOUND_SYSTEM* sys, int num) {
 	StopSample(sys, num);
 }
 
-long S_SoundPlaySample(SOUND_SYSTEM* sys, SAMPLE_BUFFER* buffer, unsigned short volume, long pitch, short pan) {
+int S_SoundPlaySample(SOUND_SYSTEM* sys, SAMPLE_BUFFER* buffer, unsigned short volume, int pitch, short pan) {
 	return S_StartSample(sys, buffer, CalcVolume(volume), pitch, pan, 0);
 }
 
-long S_SoundPlaySampleLooped(SOUND_SYSTEM* sys, SAMPLE_BUFFER* buffer, unsigned short volume, long pitch, short pan) {
+int S_SoundPlaySampleLooped(SOUND_SYSTEM* sys, SAMPLE_BUFFER* buffer, unsigned short volume, int pitch, short pan) {
 	return S_StartSample(sys, buffer, CalcVolume(volume), pitch, pan, XAUDIO2_LOOP_INFINITE);
 }
 
-long S_SoundSampleIsPlaying(SOUND_SYSTEM* sys, long num) {
+int S_SoundSampleIsPlaying(SOUND_SYSTEM* sys, int num) {
 	if(num < 0) {
 		return 0;
 	}
@@ -209,13 +209,13 @@ long S_SoundSampleIsPlaying(SOUND_SYSTEM* sys, long num) {
 	return 0;
 }
 
-long S_SoundSetVolume(SOUND_SYSTEM* sys, long num, long volume) {
+int S_SoundSetVolume(SOUND_SYSTEM* sys, int num, int volume) {
 	float fvolume = XAudio2DecibelsToAmplitudeRatio(volume / 65535.0F);
 	IXAudio2SourceVoice_SetChannelVolumes(sys->sourceVoices[num], 1, &fvolume, XAUDIO2_COMMIT_NOW);
 	return 1;
 }
 
-void S_SoundSetPanAndVolume(SOUND_SYSTEM* sys, long num, short pan, unsigned short volume) {
+void S_SoundSetPanAndVolume(SOUND_SYSTEM* sys, int num, short pan, unsigned short volume) {
 	S_SoundSetVolume(sys, num, volume);
 	float matrix[2];
 	if(pan < 0) {
@@ -241,12 +241,12 @@ void S_SoundSetPanAndVolume(SOUND_SYSTEM* sys, long num, short pan, unsigned sho
 	IXAudio2Voice_SetOutputMatrix(sys->sourceVoices[num], NULL, 1, 2, matrix, XAUDIO2_COMMIT_NOW);
 }
 
-void S_SoundSetPitch(SOUND_SYSTEM* sys, long num, long pitch) {
+void S_SoundSetPitch(SOUND_SYSTEM* sys, int num, int pitch) {
 	float frequency = ((float)pitch / 65536.0F);
 	IXAudio2SourceVoice_SetFrequencyRatio(sys->sourceVoices[num], frequency, XAUDIO2_COMMIT_NOW);
 }
 
-void S_SetReverbType(SOUND_SYSTEM* sys, long reverb) {
+void S_SetReverbType(SOUND_SYSTEM* sys, int reverb) {
 	if(App.SoundDisabled) {
 		return;
 	}
@@ -268,10 +268,10 @@ void S_SetReverbType(SOUND_SYSTEM* sys, long reverb) {
 	}
 }
 
-static long Check(const char* scope, HRESULT res) {
+static int Check(const char* scope, HRESULT res) {
 	if(FAILED(res)) {
 		char buffer[256];
-		long n = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, res, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), buffer, sizeof(buffer), NULL);
+		int n = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, res, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), buffer, sizeof(buffer), NULL);
 		LogE(scope, "DirectInput Error: %.*s", n, buffer);
 		return 0;
 	}
@@ -309,7 +309,7 @@ WAVEFORMATEX* CreateADPCMFormat() {
 	return (WAVEFORMATEX*)adpcmfmt;
 }
 
-long S_CreateSoundSystem(SOUND_SYSTEM** out) {
+int S_CreateSoundSystem(SOUND_SYSTEM** out) {
 	SOUND_SYSTEM* system = (SOUND_SYSTEM*)calloc(1, sizeof(SOUND_SYSTEM));
 	if(!system) {
 		return 0;
@@ -404,11 +404,11 @@ void S_DestroySoundSystem(SOUND_SYSTEM* sys) {
 	free(sys);
 }
 
-void S_SetSoundVolume(SOUND_SYSTEM* sys, long volume) {
+void S_SetSoundVolume(SOUND_SYSTEM* sys, int volume) {
 	float v = volume / 100.0F;
 	IXAudio2MasteringVoice_SetVolume(sys->master,v,XAUDIO2_COMMIT_NOW);
 }
 
-void S_StopSampleLoop(SOUND_SYSTEM* sys, long num) {
+void S_StopSampleLoop(SOUND_SYSTEM* sys, int num) {
 	IXAudio2SourceVoice_ExitLoop(sys->sourceVoices[num], XAUDIO2_COMMIT_NOW);
 }

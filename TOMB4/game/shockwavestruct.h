@@ -1,9 +1,9 @@
 #ifndef SHOCKWAVE_STRUCT_INCLUDED
 #define SHOCKWAVE_STRUCT_INCLUDED
 typedef struct SHOCKWAVE_STRUCT {
-	long x;
-	long y;
-	long z;
+	int x;
+	int y;
+	int z;
 	short InnerRad;
 	short OuterRad;
 	short XRot;

@@ -30,7 +30,7 @@ void TriggerAutogunFlamethrower(ITEM_INFO* item) {
 	SPARKS* sptr;
 	PHD_VECTOR pos;
 	PHD_VECTOR vel;
-	long v;
+	int v;
 
 	for(int i = 0; i < 3; i++) {
 		sptr = GetFreeSpark();
@@ -97,7 +97,7 @@ void AutogunControl(short item_number) {
 	CREATURE_INFO* autogun;
 	AI_INFO info;
 	PHD_VECTOR pos;
-	long ang;
+	int ang;
 	short ahead;
 
 	ang = 0;

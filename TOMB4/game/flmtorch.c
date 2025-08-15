@@ -45,7 +45,7 @@
 static short FireBounds[12] = { 0, 0, 0, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 static ITEM_INFO* TorchItem = 0;
 
-void TriggerTorchFlame(short item_number, long node) {
+void TriggerTorchFlame(short item_number, int node) {
 	SPARKS* sptr;
 
 	sptr = GetFreeSpark();
@@ -275,7 +275,7 @@ void FlameTorchControl(short item_number) {
 	ITEM_INFO* item;
 	STATIC_INFO* sinfo;
 	PHD_3DPOS pos;
-	long x, y, z, xv, yv, zv;
+	int x, y, z, xv, yv, zv;
 
 	item = GetItem(currentLevel, item_number);
 

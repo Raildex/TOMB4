@@ -38,9 +38,9 @@ static COMMANDLINES commandlines[] = {
 
 WINAPP App;
 char* cutseqpakPtr;
-long resChangeCounter;
+int resChangeCounter;
 
-long WinRunCheck(LPSTR WindowName, LPSTR ClassName, HANDLE* mutex) {
+int WinRunCheck(LPSTR WindowName, LPSTR ClassName, HANDLE* mutex) {
 	HWND window;
 
 	Log(__func__, "WinRunCheck");
@@ -66,8 +66,8 @@ void WinProcessCommandLine(LPSTR cmd) {
 	char* pCommand;
 	char* p;
 	char* last;
-	unsigned long l;
-	long num;
+	unsigned int l;
+	int num;
 	char parameter[20];
 
 	Log(__func__, "WinProcessCommandLine");
@@ -164,7 +164,7 @@ void WinClose() {
 float WinFrameRate() {
 	double t, time_now;
 	static float fps;
-	static long time, counter;
+	static int time, counter;
 	static char first_time;
 
 	if(!(first_time & 1)) {
@@ -177,7 +177,7 @@ float WinFrameRate() {
 	if(counter == 10) {
 		time_now = clock();
 		t = (time_now - time) / (double)CLOCKS_PER_SEC;
-		time = (long)time_now;
+		time = (int)time_now;
 		fps = (float)(counter / t);
 		counter = 0;
 	}
@@ -186,7 +186,7 @@ float WinFrameRate() {
 	return fps;
 }
 
-void WinDisplayString(long x, long y, char* string, ...) {
+void WinDisplayString(int x, int y, char* string, ...) {
 	va_list list;
 	char buf[4096];
 
@@ -206,9 +206,9 @@ void WinProcMsg() {
 	}
 }
 
-void WinProcessCommands(long cmd) {
+void WinProcessCommands(int cmd) {
 	DXDISPLAYMODE* dm;
-	long odm;
+	int odm;
 
 	if(cmd == KA_ALTENTER) {
 		if(App.fmv || !(G_dxinfo->DDInfo[G_dxinfo->nDD].DDCaps.dwCaps2 & DDCAPS2_CANRENDERWINDOWED)) {
@@ -302,7 +302,7 @@ void WinProcessCommands(long cmd) {
 	}
 }
 LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	static long closing;
+	static int closing;
 
 	switch(uMsg) {
 	case WM_CREATE:
@@ -387,7 +387,7 @@ void ClearSurfaces() {
 	S_DumpScreen();
 }
 
-long WinRegisterWindow(HINSTANCE hinstance) {
+int WinRegisterWindow(HINSTANCE hinstance) {
 	App.hInstance = hinstance;
 	App.WindowClass.hIcon = 0;
 	App.WindowClass.lpszMenuName = 0;
@@ -407,7 +407,7 @@ long WinRegisterWindow(HINSTANCE hinstance) {
 	return 1;
 }
 
-long WinCreateWindow() {
+int WinCreateWindow() {
 	App.hWnd = CreateWindowEx(WS_EX_APPWINDOW, "MainGameWindow", "Tomb Raider - The Last Revelation", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, App.hInstance, 0);
 
 	if(!App.hWnd) {
@@ -417,8 +417,8 @@ long WinCreateWindow() {
 	return 1;
 }
 
-void WinSetStyle(long fullscreen, unsigned long* set) {
-	unsigned long style;
+void WinSetStyle(int fullscreen, unsigned long* set) {
+	unsigned int style;
 
 	style = GetWindowLong(App.hWnd, GWL_STYLE);
 
@@ -443,7 +443,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	HDC hdc;
 	DEVMODE devmode;
 	char* buf;
-	long size;
+	int size;
 
 	start_setup = 0;
 	App.mmx = 0;

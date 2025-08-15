@@ -1,7 +1,7 @@
 #ifndef TOMB4_GAME_FLAREINFO_H
 #define TOMB4_GAME_FLAREINFO_H
 typedef struct FLARE_INFO {
-	long age;
+	int age;
 }FLARE_INFO;
 
 #endif// TOMB4_GAME_FLAREINFO_H

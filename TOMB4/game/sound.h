@@ -5,16 +5,16 @@ typedef struct SoundSlot SoundSlot;
 typedef struct PHD_VECTOR PHD_VECTOR;
 typedef struct SAMPLE_INFO SAMPLE_INFO;
 void GetPanVolume(SoundSlot* slot);
-void StopSoundEffect(long sfx);
+void StopSoundEffect(int sfx);
 void InitialiseSounds();
 void StopSounds();
-long SoundEffect(long sfx, PHD_VECTOR* pos,short room, long flags);
+int SoundEffect(int sfx, PHD_VECTOR* pos,short room, int flags);
 void SayNo();
 
 extern SAMPLE_INFO* sample_infos;
 extern SoundSlot LaSlot[];
 extern short* sample_lut;
-extern long sound_active;
+extern int sound_active;
 
 enum sfx_options {
 	SFX_WATER = 1,

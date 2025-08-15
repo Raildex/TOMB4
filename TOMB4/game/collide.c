@@ -43,12 +43,12 @@ static short StarGateBounds[24] = {
 
 short GlobalCollisionBounds[6];
 
-short GetTiltType(FLOOR_INFO* floor, long x, long y, long z);
-long FindGridShift(long src, long dst);
-long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_number, long hite);
-long TestBoundsCollideStatic(short* bounds, PHD_3DPOS* pos, long rad);
-long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotation);
-long TestBoundsCollide2(ITEM_INFO* item, ITEM_INFO* l, long rad);
+short GetTiltType(FLOOR_INFO* floor, int x, int y, int z);
+int FindGridShift(int src, int dst);
+int CollideStaticObjects(COLL_INFO* coll, int x, int y, int z, short room_number, int hite);
+int TestBoundsCollideStatic(short* bounds, PHD_3DPOS* pos, int rad);
+int Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, int speed, short rotation);
+int TestBoundsCollide2(ITEM_INFO* item, ITEM_INFO* l, int rad);
 
 void ShiftItem(ITEM_INFO* item, COLL_INFO* coll) {
 	item->pos.pos.x += coll->shift.x;
@@ -59,13 +59,13 @@ void ShiftItem(ITEM_INFO* item, COLL_INFO* coll) {
 	coll->shift.x = 0;
 }
 
-long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO** StoredItems, long StoredItemsSize, MESH_INFO** StoredStatics, long StoredStaticsSize, long StoreLara) {
+int GetCollidedObjects(ITEM_INFO* item, int rad, int noInvisible, ITEM_INFO** StoredItems, int StoredItemsSize, MESH_INFO** StoredStatics, int StoredStaticsSize, int StoreLara) {
 	MESH_INFO* mesh;
 	ROOM_INFO* r;
 	ITEM_INFO* item2;
 	short* doors;
 	short* bounds;
-	long j, sy, cy, dx, dy, dz, num;
+	int j, sy, cy, dx, dy, dz, num;
 	short rooms[22];
 	short switch_bounds[6];
 	short room_count, statics_count, items_count, item_number, next_item;
@@ -231,7 +231,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	PHD_VECTOR dir;
-	long dx, dy, dz;
+	int dx, dy, dz;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -266,7 +266,7 @@ void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	ITEM_INFO* item;
 	SPHERE* sptr;
 	PHD_VECTOR dir;
-	long TouchBits, DeadlyBits, dx, dy, dz;
+	int TouchBits, DeadlyBits, dx, dy, dz;
 	short y_rot;
 
 	item = GetItem(currentLevel, item_number);
@@ -333,7 +333,7 @@ void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 void CreatureCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	short* bounds;
-	long x, z, rx, rz, c, s;
+	int x, z, rx, rz, c, s;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -363,8 +363,8 @@ void CreatureCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	}
 }
 
-long FindGridShift(long src, long dst) {
-	long srcw, dstw;
+int FindGridShift(int src, int dst) {
+	int srcw, dstw;
 
 	srcw = src >> 10;
 	dstw = dst >> 10;
@@ -381,7 +381,7 @@ long FindGridShift(long src, long dst) {
 	return -1 - src;
 }
 
-short GetTiltType(FLOOR_INFO* floor, long x, long y, long z) {
+short GetTiltType(FLOOR_INFO* floor, int x, int y, int z) {
 	ROOM_INFO* r;
 	short* data;
 	short type, t0, t1, t2, t3, tilt, x2, z2, x3, y2;
@@ -440,14 +440,14 @@ short GetTiltType(FLOOR_INFO* floor, long x, long y, long z) {
 	return 0;
 }
 
-long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_number, long hite) {
+int CollideStaticObjects(COLL_INFO* coll, int x, int y, int z, short room_number, int hite) {
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
 	STATIC_INFO* sinfo;
 	short* door;
-	long lxmin, lxmax, lymin, lymax, lzmin, lzmax;
-	long xmin, xmax, ymin, ymax, zmin, zmax;
-	long i, j;
+	int lxmin, lxmax, lymin, lymax, lzmin, lzmax;
+	int xmin, xmax, ymin, ymax, zmin, zmax;
+	int i, j;
 	short num_nearby_rooms;
 	short nearby_rooms[22];
 
@@ -527,11 +527,11 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 	return 0;
 }
 
-void UpdateLaraRoom(ITEM_INFO* item, long height) {
+void UpdateLaraRoom(ITEM_INFO* item, int height) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long x, y, z;
+	int tiltxoff, tiltzoff, OnObject;
+	int x, y, z;
 	short room_number;
 
 	x = item->pos.pos.x;
@@ -553,7 +553,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll) {
 	PHD_3DPOS pos;
 	short* door;
 	short* bounds;
-	long i, j, dx, dy, dz;
+	int i, j, dx, dy, dz;
 	short num_nearby_rooms, item_number, nex;
 	short nearby_rooms[22];
 
@@ -677,10 +677,10 @@ void TrapCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ObjectCollision(item_number, l, coll);
 }
 
-long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, long BigPush) {
+int ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, int spaz, int BigPush) {
 	short* bounds;
-	long dx, dz, s, c, x, z;
-	long xmin, xmax, zmin, zmax, left, top, right, bottom;
+	int dx, dz, s, c, x, z;
+	int xmin, xmax, zmin, zmax, left, top, right, bottom;
 	short facing;
 
 	dx = l->pos.pos.x - item->pos.pos.x;
@@ -774,10 +774,10 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 	return 1;
 }
 
-long TestBoundsCollide(ITEM_INFO* item, ITEM_INFO* l, long rad) {
+int TestBoundsCollide(ITEM_INFO* item, ITEM_INFO* l, int rad) {
 	short* bounds;
 	short* lbounds;
-	long s, c, dx, dz, x, z;
+	int s, c, dx, dz, x, z;
 
 	bounds = GetBestFrame(item);
 	lbounds = GetBestFrame(l);
@@ -795,9 +795,9 @@ long TestBoundsCollide(ITEM_INFO* item, ITEM_INFO* l, long rad) {
 	return x >= bounds[0] - rad && x <= rad + bounds[1] && z >= bounds[4] - rad && z <= rad + bounds[5];
 }
 
-long TestBoundsCollideStatic(short* bounds, PHD_3DPOS* pos, long rad) {
+int TestBoundsCollideStatic(short* bounds, PHD_3DPOS* pos, int rad) {
 	short* lbounds;
-	long s, c, dx, dz, x, z;
+	int s, c, dx, dz, x, z;
 
 	if(!(bounds[0] | bounds[1] | bounds[2] | bounds[3] | bounds[4] | bounds[5])) {
 		return 0;
@@ -818,9 +818,9 @@ long TestBoundsCollideStatic(short* bounds, PHD_3DPOS* pos, long rad) {
 	return x >= bounds[0] - rad && x <= rad + bounds[1] && z >= bounds[4] - rad && z <= rad + bounds[5];
 }
 
-long ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* coll) {
-	long dx, dz, s, c, x, z;
-	long xmin, xmax, zmin, zmax, left, top, right, bottom;
+int ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* coll) {
+	int dx, dz, s, c, x, z;
+	int xmin, xmax, zmin, zmax, left, top, right, bottom;
 	short facing;
 
 	dx = l->pos.pos.x - pos->pos.x;
@@ -881,9 +881,9 @@ long ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* 
 	return 1;
 }
 
-long TestLaraPosition(short* bounds, ITEM_INFO* item, ITEM_INFO* l) {
+int TestLaraPosition(short* bounds, ITEM_INFO* item, ITEM_INFO* l) {
 	PHD_VECTOR pos;
-	long x, y, z;
+	int x, y, z;
 	short xrot, yrot, zrot;
 
 	xrot = l->pos.x_rot - item->pos.x_rot;
@@ -899,16 +899,16 @@ long TestLaraPosition(short* bounds, ITEM_INFO* item, ITEM_INFO* l) {
 	pos.x = l->pos.pos.x - item->pos.pos.x;
 	pos.y = l->pos.pos.y - item->pos.pos.y;
 	pos.z = l->pos.pos.z - item->pos.pos.z;
-	x = (long)(pos.x * mMXPtr[M00] + pos.y * mMXPtr[M10] + pos.z * mMXPtr[M20]);
-	y = (long)(pos.x * mMXPtr[M01] + pos.y * mMXPtr[M11] + pos.z * mMXPtr[M21]);
-	z = (long)(pos.x * mMXPtr[M02] + pos.y * mMXPtr[M12] + pos.z * mMXPtr[M22]);
+	x = (int)(pos.x * mMXPtr[M00] + pos.y * mMXPtr[M10] + pos.z * mMXPtr[M20]);
+	y = (int)(pos.x * mMXPtr[M01] + pos.y * mMXPtr[M11] + pos.z * mMXPtr[M21]);
+	z = (int)(pos.x * mMXPtr[M02] + pos.y * mMXPtr[M12] + pos.z * mMXPtr[M22]);
 	phd_PopMatrix();
 
 	return x >= bounds[0] && x <= bounds[1] && y >= bounds[2] && y <= bounds[3] && z >= bounds[4] && z <= bounds[5];
 }
 
 void AlignLaraPosition(PHD_VECTOR* pos, ITEM_INFO* item, ITEM_INFO* l) {
-	long x, y, z;
+	int x, y, z;
 
 	l->pos.x_rot = item->pos.x_rot;
 	l->pos.y_rot = item->pos.y_rot;
@@ -916,9 +916,9 @@ void AlignLaraPosition(PHD_VECTOR* pos, ITEM_INFO* item, ITEM_INFO* l) {
 
 	phd_PushUnitMatrix();
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	x = item->pos.pos.x + (long)(pos->x * mMXPtr[M00] + pos->y * mMXPtr[M01] + pos->z * mMXPtr[M02]);
-	y = item->pos.pos.y + (long)(pos->x * mMXPtr[M10] + pos->y * mMXPtr[M11] + pos->z * mMXPtr[M12]);
-	z = item->pos.pos.z + (long)(pos->x * mMXPtr[M20] + pos->y * mMXPtr[M21] + pos->z * mMXPtr[M22]);
+	x = item->pos.pos.x + (int)(pos->x * mMXPtr[M00] + pos->y * mMXPtr[M01] + pos->z * mMXPtr[M02]);
+	y = item->pos.pos.y + (int)(pos->x * mMXPtr[M10] + pos->y * mMXPtr[M11] + pos->z * mMXPtr[M12]);
+	z = item->pos.pos.z + (int)(pos->x * mMXPtr[M20] + pos->y * mMXPtr[M21] + pos->z * mMXPtr[M22]);
 	phd_PopMatrix();
 
 	l->pos.pos.x = x;
@@ -926,8 +926,8 @@ void AlignLaraPosition(PHD_VECTOR* pos, ITEM_INFO* item, ITEM_INFO* l) {
 	l->pos.pos.z = z;
 }
 
-long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotation) {
-	long dx, dy, dz, distance;
+int Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, int speed, short rotation) {
+	int dx, dy, dz, distance;
 	short adiff;
 
 	dx = dest->pos.x - pos->pos.x;
@@ -1017,11 +1017,11 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 	return pos->pos.x == dest->pos.x && pos->pos.y == dest->pos.y && pos->pos.z == dest->pos.z && pos->x_rot == dest->x_rot && pos->y_rot == dest->y_rot && pos->z_rot == dest->z_rot;
 }
 
-long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
+int MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
 	PHD_3DPOS pos;
-	long height;
+	int height;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	short room_number;
 
 	pos.x_rot = item->pos.x_rot;
@@ -1029,9 +1029,9 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
 	pos.z_rot = item->pos.z_rot;
 	phd_PushUnitMatrix();
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
-	pos.pos.x = item->pos.pos.x + (long)(v->x * mMXPtr[M00] + v->y * mMXPtr[M01] + v->z * mMXPtr[M02]);
-	pos.pos.y = item->pos.pos.y + (long)(v->x * mMXPtr[M10] + v->y * mMXPtr[M11] + v->z * mMXPtr[M12]);
-	pos.pos.z = item->pos.pos.z + (long)(v->x * mMXPtr[M20] + v->y * mMXPtr[M21] + v->z * mMXPtr[M22]);
+	pos.pos.x = item->pos.pos.x + (int)(v->x * mMXPtr[M00] + v->y * mMXPtr[M01] + v->z * mMXPtr[M02]);
+	pos.pos.y = item->pos.pos.y + (int)(v->x * mMXPtr[M10] + v->y * mMXPtr[M11] + v->z * mMXPtr[M12]);
+	pos.pos.z = item->pos.pos.z + (int)(v->x * mMXPtr[M20] + v->y * mMXPtr[M21] + v->z * mMXPtr[M22]);
 	phd_PopMatrix();
 
 	if(item->object_number == FLARE_ITEM || item->object_number == BURNING_TORCH_ITEM || item->object_number == CLOCKWORK_BEETLE) {
@@ -1054,9 +1054,9 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l) {
 	return Move3DPosTo3DPos(&l->pos, &pos, 12, 364);
 }
 
-long TestBoundsCollide2(ITEM_INFO* item, ITEM_INFO* l, long rad) {
+int TestBoundsCollide2(ITEM_INFO* item, ITEM_INFO* l, int rad) {
 	short* bounds;
-	long s, c, dx, dz, x, z;
+	int s, c, dx, dz, x, z;
 
 	bounds = GetBestFrame(l);
 
@@ -1078,7 +1078,7 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	SPHERE* sphere;
 	PHD_VECTOR dir;
 	short* bounds;
-	long touchedBits, hurtfulBits, x, y, z;
+	int touchedBits, hurtfulBits, x, y, z;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -1159,7 +1159,7 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	PHD_VECTOR dir;
-	long x, y, z;
+	int x, y, z;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -1185,13 +1185,13 @@ void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	}
 }
 
-void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number, long hite) {
+void GetCollisionInfo(COLL_INFO* coll, int x, int y, int z, short room_number, int hite) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long xfront, zfront;
-	long yT, h, c, tx, tz;
-	long fspeed, ang, xright, xleft, zright, zleft, xright2, xleft2, zright2, zleft2;
+	int tiltxoff, tiltzoff, OnObject;
+	int xfront, zfront;
+	int yT, h, c, tx, tz;
+	int fspeed, ang, xright, xleft, zright, zleft, xright2, xleft2, zright2, zleft2;
 	short room_num, room_num2, tilt;
 
 	coll->coll_type = CT_NONE;

@@ -7,7 +7,7 @@ typedef struct SHATTER_ITEM {
 	SPHERE Sphere;
 	ITEM_LIGHT* il;
 	short* meshp;
-	long Bit;
+	int Bit;
 	short YRot;
 	short Flags;
 } SHATTER_ITEM;

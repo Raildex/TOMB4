@@ -28,8 +28,8 @@
 #include <stdlib.h>
 
 
-long SenetTargetX;
-long SenetTargetZ;
+int SenetTargetX;
+int SenetTargetZ;
 short senet_item[6];
 char piece_moving = -1;
 char last_throw = 0;
@@ -82,7 +82,7 @@ void InitialiseSenet(short item_number) {
 	}
 }
 
-void MakeMove(long piece, long displacement) {
+void MakeMove(int piece, int displacement) {
 	short num, spot, lp;
 
 	spot = (short)(senet_piece[piece] + displacement);
@@ -141,8 +141,8 @@ void SenetControl(short item_number) {
 	RemoveActiveItem(item_number);
 }
 
-long CheckSenetWinner(long ourPiece) {
-	long lp;
+int CheckSenetWinner(int ourPiece) {
+	int lp;
 
 	if(ourPiece == 1) {
 		for(lp = 0; lp < 3; lp++) {
@@ -178,7 +178,7 @@ void InitialiseGameStix(short item_number) {
 }
 
 void ThrowSticks(ITEM_INFO* item) {
-	long lp;
+	int lp;
 	char rnd;
 
 	last_throw = 0;
@@ -208,7 +208,7 @@ void GameStixControl(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 	ITEM_INFO* piece;
-	long piece_num, num, x, z, change;
+	int piece_num, num, x, z, change;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -429,9 +429,9 @@ void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	}
 }
 
-void ShockwaveExplosion(ITEM_INFO* item, unsigned long col, long speed) {
+void ShockwaveExplosion(ITEM_INFO* item, unsigned int col, int speed) {
 	PHD_VECTOR pos;
-	long InnerOuter;
+	int InnerOuter;
 
 	item->pos.pos.y -= 384;
 
@@ -498,7 +498,7 @@ void DrawGodHead(ITEM_INFO* item) {
 	PHD_VECTOR scalar;
 	short** meshpp;
 	short* frm[2];
-	long rate, oldAlpha, alpha;
+	int rate, oldAlpha, alpha;
 
 	r = GetRoom(currentLevel, item->room_number);
 	phd_left = r->left;

@@ -12,12 +12,12 @@ typedef struct DXD3DDEVICE {
 	LPGUID lpGuid;
 	GUID Guid;
 	D3DDEVICEDESC DeviceDesc;
-	long bHardware;
-	long nDisplayModes;
+	int bHardware;
+	int nDisplayModes;
 	DXDISPLAYMODE* DisplayModes;
-	long nTextureInfos;
+	int nTextureInfos;
 	DXTEXTUREINFO* TextureInfos;
-	long nZBufferInfos;
+	int nZBufferInfos;
 	DXZBUFFERINFO* ZBufferInfos;
 } DXD3DDEVICE;
 #endif// TOMB4_SPECIFIC_DXD3DDEVICE_H

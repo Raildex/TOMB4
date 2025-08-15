@@ -32,7 +32,7 @@ static PISTOL_DEF PistolTable[4] = {
 	{ LARA, 0, 0, 0, 0 }, { PISTOLS_ANIM, 4, 5, 13, 24 }, { SIXSHOOTER_ANIM, 7, 8, 15, 29 }, { UZI_ANIM, 4, 5, 13, 24 }
 };
 
-void undraw_pistol_mesh_left(long weapon_type) {
+void undraw_pistol_mesh_left(int weapon_type) {
 	if(weapon_type != WEAPON_REVOLVER) {
 		WeaponObject(weapon_type);
 		lara.mesh_ptrs[LM_LHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_LHAND * 2);
@@ -45,7 +45,7 @@ void undraw_pistol_mesh_left(long weapon_type) {
 	}
 }
 
-void undraw_pistol_mesh_right(long weapon_type) {
+void undraw_pistol_mesh_right(int weapon_type) {
 	WeaponObject(weapon_type);
 	lara.mesh_ptrs[LM_RHAND] = GetMesh(currentLevel, GetObjectInfo(currentLevel, LARA)->mesh_index + LM_RHAND * 2);
 
@@ -58,9 +58,9 @@ void undraw_pistol_mesh_right(long weapon_type) {
 	}
 }
 
-static void set_arm_info(LARA_ARM* arm, long frame) {
+static void set_arm_info(LARA_ARM* arm, int frame) {
 	PISTOL_DEF* p;
-	long anim_base;
+	int anim_base;
 
 	p = &PistolTable[lara.gun_type];
 	anim_base = GetObjectInfo(currentLevel, p->ObjectNum)->anim_index;
@@ -82,7 +82,7 @@ static void set_arm_info(LARA_ARM* arm, long frame) {
 	arm->frame_base = GetAnim(currentLevel, anim_base)->frame_ptr;
 }
 
-void ready_pistols(long weapon_type) {
+void ready_pistols(int weapon_type) {
 	lara.gun_status = LG_READY;
 	lara.left_arm.x_rot = 0;
 	lara.left_arm.y_rot = 0;
@@ -99,8 +99,8 @@ void ready_pistols(long weapon_type) {
 	lara.left_arm.frame_base = lara.right_arm.frame_base;
 }
 
-void draw_pistol_meshes(long weapon_type) {
-	long mesh_index;
+void draw_pistol_meshes(int weapon_type) {
+	int mesh_index;
 
 	mesh_index = GetObjectInfo(currentLevel, WeaponObjectMesh(weapon_type))->mesh_index;
 	lara.holster = LARA_HOLSTERS;
@@ -111,7 +111,7 @@ void draw_pistol_meshes(long weapon_type) {
 	}
 }
 
-void draw_pistols(long weapon_type) {
+void draw_pistols(int weapon_type) {
 	PISTOL_DEF* p;
 	short ani;
 
@@ -132,7 +132,7 @@ void draw_pistols(long weapon_type) {
 	set_arm_info(&lara.left_arm, ani);
 }
 
-void undraw_pistols(long weapon_type) {
+void undraw_pistols(int weapon_type) {
 	PISTOL_DEF* p;
 	short anil, anir;
 
@@ -201,12 +201,12 @@ void undraw_pistols(long weapon_type) {
 	}
 }
 
-void AnimatePistols(long weapon_type) {
+void AnimatePistols(int weapon_type) {
 	PISTOL_DEF* p;
 	WEAPON_INFO* winfo;
 	PHD_VECTOR pos;
-	static long uzi_left;
-	static long uzi_right;
+	static int uzi_left;
+	static int uzi_right;
 	short angles[2];
 	short anil, anir, sound_already;
 
@@ -391,10 +391,10 @@ void AnimatePistols(long weapon_type) {
 	set_arm_info(&lara.left_arm, anil);
 }
 
-void PistolHandler(long weapon_type) {
+void PistolHandler(int weapon_type) {
 	WEAPON_INFO* winfo;
 	PHD_VECTOR pos;
-	long r, g, b;
+	int r, g, b;
 
 	winfo = &weapons[weapon_type];
 	LaraGetNewTarget(winfo);

@@ -39,12 +39,12 @@ static TRAIN_STATIC dels_handy_train_map2[64] = {
 	{ ROCK2, 4096 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, -3072 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, 4096 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, -3072 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, 4096 }, { NO_ITEM, 0 }, { ROCK3, -3072 }, { NO_ITEM, 0 }, { ROCK0, -3072 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, 4096 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, 4096 }, { ROCK3, -2048 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK2, 4096 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, -3072 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, 4096 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, -3072 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, 4096 }, { NO_ITEM, 0 }, { ROCK3, -3072 }, { NO_ITEM, 0 }, { ROCK0, -3072 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, 4096 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { ROCK0, 4096 }, { ROCK3, -2048 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }, { NO_ITEM, 0 }
 };
 
-long trainmappos;
+int trainmappos;
 
 void DrawTrainObjects() {
 	TRAIN_STATIC* p;
 	short* obj;
-	long x, x2;
+	int x, x2;
 
 	trainmappos = (trainmappos + (gfUVRotate << 5)) % 0x60000;
 	obj = &dels_handy_train_map[96 - ((trainmappos / 6144 - lara_item->pos.pos.x / 6144) & 0x1F)];
@@ -109,7 +109,7 @@ void DrawTrainObjects() {
 }
 
 void DrawTrainFloor() {
-	long x;
+	int x;
 
 	x = lara_item->pos.pos.x;
 	lara_item->pos.pos.x = camera.pos.pos.x;

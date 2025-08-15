@@ -28,34 +28,34 @@
 #include <d3dtypes.h>
 #include <math.h>
 
-extern long nBuckets;
+extern int nBuckets;
 extern TEXTUREBUCKET* Bucket;
 D3DTLBUMPVERTEX XYUVClipperBuffer[20];
 D3DTLBUMPVERTEX zClipperBuffer[20];
 
 FOGBULB_STRUCT FogBulbs[20];
-long NumLevelFogBulbs;
+int NumLevelFogBulbs;
 
 static FOGBULB_STRUCT* ActiveFogBulbs[5];
 static FOGBULB_STRUCT FXFogBulbs[5];
-static long NumFXFogBulbs;
-static long NumActiveFogBulbs;
-static long NumFogBulbsInRange;
+static int NumFXFogBulbs;
+static int NumActiveFogBulbs;
+static int NumFogBulbsInRange;
 
-long nPolys;
-long nClippedPolys;
-long DrawPrimitiveCnt;
+int nPolys;
+int nClippedPolys;
+int DrawPrimitiveCnt;
 
 SORTLIST* SortList[16384];
-long SortCount;
+int SortCount;
 
 static char SortBuffer[8388608];
 static SORTLIST** pSortList;
 static char* pSortBuffer;
 
-static long rgb80h = 0x808080;
-static long rgbmask = 0xFFFFFFFF;
-static long zero = 0;
+static int rgb80h = 0x808080;
+static int rgbmask = 0xFFFFFFFF;
+static int zero = 0;
 
 void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, short type) {
 	IDirect3DDevice3_SetRenderState(App.dx.lpD3DDevice, D3DRENDERSTATE_TEXTUREMAG, D3DFILTER_LINEARMIPLINEAR);
@@ -196,7 +196,7 @@ void DrawSortList() {
 	D3DTLBUMPVERTEX* vtx;
 	D3DTLBUMPVERTEX* bVtx;
 	D3DTLBUMPVERTEX* bVtxbak;
-	long num;
+	int num;
 	short nVtx, tpage, drawtype;
 
 	nVtx = 0;
@@ -348,7 +348,7 @@ void CreateFogPos(FOGBULB_STRUCT* FogBulb) {
 
 			rad = (short)(FogBulb->rad / 2);
 			phd_PushMatrix();
-			phd_TranslateAbs((long)FogBulb->WorldPos.x, (long)FogBulb->WorldPos.y, (long)FogBulb->WorldPos.z);
+			phd_TranslateAbs((int)FogBulb->WorldPos.x, (int)FogBulb->WorldPos.y, (int)FogBulb->WorldPos.z);
 			bounds[0] = rad;
 			bounds[1] = -rad;
 			bounds[2] = rad;
@@ -407,8 +407,8 @@ void ControlFXBulb(FOGBULB_STRUCT* FogBulb) {
 		}
 	}
 
-	TriggerFlashSmoke((long)FogBulb->WorldPos.x, (long)FogBulb->WorldPos.y, (long)FogBulb->WorldPos.z, (short)FogBulb->room_number);
-	TriggerFlashSmoke((long)FogBulb->WorldPos.x, (long)FogBulb->WorldPos.y, (long)FogBulb->WorldPos.z, (short)FogBulb->room_number);
+	TriggerFlashSmoke((int)FogBulb->WorldPos.x, (int)FogBulb->WorldPos.y, (int)FogBulb->WorldPos.z, (short)FogBulb->room_number);
+	TriggerFlashSmoke((int)FogBulb->WorldPos.x, (int)FogBulb->WorldPos.y, (int)FogBulb->WorldPos.z, (short)FogBulb->room_number);
 	FogBulb->sqrad = SQUARE(FogBulb->rad);
 	FogBulb->inv_sqrad = 1.0F / FogBulb->sqrad;
 }
@@ -437,9 +437,9 @@ void ClearFXFogBulbs() {
 	NumFXFogBulbs = 0;
 }
 
-void TriggerFXFogBulb(long x, long y, long z, long FXRad, long density, long r, long g, long b, long room_number) {
+void TriggerFXFogBulb(int x, int y, int z, int FXRad, int density, int r, int g, int b, int room_number) {
 	FOGBULB_STRUCT* FogBulb;
-	long num;
+	int num;
 
 	num = 0;
 
@@ -471,7 +471,7 @@ void TriggerFXFogBulb(long x, long y, long z, long FXRad, long density, long r, 
 	NumFXFogBulbs++;
 }
 
-long IsVolumetric() {
+int IsVolumetric() {
 	return App.Volumetric;
 }
 
@@ -531,7 +531,7 @@ void OmniEffect(_D3DTLVERTEX* v) {
 	FVECTOR dP;
 	FVECTOR dV;
 	float val, val2;
-	long r, g, b, lVal;
+	int r, g, b, lVal;
 
 	for(int i = 0; i < 5; i++) {
 		FogBulb = &FXFogBulbs[i];
@@ -569,7 +569,7 @@ void OmniEffect(_D3DTLVERTEX* v) {
 
 					if(val && val < FogBulb->sqrad) {
 						val *= FogBulb->inv_sqrad * FogBulb->density;
-						lVal = (long)val;
+						lVal = (int)val;
 						r = CLRR(v->specular) + (((FogBulb->density - lVal) * FogBulb->r) >> 8);
 						g = CLRG(v->specular) + (((FogBulb->density - lVal) * FogBulb->g) >> 8);
 						b = CLRB(v->specular) + (((FogBulb->density - lVal) * FogBulb->b) >> 8);
@@ -600,7 +600,7 @@ void OmniFog(_D3DTLVERTEX* v) {
 	FVECTOR dP;
 	FVECTOR dV;
 	float val, val2;
-	long s, r, g, b, lVal;
+	int s, r, g, b, lVal;
 
 	if(InventoryActive || nPolyType == 6 || gfLevelFlags & GF_TRAIN) {
 		return;
@@ -659,7 +659,7 @@ void OmniFog(_D3DTLVERTEX* v) {
 
 						if(val && val < FogBulb->sqrad) {
 							val *= FogBulb->inv_sqrad * FogBulb->density;
-							lVal = (long)val + (v->specular >> 24) - FogBulb->density;
+							lVal = (int)val + (v->specular >> 24) - FogBulb->density;
 
 							if(lVal < 0) {
 								lVal = 0;
@@ -674,18 +674,18 @@ void OmniFog(_D3DTLVERTEX* v) {
 	}
 }
 
-void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided) {
+void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, int double_sided) {
 	D3DTLBUMPVERTEX* p;
 	_D3DTLVERTEX* pV;
 	SORTLIST* sl;
 	TEXTURESTRUCT tex2;
 	short* c;
 	float z;
-	long colBak[3];
-	long specBak[3];
-	long num;
+	int colBak[3];
+	int specBak[3];
+	int num;
 	short swap;
-	long clip, clipZ;
+	int clip, clipZ;
 
 	c = clipflags;
 	clipZ = 0;
@@ -905,15 +905,15 @@ void AddTriClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURES
 	v[v2].specular = specBak[2];
 }
 
-void AddQuadClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided) {
+void AddQuadClippedSorted(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, int double_sided) {
 	D3DTLBUMPVERTEX* p;
 	_D3DTLVERTEX* pV;
 	SORTLIST* sl;
 	TEXTURESTRUCT tex2;
 	short* c;
 	float z;
-	long colBak[4];
-	long specBak[4];
+	int colBak[4];
+	int specBak[4];
 	short swap;
 
 	c = clipflags;
@@ -1140,10 +1140,10 @@ void InitialiseSortList() {
 	SortCount = 0;
 }
 
-void DoSort(long left, long right, SORTLIST** list) {
+void DoSort(int left, int right, SORTLIST** list) {
 	SORTLIST* swap;
 	float z;
-	long l, r;
+	int l, r;
 
 	l = left;
 	r = right;
@@ -1177,7 +1177,7 @@ void DoSort(long left, long right, SORTLIST** list) {
 	}
 }
 
-void SortPolyList(long count, SORTLIST** list) {
+void SortPolyList(int count, SORTLIST** list) {
 	if(!count) {
 		return;
 	}
@@ -1200,7 +1200,7 @@ void mD3DTransform(FVECTOR* vec, _D3DMATRIX* mx) {
 	vec->z = z;
 }
 
-void AddClippedPoly(D3DTLBUMPVERTEX* dest, long nPoints, D3DTLBUMPVERTEX* v, TEXTURESTRUCT* pTex) {
+void AddClippedPoly(D3DTLBUMPVERTEX* dest, int nPoints, D3DTLBUMPVERTEX* v, TEXTURESTRUCT* pTex) {
 	D3DTLBUMPVERTEX* p;
 	float z;
 
@@ -1259,18 +1259,18 @@ void AddClippedPoly(D3DTLBUMPVERTEX* dest, long nPoints, D3DTLBUMPVERTEX* v, TEX
 	}
 }
 
-void AddTriClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided) {
+void AddTriClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, int double_sided) {
 	_D3DTLVERTEX* vtx;
 	D3DTLBUMPVERTEX* p;
 	D3DTLBUMPVERTEX* bp;
 	TEXTURESTRUCT tex2;
 	long* nVtx;
 	short* c;
-	long colBak[3];
-	long specBak[3];
-	long nPoints;
+	int colBak[3];
+	int specBak[3];
+	int nPoints;
 	short swap;
-	long clip, clipZ;
+	int clip, clipZ;
 
 	c = clipflags;
 	clipZ = 0;
@@ -1441,14 +1441,14 @@ void AddTriClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURE
 	v[v2].specular = specBak[2];
 }
 
-void AddQuadClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided) {
+void AddQuadClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, int double_sided) {
 	D3DTLBUMPVERTEX* p;
 	_D3DTLVERTEX* vtx;
 	TEXTURESTRUCT tex2;
 	long* nVtx;
 	short* c;
-	long colBak[4];
-	long specBak[4];
+	int colBak[4];
+	int specBak[4];
 	short swap;
 
 	c = clipflags;
@@ -1669,7 +1669,7 @@ void SubdivideEdge(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v, short* c
 	v->specular = RGBA(r1, g1, b1, a1);
 }
 
-void SubdivideQuad(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2, _D3DTLVERTEX* v3, TEXTURESTRUCT* tex, long double_sided, long steps, short* c) {
+void SubdivideQuad(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2, _D3DTLVERTEX* v3, TEXTURESTRUCT* tex, int double_sided, int steps, short* c) {
 	_D3DTLVERTEX v[5];
 	TEXTURESTRUCT tex2;
 	float uv[10];
@@ -1768,7 +1768,7 @@ void SubdivideQuad(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2, _D3DTLV
 	SubdivideQuad(&v[2], &v[4], &v[1], v3, &tex2, double_sided, steps - 1, bclip);
 }
 
-void SubdivideTri(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2, TEXTURESTRUCT* tex, long double_sided, long steps, short* c) {
+void SubdivideTri(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2, TEXTURESTRUCT* tex, int double_sided, int steps, short* c) {
 	_D3DTLVERTEX v[3];
 	TEXTURESTRUCT tex2;
 	float uv[6];
@@ -1839,8 +1839,8 @@ void SubdivideTri(_D3DTLVERTEX* v0, _D3DTLVERTEX* v1, _D3DTLVERTEX* v2, TEXTURES
 	SubdivideQuad(&v[2], v, &v[1], v2, &tex2, double_sided, steps - 1, bclip);
 }
 
-void AddTriSubdivide(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided) {
-	long steps;
+void AddTriSubdivide(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, int double_sided) {
+	int steps;
 	short c[4];
 
 	if(nPolyType || v[v2].sz >= 3500) {
@@ -1859,8 +1859,8 @@ void AddTriSubdivide(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUC
 	}
 }
 
-void AddQuadSubdivide(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, long double_sided) {
-	long steps;
+void AddQuadSubdivide(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, TEXTURESTRUCT* tex, int double_sided) {
+	int steps;
 	short c[4];
 
 	if(nPolyType || v[v3].sz >= 3500) {
@@ -1881,7 +1881,7 @@ void AddQuadSubdivide(_D3DTLVERTEX* v, short v0, short v1, short v2, short v3, T
 }
 
 void CalcColorSplit(D3DCOLOR s, D3DCOLOR* d) {
-	long r, g, b, sr, sg, sb;
+	int r, g, b, sr, sg, sb;
 
 	sr = 0;
 	sg = 0;

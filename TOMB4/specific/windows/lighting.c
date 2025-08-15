@@ -25,19 +25,19 @@
 #include <math.h>
 
 ITEM_INFO* current_item;
-long StaticMeshShade;
-long ambientR, ambientG, ambientB;
+int StaticMeshShade;
+int ambientR, ambientG, ambientB;
 
 FVECTOR lGlobalMeshPos;
 SUNLIGHT_STRUCT SunLights[64];
 POINTLIGHT_STRUCT PointLights[64];
 POINTLIGHT_STRUCT SpotLights[64];
-long nSunLights, nPointLights, nSpotLights, nShadowLights, nTotalLights;
+int nSunLights, nPointLights, nSpotLights, nShadowLights, nTotalLights;
 
 static ITEM_INFO StaticMeshLightItem;
-static long SetupLight_thing;
+static int SetupLight_thing;
 
-void S_CalculateStaticMeshLight(long x, long y, long z, long shade, ROOM_INFO* r) {
+void S_CalculateStaticMeshLight(int x, int y, int z, int shade, ROOM_INFO* r) {
 	StaticMeshLightItem.il.ambient = r->ambient;
 	StaticMeshLightItem.il.item_pos.x = x;
 	StaticMeshLightItem.il.item_pos.y = y;
@@ -92,7 +92,7 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
 	SUNLIGHT_STRUCT* sun;
 	POINTLIGHT_STRUCT* point;
 	float x, y, z, num, num2;
-	long r, g, b, val, val2;
+	int r, g, b, val, val2;
 
 	switch(light->Type) {
 	case LIGHT_SUN:
@@ -140,9 +140,9 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
 		}
 
 		if(SetupLight_thing && point->rad < 1) {
-			r = CLRR(*ambient) + (long)(point->rad * point->r);
-			g = CLRG(*ambient) + (long)(point->rad * point->g);
-			b = CLRB(*ambient) + (long)(point->rad * point->b);
+			r = CLRR(*ambient) + (int)(point->rad * point->r);
+			g = CLRG(*ambient) + (int)(point->rad * point->g);
+			b = CLRB(*ambient) + (int)(point->rad * point->b);
 
 			if(r > 255) {
 				r = 255;
@@ -208,7 +208,7 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
 		val2 = light->shadow >> 3;
 
 		if(val >= light->Inner) {
-			val2 = (long)((val - light->Outer) / ((light->Outer - light->Inner) / -val2));
+			val2 = (int)((val - light->Outer) / ((light->Outer - light->Inner) / -val2));
 		}
 
 		if(val2 < 0) {
@@ -257,8 +257,8 @@ void CreateLightList(ITEM_INFO* item) {
 	PCLIGHT_INFO* room_light;
 	_D3DVECTOR vec;
 	void* bakPtr;
-	long bakNum, dx, dy, dz, range;
-	long in_range;
+	int bakNum, dx, dy, dz, range;
+	int in_range;
 
 	r = GetRoom(currentLevel, item->room_number);
 
@@ -405,7 +405,7 @@ void CreateLightList(ITEM_INFO* item) {
 	FadeLightList(prev_lights, item->il.nPrevLights);
 }
 
-void FadeLightList(PCLIGHT* lights, long nLights) {
+void FadeLightList(PCLIGHT* lights, int nLights) {
 	for(int i = 0; i < nLights; i++) {
 		if(lights[i].Active && lights[i].fcnt) {
 			if(lights[i].Type == LIGHT_SHADOW) {
@@ -433,7 +433,7 @@ void FadeLightList(PCLIGHT* lights, long nLights) {
 
 void InitObjectLighting(ITEM_INFO* item) {
 	PCLIGHT* light;
-	long node_ambient, r, g, b;
+	int node_ambient, r, g, b;
 
 	node_ambient = item->il.ambient;
 	SetupLight_thing = item->object_number >= GAME_PIECE1;

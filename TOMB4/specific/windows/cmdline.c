@@ -25,15 +25,15 @@ wchar_t ASCIIToANSITable[7][2] = {
 	{ L' ', L' ' }
 };
 
-long start_setup = 0;
-long fmvs_disabled = 0;
+int start_setup = 0;
+int fmvs_disabled = 0;
 
-static long nDDDevice = 0;
-static long nD3DDevice = 0;
-static long Filter = 1;
-static long VolumetricFx = 0;
-static long BumpMap = 0;
-static long TextLow = 0;
+static int nDDDevice = 0;
+static int nD3DDevice = 0;
+static int Filter = 1;
+static int VolumetricFx = 0;
+static int BumpMap = 0;
+static int TextLow = 0;
 
 void CLSetup(char* cmd) {
 	Log(__func__, "CLSetup");
@@ -75,9 +75,9 @@ void InitDSDevice(HWND dlg, HWND hwnd) {
 void InitTFormats(HWND dlg, HWND hwnd) {
 	DXD3DDEVICE* device;
 	DXTEXTUREINFO* tex;
-	long bpp, r, g, b, a;
+	int bpp, r, g, b, a;
 	char buffer[40];
-	long software;
+	int software;
 
 	SendMessage(hwnd, CB_RESETCONTENT, 0, 0);
 	EnableWindow(GetDlgItem(dlg, 1006), 1);
@@ -108,12 +108,12 @@ void InitTFormats(HWND dlg, HWND hwnd) {
 	}
 }
 
-void InitResolution(HWND dlg, HWND hwnd, long resetvms) {
+void InitResolution(HWND dlg, HWND hwnd, int resetvms) {
 	DXD3DDEVICE* device;
 	DXDISPLAYMODE* dm;
-	long bpp, w, h, n;
+	int bpp, w, h, n;
 	char buffer[40];
-	long software;
+	int software;
 
 	n = 0;
 
@@ -234,9 +234,9 @@ void InitDDDevice(HWND dlg, HWND hwnd) {
 
 char* MapASCIIToANSI(char* s, char* d) {
 	char* p;
-	long l;
+	int l;
 	unsigned char c;
-	long found;
+	int found;
 
 	l = strlen(s);
 	p = d;
@@ -438,8 +438,8 @@ INT_PTR WINAPI DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
-long DXSetupDialog() {
-	long ret;
+int DXSetupDialog() {
+	int ret;
 
 	ShowCursor(1);
 	ret = DialogBoxA(App.hInstance, MAKEINTRESOURCE(109), 0, DXSetupDlgProc);

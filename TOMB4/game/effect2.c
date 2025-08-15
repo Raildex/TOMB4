@@ -41,31 +41,31 @@
 
 
 DYNAMIC dynamics[MAX_DYNAMICS * 2];
-long nSplashes;
+int nSplashes;
 SPLASH_STRUCT* splashes;
-long nRipples;
+int nRipples;
 RIPPLE_STRUCT* ripples;
 SPLASH_SETUP splash_setup;
-long nSpark;
+int nSpark;
 SPARKS* spark;
-long wibble = 0;
-long SplashCount = 0;
-long KillEverythingFlag = 0;
-long SmokeCountL;
-long SmokeCountR;
-long SmokeWeapon;
-long SmokeWindX;
-long SmokeWindZ;
+int wibble = 0;
+int SplashCount = 0;
+int KillEverythingFlag = 0;
+int SmokeCountL;
+int SmokeCountR;
+int SmokeWeapon;
+int SmokeWindX;
+int SmokeWindZ;
 
 static SP_DYNAMIC spark_dynamics[8];
-static long DeadlyBounds[6];
-static long number_dynamics;
+static int DeadlyBounds[6];
+static int number_dynamics;
 
 void ControlSmokeEmitter(short item_number) {
 	ITEM_INFO* item;
 	SPARKS* sptr;
 	PHD_3DPOS pos;
-	long size, dx, dz, normal;
+	int size, dx, dz, normal;
 
 	item = GetItem(currentLevel, item_number);
 	normal = 0;
@@ -264,9 +264,9 @@ void ControlSmokeEmitter(short item_number) {
 	}
 }
 
-void TriggerExplosionSmokeEnd(long x, long y, long z, long uw) {
+void TriggerExplosionSmokeEnd(int x, int y, int z, int uw) {
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	dx = lara_item->pos.pos.x - x;
 	dz = lara_item->pos.pos.z - z;
@@ -344,9 +344,9 @@ void TriggerExplosionSmokeEnd(long x, long y, long z, long uw) {
 	sptr->Size = sptr->sSize;
 }
 
-void TriggerExplosionSmoke(long x, long y, long z, long uw) {
+void TriggerExplosionSmoke(int x, int y, int z, int uw) {
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	dx = lara_item->pos.pos.x - x;
 	dz = lara_item->pos.pos.z - z;
@@ -404,10 +404,10 @@ void TriggerExplosionSmoke(long x, long y, long z, long uw) {
 	GetRandomControl(); // cool
 }
 
-void TriggerFlareSparks(long x, long y, long z, long xvel, long yvel, long zvel, long smoke) {
+void TriggerFlareSparks(int x, int y, int z, int xvel, int yvel, int zvel, int smoke) {
 	SPARKS* sptr;
 	SPARKS* smokeSpark;
-	long dx, dz, rnd;
+	int dx, dz, rnd;
 
 	dx = lara_item->pos.pos.x - x;
 	dz = lara_item->pos.pos.z - z;
@@ -490,7 +490,7 @@ void TriggerFlareSparks(long x, long y, long z, long xvel, long yvel, long zvel,
 	}
 }
 
-void TriggerDynamic(long x, long y, long z, long falloff, long r, long g, long b) {
+void TriggerDynamic(int x, int y, int z, int falloff, int r, int g, int b) {
 	DYNAMIC* dl;
 
 	if(number_dynamics == MAX_DYNAMICS || !falloff) {
@@ -517,7 +517,7 @@ void TriggerDynamic(long x, long y, long z, long falloff, long r, long g, long b
 	number_dynamics++;
 }
 
-void TriggerDynamic_MIRROR(long x, long y, long z, long falloff, long r, long g, long b) {
+void TriggerDynamic_MIRROR(int x, int y, int z, int falloff, int r, int g, int b) {
 	DYNAMIC* dl;
 
 	for(int i = 0; i < 2; i++) {
@@ -555,9 +555,9 @@ void ClearDynamics() {
 	}
 }
 
-void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv) {
+void TriggerSethMissileFlame(short fx_number, int xv, int yv, int zv) {
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	dx = lara_item->pos.pos.x - GetEffect(currentLevel, fx_number)->pos.pos.x;
 	dz = lara_item->pos.pos.z - GetEffect(currentLevel, fx_number)->pos.pos.z;
@@ -615,8 +615,8 @@ void ControlEnemyMissile(short fx_number) {
 	FX_INFO* fx;
 	FLOOR_INFO* floor;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
-	long speed, ox, oy, oz, h, c;
+	int tiltxoff, tiltzoff, OnObject;
+	int speed, ox, oy, oz, h, c;
 	short room_number, max_speed, max_turn;
 	short angles[2];
 
@@ -809,7 +809,7 @@ RIPPLE_STRUCT* GetFreeRipple() {
 	return &ripples[idx];
 }
 
-void SetupRipple(long x, long y, long z, long size, long flags) {
+void SetupRipple(int x, int y, int z, int size, int flags) {
 	RIPPLE_STRUCT* ripple;
 
 	ripple = GetFreeRipple();
@@ -826,10 +826,10 @@ void SetupRipple(long x, long y, long z, long size, long flags) {
 
 
 
-void TriggerWaterfallMist(long x, long y, long z, long ang) {
+void TriggerWaterfallMist(int x, int y, int z, int ang) {
 	SPARKS* sptr;
-	long offsets[4];
-	long ang2, ps, pc, rad;
+	int offsets[4];
+	int ang2, ps, pc, rad;
 	short vs, vc;
 
 	offsets[0] = 576;
@@ -886,9 +886,9 @@ void TriggerWaterfallMist(long x, long y, long z, long ang) {
 	}
 }
 
-void TriggerDartSmoke(long x, long y, long z, long xv, long zv, long hit) {
+void TriggerDartSmoke(int x, int y, int z, int xv, int zv, int hit) {
 	SPARKS* sptr;
-	long dx, dz, rand;
+	int dx, dz, rand;
 
 	dx = lara_item->pos.pos.x - x;
 	dz = lara_item->pos.pos.z - z;
@@ -975,10 +975,10 @@ void KillEverything() {
 	KillEverythingFlag = 0;
 }
 
-void TriggerExplosionBubble(long x, long y, long z, short room_number) {
+void TriggerExplosionBubble(int x, int y, int z, short room_number) {
 	SPARKS* sptr;
 	PHD_3DPOS pos;
-	long dx, dz;
+	int dx, dz;
 	unsigned char size;
 
 	dx = lara_item->pos.pos.x - x;
@@ -1028,7 +1028,7 @@ void TriggerExplosionBubble(long x, long y, long z, short room_number) {
 
 void ControlColouredLights(short item_number) {
 	ITEM_INFO* item;
-	long objnum;
+	int objnum;
 	unsigned char colours[5][3] = {
 		{ 255, 0, 0 }, // RED_LIGHT
 		{ 0, 255, 0 }, // GREEN_LIGHT
@@ -1045,7 +1045,7 @@ void ControlColouredLights(short item_number) {
 	}
 }
 
-void DetatchSpark(long num, long type) {
+void DetatchSpark(int num, int type) {
 	SPARKS* sptr;
 	FX_INFO* fx;
 	ITEM_INFO* item;
@@ -1103,7 +1103,7 @@ void UpdateSparks() {
 	SPARKS* sptr;
 	SP_DYNAMIC* dynamic;
 	short bounds[6];
-	long fade, uw, rad, rnd, x, y, z, r, g, b, falloff;
+	int fade, uw, rad, rnd, x, y, z, r, g, b, falloff;
 
 	GetBoundsAccurate(lara_item, bounds);
 	DeadlyBounds[0] = lara_item->pos.pos.x + bounds[0];
@@ -1277,9 +1277,9 @@ void UpdateSparks() {
 	}
 }
 
-void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only) {
+void TriggerRicochetSpark(GAME_VECTOR* pos, int ang, int num, int smoke_only) {
 	SPARKS* sptr;
-	long rnd;
+	int rnd;
 
 	if(!smoke_only) {
 		for(int i = 0; i < num; i++) {
@@ -1400,10 +1400,10 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 	}
 }
 
-void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, long uw, short room_number) {
+void TriggerExplosionSparks(int x, int y, int z, int extras, int dynamic, int uw, short room_number) {
 	SPARKS* sptr;
 	SP_DYNAMIC* pDL;
-	long dx, dz, scalar, mirror, i;
+	int dx, dz, scalar, mirror, i;
 	unsigned char extras_table[4];
 	unsigned char r, g, b;
 
@@ -1560,9 +1560,9 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 	} while(mirror >= 0);
 }
 
-void TriggerFireFlame(long x, long y, long z, long body_part, long type) {
+void TriggerFireFlame(int x, int y, int z, int body_part, int type) {
 	SPARKS* sptr;
-	long dx, dz, size;
+	int dx, dz, size;
 
 	dx = lara_item->pos.pos.x - x;
 	dz = lara_item->pos.pos.z - z;
@@ -1712,9 +1712,9 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type) {
 	}
 }
 
-void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly) {
+void TriggerSuperJetFlame(ITEM_INFO* item, int yvel, int deadly) {
 	SPARKS* sptr;
-	long dx, dy, dz;
+	int dx, dy, dz;
 
 	dx = lara_item->pos.pos.x - item->pos.pos.x;
 	dz = lara_item->pos.pos.z - item->pos.pos.z;
@@ -1786,7 +1786,7 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly) {
 	}
 }
 
-void TriggerRocketSmoke(long x, long y, long z, long col) {
+void TriggerRocketSmoke(int x, int y, int z, int col) {
 	SPARKS* sptr;
 
 	sptr = GetFreeSpark();

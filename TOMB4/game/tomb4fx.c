@@ -68,25 +68,25 @@ NODEOFFSET_INFO NodeOffsets[16] = {
 	{ 0, 0, 0, 0, 0 }
 };
 
-long nLightnings;
+int nLightnings;
 LIGHTNING_STRUCT* Lightning;
-long nGunshells;
+int nGunshells;
 GUNSHELL_STRUCT* Gunshells;
-long nDrips;
+int nDrips;
 DRIP_STRUCT* Drips;
-long nSmokeSparks;
+int nSmokeSparks;
 SMOKE_SPARKS* smoke_spark;
-long nBubbles;
+int nBubbles;
 BUBBLE_STRUCT* Bubbles;
-long nShockWaves;
+int nShockWaves;
 SHOCKWAVE_STRUCT* ShockWaves;
-long nFireSparks;
+int nFireSparks;
 FIRE_SPARKS* fire_spark;
-long nBlood;
+int nBlood;
 BLOOD_STRUCT* blood;
-long nGunflashes;
+int nGunflashes;
 GUNFLASH_STRUCT* Gunflashes;
-long nFires;
+int nFires;
 FIRE_LIST* fires;
 short FlashFadeR = 0;
 short FlashFadeG = 0;
@@ -153,7 +153,7 @@ LIGHTNING_STRUCT* GetFreeLightning() {
 	return &Lightning[idx];
 }
 
-LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, long rgb, unsigned char flags, unsigned char size, unsigned char segments) {
+LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, int rgb, unsigned char flags, unsigned char size, unsigned char segments) {
 	LIGHTNING_STRUCT* lptr;
 	char* vptr;
 
@@ -195,7 +195,7 @@ LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation,
 	return 0;
 }
 
-long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
+int ExplodingDeath2(short item_number, int mesh_bits, short Flags) {
 	ITEM_INFO* item;
 	OBJECT_INFO* obj;
 	FX_INFO* fx;
@@ -203,7 +203,7 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 	short* rotation;
 	short* frame;
 	short* extra_rotation;
-	long bit, poppush;
+	int bit, poppush;
 	short fx_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -231,9 +231,9 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 
 			if(fx_number != NO_ITEM) {
 				fx = GetEffect(currentLevel, fx_number);
-				fx->pos.pos.x = item->pos.pos.x + (long)mMXPtr[M03];
-				fx->pos.pos.y = item->pos.pos.y + (long)mMXPtr[M13];
-				fx->pos.pos.z = item->pos.pos.z + (long)mMXPtr[M23];
+				fx->pos.pos.x = item->pos.pos.x + (int)mMXPtr[M03];
+				fx->pos.pos.y = item->pos.pos.y + (int)mMXPtr[M13];
+				fx->pos.pos.z = item->pos.pos.z + (int)mMXPtr[M23];
 				fx->room_number = item->room_number;
 				fx->pos.y_rot = (short)(GetRandomControl() << 1);
 				fx->pos.x_rot = 0;
@@ -302,9 +302,9 @@ long ExplodingDeath2(short item_number, long mesh_bits, short Flags) {
 
 			if(fx_number != NO_ITEM) {
 				fx = GetEffect(currentLevel, fx_number);
-				fx->pos.pos.x = item->pos.pos.x + (long)mMXPtr[M03];
-				fx->pos.pos.y = item->pos.pos.y + (long)mMXPtr[M13];
-				fx->pos.pos.z = item->pos.pos.z + (long)mMXPtr[M23];
+				fx->pos.pos.x = item->pos.pos.x + (int)mMXPtr[M03];
+				fx->pos.pos.y = item->pos.pos.y + (int)mMXPtr[M13];
+				fx->pos.pos.z = item->pos.pos.z + (int)mMXPtr[M23];
 				fx->room_number = item->room_number;
 				fx->pos.y_rot = (short)(GetRandomControl() << 1);
 				fx->pos.x_rot = 0;
@@ -362,7 +362,7 @@ void DrawGunshells() {
 	}
 }
 
-void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, long notLara, long weaponType, long shade) {
+void TriggerGunSmoke(int x, int y, int z, int xVel, int yVel, int zVel, int notLara, int weaponType, int shade) {
 	SMOKE_SPARKS* sptr;
 	unsigned char size;
 
@@ -459,8 +459,8 @@ void UpdateDrips() {
 	DRIP_STRUCT* drip;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long h;
+	int tiltxoff, tiltzoff, OnObject;
+	int h;
 
 	for(int i = 0; i < nDrips; i++) {
 		drip = &Drips[i];
@@ -649,7 +649,7 @@ void keep_those_fires_burning() {
 
 void UpdateFireSparks() {
 	FIRE_SPARKS* sptr;
-	long fade;
+	int fade;
 
 	keep_those_fires_burning();
 
@@ -754,7 +754,7 @@ FIRE_LIST* GetFreeFire() {
 	return &fires[idx];
 }
 
-void AddFire(long x, long y, long z, long size, short room_number, short fade) {
+void AddFire(int x, int y, int z, int size, short room_number, short fade) {
 	FIRE_LIST* fire;
 
 	fire = GetFreeFire();
@@ -828,7 +828,7 @@ void S_DrawFires() {
 
 void UpdateSmokeSparks() {
 	SMOKE_SPARKS* sptr;
-	long fade;
+	int fade;
 
 	for(int i = 0; i < nSmokeSparks; i++) {
 		sptr = &smoke_spark[i];
@@ -902,7 +902,7 @@ void UpdateSmokeSparks() {
 	}
 }
 
-void TriggerShatterSmoke(long x, long y, long z) {
+void TriggerShatterSmoke(int x, int y, int z) {
 	SMOKE_SPARKS* sptr;
 
 	sptr = GetFreeSmokeSpark();
@@ -997,7 +997,7 @@ GUNSHELL_STRUCT* GetFreeGunshell() {
 void TriggerGunShell(short leftright, short objnum, weapon_types weapon) {
 	GUNSHELL_STRUCT* shell;
 	PHD_VECTOR pos;
-	long shade;
+	int shade;
 
 	if(leftright) {
 		switch(weapon) {
@@ -1087,8 +1087,8 @@ void UpdateGunShells() {
 	GUNSHELL_STRUCT* shell;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long ox, oy, oz, c, h;
+	int tiltxoff, tiltzoff, OnObject;
+	int ox, oy, oz, c, h;
 	short oroom;
 
 	for(int i = 0; i < nGunshells; i++) {
@@ -1167,7 +1167,7 @@ void UpdateGunShells() {
 	}
 }
 
-void TriggerSmallSplash(long x, long y, long z, long num) {
+void TriggerSmallSplash(int x, int y, int z, int num) {
 	SPARKS* sptr;
 	short ang;
 
@@ -1317,7 +1317,7 @@ BLOOD_STRUCT* GetFreeBlood() {
 
 void UpdateBlood() {
 	BLOOD_STRUCT* bptr;
-	long fade;
+	int fade;
 
 	for(int i = 0; i < nBlood; i++) {
 		bptr = &blood[i];
@@ -1367,7 +1367,7 @@ void UpdateBlood() {
 }
 
 
-void TriggerUnderwaterBlood(long x, long y, long z, long size) {
+void TriggerUnderwaterBlood(int x, int y, int z, int size) {
 	BLOOD_STRUCT* bptr;
 	bptr = GetFreeBlood();
 	bptr->x = x;
@@ -1391,7 +1391,7 @@ void TriggerUnderwaterBlood(long x, long y, long z, long size) {
 	bptr->underwater = 1;
 }
 
-void TriggerBlood(long x, long y, long z, long angle, long num) {
+void TriggerBlood(int x, int y, int z, int angle, int num) {
 	BLOOD_STRUCT* bptr;
 	short ang, speed;
 	unsigned char size;
@@ -1462,7 +1462,7 @@ BUBBLE_STRUCT* GetFreeBubble() {
 	return &Bubbles[idx];
 }
 
-void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long biggest) {
+void CreateBubble(PHD_3DPOS* pos, short room_number, int size, int biggest) {
 	BUBBLE_STRUCT* bubble;
 
 	GetFloor(pos->pos.x, pos->pos.y, pos->pos.z, &room_number);
@@ -1486,8 +1486,8 @@ void UpdateBubbles() {
 	BUBBLE_STRUCT* bubble;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long h, c;
+	int tiltxoff, tiltzoff, OnObject;
+	int h, c;
 	short room_number;
 
 	for(int i = 0; i < nBubbles; i++) {
@@ -1617,7 +1617,7 @@ SHOCKWAVE_STRUCT* GetFreeShockwave() {
 	return &ShockWaves[idx];
 }
 
-void TriggerShockwave(PHD_VECTOR* pos, long InnerOuterRads, long speed, long bgrl, long XRotFlags) {
+void TriggerShockwave(PHD_VECTOR* pos, int InnerOuterRads, int speed, int bgrl, int XRotFlags) {
 	SHOCKWAVE_STRUCT* sw;
 
 	sw = GetFreeShockwave();
@@ -1636,9 +1636,9 @@ void TriggerShockwave(PHD_VECTOR* pos, long InnerOuterRads, long speed, long bgr
 	SoundEffect(SFX_DEMI_SIREN_SWAVE, pos, -1, SFX_DEFAULT);
 }
 
-void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long speed) {
+void TriggerShockwaveHitEffect(int x, int y, int z, int rgb, short dir, int speed) {
 	SPARKS* sptr;
-	long dx, dz, xvel, zvel;
+	int dx, dz, xvel, zvel;
 
 	dx = lara_item->pos.pos.x - x;
 	dz = lara_item->pos.pos.z - z;
@@ -1701,7 +1701,7 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 void UpdateShockwaves() {
 	SHOCKWAVE_STRUCT* sw;
 	short* bounds;
-	long dx, dz, dist;
+	int dx, dz, dist;
 	short dir;
 
 	for(int i = 0; i < nShockWaves; i++) {
@@ -1763,9 +1763,9 @@ void UpdateLightning() {
 	}
 }
 
-long LSpline(long x, long* knots, long nk) {
+int LSpline(int x, long* knots, int nk) {
 	long* k;
-	long c1, c2, c3, ret, span;
+	int c1, c2, c3, ret, span;
 
 	x *= nk - 3;
 	span = x >> 16;
@@ -1777,16 +1777,16 @@ long LSpline(long x, long* knots, long nk) {
 	x -= 65536 * span;
 	k = &knots[3 * (ptrdiff_t)span];
 	c1 = k[3] + (k[3] >> 1) - (k[6] >> 1) - k[6] + (k[9] >> 1) + ((-k[0] - 1) >> 1);
-	ret = (long long)c1 * x >> 16;
+	ret = (int long)c1 * x >> 16;
 	c2 = ret + 2 * k[6] - 2 * k[3] - (k[3] >> 1) - (k[9] >> 1) + k[0];
-	ret = (long long)c2 * x >> 16;
+	ret = (int long)c2 * x >> 16;
 	c3 = ret + (k[6] >> 1) + ((-k[0] - 1) >> 1);
-	ret = (long long)c3 * x >> 16;
+	ret = (int long)c3 * x >> 16;
 	return ret + k[3];
 }
 
 void CalcLightningSpline(PHD_VECTOR* pos, PHD_VECTOR* dest, LIGHTNING_STRUCT* lptr) {
-	long segments, x, y, z, xadd, yadd, zadd;
+	int segments, x, y, z, xadd, yadd, zadd;
 
 	dest->x = (short)pos->x;
 	dest->y = (short)pos->y;
@@ -1829,9 +1829,9 @@ void CalcLightningSpline(PHD_VECTOR* pos, PHD_VECTOR* dest, LIGHTNING_STRUCT* lp
 	dest->z = (short)pos[5].z;
 }
 
-void TriggerLightningGlow(long x, long y, long z, long rgb) {
+void TriggerLightningGlow(int x, int y, int z, int rgb) {
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	dx = lara_item->pos.pos.x - x;
 	dz = lara_item->pos.pos.z - z;
@@ -1869,9 +1869,9 @@ void TriggerLightningGlow(long x, long y, long z, long rgb) {
 	sptr->sSize = sptr->Size;
 }
 
-void TriggerFlashSmoke(long x, long y, long z, short room_number) {
+void TriggerFlashSmoke(int x, int y, int z, short room_number) {
 	SMOKE_SPARKS* sptr;
-	long uw;
+	int uw;
 
 	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
 		TriggerExplosionBubble(x, y, z, room_number);
@@ -1937,7 +1937,7 @@ void S_DrawSparks() {
 	long* Z;
 	long* offsets;
 	float perspz;
-	long x, y, z, smallest_size;
+	int x, y, z, smallest_size;
 
 	smallest_size = 0;
 
@@ -2032,9 +2032,9 @@ void S_DrawSparks() {
 		fPos.y = mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2] + mMXPtr[M13];
 		fPos.z = mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2] + mMXPtr[M23];
 		perspz = f_persp / fPos.z;
-		XY[0] = (long)(fPos.x * perspz + f_centerx);
-		XY[1] = (long)(fPos.y * perspz + f_centery);
-		Z[0] = (long)fPos.z;
+		XY[0] = (int)(fPos.x * perspz + f_centerx);
+		XY[1] = (int)(fPos.y * perspz + f_centery);
+		Z[0] = (int)fPos.z;
 
 		if(sptr->Flags & 8) {
 			if(sptr->Flags & 2) {
@@ -2048,9 +2048,9 @@ void S_DrawSparks() {
 			fPos.y = mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2] + mMXPtr[M13];
 			fPos.z = mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2] + mMXPtr[M23];
 			perspz = f_persp / fPos.z;
-			XY[2] = (long)(fPos.x * perspz + f_centerx);
-			XY[3] = (long)(fPos.y * perspz + f_centery);
-			Z[1] = (long)fPos.z;
+			XY[2] = (int)(fPos.x * perspz + f_centerx);
+			XY[3] = (int)(fPos.y * perspz + f_centery);
+			Z[1] = (int)fPos.z;
 		}
 
 		S_DrawDrawSparks(sptr, smallest_size, XY, Z);
@@ -2102,7 +2102,7 @@ void SetScreenFadeIn(short speed) {
 }
 
 void Fade() {
-	long oldfucker;
+	int oldfucker;
 
 	oldfucker = ScreenFade;
 

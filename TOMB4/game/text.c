@@ -17,11 +17,11 @@
 #include <d3dtypes.h>
 
 
-long stash_font_height;
-long smol_font_height;
-long small_font;
-long font_height;
-long GnFrameCounter;
+int stash_font_height;
+int smol_font_height;
+int small_font;
+int font_height;
+int GnFrameCounter;
 
 static CVECTOR FontShades[10][32];
 static unsigned char ScaleFlag;
@@ -204,7 +204,7 @@ static CHARDEF CharDef[106] = {
 void InitFont() {
 	_D3DTLVERTEX v;
 	static CHARDEF copy[106];
-	static long init = 1;
+	static int init = 1;
 	unsigned short r, g, b;
 	short h, w, yoff;
 	unsigned char fr, fg, fb, tr, tg, tb;
@@ -273,9 +273,9 @@ void InitFont() {
 		CharDef[i].YOffset = yoff;
 	}
 
-	font_height = (long)((float)(3.0F * phd_winymax / 40.0F));
+	font_height = (int)((float)(3.0F * phd_winymax / 40.0F));
 	stash_font_height = font_height;
-	smol_font_height = (long)((float)(7.0F * phd_winymax / 120.0F));
+	smol_font_height = (int)((float)(7.0F * phd_winymax / 120.0F));
 }
 
 void UpdatePulseColour() {
@@ -311,9 +311,9 @@ void UpdatePulseColour() {
 	}
 }
 
-long GetStringLength(const char* string, long* top, long* bottom) {
+int GetStringLength(const char* string, long* top, long* bottom) {
 	CHARDEF* def;
-	long s, accent, length, lowest, highest, y;
+	int s, accent, length, lowest, highest, y;
 
 	s = *string++;
 	length = 0;
@@ -327,7 +327,7 @@ long GetStringLength(const char* string, long* top, long* bottom) {
 		}
 
 		if(s == ' ') {
-			length += (long)(((float)(phd_winxmax + 1) / 640.0F) * 8.0F);
+			length += (int)(((float)(phd_winxmax + 1) / 640.0F) * 8.0F);
 		} else if(s == '\t') {
 			length += 40;
 
@@ -393,11 +393,11 @@ long GetStringLength(const char* string, long* top, long* bottom) {
 	return length;
 }
 
-void DrawChar(long x, long y, unsigned short col, CHARDEF* def) {
+void DrawChar(int x, int y, unsigned short col, CHARDEF* def) {
 	_D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
 	float u1, v1, u2, v2;
-	long x1, y1, x2, y2, top, bottom;
+	int x1, y1, x2, y2, top, bottom;
 
 	v = MyVertexBuffer;
 
@@ -405,13 +405,13 @@ void DrawChar(long x, long y, unsigned short col, CHARDEF* def) {
 	y2 = y + phd_winymin + def->h + def->YOffset;
 
 	if(small_font) {
-		y1 = (long)((float)y1 * 0.75F);
-		y2 = (long)((float)y2 * 0.75F);
+		y1 = (int)((float)y1 * 0.75F);
+		y2 = (int)((float)y2 * 0.75F);
 	}
 
 	x1 = x + phd_winxmin;
 	x2 = x1 + def->w;
-	setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, (long)f_mznear, clipflags);
+	setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, (int)f_mznear, clipflags);
 
 	top = *(long*)&FontShades[col][2 * def->TopShade];
 	bottom = *(long*)&FontShades[col][2 * def->BottomShade];
@@ -447,10 +447,10 @@ void DrawChar(long x, long y, unsigned short col, CHARDEF* def) {
 	AddQuadClippedSorted(v, 0, 1, 2, 3, &tex, 0);
 }
 
-void PrintString(long x, long y, unsigned char col, const char* string, unsigned short flags) {
+void PrintString(int x, int y, unsigned char col, const char* string, unsigned short flags) {
 	CHARDEF* def;
 	CHARDEF* accent;
-	long x2, bottom, l, top, bottom2;
+	int x2, bottom, l, top, bottom2;
 	unsigned char s;
 
 	if(flags & FF_BLINK && GnFrameCounter & 0x10) {
@@ -498,7 +498,7 @@ void PrintString(long x, long y, unsigned char col, const char* string, unsigned
 			if(ScaleFlag) {
 				x2 += 6;
 			} else {
-				x2 += (long)((float)(phd_winxmax + 1) / 640.0F * 8.0F);
+				x2 += (int)((float)(phd_winxmax + 1) / 640.0F * 8.0F);
 			}
 
 			s = *string++;

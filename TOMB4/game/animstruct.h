@@ -5,10 +5,10 @@ typedef struct ANIM_STRUCT {
 	short* frame_ptr;
 	short interpolation;
 	short current_anim_state;
-	long velocity;
-	long acceleration;
-	long Xvelocity;
-	long Xacceleration;
+	int velocity;
+	int acceleration;
+	int Xvelocity;
+	int Xacceleration;
 	short frame_base;
 	short frame_end;
 	short jump_anim_num;

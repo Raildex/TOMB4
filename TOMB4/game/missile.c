@@ -16,7 +16,7 @@
 #include "specific/function_stubs.h"
 #include <stdlib.h>
 
-long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num) {
+int ExplodeFX(FX_INFO* fx, int NoXZVel, short Num) {
 	short** meshpp;
 
 	meshpp = GetMeshPointer(currentLevel, fx->frame_number);
@@ -36,8 +36,8 @@ void ControlBodyPart(short fx_number) {
 	FLOOR_INFO* floor;
 	height_types height_type;
 	PHD_VECTOR dir;
-	long tiltxoff, tiltzoff, OnObject;
-	long height, ceiling, ox, oy, oz;
+	int tiltxoff, tiltzoff, OnObject;
+	int height, ceiling, ox, oy, oz;
 	short room_number;
 
 	fx = GetEffect(currentLevel, fx_number);

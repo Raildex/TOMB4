@@ -20,8 +20,8 @@
 
 
 typedef struct CreateMipMapFormat0Payload {
-	long width;
-	long height;
+	int width;
+	int height;
 	TEXTURE_FORMAT sourceFmt;
 	TEXTURE_FORMAT destinationFmt;
 	void* source;
@@ -89,7 +89,7 @@ HRESULT WINAPI CreateMipMapFormat0(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 	int w = desc->dwWidth;
 	int h = desc->dwHeight;
 	void* dest = (char*)desc->lpSurface;
-	long skip;
+	int skip;
 	switch(data->sourceFmt) {
 	case b8g8r8a8:
 		skip = 4;
@@ -98,9 +98,9 @@ HRESULT WINAPI CreateMipMapFormat0(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 		skip = 2;
 		break;
 	}
-	for(unsigned long y = 0; y < desc->dwHeight; y++) {
-		for(unsigned long x = 0; x < desc->dwWidth; x++) {
-			long offset = (x * data->width / w + y * (data->width * data->height) / h) * skip;
+	for(unsigned int y = 0; y < desc->dwHeight; y++) {
+		for(unsigned int x = 0; x < desc->dwWidth; x++) {
+			int offset = (x * data->width / w + y * (data->width * data->height) / h) * skip;
 			ConvertFormat(&dest, ((char*)data->source + offset), data->destinationFmt, data->sourceFmt);
 		}
 	}
@@ -109,7 +109,7 @@ HRESULT WINAPI CreateMipMapFormat0(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 	return DDENUMRET_OK;
 }
 
-char CreateTexturePage(long w, long h, TEXTURE_FORMAT tfmt, TEXTURE_FORMAT sfmt, long MipMapCount, void* pSrc, rgbfunc RGBM, HAL_TEXTURE* dst) {
+char CreateTexturePage(int w, int h, TEXTURE_FORMAT tfmt, TEXTURE_FORMAT sfmt, int MipMapCount, void* pSrc, rgbfunc RGBM, HAL_TEXTURE* dst) {
 	IDirectDrawSurface4* tSurf;
 	DDSURFACEDESC2 desc = { 0 };
 	long* lS;
@@ -156,6 +156,6 @@ void FreeTextures() {
 }
 
 
-long CalcMipMapCount(long w, long h) {
-	return (long)floor(log2(max(w, h)));
+int CalcMipMapCount(int w, int h) {
+	return (int)floor(log2(max(w, h)));
 }

@@ -46,7 +46,7 @@ static HMODULE hBinkW32;
 
 static BINK_STRUCT* Bink;
 static IDirectDrawSurface4* BinkSurface;
-static long BinkSurfaceType;
+static int BinkSurfaceType;
 
 #define GET_DLL_PROC(dll, proc, n)                            \
 	{                                                         \
@@ -55,7 +55,7 @@ static long BinkSurfaceType;
 			RaiseException(1, 2, 1, (const ULONG_PTR*)#proc); \
 	}
 
-long LoadBinkStuff() {
+int LoadBinkStuff() {
 	hBinkW32 = LoadLibrary("binkw32.dll");
 
 	if(!hBinkW32) {
@@ -101,11 +101,11 @@ void ShowBinkFrame() {
 	}
 }
 
-long PlayFmvNow(long num) {
+int PlayFmvNow(int num) {
 	return 0;
 	DXDISPLAYMODE* modes;
 	DXDISPLAYMODE* current;
-	long dm, rm, ndms;
+	int dm, rm, ndms;
 	char name[80];
 	char path[80];
 

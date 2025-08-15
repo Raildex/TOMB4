@@ -51,7 +51,7 @@ void TroopControl(short item_number) {
 	CREATURE_INFO* baddie;
 	PHD_VECTOR pos;
 	AI_INFO info;
-	long dist, max_dist, dx, dz, iDistance;
+	int dist, max_dist, dx, dz, iDistance;
 	short angle, tilt, torso_x, torso_y, head, iAngle;
 
 	if(!CreatureActive(item_number)) {

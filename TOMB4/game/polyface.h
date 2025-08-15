@@ -13,8 +13,8 @@ typedef struct POLYFACE4 {
 	unsigned short effects;
 } POLYFACE4;
 
-void SetShineStrength(unsigned short* Effect, long shine);
-void SetAdditiveBlending(unsigned short* Effect, long enabled);
+void SetShineStrength(unsigned short* Effect, int shine);
+void SetAdditiveBlending(unsigned short* Effect, int enabled);
 unsigned short GetShineStrength(unsigned short Effect);
 unsigned short GetAdditiveBlending(unsigned short Effect);
 #endif// TOMB4_GAME_POLY_H

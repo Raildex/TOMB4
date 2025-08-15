@@ -2,48 +2,48 @@
 #define TOMB4_GAME_NEWINV_H
 #include "game/invobj.h"
 typedef struct INVDRAWITEM INVDRAWITEM;
-long LoadGame();
-long SaveGame();
+int LoadGame();
+int SaveGame();
 void init_new_inventry();
 void do_debounced_joystick_poo();
-void DrawThreeDeeObject2D(long x, long y, long num, long shade, long xrot, long yrot, long zrot, long bright, long overlay);
-long go_and_load_game();
-long go_and_save_game();
+void DrawThreeDeeObject2D(int x, int y, int num, int shade, int xrot, int yrot, int zrot, int bright, int overlay);
+int go_and_load_game();
+int go_and_save_game();
 void insert_object_into_list_v2(short num);
 void construct_combine_object_list();
 void insert_object_into_list(short num);
 void construct_object_list();
-void handle_object_changeover(long ringnum);
+void handle_object_changeover(int ringnum);
 void fade_ammo_selector();
 void spinback(unsigned short* cock);
 void update_laras_weapons_status();
-long have_i_got_item(short obj);
+int have_i_got_item(short obj);
 
-long do_special_waterskin_combine_bullshit(long flag);
+int do_special_waterskin_combine_bullshit(int flag);
 void setup_objectlist_startposition(short newobj);
 void setup_objectlist_startposition2(short newobj);
-long have_i_got_object(short object_number);
+int have_i_got_object(short object_number);
 void remove_inventory_item(short object_number);
-long convert_obj_to_invobj(short obj);
+int convert_obj_to_invobj(short obj);
 void draw_compass();
 void do_examine_mode();
 void dels_give_lara_items_cheat();
 void use_current_item();
 void DEL_picked_up_object(short objnum);
-long is_item_currently_combinable(short obj);
-long do_these_objects_combine(long obj1, long obj2);
+int is_item_currently_combinable(short obj);
+int do_these_objects_combine(int obj1, int obj2);
 void combine_these_two_objects(short obj1, short obj2);
 void seperate_object(short obj);
 void draw_ammo_selector();
 void handle_inventry_menu();
-void draw_current_object_list(long ringnum);
-long S_CallInventory2();
+void draw_current_object_list(int ringnum);
+int S_CallInventory2();
 
 extern INVOBJ inventry_objects_list[];
-extern long GLOBAL_enterinventory;
-extern long GLOBAL_inventoryitemchosen;
-extern long GLOBAL_lastinvitem;
-extern long InventoryActive;
+extern int GLOBAL_enterinventory;
+extern int GLOBAL_inventoryitemchosen;
+extern int GLOBAL_lastinvitem;
+extern int InventoryActive;
 
 enum ring_types {
 	RING_INVENTORY,

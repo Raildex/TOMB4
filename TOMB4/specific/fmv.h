@@ -2,10 +2,10 @@
 #define TOMB4_SPECIFIC_FMV_H
 
 
-long LoadBinkStuff();
+int LoadBinkStuff();
 void FreeBinkStuff();
 void ShowBinkFrame();
-long PlayFmvNow(long num);
+int PlayFmvNow(int num);
 
 
 #endif// TOMB4_SPECIFIC_FMV_H

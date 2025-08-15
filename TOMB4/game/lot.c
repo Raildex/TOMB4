@@ -22,9 +22,9 @@
 
 CREATURE_INFO* baddie_slots;
 
-static long slots_used = 0;
+static int slots_used = 0;
 
-void InitialiseLOTarray(long allocmem) {
+void InitialiseLOTarray(int allocmem) {
 	CREATURE_INFO* creature;
 
 	if(allocmem) {
@@ -117,7 +117,7 @@ void CreateZone(ITEM_INFO* item) {
 	}
 }
 
-void InitialiseSlot(short item_number, long slot) {
+void InitialiseSlot(short item_number, int slot) {
 	ITEM_INFO* item;
 	CREATURE_INFO* creature;
 
@@ -222,10 +222,10 @@ void InitialiseSlot(short item_number, long slot) {
 	slots_used++;
 }
 
-long EnableBaddieAI(short item_number, long Always) {
+int EnableBaddieAI(short item_number, int Always) {
 	ITEM_INFO* item;
 	CREATURE_INFO* creature;
-	long x, y, z, slot, worstslot, dist, worstdist;
+	int x, y, z, slot, worstslot, dist, worstdist;
 
 	item = GetItem(currentLevel, item_number);
 

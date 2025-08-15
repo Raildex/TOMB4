@@ -58,9 +58,9 @@ void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type) {
 	}
 }
 
-void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv) {
+void TriggerSethSparks(int x, int y, int z, short xv, short yv, short zv) {
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	dx = lara_item->pos.pos.x - x;
 	dz = lara_item->pos.pos.x - z;
@@ -100,7 +100,7 @@ void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv) {
 
 void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size) {
 	SPARKS* sptr;
-	long dx, dz;
+	int dx, dz;
 
 	dx = lara_item->pos.pos.x - GetItem(currentLevel, item_number)->pos.pos.x;
 	dz = lara_item->pos.pos.z - GetItem(currentLevel, item_number)->pos.pos.z;
@@ -355,9 +355,9 @@ void SethControl(short item_number) {
 	CREATURE_INFO* seth;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	AI_INFO info;
-	long x, y, z, Xoffset, Zoffset, c, h, nearheight, midheight, farheight, can_jump;
+	int x, y, z, Xoffset, Zoffset, c, h, nearheight, midheight, farheight, can_jump;
 	short angle, room_number, hp;
 
 	if(!CreatureActive(item_number)) {

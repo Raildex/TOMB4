@@ -1755,7 +1755,7 @@ void BuildOutsideTable(LEVEL_INFO* lvl) {
 	unsigned char* pTable;
 	unsigned char* oTable;
 	unsigned char* cTable;
-	long max_slots, roomx, roomy, cont, offset, z, z2;
+	int max_slots, roomx, roomy, cont, offset, z, z2;
 	char flipped[256];
 
 	max_slots = 0;

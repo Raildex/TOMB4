@@ -2,12 +2,12 @@
 #define TOMB4_SPECIFIC_DRAWBARS_H
 
 
-void S_DrawHealthBar(long pos);
-void S_DrawAirBar(long pos);
-void S_DrawDashBar(long pos);
-void S_DrawEnemyBar(long pos);
-void S_DoSlider(long x, long y, long width, long height, long pos, long c1, long c2, long c3);
-void S_InitLoadBar(long maxpos);
+void S_DrawHealthBar(int pos);
+void S_DrawAirBar(int pos);
+void S_DrawDashBar(int pos);
+void S_DrawEnemyBar(int pos);
+void S_DoSlider(int x, int y, int width, int height, int pos, int c1, int c2, int c3);
+void S_InitLoadBar(int maxpos);
 void S_LoadBar();
 
 

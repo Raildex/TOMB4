@@ -74,7 +74,7 @@ void CreateSkinningData() {
 	long* bone;
 	short* joint;
 	short* LaraMesh;
-	long vertCount, aboveVerts, belowVerts, jointVerts, laraVerts, laraX, laraY, laraZ, jointX, jointY, jointZ, calcPointsCounter;
+	int vertCount, aboveVerts, belowVerts, jointVerts, laraVerts, laraX, laraY, laraZ, jointX, jointY, jointZ, calcPointsCounter;
 	short aboveMeshNum, belowMeshNum, jointMeshNum;
 	unsigned char vertBuf[128];
 
@@ -328,7 +328,7 @@ void OptomiseSkinningData() {
 	short *JointMesh, *MeshJ, *MeshNormals, *Src, *Dest;
 	short VertTable[128];
 	short NormalTable[128];
-	long c, lp, lp1, numvertsj, numvertstocalc, padval, numtris, numquads;
+	int c, lp, lp1, numvertsj, numvertstocalc, padval, numtris, numquads;
 	unsigned char RemapTable[32];
 
 

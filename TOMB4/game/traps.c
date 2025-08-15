@@ -77,8 +77,8 @@ char LibraryTab[8];
 
 void FlameEmitterControl(short item_number) {
 	ITEM_INFO* item;
-	unsigned long distance;
-	long x, z;
+	unsigned int distance;
+	int x, z;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -194,8 +194,8 @@ void FlameEmitterControl(short item_number) {
 	}
 }
 
-static long OnTwoBlockPlatform(ITEM_INFO* item, long x, long z) {
-	long tx, tz;
+static int OnTwoBlockPlatform(ITEM_INFO* item, int x, int z) {
+	int tx, tz;
 
 	if(!item->mesh_bits) {
 		return 0;
@@ -229,7 +229,7 @@ static long OnTwoBlockPlatform(ITEM_INFO* item, long x, long z) {
 }
 
 void TwoBlockPlatformFloor(
-	ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
+	ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
 	if(OnTwoBlockPlatform(item, x, z)) {
 		if(y <= item->pos.pos.y + 32 && item->pos.pos.y < *height) {
 			*height = item->pos.pos.y;
@@ -240,7 +240,7 @@ void TwoBlockPlatformFloor(
 }
 
 void TwoBlockPlatformCeiling(
-	ITEM_INFO* item, long x, long y, long z, long* height) {
+	ITEM_INFO* item, int x, int y, int z, long* height) {
 	if(OnTwoBlockPlatform(item, x, z)) {
 		if(y > item->pos.pos.y + 32 && item->pos.pos.y > *height) {
 			*height = item->pos.pos.y + 256;
@@ -251,8 +251,8 @@ void TwoBlockPlatformCeiling(
 void ControlTwoBlockPlatform(short item_number) {
 	ITEM_INFO* item;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long height;
+	int tiltxoff, tiltzoff, OnObject;
+	int height;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -263,7 +263,7 @@ void ControlTwoBlockPlatform(short item_number) {
 
 	if(item->trigger_flags) {
 		if(item->pos.pos.y > item->item_flags[0]
-			   - ((long)(item->trigger_flags & 0xFFFFFFF0) << 4)) {
+			   - ((int)(item->trigger_flags & 0xFFFFFFF0) << 4)) {
 			item->pos.pos.y -= item->trigger_flags & 0xF;
 		}
 
@@ -312,7 +312,7 @@ void ControlJobySpike(short item_number) {
 	ITEM_INFO* item;
 	PHD_VECTOR dir;
 	short* frm[2];
-	long rate, y, h;
+	int rate, y, h;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -359,7 +359,7 @@ void DrawScaledSpike(ITEM_INFO* item) {
 	ROOM_INFO* r;
 	short** meshpp;
 	short* frm[2];
-	long rate, clip, lp;
+	int rate, clip, lp;
 
 	if(item->object_number != TEETH_SPIKES || item->item_flags[1]) {
 		if((item->object_number == RAISING_BLOCK1
@@ -429,7 +429,7 @@ void DrawScaledSpike(ITEM_INFO* item) {
 
 void ControlSlicerDicer(short item_number) {
 	ITEM_INFO* item;
-	long distance;
+	int distance;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -458,7 +458,7 @@ void ControlSprinkler(short item_number) {
 	DRIP_STRUCT* drip;
 	SPARKS* sptr;
 	SMOKE_SPARKS* smokeptr;
-	long vel, size;
+	int vel, size;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -566,7 +566,7 @@ void ControlMineHelicopter(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* sentry;
 	SPHERE* sphere;
-	long nSpheres;
+	int nSpheres;
 	short sentries, fade;
 
 	item = GetItem(currentLevel, item_number);
@@ -968,7 +968,7 @@ void ControlSpikeball(short item_number) {
 void ControlHammer(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
-	long hammered; // hammer touched a pushable (Senet lose path)
+	int hammered; // hammer touched a pushable (Senet lose path)
 	short frame, target_item;
 
 	item = GetItem(currentLevel, item_number);
@@ -1141,7 +1141,7 @@ void ControlBurningFloor(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* torch;
 	SPHERE* sphere;
-	long nSpheres, dx, dy, dz;
+	int nSpheres, dx, dy, dz;
 	short torch_num, xoff, zoff, size;
 
 	item = GetItem(currentLevel, item_number);
@@ -1336,10 +1336,10 @@ void ControlRaisingBlock(short item_number) {
 void ControlScaledSpike(short item_number) {
 	ITEM_INFO* item;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	short* bounds;
 	short* larabounds;
-	long dx, dy, dz, num;
+	int dx, dy, dz, num;
 	short room_number, yt, yb, iyb1, iyb2, hit;
 
 	item = GetItem(currentLevel, item_number);
@@ -1474,7 +1474,7 @@ void FlameEmitter3Control(short item_number) {
 	ITEM_INFO *item, *item2;
 	PHD_3DPOS pos;
 	PHD_VECTOR s, d;
-	long x, z, distance, r, g, b;
+	int x, z, distance, r, g, b;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -1597,7 +1597,7 @@ void FlameEmitter3Control(short item_number) {
 
 void FlameControl(short fx_number) {
 	FX_INFO* fx;
-	long r, g, b, wh;
+	int r, g, b, wh;
 
 	if(lara.water_status == LW_FLYCHEAT) {
 		KillEffect(fx_number);
@@ -1656,8 +1656,8 @@ void FlameEmitter2Control(short item_number) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long r, g;
+	int tiltxoff, tiltzoff, OnObject;
+	int r, g;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -1751,7 +1751,7 @@ void LavaBurn(ITEM_INFO* item) {
 	FLOOR_INFO* floor;
 	short room_number;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 
 	if(item->hit_points >= 0 && lara.water_status != LW_FLYCHEAT) {
 		room_number = item->room_number;
@@ -1766,9 +1766,9 @@ void LavaBurn(ITEM_INFO* item) {
 	}
 }
 
-long TestBoundsCollideTeethSpikes(ITEM_INFO* item) {
+int TestBoundsCollideTeethSpikes(ITEM_INFO* item) {
 	short* bounds;
-	long x, y, z, rad, xMin, xMax, zMin, zMax;
+	int x, y, z, rad, xMin, xMax, zMin, zMax;
 
 	if(item->trigger_flags & 8) {
 		x = item->pos.pos.x & ~0x3FF | 0x200;
@@ -1805,10 +1805,10 @@ long TestBoundsCollideTeethSpikes(ITEM_INFO* item) {
 void ControlRollingBall(short item_number) {
 	ITEM_INFO* item;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	unsigned short tyrot, destyrot;
 	short room_number, velnotadjusted;
-	long h, fx, fz, fh, fhf, bz, bh, bhf, rx, rh, rhf, lx, lh, lhf;
+	int h, fx, fz, fh, fhf, bz, bh, bhf, rx, rh, rhf, lx, lh, lhf;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -2067,8 +2067,8 @@ void DartsControl(short item_number) {
 	FLOOR_INFO* floor;
 	PHD_VECTOR dir;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long x, z, speed;
+	int tiltxoff, tiltzoff, OnObject;
+	int x, z, speed;
 	short room_num;
 
 	item = GetItem(currentLevel, item_number);
@@ -2117,7 +2117,7 @@ void DartsControl(short item_number) {
 void DartEmitterControl(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* dart;
-	long x, z, xLimit, zLimit, xv, zv, rand;
+	int x, z, xLimit, zLimit, xv, zv, rand;
 	short num;
 
 	item = GetItem(currentLevel, item_number);
@@ -2194,7 +2194,7 @@ void DartEmitterControl(short item_number) {
 void FallingCeiling(short item_number) {
 	ITEM_INFO* item;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	short room_number;
 
 	item = GetItem(currentLevel, item_number);
@@ -2273,8 +2273,8 @@ void ControlFallingBlock2(short item_number) {
 }
 
 void FallingBlockCeiling(
-	ITEM_INFO* item, long x, long y, long z, long* height) {
-	long tx, tz;
+	ITEM_INFO* item, int x, int y, int z, long* height) {
+	int tx, tz;
 
 	tx = x ^ item->pos.pos.x;
 	tz = z ^ item->pos.pos.z;
@@ -2288,8 +2288,8 @@ void FallingBlockCeiling(
 	}
 }
 
-void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
-	long tx, tz;
+void FallingBlockFloor(ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
+	int tx, tz;
 
 	tx = x ^ item->pos.pos.x;
 	tz = z ^ item->pos.pos.z;
@@ -2323,7 +2323,7 @@ void FallingBlock(short item_number) {
 
 void FallingBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
-	long x, z, tx, tz;
+	int x, z, tx, tz;
 
 	item = GetItem(currentLevel, item_number);
 	x = l->pos.pos.x;
@@ -2380,7 +2380,7 @@ void CeilingTrapDoorCollision(
 
 void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	ITEM_INFO* item;
-	long y;
+	int y;
 
 	item = GetItem(currentLevel, item_number);
 
@@ -2523,7 +2523,7 @@ void ControlObelisk(short item_number) {
 	ITEM_INFO* disc;
 	PHD_VECTOR s;
 	PHD_VECTOR d;
-	long stop, rad;
+	int stop, rad;
 	short r, g, b;
 
 	item = GetItem(currentLevel, item_number);

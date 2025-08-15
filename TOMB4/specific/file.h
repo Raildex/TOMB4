@@ -10,13 +10,13 @@ typedef struct CHANGE_STRUCT CHANGE_STRUCT;
 typedef struct RANGE_STRUCT RANGE_STRUCT;
 typedef struct AIOBJECT AIOBJECT;
 typedef struct LEVEL_INFO LEVEL_INFO;
-long S_LoadLevelFile(long num);
+int S_LoadLevelFile(int num);
 void FreeLevel();
-long FindCDDrive();
+int FindCDDrive();
 FILE* FileOpen(const char* name);
 void FileClose(FILE* file);
-long FileSize(FILE* file);
-long LoadFile(const char* name, char** dest);
+int FileSize(FILE* file);
+int LoadFile(const char* name, char** dest);
 char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl);
 char LoadRooms(char** data,LEVEL_INFO* lvl);
 char LoadObjects(char** data,LEVEL_INFO* lvl);
@@ -31,7 +31,7 @@ char LoadCinematic(char** data, LEVEL_INFO* lvl);
 char LoadAIInfo(char** data, LEVEL_INFO* lvl);
 char LoadSamples(FILE* file, char** data, LEVEL_INFO* lvl);
 void S_GetUVRotateTextures(LEVEL_INFO* lvl);
-char S_Decompress(char* pDest, char* pCompressed, long compressedSize, long size);
+char S_Decompress(char* pDest, char* pCompressed, int compressedSize, int size);
 
 extern THREAD* LevelLoadingThread;
 

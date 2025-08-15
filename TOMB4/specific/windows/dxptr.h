@@ -21,18 +21,18 @@ typedef struct DXPTR {
 	IDirect3DViewport3* lpViewport;
 	IDirectSound8* lpDS;
 	IXAudio2* lpXA;
-	unsigned long dwRenderWidth;
-	unsigned long dwRenderHeight;
+	unsigned int dwRenderWidth;
+	unsigned int dwRenderHeight;
 	RECT rViewport;
 	RECT rScreen;
-	long Flags;
-	unsigned long WindowStyle;
-	long CoopLevel;
+	int Flags;
+	unsigned int WindowStyle;
+	int CoopLevel;
 	IDirectInput2A* lpDirectInput;
 	IDirectInputDevice2A* Keyboard;
 	HWND hWnd;
-	volatile long InScene;
-	volatile long WaitAtBeginScene;
-	volatile long DoneBlit;
+	volatile int InScene;
+	volatile int WaitAtBeginScene;
+	volatile int DoneBlit;
 } DXPTR;
 #endif // TOMB4_GAME_DXPTR_H

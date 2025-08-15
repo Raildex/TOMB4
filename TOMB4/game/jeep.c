@@ -82,12 +82,12 @@ void InitialiseJeep(short item_number) {
 	item->mesh_bits = 0x1BFFF;
 }
 
-static long GetOnJeep(short item_number, COLL_INFO* coll) {
+static int GetOnJeep(short item_number, COLL_INFO* coll) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long h;
+	int tiltxoff, tiltzoff, OnObject;
+	int h;
 	short room_number, ang;
 
 	item = GetItem(currentLevel, item_number);
@@ -149,7 +149,7 @@ void DrawJeepExtras(ITEM_INFO* item) {
 	DrawJeepSpeedo(phd_winwidth - 64, phd_winheight - 16, jeep->velocity, 0x6000, 0x8000, 32, jeep->gear);
 }
 
-static void TriggerExhaustSmoke(long x, long y, long z, short angle, long velocity, long thing) {
+static void TriggerExhaustSmoke(int x, int y, int z, short angle, int velocity, int thing) {
 	SPARKS* sptr;
 
 	sptr = GetFreeSpark();
@@ -226,7 +226,7 @@ void JeepExplode(ITEM_INFO* item) {
 	lara.vehicle = NO_ITEM;
 }
 
-static long JeepCheckGetOut() {
+static int JeepCheckGetOut() {
 	if(lara_item->current_anim_state == 10 && lara_item->frame_number == GetAnim(currentLevel, lara_item->anim_number)->frame_end) {
 		lara_item->pos.y_rot += 0x4000;
 		lara_item->anim_number = ANIM_STOP;
@@ -247,8 +247,8 @@ static long JeepCheckGetOut() {
 	return 1;
 }
 
-static long DoDynamics(long height, long fallspeed, long* ypos, long zero) {
-	long bounce;
+static int DoDynamics(int height, int fallspeed, long* ypos, int zero) {
+	int bounce;
 
 	if(height <= *ypos) {
 		if(zero) {
@@ -289,12 +289,12 @@ static long DoDynamics(long height, long fallspeed, long* ypos, long zero) {
 	return fallspeed;
 }
 
-static long CanGetOff(short num) {
+static int CanGetOff(short num) {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long x, y, z, h, c;
+	int tiltxoff, tiltzoff, OnObject;
+	int x, y, z, h, c;
 	short yrot, room_number;
 
 	item = GetItem(currentLevel, lara.vehicle);
@@ -389,8 +389,8 @@ void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll) {
 	}
 }
 
-long GetCollisionAnim(ITEM_INFO* item, PHD_VECTOR* pos, BIKEINFO* vehicle) {
-	long sin, cos, fb, lr;
+int GetCollisionAnim(ITEM_INFO* item, PHD_VECTOR* pos, BIKEINFO* vehicle) {
+	int sin, cos, fb, lr;
 	pos->x = item->pos.pos.x - pos->x;
 	pos->z = item->pos.pos.z - pos->z;
 
@@ -418,11 +418,11 @@ long GetCollisionAnim(ITEM_INFO* item, PHD_VECTOR* pos, BIKEINFO* vehicle) {
 	}
 }
 
-long DoShift(ITEM_INFO* item, PHD_VECTOR* newPos, PHD_VECTOR* oldPos) {
+int DoShift(ITEM_INFO* item, PHD_VECTOR* newPos, PHD_VECTOR* oldPos) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long x, z, nX, nZ, oX, oZ, sX, sZ, h;
+	int tiltxoff, tiltzoff, OnObject;
+	int x, z, nX, nZ, oX, oZ, sX, sZ, h;
 	short room_number;
 
 	nX = newPos->x >> 10;
@@ -513,7 +513,7 @@ long DoShift(ITEM_INFO* item, PHD_VECTOR* newPos, PHD_VECTOR* oldPos) {
 	return 0;
 }
 
-static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
+static void AnimateJeep(ITEM_INFO* item, int hitWall, int killed) {
 	JEEPINFO* jeep;
 	short state;
 
@@ -868,10 +868,10 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed) {
 	}
 }
 
-static long UserControl(ITEM_INFO* item, long height, long* pitch) {
+static int UserControl(ITEM_INFO* item, int height, long* pitch) {
 	JEEPINFO* jeep;
 	PHD_VECTOR pos;
-	long turn, maxTurn, vel;
+	int turn, maxTurn, vel;
 
 	if(lara_item->current_anim_state == 10 || lara_item->goal_anim_state == 10) {
 	}
@@ -1013,7 +1013,7 @@ void JeepBaddieCollision(ITEM_INFO* item) {
 	ITEM_INFO* collided;
 	OBJECT_INFO* obj;
 	short* doors;
-	long j, dx, dy, dz;
+	int j, dx, dy, dz;
 	short room_count, item_number;
 
 	jeep = (JEEPINFO*)item->data;
@@ -1073,15 +1073,15 @@ void JeepBaddieCollision(ITEM_INFO* item) {
 	}
 }
 
-void JeepCollideStaticObjects(long x, long y, long z, short room_number, long height) {
+void JeepCollideStaticObjects(int x, int y, int z, short room_number, int height) {
 	MESH_INFO* mesh;
 	STATIC_INFO* sinfo;
 	ROOM_INFO* r;
 	PHD_VECTOR pos;
 	short* doors;
-	long j;
-	static long JeepBounds[6] = { 0, 0, 0, 0, 0, 0 };
-	static long CollidedStaticBounds[6] = { 0, 0, 0, 0, 0, 0 };
+	int j;
+	static int JeepBounds[6] = { 0, 0, 0, 0, 0, 0 };
+	static int CollidedStaticBounds[6] = { 0, 0, 0, 0, 0, 0 };
 	short room_count, rn;
 
 	pos.x = x;
@@ -1159,15 +1159,15 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 	}
 }
 
-long JeepDynamics(ITEM_INFO* item) {
+int JeepDynamics(ITEM_INFO* item) {
 	JEEPINFO* jeep;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos, newPos;
 	PHD_VECTOR flPos, frPos, blPos, brPos, fmPos, flPos2, frPos2, blPos2, brPos2, fmPos2;
-	long front_left, front_right, back_left, back_right, front_mid, front_left2, front_right2, back_left2, back_right2, front_mid2;
-	long h, speed, shift, shift2, anim, dx, dz;
+	int front_left, front_right, back_left, back_right, front_mid, front_left2, front_right2, back_left2, back_right2, front_mid2;
+	int h, speed, shift, shift2, anim, dx, dz;
 	short ang, ang2, vel, room_number;
 
 	dont_exit_jeep = 0;
@@ -1416,11 +1416,11 @@ void JeepControl(short item_number) {
 	JEEPINFO* jeep;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR flPos, frPos, fmPos;
 	PHD_VECTOR pos;
-	long front_left, front_right, front_mid;
-	long hitWall, h, driving, killed, pitch, oldY, hdiff, smokeVel;
+	int front_left, front_right, front_mid;
+	int hitWall, h, driving, killed, pitch, oldY, hdiff, smokeVel;
 	short room_number, wheelRot, xRot, zRot;
 	static unsigned char ExhaustSmokeVel;
 
@@ -1650,11 +1650,11 @@ void EnemyJeepControl(short item_number) {
 	CREATURE_INFO* jeep;
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	AIOBJECT* aiobj;
 	AI_INFO info;
 	PHD_VECTOR pos;
-	long Xoffset, Zoffset, x, y, z, h1, h2, _h1, _h2, iAngle, iDist;
+	int Xoffset, Zoffset, x, y, z, h1, h2, _h1, _h2, iAngle, iDist;
 	short room_number, xrot, zrot;
 
 	if(!CreatureActive(item_number)) {

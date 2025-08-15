@@ -2,9 +2,9 @@
 #define TOMB4_GAME_LIGHTINFO_H
 #pragma pack(push, 1)
 typedef struct LIGHTINFO {
-	long x;
-	long y;
-	long z;
+	int x;
+	int y;
+	int z;
 	unsigned char r;
 	unsigned char g;
 	unsigned char b;

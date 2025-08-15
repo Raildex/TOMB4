@@ -1,6 +1,6 @@
 #include "game/polyface.h"
 
-void SetShineStrength(unsigned short* Effect, long shine) {
+void SetShineStrength(unsigned short* Effect, int shine) {
 	if(shine > 0) {
 		shine = shine & 0x1F;
 		*Effect |= 1 << 1;
@@ -10,7 +10,7 @@ void SetShineStrength(unsigned short* Effect, long shine) {
 		*Effect &= ~(0x1F << 7);
 	}
 }
-void SetAdditiveBlending(unsigned short* Effect, long enabled) {
+void SetAdditiveBlending(unsigned short* Effect, int enabled) {
 	if(enabled) {
 		*Effect |= 0x1;
 	}else {

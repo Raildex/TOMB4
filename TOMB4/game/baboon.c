@@ -113,12 +113,12 @@ void ReTriggerBaboon(short item_number) {
 
 void BaboonControl(short item_number) {
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 	CREATURE_INFO* baboon;
 	AI_INFO info;
-	long distance, dx, dz;
+	int distance, dx, dz;
 	short tilt, head, angle, room_number;
 
 	if(CreatureActive(item_number)) {

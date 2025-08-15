@@ -41,9 +41,9 @@
 #include "specific/sound.h"
 
 
-long GlobalFogOff = 0;
+int GlobalFogOff = 0;
 
-long FogTableColor[28] = {
+int FogTableColor[28] = {
 	0,
 	RGBONLY(245, 200, 60),
 	RGBONLY(120, 196, 112),
@@ -104,7 +104,7 @@ void turn180_effect(ITEM_INFO* item) {
 }
 
 void floor_shake_effect(ITEM_INFO* item) {
-	long dx, dy, dz, dist;
+	int dx, dy, dz, dist;
 
 	dx = item->pos.pos.x - camera.pos.pos.x;
 	dy = item->pos.pos.y - camera.pos.pos.y;
@@ -336,7 +336,7 @@ void void_effect(ITEM_INFO* item) {
 
 void WaterFall(short item_number) {
 	ITEM_INFO* item;
-	long dx, dy, dz;
+	int dx, dy, dz;
 
 	item = GetItem(currentLevel, item_number);
 	dx = item->pos.pos.x - lara_item->pos.pos.x;
@@ -356,7 +356,7 @@ void WaterFall(short item_number) {
 	}
 }
 
-void WadeSplash(ITEM_INFO* item, long water, long depth) {
+void WadeSplash(ITEM_INFO* item, int water, int depth) {
 	short* bounds;
 	short room_number;
 
@@ -424,8 +424,8 @@ void Splash(ITEM_INFO* item) {
 	}
 }
 
-short DoBloodSplat(long x, long y, long z, short speed, short ang, PHD_VECTOR dir, short room_number) {
-	long wh;
+short DoBloodSplat(int x, int y, int z, short speed, short ang, PHD_VECTOR dir, short room_number) {
+	int wh;
 	if(GetRoom(currentLevel, room_number)->flags & ROOM_UNDERWATER) {
 		wh = GetWaterHeight(x, y, z, room_number);
 		if(y < wh + 512) {
@@ -439,8 +439,8 @@ short DoBloodSplat(long x, long y, long z, short speed, short ang, PHD_VECTOR di
 	return -1;
 }
 
-void DoLotsOfBlood(long x, long y, long z, short speed, short ang, short room_number, long num) {
-	long bx, by, bz;
+void DoLotsOfBlood(int x, int y, int z, short speed, short ang, short room_number, int num) {
+	int bx, by, bz;
 	PHD_VECTOR dir;
 	for(; num > 0; num--) {
 		bx = x - (GetRandomControl() << 9) / 0x8000 + 256;
@@ -509,9 +509,9 @@ void SoundEffects() {
 	}
 }
 
-long ItemNearLara(PHD_3DPOS* pos, long rad) {
+int ItemNearLara(PHD_3DPOS* pos, int rad) {
 	short bounds[6];
-	long dx, dy, dz;
+	int dx, dy, dz;
 
 	dx = pos->pos.x - lara_item->pos.pos.x;
 	dy = pos->pos.y - lara_item->pos.pos.y;

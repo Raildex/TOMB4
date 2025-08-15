@@ -63,22 +63,22 @@ typedef enum gamepad_button {
 } gamepad_button;
 
 typedef struct INPUT_MANAGER INPUT_MANAGER;
-long S_CreateInputManager(INPUT_MANAGER** out);
+int S_CreateInputManager(INPUT_MANAGER** out);
 void S_DestroyInputManager(INPUT_MANAGER* manager);
 void S_UpdateInput(INPUT_MANAGER* manager);
 void S_ClearInput(INPUT_MANAGER* manager);
 void S_ClearAction(INPUT_MANAGER* manager, input_buttons button);
-long S_IsActionDownDebounced(INPUT_MANAGER* manager, input_buttons button);
-long S_IsActionDown(INPUT_MANAGER* manager, input_buttons button);
-long S_MapKeyboardButton(INPUT_MANAGER* manager, keyboard_button button, input_buttons action);
-long S_MapGamepadButton(INPUT_MANAGER* manager, gamepad_button button, input_buttons action);
-long ReadJoystick(long* x, long* y);
+int S_IsActionDownDebounced(INPUT_MANAGER* manager, input_buttons button);
+int S_IsActionDown(INPUT_MANAGER* manager, input_buttons button);
+int S_MapKeyboardButton(INPUT_MANAGER* manager, keyboard_button button, input_buttons action);
+int S_MapGamepadButton(INPUT_MANAGER* manager, gamepad_button button, input_buttons action);
+int ReadJoystick(long* x, long* y);
 
 extern const char* KeyboardButtons[272];
 extern const char* GermanKeyboard[272];
 extern short layout[2][18];
 
-extern long conflict[18];
+extern int conflict[18];
 extern short ammo_change_timer;
 extern char ammo_change_buf[12];
 

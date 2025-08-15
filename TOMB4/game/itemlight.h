@@ -2,19 +2,19 @@
 #define TOMB4_GAME_ITEMLIGHT_H
 #include "game/pclight.h"
 typedef struct ITEM_LIGHT {
-	long r;
-	long g;
-	long b;
-	long ambient;
-	long rs;
-	long gs;
-	long bs;
-	long fcnt;
+	int r;
+	int g;
+	int b;
+	int ambient;
+	int rs;
+	int gs;
+	int bs;
+	int fcnt;
 	PCLIGHT CurrentLights[21];
 	PCLIGHT PrevLights[21];
-	long nCurrentLights;
-	long nPrevLights;
-	long room_number;
+	int nCurrentLights;
+	int nPrevLights;
+	int room_number;
 	PHD_VECTOR item_pos;
 	void* pCurrentLights;
 	void* pPrevLights;

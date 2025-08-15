@@ -48,14 +48,14 @@
 void lara_void_func(ITEM_INFO* item, COLL_INFO* coll);
 void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll);
 void SetCornerAnim(ITEM_INFO* item, COLL_INFO* coll, short rot, short flip);
-long CanLaraHangSideways(ITEM_INFO* item, COLL_INFO* coll, short angle);
+int CanLaraHangSideways(ITEM_INFO* item, COLL_INFO* coll, short angle);
 void lara_as_hang(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_hang(ITEM_INFO* item, COLL_INFO* coll);
-short LaraCeilingFront(ITEM_INFO* item, short ang, long dist, long h);
-short LaraFloorFront(ITEM_INFO* item, short ang, long dist, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject);
-long LaraFallen(ITEM_INFO* item, COLL_INFO* coll);
-long TestLaraSlide(ITEM_INFO* item, COLL_INFO* coll);
-long LaraHitCeiling(ITEM_INFO* item, COLL_INFO* coll);
+short LaraCeilingFront(ITEM_INFO* item, short ang, int dist, int h);
+short LaraFloorFront(ITEM_INFO* item, short ang, int dist, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject);
+int LaraFallen(ITEM_INFO* item, COLL_INFO* coll);
+int TestLaraSlide(ITEM_INFO* item, COLL_INFO* coll);
+int LaraHitCeiling(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_duckl(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_duckr(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_ducklr(ITEM_INFO* item, COLL_INFO* coll);
@@ -65,7 +65,7 @@ void lara_as_all4s(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_crawl(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_crawl(ITEM_INFO* item, COLL_INFO* coll);
-long LaraDeflectEdgeDuck(ITEM_INFO* item, COLL_INFO* coll);
+int LaraDeflectEdgeDuck(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_all4turnl(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_all4turnr(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_all4turnlr(ITEM_INFO* item, COLL_INFO* coll);
@@ -77,7 +77,7 @@ void lara_col_dash(ITEM_INFO* item, COLL_INFO* coll);
 void GetLaraCollisionInfo(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_dashdive(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_dashdive(ITEM_INFO* item, COLL_INFO* coll);
-long LaraLandedBad(ITEM_INFO* item, COLL_INFO* coll);
+int LaraLandedBad(ITEM_INFO* item, COLL_INFO* coll);
 void MonkeySwingFall(ITEM_INFO* item);
 void MonkeySwingSnap(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_hang2(ITEM_INFO* item, COLL_INFO* coll);
@@ -188,28 +188,28 @@ void lara_col_jumper(ITEM_INFO* item, COLL_INFO* coll);
 void lara_slide_slope(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_swandiveroll(ITEM_INFO* item, COLL_INFO* coll);
 void ResetLook();
-long UseInventoryItems(ITEM_INFO* item);
+int UseInventoryItems(ITEM_INFO* item);
 void LaraDeflectEdgeJump(ITEM_INFO* item, COLL_INFO* coll);
-void ApplyVelocityToRope(long node, unsigned short angle, unsigned short n);
-long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll);
-long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll);
-long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll);
+void ApplyVelocityToRope(int node, unsigned short angle, unsigned short n);
+int LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll);
+int LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll);
+int LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll);
 void LaraSlideEdgeJump(ITEM_INFO* item, COLL_INFO* coll);
 void JumpOffRope(ITEM_INFO* item);
 void UpdateRopeSwing(ITEM_INFO* item);
 void FallFromRope(ITEM_INFO* item);
-short GetDirOctant(long rot);
+short GetDirOctant(int rot);
 short TestMonkeyLeft(ITEM_INFO* item, COLL_INFO* coll);
 short TestMonkeyRight(ITEM_INFO* item, COLL_INFO* coll);
-long LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, long* edge);
-long TestHangSwingIn(ITEM_INFO* item, short angle);
-long LaraDeflectEdge(ITEM_INFO* item, COLL_INFO* coll);
-long TestLaraVault(ITEM_INFO* item, COLL_INFO* coll);
-long LaraTestClimbStance(ITEM_INFO* item, COLL_INFO* coll);
-long TestWall(ITEM_INFO* item, long front, long right, long down);
+int LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, long* edge);
+int TestHangSwingIn(ITEM_INFO* item, short angle);
+int LaraDeflectEdge(ITEM_INFO* item, COLL_INFO* coll);
+int TestLaraVault(ITEM_INFO* item, COLL_INFO* coll);
+int LaraTestClimbStance(ITEM_INFO* item, COLL_INFO* coll);
+int TestWall(ITEM_INFO* item, int front, int right, int down);
 void LaraCollideStop(ITEM_INFO* item, COLL_INFO* coll);
 void SnapLaraToEdgeOfBlock(ITEM_INFO* item, COLL_INFO* coll, short angle);
-long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll);
+int LaraHangTest(ITEM_INFO* item, COLL_INFO* coll);
 void lara_as_roll(ITEM_INFO* item, COLL_INFO* coll);
 void (*lara_control_routines[NUM_LARA_STATES])(ITEM_INFO* item, COLL_INFO* coll) = {
 	lara_as_walk,
@@ -462,13 +462,13 @@ short DashTimer;
 static short LeftClimbTab[4] = { 512, 1024, 2048, 256 };
 static short RightClimbTab[4] = { 2048, 256, 512, 1024 };
 
-static void TiltHer(ITEM_INFO* item, long rad, long height) {
+static void TiltHer(ITEM_INFO* item, int rad, int height) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	FVECTOR plane;
-	long wy[4];
-	long yT, y, wx, wz, dy;
+	int wy[4];
+	int yT, y, wx, wz, dy;
 	short room_number, rotX, rotZ;
 
 	yT = item->pos.pos.y - height - 162;
@@ -509,7 +509,7 @@ static void TiltHer(ITEM_INFO* item, long rad, long height) {
 		wy[i] = GetHeight(floor, wx, yT, wz, &height_type, &tiltxoff, &tiltzoff, &OnObject);
 
 		if(abs(y - wy[i]) > rad / 2) {
-			wy[i] = (long)(plane.x * wx + plane.y * wz + plane.z);
+			wy[i] = (int)(plane.x * wx + plane.y * wz + plane.z);
 		}
 	}
 
@@ -691,8 +691,8 @@ void SetCornerAnim(ITEM_INFO* item, COLL_INFO* coll, short rot, short flip) {
 	}
 }
 
-long CanLaraHangSideways(ITEM_INFO* item, COLL_INFO* coll, short angle) {
-	long oldx, oldz, x, z, res;
+int CanLaraHangSideways(ITEM_INFO* item, COLL_INFO* coll, short angle) {
+	int oldx, oldz, x, z, res;
 
 	oldx = item->pos.pos.x;
 	oldz = item->pos.pos.z;
@@ -747,7 +747,7 @@ void lara_as_hang(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_col_hang(ITEM_INFO* item, COLL_INFO* coll) {
-	long flag;
+	int flag;
 
 	item->fallspeed = 0;
 	item->gravity_status = 0;
@@ -858,8 +858,8 @@ void lara_col_hang(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 }
 
-short LaraCeilingFront(ITEM_INFO* item, short ang, long dist, long h) {
-	long x, y, z, height;
+short LaraCeilingFront(ITEM_INFO* item, short ang, int dist, int h) {
+	int x, y, z, height;
 	short room_num;
 
 	x = item->pos.pos.x + ((dist * phd_sin(ang)) >> W2V_SHIFT);
@@ -875,8 +875,8 @@ short LaraCeilingFront(ITEM_INFO* item, short ang, long dist, long h) {
 	return (short)height;
 }
 
-short LaraFloorFront(ITEM_INFO* item, short ang, long dist, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject) {
-	long x, y, z, height;
+short LaraFloorFront(ITEM_INFO* item, short ang, int dist, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject) {
+	int x, y, z, height;
 	short room_num;
 
 	room_num = item->room_number;
@@ -892,7 +892,7 @@ short LaraFloorFront(ITEM_INFO* item, short ang, long dist, height_types* ht, lo
 	return (short)height;
 }
 
-long LaraFallen(ITEM_INFO* item, COLL_INFO* coll) {
+int LaraFallen(ITEM_INFO* item, COLL_INFO* coll) {
 	if(lara.water_status == LW_WADE || coll->mid_floor <= 384) {
 		return 0;
 	}
@@ -906,7 +906,7 @@ long LaraFallen(ITEM_INFO* item, COLL_INFO* coll) {
 	return 1;
 }
 
-long TestLaraSlide(ITEM_INFO* item, COLL_INFO* coll) {
+int TestLaraSlide(ITEM_INFO* item, COLL_INFO* coll) {
 	static short old_ang = 1;
 	short ang_diff, ang;
 
@@ -954,7 +954,7 @@ long TestLaraSlide(ITEM_INFO* item, COLL_INFO* coll) {
 	return 1;
 }
 
-long LaraHitCeiling(ITEM_INFO* item, COLL_INFO* coll) {
+int LaraHitCeiling(ITEM_INFO* item, COLL_INFO* coll) {
 	if(coll->coll_type != CT_TOP && coll->coll_type != CT_CLAMP) {
 		return 0;
 	}
@@ -1117,8 +1117,8 @@ void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll) {
 	ITEM_INFO* itemlist[6] = { 0 };
 	MESH_INFO* meshlist[6] = { 0 };
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long slope, x, z, collided;
+	int tiltxoff, tiltzoff, OnObject;
+	int slope, x, z, collided;
 	short height;
 
 	item->fallspeed = 0;
@@ -1296,7 +1296,7 @@ void lara_col_crawl(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 }
 
-long LaraDeflectEdgeDuck(ITEM_INFO* item, COLL_INFO* coll) {
+int LaraDeflectEdgeDuck(ITEM_INFO* item, COLL_INFO* coll) {
 	switch(coll->coll_type) {
 		case CT_FRONT:
 		case CT_TOP_FRONT:
@@ -1425,7 +1425,7 @@ void lara_col_crawlb(ITEM_INFO* item, COLL_INFO* coll) {
 
 void lara_col_crawl2hang(ITEM_INFO* item, COLL_INFO* coll) {
 	short bounds[6];
-	long edge, edge_catch;
+	int edge, edge_catch;
 	short angle;
 
 	camera.target_angle = 0;
@@ -1666,8 +1666,8 @@ void lara_col_dashdive(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 }
 
-long LaraLandedBad(ITEM_INFO* item, COLL_INFO* coll) {
-	long land_speed;
+int LaraLandedBad(ITEM_INFO* item, COLL_INFO* coll) {
+	int land_speed;
 
 	land_speed = item->fallspeed - 140;
 
@@ -2065,7 +2065,7 @@ void lara_col_splat(ITEM_INFO* item, COLL_INFO* coll) {
 
 void lara_as_compress(ITEM_INFO* item, COLL_INFO* coll) {
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	if(lara.water_status != LW_WADE) {
 		if(S_IsActionDown(inputImpl, IN_FORWARD) && LaraFloorFront(item, item->pos.y_rot, 256, &height_type, &tiltxoff, &tiltzoff, &OnObject) >= -384) {
 			item->goal_anim_state = AS_FORWARDJUMP;
@@ -2777,7 +2777,7 @@ void lara_default_col(ITEM_INFO* item, COLL_INFO* coll) {
 void lara_as_deathslide(ITEM_INFO* item, COLL_INFO* coll) {
 	short room_number;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	room_number = item->room_number;
 	camera.target_angle = 12740;
 	GetHeight(GetFloor(item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &room_number), item->pos.pos.x, item->pos.pos.y, item->pos.pos.z, &height_type, &tiltxoff, &tiltzoff, &OnObject);
@@ -3001,7 +3001,7 @@ void lara_col_walk(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_as_run(ITEM_INFO* item, COLL_INFO* coll) {
-	static long jump_ok = 1;
+	static int jump_ok = 1;
 
 	if(item->hit_points <= 0) {
 		item->goal_anim_state = AS_DEATH;
@@ -3379,7 +3379,7 @@ void lara_col_fastfall(ITEM_INFO* item, COLL_INFO* coll) {
 void lara_as_stop(ITEM_INFO* item, COLL_INFO* coll) {
 	short height, ceiling, fheight, rheight;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	fheight = NO_HEIGHT;
 	rheight = NO_HEIGHT;
 
@@ -3549,7 +3549,7 @@ void lara_as_upjump(ITEM_INFO* item, COLL_INFO* coll) {
 
 void lara_col_upjump(ITEM_INFO* item, COLL_INFO* coll) {
 	short bounds[6];
-	long edge, edge_catch;
+	int edge, edge_catch;
 	short angle;
 
 	if(item->hit_points <= 0) {
@@ -3757,7 +3757,7 @@ void lara_as_reach(ITEM_INFO* item, COLL_INFO* coll) {
 
 void lara_col_reach(ITEM_INFO* item, COLL_INFO* coll) {
 	short bounds[6];
-	long edge, edge_catch;
+	int edge, edge_catch;
 	short angle;
 
 	if(lara.RopePtr == -1) {
@@ -3996,7 +3996,7 @@ void lara_col_poleup(ITEM_INFO* item, COLL_INFO* coll) {
 void lara_col_poledown(ITEM_INFO* item, COLL_INFO* coll) {
 	short room_number;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 
 	coll->enable_spaz = 0;
 	coll->enable_baddie_push = 0;
@@ -4113,7 +4113,7 @@ void lara_as_roper(ITEM_INFO* item, COLL_INFO* coll) {
 }
 
 void lara_col_ropefwd(ITEM_INFO* item, COLL_INFO* coll) {
-	long Vel;
+	int Vel;
 
 	camera.target_distance = 2048;
 	UpdateRopeSwing(item);
@@ -4357,8 +4357,8 @@ void LookLeftRight() {
 	}
 }
 
-long UseInventoryItems(ITEM_INFO* item) {
-	long in_use, goin;
+int UseInventoryItems(ITEM_INFO* item) {
+	int in_use, goin;
 	short flags;
 
 	in_use = GLOBAL_inventoryitemchosen;
@@ -4490,18 +4490,18 @@ void LaraDeflectEdgeJump(ITEM_INFO* item, COLL_INFO* coll) {
 	}
 }
 
-void ApplyVelocityToRope(long node, unsigned short angle, unsigned short n) {
-	long xvel, zvel;
+void ApplyVelocityToRope(int node, unsigned short angle, unsigned short n) {
+	int xvel, zvel;
 
 	xvel = n * phd_sin(angle) >> 2;
 	zvel = n * phd_cos(angle) >> 2;
 	SetPendulumVelocity(xvel, 0, zvel);
 }
 
-static long IsValidHangPos(ITEM_INFO* item, COLL_INFO* coll) {
+static int IsValidHangPos(ITEM_INFO* item, COLL_INFO* coll) {
 	short angle;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 
 	if(LaraFloorFront(item, lara.move_angle, 100, &height_type, &tiltxoff, &tiltzoff, &OnObject) >= 200) {
 		angle = (unsigned short)(item->pos.y_rot + 0x2000) / 0x4000;
@@ -4538,9 +4538,9 @@ static long IsValidHangPos(ITEM_INFO* item, COLL_INFO* coll) {
 	return 0;
 }
 
-long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll) {
+int LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll) {
 	short bounds[6];
-	long shift, result;
+	int shift, result;
 	short l, r;
 	quadrant_names angle;
 
@@ -4590,12 +4590,12 @@ long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll) {
 	return 1;
 }
 
-long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
-	long oldx, oldz, front, x, z, flag;
+int LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
+	int oldx, oldz, front, x, z, flag;
 	short oldy;
 	quadrant_names angle;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 
 	if(item->anim_number != ANIM_GRABLEDGE || coll->hit_static) {
 		return 0;
@@ -4741,12 +4741,12 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
 	return flag;
 }
 
-long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
-	long oldx, oldz, front, x, z, flag;
+int LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll) {
+	int oldx, oldz, front, x, z, flag;
 	short oldy;
 	quadrant_names angle;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 
 	if(item->anim_number != ANIM_GRABLEDGE || coll->hit_static) {
 		return 0;
@@ -4959,7 +4959,7 @@ void JumpOffRope(ITEM_INFO* item) {
 }
 
 void UpdateRopeSwing(ITEM_INFO* item) {
-	long temp;
+	int temp;
 	static unsigned char LegsSwinging;
 
 	if(lara.RopeMaxXForward > 9000) {
@@ -5024,7 +5024,7 @@ void UpdateRopeSwing(ITEM_INFO* item) {
 }
 
 void FallFromRope(ITEM_INFO* item) {
-	long l;
+	int l;
 
 	l = abs(CurrentPendulum.Velocity.x >> 16) + abs(CurrentPendulum.Velocity.z >> 16);
 	item->speed = (short)(l >> 1);
@@ -5040,7 +5040,7 @@ void FallFromRope(ITEM_INFO* item) {
 	lara.RopePtr = -1;
 }
 
-short GetDirOctant(long rot) {
+short GetDirOctant(int rot) {
 	rot = abs(rot);
 	return rot >= 0x2000 && rot <= 0x6000;
 }
@@ -5107,9 +5107,9 @@ short TestMonkeyRight(ITEM_INFO* item, COLL_INFO* coll) {
 	return 1;
 }
 
-long LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, long* edge) {
+int LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, long* edge) {
 	short bounds[6];
-	long hdif;
+	int hdif;
 
 	GetBoundsAccurate(item, bounds);
 	hdif = coll->front_floor - bounds[2];
@@ -5137,11 +5137,11 @@ long LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, long* edge) {
 	return -1;
 }
 
-long TestHangSwingIn(ITEM_INFO* item, short angle) {
+int TestHangSwingIn(ITEM_INFO* item, short angle) {
 	FLOOR_INFO* floor;
 	height_types ht;
-	long tiltxoff, tiltzoff, OnObject;
-	long x, y, z, h, c;
+	int tiltxoff, tiltzoff, OnObject;
+	int x, y, z, h, c;
 	short room_number;
 
 	x = item->pos.pos.x;
@@ -5173,7 +5173,7 @@ long TestHangSwingIn(ITEM_INFO* item, short angle) {
 	return h != NO_HEIGHT && h - y > 0 && c - y < -400 && y - c - 819 > -72;
 }
 
-long LaraDeflectEdge(ITEM_INFO* item, COLL_INFO* coll) {
+int LaraDeflectEdge(ITEM_INFO* item, COLL_INFO* coll) {
 
 	switch(coll->coll_type) {
 	case CT_LEFT:
@@ -5198,8 +5198,8 @@ long LaraDeflectEdge(ITEM_INFO* item, COLL_INFO* coll) {
 	return 0;
 }
 
-long TestLaraVault(ITEM_INFO* item, COLL_INFO* coll) {
-	long hdif, slope;
+int TestLaraVault(ITEM_INFO* item, COLL_INFO* coll) {
+	int hdif, slope;
 	short angle;
 
 	if((!S_IsActionDown(inputImpl, IN_ACTION)) || lara.gun_status != LG_NO_ARMS || coll->coll_type != CT_FRONT /*|| !(item->anim_number == 103  || item->anim_number == 11)*/ ) {
@@ -5311,8 +5311,8 @@ long TestLaraVault(ITEM_INFO* item, COLL_INFO* coll) {
 	return 1;
 }
 
-long LaraTestClimbStance(ITEM_INFO* item, COLL_INFO* coll) {
-	long shift_r, shift_l;
+int LaraTestClimbStance(ITEM_INFO* item, COLL_INFO* coll) {
+	int shift_r, shift_l;
 
 	if(LaraTestClimbPos(item, coll->radius, coll->radius + 120, -700, 512, &shift_r) != 1) {
 		return 0;
@@ -5343,11 +5343,11 @@ long LaraTestClimbStance(ITEM_INFO* item, COLL_INFO* coll) {
 	return 1;
 }
 
-long TestWall(ITEM_INFO* item, long front, long right, long down) {
+int TestWall(ITEM_INFO* item, int front, int right, int down) {
 	FLOOR_INFO* floor;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
-	long x, y, z, h, c;
+	int tiltxoff, tiltzoff, OnObject;
+	int x, y, z, h, c;
 	short angle, room_num;
 
 	room_num = item->room_number;
@@ -5477,13 +5477,13 @@ void SnapLaraToEdgeOfBlock(ITEM_INFO* item, COLL_INFO* coll, short angle) {
 	}
 }
 
-long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
+int LaraHangTest(ITEM_INFO* item, COLL_INFO* coll) {
 	short bounds[6];
-	long x, z, oldfloor, hdif, flag;
+	int x, z, oldfloor, hdif, flag;
 	short angle, move, wall, ceiling;
 	quadrant_names dir;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	move = 0;
 	flag = 0;
 	angle = lara.move_angle;

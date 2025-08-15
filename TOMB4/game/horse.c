@@ -54,11 +54,11 @@ void HorsemanControl(short item_number) {
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 	height_types height_type;
-	long tiltxoff, tiltzoff, OnObject;
+	int tiltxoff, tiltzoff, OnObject;
 	CREATURE_INFO* horseman;
 	AI_INFO info, larainfo;
 	PHD_VECTOR v;
-	long x, z, c, s, h1, h2;
+	int x, z, c, s, h1, h2;
 	short room_number, angle, rot;
 
 	room_number = 0;
@@ -494,9 +494,9 @@ void HorsemanControl(short item_number) {
 }
 #pragma warning(pop)
 
-void TriggerHorsemanRicochets(PHD_VECTOR* pos, long yrot, long num) {
+void TriggerHorsemanRicochets(PHD_VECTOR* pos, int yrot, int num) {
 	SPARKS* sptr;
-	long random, rot;
+	int random, rot;
 
 	for(int i = 0; i < num; i++) {
 		sptr = GetFreeSpark();

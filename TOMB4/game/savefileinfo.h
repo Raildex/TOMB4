@@ -7,6 +7,6 @@ typedef struct SAVEFILE_INFO {
 	short minutes;
 	short seconds;
 	short days;
-	long num;
+	int num;
 } SAVEFILE_INFO;
 #endif
