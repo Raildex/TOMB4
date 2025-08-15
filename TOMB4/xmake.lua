@@ -16,7 +16,6 @@ if(is_plat("linux")) then
 	add_requires("FAudio")
 end
 target("trng2")
-	add_packages("zlib")
 	set_kind("binary")
 	add_languages("c23")
 	add_files("game/*.c")
