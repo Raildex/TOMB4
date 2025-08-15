@@ -72,7 +72,7 @@ int S_IsActionDownDebounced(INPUT_MANAGER* manager, input_buttons button);
 int S_IsActionDown(INPUT_MANAGER* manager, input_buttons button);
 int S_MapKeyboardButton(INPUT_MANAGER* manager, keyboard_button button, input_buttons action);
 int S_MapGamepadButton(INPUT_MANAGER* manager, gamepad_button button, input_buttons action);
-int ReadJoystick(long* x, long* y);
+int ReadJoystick(int* x, int* y);
 
 extern const char* KeyboardButtons[272];
 extern const char* GermanKeyboard[272];

@@ -199,7 +199,7 @@ int ExplodingDeath2(short item_number, int mesh_bits, short Flags) {
 	ITEM_INFO* item;
 	OBJECT_INFO* obj;
 	FX_INFO* fx;
-	long* bone;
+	int* bone;
 	short* rotation;
 	short* frame;
 	short* extra_rotation;
@@ -1740,7 +1740,7 @@ void UpdateShockwaves() {
 
 void UpdateLightning() {
 	LIGHTNING_STRUCT* lptr;
-	long* pPoint;
+	int* pPoint;
 	char* pVel;
 
 	for(int i = 0; i < nLightnings; i++) {
@@ -1763,8 +1763,8 @@ void UpdateLightning() {
 	}
 }
 
-int LSpline(int x, long* knots, int nk) {
-	long* k;
+int LSpline(int x, int* knots, int nk) {
+	int* k;
 	int c1, c2, c3, ret, span;
 
 	x *= nk - 3;
@@ -1933,9 +1933,9 @@ void S_DrawSparks() {
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 	FVECTOR fPos;
-	long* XY;
-	long* Z;
-	long* offsets;
+	int* XY;
+	int* Z;
+	int* offsets;
 	float perspz;
 	int x, y, z, smallest_size;
 

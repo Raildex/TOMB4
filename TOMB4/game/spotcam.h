@@ -24,7 +24,7 @@ void InitialiseSpotCam(short Sequence);
 void EnableLaraControl();
 void DisableLaraControl();
 void InitSpotCamSequences();
-int Spline(int x, long* knots, int nk);
+int Spline(int x, int* knots, int nk);
 void CalculateSpotCams();
 
 extern int bTrackCamInit;

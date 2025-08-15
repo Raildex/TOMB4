@@ -118,6 +118,7 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 					val = val * 0.5 + 0.5;
 					val *= val;
 #endif
+
 					val *= point->rad;
 					fR += val * point->r;
 					fG += val * point->g;
@@ -134,6 +135,7 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 					val = val * 0.5 + 0.5;
 					val *= val;
 #endif
+
 					val *= point->rad;
 					fR += val * point->r;
 					fG += val * point->g;
@@ -150,6 +152,7 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh) {
 					val = val * 0.5 + 0.5;
 					val *= val;
 #endif
+
 					if(!InventoryActive) {
 						val *= 0.75F;
 					} else {
@@ -768,7 +771,7 @@ void ProcessPickupMeshVertices(MESH_DATA* mesh) {
 	IDirect3DVertexBuffer_Unlock(mesh->SourceVB);
 }
 
-static void RGB_M(unsigned long* c, int m) // Original was a macro.
+static void RGB_M(unsigned int* c, int m) // Original was a macro.
 {
 	int r, g, b, a;
 
@@ -1656,6 +1659,7 @@ void do_boot_screen(languages language) {
 #ifdef TIMES_LEVEL
 	Sleep(2000);
 #endif
+
 }
 
 void S_AnimateTextures(int n) {

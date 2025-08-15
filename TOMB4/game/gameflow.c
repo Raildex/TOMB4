@@ -165,6 +165,7 @@ void DoGameflow() {
 #ifndef TIMES_LEVEL
 	PlayFmvNow(0);
 #endif
+
 	do_boot_screen(Gameflow->Language);
 	num_fmvs = 0;
 	fmv_to_play[0] = 0;
@@ -179,6 +180,7 @@ void DoGameflow() {
 			fmv_to_play[num_fmvs] = gf[0];
 			num_fmvs++;
 #endif
+
 			gf++;
 			break;
 
@@ -502,6 +504,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 #if defined(CUTS_ENABLED) // no cutscenes
 	if(!gfCutNumber || CheckCutPlayed(gfCutNumber))
 #endif
+
 	{
 		cutseq_num = 0;
 		gfCutNumber = 0;
@@ -514,6 +517,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 		ScreenFadedOut = 1;
 	}
 #endif
+
 	InitialiseCamera();
 	bUseSpotCam = 0;
 	gfGameMode = 0;
@@ -534,6 +538,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 #if 0
 		handle_cutseq_triggering(Name);
 #endif
+
 		if(DEL_playingamefmv) {
 			DEL_playingamefmv = 0;
 #ifndef TIMES_LEVEL
@@ -541,6 +546,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 			PlayFmvNow(7);
 			DelsHandyTeleportLara(54179, -8192, 50899, -32703);
 #endif
+
 		}
 
 		if(gfLevelComplete) {
@@ -595,6 +601,7 @@ void DoLevel(unsigned char Name, unsigned char Audio) {
 	fmv_to_play[0] = 0;
 	fmv_to_play[1] = 0;
 #endif
+
 	lara.examine1 = 0;
 	lara.examine2 = 0;
 	lara.examine3 = 0;
@@ -898,6 +905,7 @@ void DoTitle(unsigned char Name, unsigned char Audio) {
 		PlayFmvNow(12);
 	}
 #endif
+
 
 	if(gfStatus != 4) {
 		RenderLoadPic(0);

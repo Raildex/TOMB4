@@ -40,7 +40,7 @@ short* GetMeshBase(LEVEL_INFO* lvl);
 ROOM_INFO* GetRoom(LEVEL_INFO* lvl, int room);
 int GetNumRooms(LEVEL_INFO* lvl);
 short* GetFloorData(LEVEL_INFO* lvl, int index);
-long* GetBone(LEVEL_INFO* lvl, int index);
+int* GetBone(LEVEL_INFO* lvl, int index);
 CHANGE_STRUCT* GetAnimChange(LEVEL_INFO* lvl, int index);
 RANGE_STRUCT* GetAnimRange(LEVEL_INFO* lvl,int index);
 short* GetAnimCommand(LEVEL_INFO* lvl, int index);

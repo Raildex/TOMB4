@@ -9,7 +9,7 @@ void WinProcessCommands(int cmd);
 void ClearSurfaces();
 int WinRegisterWindow(HINSTANCE hinstance);
 int WinCreateWindow();
-void WinSetStyle(int fullscreen, unsigned long* set);
+void WinSetStyle(int fullscreen, unsigned int* set);
 
 extern WINAPP App;
 extern char* cutseqpakPtr;

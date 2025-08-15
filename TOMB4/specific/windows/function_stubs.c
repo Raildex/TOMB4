@@ -64,4 +64,5 @@ void LogD(const char* scope, const char* s, ...) {
 	va_end(list);
 	fflush(stderr);
 #endif
+
 }

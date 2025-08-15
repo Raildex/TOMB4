@@ -37,7 +37,7 @@ static int first_hair[2];
 void InitialiseHair() {
 	OBJECT_INFO* obj;
 	HAIR_STRUCT* hptr;
-	long* bone;
+	int* bone;
 
 	for(int i = 0; i < 2; i++) {
 		obj = GetObjectInfo(currentLevel, HAIR);
@@ -71,7 +71,7 @@ void HairControl(int in_cutscene, int pigtail, short* cutscenething) {
 	int tiltxoff, tiltzoff, OnObject;
 	PHD_VECTOR pos;
 	SPHERE sphere[6];
-	long* bone;
+	int* bone;
 	short* rot[2];
 	short* frm[2];
 	short* objptr;

@@ -66,7 +66,7 @@ struct LEVEL_INFO {
 	RANGE_STRUCT* ranges;
 	CHANGE_STRUCT* changes;
 	short* commands;
-	long* bones;
+	int* bones;
 	short* frames;
 	FX_INFO* effects;
 	int effectsCapacity;
@@ -504,7 +504,7 @@ short* GetAnimCommand(LEVEL_INFO* lvl, int index) {
 	return lvl->commands + index;
 }
 
-long* GetBone(LEVEL_INFO* lvl, int index) {
+int* GetBone(LEVEL_INFO* lvl, int index) {
 	return lvl->bones + index;
 }
 
@@ -945,7 +945,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	}
 	lvl->nTextures = count;
 	for(int i = 0; i < RTPages + OTPages; ++i) {
-		long* src = (long*)Uncompressed32Data + i * ((256 * 256));
+		int* src = (long*)Uncompressed32Data + i * ((256 * 256));
 		TEXTURE* tex = &lvl->Textures[i + 1];
 		tex->width = (unsigned short)App.TextureSize;
 		tex->height = (unsigned short)App.TextureSize;
@@ -958,7 +958,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	Log(__func__, "Create bump maps");
 	int offset = RTPages + OTPages;
 	for(int i = 0; i < BTPages / 2; ++i) {
-		long* src = (long*)Uncompressed32Data + (i + offset) * ((256 * 256));
+		int* src = (long*)Uncompressed32Data + (i + offset) * ((256 * 256));
 		TEXTURE* tex = &lvl->Textures[offset + i + 1];
 		tex->width = (unsigned short)App.TextureSize;
 		tex->height = (unsigned short)App.TextureSize;
@@ -972,7 +972,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 	}
 	offset = RTPages + OTPages + (BTPages / 2);
 	for(int i = 0; i < BTPages / 2; ++i) {
-		long* src = (long*)Uncompressed32Data + (i + offset) * ((256 * 256));
+		int* src = (long*)Uncompressed32Data + (i + offset) * ((256 * 256));
 		TEXTURE* tex = &lvl->Textures[offset + i + 1];
 		tex->width = (unsigned short)App.BumpMapSize;
 		tex->height = (unsigned short)App.BumpMapSize;
@@ -997,9 +997,9 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		}
 		for(int i = 0; i < 2; ++i) {
 			for(int i = 0; i < 2; ++i) {
-				long* data = (long*)calloc(uncompSize, 1);
+				int* data = (long*)calloc(uncompSize, 1);
 				char* source = pComp + (i * 768);
-				long* d = data;
+				int* d = data;
 				for(int y = 0; y < 256; y++) {
 					for(int x = 0; x < 256; x++) {
 						char r = *(source + (x * 3) + (y * 1536));
@@ -1049,7 +1049,7 @@ char LoadTextures(TEXTURE_FORMAT fmt, FILE* f, LEVEL_INFO* lvl) {
 		return 0;
 	}
 	for(int i = 0; i < 2; i++) {
-		long* src = (long*)miscUncompressed32Data + (i) * ((256 * 256));
+		int* src = (long*)miscUncompressed32Data + (i) * ((256 * 256));
 		TEXTURE* tex = &lvl->Textures[i + offset + 1];
 		tex->width = 256;
 		tex->height = 256;

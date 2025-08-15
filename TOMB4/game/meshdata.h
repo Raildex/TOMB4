@@ -15,7 +15,7 @@ typedef struct MESH_DATA {
 	POLYFACE4* gt4;
 	short ngt3;
 	POLYFACE3* gt3;
-	long* prelight;
+	int* prelight;
 	IDirect3DVertexBuffer* SourceVB;
 	_D3DVECTOR* Normals;
 } MESH_DATA;

@@ -448,6 +448,7 @@ void DisplayStatsUCunt() {
 #else
 	sprintf(buf, "%d / 70", savegame.Game.Secrets);
 #endif
+
 	PrintString(phd_centerx + (phd_centerx >> 2), y + 7 * font_height, 6, buf, 0);
 }
 
@@ -754,7 +755,7 @@ void RGBM_Mono(unsigned char* r, unsigned char* g, unsigned char* b) {
 	*b = c;
 }
 
-static void BitMaskGetNumberOfBits(unsigned int bitMask, unsigned long* bitDepth, unsigned long* bitOffset) {
+static void BitMaskGetNumberOfBits(unsigned int bitMask, unsigned int* bitDepth, unsigned int* bitOffset) {
 	int i;
 
 	if(!bitMask) {

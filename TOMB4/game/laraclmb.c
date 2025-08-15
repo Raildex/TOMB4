@@ -320,7 +320,7 @@ short GetClimbTrigger(int x, int y, int z, short room_number) {
 	return 0;
 }
 
-int LaraTestClimb(int x, int y, int z, int xfront, int zfront, int item_height, short item_room, long* shift) {
+int LaraTestClimb(int x, int y, int z, int xfront, int zfront, int item_height, short item_room, int* shift) {
 	FLOOR_INFO* floor;
 	height_types ht;
 	int tiltxoff, tiltzoff, OnObject;
@@ -461,7 +461,7 @@ int LaraTestClimb(int x, int y, int z, int xfront, int zfront, int item_height, 
 	return 1;
 }
 
-int LaraTestClimbPos(ITEM_INFO* item, int front, int right, int origin, int height, long* shift) {
+int LaraTestClimbPos(ITEM_INFO* item, int front, int right, int origin, int height, int* shift) {
 	int angle, x, z, xfront, zfront;
 
 	xfront = 0;
@@ -497,7 +497,7 @@ int LaraTestClimbPos(ITEM_INFO* item, int front, int right, int origin, int heig
 	return LaraTestClimb(x, origin + item->pos.pos.y, z, xfront, zfront, height, item->room_number, shift);
 }
 
-int LaraTestClimbUpPos(ITEM_INFO* item, int front, int right, long* shift, long* ledge) {
+int LaraTestClimbUpPos(ITEM_INFO* item, int front, int right, int* shift, int* ledge) {
 	FLOOR_INFO* floor;
 	height_types ht;
 	int tiltxoff, tiltzoff, OnObject;

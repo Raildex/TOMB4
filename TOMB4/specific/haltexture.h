@@ -7,6 +7,7 @@ typedef struct HAL_TEXTURE {
 	IDirectDrawSurface4* surface;
 	IDirect3DTexture2* dxTex;
 	#endif
+
 } HAL_TEXTURE;
 
 #endif// TOMB4_SPECIFIC_HALTEXTURE_H

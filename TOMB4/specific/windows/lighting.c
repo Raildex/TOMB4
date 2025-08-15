@@ -88,7 +88,7 @@ void SetupDynamicLight(DYNAMIC* light, ITEM_INFO* item) {
 	}
 }
 
-void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient) {
+void SetupLight(PCLIGHT* light, ITEM_INFO* item, int* ambient) {
 	SUNLIGHT_STRUCT* sun;
 	POINTLIGHT_STRUCT* point;
 	float x, y, z, num, num2;

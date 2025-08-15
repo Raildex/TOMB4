@@ -229,7 +229,7 @@ static int OnTwoBlockPlatform(ITEM_INFO* item, int x, int z) {
 }
 
 void TwoBlockPlatformFloor(
-	ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
+	ITEM_INFO* item, int x, int y, int z, int* height, height_types* height_type, int* tiltxoff, int* tiltzoff, int* OnObject) {
 	if(OnTwoBlockPlatform(item, x, z)) {
 		if(y <= item->pos.pos.y + 32 && item->pos.pos.y < *height) {
 			*height = item->pos.pos.y;
@@ -240,7 +240,7 @@ void TwoBlockPlatformFloor(
 }
 
 void TwoBlockPlatformCeiling(
-	ITEM_INFO* item, int x, int y, int z, long* height) {
+	ITEM_INFO* item, int x, int y, int z, int* height) {
 	if(OnTwoBlockPlatform(item, x, z)) {
 		if(y > item->pos.pos.y + 32 && item->pos.pos.y > *height) {
 			*height = item->pos.pos.y + 256;
@@ -2273,7 +2273,7 @@ void ControlFallingBlock2(short item_number) {
 }
 
 void FallingBlockCeiling(
-	ITEM_INFO* item, int x, int y, int z, long* height) {
+	ITEM_INFO* item, int x, int y, int z, int* height) {
 	int tx, tz;
 
 	tx = x ^ item->pos.pos.x;
@@ -2288,7 +2288,7 @@ void FallingBlockCeiling(
 	}
 }
 
-void FallingBlockFloor(ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
+void FallingBlockFloor(ITEM_INFO* item, int x, int y, int z, int* height, height_types* height_type, int* tiltxoff, int* tiltzoff, int* OnObject) {
 	int tx, tz;
 
 	tx = x ^ item->pos.pos.x;

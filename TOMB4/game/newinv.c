@@ -649,7 +649,7 @@ void DrawInventoryItemMe(INVDRAWITEM* item, int shade, int overlay, int shagflag
 	OBJECT_INFO* object;
 	PHD_VECTOR vec;
 	short** meshpp;
-	long* bone;
+	int* bone;
 	short* rotation1;
 	short* frmptr;
 	unsigned int bit;

@@ -25,7 +25,7 @@ float mW2V[indices_count];
 float mMXStack[20 * indices_count];
 float fcossin_tbl[65536];
 
-long* phd_mxptr;
+int* phd_mxptr;
 int w2v_matrix[indices_count];
 int matrix_stack[20 * indices_count];
 

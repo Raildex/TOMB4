@@ -1438,7 +1438,7 @@ int GetWaterHeight(int x, int y, int z, short room_number) {
 	return NO_HEIGHT;
 }
 
-int GetHeight(FLOOR_INFO* floor, int x, int y, int z, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject) {
+int GetHeight(FLOOR_INFO* floor, int x, int y, int z, height_types* ht, int* tiltxoff, int* tiltzoff, int* OnObject) {
 	ITEM_INFO* item;
 	ROOM_INFO* r;
 	short* data;

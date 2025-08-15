@@ -97,7 +97,7 @@ void mCrossProduct(PHD_VECTOR* a, PHD_VECTOR* b, PHD_VECTOR* n) {
 	n->z = t.z >> W2V_SHIFT;
 }
 
-void phd_GetMatrixAngles(long* m, short* dest) {
+void phd_GetMatrixAngles(int* m, short* dest) {
 	int sy, cy;
 	short roll, pitch, yaw;
 
@@ -116,7 +116,7 @@ void phd_GetMatrixAngles(long* m, short* dest) {
 	dest[2] = roll;
 }
 
-void GetRopePos(ROPE_STRUCT* rope, int pos, long* x, long* y, long* z) {
+void GetRopePos(ROPE_STRUCT* rope, int pos, int* x, int* y, int* z) {
 	int segment;
 
 	segment = pos >> 7;

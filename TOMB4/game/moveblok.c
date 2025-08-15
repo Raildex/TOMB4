@@ -698,7 +698,7 @@ void ControlPlanetEffect(short item_number) {
 void DrawPlanetEffect(ITEM_INFO* item) {
 	OBJECT_INFO* obj;
 	short** meshpp;
-	long* bone;
+	int* bone;
 	short* frm[2];
 	short* rot;
 	int poppush;

@@ -311,7 +311,7 @@ void UpdatePulseColour() {
 	}
 }
 
-int GetStringLength(const char* string, long* top, long* bottom) {
+int GetStringLength(const char* string, int* top, int* bottom) {
 	CHARDEF* def;
 	int s, accent, length, lowest, highest, y;
 

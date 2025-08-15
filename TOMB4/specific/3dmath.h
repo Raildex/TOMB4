@@ -37,7 +37,7 @@ extern float mW2V[indices_count];
 extern float fMXStack[20 * indices_count];
 extern float fcossin_tbl[65536];
 
-extern long* phd_mxptr;
+extern int* phd_mxptr;
 extern int w2v_matrix[indices_count];
 extern int matrix_stack[20 * indices_count];
 

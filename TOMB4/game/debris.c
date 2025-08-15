@@ -112,7 +112,7 @@ int GetFreeDebris() {
 	return eldestfree;
 }
 
-void TriggerDebris(GAME_VECTOR* pos, TEXTURESTRUCT* TextInfo, short* Offsets, long* Vels, short rgb) {
+void TriggerDebris(GAME_VECTOR* pos, TEXTURESTRUCT* TextInfo, short* Offsets, int* Vels, short rgb) {
 	DEBRIS_STRUCT* dptr;
 
 	if(GetRandomControl() & 3) {
@@ -210,7 +210,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	PHD_VECTOR pos;
 	GAME_VECTOR vec;
 	float* vtx;
-	long* Vels;
+	int* Vels;
 	POLYFACE3* tri;
 	POLYFACE4* quad;
 	short* meshp;

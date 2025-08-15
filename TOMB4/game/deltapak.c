@@ -26,6 +26,7 @@
 #ifdef TIMES_LEVEL
 #include "specific/function_table.h"
 #endif
+
 #include "game/actorme.h"
 #include "game/animstruct.h"
 #include "game/cutseqroutines.h"
@@ -83,6 +84,7 @@ static short editor_chat_ranges_times[40] = {
 };
 #endif
 
+
 static CUTSEQ_ROUTINES cutseq_control_routines[] = {
 	{ 0, 0, 0 },
 	{ do_spade_meshswap, 0, 0 },
@@ -118,6 +120,7 @@ static CUTSEQ_ROUTINES cutseq_control_routines[] = {
 #ifdef TIMES_LEVEL
 	{ times_init, times_control, 0 }
 #endif
+
 };
 
 int cutseq_trig = 0;
@@ -300,11 +303,13 @@ void handle_cutseq_triggering(int name) {
 #else
 			else if(fuck == 9 || fuck == 11 || fuck == 15 || fuck == 23)
 #endif
+
 			{
 				gfLevelComplete = gfCurrentLevel + 1;
 #ifdef TIMES_LEVEL
 				skipped_level = 1;
 #endif
+
 				gfRequiredStartPos = 0;
 				cutseq_num = 0;
 				GLOBAL_playing_cutseq = 0;
@@ -514,7 +519,7 @@ short GetTrackWord(int off, char* packed, int packmethod) {
 }
 
 void frigup_lara() {
-	long* bone;
+	int* bone;
 
 	lara_item->pos.pos.x = GLOBAL_cutme->orgx;
 	lara_item->pos.pos.y = GLOBAL_cutme->orgy;
@@ -564,7 +569,7 @@ void finish_cutseq() {
 void DrawCutSeqActors() {
 	OBJECT_INFO* obj;
 	short** mesh;
-	long* bone;
+	int* bone;
 	short* rot;
 	int n;
 
@@ -1401,7 +1406,7 @@ ITEM_INFO* cutseq_restore_item(int num) {
 
 int Load_and_Init_Cutseq(int num) {
 	ACTORME* actor;
-	long* headerbuf;
+	int* headerbuf;
 	char* packed;
 	int Offset, Length;
 
@@ -1719,3 +1724,4 @@ void times_control() {
 	actor_chat_cnt = (actor_chat_cnt - 1) & 1;
 }
 #endif
+

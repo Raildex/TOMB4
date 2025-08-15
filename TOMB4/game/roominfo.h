@@ -50,8 +50,8 @@ typedef struct ROOM_INFO {
 	float posy;
 	float posz;
 	FVECTOR* vnormals;
-	long* prelight;
-	long* prelightwater;
+	int* prelight;
+	int* prelightwater;
 	int watercalc;
 	PHD_VECTOR* verts;
 	int gt3cnt;

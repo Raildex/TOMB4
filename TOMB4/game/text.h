@@ -6,7 +6,7 @@ typedef struct CHARDEF CHARDEF;
 
 void InitFont();
 void UpdatePulseColour();
-int GetStringLength(const char* string, long* top, long* bottom);
+int GetStringLength(const char* string, int* top, int* bottom);
 void DrawChar(int x, int y, unsigned short col, CHARDEF* def);
 void PrintString(int x, int y, unsigned char col, const char* string, unsigned short flags);
 

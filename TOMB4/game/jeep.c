@@ -247,7 +247,7 @@ static int JeepCheckGetOut() {
 	return 1;
 }
 
-static int DoDynamics(int height, int fallspeed, long* ypos, int zero) {
+static int DoDynamics(int height, int fallspeed, int* ypos, int zero) {
 	int bounce;
 
 	if(height <= *ypos) {
@@ -868,7 +868,7 @@ static void AnimateJeep(ITEM_INFO* item, int hitWall, int killed) {
 	}
 }
 
-static int UserControl(ITEM_INFO* item, int height, long* pitch) {
+static int UserControl(ITEM_INFO* item, int height, int* pitch) {
 	JEEPINFO* jeep;
 	PHD_VECTOR pos;
 	int turn, maxTurn, vel;

@@ -105,6 +105,7 @@ void times_init();
 void times_control();
 #endif
 
+
 extern int cutseq_trig;
 extern int cutseq_num;
 extern int GLOBAL_playing_cutseq;

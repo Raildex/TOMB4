@@ -52,7 +52,7 @@ int CanLaraHangSideways(ITEM_INFO* item, COLL_INFO* coll, short angle);
 void lara_as_hang(ITEM_INFO* item, COLL_INFO* coll);
 void lara_col_hang(ITEM_INFO* item, COLL_INFO* coll);
 short LaraCeilingFront(ITEM_INFO* item, short ang, int dist, int h);
-short LaraFloorFront(ITEM_INFO* item, short ang, int dist, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject);
+short LaraFloorFront(ITEM_INFO* item, short ang, int dist, height_types* ht, int* tiltxoff, int* tiltzoff, int* OnObject);
 int LaraFallen(ITEM_INFO* item, COLL_INFO* coll);
 int TestLaraSlide(ITEM_INFO* item, COLL_INFO* coll);
 int LaraHitCeiling(ITEM_INFO* item, COLL_INFO* coll);
@@ -201,7 +201,7 @@ void FallFromRope(ITEM_INFO* item);
 short GetDirOctant(int rot);
 short TestMonkeyLeft(ITEM_INFO* item, COLL_INFO* coll);
 short TestMonkeyRight(ITEM_INFO* item, COLL_INFO* coll);
-int LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, long* edge);
+int LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, int* edge);
 int TestHangSwingIn(ITEM_INFO* item, short angle);
 int LaraDeflectEdge(ITEM_INFO* item, COLL_INFO* coll);
 int TestLaraVault(ITEM_INFO* item, COLL_INFO* coll);
@@ -875,7 +875,7 @@ short LaraCeilingFront(ITEM_INFO* item, short ang, int dist, int h) {
 	return (short)height;
 }
 
-short LaraFloorFront(ITEM_INFO* item, short ang, int dist, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject) {
+short LaraFloorFront(ITEM_INFO* item, short ang, int dist, height_types* ht, int* tiltxoff, int* tiltzoff, int* OnObject) {
 	int x, y, z, height;
 	short room_num;
 
@@ -5107,7 +5107,7 @@ short TestMonkeyRight(ITEM_INFO* item, COLL_INFO* coll) {
 	return 1;
 }
 
-int LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, long* edge) {
+int LaraTestEdgeCatch(ITEM_INFO* item, COLL_INFO* coll, int* edge) {
 	short bounds[6];
 	int hdif;
 

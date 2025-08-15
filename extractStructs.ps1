@@ -10,5 +10,6 @@ foreach($struct in $structs.Matches) {
 #define $($struct.groups[1].Value.ToUpper())_INCLUDED
 $($struct.Value)
 #endif
+
 "@
 }

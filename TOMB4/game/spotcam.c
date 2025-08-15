@@ -248,8 +248,8 @@ void InitSpotCamSequences() {
 	}
 }
 
-int Spline(int x, long* knots, int nk) {
-	long* k;
+int Spline(int x, int* knots, int nk) {
+	int* k;
 	int span, c1, c2;
 
 	span = x * (nk - 3) >> 16;

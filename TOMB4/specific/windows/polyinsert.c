@@ -1264,7 +1264,7 @@ void AddTriClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURE
 	D3DTLBUMPVERTEX* p;
 	D3DTLBUMPVERTEX* bp;
 	TEXTURESTRUCT tex2;
-	long* nVtx;
+	int* nVtx;
 	short* c;
 	int colBak[3];
 	int specBak[3];
@@ -1445,7 +1445,7 @@ void AddQuadClippedZBuffer(_D3DTLVERTEX* v, short v0, short v1, short v2, short 
 	D3DTLBUMPVERTEX* p;
 	_D3DTLVERTEX* vtx;
 	TEXTURESTRUCT tex2;
-	long* nVtx;
+	int* nVtx;
 	short* c;
 	int colBak[4];
 	int specBak[4];

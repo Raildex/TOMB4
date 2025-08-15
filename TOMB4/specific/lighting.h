@@ -13,7 +13,7 @@ typedef struct DYNAMIC DYNAMIC;
 void S_CalculateStaticMeshLight(int x, int y, int z, int shade, ROOM_INFO* r);
 void InitItemDynamicLighting(ITEM_INFO* item);
 void SetupDynamicLight(DYNAMIC* light, ITEM_INFO* item);
-void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient);
+void SetupLight(PCLIGHT* light, ITEM_INFO* item, int* ambient);
 void mApplyMatrix(float* matrix, FVECTOR* start, FVECTOR* dest);
 void mApplyTransposeMatrix(float* matrix, FVECTOR* start, FVECTOR* dest);
 void CreateLightList(ITEM_INFO* item);

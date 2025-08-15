@@ -383,7 +383,7 @@ void DrawAnimatingItem(ITEM_INFO* item) {
 	OBJECT_INFO* obj;
 	BITE_INFO* bite;
 	short** meshpp;
-	long* bone;
+	int* bone;
 	short* frm[2];
 	short* data;
 	short* rot;
@@ -1291,7 +1291,7 @@ void PrintObjects(short room_number) {
 	r->bottom = 0;
 }
 
-int GetFrames(ITEM_INFO* item, short* frm[], long* rate) {
+int GetFrames(ITEM_INFO* item, short* frm[], int* rate) {
 	ANIM_STRUCT* anim;
 	int frame, size, frac, num;
 

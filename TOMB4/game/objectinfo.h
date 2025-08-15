@@ -10,8 +10,8 @@ typedef struct OBJECT_INFO {
 	short* frame_base;
 	void (*initialise)(short item_number);
 	void (*control)(short item_number);
-	void (*floor)(ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject);
-	void (*ceiling)(ITEM_INFO* item, int x, int y, int z, long* height);
+	void (*floor)(ITEM_INFO* item, int x, int y, int z, int* height, height_types* height_type, int* tiltxoff, int* tiltzoff, int* OnObject);
+	void (*ceiling)(ITEM_INFO* item, int x, int y, int z, int* height);
 	void (*draw_routine)(ITEM_INFO* item);
 	void (*collision)(short item_num, ITEM_INFO* laraitem, COLL_INFO* coll);
 	short object_mip;

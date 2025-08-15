@@ -198,7 +198,7 @@ void ControlLightningConductor(short item_number) {
 	}
 }
 
-void BridgeFlatFloor(ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
+void BridgeFlatFloor(ITEM_INFO* item, int x, int y, int z, int* height, height_types* height_type, int* tiltxoff, int* tiltzoff, int* OnObject) {
 	if(item->pos.pos.y >= y) {
 		*height = item->pos.pos.y;
 		*height_type = WALL;
@@ -206,7 +206,7 @@ void BridgeFlatFloor(ITEM_INFO* item, int x, int y, int z, long* height, height_
 	}
 }
 
-void BridgeFlatCeiling(ITEM_INFO* item, int x, int y, int z, long* height) {
+void BridgeFlatCeiling(ITEM_INFO* item, int x, int y, int z, int* height) {
 	if(item->pos.pos.y < y) {
 		*height = item->pos.pos.y + 256;
 	}
@@ -224,7 +224,7 @@ int GetOffset(ITEM_INFO* item, int x, int z) {
 	}
 }
 
-void BridgeTilt1Floor(ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
+void BridgeTilt1Floor(ITEM_INFO* item, int x, int y, int z, int* height, height_types* height_type, int* tiltxoff, int* tiltzoff, int* OnObject) {
 	int level;
 
 	level = item->pos.pos.y + (GetOffset(item, x, z) >> 2);
@@ -236,7 +236,7 @@ void BridgeTilt1Floor(ITEM_INFO* item, int x, int y, int z, long* height, height
 	}
 }
 
-void BridgeTilt1Ceiling(ITEM_INFO* item, int x, int y, int z, long* height) {
+void BridgeTilt1Ceiling(ITEM_INFO* item, int x, int y, int z, int* height) {
 	int level;
 
 	level = item->pos.pos.y + (GetOffset(item, x, z) >> 2);
@@ -246,7 +246,7 @@ void BridgeTilt1Ceiling(ITEM_INFO* item, int x, int y, int z, long* height) {
 	}
 }
 
-void BridgeTilt2Floor(ITEM_INFO* item, int x, int y, int z, long* height, height_types* height_type, long* tiltxoff, long* tiltzoff, long* OnObject) {
+void BridgeTilt2Floor(ITEM_INFO* item, int x, int y, int z, int* height, height_types* height_type, int* tiltxoff, int* tiltzoff, int* OnObject) {
 	int level;
 
 	level = item->pos.pos.y + (GetOffset(item, x, z) >> 1);
@@ -258,7 +258,7 @@ void BridgeTilt2Floor(ITEM_INFO* item, int x, int y, int z, long* height, height
 	}
 }
 
-void BridgeTilt2Ceiling(ITEM_INFO* item, int x, int y, int z, long* height) {
+void BridgeTilt2Ceiling(ITEM_INFO* item, int x, int y, int z, int* height) {
 	int level;
 
 	level = item->pos.pos.y + (GetOffset(item, x, z) >> 1);

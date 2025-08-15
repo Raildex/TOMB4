@@ -21,7 +21,7 @@ int CheckNoColFloorTriangle(FLOOR_INFO* floor, int x, int z);
 int CheckNoColCeilingTriangle(FLOOR_INFO* floor, int x, int z);
 FLOOR_INFO* GetFloor(int x, int y, int z, short* room_number);
 int GetWaterHeight(int x, int y, int z, short room_number);
-int GetHeight(FLOOR_INFO* floor, int x, int y, int z, height_types* ht, long* tiltxoff, long* tiltzoff, long* OnObject);
+int GetHeight(FLOOR_INFO* floor, int x, int y, int z, height_types* ht, int* tiltxoff, int* tiltzoff, int* OnObject);
 int GetCeiling(FLOOR_INFO* floor, int x, int y, int z);
 void AlterFloorHeight(ITEM_INFO* item, int height);
 void TranslateItem(ITEM_INFO* item, short x, short y, short z);

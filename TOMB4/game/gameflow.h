@@ -201,6 +201,7 @@ typedef enum gf_strings // auto generated from the script compiler
 	TXT_The_Times_Exclusive,
 	TXT_The_Gold_Mask,
 #endif
+
 	TXT_Unlimited_s,
 	TXT_USE,
 	TXT_CHOOSE_AMMO,

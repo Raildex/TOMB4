@@ -24,7 +24,7 @@ static int NumLaraSpheres;
 int GetSpheres(ITEM_INFO* item, SPHERE* ptr, int WorldSpace) {
 	OBJECT_INFO* obj;
 	short** meshpp;
-	long* bone;
+	int* bone;
 	short* meshp;
 	short* frame;
 	short* rot;
@@ -194,8 +194,8 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, int joint) {
 	OBJECT_INFO* obj;
 	float* mMx;
 	float* mIMx;
-	long* iMx;
-	long* bone;
+	int* iMx;
+	int* bone;
 	short* frm[2];
 	short* extra_rotation;
 	short* rot;
@@ -311,8 +311,8 @@ void GetJointAbsPositionRotation(ITEM_INFO* item, PHD_3DPOS* vec, int joint) {
 	OBJECT_INFO* obj;
 	float* mMx;
 	float* mIMx;
-	long* iMx;
-	long* bone;
+	int* iMx;
+	int* bone;
 	short* frm[2];
 	short* extra_rotation;
 	short* rot;

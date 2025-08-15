@@ -82,11 +82,13 @@ void LaraCheatyBits() {
 	}
 #endif
 
+
 #ifdef _DEBUG
 	if(keymap[DIK_F2])
 #else
 	if(keymap[DIK_D] && keymap[DIK_O] && keymap[DIK_Z] && keymap[DIK_Y])
 #endif
+
 	{
 		if(lara.vehicle != NO_ITEM) {
 			return;
@@ -121,6 +123,7 @@ void LaraCheatyBits() {
 		gfLevelComplete = gfCurrentLevel + 1;
 	}
 #endif
+
 }
 
 void LaraCheat(ITEM_INFO* item, COLL_INFO* coll) {

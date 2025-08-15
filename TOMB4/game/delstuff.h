@@ -5,8 +5,8 @@ typedef struct PHD_VECTOR PHD_VECTOR;
 void DrawLara(ITEM_INFO* item, int mirror);
 void GetLaraJointPos(PHD_VECTOR* pos, int node);
 void SetLaraUnderwaterNodes();
-void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, int flag);
-void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, int frac, int rate, long* bone, int flag);
+void Rich_CalcLaraMatrices_Normal(short* frame, int* bone, int flag);
+void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, int frac, int rate, int* bone, int flag);
 void CalcLaraMatrices(int flag);
 
 extern short GLaraShadowframe[6];

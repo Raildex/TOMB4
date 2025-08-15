@@ -417,7 +417,7 @@ int WinCreateWindow() {
 	return 1;
 }
 
-void WinSetStyle(int fullscreen, unsigned long* set) {
+void WinSetStyle(int fullscreen, unsigned int* set) {
 	unsigned int style;
 
 	style = GetWindowLong(App.hWnd, GWL_STYLE);
@@ -490,6 +490,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 		}
 	}
 #endif
+
 
 	SetWindowPos(App.hWnd, 0, App.dx.rScreen.left, App.dx.rScreen.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 	desktop = GetDesktopWindow();

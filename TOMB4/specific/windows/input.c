@@ -638,7 +638,7 @@ void S_ClearInput(INPUT_MANAGER* manager) {
 	memset(&manager->lastInput[0],0,sizeof(manager->lastInput));
 }
 
-int ReadJoystick(long* x, long* y) {
+int ReadJoystick(int* x, int* y) {
 	JOYINFOEX joystick;
 	static JOYCAPS caps;
 	static int unavailable = 1;

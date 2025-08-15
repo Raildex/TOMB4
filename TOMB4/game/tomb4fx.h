@@ -50,7 +50,7 @@ void TriggerShockwave(PHD_VECTOR* pos, int InnerOuterRads, int speed, int bgrl, 
 void TriggerShockwaveHitEffect(int x, int y, int z, int rgb, short dir, int speed);
 void UpdateShockwaves();
 void UpdateLightning();
-int LSpline(int x, long* knots, int nk);
+int LSpline(int x, int* knots, int nk);
 void CalcLightningSpline(PHD_VECTOR* pos, PHD_VECTOR* dest, LIGHTNING_STRUCT* lptr);
 void TriggerLightningGlow(int x, int y, int z, int rgb);
 void TriggerFlashSmoke(int x, int y, int z, short room_number);

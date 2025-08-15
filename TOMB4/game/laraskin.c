@@ -71,7 +71,7 @@ void CreateSkinningData() {
 	MESH_DATA* hairMesh;
 	OBJECT_INFO* obj;
 	short** meshpp;
-	long* bone;
+	int* bone;
 	short* joint;
 	short* LaraMesh;
 	int vertCount, aboveVerts, belowVerts, jointVerts, laraVerts, laraX, laraY, laraZ, jointX, jointY, jointZ, calcPointsCounter;

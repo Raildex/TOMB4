@@ -165,7 +165,7 @@ void DrawBikeBeam(ITEM_INFO* item) {
 	BIKEINFO* bike;
 	OBJECT_INFO* obj;
 	short** meshpp;
-	long* bone;
+	int* bone;
 	short* frm[2];
 	short* rot;
 	int frac, rate, bounds, r, g, b;
@@ -721,7 +721,7 @@ static int BikeCheckGetOff() {
 	return 1;
 }
 
-static int DoDynamics(int height, int fallspeed, long* ypos, int zero) {
+static int DoDynamics(int height, int fallspeed, int* ypos, int zero) {
 	int bounce;
 
 	if(height <= *ypos) {
@@ -990,7 +990,7 @@ void BikeCollideStaticObjects(
 	}
 }
 
-static int UserControl(ITEM_INFO* item, int height, long* pitch) {
+static int UserControl(ITEM_INFO* item, int height, int* pitch) {
 	BIKEINFO* bike;
 	PHD_VECTOR pos;
 	int turn, vel;

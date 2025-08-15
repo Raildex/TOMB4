@@ -64,7 +64,7 @@ void REG_WriteFloat(char* SubKeyName, float value) {
 	REG_WriteString(SubKeyName, buf, length);
 }
 
-char REG_ReadLongDefault(char* SubKeyName, long* value, int defaultValue) {
+char REG_ReadLongDefault(char* SubKeyName, int* value, int defaultValue) {
 	unsigned int type;
 	unsigned int cbData;
 

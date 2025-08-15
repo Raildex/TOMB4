@@ -55,7 +55,7 @@ void ConvertFormat(void** destination, void* source, TEXTURE_FORMAT tfmt, TEXTUR
 	}
 	switch(tfmt) {
 	case b8g8r8a8: {
-		long* dst = (long*)(*destination);
+		int* dst = (long*)(*destination);
 		*(dst++) = RGBA(sr, sg, sb, sa);
 		*destination = dst;
 	}
@@ -112,7 +112,7 @@ HRESULT WINAPI CreateMipMapFormat0(LPDIRECTDRAWSURFACE4 surface, LPDDSURFACEDESC
 char CreateTexturePage(int w, int h, TEXTURE_FORMAT tfmt, TEXTURE_FORMAT sfmt, int MipMapCount, void* pSrc, rgbfunc RGBM, HAL_TEXTURE* dst) {
 	IDirectDrawSurface4* tSurf;
 	DDSURFACEDESC2 desc = { 0 };
-	long* lS;
+	int* lS;
 	desc.dwSize = sizeof(DDSURFACEDESC2);
 	desc.dwWidth = w;
 	desc.dwHeight = h;

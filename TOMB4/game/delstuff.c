@@ -113,7 +113,7 @@ void DrawLara(ITEM_INFO* item, int mirror) {
 	FVECTOR v0;
 	FVECTOR v1;
 	short** meshpp;
-	long* bone;
+	int* bone;
 	short* rot;
 	int top, bottom, left, right, dx, dy, dz, dist, stash, xRot;
 	static int a = 255;
@@ -416,7 +416,7 @@ void SetLaraUnderwaterNodes() {
 	}
 }
 
-void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, int flag) {
+void Rich_CalcLaraMatrices_Normal(short* frame, int* bone, int flag) {
 	PHD_VECTOR vec;
 	float* matrix;
 	short* rot;
@@ -722,7 +722,7 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, int flag) {
 	memcpy(&GLaraShadowframe,frame,sizeof(GLaraShadowframe));
 }
 
-void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, int frac, int rate, long* bone, int flag) {
+void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, int frac, int rate, int* bone, int flag) {
 	PHD_VECTOR vec;
 	float* matrix;
 	float* arms;
@@ -1060,7 +1060,7 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, int frac, 
 }
 
 void CalcLaraMatrices(int flag) {
-	long* bone;
+	int* bone;
 	short* frame;
 	short* frmptr[2];
 	int rate, frac;
